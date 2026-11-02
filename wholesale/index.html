@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>rorraxy - Wholesale B2B Portal</title>
     
+    <!-- Preconnect & DNS-Prefetch for Speed -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+
     <!-- Central Script Tag -->
-    <script src="/ecosystem-core.js"></script>
+    <script src="/ecosystem-core.js" defer></script>
 
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="/manifest.json">
@@ -23,18 +31,18 @@
     </script>
 
     <!-- Popup JS Link -->
-    <script src="/popup.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+    <script src="/popup.js" defer></script>
 
     <!-- Correct Cloudflare R2 Icons & Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Non-blocking Google Fonts & Font Awesome -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 
     <style>
         :root {
@@ -47,7 +55,7 @@
             --pink-love: #ff2a85;
             --text-white: #ffffff;
             --text-gray: #a0a0b5;
-            --font-main: 'Poppins', sans-serif;
+            --font-main: 'Poppins', system-ui, -apple-system, sans-serif;
         }
 
         html, body { 
@@ -60,7 +68,7 @@
             scroll-behavior: smooth;
         }
         
-        body { padding-top: 42px; padding-bottom: 75px; text-transform: uppercase !important; }
+        body { padding-top: 42px; padding-bottom: 75px; text-transform: uppercase !important; contain: content; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         header.app-header {
@@ -69,6 +77,7 @@
             -webkit-backdrop-filter: blur(20px);
             display: flex; flex-direction: row; align-items: center; justify-content: space-between;
             border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding: 0 0 0 8px; height: 42px;
+            contain: layout style;
         }
 
         .trending-marquee-bar {
@@ -81,6 +90,7 @@
             animation: smoothMarquee 22s linear infinite; 
             will-change: transform; 
             backface-visibility: hidden;
+            transform: translateZ(0);
         }
 
         .marquee-group { display: flex; align-items: center; gap: 40px; padding-right: 40px; flex-shrink: 0; }
@@ -163,6 +173,7 @@
         .feed-container {
             padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
             gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
+            content-visibility: auto; contain-intrinsic-size: 1000px;
         }
         @media (min-width: 768px) { 
             .feed-container { grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 12px; } 
@@ -173,8 +184,9 @@
             display: flex; flex-direction: column; width: 100%; 
             border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
             break-inside: avoid; margin-bottom: 8px;
+            will-change: transform;
         }
-        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 160px; }
         .product-media-box img { width: 100%; height: auto; display: block; object-fit: cover; background: #050508; }
         
         .wholesale-badge {
@@ -203,6 +215,7 @@
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-wholesale);
             display: flex; justify-content: space-around; align-items: center; padding: 8px 4px 10px 4px;
             z-index: 1000; backdrop-filter: blur(20px); border-top: none !important;
+            contain: layout style;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; text-decoration: none;
@@ -253,7 +266,7 @@
 
         <div class="mode-selector-wrapper">
             <select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
-                <option value="retail">RETAIL</option>
+                <option value="retail">RETAIL STORE</option>
                 <option value="wholesale" selected>WHOLESALE</option>
                 <option value="dropshipping">DROPSHIPPING</option>
             </select>
@@ -263,7 +276,7 @@
     <div id="youMenuModalOverlay" class="luxury-center-modal-overlay">
         <div class="luxury-center-modal-box" onclick="event.stopPropagation()">
             <button class="luxury-modal-close-btn" onclick="closeYouMenuModal()"><i class="fa-solid fa-xmark"></i></button>
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="luxury-modal-logo-large" onclick="navigateTo('https://rorraxy.com/')">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="luxury-modal-logo-large" onclick="navigateTo('https://rorraxy.com/')" loading="lazy">
             
             <div class="modal-material-info-text">B2B PORTAL</div>
 
@@ -337,7 +350,7 @@
     </nav>
 
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
             updateCartBadgeCount();
             loadWholesaleProducts();
@@ -387,44 +400,49 @@
 
         function renderWholesaleCards(products) {
             const feedContainer = document.getElementById('productFeed');
-            feedContainer.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            const defaultImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
 
-            products.forEach(item => {
+            products.forEach((item, index) => {
                 const productId = item.id || item.product_id || item.product_code || item.code || '101';
                 const title = item.title || 'rorraxy Bulk Item';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00');
                 const moq = item.moq || 10;
+                const resolvedImageUrl = item.image_url || item.imageUrl || defaultImg;
                 
-                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                if (item.image_url) resolvedImageUrl = item.image_url;
-                else if (item.imageUrl) resolvedImageUrl = item.imageUrl;
+                // First 4 images high priority, remaining lazy loaded
+                const loadingAttr = index < 4 ? 'eager' : 'lazy';
 
-                const cardHtml = `
-                    <div class="product-card" onclick="openProductDetails('${productId}')">
-                        <div class="product-media-box">
-                            <div class="wholesale-badge">
-                                <i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS
-                            </div>
-                            <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'product-card';
+                cardDiv.onclick = () => openProductDetails(productId);
+                cardDiv.innerHTML = `
+                    <div class="product-media-box">
+                        <div class="wholesale-badge">
+                            <i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS
                         </div>
-                        <div class="card-footer-actions" onclick="event.stopPropagation()">
-                            <div class="wholesale-pricing-row">
-                                <span class="product-price-tag">${bulkPrice} / pc</span>
-                                <span class="moq-tag">Min ${moq} Pcs</span>
+                        <img src="${resolvedImageUrl}" alt="${title}" loading="${loadingAttr}" decoding="async" onerror="this.src='${defaultImg}'">
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                        <div class="wholesale-pricing-row">
+                            <span class="product-price-tag">${bulkPrice} / pc</span>
+                            <span class="moq-tag">Min ${moq} Pcs</span>
+                        </div>
+                        <div class="card-sub-actions">
+                            <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
+                                <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 45}</span>
                             </div>
-                            <div class="card-sub-actions">
-                                <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 45}</span>
-                                </div>
-                                <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
-                                    <i class="fa-solid fa-share-nodes"></i> Share
-                                </button>
-                            </div>
+                            <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
+                                <i class="fa-solid fa-share-nodes"></i> Share
+                            </button>
                         </div>
                     </div>
                 `;
-                feedContainer.insertAdjacentHTML('beforeend', cardHtml);
+                fragment.appendChild(cardDiv);
             });
+
+            feedContainer.innerHTML = '';
+            feedContainer.appendChild(fragment);
         }
 
         function openProductDetails(productId) {
@@ -432,10 +450,12 @@
         }
 
         function navigateTo(url) { window.location.href = url; }
+        
         function openYouMenuModal(event) {
             if(event) event.stopPropagation();
             document.getElementById('youMenuModalOverlay').style.display = 'flex';
         }
+        
         function closeYouMenuModal() {
             document.getElementById('youMenuModalOverlay').style.display = 'none';
         }
