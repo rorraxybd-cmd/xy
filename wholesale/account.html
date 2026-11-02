@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>rorraxy - Wholesale Account & Order Tracking</title>
+
+    <script src="/ecosystem-core.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --bg-body: #000000;
+            --card-bg: #07070a;
+            --gold-color: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --text-main: #ffffff;
+            --text-muted: #a0a0b8;
+            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --accent-green: #00e676;
+        }
+
+        * {
+            box-sizing: border-box !important;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 12px 20px 12px;
+            text-transform: uppercase !important;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 99999;
+        }
+
+        .account-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            animation: luxurySlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            margin: auto 0;
+        }
+
+        @keyframes luxurySlideUp {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .empty-orders-screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 20px;
+            gap: 20px;
+        }
+
+        .shop-now-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            font-weight: 900;
+            font-size: 0.85rem;
+            padding: 12px 35px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* MEMO & PREVIEW CARD */
+        .memo-preview-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 18px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .memo-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+        }
+
+        .download-pdf-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 22px;
+            font-size: 0.74rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+        .download-pdf-btn:active { transform: scale(0.96); }
+
+        .memo-details-grid {
+            background: #030305;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .memo-details-grid span { color: #fff; font-weight: 700; }
+
+        .memo-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+        .memo-items-table th, .memo-items-table td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .memo-items-table th {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-size: 0.68rem;
+            letter-spacing: 0.5px;
+        }
+
+        .memo-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--gold-color);
+            border-top: 1px solid rgba(212, 175, 55, 0.12);
+            padding-top: 8px;
+            margin-top: 2px;
+        }
+
+        .section-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* BOTTOM SEARCH & HOME BAR */
+        .bottom-nav-bar {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .search-tracking-box {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            border-radius: 12px;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-input-field {
+            flex: 1;
+            background: #030305;
+            border: 1px solid rgba(212, 175, 55, 0.06);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 0.7rem;
+            outline: none;
+            font-family: var(--font-family);
+        }
+        .search-input-field:focus { border-color: var(--gold-color); }
+
+        .search-submit-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #000;
+            font-weight: 900;
+            font-size: 0.7rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .home-icon-btn {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--gold-color);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="account-container" id="accountDynamicContent">
+        <!-- Dynamic Content Loaded Here -->
+    </div>
+
+    <!-- BOTTOM SEARCH & HOME BAR -->
+    <div class="bottom-nav-bar">
+        <a href="/wholesale/index.html" class="home-icon-btn" title="Home">
+            <i class="fa-solid fa-house"></i>
+        </a>
+        <div class="search-tracking-box">
+            <input type="text" id="orderSearchInput" class="search-input-field" placeholder="ENTER ORDER ID">
+            <button onclick="executeOrderSearch()" class="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i> TRACK</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = ''; 
+        let currentOrderData = null;
+
+        window.onload = function() {
+            initWholesaleAccountFetch();
+            triggerConfetti();
+        };
+
+        function triggerConfetti() {
+            try {
+                confetti({
+                    particleCount: 75,
+                    spread: 70,
+                    origin: { y: 0.5 },
+                    colors: ['#d4af37', '#fcf6ba', '#b38728', '#ffffff']
+                });
+            } catch(e) {}
+        }
+
+        async function initWholesaleAccountFetch() {
+            const lastOrderRaw = localStorage.getItem('rorraxy_wholesale_last_order');
+            if (lastOrderRaw) {
+                try {
+                    currentOrderData = JSON.parse(lastOrderRaw);
+                    renderOrdersUI(currentOrderData);
+                    return;
+                } catch(e) { console.error(e); }
+            }
+
+            try {
+                let response = await fetch(`${API_BASE_URL}/api/get?table=wholesale_orders&limit=1`);
+                let result = await response.json();
+
+                if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+                    currentOrderData = result.data[0];
+                    renderOrdersUI(currentOrderData);
+                } else {
+                    renderEmptyOrdersUI();
+                }
+            } catch(err) {
+                renderEmptyOrdersUI();
+            }
+        }
+
+        async function executeOrderSearch() {
+            let query = document.getElementById('orderSearchInput').value.trim();
+            if(!query) {
+                initWholesaleAccountFetch();
+                return;
+            }
+
+            try {
+                let response = await fetch(`${API_BASE_URL}/api/get?table=wholesale_orders`);
+                let result = await response.json();
+
+                if (result.success && Array.isArray(result.data)) {
+                    let found = result.data.find(o => 
+                        (o.master_order_id && o.master_order_id.toLowerCase().includes(query.toLowerCase())) ||
+                        (o.customer_phone && o.customer_phone.includes(query)) ||
+                        (o.id && String(o.id).includes(query))
+                    );
+
+                    if (found) {
+                        currentOrderData = found;
+                        renderOrdersUI(currentOrderData);
+                    } else {
+                        alert("No wholesale order found matching your search query!");
+                    }
+                }
+            } catch(e) {
+                alert("Error searching database.");
+            }
+        }
+
+        function renderEmptyOrdersUI() {
+            const container = document.getElementById('accountDynamicContent');
+            container.innerHTML = `
+                <div class="empty-orders-screen">
+                    <button onclick="window.location.href='/wholesale/index.html'" class="shop-now-btn">
+                        <i class="fa-solid fa-bag-shopping"></i> START WHOLESALE SHOPPING
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderOrdersUI(orderData) {
+            const container = document.getElementById('accountDynamicContent');
+            const items = orderData.items || [];
+            const mainOrderId = orderData.master_order_id || orderData.id || 'RRX-WHOLE-' + Math.floor(100000 + Math.random() * 900000);
+            const customerName = orderData.customer_name || 'Valued Partner';
+            const customerPhone = orderData.customer_phone || 'N/A';
+            const paymentMethod = orderData.payment_method || 'Online Gateway';
+            const orderDate = orderData.created_at ? new Date(orderData.created_at).toLocaleDateString() : '2026';
+
+            let itemsTableHtml = '';
+            let totalAmt = 0;
+
+            items.forEach((item) => {
+                let itemPriceNum = parseFloat(String(item.price || '0').replace('$', '')) || 0;
+                let itemTotal = itemPriceNum * (item.qty || 1);
+                totalAmt += itemTotal;
+                let title = item.title || item.product_title || 'Wholesale Product';
+
+                itemsTableHtml += `
+                    <tr>
+                        <td style="font-size:0.7rem; font-weight:700; color:#fff;">${title}</td>
+                        <td style="text-align:center; font-weight:700;">${item.qty || 1}</td>
+                        <td style="text-align:right; color:var(--gold-color); font-weight:900;">$${itemTotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            let finalTotal = orderData.total_amount ? parseFloat(orderData.total_amount).toFixed(2) : totalAmt.toFixed(2);
+
+            container.innerHTML = `
+                <div class="section-title">
+                    <i class="fa-solid fa-file-invoice"></i> WHOLESALE ORDER MEMO
+                </div>
+
+                <div class="memo-preview-card" id="printableMemoArea">
+                    <div class="memo-top-row">
+                        <div>
+                            <h2 style="font-size:0.85rem; font-weight:900; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">RORRAXY WHOLESALE</h2>
+                            <p style="font-size:0.48rem; color:var(--text-muted);">DIGITAL B2B MEMO</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <p style="font-size:0.68rem; font-weight:900; color:#fff;">#${mainOrderId}</p>
+                            <p style="font-size:0.48rem; color:var(--text-muted);">${orderDate}</p>
+                        </div>
+                    </div>
+
+                    <div class="memo-details-grid">
+                        <strong>PARTNER NAME:</strong> <span>${customerName}</span><br>
+                        <strong>PHONE / WHATSAPP:</strong> <span>${customerPhone}</span><br>
+                        <strong>PAYMENT METHOD:</strong> <span>${paymentMethod}</span><br>
+                        <strong>ORDER STATUS:</strong> <span style="color:var(--accent-green);">CONFIRMED & FULFILLED</span>
+                    </div>
+
+                    <table class="memo-items-table">
+                        <thead>
+                            <tr>
+                                <th>PRODUCT ITEM</th>
+                                <th style="text-align:center;">QTY</th>
+                                <th style="text-align:right;">AMOUNT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsTableHtml}
+                        </tbody>
+                    </table>
+
+                    <div class="memo-total-row">
+                        <span>TOTAL PAYABLE:</span>
+                        <span>$${finalTotal} USD</span>
+                    </div>
+                </div>
+
+                <div style="width:100%;">
+                    <button onclick="downloadMemoAsPDF('${mainOrderId}')" class="download-pdf-btn">
+                        <i class="fa-solid fa-file-arrow-down"></i> DOWNLOAD MEMO PDF
+                    </button>
+                </div>
+            `;
+        }
+
+        function downloadMemoAsPDF(orderId) {
+            const element = document.getElementById('printableMemoArea');
+            const options = {
+                margin:       10,
+                filename:     `rorraxy-wholesale-memo-${orderId}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).set(options).save().then(() => {
+                setTimeout(() => {
+                    window.location.href = '/wholesale/index.html';
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+</html>
