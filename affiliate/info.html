@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Affiliate Settings - rorraxy</title>
+    
+    <!-- Favicon Logo -->
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    
+    <script src="/ecosystem-core.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #050508;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Poppins', sans-serif;
+            --required-red: #ff4d4d;
+            --border-color: rgba(212, 175, 55, 0.2);
+            --accent-green: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; text-rendering: optimizeLegibility; }
+        body { padding: 24px 16px 40px 16px; text-transform: uppercase; }
+        .main-container { width: 100%; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+        .dashboard-header { text-align: center; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .header-logo-img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3)); }
+        .dashboard-header h1 { font-size: 1.35rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+
+        .sector-card { background: var(--card-retail); border-radius: 16px; padding: 20px 18px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .section-title { font-size: 0.80rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 6px; letter-spacing: 0.5px; }
+        
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { font-size: 0.68rem; font-weight: 700; color: var(--text-gray); }
+        .req-star { color: var(--required-red); margin-left: 2px; }
+
+        .form-control, .form-select { width: 100%; background: #000000; border: none; border-radius: 12px; padding: 12px 14px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
+        .form-control:focus, .form-select:focus { background: #030305; }
+        .form-control[readonly] { color: var(--gold-solid); cursor: not-allowed; opacity: 0.85; }
+        .form-select option { background: #08080c; color: #fff; }
+
+        .dynamic-payment-container { grid-column: span 2; display: flex; flex-direction: column; gap: 10px; background: #000000; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
+        .payment-field-group { display: none; flex-direction: column; gap: 10px; }
+        .payment-field-group.active { display: flex; }
+
+        .action-btn { background: var(--gold-gradient); color: #000000; border: none; width: 100%; padding: 13px 14px; border-radius: 12px; font-weight: 800; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.5px; box-shadow: 0 0 20px rgba(212,175,55,0.25); transition: all 0.25s ease; }
+        .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 0 30px rgba(212,175,55,0.4); }
+        
+        .summary-box { display: none; background: #000000; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); flex-direction: column; gap: 8px; text-transform: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 5px; }
+        .summary-row span:first-child { color: var(--text-gray); font-weight: 600; }
+        .summary-row span:last-child { color: var(--text-white); font-weight: 700; }
+        .edit-badge { color: var(--gold-solid); cursor: pointer; font-weight: 700; font-size: 0.70rem; display: inline-flex; align-items: center; gap: 4px; }
+
+        @media (max-width: 600px) { 
+            body { padding: 16px 12px 30px 12px; }
+            .form-grid { grid-template-columns: 1fr; gap: 10px; } 
+            .form-group.full-width, .dynamic-payment-container { grid-column: span 1; } 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- সিকিউরিটি গার্ড চেক -->
+    <script>
+        if (localStorage.getItem('rorraxy_affiliate_verified') !== 'true') {
+            window.location.replace('/affiliate/index.html');
+        }
+    </script>
+
+    <div class="main-container">
+        <header class="dashboard-header">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
+            <h1>AFFILIATE SETTINGS</h1>
+        </header>
+
+        <div class="sector-card">
+            <div class="section-title">
+                <i class="fa-solid fa-user-gear"></i> AFFILIATE & PAYMENT INFO
+                <span id="infoCheckMark" style="margin-left:auto; display:none; color:var(--accent-green); font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> SAVED</span>
+            </div>
+
+            <form id="affiliateInfoForm" onsubmit="saveAffiliateInfo(event)">
+                <div class="form-grid">
+                    <div class="form-group"><label>FIRST NAME <span class="req-star">*</span></label><input type="text" id="firstName" class="form-control" placeholder="First Name" required style="text-transform:none;"></div>
+                    <div class="form-group"><label>LAST NAME <span class="req-star">*</span></label><input type="text" id="lastName" class="form-control" placeholder="Last Name" required style="text-transform:none;"></div>
+                    <div class="form-group"><label>EMAIL (AUTOMATIC) <span class="req-star">*</span></label><input type="email" id="email" class="form-control" readonly style="text-transform:none;"></div>
+                    <div class="form-group"><label>PHONE / WHATSAPP <span class="req-star">*</span></label><input type="tel" id="phone" class="form-control" placeholder="+8801700000000" required style="text-transform:none;"></div>
+                    <div class="form-group full-width"><label>PROMO CHANNEL <span class="req-star">*</span></label><input type="text" id="promoChannel" class="form-control" placeholder="YouTube, Facebook or Website URL" required style="text-transform:none;"></div>
+                    
+                    <div class="form-group full-width">
+                        <label>PAYMENT METHOD <span class="req-star">*</span></label>
+                        <select id="paymentMethod" class="form-select" onchange="handlePaymentMethodChange()" required>
+                            <option value="">Select Method</option>
+                            <option value="bKash">bKash</option>
+                            <option value="Nagad">Nagad</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Payoneer">Payoneer</option>
+                            <option value="Crypto USDT">Crypto USDT (TRC20)</option>
+                        </select>
+                    </div>
+
+                    <div id="dynamicPaymentContainer" class="dynamic-payment-container" style="display: none;">
+                        <div id="field_bKash" class="payment-field-group"><div class="form-group"><label>BKASH NUMBER *</label><input type="tel" id="bkashNumber" class="form-control" placeholder="11-digit bKash number" style="text-transform:none;"></div></div>
+                        <div id="field_Nagad" class="payment-field-group"><div class="form-group"><label>NAGAD NUMBER *</label><input type="tel" id="nagadNumber" class="form-control" placeholder="11-digit Nagad number" style="text-transform:none;"></div></div>
+                        <div id="field_Bank" class="payment-field-group">
+                            <div class="form-group"><label>BANK NAME *</label><input type="text" id="bankName" class="form-control" placeholder="Bank name" style="text-transform:none;"></div>
+                            <div class="form-group"><label>ACCOUNT NUMBER *</label><input type="text" id="bankAccountNumber" class="form-control" placeholder="Account number" style="text-transform:none;"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="saveInfoBtn" class="action-btn"><i class="fa-solid fa-floppy-disk"></i> SAVE INFO</button>
+            </form>
+
+            <div class="summary-box" id="infoSummaryBox">
+                <div class="summary-row"><span>FULL NAME:</span> <span id="sumName"></span></div>
+                <div class="summary-row"><span>EMAIL:</span> <span id="sumEmail"></span></div>
+                <div class="summary-row"><span>PHONE:</span> <span id="sumPhone"></span></div>
+                <div class="summary-row"><span>PAYMENT METHOD:</span> <span id="sumMethod"></span></div>
+                <div class="summary-row"><span>CHANNEL:</span> <span id="sumChannel"></span></div>
+                <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                    <span class="edit-badge" onclick="editAffiliateInfo()"><i class="fa-solid fa-pen-to-square"></i> EDIT</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handlePaymentMethodChange() {
+            const method = document.getElementById('paymentMethod').value;
+            const container = document.getElementById('dynamicPaymentContainer');
+            document.querySelectorAll('.payment-field-group').forEach(group => group.classList.remove('active'));
+            if (!method) { container.style.display = 'none'; return; }
+            container.style.display = 'flex';
+            const activeGroup = document.getElementById(`field_${method.replace(' ', '')}`);
+            if (activeGroup) activeGroup.classList.add('active');
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let autoEmail = urlParams.get('email') || localStorage.getItem('rorraxy_affiliate_email') || 'affiliate@rorraxy.com';
+            document.getElementById('email').value = autoEmail;
+
+            const storageKey = `rorraxy_affiliate_info_${autoEmail}`;
+            const savedInfo = localStorage.getItem(storageKey);
+
+            if(savedInfo) {
+                try {
+                    const data = JSON.parse(savedInfo);
+                    fillFormAndShowSummary(data);
+                } catch(e) { console.error(e); }
+            } else {
+                try {
+                    const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(autoEmail)}`);
+                    const result = await res.json();
+                    if(result.success && result.data && result.data.length > 0) {
+                        const dbData = result.data[0];
+                        const formattedData = {
+                            firstName: dbData.first_name || '',
+                            lastName: dbData.last_name || '',
+                            phone: dbData.phone || '',
+                            promoChannel: dbData.promo_channel || '',
+                            paymentMethod: dbData.payment_method || '',
+                            accountDetails: dbData.account_details || ''
+                        };
+                        localStorage.setItem(storageKey, JSON.stringify(formattedData));
+                        fillFormAndShowSummary(formattedData);
+                    }
+                } catch(err) {
+                    console.warn("Cloud sync fetch notice:", err);
+                }
+            }
+        });
+
+        function fillFormAndShowSummary(data) {
+            document.getElementById('firstName').value = data.firstName || '';
+            document.getElementById('lastName').value = data.lastName || '';
+            document.getElementById('phone').value = data.phone || '';
+            document.getElementById('promoChannel').value = data.promoChannel || '';
+            document.getElementById('paymentMethod').value = data.paymentMethod || '';
+            
+            if(data.paymentMethod === 'bKash') {
+                document.getElementById('bkashNumber').value = data.accountDetails || '';
+            } else if(data.paymentMethod === 'Nagad') {
+                document.getElementById('nagadNumber').value = data.accountDetails || '';
+            } else {
+                document.getElementById('bankAccountNumber').value = data.accountDetails || '';
+            }
+
+            handlePaymentMethodChange();
+            showSummary(data);
+        }
+
+        async function saveAffiliateInfo(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('saveInfoBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
+
+            const userEmail = document.getElementById('email').value.trim().toLowerCase();
+            const paymentMethodVal = document.getElementById('paymentMethod').value;
+            let accountDetailsVal = "N/A";
+
+            if(paymentMethodVal === 'bKash') accountDetailsVal = document.getElementById('bkashNumber').value.trim();
+            else if(paymentMethodVal === 'Nagad') accountDetailsVal = document.getElementById('nagadNumber').value.trim();
+            else accountDetailsVal = document.getElementById('bankAccountNumber').value.trim();
+
+            const data = {
+                first_name: document.getElementById('firstName').value.trim(),
+                last_name: document.getElementById('lastName').value.trim(),
+                email: userEmail,
+                phone: document.getElementById('phone').value.trim(),
+                promo_channel: document.getElementById('promoChannel').value.trim(),
+                payment_method: paymentMethodVal,
+                account_details: accountDetailsVal,
+                auth_provider: "email",
+                auth_id: userEmail
+            };
+
+            const cleanData = {
+                firstName: data.first_name,
+                lastName: data.last_name,
+                email: data.email,
+                phone: data.phone,
+                promoChannel: data.promo_channel,
+                paymentMethod: data.payment_method,
+                accountDetails: data.account_details
+            };
+
+            localStorage.setItem(`rorraxy_affiliate_info_${userEmail}`, JSON.stringify(cleanData));
+
+            try {
+                await fetch('/api/affiliate?action=register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } catch (err) {
+                console.error("API Error:", err);
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> SAVE INFO';
+            showSummary(cleanData);
+        }
+
+        function showSummary(data) {
+            document.getElementById('sumName').innerText = `${data.firstName || ''} ${data.lastName || ''}`;
+            document.getElementById('sumEmail').innerText = document.getElementById('email').value;
+            document.getElementById('sumPhone').innerText = data.phone || '';
+            document.getElementById('sumMethod').innerText = data.paymentMethod || '';
+            document.getElementById('sumChannel').innerText = data.promoChannel || '';
+
+            document.getElementById('affiliateInfoForm').style.display = 'none';
+            document.getElementById('infoSummaryBox').style.display = 'flex';
+            document.getElementById('infoCheckMark').style.display = 'inline-flex';
+        }
+
+        function editAffiliateInfo() {
+            document.getElementById('affiliateInfoForm').style.display = 'block';
+            document.getElementById('infoSummaryBox').style.display = 'none';
+            document.getElementById('infoCheckMark').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
