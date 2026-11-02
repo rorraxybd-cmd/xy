@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Affiliate Report - rorraxy</title>
+    
+    <script src="/ecosystem-core.js"></script>
+ 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #08080c;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #a0a0ab;
+            --font-main: 'Poppins', sans-serif;
+            --border-color: rgba(212, 175, 55, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; }
+        body { padding: 24px 16px 110px 16px; text-transform: uppercase; }
+        .main-container { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+        
+        .dashboard-header { text-align: center; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .header-logo-img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5)); }
+        .dashboard-header h1 { font-size: 1.35rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        
+        .report-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .summary-card { background: var(--card-retail); border-radius: 16px; padding: 18px 14px; text-align: center; border: 1px solid var(--border-color); }
+        .summary-card h3 { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; margin-bottom: 6px; }
+        .summary-card .val { font-size: 1.25rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .report-card { background: var(--card-retail); border-radius: 16px; padding: 20px 18px; border: 1px solid var(--border-color); }
+        .table-title { font-size: 0.80rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 6px; letter-spacing: 0.5px; }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+        th { font-size: 0.62rem; color: var(--text-gray); font-weight: 700; padding: 8px 10px; border-bottom: 1px solid var(--border-color); }
+        td { font-size: 0.72rem; padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 0.58rem; font-weight: 700; }
+        .badge.pending { background: rgba(234, 179, 8, 0.12); color: #facc15; }
+        .badge.confirmed { background: rgba(34, 197, 94, 0.12); color: #4ade80; }
+
+        .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; padding: 10px 4px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; white-space: nowrap; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-gray); }
+        .nav-item span { font-size: 0.58rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.3px; }
+
+        @media (max-width: 768px) { .report-summary-grid { grid-template-columns: 1fr; } body { padding: 16px 12px 90px 12px; } }
+    </style>
+</head>
+<body>
+    <!-- সিকিউরিটি গার্ড চেক -->
+    <script>
+        if (localStorage.getItem('rorraxy_affiliate_verified') !== 'true') {
+            window.location.replace('/affiliate/index.html');
+        }
+    </script>
+    <div class="main-container">
+        <header class="dashboard-header">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
+            <h1>AFFILIATE CONVERSION REPORT</h1>
+        </header>
+
+        <section class="report-summary-grid">
+            <div class="summary-card"><h3>PENDING COMMISSIONS</h3><div class="val" id="pendingCommVal">$0.00</div></div>
+            <div class="summary-card"><h3>CONFIRMED COMMISSIONS</h3><div class="val" id="confirmedCommVal">$0.00</div></div>
+            <div class="summary-card"><h3>TOTAL CLICKS RECORDED</h3><div class="val" id="totalClicksVal">0</div></div>
+        </section>
+
+        <section class="report-card">
+            <div class="table-title"><i class="fa-solid fa-table-list"></i> CONVERSION & CLICK LOGS</div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>DATE</th><th>ORDER ID</th><th>PLATFORM</th><th>COMMISSION</th><th>STATUS</th></tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-gray);">No conversion logs found.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Affiliate Bottom Navigation Menu -->
+    <nav class="affiliate-bottom-nav">
+        <a href="/affiliate/dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>DASHBOARD</span></a>
+        <a href="/affiliate/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
+        <a href="/affiliate/reports.html" class="nav-item active"><i class="fa-solid fa-chart-column"></i><span>REPORTS</span></a>
+        <a href="/affiliate/links.html" class="nav-item"><i class="fa-solid fa-link"></i><span>LINKS</span></a>
+        <a href="/affiliate/info.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span>SETTINGS</span></a>
+    </nav>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchReportData();
+        });
+
+        // ক্লাউডফায়ার ফাংশন এপিআই (/api/affiliate?action=conversion) এর মাধ্যমে রিয়েল-টাইম রিপোর্ট ডেটা ফেচ করা
+        async function fetchReportData() {
+            let affiliateId = localStorage.getItem('rorraxy_affiliate_email') || "AFF-DIRECT";
+
+            try {
+                const response = await fetch(`/api/affiliate?action=conversion&affiliate_id=${encodeURIComponent(affiliateId)}`);
+                const result = await response.json();
+                
+                if(result.success && Array.isArray(result.data) && result.data.length > 0) {
+                    const tbody = document.getElementById('reportTableBody');
+                    tbody.innerHTML = '';
+                    
+                    let pendingTotal = 0;
+                    let confirmedTotal = 0;
+
+                    result.data.forEach(item => {
+                        const comm = parseFloat(item.commission_amount || 0);
+                        const status = (item.status || 'PENDING').toUpperCase();
+                        
+                        if(status === 'PENDING') pendingTotal += comm;
+                        if(status === 'CONFIRMED' || status === 'PAID') confirmedTotal += comm;
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${item.created_at || 'Just now'}</td>
+                            <td>${item.order_id || 'N/A'}</td>
+                            <td>${item.platform_name || 'Retail Store'}</td>
+                            <td>$${comm.toFixed(2)}</td>
+                            <td><span class="badge ${status.toLowerCase()}">${status}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    document.getElementById('pendingCommVal').innerText = `$${pendingTotal.toFixed(2)}`;
+                    document.getElementById('confirmedCommVal').innerText = `$${confirmedTotal.toFixed(2)}`;
+                    document.getElementById('totalClicksVal').innerText = result.data.length;
+                }
+            } catch(e) { 
+                console.warn("Report API fetch notice:", e); 
+            }
+        }
+    </script>
+</body>
+</html>
