@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Seller Payout - rorraxy Ecosystem</title>
+    
+    <!-- Favicon Logo -->
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    
+    <script src="/ecosystem-core.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #050508;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Poppins', sans-serif;
+            --required-red: #ff4d4d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; }
+        body { padding: 24px 16px 90px 16px; text-transform: uppercase; }
+
+        .main-container { width: 100%; max-width: 900px; margin: 0 auto; }
+        .dashboard-header { text-align: center; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .header-logo-img { width: 90px; height: 90px; object-fit: contain; filter: drop-shadow(0 0 25px rgba(255, 42, 133, 0.4)); }
+        .dashboard-header h1 { font-size: 1.5rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .balance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 25px; }
+        .balance-card { background: var(--card-retail); border-radius: 18px; padding: 20px 16px; text-align: center; display: flex; flex-direction: column; gap: 8px; border: 1px solid rgba(255, 42, 133, 0.12); }
+        .balance-card h3 { font-size: 0.68rem; color: var(--text-gray); font-weight: 700; }
+        .balance-card .amount { font-size: 1.25rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .payout-card, .history-card { background: var(--card-retail); border-radius: 18px; padding: 24px 20px; margin-bottom: 25px; border: 1px solid rgba(255, 42, 133, 0.12); }
+        .section-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255, 42, 133, 0.12); padding-bottom: 8px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { font-size: 0.72rem; font-weight: 700; color: var(--text-gray); }
+        .req-star { color: var(--required-red); margin-left: 3px; }
+
+        .form-control, .form-select { width: 100%; background: #000000; border: none; border-radius: 12px; padding: 12px 16px; color: var(--text-white); font-size: 0.8rem; outline: none; font-family: var(--font-main); text-transform: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
+        .form-control:focus, .form-select:focus { background: #030305; }
+        .form-select option { background: #08080c; color: #fff; }
+
+        /* পিংক কালার সিকিউর উইথড্র বাটন */
+        .withdraw-btn { width: 100%; background: var(--pink-solid); border: none; border-radius: 14px; padding: 14px; color: #ffffff; font-weight: 800; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px rgba(255, 42, 133, 0.35); transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .withdraw-btn:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 0 30px rgba(255, 42, 133, 0.55); }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .payout-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.75rem; white-space: nowrap; }
+        .payout-table th { color: var(--gold-solid); padding: 12px 14px; background: #040407; }
+        .payout-table td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.03); text-transform: none; }
+
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; }
+        .status-badge.paid { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .status-badge.pending { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95); border-top: 1px solid rgba(255, 42, 133, 0.12); display: flex; justify-content: space-around; align-items: center; padding: 12px 6px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.25rem; margin-bottom: 4px; color: var(--text-gray); }
+        .nav-item span { font-size: 0.62rem; font-weight: 700; color: var(--text-gray); }
+
+        @media (max-width: 600px) {
+            .balance-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- সিকিউরিটি গেটিং চেক -->
+    <script>
+        if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
+            window.location.href = '/seller/index.html';
+        }
+    </script>
+
+    <div class="main-container">
+        <header class="dashboard-header">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
+            <h1>SELLER PAYOUT</h1>
+        </header>
+
+        <section class="balance-grid">
+            <div class="balance-card"><h3>TOTAL EARNINGS</h3><div class="amount" id="totalEarn">$0.00</div></div>
+            <div class="balance-card"><h3>AVAILABLE BALANCE</h3><div class="amount" id="availBal">$0.00</div></div>
+            <div class="balance-card"><h3>PENDING CLEARANCE</h3><div class="amount" id="pendBal">$0.00</div></div>
+        </section>
+
+        <section class="payout-card">
+            <form id="payoutForm">
+                <div class="section-title"><i class="fa-solid fa-hand-holding-dollar"></i><span>REQUEST WITHDRAWAL</span></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>WITHDRAW AMOUNT ($)<span class="req-star">*</span></label>
+                        <input type="number" class="form-control" id="withdrawAmount" placeholder="Min $10..." min="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>PAYOUT METHOD<span class="req-star">*</span></label>
+                        <select class="form-select" id="payoutMethod" required>
+                            <option value="bKash">bKash</option>
+                            <option value="Nagad">Nagad</option>
+                            <option value="Bank">Bank Transfer</option>
+                            <option value="Payoneer">Payoneer (International)</option>
+                        </select>
+                    </div>
+                    <div class="form-grid full-width" id="payoutDetailsGrid" style="margin-bottom: 0;">
+                        <div class="form-group full-width">
+                            <label>BKASH ACCOUNT NUMBER<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="payoutAccNum" placeholder="Enter bKash number..." required style="text-transform: none;">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="withdraw-btn" id="requestBtn">
+                    <i class="fa-solid fa-shield-check"></i> REQUEST SECURE WITHDRAWAL
+                </button>
+            </form>
+        </section>
+
+        <section class="history-card">
+            <div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i><span>PAYOUT HISTORY</span></div>
+            <div class="table-responsive">
+                <table class="payout-table">
+                    <thead>
+                        <tr><th>DATE</th><th>METHOD</th><th>ACCOUNT / DETAILS</th><th>AMOUNT</th><th>STATUS</th></tr>
+                    </thead>
+                    <tbody id="payoutHistoryBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <nav class="seller-bottom-nav">
+        <a href="/seller/list.html" class="nav-item"><i class="fa-solid fa-list-check"></i><span>LIST</span></a>
+        <a href="/seller/payout.html" class="nav-item active"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
+        <button type="button" class="nav-item" onclick="location.href='/seller/dashboard.html'"><i class="fa-solid fa-house"></i><span>HOME</span></button>
+        <a href="/seller/shipment.html" class="nav-item"><i class="fa-solid fa-truck-fast"></i><span>SHIPMENT</span></a>
+        <a href="/seller/info.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span>SETTING</span></a>
+    </nav>
+
+    <script>
+        const WORKER_URL = "https://email.rorraxybd.workers.dev";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPayoutRealtimeData();
+        });
+
+        async function loadPayoutRealtimeData() {
+            let payoutRequests = [];
+            try {
+                const response = await fetch(`/api/get?table=payouts`);
+                const result = await response.json();
+                if (result.success && Array.isArray(result.data)) {
+                    payoutRequests = result.data;
+                }
+            } catch (err) {
+                console.warn("API fetch warning, fallback to local:", err);
+            }
+
+            let localPayouts = JSON.parse(localStorage.getItem('rorraxy_seller_payouts') || '[]');
+            let mergedMap = new Map();
+            [...localPayouts, ...payoutRequests].forEach(p => {
+                let key = `${p.date || p.created_at}_${p.amount}_${p.method}`;
+                mergedMap.set(key, p);
+            });
+            payoutRequests = Array.from(mergedMap.values());
+
+            try {
+                let sellerNotifs = JSON.parse(localStorage.getItem('rorraxy_seller_notifications') || '[]');
+                let totalEarned = 0, pendingClearance = 0;
+
+                sellerNotifs.forEach(item => {
+                    let priceNum = parseFloat(String(item.price || '10').replace('$', '')) * (item.qty || 1);
+                    if (item.status && (item.status.includes('Delivered') || item.status.includes('completed'))) {
+                        totalEarned += priceNum;
+                    } else {
+                        pendingClearance += priceNum;
+                    }
+                });
+
+                let netEarned = totalEarned * 0.90;
+                let availBalance = netEarned; 
+                
+                payoutRequests.forEach(req => {
+                    if (req.status === 'PAID' || req.status === 'PENDING') availBalance -= parseFloat(req.amount || 0);
+                });
+
+                if (availBalance < 0) availBalance = 0;
+
+                document.getElementById('totalEarn').innerText = `$${netEarned.toFixed(2)}`;
+                document.getElementById('availBal').innerText = `$${availBalance.toFixed(2)}`;
+                document.getElementById('pendBal').innerText = `$${(pendingClearance * 0.90).toFixed(2)}`;
+            } catch(e) { console.error(e); }
+
+            renderPayoutHistory(payoutRequests);
+        }
+
+        function renderPayoutHistory(payoutRequests) {
+            const tbody = document.getElementById('payoutHistoryBody');
+            let html = '';
+            if (payoutRequests.length === 0) {
+                html = `<tr><td colspan="5" style="text-align:center; color:var(--text-gray); padding:16px;">NO PAYOUT HISTORY FOUND.</td></tr>`;
+            } else {
+                payoutRequests.forEach(req => {
+                    let badgeClass = (req.status === 'PAID') ? 'paid' : 'pending';
+                    let reqDate = req.date || req.created_at || 'Today';
+                    let reqAmount = parseFloat(req.amount || 0).toFixed(2);
+                    let reqDetails = req.details || req.account_details || 'N/A';
+                    html += `<tr><td>${reqDate}</td><td>${req.method}</td><td>${reqDetails}</td><td>$${reqAmount}</td><td><span class="status-badge ${badgeClass}">${req.status || 'PENDING'}</span></td></tr>`;
+                });
+            }
+            tbody.innerHTML = html;
+        }
+
+        const payoutMethod = document.getElementById('payoutMethod');
+        const payoutDetailsGrid = document.getElementById('payoutDetailsGrid');
+
+        payoutMethod.addEventListener('change', () => {
+            const val = payoutMethod.value;
+            if (val === 'bKash' || val === 'Nagad') {
+                payoutDetailsGrid.innerHTML = `<div class="form-group full-width"><label><span class="label-text">${val.toUpperCase()} ACCOUNT NUMBER<span class="req-star">*</span></span></label><input type="text" class="form-control" id="payoutAccNum" placeholder="Enter ${val} number..." required style="text-transform: none;"></div>`;
+            } else if (val === 'Bank') {
+                payoutDetailsGrid.innerHTML = `
+                    <div class="form-group full-width"><label><span class="label-text">BANK NAME<span class="req-star">*</span></span></label><input type="text" class="form-control" id="bankNameInput" placeholder="Bank name..." required style="text-transform: none;"></div>
+                    <div class="form-group full-width"><label><span class="label-text">ACCOUNT HOLDER NAME<span class="req-star">*</span></span></label><input type="text" class="form-control" id="bankAccName" placeholder="Full name..." required style="text-transform: none;"></div>
+                    <div class="form-group full-width"><label><span class="label-text">ACCOUNT NUMBER / IBAN<span class="req-star">*</span></span></label><input type="text" class="form-control" id="bankAccNum" placeholder="Account number..." required style="text-transform: none;"></div>
+                    <div class="form-group full-width"><label><span class="label-text">ROUTING / SWIFT CODE<span class="req-star">*</span></span></label><input type="text" class="form-control" id="bankRouting" placeholder="Routing code..." required style="text-transform: none;"></div>
+                `;
+            } else if (val === 'Payoneer') {
+                payoutDetailsGrid.innerHTML = `<div class="form-group full-width"><label><span class="label-text">PAYONEER EMAIL<span class="req-star">*</span></span></label><input type="email" class="form-control" id="payoneerEmailInput" placeholder="Payoneer email..." required style="text-transform: none;"></div>`;
+            }
+        });
+
+        // অটো-ভেরিফাইড ওয়ান-ক্লিক পে-আউট সাবমিট
+        document.getElementById('payoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const savedProfile = JSON.parse(localStorage.getItem('rorraxy_seller_profile') || 'null');
+            if (!savedProfile || !savedProfile.brandName || !savedProfile.businessEmail) {
+                alert('PLEASE COMPLETE YOUR BUSINESS INFORMATION & EMAIL IN SETTINGS FIRST!');
+                window.location.href = '/seller/info.html';
+                return;
+            }
+
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = payoutMethod.value;
+            let detailText = '';
+
+            if (method === 'bKash' || method === 'Nagad') {
+                detailText = document.getElementById('payoutAccNum').value;
+            } else if (method === 'Bank') {
+                detailText = `${document.getElementById('bankNameInput').value} - ${document.getElementById('bankAccName').value} - ${document.getElementById('bankAccNum').value}`;
+            } else if (method === 'Payoneer') {
+                detailText = document.getElementById('payoneerEmailInput').value;
+            }
+
+            let currentAvail = parseFloat(document.getElementById('availBal').innerText.replace('$', ''));
+
+            if (amount < 10) { alert('MINIMUM WITHDRAWAL IS $10!'); return; }
+            if (amount > currentAvail) { alert('INSUFFICIENT BALANCE!'); return; }
+
+            const today = new Date().toLocaleDateString();
+            const payoutData = { date: today, method: method, details: detailText, amount: amount, status: 'PENDING', email: savedProfile.businessEmail };
+
+            const requestBtn = document.getElementById('requestBtn');
+            requestBtn.disabled = true;
+            requestBtn.innerText = "PROCESSING...";
+
+            try {
+                let payoutRequests = JSON.parse(localStorage.getItem('rorraxy_seller_payouts') || '[]');
+                payoutRequests.unshift(payoutData);
+                localStorage.setItem('rorraxy_seller_payouts', JSON.stringify(payoutRequests));
+
+                try {
+                    await fetch(`/api/post`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'payouts', ...payoutData })
+                    });
+                } catch (err) { console.warn("API sync error:", err); }
+
+                alert('WITHDRAWAL REQUEST SUBMITTED SUCCESSFULLY!');
+                document.getElementById('payoutForm').reset();
+                loadPayoutRealtimeData();
+            } catch (err) {
+                alert('ERROR PROCESSING REQUEST!');
+            } finally {
+                requestBtn.disabled = false;
+                requestBtn.innerHTML = '<i class="fa-solid fa-shield-check"></i> REQUEST SECURE WITHDRAWAL';
+            }
+        });
+    </script>
+</body>
+</html>
