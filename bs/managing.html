@@ -1,1 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>rorraxy | Managing Director Directory</title>
+    
+    <script src="/ecosystem-core.js"></script>
 
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1PD_g_agcbmm7bbJTHoOWss8YtQ17LNsb=s400">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-black: #000000;
+            --surface-bg: rgba(12, 12, 15, 0.92);
+            --card-bg: rgba(8, 8, 12, 0.85);
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #c0c0c8;
+            --font-luxury: 'Cinzel', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        html { width: 100%; background-color: var(--bg-black); scroll-behavior: smooth; overflow-x: hidden; }
+        body { 
+            width: 100%; 
+            min-height: 100vh; 
+            background-color: var(--bg-black); 
+            color: var(--text-white); 
+            font-family: var(--font-body); 
+            padding-top: 95px; 
+            padding-bottom: 50px; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5 { font-family: var(--font-luxury); }
+
+        header.app-header {
+            display: flex; justify-content: center; align-items: center; padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.92); position: fixed; top: 0; left: 0; z-index: 1000;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            width: 100%; border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+        }
+        .brand-logo-link { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .logo { width: 65px; height: 65px; border-radius: 50%; object-fit: contain; }
+
+        .main-wrapper { 
+            width: 100%; max-width: 1350px; margin: 0 auto; padding: 0 16px; 
+            display: flex; flex-direction: column; gap: 22px;
+        }
+
+        .luxury-hero { 
+            background: var(--surface-bg); border-radius: 16px; padding: 22px 18px; text-align: center; 
+            border: 1px solid rgba(212, 175, 55, 0.12);
+        }
+
+        .hero-title { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; width: 100%; }
+        .hero-top-text {
+            font-size: clamp(1.3rem, 3.8vw, 1.8rem); font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 1.2px;
+        }
+        .hero-sub { font-size: 0.85rem; color: var(--text-gray); line-height: 1.5; max-width: 700px; margin: 0 auto; }
+
+        .search-filter-container { max-width: 440px; margin: 0 auto; width: 100%; }
+        .search-action-group { display: flex; gap: 8px; align-items: center; }
+        
+        .search-box-wrapper { position: relative; flex: 1; display: flex; align-items: center; }
+        .search-box-wrapper i { position: absolute; left: 12px; color: var(--gold-solid); font-size: 0.85rem; }
+        .search-input {
+            width: 100%; background: rgba(4, 4, 6, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.12); border-radius: 10px;
+            padding: 10px 12px 10px 36px; color: var(--text-white);
+            font-family: var(--font-body); font-size: 0.85rem; outline: none; transition: all 0.2s ease;
+        }
+        .search-input::placeholder { color: rgba(192, 192, 200, 0.45); }
+        .search-input:focus { border-color: rgba(212, 175, 55, 0.35); background: rgba(4, 4, 6, 0.85); }
+        
+        .search-btn {
+            background: var(--gold-gradient); color: #000; font-family: var(--font-luxury);
+            font-weight: 800; font-size: 0.78rem; text-transform: uppercase;
+            padding: 10px 18px; border: none; border-radius: 10px; cursor: pointer;
+            transition: all 0.2s ease; white-space: nowrap;
+        }
+        .search-btn:hover { background: #ffffff; color: #000000; }
+
+        .continent-section {
+            background: var(--surface-bg); border-radius: 16px; padding: 20px 16px;
+            border: 1px solid rgba(212, 175, 55, 0.12);
+        }
+        .continent-title {
+            font-size: clamp(1.05rem, 2.8vw, 1.2rem); font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+        }
+
+        .countries-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+        }
+        @media (min-width: 600px) { .countries-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+        @media (min-width: 992px) { .countries-grid { grid-template-columns: repeat(5, 1fr); gap: 14px; } }
+
+        .country-card {
+            background: var(--card-bg); border: 1px solid rgba(212, 175, 55, 0.12);
+            border-radius: 12px; padding: 14px 10px; display: flex; flex-direction: column;
+            align-items: center; text-align: center; gap: 6px; transition: all 0.2s ease;
+        }
+        .country-card:hover { border-color: rgba(212, 175, 55, 0.35); transform: translateY(-2px); }
+        .country-flag { font-size: 2rem; line-height: 1; }
+        .country-name { font-size: 0.82rem; font-weight: 600; color: var(--text-white); width: 100%; }
+        
+        .join-btn {
+            margin-top: 4px; width: 100%; background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3); color: #ffe58f;
+            padding: 6px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;
+            font-family: var(--font-luxury); letter-spacing: 0.5px;
+        }
+        .join-btn:hover { background: var(--gold-gradient); color: #000; border-color: transparent; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); z-index: 2000; display: flex;
+            justify-content: center; align-items: center; padding: 16px;
+            opacity: 0; visibility: hidden; transition: all 0.25s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-content {
+            background: rgba(12, 12, 15, 0.98); border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px; width: 100%; max-width: 480px; padding: 24px 20px;
+            position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        
+        .modal-close-btn {
+            position: absolute; top: 14px; right: 14px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2); color: var(--text-gray);
+            width: 30px; height: 30px; border-radius: 50%; font-size: 0.85rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
+        }
+        .modal-close-btn:hover { background: rgba(212, 175, 55, 0.2); color: #fff; }
+
+        .modal-country-header { text-align: center; margin-bottom: 20px; }
+        .modal-flag { font-size: 2.8rem; margin-bottom: 4px; display: inline-block; }
+        .modal-title {
+            font-size: clamp(1.1rem, 3.2vw, 1.25rem); font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 0.8px;
+        }
+        .modal-subtitle { font-size: 0.82rem; color: var(--text-gray); margin-top: 2px; }
+
+        /* সফট ও ক্লিন ফর্ম ডিজাইন (লেবেল ছাড়া, সরাসরি সফট প্লেসহোল্ডার) */
+        .ecosystem-form { display: flex; flex-direction: column; gap: 12px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        
+        .form-input, .form-textarea {
+            width: 100%; background: rgba(4, 4, 6, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.12); border-radius: 10px;
+            padding: 12px 14px; color: var(--text-white); font-family: var(--font-body);
+            font-size: 0.85rem; outline: none; transition: all 0.2s ease;
+        }
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: rgba(192, 192, 200, 0.45); font-size: 0.8rem; opacity: 1;
+        }
+        .form-input:focus, .form-textarea:focus {
+            border-color: rgba(212, 175, 55, 0.35); background: rgba(4, 4, 6, 0.85);
+        }
+        .form-textarea { min-height: 100px; resize: vertical; }
+        
+        .modal-submit-btn {
+            width: 100%; background: var(--gold-gradient); color: #000;
+            font-family: var(--font-luxury); font-weight: 900; font-size: 0.8rem;
+            text-transform: uppercase; padding: 11px 22px; border: none;
+            border-radius: 24px; cursor: pointer; margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+        .modal-submit-btn:hover { background: #ffffff; color: #000000; }
+        .modal-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="#" class="brand-logo-link">
+            <img src="https://lh3.googleusercontent.com/d/1PD_g_agcbmm7bbJTHoOWss8YtQ17LNsb=s400" alt="rorraxy Logo" class="logo">
+        </a>
+    </header>
+
+    <div class="main-wrapper">
+        
+        <div class="luxury-hero">
+            <h1 class="hero-title">
+                <span class="hero-top-text">Managing Director</span>
+            </h1>
+            <p class="hero-sub">
+                Select your target country to initiate business partnership as Managing Director.
+            </p>
+        </div>
+
+        <div class="search-filter-container">
+            <div class="search-action-group">
+                <div class="search-box-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="directorySearchInput" class="search-input" placeholder="Search Country...">
+                </div>
+                <button type="button" id="directorySearchBtn" class="search-btn">Search</button>
+            </div>
+        </div>
+
+        <div id="continentsContainer" style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Asia -->
+            <div class="continent-section" data-continent="asia">
+                <h3 class="continent-title">🌏 Asia (49 Countries)</h3>
+                <div class="countries-grid">
+                    <div class="country-card" data-name="afghanistan"><span class="country-flag">🇦🇫</span><span class="country-name">Afghanistan</span><button class="join-btn" onclick="openModal('🇦🇫', 'Afghanistan')">Join</button></div>
+                    <div class="country-card" data-name="armenia"><span class="country-flag">🇦🇲</span><span class="country-name">Armenia</span><button class="join-btn" onclick="openModal('🇦🇲', 'Armenia')">Join</button></div>
+                    <div class="country-card" data-name="azerbaijan"><span class="country-flag">🇦🇿</span><span class="country-name">Azerbaijan</span><button class="join-btn" onclick="openModal('🇦🇿', 'Azerbaijan')">Join</button></div>
+                    <div class="country-card" data-name="bahrain"><span class="country-flag">🇧🇭</span><span class="country-name">Bahrain</span><button class="join-btn" onclick="openModal('🇧🇭', 'Bahrain')">Join</button></div>
+                    <div class="country-card" data-name="bangladesh"><span class="country-flag">🇧🇩</span><span class="country-name">Bangladesh</span><button class="join-btn" onclick="openModal('🇧🇩', 'Bangladesh')">Join</button></div>
+                    <div class="country-card" data-name="bhutan"><span class="country-flag">🇧🇹</span><span class="country-name">Bhutan</span><button class="join-btn" onclick="openModal('🇧🇹', 'Bhutan')">Join</button></div>
+                    <div class="country-card" data-name="brunei"><span class="country-flag">🇧🇳</span><span class="country-name">Brunei</span><button class="join-btn" onclick="openModal('🇧🇳', 'Brunei')">Join</button></div>
+                    <div class="country-card" data-name="cambodia"><span class="country-flag">🇰🇭</span><span class="country-name">Cambodia</span><button class="join-btn" onclick="openModal('🇰🇭', 'Cambodia')">Join</button></div>
+                    <div class="country-card" data-name="china"><span class="country-flag">🇨🇳</span><span class="country-name">China</span><button class="join-btn" onclick="openModal('🇨🇳', 'China')">Join</button></div>
+                    <div class="country-card" data-name="cyprus"><span class="country-flag">🇨🇾</span><span class="country-name">Cyprus</span><button class="join-btn" onclick="openModal('🇨🇾', 'Cyprus')">Join</button></div>
+                    <div class="country-card" data-name="georgia"><span class="country-flag">🇬🇪</span><span class="country-name">Georgia</span><button class="join-btn" onclick="openModal('🇬🇪', 'Georgia')">Join</button></div>
+                    <div class="country-card" data-name="india"><span class="country-flag">🇮🇳</span><span class="country-name">India</span><button class="join-btn" onclick="openModal('🇮🇳', 'India')">Join</button></div>
+                    <div class="country-card" data-name="indonesia"><span class="country-flag">🇮🇩</span><span class="country-name">Indonesia</span><button class="join-btn" onclick="openModal('🇮🇩', 'Indonesia')">Join</button></div>
+                    <div class="country-card" data-name="iran"><span class="country-flag">🇮🇷</span><span class="country-name">Iran</span><button class="join-btn" onclick="openModal('🇮🇷', 'Iran')">Join</button></div>
+                    <div class="country-card" data-name="iraq"><span class="country-flag">🇮🇶</span><span class="country-name">Iraq</span><button class="join-btn" onclick="openModal('🇮🇶', 'Iraq')">Join</button></div>
+                    <div class="country-card" data-name="israel"><span class="country-flag">🇮🇱</span><span class="country-name">Israel</span><button class="join-btn" onclick="openModal('🇮🇱', 'Israel')">Join</button></div>
+                    <div class="country-card" data-name="japan"><span class="country-flag">🇯🇵</span><span class="country-name">Japan</span><button class="join-btn" onclick="openModal('🇯🇵', 'Japan')">Join</button></div>
+                    <div class="country-card" data-name="jordan"><span class="country-flag">🇯🇴</span><span class="country-name">Jordan</span><button class="join-btn" onclick="openModal('🇯🇴', 'Jordan')">Join</button></div>
+                    <div class="country-card" data-name="kazakhstan"><span class="country-flag">🇰🇿</span><span class="country-name">Kazakhstan</span><button class="join-btn" onclick="openModal('🇰🇿', 'Kazakhstan')">Join</button></div>
+                    <div class="country-card" data-name="kuwait"><span class="country-flag">🇰🇼</span><span class="country-name">Kuwait</span><button class="join-btn" onclick="openModal('🇰🇼', 'Kuwait')">Join</button></div>
+                    <div class="country-card" data-name="kyrgyzstan"><span class="country-flag">🇰🇬</span><span class="country-name">Kyrgyzstan</span><button class="join-btn" onclick="openModal('🇰🇬', 'Kyrgyzstan')">Join</button></div>
+                    <div class="country-card" data-name="laos"><span class="country-flag">🇱🇦</span><span class="country-name">Laos</span><button class="join-btn" onclick="openModal('🇱🇦', 'Laos')">Join</button></div>
+                    <div class="country-card" data-name="lebanon"><span class="country-flag">🇱🇧</span><span class="country-name">Lebanon</span><button class="join-btn" onclick="openModal('🇱🇧', 'Lebanon')">Join</button></div>
+                    <div class="country-card" data-name="malaysia"><span class="country-flag">🇲🇾</span><span class="country-name">Malaysia</span><button class="join-btn" onclick="openModal('🇲🇾', 'Malaysia')">Join</button></div>
+                    <div class="country-card" data-name="maldives"><span class="country-flag">🇲🇻</span><span class="country-name">Maldives</span><button class="join-btn" onclick="openModal('🇲🇻', 'Maldives')">Join</button></div>
+                    <div class="country-card" data-name="mongolia"><span class="country-flag">🇲🇳</span><span class="country-name">Mongolia</span><button class="join-btn" onclick="openModal('🇲🇳', 'Mongolia')">Join</button></div>
+                    <div class="country-card" data-name="myanmar"><span class="country-flag">🇲🇲</span><span class="country-name">Myanmar</span><button class="join-btn" onclick="openModal('🇲🇲', 'Myanmar')">Join</button></div>
+                    <div class="country-card" data-name="nepal"><span class="country-flag">🇳🇵</span><span class="country-name">Nepal</span><button class="join-btn" onclick="openModal('🇳🇵', 'Nepal')">Join</button></div>
+                    <div class="country-card" data-name="north korea"><span class="country-flag">🇰🇵</span><span class="country-name">North Korea</span><button class="join-btn" onclick="openModal('🇰🇵', 'North Korea')">Join</button></div>
+                    <div class="country-card" data-name="oman"><span class="country-flag">🇴🇲</span><span class="country-name">Oman</span><button class="join-btn" onclick="openModal('🇴🇲', 'Oman')">Join</button></div>
+                    <div class="country-card" data-name="pakistan"><span class="country-flag">🇵🇰</span><span class="country-name">Pakistan</span><button class="join-btn" onclick="openModal('🇵🇰', 'Pakistan')">Join</button></div>
+                    <div class="country-card" data-name="palestine"><span class="country-flag">🇵🇸</span><span class="country-name">Palestine</span><button class="join-btn" onclick="openModal('🇵🇸', 'Palestine')">Join</button></div>
+                    <div class="country-card" data-name="philippines"><span class="country-flag">🇵🇭</span><span class="country-name">Philippines</span><button class="join-btn" onclick="openModal('🇵🇭', 'Philippines')">Join</button></div>
+                    <div class="country-card" data-name="qatar"><span class="country-flag">🇶🇦</span><span class="country-name">Qatar</span><button class="join-btn" onclick="openModal('🇶🇦', 'Qatar')">Join</button></div>
+                    <div class="country-card" data-name="saudi arabia"><span class="country-flag">🇸🇦</span><span class="country-name">Saudi Arabia</span><button class="join-btn" onclick="openModal('🇸🇦', 'Saudi Arabia')">Join</button></div>
+                    <div class="country-card" data-name="singapore"><span class="country-flag">🇸🇬</span><span class="country-name">Singapore</span><button class="join-btn" onclick="openModal('🇸🇬', 'Singapore')">Join</button></div>
+                    <div class="country-card" data-name="south korea"><span class="country-flag">🇰🇷</span><span class="country-name">South Korea</span><button class="join-btn" onclick="openModal('🇰🇷', 'South Korea')">Join</button></div>
+                    <div class="country-card" data-name="sri lanka"><span class="country-flag">🇱🇰</span><span class="country-name">Sri Lanka</span><button class="join-btn" onclick="openModal('🇱🇰', 'Sri Lanka')">Join</button></div>
+                    <div class="country-card" data-name="syria"><span class="country-flag">🇸🇾</span><span class="country-name">Syria</span><button class="join-btn" onclick="openModal('🇸🇾', 'Syria')">Join</button></div>
+                    <div class="country-card" data-name="taiwan"><span class="country-flag">🇹🇼</span><span class="country-name">Taiwan</span><button class="join-btn" onclick="openModal('🇹🇼', 'Taiwan')">Join</button></div>
+                    <div class="country-card" data-name="tajikistan"><span class="country-flag">🇹🇯</span><span class="country-name">Tajikistan</span><button class="join-btn" onclick="openModal('🇹🇯', 'Tajikistan')">Join</button></div>
+                    <div class="country-card" data-name="thailand"><span class="country-flag">🇹🇭</span><span class="country-name">Thailand</span><button class="join-btn" onclick="openModal('🇹🇭', 'Thailand')">Join</button></div>
+                    <div class="country-card" data-name="timor-leste"><span class="country-flag">🇹🇱</span><span class="country-name">Timor-Leste</span><button class="join-btn" onclick="openModal('🇹🇱', 'Timor-Leste')">Join</button></div>
+                    <div class="country-card" data-name="turkey"><span class="country-flag">🇹🇷</span><span class="country-name">Turkey</span><button class="join-btn" onclick="openModal('🇹🇷', 'Turkey')">Join</button></div>
+                    <div class="country-card" data-name="turkmenistan"><span class="country-flag">🇹🇲</span><span class="country-name">Turkmenistan</span><button class="join-btn" onclick="openModal('🇹🇲', 'Turkmenistan')">Join</button></div>
+                    <div class="country-card" data-name="united arab emirates"><span class="country-flag">🇦🇪</span><span class="country-name">United Arab Emirates</span><button class="join-btn" onclick="openModal('🇦🇪', 'United Arab Emirates')">Join</button></div>
+                    <div class="country-card" data-name="uzbekistan"><span class="country-flag">🇺🇿</span><span class="country-name">Uzbekistan</span><button class="join-btn" onclick="openModal('🇺🇿', 'Uzbekistan')">Join</button></div>
+                    <div class="country-card" data-name="vietnam"><span class="country-flag">🇻🇳</span><span class="country-name">Vietnam</span><button class="join-btn" onclick="openModal('🇻🇳', 'Vietnam')">Join</button></div>
+                    <div class="country-card" data-name="yemen"><span class="country-flag">🇾🇪</span><span class="country-name">Yemen</span><button class="join-btn" onclick="openModal('🇾🇪', 'Yemen')">Join</button></div>
+                </div>
+            </div>
+
+            <!-- Europe -->
+            <div class="continent-section" data-continent="europe">
+                <h3 class="continent-title">🇪🇺 Europe (43 Countries)</h3>
+                <div class="countries-grid">
+                    <div class="country-card" data-name="albania"><span class="country-flag">🇦🇱</span><span class="country-name">Albania</span><button class="join-btn" onclick="openModal('🇦🇱', 'Albania')">Join</button></div>
+                    <div class="country-card" data-name="andorra"><span class="country-flag">🇦🇩</span><span class="country-name">Andorra</span><button class="join-btn" onclick="openModal('🇦🇩', 'Andorra')">Join</button></div>
+                    <div class="country-card" data-name="austria"><span class="country-flag">🇦🇹</span><span class="country-name">Austria</span><button class="join-btn" onclick="openModal('🇦🇹', 'Austria')">Join</button></div>
+                    <div class="country-card" data-name="belarus"><span class="country-flag">🇧🇾</span><span class="country-name">Belarus</span><button class="join-btn" onclick="openModal('🇧🇾', 'Belarus')">Join</button></div>
+                    <div class="country-card" data-name="belgium"><span class="country-flag">🇧🇪</span><span class="country-name">Belgium</span><button class="join-btn" onclick="openModal('🇧🇪', 'Belgium')">Join</button></div>
+                    <div class="country-card" data-name="bosnia and herzegovina"><span class="country-flag">🇧🇦</span><span class="country-name">Bosnia & Herzegovina</span><button class="join-btn" onclick="openModal('🇧🇦', 'Bosnia & Herzegovina')">Join</button></div>
+                    <div class="country-card" data-name="bulgaria"><span class="country-flag">🇧🇬</span><span class="country-name">Bulgaria</span><button class="join-btn" onclick="openModal('🇧🇬', 'Bulgaria')">Join</button></div>
+                    <div class="country-card" data-name="croatia"><span class="country-flag">🇭🇷</span><span class="country-name">Croatia</span><button class="join-btn" onclick="openModal('🇭🇷', 'Croatia')">Join</button></div>
+                    <div class="country-card" data-name="czech republic"><span class="country-flag">🇨🇿</span><span class="country-name">Czech Republic</span><button class="join-btn" onclick="openModal('🇨🇿', 'Czech Republic')">Join</button></div>
+                    <div class="country-card" data-name="denmark"><span class="country-flag">🇩🇰</span><span class="country-name">Denmark</span><button class="join-btn" onclick="openModal('🇩🇰', 'Denmark')">Join</button></div>
+                    <div class="country-card" data-name="estonia"><span class="country-flag">🇪🇪</span><span class="country-name">Estonia</span><button class="join-btn" onclick="openModal('🇪🇪', 'Estonia')">Join</button></div>
+                    <div class="country-card" data-name="finland"><span class="country-flag">🇫🇮</span><span class="country-name">Finland</span><button class="join-btn" onclick="openModal('🇫🇮', 'Finland')">Join</button></div>
+                    <div class="country-card" data-name="france"><span class="country-flag">🇫🇷</span><span class="country-name">France</span><button class="join-btn" onclick="openModal('🇫🇷', 'France')">Join</button></div>
+                    <div class="country-card" data-name="germany"><span class="country-flag">🇩🇪</span><span class="country-name">Germany</span><button class="join-btn" onclick="openModal('🇩🇪', 'Germany')">Join</button></div>
+                    <div class="country-card" data-name="greece"><span class="country-flag">🇬🇷</span><span class="country-name">Greece</span><button class="join-btn" onclick="openModal('🇬🇷', 'Greece')">Join</button></div>
+                    <div class="country-card" data-name="hungary"><span class="country-flag">🇭🇺</span><span class="country-name">Hungary</span><button class="join-btn" onclick="openModal('🇭🇺', 'Hungary')">Join</button></div>
+                    <div class="country-card" data-name="iceland"><span class="country-flag">🇮🇸</span><span class="country-name">Iceland</span><button class="join-btn" onclick="openModal('🇮🇸', 'Iceland')">Join</button></div>
+                    <div class="country-card" data-name="ireland"><span class="country-flag">🇮🇪</span><span class="country-name">Ireland</span><button class="join-btn" onclick="openModal('🇮🇪', 'Ireland')">Join</button></div>
+                    <div class="country-card" data-name="italy"><span class="country-flag">🇮🇹</span><span class="country-name">Italy</span><button class="join-btn" onclick="openModal('🇮🇹', 'Italy')">Join</button></div>
+                    <div class="country-card" data-name="latvia"><span class="country-flag">🇱🇻</span><span class="country-name">Latvia</span><button class="join-btn" onclick="openModal('🇱🇻', 'Latvia')">Join</button></div>
+                    <div class="country-card" data-name="lithuania"><span class="country-flag">🇱🇹</span><span class="country-name">Lithuania</span><button class="join-btn" onclick="openModal('🇱🇹', 'Lithuania')">Join</button></div>
+                    <div class="country-card" data-name="luxembourg"><span class="country-flag">🇱🇺</span><span class="country-name">Luxembourg</span><button class="join-btn" onclick="openModal('🇱🇺', 'Luxembourg')">Join</button></div>
+                    <div class="country-card" data-name="malta"><span class="country-flag">🇲🇹</span><span class="country-name">Malta</span><button class="join-btn" onclick="openModal('🇲🇹', 'Malta')">Join</button></div>
+                    <div class="country-card" data-name="moldova"><span class="country-flag">🇲🇩</span><span class="country-name">Moldova</span><button class="join-btn" onclick="openModal('🇲🇩', 'Moldova')">Join</button></div>
+                    <div class="country-card" data-name="monaco"><span class="country-flag">🇲🇨</span><span class="country-name">Monaco</span><button class="join-btn" onclick="openModal('🇲🇨', 'Monaco')">Join</button></div>
+                    <div class="country-card" data-name="montenegro"><span class="country-flag">🇲🇪</span><span class="country-name">Montenegro</span><button class="join-btn" onclick="openModal('🇲🇪', 'Montenegro')">Join</button></div>
+                    <div class="country-card" data-name="netherlands"><span class="country-flag">🇳🇱</span><span class="country-name">Netherlands</span><button class="join-btn" onclick="openModal('🇳🇱', 'Netherlands')">Join</button></div>
+                    <div class="country-card" data-name="north macedonia"><span class="country-flag">🇲🇰</span><span class="country-name">North Macedonia</span><button class="join-btn" onclick="openModal('🇲🇰', 'North Macedonia')">Join</button></div>
+                    <div class="country-card" data-name="norway"><span class="country-flag">🇳🇴</span><span class="country-name">Norway</span><button class="join-btn" onclick="openModal('🇳🇴', 'Norway')">Join</button></div>
+                    <div class="country-card" data-name="poland"><span class="country-flag">🇵🇱</span><span class="country-name">Poland</span><button class="join-btn" onclick="openModal('🇵🇱', 'Poland')">Join</button></div>
+                    <div class="country-card" data-name="portugal"><span class="country-flag">🇵🇹</span><span class="country-name">Portugal</span><button class="join-btn" onclick="openModal('🇵🇹', 'Portugal')">Join</button></div>
+                    <div class="country-card" data-name="romania"><span class="country-flag">🇷🇴</span><span class="country-name">Romania</span><button class="join-btn" onclick="openModal('🇷🇴', 'Romania')">Join</button></div>
+                    <div class="country-card" data-name="russia"><span class="country-flag">🇷🇺</span><span class="country-name">Russia</span><button class="join-btn" onclick="openModal('🇷🇺', 'Russia')">Join</button></div>
+                    <div class="country-card" data-name="san marino"><span class="country-flag">🇸🇲</span><span class="country-name">San Marino</span><button class="join-btn" onclick="openModal('🇸🇲', 'San Marino')">Join</button></div>
+                    <div class="country-card" data-name="serbia"><span class="country-flag">🇷🇸</span><span class="country-name">Serbia</span><button class="join-btn" onclick="openModal('🇷🇸', 'Serbia')">Join</button></div>
+                    <div class="country-card" data-name="slovakia"><span class="country-flag">🇸🇰</span><span class="country-name">Slovakia</span><button class="join-btn" onclick="openModal('🇸🇰', 'Slovakia')">Join</button></div>
+                    <div class="country-card" data-name="slovenia"><span class="country-flag">🇸🇮</span><span class="country-name">Slovenia</span><button class="join-btn" onclick="openModal('🇸🇮', 'Slovenia')">Join</button></div>
+                    <div class="country-card" data-name="spain"><span class="country-flag">🇪🇸</span><span class="country-name">Spain</span><button class="join-btn" onclick="openModal('🇪🇸', 'Spain')">Join</button></div>
+                    <div class="country-card" data-name="sweden"><span class="country-flag">🇸🇪</span><span class="country-name">Sweden</span><button class="join-btn" onclick="openModal('🇸🇪', 'Sweden')">Join</button></div>
+                    <div class="country-card" data-name="switzerland"><span class="country-flag">🇨🇭</span><span class="country-name">Switzerland</span><button class="join-btn" onclick="openModal('🇨🇭', 'Switzerland')">Join</button></div>
+                    <div class="country-card" data-name="ukraine"><span class="country-flag">🇺🇦</span><span class="country-name">Ukraine</span><button class="join-btn" onclick="openModal('🇺🇦', 'Ukraine')">Join</button></div>
+                    <div class="country-card" data-name="united kingdom"><span class="country-flag">🇬🇧</span><span class="country-name">United Kingdom</span><button class="join-btn" onclick="openModal('🇬🇧', 'United Kingdom')">Join</button></div>
+                    <div class="country-card" data-name="vatican city"><span class="country-flag">🇻🇦</span><span class="country-name">Vatican City</span><button class="join-btn" onclick="openModal('🇻🇦', 'Vatican City')">Join</button></div>
+                </div>
+            </div>
+
+            <!-- North America -->
+            <div class="continent-section" data-continent="north-america">
+                <h3 class="continent-title">🌎 North America (23 Countries)</h3>
+                <div class="countries-grid">
+                    <div class="country-card" data-name="antigua and barbuda"><span class="country-flag">🇦🇬</span><span class="country-name">Antigua & Barbuda</span><button class="join-btn" onclick="openModal('🇦🇬', 'Antigua & Barbuda')">Join</button></div>
+                    <div class="country-card" data-name="bahamas"><span class="country-flag">🇧🇸</span><span class="country-name">Bahamas</span><button class="join-btn" onclick="openModal('🇧🇸', 'Bahamas')">Join</button></div>
+                    <div class="country-card" data-name="barbados"><span class="country-flag">🇧🇧</span><span class="country-name">Barbados</span><button class="join-btn" onclick="openModal('🇧🇧', 'Barbados')">Join</button></div>
+                    <div class="country-card" data-name="belize"><span class="country-flag">🇧🇿</span><span class="country-name">Belize</span><button class="join-btn" onclick="openModal('🇧🇿', 'Belize')">Join</button></div>
+                    <div class="country-card" data-name="canada"><span class="country-flag">🇨🇦</span><span class="country-name">Canada</span><button class="join-btn" onclick="openModal('🇨🇦', 'Canada')">Join</button></div>
+                    <div class="country-card" data-name="costa rica"><span class="country-flag">🇨🇷</span><span class="country-name">Costa Rica</span><button class="join-btn" onclick="openModal('🇨🇷', 'Costa Rica')">Join</button></div>
+                    <div class="country-card" data-name="cuba"><span class="country-flag">🇨🇺</span><span class="country-name">Cuba</span><button class="join-btn" onclick="openModal('🇨🇺', 'Cuba')">Join</button></div>
+                    <div class="country-card" data-name="dominica"><span class="country-flag">🇩🇲</span><span class="country-name">Dominica</span><button class="join-btn" onclick="openModal('🇩🇲', 'Dominica')">Join</button></div>
+                    <div class="country-card" data-name="dominican republic"><span class="country-flag">🇩🇴</span><span class="country-name">Dominican Republic</span><button class="join-btn" onclick="openModal('🇩🇴', 'Dominican Republic')">Join</button></div>
+                    <div class="country-card" data-name="el salvador"><span class="country-flag">🇸🇻</span><span class="country-name">El Salvador</span><button class="join-btn" onclick="openModal('🇸🇻', 'El Salvador')">Join</button></div>
+                    <div class="country-card" data-name="grenada"><span class="country-flag">🇬🇩</span><span class="country-name">Grenada</span><button class="join-btn" onclick="openModal('🇬🇩', 'Grenada')">Join</button></div>
+                    <div class="country-card" data-name="guatemala"><span class="country-flag">🇬🇹</span><span class="country-name">Guatemala</span><button class="join-btn" onclick="openModal('🇬🇹', 'Guatemala')">Join</button></div>
+                    <div class="country-card" data-name="haiti"><span class="country-flag">🇭🇹</span><span class="country-name">Haiti</span><button class="join-btn" onclick="openModal('🇭🇹', 'Haiti')">Join</button></div>
+                    <div class="country-card" data-name="honduras"><span class="country-flag">🇭🇳</span><span class="country-name">Honduras</span><button class="join-btn" onclick="openModal('🇭🇳', 'Honduras')">Join</button></div>
+                    <div class="country-card" data-name="jamaica"><span class="country-flag">🇯🇲</span><span class="country-name">Jamaica</span><button class="join-btn" onclick="openModal('🇯🇲', 'Jamaica')">Join</button></div>
+                    <div class="country-card" data-name="mexico"><span class="country-flag">🇲🇽</span><span class="country-name">Mexico</span><button class="join-btn" onclick="openModal('🇲🇽', 'Mexico')">Join</button></div>
+                    <div class="country-card" data-name="nicaragua"><span class="country-flag">🇳🇮</span><span class="country-name">Nicaragua</span><button class="join-btn" onclick="openModal('🇳🇮', 'Nicaragua')">Join</button></div>
+                    <div class="country-card" data-name="panama"><span class="country-flag">🇵🇦</span><span class="country-name">Panama</span><button class="join-btn" onclick="openModal('🇵🇦', 'Panama')">Join</button></div>
+                    <div class="country-card" data-name="saint kitts and nevis"><span class="country-flag">🇰🇳</span><span class="country-name">Saint Kitts & Nevis</span><button class="join-btn" onclick="openModal('🇰🇳', 'Saint Kitts & Nevis')">Join</button></div>
+                    <div class="country-card" data-name="saint lucia"><span class="country-flag">🇱🇨</span><span class="country-name">Saint Lucia</span><button class="join-btn" onclick="openModal('🇱🇨', 'Saint Lucia')">Join</button></div>
+                    <div class="country-card" data-name="saint vincent and the grenadines"><span class="country-flag">🇻🇨</span><span class="country-name">St. Vincent & Grenadines</span><button class="join-btn" onclick="openModal('🇻🇨', 'St. Vincent & Grenadines')">Join</button></div>
+                    <div class="country-card" data-name="trinidad and tobago"><span class="country-flag">🇹🇹</span><span class="country-name">Trinidad & Tobago</span><button class="join-btn" onclick="openModal('🇹🇹', 'Trinidad & Tobago')">Join</button></div>
+                    <div class="country-card" data-name="united states"><span class="country-flag">🇺🇸</span><span class="country-name">United States</span><button class="join-btn" onclick="openModal('🇺🇸', 'United States')">Join</button></div>
+                </div>
+            </div>
+
+            <!-- South America -->
+            <div class="continent-section" data-continent="south-america">
+                <h3 class="continent-title">🌎 South America (12 Countries)</h3>
+                <div class="countries-grid">
+                    <div class="country-card" data-name="argentina"><span class="country-flag">🇦🇷</span><span class="country-name">Argentina</span><button class="join-btn" onclick="openModal('🇦🇷', 'Argentina')">Join</button></div>
+                    <div class="country-card" data-name="bolivia"><span class="country-flag">🇧🇴</span><span class="country-name">Bolivia</span><button class="join-btn" onclick="openModal('🇧🇴', 'Bolivia')">Join</button></div>
+                    <div class="country-card" data-name="brazil"><span class="country-flag">🇧🇷</span><span class="country-name">Brazil</span><button class="join-btn" onclick="openModal('🇧🇷', 'Brazil')">Join</button></div>
+                    <div class="country-card" data-name="chile"><span class="country-flag">🇨🇱</span><span class="country-name">Chile</span><button class="join-btn" onclick="openModal('🇨🇱', 'Chile')">Join</button></div>
+                    <div class="country-card" data-name="colombia"><span class="country-flag">🇨🇴</span><span class="country-name">Colombia</span><button class="join-btn" onclick="openModal('🇨🇴', 'Colombia')">Join</button></div>
+                    <div class="country-card" data-name="ecuador"><span class="country-flag">🇪🇨</span><span class="country-name">Ecuador</span><button class="join-btn" onclick="openModal('🇪🇨', 'Ecuador')">Join</button></div>
+                    <div class="country-card" data-name="guyana"><span class="country-flag">🇬🇾</span><span class="country-name">Guyana</span><button class="join-btn" onclick="openModal('🇬🇾', 'Guyana')">Join</button></div>
+                    <div class="country-card" data-name="paraguay"><span class="country-flag">🇵🇾</span><span class="country-name">Paraguay</span><button class="join-btn" onclick="openModal('🇵🇾', 'Paraguay')">Join</button></div>
+                    <div class="country-card" data-name="peru"><span class="country-flag">🇵🇪</span><span class="country-name">Peru</span><button class="join-btn" onclick="openModal('🇵🇪', 'Peru')">Join</button></div>
+                    <div class="country-card" data-name="suriname"><span class="country-flag">🇸🇷</span><span class="country-name">Suriname</span><button class="join-btn" onclick="openModal('🇸🇷', 'Suriname')">Join</button></div>
+                    <div class="country-card" data-name="uruguay"><span class="country-flag">🇺🇾</span><span class="country-name">Uruguay</span><button class="join-btn" onclick="openModal('🇺🇾', 'Uruguay')">Join</button></div>
+                    <div class="country-card" data-name="venezuela"><span class="country-flag">🇻🇪</span><span class="country-name">Venezuela</span><button class="join-btn" onclick="openModal('🇻🇪', 'Venezuela')">Join</button></div>
+                </div>
+            </div>
+
+            <!-- Africa -->
+            <div class="continent-section" data-continent="africa">
+                <h3 class="continent-title">🌍 Africa (51 Countries)</h3>
+                <div class="countries-grid">
+                    <div class="country-card" data-name="algeria"><span class="country-flag">🇩🇿</span><span class="country-name">Algeria</span><button class="join-btn" onclick="openModal('🇩🇿', 'Algeria')">Join</button></div>
+                    <div class="country-card" data-name="angola"><span class="country-flag">🇦🇴</span><span class="country-name">Angola</span><button class="join-btn" onclick="openModal('🇦🇴', 'Angola')">Join</button></div>
+                    <div class="country-card" data-name="benin"><span class="country-flag">🇧🇯</span><span class="country-name">Benin</span><button class="join-btn" onclick="openModal('🇧🇯', 'Benin')">Join</button></div>
+                    <div class="country-card" data-name="botswana"><span class="country-flag">🇧🇼</span><span class="country-name">Botswana</span><button class="join-btn" onclick="openModal('🇧🇼', 'Botswana')">Join</button></div>
+                    <div class="country-card" data-name="burkina faso"><span class="country-flag">🇧🇫</span><span class="country-name">Burkina Faso</span><button class="join-btn" onclick="openModal('🇧🇫', 'Burkina Faso')">Join</button></div>
+                    <div class="country-card" data-name="burundi"><span class="country-flag">🇧🇮</span><span class="country-name">Burundi</span><button class="join-btn" onclick="openModal('🇧🇮', 'Burundi')">Join</button></div>
+                    <div class="country-card" data-name="cameroon"><span class="country-flag">🇨🇲</span><span class="country-name">Cameroon</span><button class="join-btn" onclick="openModal('🇨🇲', 'Cameroon')">Join</button></div>
+                    <div class="country-card" data-name="cape verde"><span class="country-flag">🇨🇻</span><span class="country-name">Cape Verde</span><button class="join-btn" onclick="openModal('🇨🇻', 'Cape Verde')">Join</button></div>
+                    <div class="country-card" data-name="central african republic"><span class="country-flag">🇨🇫</span><span class="country-name">Central African Republic</span><button class="join-btn" onclick="openModal('🇨🇫', 'Central African Republic')">Join</button></div>
+                    <div class="country-card" data-name="chad"><span class="country-flag">🇹🇩</span><span class="country-name">Chad</span><button class="join-btn" onclick="openModal('🇹🇩', 'Chad')">Join</button></div>
+                    <div class="country-card" data-name="comoros"><span class="country-flag">🇰🇲</span><span class="country-name">Comoros</span><button class="join-btn" onclick="openModal('🇰🇲', 'Comoros')">Join</button></div>
+                    <div class="country-card" data-name="congo"><span class="country-flag">🇨🇬</span><span class="country-name">Congo</span><button class="join-btn" onclick="openModal('🇨🇬', 'Congo')">Join</button></div>
+                    <div class="country-card" data-name="djibouti"><span class="country-flag">🇩🇯</span><span class="country-name">Djibouti</span><button class="join-btn" onclick="openModal('🇩🇯', 'Djibouti')">Join</button></div>
+                    <div class="country-card" data-name="egypt"><span class="country-flag">🇪🇬</span><span class="country-name">Egypt</span><button class="join-btn" onclick="openModal('🇪🇬', 'Egypt')">Join</button></div>
+                    <div class="country-card" data-name="equatorial guinea"><span class="country-flag">🇬🇶</span><span class="country-name">Equatorial Guinea</span><button class="join-btn" onclick="openModal('🇬🇶', 'Equatorial Guinea')">Join</button></div>
+                    <div class="country-card" data-name="eritrea"><span class="country-flag">🇪🇷</span><span class="country-name">Eritrea</span><button class="join-btn" onclick="openModal('🇪🇷', 'Eritrea')">Join</button></div>
+                    <div class="country-card" data-name="eswatini"><span class="country-flag">🇸🇿</span><span class="country-name">Eswatini</span><button class="join-btn" onclick="openModal('🇸🇿', 'Eswatini')">Join</button></div>
+                    <div class="country-card" data-name="ethiopia"><span class="country-flag">🇪🇹</span><span class="country-name">Ethiopia</span><button class="join-btn" onclick="openModal('🇪🇹', 'Ethiopia')">Join</button></div>
+                    <div class="country-card" data-name="gabon"><span class="country-flag">🇬🇦</span><span class="country-name">Gabon</span><button class="join-btn" onclick="openModal('🇬🇦', 'Gabon')">Join</button></div>
+                    <div class="country-card" data-name="gambia"><span class="country-flag">🇬🇲</span><span class="country-name">Gambia</span><button class="join-btn" onclick="openModal('🇬🇲', 'Gambia')">Join</button></div>
+                    <div class="country-card" data-name="ghana"><span class="country-flag">🇬🇭</span><span class="country-name">Ghana</span><button class="join-btn" onclick="openModal('🇬🇭', 'Ghana')">Join</button></div>
+                    <div class="country-card" data-name="guinea"><span class="country-flag">🇬🇳</span><span class="country-name">Guinea</span><button class="join-btn" onclick="openModal('🇬🇳', 'Guinea')">Join</button></div>
+                    <div class="country-card" data-name="ivory coast"><span class="country-flag">🇨🇮</span><span class="country-name">Ivory Coast</span><button class="join-btn" onclick="openModal('🇨🇮', 'Ivory Coast')">Join</button></div>
+                    <div class="country-card" data-name="kenya"><span class="country-flag">🇰🇪</span><span class="country-name">Kenya</span><button class="join-btn" onclick="openModal('🇰🇪', 'Kenya')">Join</button></div>
+                    <div class="country-card" data-name="lesotho"><span class="country-flag">🇱🇸</span><span class="country-name">Lesotho</span><button class="join-btn" onclick="openModal('🇱🇸', 'Lesotho')">Join</button></div>
+                    <div class="country-card" data-name="liberia"><span class="country-flag">🇱🇷</span><span class="country-name">Liberia</span><button class="join-btn" onclick="openModal('🇱🇷', 'Liberia')">Join</button></div>
+                    <div class="country-card" data-name="libya"><span class="country-flag">🇱🇾</span><span class="country-name">Libya</span><button class="join-btn" onclick="openModal('🇱🇾', 'Libya')">Join</button></div>
+                    <div class="country-card" data-name="madagascar"><span class="country-flag">🇲🇬</span><span class="country-name">Madagascar</span><button class="join-btn" onclick="openModal('🇲🇬', 'Madagascar')">Join</button></div>
+                    <div class="country-card" data-name="malawi"><span class="country-flag">🇲🇼</span><span class="country-name">Malawi</span><button class="join-btn" onclick="openModal('🇲🇼', 'Malawi')">Join</button></div>
+                    <div class="country-card" data-name="mali"><span class="country-flag">🇲🇱</span><span class="country-name">Mali</span><button class="join-btn" onclick="openModal('🇲🇱', 'Mali')">Join</button></div>
+                    <div class="country-card" data-name="mauritania"><span class="country-flag">🇲🇷</span><span class="country-name">Mauritania</span><button class="join-btn" onclick="openModal('🇲🇷', 'Mauritania')">Join</button></div>
+                    <div class="country-card" data-name="mauritius"><span class="country-flag">🇲🇺</span><span class="country-name">Mauritius</span><button class="join-btn" onclick="openModal('🇲🇺', 'Mauritius')">Join</button></div>
+                    <div class="country-card" data-name="morocco"><span class="country-flag">🇲🇦</span><span class="country-name">Morocco</span><button class="join-btn" onclick="openModal('🇲🇦', 'Morocco')">Join</button></div>
+                    <div class="country-card" data-name="mozambique"><span class="country-flag">🇲🇿</span><span class="country-name">Mozambique</span><button class="join-btn" onclick="openModal('🇲🇿', 'Mozambique')">Join</button></div>
+                    <div class="country-card" data-name="namibia"><span class="country-flag">🇳🇦</span><span class="country-name">Namibia</span><button class="join-btn" onclick="openModal('🇳🇦', 'Namibia')">Join</button></div>
+                    <div class="country-card" data-name="niger"><span class="country-flag">🇳🇪</span><span class="country-name">Niger</span><button class="join-btn" onclick="openModal('🇳🇪', 'Niger')">Join</button></div>
+                    <div class="country-card" data-name="nigeria"><span class="country-flag">🇳🇬</span><span class="country-name">Nigeria</span><button class="join-btn" onclick="openModal('🇳🇬', 'Nigeria')">Join</button></div>
+                    <div class="country-card" data-name="rwanda"><span class="country-flag">🇷🇼</span><span class="country-name">Rwanda</span><button class="join-btn" onclick="openModal('🇷🇼', 'Rwanda')">Join</button></div>
+                    <div class="country-card" data-name="senegal"><span class="country-flag">🇸🇳</span><span class="country-name">Senegal</span><button class="join-btn" onclick="openModal('🇸🇳', 'Senegal')">Join</button></div>
+                    <div class="country-card" data-name="seychelles"><span class="country-flag">🇸🇨</span><span class="country-name">Seychelles</span><button class="join-btn" onclick="openModal('🇸🇨', 'Seychelles')">Join</button></div>
+                    <div class="country-card" data-name="sierra leone"><span class="country-flag">🇸🇱</span><span class="country-name">Sierra Leone</span><button class="join-btn" onclick="openModal('🇸🇱', 'Sierra Leone')">Join</button></div>
+                    <div class="country-card" data-name="somalia"><span class="country-flag">🇸🇴</span><span class="country-name">Somalia</span><button class="join-btn" onclick="openModal('🇸🇴', 'Somalia')">Join</button></div>
+                    <div class="country-card" data-name="south africa"><span class="country-flag">🇿🇦</span><span class="country-name">South Africa</span><button class="join-btn" onclick="openModal('🇿🇦', 'South Africa')">Join</button></div>
+                    <div class="country-card" data-name="south sudan"><span class="country-flag">🇸🇸</span><span class="country-name">South Sudan</span><button class="join-btn" onclick="openModal('🇸🇸', 'South Sudan')">Join</button></div>
+                    <div class="country-card" data-name="sudan"><span class="country-flag">🇸🇩</span><span class="country-name">Sudan</span><button class="join-btn" onclick="openModal('🇸🇩', 'Sudan')">Join</button></div>
+                    <div class="country-card" data-name="tanzania"><span class="country-flag">🇹🇿</span><span class="country-name">Tanzania</span><button class="join-btn" onclick="openModal('🇹🇿', 'Tanzania')">Join</button></div>
+                    <div class="country-card" data-name="togo"><span class="country-flag">🇹🇬</span><span class="country-name">Togo</span><button class="join-btn" onclick="openModal('🇹🇬', 'Togo')">Join</button></div>
+                    <div class="country-card" data-name="tunisia"><span class="country-flag">🇹🇳</span><span class="country-name">Tunisia</span><button class="join-btn" onclick="openModal('🇹🇳', 'Tunisia')">Join</button></div>
+                    <div class="country-card" data-name="uganda"><span class="country-flag">🇺🇬</span><span class="country-name">Uganda</span><button class="join-btn" onclick="openModal('🇺🇬', 'Uganda')">Join</button></div>
+                    <div class="country-card" data-name="zambia"><span class="country-flag">🇿🇲</span><span class="country-name">Zambia</span><button class="join-btn" onclick="openModal('🇿🇲', 'Zambia')">Join</button></div>
+                    <div class="country-card" data-name="zimbabwe"><span class="country-flag">🇿🇼</span><span class="country-name">Zimbabwe</span><button class="join-btn" onclick="openModal('🇿🇼', 'Zimbabwe')">Join</button></div>
+                </div>
+            </div>
+
+            <!-- Oceania -->
+            <div class="continent-section" data-continent="oceania">
+                <h3 class="continent-title">🌊 Oceania (14 Countries)</h3>
+                <div class="countries-grid">
+                    <div class="country-card" data-name="australia"><span class="country-flag">🇦🇺</span><span class="country-name">Australia</span><button class="join-btn" onclick="openModal('🇦🇺', 'Australia')">Join</button></div>
+                    <div class="country-card" data-name="fiji"><span class="country-flag">🇫🇯</span><span class="country-name">Fiji</span><button class="join-btn" onclick="openModal('🇫🇯', 'Fiji')">Join</button></div>
+                    <div class="country-card" data-name="kiribati"><span class="country-flag">🇰🇮</span><span class="country-name">Kiribati</span><button class="join-btn" onclick="openModal('🇰🇮', 'Kiribati')">Join</button></div>
+                    <div class="country-card" data-name="marshall islands"><span class="country-flag">🇲🇭</span><span class="country-name">Marshall Islands</span><button class="join-btn" onclick="openModal('🇲🇭', 'Marshall Islands')">Join</button></div>
+                    <div class="country-card" data-name="micronesia"><span class="country-flag">🇫🇲</span><span class="country-name">Micronesia</span><button class="join-btn" onclick="openModal('🇫🇲', 'Micronesia')">Join</button></div>
+                    <div class="country-card" data-name="nauru"><span class="country-flag">🇳🇷</span><span class="country-name">Nauru</span><button class="join-btn" onclick="openModal('🇳🇷', 'Nauru')">Join</button></div>
+                    <div class="country-card" data-name="new zealand"><span class="country-flag">🇳🇿</span><span class="country-name">New Zealand</span><button class="join-btn" onclick="openModal('🇳🇿', 'New Zealand')">Join</button></div>
+                    <div class="country-card" data-name="palau"><span class="country-flag">🇵🇼</span><span class="country-name">Palau</span><button class="join-btn" onclick="openModal('🇵🇼', 'Palau')">Join</button></div>
+                    <div class="country-card" data-name="papua new guinea"><span class="country-flag">🇵🇬</span><span class="country-name">Papua New Guinea</span><button class="join-btn" onclick="openModal('🇵🇬', 'Papua New Guinea')">Join</button></div>
+                    <div class="country-card" data-name="samoa"><span class="country-flag">🇼🇸</span><span class="country-name">Samoa</span><button class="join-btn" onclick="openModal('🇼🇸', 'Samoa')">Join</button></div>
+                    <div class="country-card" data-name="solomon islands"><span class="country-flag">🇸🇧</span><span class="country-name">Solomon Islands</span><button class="join-btn" onclick="openModal('🇸🇧', 'Solomon Islands')">Join</button></div>
+                    <div class="country-card" data-name="tonga"><span class="country-flag">🇹🇴</span><span class="country-name">Tonga</span><button class="join-btn" onclick="openModal('🇹🇴', 'Tonga')">Join</button></div>
+                    <div class="country-card" data-name="tuvalu"><span class="country-flag">🇹🇻</span><span class="country-name">Tuvalu</span><button class="join-btn" onclick="openModal('🇹🇻', 'Tuvalu')">Join</button></div>
+                    <div class="country-card" data-name="vanuatu"><span class="country-flag">🇻🇺</span><span class="country-name">Vanuatu</span><button class="join-btn" onclick="openModal('🇻🇺', 'Vanuatu')">Join</button></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div class="modal-overlay" id="appModal" onclick="handleOverlayClick(event)">
+        <div class="modal-content">
+            <button type="button" class="modal-close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-country-header">
+                <span class="modal-flag" id="modalFlag">🌐</span>
+                <h3 class="modal-title" id="modalCountryTitle">Managing Director</h3>
+                <p class="modal-subtitle">Regional Partnership for <span id="targetCountryText" style="color: #ffe58f; font-weight: 600;">Country</span></p>
+            </div>
+
+            <!-- লেবেল ছাড়া সফট প্লেসহোল্ডার ইনপুট ফর্ম -->
+            <form class="ecosystem-form" id="mdApplicationForm">
+                <div class="form-group">
+                    <input type="text" id="fullName" class="form-input" placeholder="Enter your full name *" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email (e.g., Gmail, Apple, Outlook, Yahoo) *" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="tel" id="whatsapp" class="form-input" placeholder="Enter your WhatsApp number *" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="number" id="budget" class="form-input" placeholder="Enter your budget amount in USD *" required>
+                </div>
+                
+                <div class="form-group">
+                    <textarea id="strategicPlan" class="form-textarea" placeholder="Outline your vision and strategic plan... *" required></textarea>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="modal-submit-btn">SUBMIT</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Frontend Script (কোনো পপআপ নোটিফিকেশন ছাড়া ব্যাকগ্রাউন্ডে Cloudflare API তে সাবমিট করার ব্যবস্থা) -->
+    <script>
+        const mdApplicationForm = document.getElementById('mdApplicationForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function openModal(flag, country) {
+            document.getElementById('modalFlag').innerText = flag;
+            document.getElementById('targetCountryText').innerText = country;
+            document.getElementById('appModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            document.getElementById('appModal').classList.remove('active');
+            document.body.style.overflow = ''; 
+        }
+
+        function handleOverlayClick(e) {
+            if (e.target.id === 'appModal') closeModal();
+        }
+
+        const searchInput = document.getElementById('directorySearchInput');
+        searchInput.addEventListener('input', function(e) {
+            const filter = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.country-card');
+            const sections = document.querySelectorAll('.continent-section');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                card.style.display = name.includes(filter) ? "flex" : "none";
+            });
+
+            sections.forEach(section => {
+                const visibleCards = section.querySelectorAll('.country-card[style*="display: flex"]');
+                section.style.display = (filter !== "" && visibleCards.length === 0) ? "none" : "block";
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Cloudflare API (/api/managing) এ ডেটা পাঠানোর হ্যান্ডলার (নোটিফিকেশন পপআপ ছাড়া)
+        mdApplicationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const targetCountry = document.getElementById('targetCountryText').innerText;
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const budget = document.getElementById('budget').value;
+            const strategicPlan = document.getElementById('strategicPlan').value.trim();
+
+            if (!fullName || !email || !whatsapp || !budget || !strategicPlan) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'SENDING...';
+
+            try {
+                const payload = {
+                    country: targetCountry,
+                    fullName: fullName,
+                    email: email,
+                    whatsapp: whatsapp,
+                    budget: Number(budget),
+                    strategicPlan: strategicPlan
+                };
+
+                const response = await fetch('/api/managing', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    mdApplicationForm.reset();
+                    closeModal();
+                }
+            } catch (error) {
+                console.error("Submission Error:", error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'SUBMIT';
+            }
+        });
+    </script>
+</body>
+</html>
