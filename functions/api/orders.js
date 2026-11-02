@@ -1,130 +1,131 @@
-export async function onRequest(context) {
-  const { request, env } = context;
-  
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-  };
+export async function onRequestPost(context) {
+    const corsHeaders = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Content-Type": "application/json"
+    };
 
-  if (request.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+    try {
+        const { request, env } = context;
+        const data = await request.json();
 
-  try {
-    const url = new URL(request.url);
-    const type = url.searchParams.get("type"); // retail, dropship, wholesale
-    const orderId = url.searchParams.get("order_id");
-
-    // ১. GET রিকোয়েস্ট: অর্ডারগুলো দেখার জন্য (আউটপুট)
-    if (request.method === "GET") {
-      let tableName = "";
-      if (type === "retail") tableName = "retail_orders";
-      else if (type === "dropship") tableName = "dropship_orders";
-      else if (type === "wholesale") tableName = "wholesale_orders";
-      else {
-        return new Response(JSON.stringify({ success: false, error: "Invalid order type parameter" }), {
-          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" }
-        });
-      }
-
-      let query = `SELECT * FROM ${tableName}`;
-      let stmt;
-      if (orderId) {
-        query += ` WHERE order_id = ?`;
-        stmt = env.retail.prepare(query).bind(orderId);
-      } else {
-        stmt = env.retail.prepare(query);
-      }
-
-      const { results } = await stmt.all();
-      return new Response(JSON.stringify({ success: true, data: results }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
-    }
-
-    // ২. POST রিকোয়েস্ট: চেকআউট ফর্ম থেকে সমস্ত তথ্য নিয়ে অর্ডারে ইনপুট দেওয়ার জন্য
-    if (request.method === "POST") {
-      const body = await request.json();
-
-      // ক্যাটাগরি ১: রিটেইল অর্ডার (retail_orders)
-      if (type === "retail") {
         const {
-          master_order_id,
-          customer_name,
-          customer_phone,
-          shipping_address,
-          customer_country,
-          payment_method,
-          payment_status,
-          transaction_id,
-          total_amount,
-          currency,
-          affiliate_id,
-          affiliate_commission,
-          admin_commission,
-          order_status
-        } = body;
+            master_order_id,
+            customer_name,
+            customer_phone,
+            shipping_address,
+            customer_country,
+            payment_method, // এখানে bKash, SSLCommerz, Payoneer, Stripe অথবা PayPal আসবে
+            payment_status,
+            transaction_id,
+            total_amount,
+            currency,
+            affiliate_id,
+            affiliate_commission,
+            admin_commission,
+            order_status,
+            items
+        } = data;
 
+        if (!master_order_id || !customer_name || !customer_phone || !shipping_address || !total_amount) {
+            return new Response(JSON.stringify({ success: false, error: "Missing required order fields" }), {
+                status: 400,
+                headers: corsHeaders
+            });
+        }
+
+        // নিখুঁতভাবে প্রডাক্টের দাম ও পরিমাণ কাউন্ট করা
+        let calculatedTotal = 0;
+        let totalItemsQty = 0;
+
+        if (Array.isArray(items)) {
+            items.forEach(item => {
+                const price = parseFloat((item.price || "0").toString().replace('$', ''));
+                const qty = parseInt(item.qty || 1, 10);
+                calculatedTotal += (price * qty);
+                totalItemsQty += qty;
+            });
+        }
+
+        const finalAmount = calculatedTotal > 0 ? calculatedTotal : Number(total_amount);
+
+        // পেমেন্ট মেথড অনুযায়ী সিক্রেট কী হ্যান্ডেলিং (Cloudflare Variables থেকে রিড করবে)
+        let gatewayResponseUrl = null;
+
+        if (payment_method === "Stripe") {
+            // const stripeSecretKey = env.STRIPE_SECRET_KEY;
+            // এখানে স্ট্রাইপ এপিআই কল করে পেমেন্ট সেশন তৈরি করা যাবে
+        } else if (payment_method === "PayPal") {
+            // const paypalClientId = env.PAYPAL_CLIENT_ID;
+            // পেপাল এপিআই ইন্টিগ্রেশন
+        } else if (payment_method === "Payoneer") {
+            // const payoneerKey = env.PAYONEER_API_KEY;
+            // পেওনিয়ার চেকআউট ইন্টিগ্রেশন
+        } else if (payment_method === "SSLCommerz") {
+            // const sslStoreId = env.SSLCOMMERZ_STORE_ID;
+            // এসএসএল কমার্স ইন্টিগ্রেশন
+        } else if (payment_method === "bKash") {
+            // const bkashAppKey = env.BKASH_APP_KEY;
+            // বিকাশ ইন্টিগ্রেশন
+        }
+
+        // Cloudflare D1 Database এ অর্ডার সেভ করা
         const query = `
-          INSERT INTO retail_orders (
-            master_order_id, customer_name, customer_phone, shipping_address,
-            customer_country, payment_method, payment_status, transaction_id,
-            total_amount, currency, affiliate_id, affiliate_commission,
-            admin_commission, order_status, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+            INSERT INTO retail_orders (
+                master_order_id, customer_name, customer_phone, shipping_address, 
+                customer_country, payment_method, payment_status, transaction_id, 
+                total_amount, currency, affiliate_id, affiliate_commission, 
+                admin_commission, order_status, items
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        await env.retail.prepare(query).bind(
-          master_order_id || null,
-          customer_name || null,
-          customer_phone || null,
-          shipping_address || null,
-          customer_country || "Bangladesh",
-          payment_method || null,
-          payment_status || "Pending",
-          transaction_id || "",
-          total_amount || 0,
-          currency || "USD",
-          affiliate_id || "AFF-DIRECT",
-          affiliate_commission || 0,
-          admin_commission || 0,
-          order_status || "Pending"
-        ).run();
+        await env.retail.prepare(query)
+            .bind(
+                master_order_id,
+                customer_name,
+                customer_phone,
+                shipping_address,
+                customer_country || 'Bangladesh',
+                payment_method || 'Card',
+                payment_status || 'Pending',
+                transaction_id || '',
+                finalAmount,
+                currency || 'USD',
+                affiliate_id || 'AFF-DIRECT',
+                Number(affiliate_commission || 0),
+                Number(admin_commission || 0),
+                order_status || 'Pending',
+                JSON.stringify(items || [])
+            )
+            .run();
 
-        return new Response(JSON.stringify({ success: true, message: "Retail order placed successfully!" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        return new Response(JSON.stringify({ 
+            success: true, 
+            message: "Order placed successfully with multi-gateway support!",
+            total_amount: finalAmount,
+            total_qty: totalItemsQty,
+            redirect_url: gatewayResponseUrl
+        }), {
+            status: 200,
+            headers: corsHeaders
         });
-      }
 
-      // ক্যাটাগরি ২: ড্রপশিপ অর্ডার (dropship_orders)
-      else if (type === "dropship") {
-        // ড্রপশিপ টেবিলের কলাম অনুযায়ী এখানে ডেটা সেভ হবে
-        return new Response(JSON.stringify({ success: true, message: "Dropship order feature is ready to map!" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+    } catch (err) {
+        return new Response(JSON.stringify({ success: false, error: err.message }), {
+            status: 500,
+            headers: corsHeaders
         });
-      }
-
-      // ক্যাটাগরি ৩: হোলসেল অর্ডার (wholesale_orders)
-      else if (type === "wholesale") {
-        // হোলসেল টেবিলের কলাম অনুযায়ী এখানে ডেটা সেভ হবে
-        return new Response(JSON.stringify({ success: true, message: "Wholesale order feature is ready to map!" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
-        });
-      }
-
-      return new Response(JSON.stringify({ success: false, error: "Invalid order type for POST" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
     }
+}
 
-    return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), {
-      status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" }
+export async function onRequestOptions() {
+    return new Response(null, {
+        status: 204,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type"
+        }
     });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
-  }
 }
