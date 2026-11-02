@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>rorraxy | Offline Mode</title>
+    
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1PD_g_agcbmm7bbJTHoOWss8YtQ17LNsb=s400">
+    <link rel="manifest" href="/pwa/manifest.json">
+    <meta name="theme-color" content="#0b0b0b">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --bg-dark: #0b0b0b;
+            --card-bg: rgba(14, 14, 20, 0.92);
+            --text-white: #ffffff;
+            --text-gray: #b0b0bc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100vw;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .offline-wrapper { width: 100%; display: flex; align-items: center; justify-content: center; }
+
+        .offline-container {
+            width: 100%; max-width: 440px;
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 24px; padding: 45px 35px; text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            animation: rorraxyFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .offline-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 18px; filter: drop-shadow(0 4px 15px rgba(212, 175, 55, 0.4)); }
+
+        .offline-icon-badge {
+            width: 60px; height: 60px; background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px auto; color: var(--gold-solid); font-size: 24px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        h1 { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700; color: var(--text-white); margin-bottom: 12px; letter-spacing: 0.5px; }
+        p { font-size: 13.5px; color: var(--text-gray); line-height: 1.6; margin-bottom: 30px; }
+
+        .retry-btn {
+            background: var(--gold-gradient); color: #0b0b0b; border: none;
+            padding: 13px 25px; font-size: 14px; font-weight: 700; border-radius: 12px;
+            cursor: pointer; width: 100%; box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+            transition: all 0.25s ease; display: flex; align-items: center; justify-content: center;
+            gap: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5); filter: brightness(1.05); }
+        .retry-btn:active { transform: translateY(0); }
+
+        .status-indicator { margin-top: 22px; font-size: 12px; color: #8a8a9e; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .dot { width: 9px; height: 9px; background-color: #ff4d4d; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px rgba(255, 77, 77, 0.8); transition: background-color 0.3s ease; }
+        .dot.online { background-color: #2ecc71; box-shadow: 0 0 12px rgba(46, 204, 113, 0.8); }
+
+        @keyframes rorraxyFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .offline-container { padding: 30px 20px; border-radius: 20px; }
+            h1 { font-size: 21px; }
+            p { font-size: 13px; margin-bottom: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="offline-wrapper">
+        <div class="offline-container">
+            <img src="https://lh3.googleusercontent.com/d/1PD_g_agcbmm7bbJTHoOWss8YtQ17LNsb=s400" alt="rorraxy" class="offline-logo">
+            
+            <div class="offline-icon-badge">
+                <i class="fa-solid fa-wifi-slash"></i>
+            </div>
+
+            <h1>You Are Offline</h1>
+            <p>No active internet connection found. Your PWA cache and saved data are secure. Please reconnect to resume your session on the rorraxy ecosystem.</p>
+
+            <button class="retry-btn" id="retryBtn">
+                <i class="fa-solid fa-rotate-right"></i> Try Again
+            </button>
+
+            <div class="status-indicator">
+                <span class="dot" id="connectionDot"></span> 
+                <span id="statusText">Offline Mode Active</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const retryBtn = document.getElementById('retryBtn');
+        const connectionDot = document.getElementById('connectionDot');
+        const statusText = document.getElementById('statusText');
+
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                connectionDot.classList.add('online');
+                statusText.textContent = 'Connection restored! Reconnecting...';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 800);
+            } else {
+                connectionDot.classList.remove('online');
+                statusText.textContent = 'Offline Mode Active';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        retryBtn.addEventListener('click', () => {
+            retryBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking Network...';
+            setTimeout(() => {
+                if (navigator.onLine) {
+                    window.location.href = '/';
+                } else {
+                    retryBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Try Again';
+                    alert('Still offline. Please check your Wi-Fi or mobile data.');
+                }
+            }, 800);
+        });
+
+        updateOnlineStatus();
+    </script>
+</body>
+</html>
