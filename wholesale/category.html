@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>rorraxy - Wholesale B2B Categories & Search</title>
+    
+    <script src="/ecosystem-core.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://img.rorraxy.com">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    <link rel="apple-touch-icon" href="https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-wholesale: #000000;
+            --card-wholesale: #0c0c12;
+            --header-wholesale: rgba(0, 0, 0, 0.9);
+            --footer-wholesale: rgba(4, 4, 6, 0.95);
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --pink-love: #ff2a85;
+            --text-white: #ffffff;
+            --text-gray: #a0a0b5;
+            --font-main: 'Poppins', sans-serif;
+        }
+
+        html, body { 
+            width: 100%; max-width: 100%; overflow-x: hidden; 
+            background: var(--bg-wholesale) !important; 
+            color: var(--text-white); font-family: var(--font-main); 
+            min-height: 100vh; font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        body { padding-top: 15px; padding-bottom: 75px; text-transform: uppercase !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        .category-fullscreen-view { padding: 12px 14px; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+        
+        .accordion-category-box {
+            background: var(--card-wholesale); border-radius: 14px; overflow: hidden;
+            transition: all 0.3s ease; border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .accordion-category-box.active {
+            background: #101018; border-color: rgba(212, 175, 55, 0.35);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.08);
+        }
+
+        .accordion-header {
+            padding: 18px 20px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; user-select: none; background: rgba(255,255,255,0.01); transition: background 0.2s ease;
+        }
+        .accordion-header:hover { background: rgba(212, 175, 55, 0.03); }
+
+        .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
+        .accordion-icon-box { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .accordion-icon-box i { font-size: 1.35rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .accordion-texts { display: flex; flex-direction: column; gap: 2px; }
+        .accordion-main-title {
+            font-size: 0.92rem; font-weight: 700; background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px;
+        }
+        .accordion-sub-hint { font-size: 0.60rem; color: var(--text-gray); font-weight: 500; letter-spacing: 0.3px; }
+
+        .accordion-arrow { font-size: 0.9rem; color: var(--gold-solid); transition: transform 0.3s ease; flex-shrink: 0; }
+        .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
+
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
+            background: #06060a; padding: 0 16px;
+        }
+        .accordion-category-box.active .accordion-content {
+            max-height: 1400px; transition: max-height 0.4s ease-in-out;
+            padding: 14px 16px 18px 16px; border-top: 1px solid rgba(212, 175, 55, 0.08);
+        }
+
+        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .sub-cat-item {
+            background: #0f0f17; border-radius: 10px; padding: 12px 10px;
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.03);
+        }
+        .sub-cat-item:hover { background: #161622; border-color: rgba(212, 175, 55, 0.2); transform: translateY(-2px); }
+        .sub-cat-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+        .sub-cat-name { font-size: 0.68rem; color: var(--text-white); font-weight: 600; }
+
+        /* ডাইনামিক প্রোডাক্ট ডিসপ্লে সেকশন (Pinterest Style Feed) */
+        .dynamic-product-section { display: none; margin-top: 15px; padding: 10px 0; }
+        .dynamic-product-section.active { display: block; }
+        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
+        .section-title-result { font-size: 0.85rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
+        .back-to-cat-btn {
+            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold-solid); padding: 6px 14px; border-radius: 8px; font-size: 0.65rem;
+            cursor: pointer; font-weight: 600; text-transform: uppercase;
+        }
+
+        .feed-container {
+            padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
+            gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
+        }
+        @media (min-width: 768px) { .feed-container { grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px; } }
+
+        .product-card {
+            background: var(--card-wholesale); border-radius: 14px; overflow: hidden; 
+            display: flex; flex-direction: column; width: 100%; 
+            border: 1px solid rgba(212,175,55,0.15); position: relative;
+            cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+        }
+        .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
+
+        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
+        
+        .wholesale-badge {
+            position: absolute; top: 8px; left: 8px; z-index: 10;
+            background: rgba(212, 175, 55, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
+            font-size: 0.58rem; font-weight: 700; color: #000000 !important; text-transform: uppercase;
+        }
+
+        .card-footer-actions { 
+            display: flex; flex-direction: column; padding: 10px; 
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: auto;
+        }
+        .wholesale-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .moq-tag { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
+        
+        .card-sub-actions { display: flex; align-items: center; justify-content: space-between; width: 100%; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 6px; }
+        .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
+        .love-action i { color: var(--pink-love); }
+        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
+        
+        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+
+        /* ট্রান্সপারেন্ট ওভারলে সার্চ মডাল */
+        .floating-search-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 20000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; padding: 16px;
+        }
+        .floating-search-modal.active { opacity: 1; visibility: visible; }
+
+        .floating-search-box {
+            background: rgba(8, 8, 12, 0.95); border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 480px;
+            display: flex; flex-direction: column; gap: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); position: relative;
+        }
+        .close-modal-btn {
+            position: absolute; top: 16px; right: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-gray); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer;
+        }
+        .modal-title { font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+        .modal-input-container { display: flex; flex-direction: column; gap: 14px; }
+        .modal-input {
+            width: 100%; background: rgba(3, 3, 5, 0.8); border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 14px; padding: 15px 18px; color: var(--text-white); font-size: 0.95rem; outline: none; text-transform: uppercase;
+        }
+        .search-bottom-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .search-action-item-btn {
+            background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px; padding: 12px 8px; cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 6px; width: 100%;
+        }
+        .search-action-item-btn i { font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-action-item-btn span { font-size: 0.62rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* বটম ন্যাভবার */
+        nav.bottom-3nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #040406;
+            display: flex; justify-content: center; align-items: center; padding: 12px 20px;
+            z-index: 1000; border-top: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .nav-3item {
+            display: flex; flex-direction: column; align-items: center; text-decoration: none;
+            font-size: 0.60rem; font-weight: 700; cursor: pointer; text-align: center; gap: 5px; flex: 1; max-width: 140px;
+            text-transform: uppercase; background: none; border: none;
+        }
+        .nav-3item i { font-size: 1.2rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-3item span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body id="mainBody">
+
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+      <linearGradient id="goldGradientSvg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#bf953f" />
+        <stop offset="25%" stop-color="#fcf6ba" />
+        <stop offset="50%" stop-color="#b38728" />
+        <stop offset="75%" stop-color="#fbf5b7" />
+        <stop offset="100%" stop-color="#aa771c" />
+      </linearGradient>
+    </svg>
+
+    <!-- ক্যাটাগরি তালিকা ভিউ -->
+    <main class="category-fullscreen-view" id="categoryMainListView">
+        
+        <!-- ১. WOMEN'S FASHION -->
+        <div class="accordion-category-box" id="cat-women">
+            <div class="accordion-header" onclick="toggleAccordion('cat-women')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-person-dress"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">WOMEN'S FASHION</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-handbags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-lingerie')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-traditional')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-crafts')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ২. MEN'S FASHION -->
+        <div class="accordion-category-box" id="cat-men">
+            <div class="accordion-header" onclick="toggleAccordion('cat-men')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-shirt"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">MEN'S FASHION</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-grooming')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৩. GIRLS' FASHION -->
+        <div class="accordion-category-box" id="cat-girls">
+            <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-child-dress"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">GIRLS' FASHION</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-clothing')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-hair-accessories')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-sleepwear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-party-dresses')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৪. BOYS' FASHION -->
+        <div class="accordion-category-box" id="cat-boys">
+            <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-child"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">BOYS' FASHION</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-clothing')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৫. MATCHING SETS -->
+        <div class="accordion-category-box" id="cat-matching">
+            <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-people-group"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">MATCHING SETS</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('couple-matchingsets')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('family-matchingsets')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mom-me-sets')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('dad-me-sets')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('sibling-matchingsets')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('team-matchingsets')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('bff-matchingsets')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('pet-owner-sets')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('holiday-matchingsets')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('value-bundles')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৬. LUXURY GIFTS -->
+        <div class="accordion-category-box" id="cat-gifts">
+            <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-gift"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">LUXURY GIFTS</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('corporate-gifts')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('luxury-giftitems')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('premium-handicrafts')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('wood-resincrafts')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('bamboo-brass-decor')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('gift-sets-hampers')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৭. MOTHER & BABY -->
+        <div class="accordion-category-box" id="cat-mother">
+            <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-baby"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">MOTHER & BABY</span>
+                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('eco-baby-toys')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mother-baby-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ডাইনামিক প্রোডাক্ট ফিড সেকশন (Pinterest Style Feed) -->
+    <div class="category-fullscreen-view dynamic-product-section" id="dynamicProductSection">
+        <div class="section-header-row">
+            <span class="section-title-result" id="resultCategoryTitle">WHOLESALE PRODUCTS</span>
+            <button class="back-to-cat-btn" onclick="goBackToCategories()"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORIES</button>
+        </div>
+        <div class="feed-container" id="categoryProductFeed">
+            <!-- ক্লাউডফ্লেয়ার থেকে ডাইনামিক হোলসেল প্রোডাক্ট গ্রিড এখানে লোড হবে -->
+        </div>
+    </div>
+
+    <!-- বটম ন্যাভবার (HOME, CATEGORY, SEARCH) -->
+    <nav class="bottom-3nav" id="bottom3Nav">
+        <a href="/wholesale/index.html" class="nav-3item">
+            <i class="fa-solid fa-house"></i>
+            <span>HOME</span>
+        </a>
+        <a href="/wholesale/category.html" class="nav-3item">
+            <i class="fa-solid fa-list-check"></i>
+            <span>CATEGORY</span>
+        </a>
+        <div class="nav-3item" onclick="openSearchModal()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>SEARCH</span>
+        </div>
+    </nav>
+
+    <!-- ট্রান্সপারেন্ট ওভারলে সার্চ মডাল -->
+    <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event)">
+        <div class="floating-search-box" id="searchBoxContainer">
+            <button class="close-modal-btn" onclick="closeSearchModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
+            <div class="modal-input-container">
+                <input type="text" id="modalSearchInput" class="modal-input" placeholder="Type bulk product name..." autocomplete="off">
+                
+                <div class="search-bottom-actions">
+                    <label class="search-action-item-btn" style="cursor: pointer;">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>CAMERA</span>
+                        <input type="file" accept="image/*" style="display: none;" onchange="handleCameraSearch(event)">
+                    </label>
+                    <button type="button" class="search-action-item-btn" onclick="startAudioSearch()">
+                        <i class="fa-solid fa-microphone"></i>
+                        <span>AUDIO</span>
+                    </button>
+                    <button type="button" class="search-action-item-btn" onclick="submitModalSearch()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>SEARCH</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(boxId) {
+            const targetBox = document.getElementById(boxId);
+            const isOpen = targetBox.classList.contains('active');
+            document.querySelectorAll('.accordion-category-box').forEach(box => box.classList.remove('active'));
+            if (!isOpen) targetBox.classList.add('active');
+        }
+
+        async function fetchAndDisplayProducts(queryKey) {
+            document.getElementById('categoryMainListView').style.display = 'none';
+            const dynamicSection = document.getElementById('dynamicProductSection');
+            dynamicSection.classList.add('active');
+            document.getElementById('resultCategoryTitle').innerText = `BULK RESULTS FOR: ${queryKey.replace(/-/g, ' ')}`;
+
+            const feedContainer = document.getElementById('categoryProductFeed');
+            feedContainer.innerHTML = `<p style="grid-column: span 2; text-align: center; color: var(--gold-solid); padding: 40px;"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><br><span style="font-size: 0.75rem; margin-top: 10px; display:inline-block;">LOADING WHOLESALE PRODUCTS...</span></p>`;
+
+            try {
+                const response = await fetch(`/api/products?mode=wholesale`);
+                const result = await response.json();
+                let products = [];
+                if (result && result.success && Array.isArray(result.data)) {
+                    products = result.data;
+                } else if (Array.isArray(result)) {
+                    products = result;
+                }
+
+                if (products.length > 0) {
+                    const filtered = products.filter(item => {
+                        const title = (item.title || '').toLowerCase();
+                        const cat = (item.category || item.tag || '').toLowerCase();
+                        const query = queryKey.toLowerCase();
+                        return title.includes(query) || cat.includes(query) || query === 'all';
+                    });
+                    renderWholesaleFeed(filtered.length > 0 ? filtered : products);
+                } else {
+                    feedContainer.innerHTML = `<p style="grid-column: span 2; text-align: center; color: var(--text-gray); padding: 40px;">NO WHOLESALE PRODUCTS FOUND</p>`;
+                }
+            } catch (err) {
+                console.error('Error fetching wholesale products:', err);
+                feedContainer.innerHTML = `<p style="grid-column: span 2; text-align: center; color: var(--text-gray); padding: 40px;">FAILED TO LOAD PRODUCTS</p>`;
+            }
+        }
+
+        function renderWholesaleFeed(products) {
+            const feedContainer = document.getElementById('categoryProductFeed');
+            feedContainer.innerHTML = products.map(item => {
+                const productId = item.id || item.product_id || item.product_code || '101';
+                const title = item.title || 'rorraxy Bulk Item';
+                const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
+                const moq = item.moq || 10;
+                const imageUrl = item.image_url || item.imageUrl || 'https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png';
+
+                return `
+                    <div class="product-card" onclick="openProductDetails('${productId}')">
+                        <div class="product-media-box">
+                            <div class="wholesale-badge">
+                                <i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS
+                            </div>
+                            <img src="${imageUrl}" alt="${title}" loading="lazy">
+                        </div>
+                        <div class="card-footer-actions" onclick="event.stopPropagation()">
+                            <div class="wholesale-pricing-row">
+                                <span class="product-price-tag">${bulkPrice} / pc</span>
+                                <span class="moq-tag">Min ${moq} Pcs</span>
+                            </div>
+                            <div class="card-sub-actions">
+                                <div class="love-action card-love-btn" onclick="toggleLove(event, this)">
+                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 45}</span>
+                                </div>
+                                <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
+                                    <i class="fa-solid fa-share-nodes"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openProductDetails(productId) {
+            window.location.href = `/wholesale/pd.html?id=${productId}`;
+        }
+
+        function goBackToCategories() {
+            document.getElementById('dynamicProductSection').classList.remove('active');
+            document.getElementById('categoryMainListView').style.display = 'flex';
+        }
+
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.add('active');
+            setTimeout(() => { document.getElementById('modalSearchInput').focus(); }, 100);
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModal').classList.remove('active');
+        }
+
+        function handleOutsideClick(event) {
+            if (event.target === document.getElementById('searchModal')) closeSearchModal();
+        }
+
+        function submitModalSearch() {
+            let input = document.getElementById('modalSearchInput');
+            if(!input) return;
+            let query = input.value.trim();
+            if (!query) return;
+            closeSearchModal();
+            fetchAndDisplayProducts(query);
+        }
+
+        document.getElementById('modalSearchInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') submitModalSearch();
+        });
+
+        function startAudioSearch() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("আপনার ব্রাউজারে ভয়েস রিকগনিশন সমর্থিত নয়।");
+                return;
+            }
+            const searchInput = document.getElementById('modalSearchInput');
+            searchInput.value = "";
+            searchInput.placeholder = "LISTENING...";
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.onresult = function(event) {
+                let transcript = event.results[0][0].transcript;
+                searchInput.value = transcript;
+                closeSearchModal();
+                fetchAndDisplayProducts(transcript);
+            };
+            try { recognition.start(); } catch (err) {}
+        }
+
+        function handleCameraSearch(event) {
+            if (!event.target.files[0]) return;
+            closeSearchModal();
+            fetchAndDisplayProducts("search");
+        }
+
+        function toggleLove(event, btn) {
+            event.stopPropagation();
+            let countSpan = btn.querySelector('.love-count');
+            let currentLikes = parseInt(countSpan.innerText);
+            if(btn.classList.contains('gold-active')) {
+                btn.classList.remove('gold-active');
+                countSpan.innerText = currentLikes - 1;
+            } else {
+                btn.classList.add('gold-active');
+                countSpan.innerText = currentLikes + 1;
+            }
+        }
+
+        async function triggerAutoShare(event, productId, productTitle) {
+            event.stopPropagation();
+            const shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
+            if (navigator.share) {
+                try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
+            } else if (navigator.clipboard) {
+                await navigator.clipboard.writeText(shareUrl);
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> COPIED!`;
+                setTimeout(() => { btn.innerHTML = orig; }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
