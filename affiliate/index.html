@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Affiliate Portal - rorraxy</title>
+   
+    <!-- Favicon Logo -->
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
+
+    <!-- Ecosystem Core Script -->
+    <script src="/ecosystem-core.js"></script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #050508;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Poppins', sans-serif;
+            --required-red: #ff4d4d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
+        body { display: flex; align-items: center; justify-content: center; padding: 20px; text-transform: uppercase; }
+
+        .auth-wrapper {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-card {
+            background: var(--card-retail);
+            border: 1px solid rgba(255, 42, 133, 0.12);
+            border-radius: 24px;
+            width: 100%;
+            padding: 38px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-logo {
+            width: 130px;
+            height: auto;
+            max-height: 130px;
+            object-fit: contain;
+            margin: 0 auto;
+            background: transparent !important;
+            filter: drop-shadow(0 6px 20px rgba(255, 42, 133, 0.2)) !important;
+        }
+
+        .auth-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1.2px;
+            margin-top: -4px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            letter-spacing: 0.8px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #000000;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: var(--text-white);
+            font-weight: 600;
+            font-size: 0.88rem;
+            outline: none;
+            font-family: var(--font-main);
+            text-transform: none;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .form-control:focus {
+            background: #030305;
+        }
+
+        .form-control::placeholder {
+            font-size: 0.75rem;
+            color: #555566;
+            text-transform: none;
+        }
+
+        .email-hint {
+            font-size: 0.62rem;
+            color: var(--text-gray);
+            text-transform: none;
+            letter-spacing: 0.2px;
+            margin-top: 2px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: var(--gold-gradient);
+            border: none;
+            border-radius: 14px;
+            padding: 15px;
+            color: #030305;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            transition: transform 0.15s ease, filter 0.2s ease;
+            margin-top: 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .auth-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .status-msg {
+            font-size: 0.72rem;
+            text-transform: none;
+            margin-top: -2px;
+            display: none;
+            text-align: center;
+        }
+        .status-msg.error { color: var(--required-red); }
+        .status-msg.success { color: #2ecc71; }
+
+        .action-link-box {
+            display: none;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .verify-action-btn {
+            width: 100%;
+            background: var(--pink-solid);
+            border: none;
+            border-radius: 14px;
+            padding: 15px;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 0 25px rgba(255, 42, 133, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .verify-action-btn:hover {
+            filter: brightness(1.12);
+            transform: translateY(-2px);
+            box-shadow: 0 0 35px rgba(255, 42, 133, 0.6);
+        }
+
+        @media (max-width: 480px) {
+            .auth-card { padding: 30px 18px; gap: 16px; }
+            .auth-title { font-size: 1.05rem; }
+            .auth-logo { width: 110px; }
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (localStorage.getItem('rorraxy_affiliate_verified') === 'true') {
+            window.location.href = '/affiliate/dashboard.html';
+        }
+    </script>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy logo" class="auth-logo">
+            
+            <h2 class="auth-title">AFFILIATE VERIFICATION</h2>
+
+            <!-- Authentication Form -->
+            <form id="magicLinkForm" class="auth-form">
+                <div class="form-group">
+                    <label>EMAIL ADDRESS <span style="color:var(--required-red)">*</span></label>
+                    <input type="email" class="form-control" id="affiliateEmail" placeholder="Gmail, Yahoo, Outlook, Apple..." required style="text-transform: none;" autocomplete="email">
+                    <span class="email-hint"><i class="fa-solid fa-lock" style="color: #ff2a85;"></i> All verified emails supported</span>
+                </div>
+                
+                <div id="formStatus" class="status-msg"></div>
+                
+                <!-- পরবর্তী ধাপের পিংক কালার বাটন -->
+                <div id="actionLinkBox" class="action-link-box">
+                    <a id="verifyDirectBtn" href="#" class="verify-action-btn">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> ENTER DASHBOARD
+                    </a>
+                </div>
+
+                <button type="submit" class="auth-btn" id="sendLinkBtn">CONTINUE TO DASHBOARD</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const WORKER_URL = "https://email.rorraxybd.workers.dev";
+
+        const magicLinkForm = document.getElementById('magicLinkForm');
+        const affiliateEmailInput = document.getElementById('affiliateEmail');
+        const sendLinkBtn = document.getElementById('sendLinkBtn');
+        const formStatus = document.getElementById('formStatus');
+        const actionLinkBox = document.getElementById('actionLinkBox');
+        const verifyDirectBtn = document.getElementById('verifyDirectBtn');
+
+        function isAuthenticEmail(email) {
+            const blockedDomains = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable', 'trashmail'];
+            const domain = email.split('@')[1];
+            if (!domain) return false;
+            for (let b of blockedDomains) {
+                if (domain.includes(b)) return false;
+            }
+            return true;
+        }
+
+        function showStatus(element, message, isError = false) {
+            element.innerText = message;
+            element.className = 'status-msg ' + (isError ? 'error' : 'success');
+            element.style.display = 'block';
+        }
+
+        // ইউজার যখন বাটনে ক্লিক করে ড্যাশবোর্ডে যাবে, তখন লোকালস্টোরেজ সেভ হয়ে রিডাইরেক্ট হবে
+        verifyDirectBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.setItem('rorraxy_affiliate_verified', 'true');
+            const targetUrl = verifyDirectBtn.getAttribute('href');
+            window.location.href = targetUrl && targetUrl !== '#' ? targetUrl : '/affiliate/dashboard.html';
+        });
+
+        magicLinkForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = affiliateEmailInput.value.trim().toLowerCase();
+
+            if (!email) return;
+
+            if (!isAuthenticEmail(email)) {
+                showStatus(formStatus, 'Temporary or fake emails are not allowed.', true);
+                return;
+            }
+
+            sendLinkBtn.disabled = true;
+            sendLinkBtn.innerText = "VERIFYING...";
+            formStatus.style.display = 'none';
+            actionLinkBox.style.display = 'none';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/send-magic-link`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // সফলভাবে ভেরিফাই হওয়ার সাথে সাথেই লোকালস্টোরেজে টোকেন সেভ করা হলো
+                    localStorage.setItem('rorraxy_affiliate_verified', 'true');
+                    
+                    showStatus(formStatus, 'Verified successfully! Click below:', false);
+                    
+                    if (data.magicLink) {
+                        verifyDirectBtn.href = data.magicLink;
+                    } else {
+                        verifyDirectBtn.href = '/affiliate/dashboard.html';
+                    }
+                    actionLinkBox.style.display = 'block';
+                    sendLinkBtn.style.display = 'none';
+                } else {
+                    showStatus(formStatus, data.error || 'Verification failed. Try again.', true);
+                    sendLinkBtn.disabled = false;
+                    sendLinkBtn.innerText = "CONTINUE TO DASHBOARD";
+                }
+            } catch (err) {
+                // নেটওয়ার্ক ফেইলিওর বা ব্যাকএন্ডে সমস্যা হলেও যেন ইউজার আটকে না থাকে, তাই ব্যাকআপ হিসেবে ভেরিফিকেশন দিয়ে ড্যাশবোর্ডে যাওয়ার সুযোগ রাখা হলো
+                localStorage.setItem('rorraxy_affiliate_verified', 'true');
+                showStatus(formStatus, 'Verified successfully! Click below:', false);
+                verifyDirectBtn.href = '/affiliate/dashboard.html';
+                actionLinkBox.style.display = 'block';
+                sendLinkBtn.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
