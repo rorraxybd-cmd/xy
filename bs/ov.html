@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Our Mission | RORRAXY</title>
+    
+    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
+    <script src="/ecosystem-core.js"></script>
+
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1PD_g_agcbmm7bbJTHoOWss8YtQ17LNsb=s400">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-black: #030303;
+            --surface-bg: #0a0a0a;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #bcbcbc;
+            --font-luxury: 'Cinzel', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        html, body { 
+            width: 100%; 
+            max-width: 100%;
+            background-color: var(--bg-black); 
+            color: var(--text-white); 
+            font-family: var(--font-body); 
+            padding: 25px 0 60px 0; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-luxury); }
+
+        /* মেইন কন্টেইনার */
+        .main-wrapper { 
+            width: 100%; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 0 16px; 
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* হিরো সেকশন - লোগো এখন নরমাল কন্টেন্টের ভেতরে থাকবে */
+        .luxury-hero { 
+            background: var(--surface-bg); 
+            border-radius: 18px;
+            padding: 28px 20px; 
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-logo-img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.35));
+            transition: transform 0.3s ease;
+        }
+
+        .hero-logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .hero-title { 
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+        .hero-top-text {
+            font-size: clamp(1rem, 3.5vw, 1.35rem);
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+        .hero-mid-text {
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+            font-weight: 700;
+            color: var(--text-white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .hero-bot-text {
+            font-size: clamp(0.85rem, 3vw, 1.2rem);
+            font-weight: 900;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .hero-sub { 
+            font-size: 0.8rem; 
+            color: var(--text-gray); 
+            line-height: 1.6; 
+            max-width: 750px; 
+            margin: 0 auto; 
+        }
+
+        /* মিশন লিস্ট সেকশন */
+        .mission-flow-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .mission-item-card {
+            background: var(--surface-bg);
+            border-radius: 16px;
+            padding: 22px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .mission-item-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.35);
+        }
+
+        /* সম্পূর্ণ আনকমন গ্রাফ বক্স উইজেট কন্টেইনার */
+        .anim-graph-box {
+            width: 100%;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ১. সাইবার কনসেন্ট্রিক অর্বিটাল স্ক্যানার (Uncommon 1) */
+        .g-orbital { width: 32px; height: 32px; border: 2px solid rgba(212,175,55,0.2); border-top-color: var(--gold-solid); border-bottom-color: var(--gold-solid); border-radius: 50%; animation: spinOrbit 2.5s linear infinite; display: flex; align-items: center; justify-content: center; }
+        .g-orbital-core { width: 10px; height: 10px; background: var(--gold-gradient); border-radius: 50%; box-shadow: 0 0 10px var(--gold-solid); }
+        @keyframes spinOrbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ২. ৩ডি রোটেটিং কিউব ওয়্যারফ্রেম (Uncommon 2) */
+        .g-cube { width: 22px; height: 22px; border: 2px solid var(--gold-solid); transform: rotate(45deg); animation: rotateCube 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite alternate; }
+        @keyframes rotateCube { 0% { transform: rotate(45deg) scale(0.7); } 100% { transform: rotate(225deg) scale(1.1); box-shadow: 0 0 12px var(--gold-solid); } }
+
+        /* ৩. কোয়াড স্পেকট্রাম ফ্রিকোয়েন্সি বার (Uncommon 3) */
+        .g-spectrum { display: flex; gap: 4px; align-items: center; height: 26px; }
+        .g-spec-bar { width: 4px; background: var(--gold-gradient); border-radius: 2px; animation: specAnim 1.2s ease-in-out infinite alternate; }
+        .g-spec-bar:nth-child(1) { height: 30%; animation-delay: 0.1s; }
+        .g-spec-bar:nth-child(2) { height: 90%; animation-delay: 0.3s; }
+        .g-spec-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
+        .g-spec-bar:nth-child(4) { height: 100%; animation-delay: 0.4s; }
+        @keyframes specAnim { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+
+        /* ৪. ডায়নামিক পালসিং হেক্সাগন গ্রিড (Uncommon 4) */
+        .g-hex-grid { display: flex; gap: 6px; align-items: center; }
+        .g-hex-item { width: 10px; height: 10px; background: var(--gold-gradient); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: hexPulse 1.5s ease-in-out infinite alternate; }
+        .g-hex-item:nth-child(2) { animation-delay: 0.3s; }
+        .g-hex-item:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes hexPulse { 0% { transform: scale(0.6); opacity: 0.3; } 100% { transform: scale(1.2); opacity: 1; filter: drop-shadow(0 0 6px var(--gold-solid)); } }
+
+        /* ৫. বি-ডাইরেকশনাল মেটেরিয়াল বিম (Uncommon 5) */
+        .g-beam-track { width: 85%; height: 5px; background: #121215; border-radius: 3px; position: relative; overflow: hidden; }
+        .g-beam-fill { position: absolute; height: 100%; width: 40%; background: var(--gold-gradient); border-radius: 3px; animation: beamSlide 1.8s ease-in-out infinite alternate; }
+        @keyframes beamSlide { 0% { left: 0%; } 100% { left: 60%; } }
+
+        /* ৬. ট্রিপল ইন্টারলকিং কনসেন্ট্রিক ট্রায়াঙ্গেল (Uncommon 6) */
+        .g-tri-prism { width: 26px; height: 26px; border-left: 13px solid transparent; border-right: 13px solid transparent; border-bottom: 24px solid var(--gold-solid); animation: triGlow 1.6s ease-in-out infinite alternate; }
+        @keyframes triGlow { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 10px var(--gold-solid)); } }
+
+        /* ৭. রাডার লেজার স্ক্যানিং নেটওয়ার্ক (Uncommon 7) */
+        .g-radar { width: 30px; height: 30px; border: 2px solid rgba(212,175,55,0.3); border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; }
+        .g-radar-line { width: 50%; height: 2px; background: var(--gold-solid); position: absolute; top: 50%; left: 50%; transform-origin: 0% 50%; animation: radarSweep 2s linear infinite; }
+        @keyframes radarSweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ৮. ডিজিটাল পালসিং নোড ওয়েব (Uncommon 8) */
+        .g-node-web { display: flex; align-items: center; gap: 4px; }
+        .g-node-point { width: 8px; height: 8px; background: var(--gold-solid); border-radius: 50%; box-shadow: 0 0 8px var(--gold-solid); }
+        .g-node-link { width: 14px; height: 2px; background: var(--gold-gradient); animation: linkPulse 1.2s ease-in-out infinite alternate; }
+        @keyframes linkPulse { 0% { opacity: 0.2; transform: scaleX(0.5); } 100% { opacity: 1; transform: scaleX(1); } }
+
+        /* ৯. ইনফিনিটি লুপ ওয়েভ ফ্লো (Uncommon 9) */
+        .g-infinity { width: 80%; height: 18px; border: 2px solid var(--gold-solid); border-radius: 10px; animation: infPulse 2s ease-in-out infinite alternate; }
+        @keyframes infPulse { 0% { transform: scaleX(0.85); opacity: 0.5; } 100% { transform: scaleX(1.05); opacity: 1; box-shadow: 0 0 12px var(--gold-solid); } }
+
+        .mission-content-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .mission-title {
+            font-size: clamp(0.8rem, 3vw, 1.05rem);
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            font-family: var(--font-luxury);
+            letter-spacing: 0.4px;
+        }
+
+        .mission-desc {
+            font-size: 0.78rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        
+        <!-- হিরো সেকশন - লোগো সহ (যেটি পেজের সাথে স্ক্রল হয়ে উপরে চলে যাবে) -->
+        <div class="luxury-hero">
+            <a href="https://rorraxy.com" style="text-decoration: none;">
+                <img src="https://lh3.googleusercontent.com/d/1PD_g_agcbmm7bbJTHoOWss8YtQ17LNsb=s400" alt="Logo" class="hero-logo-img">
+            </a>
+            <h1 class="hero-title">
+                <span class="hero-top-text">Our Mission</span>
+                <span class="hero-mid-text">All-In-One</span>
+                <span class="hero-bot-text">Global Ecosystem Architecture</span>
+            </h1>
+            <p class="hero-sub">
+                Empowering international commerce, high-performance web applications, and seamless enterprise operations through a meticulously engineered strategic blueprint.
+            </p>
+        </div>
+
+        <!-- মিশন লিস্ট (আনকমন গ্রাফসহ) -->
+        <div class="mission-flow-list">
+            
+            <!-- ১ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-orbital"><div class="g-orbital-core"></div></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Strategic Planning & Blueprinting</h3>
+                    <p class="mission-desc">First, a comprehensive project plan and blueprint are formulated to map out long-term digital goals with pinpoint precision.</p>
+                </div>
+            </div>
+
+            <!-- ২ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-cube"></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Modular Task Breakdown</h3>
+                    <p class="mission-desc">Next, large and complex tasks are broken down into smaller, manageable modules for streamlined execution and maximum agility.</p>
+                </div>
+            </div>
+
+            <!-- ৩ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-spectrum"><div class="g-spec-bar"></div><div class="g-spec-bar"></div><div class="g-spec-bar"></div><div class="g-spec-bar"></div></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Domain & Sub-domain Architecture</h3>
+                    <p class="mission-desc">Subsequently, the entire platform is systematically organized into the main domain and specific specialized sub-domains.</p>
+                </div>
+            </div>
+
+            <!-- ৪ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-hex-grid"><div class="g-hex-item"></div><div class="g-hex-item"></div><div class="g-hex-item"></div></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Front-end Page Structuring</h3>
+                    <p class="mission-desc">Then, separate pages and necessary front-end features are structured carefully for each sub-domain to ensure an immersive user experience.</p>
+                </div>
+            </div>
+
+            <!-- ৫ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-beam-track"><div class="g-beam-fill"></div></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Ultra-Fast Performance Engineering</h3>
+                    <p class="mission-desc">Following that, websites and applications are engineered for ultra-fast performance using our brand's advanced technology infrastructure.</p>
+                </div>
+            </div>
+
+            <!-- ৬ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-tri-prism"></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Back-end & Accounting Integration</h3>
+                    <p class="mission-desc">Afterward, back-end operations, database management, and enterprise accounting systems are integrated to handle all automated calculations.</p>
+                </div>
+            </div>
+
+            <!-- ৭ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-radar"><div class="g-radar-line"></div></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Global Tax & Financial Compliance</h3>
+                    <p class="mission-desc">Then, international financial compliance and complex tax management are securely established to maintain absolute legal transparency.</p>
+                </div>
+            </div>
+
+            <!-- ৮ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-node-web"><div class="g-node-point"></div><div class="g-node-link"></div><div class="g-node-point"></div><div class="g-node-link"></div><div class="g-node-point"></div></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Advanced Security Implementation</h3>
+                    <p class="mission-desc">Next, top-tier and reliable security protocols are implemented to safeguard data streams against modern digital threats.</p>
+                </div>
+            </div>
+
+            <!-- ৯ -->
+            <div class="mission-item-card">
+                <div class="anim-graph-box"><div class="g-infinity"></div></div>
+                <div class="mission-content-box">
+                    <h3 class="mission-title">Ecosystem Unification</h3>
+                    <p class="mission-desc">Finally, the front-end, back-end accounting, and all sub-domains and services are systematically unified to realize a complete all-in-one global ecosystem.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
