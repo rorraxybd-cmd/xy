@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Affiliate Link Generator - rorraxy Ecosystem</title>
+    
+    <script src="/ecosystem-core.js"></script>
+   
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #08080c;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #a0a0ab;
+            --font-main: 'Poppins', sans-serif;
+            --border-color: rgba(212, 175, 55, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; }
+        body { padding: 24px 16px 110px 16px; text-transform: uppercase; }
+        .main-container { width: 100%; max-width: 900px; margin: 0 auto; }
+
+        .dashboard-header { text-align: center; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .header-logo-img { width: 90px; height: 90px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5)); }
+        .dashboard-header h1 { font-size: 1.5rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .header-email-box { display: inline-flex; align-items: center; gap: 8px; background: var(--card-retail); padding: 6px 16px; border-radius: 25px; text-decoration: none; text-transform: lowercase; font-size: 0.78rem; color: var(--text-gray); border: 1px solid var(--border-color); }
+        .header-email-box i { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .generator-card { background: var(--card-retail); border-radius: 18px; padding: 24px 20px; margin-bottom: 25px; border: 1px solid var(--border-color); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-gray); margin-bottom: 8px; }
+        .form-control, .form-select { width: 100%; background: #040407; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px; color: var(--text-white); font-size: 0.8rem; outline: none; font-family: var(--font-main); text-transform: none; }
+        .form-select option { background: #08080c; color: var(--text-white); }
+        
+        .generate-btn { width: 100%; background: var(--gold-gradient); border: none; border-radius: 12px; padding: 12px; color: #000; font-weight: 800; font-size: 0.82rem; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 15px rgba(212,175,55,0.2); transition: transform 0.2s; }
+        .generate-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        
+        .result-box { margin-top: 20px; background: #040407; border-radius: 14px; padding: 18px; border: 1px solid var(--border-color); display: none; }
+        .result-box.active { display: block; }
+        .result-label { font-size: 0.72rem; color: var(--gold-solid); font-weight: 700; margin-bottom: 8px; }
+        .result-flex { display: flex; gap: 10px; margin-bottom: 12px; }
+        .result-input { flex: 1; background: #000; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; color: var(--text-white); font-size: 0.78rem; outline: none; text-transform: none; }
+        .copy-btn { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 0 16px; color: #000; font-weight: 800; font-size: 0.78rem; cursor: pointer; }
+        
+        .universal-share-btn { width: 100%; background: var(--gold-gradient); border: none; border-radius: 12px; padding: 12px; color: #000; font-weight: 800; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 0 20px rgba(212,175,55,0.25); transition: all 0.25s ease; }
+        .universal-share-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* বটম নেভিগেশন মেনু (সঠিক ফিক্সড ও পাশাপাশি বিন্যাস) */
+        .affiliate-bottom-nav { 
+            position: fixed !important; 
+            bottom: 0 !important; 
+            left: 0 !important; 
+            width: 100% !important; 
+            background: rgba(3, 3, 5, 0.98) !important; 
+            border-top: 1px solid var(--border-color) !important; 
+            display: flex !important; 
+            flex-direction: row !important; 
+            justify-content: space-around !important; 
+            align-items: center !important; 
+            padding: 10px 4px !important; 
+            z-index: 1000 !important; 
+        }
+        .nav-item { 
+            display: flex !important; 
+            flex-direction: column !important; 
+            align-items: center !important; 
+            text-decoration: none !important; 
+            flex: 1 !important; 
+            background: none !important; 
+            border: none !important; 
+            cursor: pointer !important; 
+            white-space: nowrap !important;
+        }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-gray); }
+        .nav-item span { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.3px; color: var(--text-gray); }
+    </style>
+</head>
+<body>
+    <!-- সিকিউরিটি গার্ড চেক -->
+    <script>
+        if (localStorage.getItem('rorraxy_affiliate_verified') !== 'true') {
+            window.location.replace('/affiliate/index.html');
+        }
+    </script>
+    <div class="main-container">
+        <header class="dashboard-header">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
+            <h1>AFFILIATE LINK GENERATOR</h1>
+            <a href="mailto:affiliate@rorraxy.com" class="header-email-box"><i class="fa-solid fa-envelope"></i><span id="headerUserEmail">affiliate@rorraxy.com</span></a>
+        </header>
+
+        <section class="generator-card">
+            <div class="form-group">
+                <label>SELECT PLATFORM / SERVICE</label>
+                <select class="form-select" id="platformSelect">
+                    <option value="https://r.rorraxy.com">RETAIL STORE (8% COMMISSION)</option>
+                    <option value="https://w.rorraxy.com">WHOLESALE STORE (2% COMMISSION)</option>
+                    <option value="https://rorraxy.com">ENTERPRISE SERVICES (10% COMMISSION)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>TARGET PRODUCT / HOME PAGE URL</label>
+                <input type="text" class="form-control" id="targetUrlInput" placeholder="Paste specific product link from store..." style="text-transform: none;">
+            </div>
+
+            <button type="button" class="generate-btn" id="generateBtn">GENERATE LINK</button>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-label">AFFILIATE LINK:</div>
+                <div class="result-flex">
+                    <input type="text" class="result-input" id="generatedLinkOutput" readonly>
+                    <button type="button" class="copy-btn" id="copyBtn">COPY</button>
+                </div>
+
+                <!-- ইউনিভার্সাল নেটিভ শেয়ার বাটন -->
+                <button type="button" class="universal-share-btn" id="universalShareBtn">
+                    <i class="fa-solid fa-share-nodes"></i> SHARE LINK
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Affiliate Bottom Navigation Menu (সঠিক রুট পাথসহ) -->
+    <nav class="affiliate-bottom-nav">
+        <a href="/affiliate/dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>DASHBOARD</span></a>
+        <a href="/affiliate/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
+        <a href="/affiliate/reports.html" class="nav-item"><i class="fa-solid fa-chart-column"></i><span>REPORTS</span></a>
+        <a href="/affiliate/links.html" class="nav-item active"><i class="fa-solid fa-link"></i><span>LINK</span></a>
+        <a href="/affiliate/info.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span>SETTINGS</span></a>
+    </nav>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedEmail = localStorage.getItem('rorraxy_affiliate_email');
+            if (savedEmail) {
+                document.getElementById('headerUserEmail').innerText = savedEmail;
+            }
+        });
+
+        let currentTrackingLink = "";
+
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const baseUrl = document.getElementById('platformSelect').value;
+            const customPath = document.getElementById('targetUrlInput').value.trim();
+            
+            let affiliateId = localStorage.getItem('rorraxy_affiliate_email') || "AFF-DIRECT";
+
+            let trackingLink = `${baseUrl}?ref=${encodeURIComponent(affiliateId)}`;
+            if (customPath !== "") {
+                trackingLink = `${baseUrl}/item?url=${encodeURIComponent(customPath)}&ref=${encodeURIComponent(affiliateId)}`;
+            }
+
+            currentTrackingLink = trackingLink;
+            document.getElementById('generatedLinkOutput').value = trackingLink;
+            document.getElementById('resultBox').classList.add('active');
+
+            try {
+                await fetch(`/api/affiliate?action=conversion`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        affiliate_id: affiliateId, 
+                        order_id: `LINK_${Date.now()}`, 
+                        platform_name: baseUrl, 
+                        commission_amount: 0 
+                    })
+                });
+            } catch(e) { console.warn("Cloudflare D1 sync warning, fallback active."); }
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const copyInput = document.getElementById('generatedLinkOutput');
+            copyInput.select();
+            navigator.clipboard.writeText(copyInput.value);
+            document.getElementById('copyBtn').innerText = "COPIED!";
+            setTimeout(() => { document.getElementById('copyBtn').innerText = "COPY"; }, 2000);
+        });
+
+        document.getElementById('universalShareBtn').addEventListener('click', async () => {
+            if (!currentTrackingLink) return;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'rorraxy Affiliate Link',
+                        text: 'Check out this exclusive product/service from rorraxy Ecosystem:',
+                        url: currentTrackingLink,
+                    });
+                } catch (error) {
+                    console.log('Error sharing:', error);
+                }
+            } else {
+                navigator.clipboard.writeText(currentTrackingLink);
+                alert('LINK COPIED TO CLIPBOARD! YOU CAN PASTE IT ANYWHERE.');
+            }
+        });
+    </script>
+</body>
+</html>
