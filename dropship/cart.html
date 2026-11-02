@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>rorraxy - Retail Checkout</title>
+    <title>rorraxy - Dropshipping Checkout</title>
     
     <script src="/ecosystem-core.js"></script>
     
@@ -237,14 +237,14 @@
         
         <div style="display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center;">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy Logo" class="cart-brand-logo">
-            <h1 style="font-size:0.9rem; font-weight:800; color:#ffffff; letter-spacing: 1.5px;">RORRAXY RETAIL</h1>
+            <h1 style="font-size:0.9rem; font-weight:800; color:#ffffff; letter-spacing: 1.5px;">RORRAXY DROPSHIPPING</h1>
         </div>
 
-        <!-- STEP 1: CART & SHIPPING ADDRESS -->
+        <!-- STEP 1: CART & END-CUSTOMER SHIPPING DETAILS -->
         <div id="step1CartSection" style="display:flex; flex-direction:column; gap:14px;">
             
             <div style="text-align: center;">
-                <h2 class="gold-gradient-text" style="font-size: 0.82rem; letter-spacing: 1px;"><i class="fa-solid fa-cart-shopping"></i> RETAIL CART & CHECKOUT</h2>
+                <h2 class="gold-gradient-text" style="font-size: 0.82rem; letter-spacing: 1px;"><i class="fa-solid fa-truck-fast"></i> DROPSHIPPING CART & FULFILLMENT</h2>
             </div>
 
             <div id="cartItemsListContainer" class="cart-items-box"></div>
@@ -267,14 +267,14 @@
             <div id="addressFormSection" class="address-form-section">
                 <div class="section-center-header">
                     <h2 class="gold-gradient-text">
-                        <i class="fa-solid fa-location-dot" style="color: var(--gold-solid);"></i> SHIPPING ADDRESS
+                        <i class="fa-solid fa-user-tag" style="color: var(--gold-solid);"></i> END-CUSTOMER SHIPPING ADDRESS
                     </h2>
                 </div>
                 
                 <form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex; flex-direction:column; gap:10px;">
                     
                     <div class="phone-check-container">
-                        <label class="luxury-form-label">WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
+                        <label class="luxury-form-label">CUSTOMER WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
                         <div class="phone-input-row">
                             <div class="phone-field-wrapper">
                                 <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="1332008886">
@@ -293,12 +293,12 @@
                     <div class="or-divider"><span>OR FILL ADDRESS BELOW</span></div>
 
                     <div style="display:flex; flex-direction:column;">
-                        <label class="luxury-form-label">FULL NAME <span style="color:var(--danger-red);">*</span></label>
+                        <label class="luxury-form-label">CUSTOMER FULL NAME <span style="color:var(--danger-red);">*</span></label>
                         <input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN">
                     </div>
 
                     <div style="display:flex; flex-direction:column;">
-                        <label class="luxury-form-label">SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label>
+                        <label class="luxury-form-label">CUSTOMER SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label>
                         <textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="3" style="resize:none;"></textarea>
                     </div>
 
@@ -485,15 +485,15 @@
         }
 
         function renderCartList() {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let cartKey = 'rorraxy_dropship_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
             let container = document.getElementById('cartItemsListContainer');
             let totalValEl = document.getElementById('cartTotalVal');
             let localValEl = document.getElementById('cartLocalVal');
             let totalQtyEl = document.getElementById('cartTotalQty');
 
             if(cart.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-gray); text-align:center; font-size:0.72rem; padding:15px;">YOUR CART IS EMPTY.</div>';
+                container.innerHTML = '<div style="color:var(--text-gray); text-align:center; font-size:0.72rem; padding:15px;">YOUR DROPSHIPPING CART IS EMPTY.</div>';
                 totalValEl.innerText = "$0.00";
                 localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} 0.00`;
                 totalQtyEl.innerText = "0 UNITS";
@@ -509,19 +509,18 @@
                 totalAmt += itemTotal;
                 totalQty += item.qty;
 
-                if (!item.orderId) item.orderId = generateUniqueId('ORD');
-                if (!item.trackingId) item.trackingId = generateUniqueId('TRK');
-                if (!item.sellerId) item.sellerId = item.seller || 'RRX-MAIN-SELLER';
+                if (!item.orderId) item.orderId = generateUniqueId('DS-ORD');
+                if (!item.sellerId) item.sellerId = item.seller || 'RRX-DROPSHIP-SELLER';
 
                 let itemImgUrl = item.img || item.image_url || item.imageUrl || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp';
-                let itemTitleText = item.title || item.product_title || 'Product Item';
+                let itemTitleText = item.title || item.product_title || 'Dropship Item';
 
                 html += `
                 <div class="cart-row-item">
                     <img src="${itemImgUrl}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
                     <div style="flex:1; text-align:left; min-width:0;">
                         <div style="font-size:0.7rem; font-weight:700; color:#ffffff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${itemTitleText}</div>
-                        <div style="font-size:0.56rem; color:var(--gold-solid); font-weight:600; margin-top:1px;">SIZE: ${item.size || 'STANDARD'}</div>
+                        <div style="font-size:0.56rem; color:var(--gold-solid); font-weight:600; margin-top:1px;">DROPSHIP ORDER</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
                         <button class="btn-qty-minus" data-index="${index}" style="background:var(--gold-gradient); border:none; color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; cursor:pointer;">-</button>
@@ -559,8 +558,8 @@
         }
 
         function changeQty(index, val) {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let cartKey = 'rorraxy_dropship_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
             cart[index].qty += val;
             if(cart[index].qty < 1) cart[index].qty = 1;
             localStorage.setItem(cartKey, JSON.stringify(cart));
@@ -568,8 +567,8 @@
         }
 
         function removeCartItem(index) {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let cartKey = 'rorraxy_dropship_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
             cart.splice(index, 1);
             localStorage.setItem(cartKey, JSON.stringify(cart));
             renderCartList();
@@ -654,10 +653,10 @@
         }
 
         function validateAndProceedToPayment() {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let cartKey = 'rorraxy_dropship_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
             if(cart.length === 0) {
-                showToast("Your cart is empty!", true);
+                showToast("Your dropshipping cart is empty!", true);
                 return;
             }
 
@@ -671,51 +670,25 @@
 
             let hasError = false;
 
-            if (!phone || (iti && !iti.isValidNumber())) { 
-                phoneEl.classList.add('input-error'); 
-                hasError = true; 
-                showToast("Please enter a VALID COMPLETE phone number!", true);
-            }
+            if (!phone || (iti && !iti.isValidNumber())) { phoneEl.classList.add('input-error'); hasError = true; }
             if (!name) { nameEl.classList.add('input-error'); hasError = true; }
             if (!address) { addressEl.classList.add('input-error'); hasError = true; }
 
             if (hasError) {
-                document.getElementById('addressFormSection').scrollIntoView({ behavior: 'smooth' });
-                if(!phone || (iti && !iti.isValidNumber())) phoneEl.focus();
-                else if(!name) nameEl.focus();
-                else if(!address) addressEl.focus();
+                showToast("Please fill all required end-customer shipping fields correctly!", true);
             } else {
-                saveAddressToLocalStorage();
+                let checkoutPayload = {
+                    customer: {
+                        fullName: name,
+                        phone: iti ? iti.getNumber() : phone,
+                        address: address
+                    },
+                    items: cart,
+                    mode: 'dropship'
+                };
+                localStorage.setItem('rorraxy_current_dropship_checkout', JSON.stringify(checkoutPayload));
                 goToStep(2);
             }
-        }
-
-        function saveAddressToLocalStorage() {
-            let fullPhoneNumber = iti ? iti.getNumber() : document.getElementById('chkPhone').value;
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-            let checkoutPayload = {
-                customer: {
-                    fullName: document.getElementById('chkFullName').value,
-                    phone: fullPhoneNumber,
-                    address: document.getElementById('chkAddress').value
-                },
-                items: cart,
-                mode: 'retail',
-                timestamp: new Date().toISOString()
-            };
-
-            let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
-            let existIndex = saved.findIndex(a => a.phone === fullPhoneNumber && a.address === checkoutPayload.customer.address);
-            if(existIndex >= 0) {
-                saved[existIndex] = checkoutPayload.customer;
-            } else {
-                saved.unshift(checkoutPayload.customer);
-            }
-
-            localStorage.setItem('rorraxy_saved_addresses', JSON.stringify(saved));
-            localStorage.setItem('rorraxy_current_checkout', JSON.stringify(checkoutPayload));
         }
 
         function goToStep(stepNumber) {
@@ -733,7 +706,7 @@
             } else if(stepNumber === 2) {
                 step1.style.display = 'none';
                 step2.style.display = 'flex';
-                mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM ORDER';
+                mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM DROPSHIP ORDER';
                 backBtn.style.display = 'inline-flex';
             }
 
@@ -749,7 +722,7 @@
         }
 
         async function finalizeAndConfirmOrderToCloudflare() {
-            let checkoutData = localStorage.getItem('rorraxy_current_checkout');
+            let checkoutData = localStorage.getItem('rorraxy_current_dropship_checkout');
             if(!checkoutData) {
                 showToast("Checkout session expired!", true);
                 goToStep(1);
@@ -762,7 +735,7 @@
                 return sum + (pNum * item.qty);
             }, 0);
 
-            let masterOrderId = 'RRX-RET-' + Math.floor(100000 + Math.random() * 900000);
+            let masterOrderId = 'RRX-DS-' + Math.floor(100000 + Math.random() * 900000);
 
             let cloudflareDbPayload = {
                 master_order_id: masterOrderId,
@@ -772,7 +745,7 @@
                 customer_country: "Bangladesh",
                 payment_method: window.selectedPaymentType || "International Cards",
                 payment_status: "Paid",
-                transaction_id: "TRX-" + Math.floor(10000000 + Math.random() * 90000000),
+                transaction_id: "DS-TRX-" + Math.floor(10000000 + Math.random() * 90000000),
                 total_amount: totalAmountVal,
                 currency: "USD",
                 affiliate_id: localStorage.getItem('affiliate_id') || "AFF-DIRECT",
@@ -784,7 +757,7 @@
                 items: orderPayload.items
             };
 
-            showToast("Submitting order to Cloudflare D1...");
+            showToast("Submitting dropshipping order to Cloudflare D1...");
 
             try {
                 let response = await fetch(`${API_BASE_URL}/api/orders`, {
@@ -793,16 +766,16 @@
                     body: JSON.stringify(cloudflareDbPayload)
                 });
                 let result = await response.json();
-                console.log("Cloudflare D1 Response:", result);
+                console.log("Dropship D1 Response:", result);
             } catch(err) {
-                console.warn("Cloudflare API sync warning, proceeding locally:", err);
+                console.warn("API sync warning, proceeding locally:", err);
             }
 
-            localStorage.setItem('rorraxy_last_order', JSON.stringify(cloudflareDbPayload));
-            localStorage.removeItem('rorraxy_current_checkout');
-            localStorage.removeItem('rorraxy_cart');
+            localStorage.setItem('rorraxy_last_dropship_order', JSON.stringify(cloudflareDbPayload));
+            localStorage.removeItem('rorraxy_current_dropship_checkout');
+            localStorage.removeItem('rorraxy_dropship_cart');
 
-            showToast("Order Confirmed Successfully!");
+            showToast("Dropshipping Order Confirmed Successfully!");
 
             setTimeout(() => {
                 window.location.href = `/account.html`;
