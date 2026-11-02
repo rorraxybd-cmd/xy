@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Seller Shipment & Orders Portal | rorraxy</title>
+
+    <script src="/ecosystem-core.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-body: #000000;
+            --card-bg: #08080c;
+            --border-color: rgba(212, 175, 55, 0.15);
+            --gold-color: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --text-main: #ffffff;
+            --text-muted: #a0a0b8;
+            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --accent-green: #00e676;
+            --accent-red: #ff3b30;
+        }
+
+        * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; min-height: 100vh; background: var(--bg-body) !important; color: var(--text-main); font-family: var(--font-family); overflow-x: hidden; padding: 16px 16px 90px 16px; text-transform: uppercase !important; }
+
+        .seller-wrapper { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+        
+        /* শ্যাডো ও ইফেক্ট মুক্ত মিনিমাল ক্লীন লেআউট */
+        .seller-header { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .seller-brand { display: flex; align-items: center; gap: 12px; }
+        .seller-brand img { width: 38px; height: 38px; object-fit: contain; }
+        .seller-brand h1 { font-size: 0.95rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
+
+        .seller-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; width: 100%; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+        .stat-card label { font-size: 0.60rem; color: var(--text-muted); font-weight: 700; }
+        .stat-card span { font-size: 1.10rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .shipment-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .section-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.68rem; text-align: left; white-space: nowrap; }
+        .seller-table th, .seller-table td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .seller-table th { color: var(--gold-color); font-weight: 800; background: #040407; }
+
+        .badge-status { padding: 3px 6px; border-radius: 5px; font-size: 0.55rem; font-weight: 800; display: inline-block; }
+        .badge-pending { background: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
+        .badge-shipped { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .badge-delivered { background: rgba(0, 176, 155, 0.15); color: #00b09b; border: 1px solid rgba(0, 176, 155, 0.3); }
+        .badge-cancelled { background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 59, 48, 0.3); }
+
+        .btn-shipment-action { background: var(--gold-gradient); color: #000; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.60rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95); border-top: 1px solid rgba(212, 175, 55, 0.15); display: flex; justify-content: space-around; align-items: center; padding: 12px 6px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.25rem; margin-bottom: 4px; color: var(--text-muted); }
+        .nav-item span { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+<!-- সিকিউরিটি গার্ড চেক -->
+    <script>
+        if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
+            window.location.replace('/seller/index.html');
+        }
+    </script>
+    <div class="seller-wrapper">
+        <header class="seller-header">
+            <div class="seller-brand">
+                <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo">
+                <h1>SELLER SHIPMENT PORTAL</h1>
+            </div>
+            <div style="font-size: 0.62rem; color: var(--text-muted); font-weight: 700;">
+                <i class="fa-solid fa-store" style="color: var(--gold-color);"></i> VENDOR ID: <strong>SELLER-MAIN</strong>
+            </div>
+        </header>
+
+        <div class="seller-stats-grid">
+            <div class="stat-card"><label>NEW PENDING SHIPMENTS</label><span id="statPendingShipments">0</span></div>
+            <div class="stat-card"><label>TOTAL COMPLETED ORDERS</label><span id="statCompletedOrders">0</span></div>
+            <div class="stat-card"><label>STORE EARNINGS ($)</label><span id="statStoreEarnings">$0.00</span></div>
+        </div>
+
+        <div class="shipment-section">
+            <div class="section-title">
+                <i class="fa-solid fa-truck-ramp-box"></i> REAL-TIME INCOMING ORDERS FOR SHIPMENT
+            </div>
+            <div class="table-responsive">
+                <table class="seller-table">
+                    <thead>
+                        <tr>
+                            <th>DATE & TIME</th>
+                            <th>SUB-ORDER ID</th>
+                            <th>PRODUCT ID</th>
+                            <th>PRODUCT TITLE</th>
+                            <th>QTY</th>
+                            <th>SHIPMENT ACTION</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sellerOrdersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <nav class="seller-bottom-nav">
+        <a href="/seller/list.html" class="nav-item"><i class="fa-solid fa-list-check"></i><span>LIST</span></a>
+        <a href="/seller/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
+        <button type="button" class="nav-item" onclick="location.href='/seller/dashboard.html'"><i class="fa-solid fa-house"></i><span>HOME</span></button>
+        <a href="/seller/shipment.html" class="nav-item active"><i class="fa-solid fa-truck-fast"></i><span>SHIPMENT</span></a>
+        <a href="/seller/info.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span>SETTING</span></a>
+    </nav>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSellerShipmentData();
+            setInterval(loadSellerShipmentData, 3000);
+        });
+
+        async function loadSellerShipmentData() {
+            let orders = [];
+            try {
+                // ক্লাউডফ্লেয়ার পেজেস ফাংশন এপিআই থেকে রিয়েল-টাইম ডেটা ফেচ করা
+                const response = await fetch(`/api/get?table=orders`);
+                const result = await response.json();
+                if (result.success && Array.isArray(result.data)) {
+                    orders = result.data;
+                }
+            } catch (err) {
+                console.warn("API fetch warning, fallback to local:", err);
+            }
+
+            let localOrders = JSON.parse(localStorage.getItem('rorraxy_seller_notifications') || '[]');
+            let mergedMap = new Map();
+            [...localOrders, ...orders].forEach(o => {
+                let key = o.subOrderId || o.id || `${o.created_at}_${o.productId}`;
+                mergedMap.set(key, o);
+            });
+            orders = Array.from(mergedMap.values());
+
+            const tbody = document.getElementById('sellerOrdersTableBody');
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">NO INCOMING SHIPMENT REQUESTS AVAILABLE.</td></tr>`;
+                document.getElementById('statPendingShipments').innerText = "0";
+                document.getElementById('statCompletedOrders').innerText = "0";
+                document.getElementById('statStoreEarnings').innerText = "$0.00";
+                return;
+            }
+
+            try {
+                let pendingCount = 0, completedCount = 0, totalEarned = 0, tableHtml = '';
+
+                orders.forEach((item, index) => {
+                    const status = item.status || item.fulfillmentStatus || 'New Order Pending Shipment';
+                    const timeStr = item.timestamp || item.created_at ? new Date(item.timestamp || item.created_at).toLocaleString() : 'N/A';
+                    let badgeClass = 'badge-pending';
+
+                    if (status.includes('Shipped') || status.includes('En Route')) {
+                        badgeClass = 'badge-shipped';
+                    } else if (status.includes('Delivered') || status.includes('completed')) {
+                        badgeClass = 'badge-delivered';
+                        completedCount++;
+                        totalEarned += parseFloat(item.price ? String(item.price).replace('$', '') : '10') * (item.qty || 1);
+                    } else if (status.includes('cancelled') || status.includes('Cancelled')) {
+                        badgeClass = 'badge-cancelled';
+                    }
+
+                    if (badgeClass === 'badge-pending') pendingCount++;
+
+                    tableHtml += `
+                        <tr>
+                            <td style="color:var(--text-muted); font-size:0.58rem;"><i class="fa-regular fa-clock"></i> ${timeStr}</td>
+                            <td style="font-weight:800; color:var(--gold-color);">${item.subOrderId || item.id || 'N/A'}</td>
+                            <td>${item.productId || 'N/A'}</td>
+                            <td>${item.title || 'Luxury Product'}</td>
+                            <td>x${item.qty || 1}</td>
+                            <td>
+                                <button class="btn-shipment-action" onclick="markAsShippedBySeller('${item.subOrderId || item.id}', ${index})">
+                                    <i class="fa-solid fa-box-archive"></i> CONFIRM SHIPMENT
+                                </button>
+                            </td>
+                            <td><span class="badge-status ${badgeClass}">${status}</span></td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = tableHtml;
+                document.getElementById('statPendingShipments').innerText = pendingCount;
+                document.getElementById('statCompletedOrders').innerText = completedCount;
+                document.getElementById('statStoreEarnings').innerText = `$${totalEarned.toFixed(2)}`;
+            } catch (err) { console.error(err); }
+        }
+
+        async function markAsShippedBySeller(subOrderId, index) {
+            let sellerNotifs = JSON.parse(localStorage.getItem('rorraxy_seller_notifications') || '[]');
+            if(sellerNotifs[index]) {
+                sellerNotifs[index].status = "Shipped & En Route";
+                localStorage.setItem('rorraxy_seller_notifications', JSON.stringify(sellerNotifs));
+            }
+
+            try {
+                // ক্লাউডফ্লেয়ার পেজেস ফাংশন এপিআই এর মাধ্যমে স্ট্যাটাস আপডেট পাঠানো
+                await fetch(`/api/post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'orders', subOrderId: subOrderId, status: 'Shipped' })
+                });
+            } catch (err) {
+                console.warn("API sync error:", err);
+            }
+
+            loadSellerShipmentData();
+            alert(`SHIPMENT CONFIRMED FOR ORDER: ${subOrderId}`);
+        }
+    </script>
+</body>
+</html>
