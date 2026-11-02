@@ -460,38 +460,30 @@
             gap: 5px;
         }
 
-        .form-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-family: var(--font-luxury);
-            letter-spacing: 0.5px;
-        }
-
-        .required-star {
-            color: #ff4d4d;
-            -webkit-text-fill-color: #ff4d4d;
-            font-weight: bold;
-        }
-
         .form-input, .form-textarea {
             width: 100%;
-            background: rgba(4, 4, 6, 0.85);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(4, 4, 6, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.12);
             border-radius: 10px;
-            padding: 10px 12px;
+            padding: 12px 14px;
             color: #ffffff;
             font-family: var(--font-body);
             font-size: 0.85rem;
             outline: none;
+            box-shadow: none;
             transition: all 0.2s ease;
         }
 
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: rgba(192, 192, 200, 0.45);
+            font-size: 0.8rem;
+            opacity: 1;
+        }
+
         .form-input:focus, .form-textarea:focus {
-            border-color: rgba(212, 175, 55, 0.5);
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.35);
+            background: rgba(4, 4, 6, 0.85);
+            box-shadow: none;
         }
 
         .form-textarea {
@@ -511,7 +503,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
             transition: all 0.2s ease;
             width: 100%;
             margin-top: 4px;
@@ -560,28 +552,23 @@
 
                 <form class="ecosystem-form" id="ecosystemContactForm">
                     <div class="form-group">
-                        <label class="form-label">Full Name <span class="required-star">*</span></label>
-                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
+                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name *" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Email Address <span class="required-star">*</span></label>
-                        <input type="email" id="email" class="form-input" placeholder="Enter your email (e.g., Gmail, Apple, Outlook, Yahoo)" required>
+                        <input type="email" id="email" class="form-input" placeholder="Enter your email (e.g., Gmail, Apple, Outlook, Yahoo) *" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">WhatsApp Number <span class="required-star">*</span></label>
-                        <input type="tel" id="whatsapp" class="form-input" placeholder="Enter your WhatsApp number" required>
+                        <input type="tel" id="whatsapp" class="form-input" placeholder="Enter your WhatsApp number *" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Project Budget ($ USD) <span class="required-star">*</span></label>
-                        <input type="number" id="budget" class="form-input" placeholder="Enter your budget amount in USD" required>
+                        <input type="number" id="budget" class="form-input" placeholder="Enter your budget amount in USD *" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Project Details / Requirements <span class="required-star">*</span></label>
-                        <textarea id="businessPlan" class="form-textarea" placeholder="Describe your project requirements and goals..." required></textarea>
+                        <textarea id="businessPlan" class="form-textarea" placeholder="Describe your project requirements and goals... *" required></textarea>
                     </div>
 
                     <button type="submit" id="submitProposalBtn" class="inline-submit-btn">
@@ -611,23 +598,7 @@
         </div>
     </nav>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDokhLgGoe4Ib7oxUJ8zczLFWj0YJKk57Y",
-            authDomain: "rorraxy-fcb91.firebaseapp.com",
-            projectId: "rorraxy-fcb91",
-            storageBucket: "rorraxy-fcb91.firebasestorage.app",
-            messagingSenderId: "880891394208",
-            appId: "1:880891394208:web:3bd8ccacf68ad5d53af1c5",
-            measurementId: "G-0XTRV9TPM3"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
+    <script>
         const ecosystemContactForm = document.getElementById('ecosystemContactForm');
         const submitProposalBtn = document.getElementById('submitProposalBtn');
         const locText = document.getElementById('locText');
@@ -670,6 +641,7 @@
         }
         fetchEcosystemGeoLocation();
 
+        // নোটিফিকেশন পপআপ সম্পূর্ণ রিমুভ করে ব্যাকগ্রাউন্ডে Cloudflare D1 এ ডাটা সেভ করার কোড
         ecosystemContactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -680,7 +652,6 @@
             const businessPlan = document.getElementById('businessPlan').value.trim();
 
             if (!fullName || !email || !whatsapp || !budget || !businessPlan) {
-                alert("Please fill in all required fields.");
                 return;
             }
 
@@ -696,24 +667,22 @@
                     projectDetails: businessPlan,
                     country: userCountryInfo.country,
                     countryCode: userCountryInfo.countryCode,
-                    ipAddress: userCountryInfo.ip,
-                    status: "pending",
-                    createdAt: serverTimestamp()
+                    ipAddress: userCountryInfo.ip
                 };
 
-                // ফায়ারবেসের ডেটা কালেকশনে সেভ
-                await addDoc(collection(db, "project_requests"), payload);
+                const response = await fetch('/api/business', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-                // গ্লোবাল ক্লাউড সিঙ্ক ব্রিজ থাকলে সেখানেও ব্যাকআপ পুশ করা
-                if (window.rorraxyCloud && typeof window.rorraxyCloud.save === 'function') {
-                    await window.rorraxyCloud.save('project_requests', payload);
+                if (response.ok) {
+                    ecosystemContactForm.reset();
                 }
-
-                alert("Submitted successfully!");
-                ecosystemContactForm.reset();
             } catch (error) {
-                console.error("Firebase Error:", error);
-                alert("Failed to submit data. Please try again.");
+                console.error("Submission Error:", error);
             } finally {
                 submitProposalBtn.disabled = false;
                 submitProposalBtn.innerText = 'SUBMIT';
