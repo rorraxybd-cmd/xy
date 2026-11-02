@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>rorraxy | Ecosystem</title>
+    
+    <script src="/ecosystem-core.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-black: #000000;
+            --surface-bg: rgba(12, 12, 15, 0.92);
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #c0c0c8;
+            --font-luxury: 'Cinzel', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        html { width: 100%; background-color: var(--bg-black); overflow-x: hidden; scroll-behavior: smooth; }
+        body { 
+            width: 100%; 
+            min-height: 100vh; 
+            background-color: var(--bg-black); 
+            color: var(--text-white); 
+            font-family: var(--font-body); 
+            padding: 20px 0 110px 0; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
+            word-wrap: break-word;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-luxury); }
+
+        .main-wrapper { 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 12px; 
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .luxury-card { 
+            background: var(--surface-bg); 
+            border-radius: 16px; 
+            padding: 30px 16px; 
+            text-align: center; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8); 
+            border: 1px solid rgba(212, 175, 55, 0.12); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInFast 0.4s ease-out;
+        }
+
+        @keyframes fadeInFast {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-logo-img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            margin: 0 auto 12px auto;
+            display: block;
+        }
+
+        .hero-title { 
+            font-size: clamp(0.95rem, 3.2vw, 1.8rem); 
+            font-weight: 900; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            text-transform: uppercase; 
+            margin-bottom: 10px; 
+            letter-spacing: 0.5px; 
+            white-space: nowrap;
+        }
+        
+        .hero-sub { 
+            font-size: 0.78rem; 
+            color: var(--text-gray); 
+            line-height: 1.6; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+
+        .principles-section {
+            background: var(--surface-bg);
+            border-radius: 16px;
+            padding: 24px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+        }
+
+        .principles-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .principles-title {
+            font-size: clamp(0.85rem, 2.7vw, 1.3rem);
+            font-weight: 900;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            white-space: nowrap;
+        }
+
+        .principles-sub {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            letter-spacing: 0.5px;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media(max-width: 850px) { .principles-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media(max-width: 500px) { .principles-grid { grid-template-columns: 1fr; } }
+
+        .principle-item {
+            background: rgba(10, 10, 13, 0.7);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            transition: all 0.25s ease;
+        }
+
+        .principle-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(212, 175, 55, 0.3);
+            background: rgba(20, 20, 25, 0.9);
+        }
+
+        .principle-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .principle-icon {
+            font-size: 1.1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .principle-content h4 {
+            font-size: 0.75rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3px;
+            font-family: var(--font-luxury);
+        }
+
+        .principle-content p {
+            font-size: 0.62rem;
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        .tiny-graph-box {
+            width: 55px;
+            height: 45px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid rgba(212,175,55,0.1);
+            padding-left: 6px;
+        }
+
+        .pinterest-masonry { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 16px; 
+        }
+        @media(max-width: 850px) { .pinterest-masonry { grid-template-columns: repeat(2, 1fr); } }
+        @media(max-width: 500px) { .pinterest-masonry { grid-template-columns: 1fr; } }
+
+        .feature-card { 
+            background: var(--surface-bg); 
+            border-radius: 14px; 
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: 0 6px 22px rgba(0,0,0,0.7); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            min-height: 280px; 
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all 0.25s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.35);
+        }
+
+        .feature-icon { 
+            font-size: 1.8rem; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin: 0 auto 10px auto;
+            display: inline-block;
+        }
+
+        .feature-title { 
+            font-size: 0.88rem; 
+            font-weight: 800; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            font-family: var(--font-luxury); 
+            margin-bottom: 6px; 
+        }
+        
+        .feature-desc { 
+            font-size: 0.68rem; 
+            color: var(--text-gray); 
+            line-height: 1.6; 
+            margin-bottom: 12px; 
+        }
+
+        .graph-box { 
+            height: 75px; 
+            width: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-top: auto; 
+            padding-top: 8px; 
+            border-top: 1px solid rgba(212,175,55,0.06); 
+            overflow: hidden; 
+        }
+
+        .graph-type-1 { width: 45px; height: 45px; border: 2px dashed var(--gold-solid); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: spin1 1s infinite linear; }
+        .graph-type-1-inner { width: 14px; height: 14px; background: var(--gold-gradient); border-radius: 50%; }
+        @keyframes spin1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .graph-type-2 { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: space-between; gap: 3px; padding: 0 5px; }
+        .ecom-thick-bar { width: 5px; background: var(--gold-gradient); border-radius: 3px 3px 0 0; animation: ecomAnim 0.4s infinite alternate ease-in-out; }
+        @keyframes ecomAnim { 0% { height: 8px; opacity: 0.4; } 100% { height: 55px; opacity: 1; } }
+
+        .graph-type-3 { display: flex; align-items: center; justify-content: center; width: 100%; }
+        .badge-3 { background: var(--gold-gradient); color: #000; font-size: 0.65rem; font-weight: 900; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; animation: pulseBadge 0.5s infinite alternate; }
+        @keyframes pulseBadge { from { transform: scale(0.95); } to { transform: scale(1.05); } }
+
+        .graph-type-4 { display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%; padding: 0 10px; }
+        .node-4 { width: 8px; height: 8px; background: var(--gold-solid); border-radius: 50%; }
+        .line-4 { height: 3px; flex: 1; background: var(--gold-gradient); position: relative; overflow: hidden; border-radius: 2px; }
+        .ball-4 { width: 6px; height: 6px; background: #fff; border-radius: 50%; position: absolute; top: -1.5px; animation: anim4ball 0.4s infinite linear; }
+        @keyframes anim4ball { 0% { left: 0; } 100% { left: 100%; } }
+
+        .graph-type-5 { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; }
+        .track-5 { width: 85%; height: 4px; background: #111; position: relative; overflow: hidden; border-radius: 2px; }
+        .fill-5 { width: 35px; height: 100%; background: var(--gold-gradient); position: absolute; animation: anim5 0.35s infinite linear; }
+        @keyframes anim5 { 0% { left: -40px; } 100% { left: 100%; } }
+
+        .graph-type-6 { display: flex; flex-direction: column; justify-content: center; gap: 6px; width: 100%; padding: 0 10px; }
+        .track-6 { width: 100%; height: 6px; background: #111; border-radius: 3px; overflow: hidden; }
+        .fill-6 { height: 100%; width: 0%; background: var(--gold-gradient); animation: fillProgress 0.6s infinite alternate ease-in-out; }
+        @keyframes fillProgress { 0% { width: 20%; } 100% { width: 100%; } }
+
+        .graph-type-7 { display: flex; align-items: flex-end; justify-content: center; gap: 3px; width: 100%; height: 100%; }
+        .eq-7 { width: 4px; background: var(--gold-gradient); border-radius: 2px; animation: anim7 0.2s infinite alternate ease-in-out; }
+        @keyframes anim7 { from { height: 8px; } to { height: 50px; } }
+
+        .graph-type-8 { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: space-around; gap: 4px; padding: 0 5px; }
+        .aff-bar { width: 6px; background: var(--gold-gradient); border-radius: 3px 3px 0 0; animation: affAnim 0.3s infinite alternate ease-in-out; }
+        .aff-bar:nth-child(1) { animation-delay: 0.05s; }
+        .aff-bar:nth-child(2) { animation-delay: 0.15s; }
+        .aff-bar:nth-child(3) { animation-delay: 0.1s; }
+        .aff-bar:nth-child(4) { animation-delay: 0.2s; }
+        .aff-bar:nth-child(5) { animation-delay: 0.08s; }
+        .aff-bar:nth-child(6) { animation-delay: 0.18s; }
+        @keyframes affAnim { 0% { height: 10px; } 100% { height: 55px; } }
+
+        .graph-type-9 { position: relative; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .core-9 { width: 10px; height: 10px; background: var(--gold-solid); border-radius: 50%; }
+        .ring-9 { position: absolute; width: 100%; height: 100%; border: 2px solid var(--gold-solid); border-radius: 50%; animation: anim9 0.45s infinite ease-out; }
+        @keyframes anim9 { 0% { transform: scale(0.3); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+
+        .fixed-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #000000;
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            z-index: 9999;
+            padding: 10px 12px;
+        }
+
+        .fixed-nav-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .fixed-nav-item {
+            background: transparent;
+            border: none;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            text-decoration: none;
+        }
+
+        .fixed-nav-icon {
+            font-size: 1.25rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .fixed-nav-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            font-family: var(--font-luxury);
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .contact-section {
+            background: var(--surface-bg);
+            border-radius: 16px;
+            padding: 26px 16px;
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+        }
+
+        .contact-header {
+            margin-bottom: 12px;
+        }
+
+        .contact-main-title {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 900;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            font-family: var(--font-luxury);
+        }
+
+        .contact-sub-title {
+            font-size: 0.68rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .top-email-link {
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-card-box {
+            background: rgba(8, 8, 12, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 14px;
+            padding: 20px 16px;
+            max-width: 850px;
+            margin: 15px auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+        }
+
+        .box-top-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 4px;
+        }
+
+        .detected-location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            padding: 6px 18px;
+            border-radius: 20px;
+            color: var(--text-white);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .detected-location-badge img {
+            width: 22px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .ecosystem-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: var(--font-luxury);
+            letter-spacing: 0.5px;
+        }
+
+        .required-star {
+            color: #ff4d4d;
+            -webkit-text-fill-color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            background: rgba(4, 4, 6, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+        }
+
+        .form-textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .inline-submit-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            border-radius: 24px;
+            padding: 11px 22px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            font-family: var(--font-luxury);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .inline-submit-btn:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        
+        <div class="luxury-card">
+            <img src="https://lh3.googleusercontent.com/d/1qyOXxZ8s2cJMEo66NDE4BdoxiC4hy_sG" alt="rorraxy Logo" class="brand-logo-img">
+            <h1 class="hero-title">All in One Global Ecosystem</h1>
+            <p class="hero-sub">A fully unified, high-performance digital architecture designed to scale your enterprise globally with absolute security and lightning speed.</p>
+        </div>
+
+        <div class="pinterest-masonry" id="dynamic-services-grid"></div>
+
+        <div class="principles-section">
+            <div class="principles-header">
+                <h3 class="principles-title">Core Principles & Architecture</h3>
+                <p class="principles-sub">Engineered for precision, speed, and seamless global scalability</p>
+            </div>
+            <div class="principles-grid" id="principlesGridContainer"></div>
+        </div>
+
+        <div class="contact-section">
+            <div class="contact-header">
+                <h3 class="contact-main-title">Contact With Us</h3>
+                <p class="contact-sub-title">Direct Corporate Communication & Inquiry</p>
+                <a href="mailto:official@rorraxy.com" class="top-email-link">official@rorraxy.com</a>
+            </div>
+
+            <div class="contact-card-box">
+                
+                <div class="box-top-bar">
+                    <div class="detected-location-badge" id="detectedLocationBadge">
+                        <span id="locText">Detecting Location...</span>
+                    </div>
+                </div>
+
+                <form class="ecosystem-form" id="ecosystemContactForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address <span class="required-star">*</span></label>
+                        <input type="email" id="email" class="form-input" placeholder="Enter your email (e.g., Gmail, Apple, Outlook, Yahoo)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp Number <span class="required-star">*</span></label>
+                        <input type="tel" id="whatsapp" class="form-input" placeholder="Enter your WhatsApp number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Project Budget ($ USD) <span class="required-star">*</span></label>
+                        <input type="number" id="budget" class="form-input" placeholder="Enter your budget amount in USD" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Project Details / Requirements <span class="required-star">*</span></label>
+                        <textarea id="businessPlan" class="form-textarea" placeholder="Describe your project requirements and goals..." required></textarea>
+                    </div>
+
+                    <button type="submit" id="submitProposalBtn" class="inline-submit-btn">
+                        SUBMIT
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="fixed-bottom-nav">
+        <div class="fixed-nav-container">
+            <a href="/bs/ov.html" class="fixed-nav-item">
+                <div class="fixed-nav-icon"><i class="fa-solid fa-eye"></i></div>
+                <span class="fixed-nav-title">VISION</span>
+            </a>
+            <a href="/bs/ts.html" class="fixed-nav-item">
+                <div class="fixed-nav-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <span class="fixed-nav-title">SOFTWARE & TOOLS</span>
+            </a>
+            <a href="/bs/ac.html" class="fixed-nav-item">
+                <div class="fixed-nav-icon"><i class="fa-solid fa-calculator"></i></div>
+                <span class="fixed-nav-title">ACCOUNTING</span>
+            </a>
+        </div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDokhLgGoe4Ib7oxUJ8zczLFWj0YJKk57Y",
+            authDomain: "rorraxy-fcb91.firebaseapp.com",
+            projectId: "rorraxy-fcb91",
+            storageBucket: "rorraxy-fcb91.firebasestorage.app",
+            messagingSenderId: "880891394208",
+            appId: "1:880891394208:web:3bd8ccacf68ad5d53af1c5",
+            measurementId: "G-0XTRV9TPM3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const ecosystemContactForm = document.getElementById('ecosystemContactForm');
+        const submitProposalBtn = document.getElementById('submitProposalBtn');
+        const locText = document.getElementById('locText');
+
+        let userCountryInfo = { country: "Global Region", countryCode: "un", ip: "" };
+
+        async function fetchEcosystemGeoLocation() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                if (data && data.country_code) {
+                    const cCode = data.country_code.toUpperCase();
+                    const cName = data.country_name;
+                    userCountryInfo.country = cName;
+                    userCountryInfo.countryCode = cCode.toLowerCase();
+                    userCountryInfo.ip = data.ip;
+
+                    locText.innerHTML = `<img src="https://flagcdn.com/w40/${userCountryInfo.countryCode}.png" alt="${cCode}"> ${cName}`;
+                    return;
+                }
+            } catch (e) {}
+
+            try {
+                const fallbackRes = await fetch('https://ipwho.is/');
+                const fallbackData = await fallbackRes.json();
+                if (fallbackData && fallbackData.success) {
+                    const cCode = fallbackData.country_code.toUpperCase();
+                    const cName = fallbackData.country;
+                    userCountryInfo.country = cName;
+                    userCountryInfo.countryCode = cCode.toLowerCase();
+                    userCountryInfo.ip = fallbackData.ip;
+
+                    locText.innerHTML = `<img src="https://flagcdn.com/w40/${userCountryInfo.countryCode}.png" alt="${cCode}"> ${cName}`;
+                } else {
+                    locText.innerHTML = `Global Region`;
+                }
+            } catch (err) {
+                locText.innerHTML = `Global Region`;
+            }
+        }
+        fetchEcosystemGeoLocation();
+
+        ecosystemContactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const budget = document.getElementById('budget').value;
+            const businessPlan = document.getElementById('businessPlan').value.trim();
+
+            if (!fullName || !email || !whatsapp || !budget || !businessPlan) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            submitProposalBtn.disabled = true;
+            submitProposalBtn.innerText = 'SENDING...';
+
+            try {
+                const payload = {
+                    fullName: fullName,
+                    email: email,
+                    whatsapp: whatsapp,
+                    budget: Number(budget),
+                    projectDetails: businessPlan,
+                    country: userCountryInfo.country,
+                    countryCode: userCountryInfo.countryCode,
+                    ipAddress: userCountryInfo.ip,
+                    status: "pending",
+                    createdAt: serverTimestamp()
+                };
+
+                // ফায়ারবেসের ডেটা কালেকশনে সেভ
+                await addDoc(collection(db, "project_requests"), payload);
+
+                // গ্লোবাল ক্লাউড সিঙ্ক ব্রিজ থাকলে সেখানেও ব্যাকআপ পুশ করা
+                if (window.rorraxyCloud && typeof window.rorraxyCloud.save === 'function') {
+                    await window.rorraxyCloud.save('project_requests', payload);
+                }
+
+                alert("Submitted successfully!");
+                ecosystemContactForm.reset();
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                alert("Failed to submit data. Please try again.");
+            } finally {
+                submitProposalBtn.disabled = false;
+                submitProposalBtn.innerText = 'SUBMIT';
+            }
+        });
+    </script>
+
+    <script>
+        const enterpriseData = [
+            { icon: "fa-desktop", title: "Web & Apps", desc: "Building high-performance custom websites, desktop software, and native mobile applications engineered for global scalability.", renderType: "type1" },
+            { icon: "fa-bolt", title: "Supersonic Performance", desc: "Lightning-fast execution speeds, optimized routing, and instantaneous response times across all digital platforms.", renderType: "type2" },
+            { icon: "fa-cubes", title: "No Plugins Dependency", desc: "A clean, native architecture completely free from heavy third-party plugins or external software dependencies.", renderType: "type3" },
+            { icon: "fa-network-wired", title: "Custom API & Sub-Domains", desc: "Seamless API creation, integration, and high-performance routing management designed to handle multiple sub-domains.", renderType: "type4" },
+            { icon: "fa-photo-film", title: "Media Production", desc: "High-end multimedia production, commercial video editing, and professional image retouching to elevate your brand.", renderType: "type5" },
+            { icon: "fa-ruler-combined", title: "Dimension Calculators", desc: "Custom business size calculators and smart data processing tools engineered for precise e-commerce sizing.", renderType: "type6" },
+            { icon: "fa-shield-halved", title: "Secure Architecture", desc: "Military-grade encryption and advanced firewall protection ensuring absolute data safety and secure transactions.", renderType: "type7" },
+            { icon: "fa-chart-line", title: "Global Affiliate & Scale", desc: "Robust portals featuring real-time tracking, multi-channel synchronization, and automated commission structures.", renderType: "type8" },
+            { icon: "fa-chess-queen", title: "Enterprise Growth Advisory", desc: "Tailored strategic blueprints and digital consulting for international business expansion and market leadership.", renderType: "type9" }
+        ];
+
+        const principlesData = [
+            { icon: "fa-wand-magic-sparkles", title: "Simplification", desc: "Transforming complex challenges into solutions.", type: "type1" },
+            { icon: "fa-boxes-stacked", title: "Micro-Segmentation", desc: "Breaking massive datasets into chunks.", type: "micro_custom" },
+            { icon: "fa-sitemap", title: "Sub-Domain Strategy", desc: "Organizing business operations cleanly.", type: "type3" },
+            { icon: "fa-folder-tree", title: "Clean Architecture", desc: "Maintaining strict code hierarchy.", type: "type4" },
+            { icon: "fa-eye", title: "Attention to Detail", desc: "Meticulous focus on every design feature.", type: "attention_custom" },
+            { icon: "fa-database", title: "Massive Data Organization", desc: "Instant retrieval and absolute order.", type: "type6" },
+            { icon: "fa-shield-cat", title: "Secure Tech Stack", desc: "Fast and secure infrastructure setup.", type: "type7" },
+            { icon: "fa-robot", title: "Automation-First", desc: "Automating all repetitive tasks.", type: "auto_custom" },
+            { icon: "fa-puzzle-piece", title: "Modular Scalability", desc: "Effortlessly integrating new tools.", type: "type9" }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const gridContainer = document.getElementById('dynamic-services-grid');
+            if(gridContainer) {
+                const fragment = document.createDocumentFragment();
+                enterpriseData.forEach((item) => {
+                    const card = document.createElement('div');
+                    card.className = 'feature-card';
+
+                    let graphHTML = '';
+                    if(item.renderType === 'type1') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-1"><div class="graph-type-1-inner"></div></div></div>`;
+                    } else if(item.renderType === 'type2') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-2">${'<div class="ecom-thick-bar"></div>'.repeat(10)}</div></div>`;
+                    } else if(item.renderType === 'type3') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-3"><div class="badge-3"><i class="fa-solid fa-bolt"></i> SUPERSONIC</div></div></div>`;
+                    } else if(item.renderType === 'type4') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-4"><div class="node-4"></div><div class="line-4"><div class="ball-4"></div></div><div class="node-4"></div></div></div>`;
+                    } else if(item.renderType === 'type5') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-5"><div style="font-size:0.5rem; color:var(--gold-solid); font-weight:700;">MEDIA STREAM</div><div class="track-5"><div class="fill-5"></div></div></div></div>`;
+                    } else if(item.renderType === 'type6') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-6"><div style="font-size:0.5rem; color:var(--gold-solid); font-weight:700;">CALCULATOR</div><div class="track-6"><div class="fill-6"></div></div></div></div>`;
+                    } else if(item.renderType === 'type7') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-7">${'<div class="eq-7"></div>'.repeat(10)}</div></div>`;
+                    } else if(item.renderType === 'type8') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-8">${'<div class="aff-bar"></div>'.repeat(6)}</div></div>`;
+                    } else if(item.renderType === 'type9') {
+                        graphHTML = `<div class="graph-box"><div class="graph-type-9"><div class="ring-9"></div><div class="core-9"></div></div></div>`;
+                    }
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="feature-icon"><i class="fa-solid ${item.icon}"></i></div>
+                            <h3 class="feature-title">${item.title}</h3>
+                            <p class="feature-desc">${item.desc}</p>
+                        </div>
+                        ${graphHTML}
+                    `;
+                    fragment.appendChild(card);
+                });
+                gridContainer.appendChild(fragment);
+            }
+
+            const pGridContainer = document.getElementById('principlesGridContainer');
+            if(pGridContainer) {
+                const pFragment = document.createDocumentFragment();
+                principlesData.forEach((item) => {
+                    const pItem = document.createElement('div');
+                    pItem.className = 'principle-item';
+
+                    let tinyGraphHTML = '';
+                    if(item.type === 'type1') {
+                        tinyGraphHTML = `<div style="width:30px;height:30px;border:2px dashed var(--gold-solid);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:spin1 1s infinite linear;"><div style="width:8px;height:8px;background:var(--gold-gradient);border-radius:50%;"></div></div>`;
+                    } else if(item.type === 'micro_custom') {
+                        tinyGraphHTML = `<div style="display:flex;align-items:center;gap:3px;height:30px;"><div style="width:4px;background:var(--gold-gradient);height:12px;animation: chunkAnim 0.3s infinite alternate;"></div><div style="width:4px;background:var(--gold-gradient);height:24px;animation: chunkAnim 0.3s 0.1s infinite alternate;"></div><div style="width:4px;background:var(--gold-gradient);height:16px;animation: chunkAnim 0.3s 0.2s infinite alternate;"></div><div style="width:4px;background:var(--gold-gradient);height:22px;animation: chunkAnim 0.3s 0.05s infinite alternate;"></div></div>`;
+                    } else if(item.type === 'type3') {
+                        tinyGraphHTML = `<div style="width:8px;height:8px;background:var(--gold-solid);border-radius:50%;box-shadow:0 0 8px var(--gold-solid);"></div>`;
+                    } else if(item.type === 'type4') {
+                        tinyGraphHTML = `<div style="width:35px;height:2px;background:var(--gold-gradient);position:relative;"><div style="width:6px;height:6px;background:#fff;border-radius:50%;position:absolute;top:-2px;animation:anim4ball 0.4s infinite linear;"></div></div>`;
+                    } else if(item.type === 'attention_custom') {
+                        tinyGraphHTML = `<div style="width:32px;height:32px;border:1px solid rgba(212,175,55,0.4);border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;"><div style="position:absolute;width:100%;height:100%;border-top:2px solid var(--gold-solid);border-radius:50%;animation: spin1 0.8s infinite linear;"></div><div style="width:6px;height:6px;background:var(--gold-solid);border-radius:50%;box-shadow:0 0 6px var(--gold-solid);"></div></div>`;
+                    } else if(item.type === 'type6') {
+                        tinyGraphHTML = `<div style="width:35px;height:4px;background:#111;border-radius:2px;overflow:hidden;"><div style="width:70%;height:100%;background:var(--gold-gradient);"></div></div>`;
+                    } else if(item.type === 'type7') {
+                        tinyGraphHTML = `<div style="display:flex;align-items:flex-end;gap:2px;">${'<div style="width:3px;height:25px;background:var(--gold-gradient);border-radius:1px;"></div>'.repeat(4)}</div>`;
+                    } else if(item.type === 'auto_custom') {
+                        tinyGraphHTML = `<div style="display:flex;align-items:center;justify-content:center;width:35px;height:30px;"><i class="fa-solid fa-microchip" style="font-size:1.1rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation: pulseBadge 0.4s infinite alternate;"></i></div>`;
+                    } else if(item.type === 'type9') {
+                        tinyGraphHTML = `<div style="position:relative;width:25px;height:25px;display:flex;align-items:center;justify-content:center;"><div style="position:absolute;width:100%;height:100%;border:1px solid var(--gold-solid);border-radius:50%;animation:anim9 0.45s infinite ease-out;"></div><div style="width:5px;height:5px;background:var(--gold-solid);border-radius:50%;"></div></div>`;
+                    }
+
+                    pItem.innerHTML = `
+                        <div class="principle-left">
+                            <div class="principle-icon"><i class="fa-solid ${item.icon}"></i></div>
+                            <div class="principle-content">
+                                <h4>${item.title}</h4>
+                                <p>${item.desc}</p>
+                            </div>
+                        </div>
+                        <div class="tiny-graph-box">
+                            ${tinyGraphHTML}
+                        </div>
+                    `;
+                    pFragment.appendChild(pItem);
+                });
+                pGridContainer.appendChild(pFragment);
+            }
+        });
+    </script>
+</body>
+</html>
