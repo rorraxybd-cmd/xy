@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>rorraxy - Wholesale B2B Checkout</title>
     
+    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
     <script src="/ecosystem-core.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- intl-tel-input CSS & JS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
@@ -104,6 +106,26 @@
         .iti__country:hover { background-color: rgba(212, 175, 55, 0.15) !important; }
         .iti__selected-dial-code { color: #ffffff !important; font-weight: 700; }
 
+        .saved-history-container {
+            display: none; flex-direction: column; gap: 6px; background: #12121a; padding: 8px; border-radius: 9px;
+            border: 1px solid rgba(0, 230, 118, 0.4); margin-top: 4px;
+        }
+        .history-title { font-size: 0.6rem; color: #00e676; font-weight: 700; text-transform: uppercase !important; }
+
+        .address-card-item {
+            background: #181824; border: 1px solid rgba(212,175,55,0.2); padding: 6px 8px; border-radius: 7px;
+            cursor: pointer; display: flex; flex-direction: column; gap: 2px;
+        }
+        .address-card-item:hover, .address-card-item.selected-card { border-color: #00e676; background: #18241c; }
+        .address-card-name { font-size: 0.72rem; font-weight: 700; color: #fff; }
+        .address-card-text { font-size: 0.64rem; color: var(--text-gray); text-transform: none !important; line-height: 1.3; }
+
+        .or-divider {
+            display: flex; align-items: center; text-align: center; margin: 2px 0; color: var(--text-gray); font-size: 0.58rem; font-weight: 700;
+        }
+        .or-divider::before, .or-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(212,175,55,0.12); }
+        .or-divider span { padding: 0 8px; color: var(--gold-solid); }
+
         #step2PaymentSection { display: none; flex-direction: column; gap: 14px; animation: fadeIn 0.3s ease-in-out; }
 
         @keyframes fadeIn {
@@ -121,7 +143,8 @@
         .payment-method-header { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
         .payment-method-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; font-weight: 800; color: #fff; }
 
-        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.1s; }
+        .badge-global-gold:active { transform: scale(0.95); }
         .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; }
 
         .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
@@ -130,6 +153,18 @@
             font-size: 0.65rem; font-weight: 700; color: #ffffff; border: 1px solid rgba(255,255,255,0.12); text-transform: none !important;
         }
         .payout-badge i { font-size: 0.9rem; }
+
+        /* CURRENCIES MODAL OVERLAY */
+        #currenciesModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 99999999; display: none; align-items: center; justify-content: center; padding: 15px;
+        }
+        .modal-content-box {
+            background: #0f0f18; border: 1px solid var(--gold-solid); border-radius: 16px; width: 100%; max-width: 440px;
+            padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+        .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
+        .currency-tag { background: #181824; border: 1px solid rgba(212,175,55,0.2); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
 
         .single-fixed-checkout-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
@@ -164,6 +199,41 @@
 <body>
 
     <div id="toastBox"></div>
+
+    <!-- 150+ CURRENCIES POPUP MODAL -->
+    <div id="currenciesModal">
+        <div class="modal-content-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.2); padding-bottom:8px;">
+                <h3 class="gold-gradient-text" style="font-size:0.85rem;"><i class="fa-solid fa-globe"></i> SUPPORTED CURRENCIES (150+)</h3>
+                <button type="button" onclick="closeCurrenciesModal()" style="background:none; border:none; color:#ff3b30; font-size:1rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="font-size:0.680rem; color:var(--text-gray); text-transform:none !important; line-height:1.4;">
+                Our global gateway automatically accepts over 150+ international currencies with real-time conversion rates:
+            </div>
+            <div class="currency-grid" id="currencyGridList">
+                <div class="currency-tag">USD ($)</div>
+                <div class="currency-tag">EUR (€)</div>
+                <div class="currency-tag">GBP (£)</div>
+                <div class="currency-tag">CAD ($)</div>
+                <div class="currency-tag">AUD ($)</div>
+                <div class="currency-tag">SGD ($)</div>
+                <div class="currency-tag">AED (د.إ)</div>
+                <div class="currency-tag">SAR (ر.س)</div>
+                <div class="currency-tag">INR (₹)</div>
+                <div class="currency-tag">MYR (RM)</div>
+                <div class="currency-tag">JPY (¥)</div>
+                <div class="currency-tag">CNY (¥)</div>
+                <div class="currency-tag">CHF (Fr)</div>
+                <div class="currency-tag">SEK (kr)</div>
+                <div class="currency-tag">NZD ($)</div>
+                <div class="currency-tag">QAR (ر.ق)</div>
+                <div class="currency-tag">KWD (د.ك)</div>
+                <div class="currency-tag">BHD (د.ب)</div>
+                <div class="currency-tag">+ 130 MORE</div>
+            </div>
+            <button type="button" onclick="closeCurrenciesModal()" style="background:var(--gold-gradient); color:#000; border:none; padding:10px; border-radius:8px; font-weight:800; font-size:0.75rem; cursor:pointer; margin-top:4px;">CLOSE WINDOW</button>
+        </div>
+    </div>
 
     <div class="checkout-container">
         
@@ -216,8 +286,18 @@
                             <div class="phone-field-wrapper">
                                 <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="1332008886">
                             </div>
+                            <button type="button" id="savedAddrBtn" class="btn-saved-address">
+                                <i class="fa-solid fa-magnifying-glass"></i> PAST ADDRESS
+                            </button>
                         </div>
                     </div>
+
+                    <div id="savedHistoryContainer" class="saved-history-container">
+                        <div class="history-title"><i class="fa-solid fa-check-circle"></i> PAST ADDRESS FOUND (TAP TO SELECT):</div>
+                        <div id="savedCardsList" style="display:flex; flex-direction:column; gap:5px;"></div>
+                    </div>
+
+                    <div class="or-divider"><span>OR FILL ADDRESS BELOW</span></div>
 
                     <div style="display:flex; flex-direction:column;">
                         <label class="luxury-form-label">FULL NAME <span style="color:var(--danger-red);">*</span></label>
@@ -251,7 +331,7 @@
                         <div class="payment-method-header">
                             <div class="payment-method-title">
                                 <span><i class="fa-solid fa-globe" style="color:var(--gold-solid); margin-right:6px;"></i> INTERNATIONAL CARDS</span>
-                                <span class="badge-global-gold">150+ CURRENCIES</span>
+                                <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="payout-icons-row">
                                 <span class="payout-badge"><i class="fa-brands fa-cc-visa" style="color:#60a5fa;"></i> VISA</span>
@@ -318,6 +398,7 @@
         const API_BASE_URL = '';
         let iti;
         let currentStep = 1;
+        let matchedSavedAddresses = [];
         let currentExchangeRate = 120;
         let currentCurrencyCode = "BDT";
         let currentCountryFlag = "🇧🇩";
@@ -328,12 +409,14 @@
             initIntlPhoneInput();
             detectUserLocationAndCurrency();
 
+            document.getElementById('savedAddrBtn').addEventListener('click', searchSavedAddressFromLocalStorage);
             document.getElementById('mainCheckoutBtn').addEventListener('click', handleMainActionButton);
 
             const phoneInput = document.getElementById('chkPhone');
             phoneInput.addEventListener('input', (e) => {
                 e.target.value = e.target.value.replace(/\D/g, ''); 
                 clearError('chkPhone');
+                resetSearchBtnState();
             });
 
             ['chkCompanyName', 'chkFullName', 'chkAddress'].forEach(id => {
@@ -341,8 +424,23 @@
             });
         });
 
+        function openCurrenciesModal() {
+            document.getElementById('currenciesModal').style.display = 'flex';
+        }
+
+        function closeCurrenciesModal() {
+            document.getElementById('currenciesModal').style.display = 'none';
+        }
+
         function clearError(fieldId) {
             document.getElementById(fieldId).classList.remove('input-error');
+        }
+
+        function resetSearchBtnState() {
+            const btn = document.getElementById('savedAddrBtn');
+            btn.classList.remove('active-found');
+            btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> PAST ADDRESS';
+            document.getElementById('savedHistoryContainer').style.display = 'none';
         }
 
         function initIntlPhoneInput() {
@@ -481,6 +579,76 @@
             cart.splice(index, 1);
             localStorage.setItem(cartKey, JSON.stringify(cart));
             renderCartList();
+        }
+
+        function searchSavedAddressFromLocalStorage() {
+            let phoneEl = document.getElementById('chkPhone');
+            let searchBtn = document.getElementById('savedAddrBtn');
+            let rawPhone = phoneEl.value.trim();
+            let fullPhoneNumber = iti ? iti.getNumber() : rawPhone;
+
+            if (!rawPhone || (iti && !iti.isValidNumber())) {
+                phoneEl.classList.add('input-error');
+                showToast("Please enter a valid complete mobile number!", true);
+                phoneEl.focus();
+                return;
+            }
+
+            phoneEl.classList.remove('input-error');
+
+            let savedData = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
+            let cleanEntered = fullPhoneNumber.replace(/\D/g, '');
+
+            matchedSavedAddresses = savedData.filter(item => {
+                let cleanSaved = (item.phone || '').replace(/\D/g, '');
+                return cleanSaved && (cleanSaved.includes(cleanEntered) || cleanEntered.includes(cleanSaved));
+            });
+
+            const historyContainer = document.getElementById('savedHistoryContainer');
+            const cardsList = document.getElementById('savedCardsList');
+
+            if (matchedSavedAddresses.length > 0) {
+                let cardsHtml = '';
+                matchedSavedAddresses.forEach((addr, idx) => {
+                    cardsHtml += `
+                    <div class="address-card-item ${idx === 0 ? 'selected-card' : ''}" data-card-idx="${idx}">
+                        <div class="address-card-name"><i class="fa-solid fa-user" style="color:#00e676;"></i> ${addr.fullName}</div>
+                        <div class="address-card-text"><i class="fa-solid fa-location-dot" style="color:#00e676;"></i> ${addr.address}</div>
+                        <div class="address-card-text" style="font-size:0.56rem; color:var(--gold-solid); margin-top:2px;"><i class="fa-solid fa-phone"></i> ${addr.phone}</div>
+                    </div>`;
+                });
+
+                cardsList.innerHTML = cardsHtml;
+                historyContainer.style.display = 'flex';
+
+                searchBtn.classList.add('active-found');
+                searchBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> PAST ADDRESS';
+
+                document.querySelectorAll('.address-card-item').forEach(card => {
+                    card.addEventListener('click', (e) => selectSavedCard(e.currentTarget.dataset.cardIdx, e.currentTarget));
+                });
+
+                selectSavedCard(0);
+                showToast(`Past address found for this number!`);
+
+            } else {
+                resetSearchBtnState();
+                showToast("No past address found for this number. Please fill details below.");
+            }
+        }
+
+        function selectSavedCard(index, elem) {
+            if (elem) {
+                document.querySelectorAll('.address-card-item').forEach(c => c.classList.remove('selected-card'));
+                elem.classList.add('selected-card');
+            }
+            if (matchedSavedAddresses[index]) {
+                let selected = matchedSavedAddresses[index];
+                document.getElementById('chkFullName').value = selected.fullName || '';
+                document.getElementById('chkAddress').value = selected.address || '';
+                clearError('chkFullName');
+                clearError('chkAddress');
+            }
         }
 
         function handleMainActionButton() {
