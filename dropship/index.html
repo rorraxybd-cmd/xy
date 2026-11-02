@@ -6,7 +6,7 @@
     <title>rorraxy - Dropshipping Hub</title>
     
     <!-- Central Script Tag -->
-    <script src="/ecosystem-core.js"></script>
+    <script src="/ecosystem-core.js" defer></script>
 
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="/manifest.json">
@@ -23,7 +23,7 @@
     </script>
 
     <!-- Popup JS Link -->
-    <script src="/popup.js"></script>
+    <script src="/popup.js" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,8 @@
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
     <style>
         :root {
@@ -92,7 +93,6 @@
             100% { transform: translate3d(-50%, 0, 0); }
         }
 
-        /* ডান কোণায় ফিট হওয়া লাক্সারি ড্রপডাউন সিলেক্টর */
         .mode-selector-wrapper {
             position: relative; display: flex; align-items: center; height: 42px;
             background: #050508; padding: 0 10px 0 6px; border-left: 1px solid rgba(212, 175, 55, 0.15);
@@ -160,7 +160,6 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Grid Layout */
         .feed-container {
             padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
             gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
@@ -176,7 +175,7 @@
             break-inside: avoid; margin-bottom: 8px;
         }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: cover; background: #050508; }
+        .product-media-box img { width: 100%; height: auto; display: block; object-fit: cover; background: #050508; content-visibility: auto; }
         
         .dropship-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
@@ -190,12 +189,10 @@
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: auto;
         }
         
-        /* প্রাইস এবং রিসেল তথ্য এক লাইনে রাখার স্টাইল */
         .dropship-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .resell-tag { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
         
-        /* লাইক বাটনটি সুন্দরভাবে এক লাইনে দেখানোর জন্য ফ্লেক্স লেআউট */
         .card-single-line-row { 
             display: flex; align-items: center; justify-content: space-between; width: 100%; 
             border-top: 1px solid rgba(255,255,255,0.04); padding-top: 6px; gap: 4px;
@@ -204,7 +201,6 @@
         .love-action i { color: var(--pink-love); }
         .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
 
-        /* Bottom Navigation Bar */
         nav.bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-dropship);
             display: flex; justify-content: space-around; align-items: center; padding: 8px 4px 10px 4px;
@@ -259,7 +255,7 @@
 
         <div class="mode-selector-wrapper">
             <select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
-                <option value="retail">RETAIL</option>
+                <option value="retail">RETAIL STORE</option>
                 <option value="wholesale">WHOLESALE</option>
                 <option value="dropshipping" selected>DROPSHIPPING</option>
             </select>
@@ -360,4 +356,9 @@
             } else if(selectedMode === 'wholesale') {
                 window.location.href = '/wholesale/index.html';
             } else {
-              
+                window.location.href = '/dropship/index.html';
+            }
+        }
+    </script>
+</body>
+</html>
