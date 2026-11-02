@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+<title>rorraxy - All-In-One Global Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Poppins Font & FontAwesome Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- PWA Manifest & Theme Color for Mobile/App Support -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#030305">
+<style>
+:root {
+--bg-retail: #030305;
+--card-retail: #08080c;
+--gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+--gold-solid: #d4af37;
+--text-white: #ffffff;
+--text-gray: #a0a0ab;
+--font-main: 'Poppins', sans-serif;
+}
+html, body {
+width: 100vw;
+max-width: 100vw;
+overflow-x: hidden !important;
+background: var(--bg-retail) !important;
+color: var(--text-white);
+font-family: var(--font-main);
+min-height: 100vh;
+font-size: 14px;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+scroll-behavior: smooth;
+box-sizing: border-box;
+}
+body {
+padding: 6px 10px 80px 10px;
+text-transform: uppercase;
+margin: 0;
+}
+*, *:before, *:after {
+box-sizing: inherit;
+-webkit-tap-highlight-color: transparent;
+}
+.main-container {
+width: 100%;
+max-width: 1200px;
+margin: 0 auto;
+overflow-x: hidden;
+position: relative;
+}
+.hero {
+text-align: center;
+margin-bottom: 14px;
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 100%;
+}
+.hero-logo-img {
+width: 75px;
+height: 75px;
+object-fit: contain;
+animation: floatLogo 3.5s ease-in-out infinite;
+}
+.hero-title-text {
+font-size: clamp(0.9rem, 3.5vw, 1.35rem);
+font-weight: 900;
+letter-spacing: 0.8px;
+background: var(--gold-gradient);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+margin-top: 10px;
+text-align: center;
+white-space: nowrap;
+width: 100%;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+@keyframes floatLogo {
+0%, 100% { transform: translateY(0px) scale(1); }
+50% { transform: translateY(-4px) scale(1.02); }
+}
+.ecosystem-hub {
+width: 100%;
+margin-bottom: 16px;
+}
+.hub-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 12px;
+width: 100%;
+align-items: stretch;
+}
+.hub-card {
+background: var(--card-retail);
+border-radius: 16px;
+padding: 20px 10px;
+text-align: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: space-between;
+position: relative;
+border: none;
+overflow: hidden;
+text-decoration: none;
+color: inherit;
+box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hub-card:hover {
+transform: translateY(-3px);
+}
+.hub-card h3 {
+font-size: 0.8rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+min-height: 32px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: var(--gold-gradient);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+text-align: center;
+width: 100%;
+margin: 0;
+}
+.sub-slogan-text {
+font-size: 0.65rem;
+font-weight: 700;
+color: var(--text-gray);
+letter-spacing: 1px;
+margin: 4px 0 6px 0;
+text-align: center;
+}
+.visual-container {
+position: relative;
+width: 75px;
+height: 75px;
+margin: 10px 0;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.solution-visual {
+position: absolute; width: 100%; height: 100%; border-radius: 50%;
+background: conic-gradient(from 0deg, transparent 60%, rgba(212, 175, 55, 0.5));
+animation: spin 2s linear infinite; border: 2px solid rgba(212, 175, 55, 0.3);
+}
+.dropshipping-visual {
+position: absolute; width: 100%; height: 100%;
+border: 2.5px dashed rgba(212, 175, 55, 0.6);
+border-radius: 50%;
+animation: dropshippingSpin 2.8s linear infinite;
+}
+.retail-visual {
+position: absolute; width: 100%; height: 100%;
+border: 2.5px solid rgba(212, 175, 55, 0.5);
+border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%;
+animation: morphShape 1.8s ease-in-out infinite;
+}
+.creator-visual-wrapper {
+position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+}
+.creator-visual-box {
+position: absolute; width: 55px; height: 55px;
+border: 2px solid rgba(212, 175, 55, 0.6); border-radius: 12px;
+animation: creatorPulseBox 1.6s ease-in-out infinite;
+}
+.creator-visual-ring {
+position: absolute; width: 70px; height: 70px;
+border-top: 3px solid var(--gold-solid); border-bottom: 3px solid rgba(212, 175, 55, 0.3);
+border-left: 3px solid transparent; border-right: 3px solid transparent; border-radius: 50%;
+animation: creatorRingRotate 1.2s ease-in-out infinite alternate;
+}
+.visual-center-icon {
+font-size: 1.5rem; background: var(--gold-gradient);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; z-index: 2;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes dropshippingSpin { 0% { transform: rotate(0deg) scale(0.95); } 50% { transform: rotate(180deg) scale(1.05); } 100% { transform: rotate(360deg) scale(0.95); } }
+@keyframes morphShape { 0%, 100% { border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%; transform: rotate(0deg); } 50% { border-radius: 65% 35% 35% 65% / 65% 65% 35% 35%; transform: rotate(180deg); } }
+@keyframes creatorPulseBox { 0%, 100% { transform: rotate(45deg) scale(0.85); opacity: 0.6; } 50% { transform: rotate(225deg) scale(1.08); opacity: 1; } }
+@keyframes creatorRingRotate { 0% { transform: rotate(0deg) scale(0.9); } 100% { transform: rotate(180deg) scale(1.12); } }
+.btn {
+display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+background: var(--gold-gradient); color: #030305; font-weight: 700; font-size: 0.68rem;
+padding: 6px 14px; border-radius: 20px; margin-top: 4px; letter-spacing: 0.5px;
+pointer-events: none; box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
+}
+.btn i { font-size: 0.6rem; }
+.logo-row {
+text-align: center; padding: 16px 10px; display: flex; flex-direction: column;
+align-items: center; gap: 6px; width: 100%; background: var(--card-retail);
+border-radius: 16px; margin-bottom: 20px; border: none;
+box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+.brand-logo-text {
+font-size: 1.15rem; font-weight: 800; letter-spacing: 1.5px;
+background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+text-transform: uppercase !important; text-align: center;
+}
+.animated-divider-line {
+width: 100%; max-width: 280px; height: 1px;
+background: linear-gradient(90deg, transparent, var(--gold-solid), transparent);
+animation: lightPulse 2s ease-in-out infinite; margin: 2px auto 6px auto;
+}
+@keyframes lightPulse {
+0%, 100% { opacity: 0.3; transform: scaleX(0.85); }
+50% { opacity: 0.9; transform: scaleX(1); }
+}
+.trending-marquee-bar {
+overflow: hidden; white-space: nowrap; font-size: 0.68rem; font-weight: 600;
+text-transform: uppercase; width: 100%; position: relative; margin: 0 auto;
+}
+.marquee-container { display: flex; width: max-content; animation: wheelInfiniteScroll 15s linear infinite; }
+.marquee-group { display: flex; align-items: center; gap: 25px; padding-right: 25px; flex-shrink: 0; }
+.marquee-group span { display: inline-flex; align-items: center; gap: 6px; }
+.txt-gold { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.txt-white { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+.marquee-divider { color: var(--gold-solid); opacity: 0.5; }
+@keyframes wheelInfiniteScroll {
+0% { transform: translate3d(0, 0, 0); }
+100% { transform: translate3d(-50%, 0, 0); }
+}
+.managing-director-card {
+background: var(--card-retail); border-radius: 16px; padding: 20px 14px; margin-bottom: 20px;
+border: none; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;
+}
+.md-badge-subtitle {
+font-size: 0.72rem; font-weight: 700; background: var(--gold-gradient);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; margin-bottom: -4px;
+}
+.md-logo-box {
+position: relative; width: 55px; height: 55px; display: flex; align-items: center;
+justify-content: center; background: rgba(212, 175, 55, 0.05); border-radius: 50%;
+border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.md-luxury-ring {
+position: absolute; width: 100%; height: 100%; border-radius: 50%;
+border-top: 2px solid var(--gold-solid); border-right: 2px solid transparent;
+border-bottom: 2px solid rgba(212, 175, 55, 0.1); border-left: 2px solid transparent;
+animation: luxurySpin 2.5s linear infinite;
+}
+@keyframes luxurySpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.md-logo-icon {
+font-size: 1.4rem; background: var(--gold-gradient);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; z-index: 2;
+}
+.md-title {
+font-size: 1rem; font-weight: 800; background: var(--gold-gradient);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; text-align: center;
+}
+.md-email-small {
+font-size: 0.72rem; font-weight: 600; color: var(--text-gray); text-transform: lowercase; margin-top: -2px; margin-bottom: 2px; text-align: center;
+}
+.md-email-small a { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+.md-btn-link {
+width: 100%; max-width: 440px; padding: 11px 18px; background: var(--gold-gradient);
+border-radius: 12px; color: #030305; text-decoration: none; display: flex;
+align-items: center; justify-content: space-between; font-weight: 800; font-size: 0.82rem;
+letter-spacing: 0.8px; transition: transform 0.2s ease; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+}
+.md-btn-link:hover { transform: scale(1.02); }
+.md-btn-link i { color: #030305; font-size: 1rem; -webkit-text-fill-color: #030305; }
+.about-section {
+background: var(--card-retail); border-radius: 16px; padding: 18px 14px; margin-bottom: 15px;
+border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); width: 100%;
+}
+.ceo-signature-box {
+text-align: center; background: rgba(212, 175, 55, 0.02); border-radius: 12px; padding: 14px;
+border: 1px solid rgba(212, 175, 55, 0.08); margin-bottom: 14px;
+}
+.ceo-signature-box h3 {
+font-size: 0.85rem; background: var(--gold-gradient); -webkit-background-clip: text;
+-webkit-text-fill-color: transparent; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center;
+}
+.ceo-signature-box p { color: var(--text-gray); font-size: 0.7rem; line-height: 1.4; text-align: center; }
+.simple-contact-box {
+text-align: center; background: rgba(10, 10, 15, 0.85); border: 1px solid rgba(212, 175, 55, 0.12);
+border-radius: 10px; padding: 12px;
+}
+.simple-contact-box span { font-size: 0.68rem; font-weight: 700; color: var(--text-gray); display: block; margin-bottom: 2px; text-align: center; }
+.simple-contact-box a { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; text-transform: lowercase; text-align: center; display: block; }
+.core-arch-banner {
+text-align: center; padding: 10px 8px; margin: 15px 0 20px 0; background: rgba(212, 175, 55, 0.02);
+border-top: 1px solid rgba(212, 175, 55, 0.12); border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+border-radius: 6px; overflow: hidden; white-space: nowrap; width: 100%;
+}
+.core-arch-title {
+font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; background: var(--gold-gradient);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase;
+display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; text-align: center;
+}
+.bottom-nav-bar {
+position: fixed; bottom: 0; left: 0; width: 100%; max-width: 100vw;
+background: rgba(6, 6, 10, 0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+border-top: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-around;
+align-items: center; padding: 6px 0; z-index: 1000; box-sizing: border-box;
+}
+.bottom-nav-item {
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+text-decoration: none; color: var(--text-gray); font-size: 0.6rem; font-weight: 600; flex: 1; text-align: center;
+}
+.bottom-nav-item i { font-size: 1rem; margin-bottom: 2px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+.bottom-nav-item span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; width: 100%; }
+@media (max-width: 768px) {
+body { padding: 4px 6px 75px 6px; }
+}
+@media (max-width: 480px) {
+.hub-card { padding: 16px 8px; }
+.visual-container { width: 68px; height: 68px; }
+.visual-center-icon { font-size: 1.35rem; }
+}
+</style>
+</head>
+<body>
+<div class="main-container">
+<!-- Hero Section with Clean Logo & Global Ecosystem Title -->
+<header class="hero">
+<img src="https://lh3.googleusercontent.com/d/1qyOXxZ8s2cJMEo66NDE4BdoxiC4hy_sG" alt="rorraxy Logo" class="hero-logo-img">
+<div class="hero-title-text">ALL-IN-ONE GLOBAL ECOSYSTEM</div>
+</header>
+<!-- Top Dropshipping & Business Solutions Hub Section -->
+<section class="ecosystem-hub">
+<div class="hub-grid">
+<a href="/dropship/index.html" target="_self" class="hub-card">
+<h3>DROPSHIPPING</h3>
+<span class="sub-slogan-text">GLOBAL FULFILLMENT</span>
+<div class="visual-container">
+<div class="dropshipping-visual"></div>
+<i class="fa-solid fa-truck-fast visual-center-icon"></i>
+</div>
+<span class="btn">Start Now <i class="fa-solid fa-arrow-right-long"></i></span>
+</a>
+<a href="/bs/index.html" target="_self" class="hub-card">
+<h3>BUSINESS SOLUTIONS</h3>
+<span class="sub-slogan-text">LESS IS MORE</span>
+<div class="visual-container">
+<div class="solution-visual"></div>
+<i class="fa-solid fa-building-shield visual-center-icon"></i>
+</div>
+<span class="btn">Explore <i class="fa-solid fa-arrow-right-long"></i></span>
+</a>
+</div>
+</section>
+<!-- Wholesale & Retail Hub Section -->
+<section class="ecosystem-hub">
+<div class="hub-grid">
+<a href="/wholesale/index.html" target="_self" class="hub-card">
+<h3>WHOLESALE STORE</h3>
+<span class="sub-slogan-text">BULK SUPPLY</span>
+<div class="visual-container">
+<div class="creator-visual-wrapper">
+<div class="creator-visual-box"></div>
+<div class="creator-visual-ring"></div>
+</div>
+<i class="fa-solid fa-boxes-stacked visual-center-icon"></i>
+</div>
+<span class="btn">Bulk Shop <i class="fa-solid fa-arrow-right-long"></i></span>
+</a>
+  
+  <a href="/index.html" target="_self" class="hub-card">
+<h3>RETAIL STORE</h3>
+<span class="sub-slogan-text">DIRECT SHOPPING</span>
+<div class="visual-container">
+<div class="retail-visual"></div>
+<i class="fa-solid fa-bag-shopping visual-center-icon"></i>
+</div>
+<span class="btn">Shop Now <i class="fa-solid fa-arrow-right-long"></i></span>
+</a>
+</div>
+</section>
+<!-- Logo Row & Marquee -->
+<div class="logo-row">
+<div class="brand-logo-text">rorraxy ECOSYSTEM</div>
+<div class="animated-divider-line"></div>
+<div class="trending-marquee-bar">
+<div class="marquee-container">
+<div class="marquee-group">
+<span class="txt-gold"><i class="fa-solid fa-bolt"></i> Enterprise Solutions</span><span class="marquee-divider">|</span>
+<span class="txt-white"><i class="fa-solid fa-chart-line"></i> All-In-One Global Ecosystem</span><span class="marquee-divider">|</span>
+<span class="txt-gold"><i class="fa-solid fa-crown"></i> Global E-Commerce & Services</span><span class="marquee-divider">|</span>
+</div>
+<div class="marquee-group" aria-hidden="true">
+<span class="txt-gold"><i class="fa-solid fa-bolt"></i> Enterprise Solutions</span><span class="marquee-divider">|</span>
+<span class="txt-white"><i class="fa-solid fa-chart-line"></i> All-In-One Global Ecosystem</span><span class="marquee-divider">|</span>
+<span class="txt-gold"><i class="fa-solid fa-crown"></i> Global E-Commerce & Services</span><span class="marquee-divider">|</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Managing Director Section -->
+<section class="managing-director-card">
+<div class="md-badge-subtitle">B2B & B2C • 200 COUNTRIES</div>
+<div class="md-logo-box"><div class="md-luxury-ring"></div><i class="fa-solid fa-user-tie md-logo-icon"></i></div>
+<h2 class="md-title">MANAGING DIRECTOR</h2>
+<div class="md-email-small"><a href="mailto:director@rorraxy.com">director@rorraxy.com</a></div>
+<a href="/bs/managing.html" target="_self" class="md-btn-link"><span><i class="fa-solid fa-user-check"></i> JOIN</span><i class="fa-solid fa-arrow-right-long"></i></a>
+</section>
+<!-- Leadership Section -->
+<section class="about-section">
+<div class="ceo-signature-box">
+<h3><i class="fa-solid fa-user-tie"></i> Founder & CEO: Mr Masudar</h3>
+<p>Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
+</div>
+<div class="simple-contact-box">
+<span>GENERAL CONTACT INQUIRY</span>
+<a href="mailto:info@rorraxy.com">info@rorraxy.com</a>
+</div>
+</section>
+<!-- Core Architecture Banner -->
+<div class="core-arch-banner"><span class="core-arch-title"><i class="fa-solid fa-microchip"></i> rorraxy Core Architecture & Infrastructure</span></div>
+</div>
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="bottom-nav-bar">
+<a href="/wholesale/index.html" target="_self" class="bottom-nav-item"><i class="fa-solid fa-boxes-stacked"></i><span>Wholesale</span></a>
+<a href="/bs/index.html" target="_self" class="bottom-nav-item"><i class="fa-solid fa-building-shield"></i><span>Business Solutions</span></a>
+
+<a href="index.html" target="_self" class="bottom-nav-item"><i class="fa-solid fa-bag-shopping"></i><span>Retail Store</span></a>
+</nav>
+<!-- ECOSYSTEM CORE SCRIPTS & PWA -->
+<script src="/ecosystem-core.js"></script>
+<script src="/pwa/popup.js"></script>
+<script>
+// Service Worker Registration for PWA Support across browsers
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('/sw.js')
+.then(reg => console.log('rorraxy SW registered:', reg.scope))
+.catch(err => console.log('rorraxy SW registration failed:', err));
+});
+}
+</script>
+</body>
+</html>
