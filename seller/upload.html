@@ -73,7 +73,9 @@
         
         .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+        @media(min-width: 600px) { .mode-grid { grid-template-columns: repeat(4, 1fr); } }
+
         .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
         @media(min-width: 768px) { .category-grid { grid-template-columns: repeat(4, 1fr); } }
 
@@ -174,6 +176,7 @@
                         <div class="mode-box" onclick="selectUploadMode('retail', this)"><i class="fa-solid fa-store"></i><span>RETAIL</span></div>
                         <div class="mode-box" onclick="selectUploadMode('wholesale', this)"><i class="fa-solid fa-boxes-stacked"></i><span>WHOLESALE</span></div>
                         <div class="mode-box" onclick="selectUploadMode('dropshipping', this)"><i class="fa-solid fa-truck-fast"></i><span>DROPSHIPPING</span></div>
+                        <div class="mode-box" onclick="selectUploadMode('both', this)"><i class="fa-solid fa-globe"></i><span>BOTH / MORE</span></div>
                     </div>
                 </div>
                 <div class="btn-nav-container">
@@ -207,7 +210,7 @@
                 </div>
             </div>
 
-            <!-- STEP 3: MEDIA & SOCIAL LINKS (অপ্টিমাইজড ইমেজ ও ভিডিও আপলোড) -->
+            <!-- STEP 3: MEDIA & SOCIAL LINKS -->
             <div class="step-section" id="step-3">
                 <div class="form-section-full">
                     <h3><i class="fa-solid fa-images gold-gradient-text"></i> IMAGES (AUTO WEBP OPTIMIZED) <span class="required-star">*</span></h3>
@@ -511,6 +514,11 @@
             } else if (mode === 'wholesale') {
                 wholesaleRow.style.display = 'grid';
                 moqGroup.style.display = 'block';
+            } else if (mode === 'both') {
+                retailRow.style.display = 'grid';
+                dropshipRow.style.display = 'grid';
+                wholesaleRow.style.display = 'grid';
+                moqGroup.style.display = 'block';
             } else {
                 retailRow.style.display = 'grid';
             }
@@ -548,7 +556,6 @@
             selectedCategoryValue = "";
         }
 
-        // ইমেজ অপ্টিমাইজেশন ও কম্প্রেশন ফাংশন (WebP ফরম্যাট)
         async function optimizeAndCompressFile(file, maxWidth = 1200, quality = 0.8) {
             return new Promise((resolve) => {
                 if (!file || !file.type || !file.type.startsWith('image/')) return resolve(file);
@@ -582,28 +589,20 @@
             });
         }
 
-        // ভিডিও অপ্টিমাইজেশন ও সাইজ চেক ফাংশন (ওয়েবসাইট সুপার ফাস্ট রাখার জন্য)
         async function optimizeAndValidateVideo(file) {
             return new Promise((resolve) => {
                 if (!file || !file.type.startsWith('video/')) return resolve(file);
-                
-                // যদি ভিডিওর সাইজ ৫০ মেগাবাইটের বেশি হয়, তবে ওয়ার্নিং দিয়ে মূল ফাইল রিটার্ন করবে অথবা অপ্টিমাইজ করবে
                 const MAX_SIZE_MB = 50;
                 if (file.size > MAX_SIZE_MB * 1024 * 1024) {
                     alert(`WARNING: Video size is large (${(file.size / (1024*1024)).toFixed(1)}MB). Recommended size is under 50MB for fast loading.`);
                 }
-
-                // ভিডিওর ডুরেশন বা ওভারসাইজ চেক করার জন্য এলিমেন্ট তৈরি
                 const videoElement = document.createElement('video');
                 videoElement.preload = 'metadata';
                 videoElement.onloadedmetadata = function() {
                     window.URL.revokeObjectURL(videoElement.src);
-                    // যদি ভিডিও ১ মিনিটের বেশি হয় তবে ইউজারকে ইনফর্ম করা যেতে পারে
                     resolve(file);
                 }
-                videoElement.onerror = function() {
-                    resolve(file);
-                }
+                videoElement.onerror = function() { resolve(file); }
                 videoElement.src = URL.createObjectURL(file);
             });
         }
@@ -666,9 +665,7 @@
             previewContainer.appendChild(card);
 
             try {
-                // ভিডিও অপ্টিমাইজেশন ও ভ্যালিডেশন কল করা হলো
                 let optimizedVideoFile = await optimizeAndValidateVideo(file);
-
                 const response = await fetch(`/api/upload?type=video`, {
                     method: "POST",
                     headers: { "X-File-Name": optimizedVideoFile.name },
@@ -697,7 +694,11 @@
                 return;
             }
 
+            // ব্রাউজারে সেভ করা সেলার আইডি বা ইমেল এখানে ফেচ করা হচ্ছে যাতে D1 টেবিলে seller_id আর NULL না দেখায়
+            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
+
             const productPayload = {
+                seller_id: sellerId,
                 product_code: `PROD_${Date.now()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
                 upload_mode: selectedModeValue,
