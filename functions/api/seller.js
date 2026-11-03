@@ -75,10 +75,13 @@ export async function onRequest(context) {
       return Response.redirect(`https://${url.hostname}/seller/dashboard.html?verified=true`, 302);
     }
 
-    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST)
+    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST) - এখানেও আইপি ও সিকিউরিটি তথ্য ক্যাপচার করা হবে
     if (request.method === "POST") {
       const data = await request.json();
       const email = (data.email || data.seller_id || "").toLowerCase();
+      const clientIp = request.headers.get("cf-connecting-ip") || "Unknown";
+      const country = request.headers.get("cf-ipcountry") || data.country || "Unknown";
+      const userAgent = request.headers.get("user-agent") || "Unknown";
       const now = new Date().toISOString();
 
       if (!email) {
@@ -88,8 +91,8 @@ export async function onRequest(context) {
       await env.retail.prepare(`
         INSERT INTO sellers (
           email, brand_name, full_name, business_desc, whatsapp, 
-          emergency_phone, country, full_address, doc_type, doc_number, trade_license, logo_url, is_verified, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
+          emergency_phone, country, full_address, doc_type, doc_number, trade_license, logo_url, is_verified, last_ip, ip_country, user_agent, verified_at, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
         ON CONFLICT(email) DO UPDATE SET
           brand_name = excluded.brand_name,
           full_name = excluded.full_name,
@@ -101,7 +104,11 @@ export async function onRequest(context) {
           doc_type = excluded.doc_type,
           doc_number = excluded.doc_number,
           trade_license = excluded.trade_license,
-          logo_url = excluded.logo_url
+          logo_url = excluded.logo_url,
+          last_ip = excluded.last_ip,
+          ip_country = excluded.ip_country,
+          user_agent = excluded.user_agent,
+          verified_at = COALESCE(sellers.verified_at, excluded.verified_at)
       `).bind(
         email,
         data.brand_name || "",
@@ -115,11 +122,15 @@ export async function onRequest(context) {
         data.doc_number || "",
         data.trade_license || data.default_payout_details || "",
         data.logo_url || "",
+        clientIp,
+        country,
+        userAgent,
+        now,
         email,
         now
       ).run();
 
-      return new Response(JSON.stringify({ success: true, message: "Seller profile saved successfully to D1" }), {
+      return new Response(JSON.stringify({ success: true, message: "Seller profile and security logs saved successfully to D1" }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
