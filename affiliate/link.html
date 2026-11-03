@@ -55,7 +55,6 @@
         .universal-share-btn { width: 100%; background: var(--gold-gradient); border: none; border-radius: 12px; padding: 12px; color: #000; font-weight: 800; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 0 20px rgba(212,175,55,0.25); transition: all 0.25s ease; }
         .universal-share-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        /* বটম নেভিগেশন মেনু (সঠিক ফিক্সড ও পাশাপাশি বিন্যাস) */
         .affiliate-bottom-nav { 
             position: fixed !important; 
             bottom: 0 !important; 
@@ -87,7 +86,6 @@
     </style>
 </head>
 <body>
-    <!-- সিকিউরিটি গার্ড চেক -->
     <script>
         if (localStorage.getItem('rorraxy_affiliate_verified') !== 'true') {
             window.location.replace('/affiliate/index.html');
@@ -104,9 +102,9 @@
             <div class="form-group">
                 <label>SELECT PLATFORM / SERVICE</label>
                 <select class="form-select" id="platformSelect">
-                    <option value="https://r.rorraxy.com">RETAIL STORE (8% COMMISSION)</option>
-                    <option value="https://w.rorraxy.com">WHOLESALE STORE (2% COMMISSION)</option>
-                    <option value="https://rorraxy.com">ENTERPRISE SERVICES (10% COMMISSION)</option>
+                    <option value="/">RETAIL STORE (8% COMMISSION)</option>
+                    <option value="/wholesale/">WHOLESALE STORE (2% COMMISSION)</option>
+                    <option value="/bs/">ENTERPRISE SERVICES (10% COMMISSION)</option>
                 </select>
             </div>
 
@@ -124,7 +122,6 @@
                     <button type="button" class="copy-btn" id="copyBtn">COPY</button>
                 </div>
 
-                <!-- ইউনিভার্সাল নেটিভ শেয়ার বাটন -->
                 <button type="button" class="universal-share-btn" id="universalShareBtn">
                     <i class="fa-solid fa-share-nodes"></i> SHARE LINK
                 </button>
@@ -132,7 +129,6 @@
         </section>
     </div>
 
-    <!-- Affiliate Bottom Navigation Menu (সঠিক রুট পাথসহ) -->
     <nav class="affiliate-bottom-nav">
         <a href="/affiliate/dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>DASHBOARD</span></a>
         <a href="/affiliate/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
@@ -155,7 +151,7 @@
             const baseUrl = document.getElementById('platformSelect').value;
             const customPath = document.getElementById('targetUrlInput').value.trim();
             
-            let affiliateId = localStorage.getItem('rorraxy_affiliate_email') || "AFF-DIRECT";
+            let affiliateId = localStorage.getItem('rorraxy_affiliate_email') || "affiliate@rorraxy.com";
 
             let trackingLink = `${baseUrl}?ref=${encodeURIComponent(affiliateId)}`;
             if (customPath !== "") {
@@ -167,17 +163,18 @@
             document.getElementById('resultBox').classList.add('active');
 
             try {
+                // ক্লাউডফায়ার পেজেস ফাংশন এপিআই কলের মাধ্যমে ক্লিক/লিংক জেনারেশন লগ ডেটাবেসে সংরক্ষণ
                 await fetch(`/api/affiliate?action=conversion`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         affiliate_id: affiliateId, 
-                        order_id: `LINK_${Date.now()}`, 
+                        order_id: `CLICK_${Date.now()}`, 
                         platform_name: baseUrl, 
                         commission_amount: 0 
                     })
                 });
-            } catch(e) { console.warn("Cloudflare D1 sync warning, fallback active."); }
+            } catch(e) { console.warn("Cloudflare D1 sync warning:", e); }
         });
 
         document.getElementById('copyBtn').addEventListener('click', () => {
