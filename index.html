@@ -160,21 +160,28 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* পিন্টারেস্ট স্টাইল মেসনারি বা ফ্লেক্সিবল গ্রিড লেআউট (ফাঁকা জায়গা বা গ্যাপ দূর করার জন্য) */
+        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (ফাঁকা জায়গা দূর করার জন্য) */
         .feed-container {
-            padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
-            align-items: start;
+            padding: 8px 6px;
+            column-count: 2;
+            column-gap: 8px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         @media (min-width: 768px) { 
-            .feed-container { grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px; } 
+            .feed-container { 
+                column-count: 4; 
+                column-gap: 12px; 
+                padding: 12px; 
+            } 
         }
 
         .product-card {
             background: var(--card-retail); border-radius: 12px; overflow: hidden; 
-            display: flex; flex-direction: column; width: 100%; 
+            display: inline-block; width: 100%; 
             border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
-            margin-bottom: 8px; break-inside: avoid;
+            margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
         }
         
         .product-media-box { 
@@ -182,7 +189,6 @@
             display: flex; align-items: center; justify-content: center; 
         }
         
-        /* ছবির অরিজিনাল সাইজ বা রেশিও বজায় রাখার ফিক্স (কোনো ফাঁকা জায়গা বা গ্যাপ ছাড়াই) */
         .product-media-box img { 
             width: 100%; height: auto; display: block; object-fit: contain; background: #000000; 
         }
@@ -371,7 +377,7 @@
             }
         }
 
-        // রিটেইল প্রোডাক্ট ফেচ ও পিন্টারেস্ট স্টাইলে রেন্ডার করার ফাংশন (All ও Both মোড সহ)
+        // রিটেইল প্রোডাক্ট ফেচ এবং নিখুঁত সিঙ্গেল মোড ফিল্টারিং
         async function loadRetailProducts() {
             const feedContainer = document.getElementById('productFeed');
             let products = [];
@@ -399,10 +405,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // রিটেইল, অল, বোথ বা ফাঁকা মোডের প্রোডাক্টগুলো নিখুঁতভাবে ফিল্টার করা
+            // শুধুমাত্র রিটেইল মোডের প্রোডাক্ট ফিল্টার করা (সিঙ্গেল মোড)
             let retailProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'retail' || mode === 'all' || mode === 'both' || mode === '';
+                return mode === 'retail' || mode === '';
             });
 
             if (retailProducts.length === 0) {
