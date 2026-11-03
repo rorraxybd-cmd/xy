@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail Store</title>
+    <title>rorraxy - Retail Store Ecosystem</title>
     
     <!-- Central Script Tag -->
-    <script src="/ecosystem-core.js" defer></script>
-
+    <script src="/ecosystem-core.js"></script>
+    
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="/manifest.json">
 
@@ -23,7 +23,7 @@
     </script>
 
     <!-- Popup JS Link -->
-    <script src="/popup.js" defer></script>
+    <script src="/popup.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,13 +34,12 @@
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             --bg-retail: #0b0b0b;
-            --card-retail: #0c0c12;
+            --card-retail: #0a0a0f;
             --header-retail: rgba(11, 11, 11, 0.95);
             --footer-retail: rgba(6, 6, 8, 0.95);
             --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
@@ -72,6 +71,7 @@
             border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding: 0 0 0 8px; height: 42px;
         }
 
+        /* অবিরাম এবং স্মুথ মারকুই বার */
         .trending-marquee-bar {
             overflow: hidden; white-space: nowrap; font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
             flex: 1; display: flex; align-items: center; height: 42px; position: relative; background: transparent;
@@ -93,6 +93,7 @@
             100% { transform: translate3d(-50%, 0, 0); }
         }
 
+        /* একদম ডান কোণায় ফিট হওয়া লাক্সারি ড্রপডাউন মোড সিলেক্টর */
         .mode-selector-wrapper {
             position: relative; display: flex; align-items: center; height: 42px;
             background: #050508; padding: 0 10px 0 6px; border-left: 1px solid rgba(212, 175, 55, 0.15);
@@ -160,62 +161,43 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (ফাঁকা জায়গা দূর করার জন্য) */
         .feed-container {
-            padding: 8px 6px;
-            column-count: 2;
-            column-gap: 8px;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
+            gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
         }
         @media (min-width: 768px) { 
-            .feed-container { 
-                column-count: 4; 
-                column-gap: 12px; 
-                padding: 12px; 
-            } 
+            .feed-container { grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 12px; } 
         }
 
         .product-card {
-            background: var(--card-retail); border-radius: 12px; overflow: hidden; 
-            display: inline-block; width: 100%; 
-            border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
-            margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
+            background: var(--card-retail); border-radius: 14px; overflow: hidden; 
+            display: flex; flex-direction: column; width: 100%; 
+            border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
+            break-inside: avoid; margin-bottom: 8px;
         }
+        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .product-media-box img { width: 100%; height: auto; display: block; object-fit: cover; background: #050508; }
         
-        .product-media-box { 
-            position: relative; width: 100%; background: #000000; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; 
-        }
-        
-        .product-media-box img { 
-            width: 100%; height: auto; display: block; object-fit: contain; background: #000000; 
-        }
-        
-        .retail-badge {
+        .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
-            background: rgba(212, 175, 55, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 700; color: #000000 !important; text-transform: uppercase;
+            font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
         }
+        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
 
         .card-footer-actions { 
-            display: flex; flex-direction: column; padding: 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: auto;
+            display: flex; justify-content: space-between; align-items: center; padding: 10px; 
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto;
         }
+        .product-price-tag { font-size: 0.85rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-sub-actions { display: flex; align-items: center; gap: 12px; justify-content: center; }
         
-        .retail-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .market-price-tag { font-size: 0.65rem; color: var(--text-gray); text-decoration: line-through; font-weight: 600; }
-        
-        .card-single-line-row { 
-            display: flex; align-items: center; justify-content: space-between; width: 100%; 
-            border-top: 1px solid rgba(255,255,255,0.04); padding-top: 6px; gap: 4px;
-        }
         .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
         .love-action i { color: var(--pink-love); }
         .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
+        
+        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
         nav.bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-retail);
@@ -255,16 +237,18 @@
         <div class="trending-marquee-bar">
             <div class="marquee-container" id="marqueeContainer1">
                 <div class="marquee-group">
-                    <span class="txt-gold"><i class="fa-solid fa-store"></i> RETAIL STORE HUB</span>
-                    <span class="txt-gold"><i class="fa-solid fa-gem"></i> EXCLUSIVE COLLECTIONS</span>
-                    <span class="txt-gold"><i class="fa-solid fa-tags"></i> BEST MARKET PRICES</span>
-                    <span class="txt-gold"><i class="fa-solid fa-globe"></i> GLOBAL SHOPPING</span>
+                    <span class="txt-gold"><i class="fa-solid fa-crown"></i> WOMEN FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-gem"></i> BABY FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-star"></i> GIRLS FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-fire"></i> BOY FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-bolt"></i> MEN FASHION</span>
                 </div>
                 <div class="marquee-group">
-                    <span class="txt-gold"><i class="fa-solid fa-store"></i> RETAIL STORE HUB</span>
-                    <span class="txt-gold"><i class="fa-solid fa-gem"></i> EXCLUSIVE COLLECTIONS</span>
-                    <span class="txt-gold"><i class="fa-solid fa-tags"></i> BEST MARKET PRICES</span>
-                    <span class="txt-gold"><i class="fa-solid fa-globe"></i> GLOBAL SHOPPING</span>
+                    <span class="txt-gold"><i class="fa-solid fa-crown"></i> WOMEN FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-gem"></i> BABY FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-star"></i> GIRLS FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-fire"></i> BOY FASHION</span>
+                    <span class="txt-gold"><i class="fa-solid fa-bolt"></i> MEN FASHION</span>
                 </div>
             </div>
         </div>
@@ -278,12 +262,12 @@
         </div>
     </header>
 
-    <div id="youMenuModalOverlay" class="luxury-center-modal-overlay" onclick="closeYouMenuModal()">
+    <div id="youMenuModalOverlay" class="luxury-center-modal-overlay">
         <div class="luxury-center-modal-box" onclick="event.stopPropagation()">
             <button class="luxury-modal-close-btn" onclick="closeYouMenuModal()"><i class="fa-solid fa-xmark"></i></button>
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="luxury-modal-logo-large" onclick="navigateTo('https://rorraxy.com/')">
             
-            <div class="modal-material-info-text">RETAIL PORTAL</div>
+            <div class="modal-material-info-text">AUTHENTIC MATERIALS</div>
 
             <h2 class="luxury-modal-title-top" onclick="navigateTo('/account.html')">USER PORTAL</h2>
             <div class="luxury-options-fullstack">
@@ -297,7 +281,7 @@
                     </div>
                     <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
                 </div>
-                <div class="luxury-action-btn-item" onclick="navigateTo('/seller/index.html')">
+                <div class="luxury-action-btn-item" onclick="navigateTo('/seller/')">
                     <div class="btn-left-part">
                         <i class="fa-solid fa-chart-line"></i>
                         <div class="btn-text-stack">
@@ -307,7 +291,7 @@
                     </div>
                     <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
                 </div>
-                <div class="luxury-action-btn-item" onclick="navigateTo('/affiliate/index.html')">
+                <div class="luxury-action-btn-item" onclick="navigateTo('/affiliate/')">
                     <div class="btn-left-part">
                         <i class="fa-solid fa-handshake"></i>
                         <div class="btn-text-stack">
@@ -321,11 +305,10 @@
         </div>
     </div>
 
-    <!-- প্রোডাক্ট ফিড কন্টেইনার -->
     <main class="feed-container" id="productFeed">
         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">LOADING RETAIL PRODUCTS...</p>
+            <p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">LOADING RORRAXY PRODUCTS...</p>
         </div>
     </main>
 
@@ -356,10 +339,10 @@
     </nav>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
             updateCartBadgeCount();
-            loadRetailProducts();
+            loadLiveProducts();
         });
 
         function initSelectedMode() {
@@ -369,135 +352,126 @@
 
         function switchEcosystemMode(selectedMode) {
             if(selectedMode === 'wholesale') {
-                window.location.href = '/wholesale/';
+                window.location.href = '/wholesale/index.html';
             } else if(selectedMode === 'dropshipping') {
-                window.location.href = '/dropship/';
+                window.location.href = '/dropship/index.html';
             } else {
-                window.location.href = '/';
+                localStorage.setItem('rorraxy_mode', selectedMode);
+                loadLiveProducts();
             }
         }
 
-        async function loadRetailProducts() {
-            const feedContainer = document.getElementById('productFeed');
-            let products = [];
-
+        async function loadLiveProducts() {
             try {
-                const response = await fetch('/api/products?mode=retail');
+                const response = await fetch(`/api/products?mode=retail`);
                 const result = await response.json();
-                let rawData = result.data || result.results || result;
-                if (result.success && Array.isArray(rawData)) {
-                    products = rawData;
-                } else if (Array.isArray(result)) {
-                    products = result;
-                }
-            } catch (err) {
-                console.warn("API Fetch Warning:", err);
-            }
-
-            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-            
-            let mergedMap = new Map();
-            [...localProducts, ...products].forEach(p => {
-                let pId = p.id || p.product_id || p.product_code || p.title;
-                if(pId) mergedMap.set(String(pId), p);
-            });
-
-            let allProducts = Array.from(mergedMap.values());
-
-            let retailProducts = allProducts.filter(p => {
-                const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'retail' || mode === 'both' || mode === 'all' || mode === '';
-            });
-
-            if (retailProducts.length === 0) {
-                feedContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-gray);">
-                        <i class="fa-solid fa-store-slash fa-2x" style="color: var(--gold-solid); margin-bottom: 12px;"></i>
-                        <p style="font-size: 0.8rem; font-weight: 600;">NO RETAIL PRODUCTS AVAILABLE RIGHT NOW.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let htmlContent = '';
-            retailProducts.forEach(p => {
-                const pTitle = p.title || 'RETAIL ITEM';
-                const price = p.price || p.selling_price || 0;
-                const marketPrice = p.market_price || 0;
                 
-                let pImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                if (p.image_url) {
-                    pImg = p.image_url;
-                } else if (p.imageUrl) {
-                    pImg = p.imageUrl;
-                } else if (p.images_json) {
-                    try {
-                        let parsed = JSON.parse(p.images_json);
-                        if (Array.isArray(parsed) && parsed.length > 0) pImg = parsed[0];
-                    } catch (e) {
-                        if (typeof p.images_json === 'string' && p.images_json.trim() !== '') {
-                            pImg = p.images_json.split(',')[0].trim();
-                        }
-                    }
+                let productsList = [];
+                if (result && result.success && Array.isArray(result.data)) {
+                    productsList = result.data;
+                } else if (Array.isArray(result)) {
+                    productsList = result;
                 }
 
-                const productId = p.id || p.product_code || '';
-
-                htmlContent += `
-                    <div class="product-card" onclick="location.href='/product-details.html?id=${productId}'">
-                        <div class="product-media-box">
-                            <div class="retail-badge"><i class="fa-solid fa-store"></i> RETAIL</div>
-                            <img src="${pImg}" alt="${pTitle}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';">
-                        </div>
-                        <div class="card-footer-actions">
-                            <div class="retail-pricing-row">
-                                <span class="product-price-tag">$${parseFloat(price).toFixed(2)}</span>
-                                ${marketPrice > 0 ? `<span class="market-price-tag">$${parseFloat(marketPrice).toFixed(2)}</span>` : ''}
-                            </div>
-                            <div class="card-single-line-row">
-                                <div class="love-action" onclick="event.stopPropagation(); toggleLike(this)">
-                                    <i class="fa-solid fa-heart"></i> <span>LIKE</span>
-                                </div>
-                                <div class="love-action" onclick="event.stopPropagation(); shareProduct('${pTitle}', window.location.origin + '/product-details.html?id=${productId}')">
-                                    <i class="fa-solid fa-share-nodes" style="color: var(--gold-solid);"></i> <span>SHARE</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            feedContainer.innerHTML = htmlContent;
+                if (productsList.length > 0) {
+                    renderProductCards(productsList);
+                } else {
+                    document.getElementById('productFeed').innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-gray);">
+                            <i class="fa-solid fa-box-open fa-2x" style="color:var(--gold-solid);"></i>
+                            <p style="margin-top: 10px; font-size: 0.75rem;">NO RETAIL PRODUCTS FOUND.</p>
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('Failed to load products:', error);
+            }
         }
 
+        function renderProductCards(products) {
+            const feedContainer = document.getElementById('productFeed');
+            feedContainer.innerHTML = '';
+
+            products.forEach(item => {
+                const productId = item.id || item.product_id || item.product_code || item.code || '101';
+                const title = item.title || 'rorraxy Luxury Item';
+                const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
+                const discount = item.discount_rate || item.discountRate || '50';
+                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
+                const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
+                
+                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                if (item.image_url) resolvedImageUrl = item.image_url;
+                else if (item.imageUrl) resolvedImageUrl = item.imageUrl;
+
+                const cardHtml = `
+                    <div class="product-card" onclick="openProductDetails('${productId}')">
+                        <div class="product-media-box">
+                            <div class="product-country-discount-badge">
+                                <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
+                            </div>
+                            <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                        </div>
+                        <div class="card-footer-actions" onclick="event.stopPropagation()">
+                            <span class="product-price-tag">${price}</span>
+                            <div class="card-sub-actions">
+                                <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
+                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 128}</span>
+                                </div>
+                                <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
+                                    <i class="fa-solid fa-share-nodes"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                feedContainer.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        function openProductDetails(productId) {
+            window.location.href = `/pd.html?id=${productId}`;
+        }
+
+        function navigateTo(url) { window.location.href = url; }
         function openYouMenuModal(event) {
             if(event) event.stopPropagation();
             document.getElementById('youMenuModalOverlay').style.display = 'flex';
         }
-
         function closeYouMenuModal() {
             document.getElementById('youMenuModalOverlay').style.display = 'none';
         }
 
-        function toggleLike(element) {
-            const icon = element.querySelector('i');
-            if (icon.classList.contains('fa-regular')) {
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-                element.classList.add('gold-active');
+        async function toggleLove(event, btn, productId) {
+            event.stopPropagation();
+            let countSpan = btn.querySelector('.love-count');
+            let currentLikes = parseInt(countSpan.innerText);
+            if(btn.classList.contains('gold-active')) {
+                btn.classList.remove('gold-active');
+                countSpan.innerText = currentLikes - 1;
             } else {
-                icon.classList.remove('fa-solid');
-                icon.classList.add('fa-regular');
-                element.classList.remove('gold-active');
+                btn.classList.add('gold-active');
+                countSpan.innerText = currentLikes + 1;
+                try {
+                    await fetch(`/api/products`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ product_code: productId })
+                    });
+                } catch (err) {}
             }
         }
 
-        function shareProduct(title, url) {
+        async function triggerAutoShare(event, productId, productTitle) {
+            event.stopPropagation();
+            const shareUrl = `${window.location.origin}/pd.html?id=${productId}`;
             if (navigator.share) {
-                navigator.share({ title: title, url: url }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(url);
-                alert("PRODUCT LINK COPIED TO CLIPBOARD!");
+                try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
+            } else if (navigator.clipboard) {
+                await navigator.clipboard.writeText(shareUrl);
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> COPIED!`;
+                setTimeout(() => { btn.innerHTML = orig; }, 1500);
             }
         }
 
