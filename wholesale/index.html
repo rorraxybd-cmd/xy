@@ -163,7 +163,7 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (গ্যাপ দূর করার জন্য) */
+        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (অতিরিক্ত ফাঁকা জায়গা দূর করার জন্য) */
         .feed-container {
             padding: 8px 6px;
             column-count: 2;
@@ -278,7 +278,6 @@
             <select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
                 <option value="retail">RETAIL STORE</option>
                 <option value="wholesale" selected>WHOLESALE</option>
-                <option value="dropshipping">DROPSHIPPING</option>
             </select>
         </div>
     </header>
@@ -375,14 +374,11 @@
         function switchEcosystemMode(selectedMode) {
             if(selectedMode === 'retail') {
                 window.location.href = '/';
-            } else if(selectedMode === 'dropshipping') {
-                window.location.href = '/dropship/';
             } else {
                 window.location.href = '/wholesale/';
             }
         }
 
-        // হোলসেল প্রোডাক্ট ফেচ এবং পিন্টারেস্ট স্টাইলে নিখুঁত সিঙ্গেল মোড ফিল্টারিং
         async function loadWholesaleProducts() {
             const feedContainer = document.getElementById('productFeed');
             let products = [];
@@ -410,7 +406,6 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // শুধুমাত্র হোলসেল মোডের প্রোডাক্ট ফিল্টার করা (সিঙ্গেল মোড)
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
                 return mode === 'wholesale' || mode === '';
