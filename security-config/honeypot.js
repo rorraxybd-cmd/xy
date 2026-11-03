@@ -1,59 +1,34 @@
 /**
- * rorraxy - Honeypot Anti-Spam & Bot Protection
- * Description: Detects automated bots via invisible form fields safely.
+ * rorraxy security configuration - Honeypot Bot Detector
+ * Traps and blocks automated bots that fill invisible form fields.
  */
 
-class HoneypotProtection {
-    constructor(options = {}) {
-        this.fieldName = options.fieldName || "rorraxy_hp_check";
-        this.init();
-    }
+const honeypot = {
+    /**
+     * হানিপট মিডলওয়্যার যা ফর্ম সাবমিশন বা পোস্ট রিকোয়েস্ট চেক করবে
+     * @param {string} fieldName - যে ফিল্ডটি বটের জন্য ফাঁকা থাকার কথা (যেমন: 'bot_check_field')
+     */
+    check: (fieldName = 'bot_check_field') => {
+        return (req, res, next) => {
+            // শুধুমাত্র POST, PUT, PATCH রিকোয়েস্ট চেক করা
+            if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+                const honeyValue = req.body[fieldName];
 
-    init() {
-        if (document.readyState === 'loading') {
-            document.addEventListener("DOMContentLoaded", () => this.setupForms());
-        } else {
-            this.setupForms();
-        }
-    }
-
-    setupForms() {
-        const forms = document.querySelectorAll("form");
-        forms.forEach(form => {
-            if (!form.querySelector(`input[name="${this.fieldName}"]`)) {
-                const hpWrapper = document.createElement("div");
-                hpWrapper.className = "rorraxy-hp-field-group";
-                hpWrapper.style.display = "none";
-                hpWrapper.style.visibility = "hidden";
-                hpWrapper.style.position = "absolute";
-                hpWrapper.style.left = "-9999px";
-
-                const hpInput = document.createElement("input");
-                hpInput.type = "text";
-                hpInput.name = this.fieldName;
-                hpInput.value = "";
-                hpInput.autocomplete = "off";
-                hpInput.tabIndex = -1;
-
-                hpWrapper.appendChild(hpInput);
-                form.appendChild(hpWrapper);
+                // যদি হানিপট ফিল্ডে কোনো ভ্যালু থাকে, তবে বুঝবে এটি কোনো মানুষ নয়, বরং স্প্যাম বট
+                if (honeyValue) {
+                    console.warn(`[Honeypot Alert]: Automated bot detected and blocked from IP: ${req.ip}`);
+                    return res.status(403).json({
+                        success: false,
+                        message: 'Access Denied: Automated submission detected.'
+                    });
+                }
             }
-        });
+
+            if (typeof next === 'function') {
+                next();
+            }
+        };
     }
+};
 
-    validateSubmission(formElement) {
-        if (!formElement) return true;
-        const hpInput = formElement.querySelector(`input[name="${this.fieldName}"]`);
-        if (hpInput && hpInput.value.trim() !== "") {
-            console.warn("Security Alert: Automated bot submission blocked.");
-            return false; 
-        }
-        return true;
-    }
-}
-
-const rorraxyHoneypot = new HoneypotProtection();
-
-if (typeof window !== 'undefined') {
-    window.HoneypotProtection = HoneypotProtection;
-}
+module.exports = honeypot;
