@@ -44,8 +44,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px 12px 20px 12px;
+            justify-content: flex-start;
+            padding: 20px 12px 90px 12px;
             text-transform: uppercase !important;
             -webkit-font-smoothing: antialiased;
         }
@@ -70,8 +70,8 @@
         }
 
         @keyframes luxurySlideUp {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .empty-orders-screen {
@@ -81,30 +81,59 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 30px 20px;
-            gap: 20px;
+            padding: 40px 20px;
+            gap: 16px;
         }
 
-        .shop-now-btn {
-            background: var(--gold-gradient);
-            color: #000;
-            font-weight: 900;
-            font-size: 0.85rem;
-            padding: 12px 35px;
-            border-radius: 25px;
-            text-decoration: none;
+        /* SOFT ANIMATED SHOPPING TEXT (NO BUTTON, NO SHADOW, NO BORDER) */
+        .shop-now-trigger {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            border: none;
+            gap: 12px;
+            text-decoration: none;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            outline: none;
+            animation: softPulse 2.5s infinite ease-in-out;
+            transition: transform 0.2s ease;
+        }
+
+        .shop-now-trigger:active {
+            transform: scale(0.95);
+        }
+
+        .shop-now-icon {
+            font-size: 1.5rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: floatIcon 3s infinite ease-in-out;
+        }
+
+        .shop-now-text {
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes softPulse {
+            0%, 100% { opacity: 0.85; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.04); }
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
 
         /* MEMO & PREVIEW CARD */
         .memo-preview-card {
             background: var(--card-bg);
-            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 16px;
             padding: 18px;
             width: 100%;
@@ -117,7 +146,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding-bottom: 10px;
         }
 
@@ -125,8 +154,8 @@
             background: var(--gold-gradient);
             color: #000;
             border: none;
-            padding: 11px 20px;
-            border-radius: 22px;
+            padding: 12px 20px;
+            border-radius: 25px;
             font-size: 0.74rem;
             font-weight: 900;
             cursor: pointer;
@@ -135,18 +164,17 @@
             justify-content: center;
             gap: 8px;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+            transition: opacity 0.2s ease;
         }
-        .download-pdf-btn:active { transform: scale(0.96); }
+        .download-pdf-btn:active { opacity: 0.8; }
 
         .memo-details-grid {
             background: #030305;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            padding: 10px 12px;
+            border-radius: 10px;
+            padding: 12px;
             font-size: 0.68rem;
             color: var(--text-muted);
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .memo-details-grid span { color: #fff; font-weight: 700; }
 
@@ -159,7 +187,7 @@
         .memo-items-table th, .memo-items-table td {
             padding: 8px 6px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
         .memo-items-table th {
             background: var(--gold-gradient);
@@ -177,7 +205,7 @@
             font-size: 0.85rem;
             font-weight: 900;
             color: var(--gold-color);
-            border-top: 1px solid rgba(212, 175, 55, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             padding-top: 8px;
             margin-top: 2px;
         }
@@ -194,22 +222,33 @@
             gap: 6px;
         }
 
-        /* BOTTOM SEARCH & HOME BAR */
+        /* SOFT FIXED MOBILE BOTTOM SEARCH & HOME BAR (NO BORDER, NO SHADOW) */
         .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             max-width: 420px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 10px;
+            padding: 12px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: rgba(10, 10, 14, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 9999;
+            box-shadow: none !important;
+            border: none !important;
         }
 
         .search-tracking-box {
             flex: 1;
-            background: var(--card-bg);
-            border: 1px solid rgba(212, 175, 55, 0.12);
-            border-radius: 12px;
-            padding: 6px 10px;
+            background: #121217;
+            border: none !important;
+            border-radius: 25px;
+            padding: 4px 6px 4px 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -217,43 +256,50 @@
 
         .search-input-field {
             flex: 1;
-            background: #030305;
-            border: 1px solid rgba(212, 175, 55, 0.06);
-            border-radius: 8px;
-            padding: 8px 12px;
+            background: transparent;
+            border: none !important;
             color: #fff;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             outline: none;
             font-family: var(--font-family);
         }
-        .search-input-field:focus { border-color: var(--gold-color); }
+        .search-input-field::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
 
         .search-submit-btn {
             background: var(--gold-gradient);
-            border: none;
+            border: none !important;
             color: #000;
             font-weight: 900;
             font-size: 0.7rem;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
             white-space: nowrap;
+            transition: opacity 0.15s ease;
+        }
+        .search-submit-btn:active {
+            opacity: 0.8;
         }
 
         .home-icon-btn {
-            background: var(--card-bg);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: #121217;
+            border: none !important;
             color: var(--gold-color);
             width: 42px;
             height: 42px;
-            border-radius: 12px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-size: 0.95rem;
             flex-shrink: 0;
+            transition: opacity 0.15s ease;
+        }
+        .home-icon-btn:active {
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -265,7 +311,7 @@
         <!-- Dynamic Content Loaded Here -->
     </div>
 
-    <!-- BOTTOM SEARCH & HOME BAR -->
+    <!-- SOFT FIXED BOTTOM SEARCH & HOME BAR -->
     <div class="bottom-nav-bar">
         <a href="/wholesale/index.html" class="home-icon-btn" title="Home">
             <i class="fa-solid fa-house"></i>
@@ -355,9 +401,10 @@
             const container = document.getElementById('accountDynamicContent');
             container.innerHTML = `
                 <div class="empty-orders-screen">
-                    <button onclick="window.location.href='/wholesale/index.html'" class="shop-now-btn">
-                        <i class="fa-solid fa-bag-shopping"></i> START WHOLESALE SHOPPING
-                    </button>
+                    <div onclick="window.location.href='/wholesale/index.html'" class="shop-now-trigger">
+                        <i class="fa-solid fa-bag-shopping shop-now-icon"></i>
+                        <span class="shop-now-text">SHOPPING NOW</span>
+                    </div>
                 </div>
             `;
         }
@@ -399,7 +446,7 @@
                 <div class="memo-preview-card" id="printableMemoArea">
                     <div class="memo-top-row">
                         <div>
-                            <h2 style="font-size:0.85rem; font-weight:900; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">RORRAXY WHOLESALE</h2>
+                            <h2 style="font-size:0.85rem; font-weight:900; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">rorraxy WHOLESALE</h2>
                             <p style="font-size:0.48rem; color:var(--text-muted);">DIGITAL B2B MEMO</p>
                         </div>
                         <div style="text-align:right;">
