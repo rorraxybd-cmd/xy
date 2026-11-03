@@ -1,85 +1,65 @@
 /**
- * rorraxy - Advanced Form State Persistence Manager
- * Description: Automatically saves user inputs in browser storage in real-time 
- * to prevent data loss on accidental page refreshes or closures.
+ * rorraxy management - Form Persist Utility
+ * Automatically saves and restores form input fields to prevent data loss.
  */
 
-class RorraxyFormPersist {
-    constructor(formId, storageKey = 'rorraxy_form_backup') {
-        this.form = document.getElementById(formId);
-        this.storageKey = storageKey;
+const formPersist = {
+    /**
+     * কোনো ফর্মে অটো-সেভ ও রিস্টোর ফিচার যুক্ত করা
+     * @param {string} formId - ফর্মের HTML ID
+     * @param {string} storageKey - লোকাল স্টোরেজে সেভ করার ইউনিক কি
+     */
+    init: (formId, storageKey) => {
+        const form = document.getElementById(formId);
+        if (!form) return;
 
-        if (this.form) {
-            this.initPersistence();
-        }
-    }
-
-    initPersistence() {
-        this.restoreFormData();
-
-        this.form.addEventListener('input', () => {
-            this.saveFormData();
-        });
-
-        this.form.addEventListener('change', () => {
-            this.saveFormData();
-        });
-
-        this.form.addEventListener('submit', () => {
-            this.clearSavedData();
-        });
-    }
-
-    saveFormData() {
-        const formData = {};
-        const elements = this.form.elements;
-
-        for (let element of elements) {
-            if (element.name || element.id) {
-                const key = element.name || element.id;
-                if (element.type !== 'password' && element.type !== 'submit') {
-                    formData[key] = element.value;
-                }
-            }
-        }
-
+        // ১. পেজ লোড হলে সংরক্ষিত ডেটা ফর্ম ইনপুটে ফিরিয়ে আনা (Restore)
         try {
-            localStorage.setItem(this.storageKey, JSON.stringify(formData));
-        } catch (error) {
-            // Safe storage fallback
-        }
-    }
-
-    restoreFormData() {
-        try {
-            const savedDataJson = localStorage.getItem(this.storageKey);
-            if (!savedDataJson) return;
-
-            const formData = JSON.parse(savedDataJson);
-            for (const key in formData) {
-                const field = this.form.elements[key];
-                if (field) {
-                    field.value = formData[key];
-                }
+            const savedData = localStorage.getItem(storageKey);
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                Object.keys(formData).forEach(name => {
+                    const field = form.elements[name];
+                    if (field) {
+                        if (field.type === 'checkbox' || field.type === 'radio') {
+                            field.checked = formData[name];
+                        } else {
+                            field.value = formData[name];
+                        }
+                    }
+                });
             }
         } catch (error) {
-            // Safe restoration fallback
+            console.error('[FormPersist Restore Error]:', error);
         }
+
+        // ২. ইউজার টাইপ বা পরিবর্তন করার সময় তা স্বয়ংক্রিয়ভাবে সেভ করা (Auto-save)
+        form.addEventListener('input', () => {
+            const formData = {};
+            Array.from(form.elements).forEach(element => {
+                if (element.name && !['password', 'file'].includes(element.type)) {
+                    if (element.type === 'checkbox' || element.type === 'radio') {
+                        formData[element.name] = element.checked;
+                    } else {
+                        formData[element.name] = element.value;
+                    }
+                }
+            });
+            localStorage.setItem(storageKey, JSON.stringify(formData));
+        });
+
+        // ৩. সফলভাবে সাবমিট হলে স্টোরেজ থেকে ডেটা মুছে ফেলা
+        form.addEventListener('submit', () => {
+            localStorage.removeItem(storageKey);
+        });
+    },
+
+    /**
+     * নির্দিষ্ট ফর্মের পার্সিস্টেন্ট ডেটা ম্যানুয়ালি মুছে ফেলা
+     */
+    clear: (storageKey) => {
+        localStorage.removeItem(storageKey);
     }
+};
 
-    clearSavedData() {
-        try {
-            localStorage.removeItem(this.storageKey);
-        } catch (error) {
-            // Safe clearing fallback
-        }
-    }
-}
-
-if (typeof window !== 'undefined') {
-    window.RorraxyFormPersist = RorraxyFormPersist;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = RorraxyFormPersist;
-}
+module.exports = formPersist;
