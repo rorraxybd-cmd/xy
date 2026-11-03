@@ -137,7 +137,6 @@
     </style>
 </head>
 <body>
-    <!-- সিকিউরিটি ভেরিফিকেশন চেক -->
     <script>
         if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
             window.location.replace('/seller/index.html');
@@ -376,7 +375,7 @@
 
     <script>
         let currentStep = 1;
-        let selectedModeValue = "";
+        let selectedModeValue = "retail";
         let selectedCategoryValue = "";
         let uploadedImageUrls = [];
         let uploadedVideoUrl = "";
@@ -557,7 +556,6 @@
             selectedCategoryValue = "";
         }
 
-        // ইমেজ অপ্টিমাইজেশন ও WebP কম্প্রেশন ফাংশন
         async function optimizeAndCompressFile(file, maxWidth = 1200, quality = 0.8) {
             return new Promise((resolve) => {
                 if (!file || !file.type || !file.type.startsWith('image/')) return resolve(file);
@@ -591,7 +589,6 @@
             });
         }
 
-        // ভিডিও ভ্যালিডেশন ও অপ্টিমাইজেশন হেল্পার
         async function optimizeAndValidateVideo(file) {
             return new Promise((resolve) => {
                 if (!file || !file.type.startsWith('video/')) return resolve(file);
@@ -697,18 +694,19 @@
                 return;
             }
 
-            // লোকালস্টোরেজ থেকে সেলারের মুল আইডি (ID: 1, 2, 3...) নেওয়া হচ্ছে যা D1 ডাটাবেজের সাথে সরাসরি কানেক্টেড
             const rawSellerId = localStorage.getItem('seller_id') || "";
             const rawSellerEmail = localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
-
-            // ডাটাবেজে সঠিক টাইপ সংরক্ষণের ব্যবস্থা (ID উপস্থিত থাকলে আইডি যাবে, অন্যথায় নিরাপদ কম্বাইন্ড মান)
             const finalSellerId = rawSellerId ? rawSellerId : (rawSellerEmail || "Unknown");
+
+            // নিশ্চিত করা হচ্ছে যে মোড 'all' বা 'both' হলে সেটি ব্যাকএন্ডে সঠিকভাবে পাস হবে
+            const finalUploadMode = selectedModeValue ? selectedModeValue.toLowerCase().trim() : "retail";
 
             const productPayload = {
                 seller_id: finalSellerId,
+                seller_email: rawSellerEmail,
                 product_code: `PROD_${Date.now()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
-                upload_mode: selectedModeValue,
+                upload_mode: finalUploadMode, // 'all', 'both', 'retail', 'wholesale', 'dropshipping'
                 category: selectedCategoryValue,
                 price: parseFloat(document.getElementById('selling_price').value) || parseFloat(document.getElementById('dropship_base_price').value) || parseFloat(document.getElementById('price_sample').value) || 0,
                 market_price: parseFloat(document.getElementById('market_price').value) || 0,
