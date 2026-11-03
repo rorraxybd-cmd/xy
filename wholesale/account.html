@@ -85,7 +85,6 @@
             gap: 16px;
         }
 
-        /* SOFT ANIMATED SHOPPING TEXT (NO BUTTON, NO SHADOW, NO BORDER) */
         .shop-now-trigger {
             display: inline-flex;
             align-items: center;
@@ -131,7 +130,6 @@
             50% { transform: translateY(-3px); }
         }
 
-        /* MEMO & PREVIEW CARD */
         .memo-preview-card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -222,7 +220,7 @@
             gap: 6px;
         }
 
-        /* SOFT FIXED MOBILE BOTTOM SEARCH & HOME BAR (NO BORDER, NO SHADOW) */
+        /* BOTTOM SEARCH & CLOSE BAR */
         .bottom-nav-bar {
             position: fixed;
             bottom: 0;
@@ -283,7 +281,8 @@
             opacity: 0.8;
         }
 
-        .home-icon-btn {
+        /* CLOSE / CROSS BUTTON STYLING */
+        .close-icon-btn {
             background: #121217;
             border: none !important;
             color: var(--gold-color);
@@ -296,10 +295,12 @@
             text-decoration: none;
             font-size: 0.95rem;
             flex-shrink: 0;
-            transition: opacity 0.15s ease;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            cursor: pointer;
         }
-        .home-icon-btn:active {
+        .close-icon-btn:active {
             opacity: 0.8;
+            transform: scale(0.92);
         }
     </style>
 </head>
@@ -311,10 +312,10 @@
         <!-- Dynamic Content Loaded Here -->
     </div>
 
-    <!-- SOFT FIXED BOTTOM SEARCH & HOME BAR -->
+    <!-- SOFT FIXED BOTTOM SEARCH & CLOSE BAR -->
     <div class="bottom-nav-bar">
-        <a href="/wholesale/index.html" class="home-icon-btn" title="Home">
-            <i class="fa-solid fa-house"></i>
+        <a href="/wholesale/index.html" class="close-icon-btn" title="Close">
+            <i class="fa-solid fa-xmark"></i>
         </a>
         <div class="search-tracking-box">
             <input type="text" id="orderSearchInput" class="search-input-field" placeholder="ENTER ORDER ID">
