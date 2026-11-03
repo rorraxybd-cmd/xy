@@ -137,11 +137,13 @@
     </style>
 </head>
 <body>
+    <!-- সিকিউরিটি ভেরিফিকেশন চেক -->
     <script>
         if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
             window.location.replace('/seller/index.html');
         }
     </script>
+
     <div id="success-overlay">
         <div class="success-card">
             <div style="font-size: 3rem; color: var(--gold-solid); margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i></div>
@@ -175,7 +177,7 @@
                         <div class="mode-box" onclick="selectUploadMode('retail', this)"><i class="fa-solid fa-store"></i><span>RETAIL</span></div>
                         <div class="mode-box" onclick="selectUploadMode('wholesale', this)"><i class="fa-solid fa-boxes-stacked"></i><span>WHOLESALE</span></div>
                         <div class="mode-box" onclick="selectUploadMode('dropshipping', this)"><i class="fa-solid fa-truck-fast"></i><span>DROPSHIPPING</span></div>
-                        <div class="mode-box" onclick="selectUploadMode('both', this)"><i class="fa-solid fa-globe"></i><span>BOTH / MORE</span></div>
+                        <div class="mode-box" onclick="selectUploadMode('all', this)"><i class="fa-solid fa-globe"></i><span>ALL MODES</span></div>
                     </div>
                 </div>
                 <div class="btn-nav-container">
@@ -513,7 +515,7 @@
             } else if (mode === 'wholesale') {
                 wholesaleRow.style.display = 'grid';
                 moqGroup.style.display = 'block';
-            } else if (mode === 'both') {
+            } else if (mode === 'all') {
                 retailRow.style.display = 'grid';
                 dropshipRow.style.display = 'grid';
                 wholesaleRow.style.display = 'grid';
@@ -555,6 +557,7 @@
             selectedCategoryValue = "";
         }
 
+        // ইমেজ অপ্টিমাইজেশন ও WebP কম্প্রেশন ফাংশন
         async function optimizeAndCompressFile(file, maxWidth = 1200, quality = 0.8) {
             return new Promise((resolve) => {
                 if (!file || !file.type || !file.type.startsWith('image/')) return resolve(file);
@@ -588,6 +591,7 @@
             });
         }
 
+        // ভিডিও ভ্যালিডেশন ও অপ্টিমাইজেশন হেল্পার
         async function optimizeAndValidateVideo(file) {
             return new Promise((resolve) => {
                 if (!file || !file.type.startsWith('video/')) return resolve(file);
@@ -693,15 +697,15 @@
                 return;
             }
 
-            // সেলার আইডি এবং ইমেল উভয়টি একসাথে কম্বাইন করে বা সংরক্ষণ করার ব্যবস্থা
-            const sellerId = localStorage.getItem('seller_id') || "";
-            const sellerEmail = localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
-            
-            // আইডি এবং ইমেল উভয়টি একসাথে রাখার জন্য ফরম্যাট (যেমন: ID: 2 | email@gmail.com)
-            const combinedSellerInfo = (sellerId && sellerEmail) ? `ID: ${sellerId} | ${sellerEmail}` : (sellerId || sellerEmail || "Unknown");
+            // লোকালস্টোরেজ থেকে সেলারের মুল আইডি (ID: 1, 2, 3...) নেওয়া হচ্ছে যা D1 ডাটাবেজের সাথে সরাসরি কানেক্টেড
+            const rawSellerId = localStorage.getItem('seller_id') || "";
+            const rawSellerEmail = localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
+
+            // ডাটাবেজে সঠিক টাইপ সংরক্ষণের ব্যবস্থা (ID উপস্থিত থাকলে আইডি যাবে, অন্যথায় নিরাপদ কম্বাইন্ড মান)
+            const finalSellerId = rawSellerId ? rawSellerId : (rawSellerEmail || "Unknown");
 
             const productPayload = {
-                seller_id: combinedSellerInfo,
+                seller_id: finalSellerId,
                 product_code: `PROD_${Date.now()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
                 upload_mode: selectedModeValue,
