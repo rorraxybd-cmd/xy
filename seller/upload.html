@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Universal Master Product Upload Portal</title>
+    <title>rorraxy - Universal Master Product Upload</title>
     
     <script src="/ecosystem-core.js"></script>
 
@@ -137,7 +137,6 @@
     </style>
 </head>
 <body>
-    <!-- সিকিউরিটি গার্ড চেক -->
     <script>
         if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
             window.location.replace('/seller/index.html');
@@ -153,7 +152,7 @@
 
     <header class="app-header">
         <a href="dashboard.html" class="back-home-btn"><i class="fa-solid fa-arrow-left"></i> DASHBOARD</a>
-        <span class="brand-title-main">rorraxy upload portal</span>
+        <span class="brand-title-main">rorraxy upload</span>
         <div style="width: 50px;"></div>
     </header>
 
@@ -213,21 +212,21 @@
             <!-- STEP 3: MEDIA & SOCIAL LINKS -->
             <div class="step-section" id="step-3">
                 <div class="form-section-full">
-                    <h3><i class="fa-solid fa-images gold-gradient-text"></i> IMAGES (AUTO WEBP OPTIMIZED) <span class="required-star">*</span></h3>
+                    <h3><i class="fa-solid fa-images gold-gradient-text"></i> IMAGES <span class="required-star">*</span></h3>
                     <div class="preview-container" id="image-preview"></div>
                     <div class="upload-box" onclick="document.getElementById('image-file-input').click();">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <p>IMAGE UPLOAD & OPTIMIZE</p>
+                        <p>IMAGE UPLOAD</p>
                         <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;" onchange="handleImageSelection(event)">
                     </div>
                 </div>
 
                 <div class="form-section-full">
-                    <h3><i class="fa-solid fa-video gold-gradient-text"></i> VIDEO UPLOAD (AUTO COMPRESSED)</h3>
+                    <h3><i class="fa-solid fa-video gold-gradient-text"></i> VIDEO UPLOAD</h3>
                     <div class="preview-container" id="video-preview"></div>
                     <div class="upload-box" onclick="document.getElementById('video-file-input').click();">
                         <i class="fa-solid fa-file-video"></i>
-                        <p>VIDEO UPLOAD & OPTIMIZE</p>
+                        <p>VIDEO UPLOAD</p>
                         <input type="file" id="video-file-input" accept="video/*" style="display: none;" onchange="handleVideoSelection(event)">
                     </div>
                 </div>
@@ -694,11 +693,15 @@
                 return;
             }
 
-            // ব্রাউজারে সেভ করা সেলার আইডি বা ইমেল এখানে ফেচ করা হচ্ছে যাতে D1 টেবিলে seller_id আর NULL না দেখায়
-            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
+            // সেলার আইডি এবং ইমেল উভয়টি একসাথে কম্বাইন করে বা সংরক্ষণ করার ব্যবস্থা
+            const sellerId = localStorage.getItem('seller_id') || "";
+            const sellerEmail = localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
+            
+            // আইডি এবং ইমেল উভয়টি একসাথে রাখার জন্য ফরম্যাট (যেমন: ID: 2 | email@gmail.com)
+            const combinedSellerInfo = (sellerId && sellerEmail) ? `ID: ${sellerId} | ${sellerEmail}` : (sellerId || sellerEmail || "Unknown");
 
             const productPayload = {
-                seller_id: sellerId,
+                seller_id: combinedSellerInfo,
                 product_code: `PROD_${Date.now()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
                 upload_mode: selectedModeValue,
