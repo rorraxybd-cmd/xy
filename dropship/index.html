@@ -370,18 +370,19 @@
             }
         }
 
-        // ক্লাউডফ্লেয়ার এবং লোকালস্টোরেজ থেকে ড্রপশিপিং প্রোডাক্ট ফেচ ও রেন্ডার করার ফাংশন
+        // ফাস্ট ও নিরাপদ ড্রপশিপিং প্রোডাক্ট ফেচ এবং রেন্ডার করার ফাংশন (লোডিং ফিক্সড)
         async function loadDropshipProducts() {
             const feedContainer = document.getElementById('productFeed');
             let products = [];
 
             try {
+                // সরাসরি সব প্রোডাক্ট ফেচ করে ক্লায়েন্ট সাইডে ফ্লেক্সিবল ফিল্টার করা হবে যাতে কোনো রিকোয়েস্ট আটকে না থাকে
                 const response = await fetch('/api/products');
                 const result = await response.json();
                 let rawData = result.data || result.results || result;
-                if (result.success && Array.isArray(rawData) && rawData.length > 0) {
+                if (result.success && Array.isArray(rawData)) {
                     products = rawData;
-                } else if (Array.isArray(result) && result.length > 0) {
+                } else if (Array.isArray(result)) {
                     products = result;
                 }
             } catch (err) {
@@ -398,10 +399,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // ড্রপশিপিং বা অল মোডের প্রোডাক্ট ফিল্টার করা
+            // ড্রপশিপিং, বোথ, অল বা ফাঁকা মোডের প্রোডাক্টগুলো নিখুঁতভাবে ফিল্টার করা
             let dropshipProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'dropshipping' || mode === 'dropship' || mode === 'all' || mode === 'both';
+                return mode === 'dropshipping' || mode === 'dropship' || mode === 'all' || mode === 'both' || mode === '';
             });
 
             if (dropshipProducts.length === 0) {
