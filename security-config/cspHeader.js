@@ -1,30 +1,33 @@
 /**
- * rorraxy Ecosystem - Optimized Non-Blocking CSP Injector
- * Prevents all CSP blocking issues for Cloudflare Workers, Firebase, and authorized endpoints.
+ * rorraxy security configuration - Content Security Policy (CSP)
+ * Prevents XSS attacks and unauthorized data injection.
  */
 
-(function () {
-    'use strict';
+const cspHeader = (req, res, next) => {
+    const cspDirectives = [
+        "default-src 'self'",
+        // স্ক্রিপ্ট সোর্স (গুগল বা ফায়ারবেস বা নিজের ডোমেইন)
+        "script-src 'self' 'unsafe-inline' https://apis.google.com https://www.gstatic.com",
+        // স্টাইলশিট ও ফন্ট
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        // ছবি এবং মিডিয়া
+        "img-src 'self' data: https:",
+        // এপিআই ও কানেকশন (rorraxy সাবডোমেইন ও ফায়ারবেস বা ক্লাউডফ্লেয়ার)
+        "connect-src 'self' https://*.rorraxy.com https://*.firebaseio.com https://*.googleapis.com"
+    ];
 
-    const cspPolicy = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline' https: wss: https://media.rorraxy.com https://rorraxy-uploader.rorraxybd.workers.dev; img-src * data: blob:; style-src * 'unsafe-inline';";
+    // CSP হেডার সেট করা
+    res.setHeader('Content-Security-Policy', cspDirectives.join('; '));
+    
+    // অন্যান্য অতিরিক্ত সিকিউরিটি হেডার
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
 
-    function injectCSP() {
-        if (!document.head) return;
-
-        const existingCSP = document.querySelector("meta[http-equiv='Content-Security-Policy']");
-        if (existingCSP) {
-            existingCSP.remove();
-        }
-
-        const meta = document.createElement('meta');
-        meta.httpEquiv = "Content-Security-Policy";
-        meta.content = cspPolicy;
-        document.head.appendChild(meta);
+    if (typeof next === 'function') {
+        next();
     }
+};
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectCSP);
-    } else {
-        injectCSP();
-    }
-})();
+module.exports = cspHeader;
