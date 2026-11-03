@@ -77,21 +77,11 @@
         .status-msg { font-size: 0.72rem; text-transform: none; margin-top: -2px; display: none; text-align: center; }
         .status-msg.error { color: var(--required-red); }
         .status-msg.success { color: #2ecc71; }
-
-        .action-link-box { display: none; margin-top: 6px; text-align: center; }
-        .verify-action-btn {
-            width: 100%; background: var(--pink-solid); border: none; border-radius: 14px;
-            padding: 15px; color: #ffffff; font-weight: 800; font-size: 0.85rem; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 0 25px rgba(255, 42, 133, 0.4);
-        }
     </style>
 </head>
 <body>
 
     <script>
-        // আগে থেকে ভেরিফাই করা থাকলে সরাসরি সেটিংস বা ইনফো পেজে রিডাইরেক্ট হবে
         if (localStorage.getItem('rorraxy_affiliate_verified') === 'true') {
             window.location.replace('/affiliate/info.html');
         }
@@ -111,12 +101,6 @@
                 </div>
                 
                 <div id="formStatus" class="status-msg"></div>
-                
-                <div id="actionLinkBox" class="action-link-box">
-                    <a id="verifyDirectBtn" href="#" class="verify-action-btn">
-                        <i class="fa-solid fa-arrow-right-to-bracket"></i> PROCEED TO SETTINGS
-                    </a>
-                </div>
 
                 <button type="submit" class="auth-btn" id="sendLinkBtn">CONTINUE TO VERIFY</button>
             </form>
@@ -128,8 +112,6 @@
         const affiliateEmailInput = document.getElementById('affiliateEmail');
         const sendLinkBtn = document.getElementById('sendLinkBtn');
         const formStatus = document.getElementById('formStatus');
-        const actionLinkBox = document.getElementById('actionLinkBox');
-        const verifyDirectBtn = document.getElementById('verifyDirectBtn');
 
         function isAuthenticEmail(email) {
             const blockedDomains = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable', 'trashmail'];
@@ -147,13 +129,6 @@
             element.style.display = 'block';
         }
 
-        verifyDirectBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.setItem('rorraxy_affiliate_verified', 'true');
-            const targetUrl = verifyDirectBtn.getAttribute('href');
-            window.location.href = targetUrl && targetUrl !== '#' ? targetUrl : '/affiliate/info.html';
-        });
-
         magicLinkForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = affiliateEmailInput.value.trim().toLowerCase();
@@ -168,11 +143,10 @@
             sendLinkBtn.disabled = true;
             sendLinkBtn.innerText = "VERIFYING...";
             formStatus.style.display = 'none';
-            actionLinkBox.style.display = 'none';
 
             try {
-                // নিজস্ব পেজেস ফাংশন এপিআই (/api/affiliate?action=send-magic-link) কল করা হচ্ছে
-                const response = await fetch(`/api/affiliate?action=send-magic-link`, {
+                // সরাসরি মাস্টার টেবিলে ভেরিফিকেশন এন্ট্রি করার জন্য রিকোয়েস্ট পাঠানো
+                const response = await fetch(`/api/affiliate?action=verify`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
@@ -184,30 +158,20 @@
                     localStorage.setItem('rorraxy_affiliate_verified', 'true');
                     localStorage.setItem('rorraxy_affiliate_email', email);
                     
-                    showStatus(formStatus, 'Verified successfully! Click below:', false);
+                    showStatus(formStatus, 'Verified successfully! Redirecting to settings...', false);
                     
-                    if (data.magicLink) {
-                        verifyDirectBtn.href = data.magicLink;
-                    } else {
-                        verifyDirectBtn.href = `/affiliate/info.html?email=${encodeURIComponent(email)}`;
-                    }
-
-                    actionLinkBox.style.display = 'block';
-                    sendLinkBtn.style.display = 'none';
+                    setTimeout(() => {
+                        window.location.href = `/affiliate/info.html?email=${encodeURIComponent(email)}`;
+                    }, 800);
                 } else {
-                    showStatus(formStatus, (data && data.error) ? data.error : 'Verification failed. Try again.', true);
+                    showStatus(formStatus, (data && data.error) ? data.error : 'Verification failed.', true);
                     sendLinkBtn.disabled = false;
                     sendLinkBtn.innerText = "CONTINUE TO VERIFY";
                 }
             } catch (err) {
-                // নেটওয়ার্ক সমস্যা হলেও ব্যাকআপ হিসেবে ইনফো পেজে যাওয়ার সুযোগ
                 localStorage.setItem('rorraxy_affiliate_verified', 'true');
                 localStorage.setItem('rorraxy_affiliate_email', email);
-                
-                showStatus(formStatus, 'Verified successfully! Click below:', false);
-                verifyDirectBtn.href = `/affiliate/info.html?email=${encodeURIComponent(email)}`;
-                actionLinkBox.style.display = 'block';
-                sendLinkBtn.style.display = 'none';
+                window.location.href = `/affiliate/info.html?email=${encodeURIComponent(email)}`;
             }
         });
     </script>
