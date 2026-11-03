@@ -406,9 +406,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
+            // সংশোধিত ফিল্টার লজিক: 'wholesale' অথবা 'both' মোডের প্রোডাক্টগুলো হোলসেল ইনডেক্স পেজে দেখাবে
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'wholesale' || mode === '';
+                return mode === 'wholesale' || mode === 'both' || mode === '';
             });
 
             if (wholesaleProducts.length === 0) {
