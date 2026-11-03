@@ -12,6 +12,15 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // অটো-ডিটেক্ট D1 ডাটাবেজ বাইন্ডিং (retail অথবা DB)
+  const db = env.retail || env.DB;
+  if (!db) {
+    return new Response(JSON.stringify({ success: false, error: "Database binding not found in environment (env.retail or env.DB)" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+  }
+
   try {
     // ১. ম্যাজিক লিংক জেনারেট রিকোয়েস্ট
     if (url.pathname.includes("/send-magic-link")) {
@@ -27,7 +36,7 @@ export async function onRequest(context) {
       const token = crypto.randomUUID();
       const expiresAt = Date.now() + 180 * 1000;
 
-      await env.retail.prepare(`
+      await db.prepare(`
         INSERT INTO verification_tokens (token, email, expires_at)
         VALUES (?, ?, ?)
       `).bind(token, email.toLowerCase(), expiresAt).run();
@@ -45,7 +54,7 @@ export async function onRequest(context) {
       const token = url.searchParams.get("token");
       if (!token) return new Response("Invalid Token", { status: 400 });
 
-      const record = await env.retail.prepare(`
+      const record = await db.prepare(`
         SELECT * FROM verification_tokens WHERE token = ?
       `).bind(token).first();
 
@@ -59,7 +68,7 @@ export async function onRequest(context) {
       const userAgent = request.headers.get("user-agent") || "Unknown";
       const now = new Date().toISOString();
 
-      await env.retail.prepare(`
+      await db.prepare(`
         INSERT INTO sellers (email, is_verified, last_ip, ip_country, user_agent, verified_at, created_at)
         VALUES (?, 1, ?, ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
         ON CONFLICT(email) DO UPDATE SET
@@ -70,12 +79,13 @@ export async function onRequest(context) {
           verified_at = excluded.verified_at
       `).bind(email, clientIp, country, userAgent, now, email, now).run();
 
-      await env.retail.prepare(`DELETE FROM verification_tokens WHERE token = ?`).bind(token).run();
+      await db.prepare(`DELETE FROM verification_tokens WHERE token = ?`).bind(token).run();
 
+      // ভেরিফিকেশনের পর সরাসরি ড্যাশবোর্ডে রিডাইরেক্ট
       return Response.redirect(`https://${url.hostname}/seller/dashboard.html?verified=true`, 302);
     }
 
-    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST) - এখানেও আইপি ও সিকিউরিটি তথ্য ক্যাপচার করা হবে
+    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST) - সাথে সেলারের মূল ID রিটার্ন করার ব্যবস্থা
     if (request.method === "POST") {
       const data = await request.json();
       const email = (data.email || data.seller_id || "").toLowerCase();
@@ -88,7 +98,7 @@ export async function onRequest(context) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      await env.retail.prepare(`
+      await db.prepare(`
         INSERT INTO sellers (
           email, brand_name, full_name, business_desc, whatsapp, 
           emergency_phone, country, full_address, doc_type, doc_number, trade_license, logo_url, is_verified, last_ip, ip_country, user_agent, verified_at, created_at
@@ -130,7 +140,15 @@ export async function onRequest(context) {
         now
       ).run();
 
-      return new Response(JSON.stringify({ success: true, message: "Seller profile and security logs saved successfully to D1" }), {
+      // সেভ হওয়ার পর ওই সেলারের ইউনিক ID সহ রেকর্ড ফেচ করে নেওয়া
+      const sellerRecord = await db.prepare(`SELECT id, email FROM sellers WHERE email = ?`).bind(email).first();
+
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: "Seller profile and security logs saved successfully to D1", 
+        seller_id: sellerRecord ? sellerRecord.id : null,
+        email: email 
+      }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
@@ -143,7 +161,7 @@ export async function onRequest(context) {
         return new Response(JSON.stringify({ success: false, error: "Email parameter required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const seller = await env.retail.prepare(`SELECT * FROM sellers WHERE email = ?`).bind(email.toLowerCase()).all();
+      const seller = await db.prepare(`SELECT * FROM sellers WHERE email = ?`).bind(email.toLowerCase()).all();
 
       return new Response(JSON.stringify({ success: true, data: seller.results }), {
         status: 200,
