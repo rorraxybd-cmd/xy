@@ -11,7 +11,7 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // অটো-ডিটেক্ট D1 ডাটাবেজ বাইন্ডিং (retail অথবা DB)
+  // অটো-ডিটেক্ট D1 ডাটাবেজ বাইন্ডিং (retail অথবা DB)[cite: 12]
   const db = env.retail || env.DB;
   if (!db) {
     return new Response(JSON.stringify({ success: false, error: "Database binding not found in environment (env.retail or env.DB)" }), {
@@ -23,7 +23,7 @@ export async function onRequest(context) {
   try {
     const url = new URL(request.url);
     
-    // ১. GET রিকোয়েস্ট: স্মার্ট ও ফ্লেক্সিবল ফিল্টারিং সহ ডাটা ফেচ করা
+    // ১. GET রিকোয়েস্ট: প্রোডাক্ট বা মোড অনুযায়ী ডাটা ফেচ করা[cite: 12]
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
       const sellerId = url.searchParams.get("seller_id");
@@ -43,14 +43,17 @@ export async function onRequest(context) {
         params.push(sellerId);
       }
 
-      // ড্রপশিপিং বা অন্যান্য মোডের জন্য ফ্লেক্সিবল ও কেস-ইনসেন্টিভ ফিল্টারিং
       if (mode) {
-        const cleanMode = mode.toLowerCase().trim();
-        if (cleanMode === 'dropshipping' || cleanMode === 'dropship') {
-          conditions.push("(LOWER(upload_mode) = 'dropshipping' OR LOWER(upload_mode) = 'dropship' OR LOWER(upload_mode) = 'all' OR LOWER(upload_mode) = 'both')");
+        const lowerMode = mode.toLowerCase().trim();
+        if (lowerMode === 'retail') {
+          conditions.push("(LOWER(upload_mode) = 'retail' OR LOWER(upload_mode) = 'both' OR LOWER(upload_mode) = 'all' OR upload_mode IS NULL OR upload_mode = '')");
+        } else if (lowerMode === 'dropshipping' || lowerMode === 'dropship') {
+          conditions.push("(LOWER(upload_mode) = 'dropshipping' OR LOWER(upload_mode) = 'dropship' OR LOWER(upload_mode) = 'all' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')");
+        } else if (lowerMode === 'wholesale') {
+          conditions.push("(LOWER(upload_mode) = 'wholesale' OR LOWER(upload_mode) = 'both' OR LOWER(upload_mode) = 'all' OR upload_mode IS NULL OR upload_mode = '')");
         } else {
           conditions.push("LOWER(upload_mode) = ?");
-          params.push(cleanMode);
+          params.push(lowerMode);
         }
       }
 
@@ -63,12 +66,12 @@ export async function onRequest(context) {
       const stmt = db.prepare(query).bind(...params);
       const { results } = await stmt.all();
 
-      return new Response(JSON.stringify({ success: true, data: results || [] }), {
+      return new Response(JSON.stringify({ success: true, data: results }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
-    // ২. POST রিকোয়েস্ট: নতুন প্রোডাক্ট ইনপুট দেওয়া
+    // ২. POST রিকোয়েস্ট: নতুন প্রোডাক্ট ইনপুট দেওয়া[cite: 12]
     if (request.method === "POST") {
       const body = await request.json();
       
@@ -143,7 +146,7 @@ export async function onRequest(context) {
       });
     }
 
-    // ৩. PUT রিকোয়েস্ট: লাইক কাউন্ট আপডেট করা
+    // ৩. PUT রিকোয়েস্ট: লাইক কাউন্ট আপডেট করা[cite: 12]
     if (request.method === "PUT") {
       const body = await request.json();
       const { product_code } = body;
