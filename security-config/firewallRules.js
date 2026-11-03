@@ -1,66 +1,43 @@
 /**
- * rorraxy - Security Configuration & Firewall Rules
- * Description: Handles safe request filtering and security headers without external breakages.
+ * rorraxy security configuration - Firewall Rules
+ * Filters and blocks suspicious automated tools, vulnerability scanners, and malicious traffic.
  */
 
-const securityConfig = {
-    enabled: true,
-    mode: "strict",
-
-    rateLimits: {
-        windowMs: 15 * 60 * 1000,
-        maxRequestsPerIP: 100,
-        loginMaxAttempts: 5
-    },
-
-    allowedMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-
-    securityHeaders: {
-        "Content-Security-Policy": "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: https://media.rorraxy.com https://rorraxy-uploader.rorraxybd.workers.dev https://*.workers.dev https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://open.er-api.com https://ipapi.co https://cdn.jsdelivr.net; img-src 'self' data: blob: https:;",
-        "X-Frame-Options": "SAMEORIGIN",
-        "X-Content-Type-Options": "nosniff",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-        "Permissions-Policy": "geolocation=(self), microphone=()"
-    },
-
+const firewallRules = {
+    // ক্ষতিকর বা পরিচিত হ্যাকিং টুলসের ইউজার-এজেন্ট ব্ল্যাকলিস্ট
     blockedUserAgents: [
-        "BadBot",
-        "ScraperX",
-        "HTTrack",
-        "Wget",
-        "libwww-perl"
-    ]
-};
+        'sqlmap',
+        'nikto',
+        'nessus',
+        'masscan',
+        'nmap',
+        'zgrab',
+        'dirbuster',
+        'gobuster'
+    ],
 
-function evaluateFirewallRules(request) {
-    if (!request || !request.headers) return { allowed: true };
-    const userAgent = request.headers.get("user-agent") || "";
-    const method = request.method;
+    /**
+     * ফায়ারওয়াল ইন্সপেকশন মিডলওয়্যার
+     */
+    inspectRequest: (req, res, next) => {
+        const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+        
+        // ১. ক্ষতিকর স্ক্যানার বা বটের ইউজার এজেন্ট চেক করা
+        const isBlockedAgent = firewallRules.blockedUserAgents.some(agent => userAgent.includes(agent));
+        if (isBlockedAgent) {
+            console.warn(`[Firewall Alert]: Blocked malicious User-Agent: ${userAgent} from IP: ${req.ip}`);
+            return res.status(403).json({
+                success: false,
+                message: 'Access Denied: Request blocked by rorraxy security firewall.'
+            });
+        }
 
-    if (!securityConfig.allowedMethods.includes(method)) {
-        return {
-            allowed: false,
-            status: 405,
-            message: "Method Not Allowed"
-        };
-    }
+        // ২. অতিরিক্ত সিকিউরিটি চেক (প্রয়োজন সাপেক্ষে এখানে আইপি হোয়াইটলিস্ট বা ব্ল্যাকলিস্ট যুক্ত করা যাবে)
 
-    for (let bot of securityConfig.blockedUserAgents) {
-        if (userAgent.includes(bot)) {
-            return {
-                allowed: false,
-                status: 403,
-                message: "Access Denied: Potential Security Threat Detected"
-            };
+        if (typeof next === 'function') {
+            next();
         }
     }
+};
 
-    return {
-        allowed: true,
-        headers: securityConfig.securityHeaders
-    };
-}
-
-if (typeof window !== 'undefined') {
-    window.RorraxyFirewall = { securityConfig, evaluateFirewallRules };
-}
+module.exports = firewallRules;
