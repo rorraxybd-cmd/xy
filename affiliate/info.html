@@ -64,7 +64,6 @@
         .summary-row span:first-child { color: var(--text-gray); font-weight: 600; }
         .summary-row span:last-child { color: var(--text-white); font-weight: 700; }
 
-        /* বটম নেভিগেশন মেনু */
         .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; padding: 10px 4px; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; white-space: nowrap; }
         .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -80,7 +79,7 @@
 </head>
 <body>
 
-    <!-- সিকিউরিটি গার্ড চেক: ভেরিফাই না করলে ইনডেক্সে পাঠিয়ে দেবে -->
+    <!-- সিকিউরিটি গার্ড চেক: ভেরিফাই না থাকলে ইনডেক্সে নিয়ে যাবে -->
     <script>
         if (localStorage.getItem('rorraxy_affiliate_verified') !== 'true') {
             window.location.replace('/affiliate/index.html');
@@ -99,7 +98,7 @@
                 <span id="infoCheckMark" style="margin-left:auto; display:none; color:var(--accent-green); font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> SAVED</span>
             </div>
 
-            <!-- ইনফো ফর্ম -->
+            <!-- ফর্ম সেকশন -->
             <form id="affiliateInfoForm" onsubmit="saveAffiliateInfo(event)">
                 <div class="form-grid">
                     <div class="form-group"><label>FIRST NAME <span class="req-star">*</span></label><input type="text" id="firstName" class="form-control" placeholder="First Name" required style="text-transform:none;"></div>
@@ -146,7 +145,7 @@
         </div>
     </div>
 
-    <!-- অ্যাফিলিয়েট বটম নেভিগেশন মেনু -->
+    <!-- বটম নেভিগেশন -->
     <nav class="affiliate-bottom-nav">
         <a href="/affiliate/dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>DASHBOARD</span></a>
         <a href="/affiliate/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
@@ -167,14 +166,16 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            let autoEmail = localStorage.getItem('rorraxy_affiliate_email') || localStorage.getItem('rorraxy_current_affiliate_email');
+            const urlParams = new URLSearchParams(window.location.search);
+            let autoEmail = urlParams.get('email') || localStorage.getItem('rorraxy_affiliate_email') || localStorage.getItem('rorraxy_current_affiliate_email');
+            
             if (!autoEmail) {
                 autoEmail = "affiliate_" + Date.now() + "@rorraxy.com";
             }
             document.getElementById('email').value = autoEmail;
             localStorage.setItem('rorraxy_affiliate_email', autoEmail);
 
-            // ক্লাউডফায়ার D1 ডেটাবেস থেকে রিয়েল-টাইম ডেটা ফেচ করা
+            // ক্লাউডফায়ার D1 ডেটাবেস থেকে রিয়েল-টাইম ডাটা লোড
             try {
                 const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(autoEmail)}`);
                 const result = await res.json();
@@ -221,7 +222,7 @@
             showSummary(data);
         }
 
-        // ফর্ম সাবমিট করার সময় কোনো অ্যালার্ট পপআপ ছাড়াই ব্যাকগ্রাউন্ডে D1 এ সেভ হবে
+        // সাবমিট করলে ব্যাকগ্রাউন্ডে D1 টেবিলে সেভ হবে, কোনো পপআপ অ্যালার্ট আসবে না
         async function saveAffiliateInfo(e) {
             e.preventDefault();
             
