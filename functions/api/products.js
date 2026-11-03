@@ -23,7 +23,7 @@ export async function onRequest(context) {
   try {
     const url = new URL(request.url);
     
-    // ১. GET রিকোয়েস্ট: প্রোডাক্ট বা মোড অনুযায়ী ডাটা ফেচ করা
+    // ১. GET রিকোয়েস্ট: স্মার্ট ও ফ্লেক্সিবল ফিল্টারিং সহ ডাটা ফেচ করা
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
       const sellerId = url.searchParams.get("seller_id");
@@ -43,9 +43,15 @@ export async function onRequest(context) {
         params.push(sellerId);
       }
 
+      // ড্রপশিপিং বা অন্যান্য মোডের জন্য ফ্লেক্সিবল ও কেস-ইনসেন্টিভ ফিল্টারিং
       if (mode) {
-        conditions.push("upload_mode = ?");
-        params.push(mode);
+        const cleanMode = mode.toLowerCase().trim();
+        if (cleanMode === 'dropshipping' || cleanMode === 'dropship') {
+          conditions.push("(LOWER(upload_mode) = 'dropshipping' OR LOWER(upload_mode) = 'dropship' OR LOWER(upload_mode) = 'all' OR LOWER(upload_mode) = 'both')");
+        } else {
+          conditions.push("LOWER(upload_mode) = ?");
+          params.push(cleanMode);
+        }
       }
 
       if (conditions.length > 0) {
@@ -57,7 +63,7 @@ export async function onRequest(context) {
       const stmt = db.prepare(query).bind(...params);
       const { results } = await stmt.all();
 
-      return new Response(JSON.stringify({ success: true, data: results }), {
+      return new Response(JSON.stringify({ success: true, data: results || [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
