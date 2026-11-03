@@ -1,83 +1,51 @@
 /**
- * rorraxy Ecosystem - Client-Side CSRF Protection Manager
- * Generates, validates, and injects anti-CSRF tokens into dynamic forms and API payloads.
+ * rorraxy security configuration - CSRF Protection
+ * Guards against Cross-Site Request Forgery attacks.
  */
 
-(function () {
-    'use strict';
+const crypto = require('crypto');
 
-    const CSRF_TOKEN_KEY = 'rorraxy_csrf_token';
-    const HEADER_NAME = 'X-CSRF-Token';
-
-    class RorraxyCSRFManager {
-        constructor() {
-            this.initToken();
+const csrfProtection = {
+    /**
+     * ইউজারের সেশনের জন্য ইউনিক CSRF টোকেন জেনারেট করা
+     */
+    generateToken: (req, res, next) => {
+        if (!req.session) {
+            if (next) return next();
+            return;
         }
 
-        initToken() {
-            let token = sessionStorage.getItem(CSRF_TOKEN_KEY);
-            if (!token) {
-                token = this.generateSecureToken();
-                sessionStorage.setItem(CSRF_TOKEN_KEY, token);
-            }
-            return token;
+        if (!req.session.csrfToken) {
+            req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+        }
+        
+        // ভিউ বা ফ্রন্টএন্ডে পাঠানোর জন্য
+        res.locals.csrfToken = req.session.csrfToken;
+        
+        if (next) next();
+    },
+
+    /**
+     * পোস্ট, পুট বা ডিলিট রিকোয়েস্টে টোকেন ভ্যালিডেশন করা
+     */
+    verifyToken: (req, res, next) => {
+        // GET, HEAD, OPTIONS রিকোয়েস্টের জন্য ভ্যালিডেশনের দরকার নেই
+        if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+            if (next) return next();
+            return;
         }
 
-        generateSecureToken() {
-            const array = new Uint8Array(32);
-            window.crypto.getRandomValues(array);
-            return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-        }
+        const clientToken = req.headers['x-csrf-token'] || req.body._csrf || req.query._csrf;
 
-        getToken() {
-            return sessionStorage.getItem(CSRF_TOKEN_KEY) || this.initToken();
-        }
-
-        injectTokenIntoForms() {
-            const token = this.getToken();
-            const forms = document.querySelectorAll('form');
-
-            forms.forEach(form => {
-                if (!form.querySelector(`input[name="csrf_token"]`)) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'csrf_token';
-                    input.value = token;
-                    form.appendChild(input);
-                }
+        if (!clientToken || !req.session || clientToken !== req.session.csrfToken) {
+            return res.status(403).json({
+                success: false,
+                message: 'Security Alert: Invalid or missing CSRF token.'
             });
         }
 
-        async secureFetch(url, options = {}) {
-            options.headers = options.headers || {};
-            
-            const method = (options.method || 'GET').toUpperCase();
-            if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
-                options.headers[HEADER_NAME] = this.getToken();
-            }
-
-            return fetch(url, options);
-        }
-
-        validateRequest(incomingToken) {
-            return incomingToken === this.getToken();
-        }
+        if (next) next();
     }
+};
 
-    const csrfManager = new RorraxyCSRFManager();
-    window.RorraxyCSRF = csrfManager;
-
-    document.addEventListener('DOMContentLoaded', () => {
-        csrfManager.injectTokenIntoForms();
-
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.addedNodes.length > 0) {
-                    csrfManager.injectTokenIntoForms();
-                }
-            });
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-    });
-})();
+module.exports = csrfProtection;
