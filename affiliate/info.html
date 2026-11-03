@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Affiliate Settings - rorraxy</title>
+    <title>Affiliate Settings - rorraxy Ecosystem</title>
     
     <!-- Favicon Logo -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
@@ -30,8 +30,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; text-rendering: optimizeLegibility; }
-        body { padding: 24px 16px 40px 16px; text-transform: uppercase; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; }
+        body { padding: 24px 16px 90px 16px; text-transform: uppercase; }
         .main-container { width: 100%; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
 
         .dashboard-header { text-align: center; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -56,17 +56,23 @@
         .payment-field-group { display: none; flex-direction: column; gap: 10px; }
         .payment-field-group.active { display: flex; }
 
-        .action-btn { background: var(--gold-gradient); color: #000000; border: none; width: 100%; padding: 13px 14px; border-radius: 12px; font-weight: 800; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.5px; box-shadow: 0 0 20px rgba(212,175,55,0.25); transition: all 0.25s ease; }
-        .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 0 30px rgba(212,175,55,0.4); }
+        .action-btn, .edit-profile-btn { background: var(--gold-gradient); color: #000000; border: none; width: 100%; padding: 13px 14px; border-radius: 12px; font-weight: 800; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.5px; box-shadow: 0 0 20px rgba(212,175,55,0.25); transition: all 0.25s ease; margin-top: 10px; }
+        .action-btn:hover, .edit-profile-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
         
         .summary-box { display: none; background: #000000; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); flex-direction: column; gap: 8px; text-transform: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
         .summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 5px; }
         .summary-row span:first-child { color: var(--text-gray); font-weight: 600; }
         .summary-row span:last-child { color: var(--text-white); font-weight: 700; }
-        .edit-badge { color: var(--gold-solid); cursor: pointer; font-weight: 700; font-size: 0.70rem; display: inline-flex; align-items: center; gap: 4px; }
+
+        /* বটম নেভিগেশন মেনু */
+        .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; padding: 10px 4px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; white-space: nowrap; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-gray); }
+        .nav-item span { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.3px; color: var(--text-gray); }
 
         @media (max-width: 600px) { 
-            body { padding: 16px 12px 30px 12px; }
+            body { padding: 16px 12px 90px 12px; }
             .form-grid { grid-template-columns: 1fr; gap: 10px; } 
             .form-group.full-width, .dynamic-payment-container { grid-column: span 1; } 
         }
@@ -74,7 +80,7 @@
 </head>
 <body>
 
-    <!-- সিকিউরিটি গার্ড চেক -->
+    <!-- সিকিউরিটি গার্ড চেক: ভেরিফাই না করলে ইনডেক্সে পাঠিয়ে দেবে -->
     <script>
         if (localStorage.getItem('rorraxy_affiliate_verified') !== 'true') {
             window.location.replace('/affiliate/index.html');
@@ -84,15 +90,16 @@
     <div class="main-container">
         <header class="dashboard-header">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
-            <h1>AFFILIATE SETTINGS</h1>
+            <h1>AFFILIATE SETTINGS & INFO</h1>
         </header>
 
         <div class="sector-card">
             <div class="section-title">
-                <i class="fa-solid fa-user-gear"></i> AFFILIATE & PAYMENT INFO
+                <i class="fa-solid fa-user-gear"></i> AFFILIATE PROFILE REGISTRATION
                 <span id="infoCheckMark" style="margin-left:auto; display:none; color:var(--accent-green); font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> SAVED</span>
             </div>
 
+            <!-- ইনফো ফর্ম -->
             <form id="affiliateInfoForm" onsubmit="saveAffiliateInfo(event)">
                 <div class="form-grid">
                     <div class="form-group"><label>FIRST NAME <span class="req-star">*</span></label><input type="text" id="firstName" class="form-control" placeholder="First Name" required style="text-transform:none;"></div>
@@ -125,18 +132,28 @@
                 <button type="submit" id="saveInfoBtn" class="action-btn"><i class="fa-solid fa-floppy-disk"></i> SAVE INFO</button>
             </form>
 
+            <!-- প্রোফাইল প্রিভিউ সামারি বক্স -->
             <div class="summary-box" id="infoSummaryBox">
                 <div class="summary-row"><span>FULL NAME:</span> <span id="sumName"></span></div>
                 <div class="summary-row"><span>EMAIL:</span> <span id="sumEmail"></span></div>
                 <div class="summary-row"><span>PHONE:</span> <span id="sumPhone"></span></div>
                 <div class="summary-row"><span>PAYMENT METHOD:</span> <span id="sumMethod"></span></div>
                 <div class="summary-row"><span>CHANNEL:</span> <span id="sumChannel"></span></div>
-                <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
-                    <span class="edit-badge" onclick="editAffiliateInfo()"><i class="fa-solid fa-pen-to-square"></i> EDIT</span>
-                </div>
+                <button type="button" class="edit-profile-btn" onclick="editAffiliateInfo()">
+                    <i class="fa-solid fa-pen-to-square"></i> EDIT INFO
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- অ্যাফিলিয়েট বটম নেভিগেশন মেনু -->
+    <nav class="affiliate-bottom-nav">
+        <a href="/affiliate/dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>DASHBOARD</span></a>
+        <a href="/affiliate/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
+        <a href="/affiliate/reports.html" class="nav-item"><i class="fa-solid fa-chart-column"></i><span>REPORTS</span></a>
+        <a href="/affiliate/links.html" class="nav-item"><i class="fa-solid fa-link"></i><span>LINKS</span></a>
+        <a href="/affiliate/info.html" class="nav-item active"><i class="fa-solid fa-user-gear"></i><span>SETTINGS</span></a>
+    </nav>
 
     <script>
         function handlePaymentMethodChange() {
@@ -150,24 +167,20 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            let autoEmail = urlParams.get('email') || localStorage.getItem('rorraxy_affiliate_email') || 'affiliate@rorraxy.com';
+            let autoEmail = localStorage.getItem('rorraxy_affiliate_email') || localStorage.getItem('rorraxy_current_affiliate_email');
+            if (!autoEmail) {
+                autoEmail = "affiliate_" + Date.now() + "@rorraxy.com";
+            }
             document.getElementById('email').value = autoEmail;
+            localStorage.setItem('rorraxy_affiliate_email', autoEmail);
 
-            const storageKey = `rorraxy_affiliate_info_${autoEmail}`;
-            const savedInfo = localStorage.getItem(storageKey);
-
-            if(savedInfo) {
-                try {
-                    const data = JSON.parse(savedInfo);
-                    fillFormAndShowSummary(data);
-                } catch(e) { console.error(e); }
-            } else {
-                try {
-                    const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(autoEmail)}`);
-                    const result = await res.json();
-                    if(result.success && result.data && result.data.length > 0) {
-                        const dbData = result.data[0];
+            // ক্লাউডফায়ার D1 ডেটাবেস থেকে রিয়েল-টাইম ডেটা ফেচ করা
+            try {
+                const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(autoEmail)}`);
+                const result = await res.json();
+                if(result.success && result.data && result.data.length > 0) {
+                    const dbData = result.data[0];
+                    if(dbData.first_name) {
                         const formattedData = {
                             firstName: dbData.first_name || '',
                             lastName: dbData.last_name || '',
@@ -176,13 +189,17 @@
                             paymentMethod: dbData.payment_method || '',
                             accountDetails: dbData.account_details || ''
                         };
-                        localStorage.setItem(storageKey, JSON.stringify(formattedData));
                         fillFormAndShowSummary(formattedData);
+                        return;
                     }
-                } catch(err) {
-                    console.warn("Cloud sync fetch notice:", err);
                 }
+            } catch(err) {
+                console.warn("Cloud sync fetch notice:", err);
             }
+
+            // প্রথমবার হলে ফর্ম দেখাবে
+            document.getElementById('affiliateInfoForm').style.display = 'block';
+            document.getElementById('infoSummaryBox').style.display = 'none';
         });
 
         function fillFormAndShowSummary(data) {
@@ -204,6 +221,7 @@
             showSummary(data);
         }
 
+        // ফর্ম সাবমিট করার সময় কোনো অ্যালার্ট পপআপ ছাড়াই ব্যাকগ্রাউন্ডে D1 এ সেভ হবে
         async function saveAffiliateInfo(e) {
             e.preventDefault();
             
@@ -240,8 +258,6 @@
                 paymentMethod: data.payment_method,
                 accountDetails: data.account_details
             };
-
-            localStorage.setItem(`rorraxy_affiliate_info_${userEmail}`, JSON.stringify(cleanData));
 
             try {
                 await fetch('/api/affiliate?action=register', {
