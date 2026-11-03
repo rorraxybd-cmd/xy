@@ -179,8 +179,49 @@
             document.getElementById('deviceSyncModal').style.display = 'none';
         }
 
+        // ক্লাউডফ্লেয়ার এবং লোকালস্টোরেজ থেকে বর্তমান সেলারের প্রোডাক্ট কাউন্ট ফেচ করে ড্যাশবোর্ডে আপডেট করার ফাংশন
         async function loadDashboardStats() {
-            document.getElementById('statProductsVal').innerText = "0";
+            let cloudflareProducts = [];
+            
+            const currentSellerId = String(localStorage.getItem('seller_id') || "").trim();
+            const currentSellerEmail = String(localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "").toLowerCase().trim();
+
+            try {
+                const response = await fetch('/api/products');
+                const result = await response.json();
+                let rawData = result.data || result.results || result;
+                if (result.success && Array.isArray(rawData) && rawData.length > 0) {
+                    cloudflareProducts = rawData;
+                } else if (Array.isArray(result) && result.length > 0) {
+                    cloudflareProducts = result;
+                }
+            } catch (err) {
+                console.warn("API Fetch Warning:", err);
+            }
+
+            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+            
+            let mergedMap = new Map();
+            [...localProducts, ...cloudflareProducts].forEach(p => {
+                let pId = p.id || p.product_id || p.product_code || p.title;
+                if(pId) mergedMap.set(String(pId), p);
+            });
+
+            let allProducts = Array.from(mergedMap.values());
+
+            // বর্তমান লগইন করা সেলারের প্রোডাক্টগুলো ফিল্টার করা
+            let sellerProducts = allProducts.filter(p => {
+                const pSellerId = String(p.seller_id || p.sellerId || "").trim();
+                const pSellerEmail = String(p.email || p.seller_email || "").toLowerCase().trim();
+
+                if (currentSellerId && pSellerId === currentSellerId) return true;
+                if (currentSellerEmail && (pSellerEmail === currentSellerEmail || pSellerId.includes(currentSellerEmail))) return true;
+                return false;
+            });
+
+            // মোট প্রোডাক্টের সংখ্যা ড্যাশবোর্ডে বসানো
+            const totalProductsCount = sellerProducts.length;
+            document.getElementById('statProductsVal').innerText = totalProductsCount;
             document.getElementById('statOrdersVal').innerText = "0";
             document.getElementById('statRevenueVal').innerText = "$0.00";
             document.getElementById('statBalanceVal').innerText = "$0.00";
