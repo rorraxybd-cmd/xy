@@ -377,7 +377,7 @@
             }
         }
 
-        // রিটেইল প্রোডাক্ট ফেচ এবং নিখুঁত সিঙ্গেল মোড ফিল্টারিং
+        // রিটেইল প্রোডাক্ট ফেচ এবং নিখুঁত ফিল্টারিং লজিক (যা ডেটাবেজের সাথে সামঞ্জস্যপূর্ণ)
         async function loadRetailProducts() {
             const feedContainer = document.getElementById('productFeed');
             let products = [];
@@ -405,10 +405,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // শুধুমাত্র রিটেইল মোডের প্রোডাক্ট ফিল্টার করা (সিঙ্গেল মোড)
+            // ডেটাবেজ বা লোকাল প্রোডাক্ট থেকে 'retail', 'both', 'all' এবং ফাঁকা মোডের প্রোডাক্টগুলো রিটেইলে শো করার ফিল্টার
             let retailProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'retail' || mode === '';
+                return mode === 'retail' || mode === 'both' || mode === 'all' || mode === '';
             });
 
             if (retailProducts.length === 0) {
