@@ -278,7 +278,7 @@
         </div>
     </header>
 
-    <div id="youMenuModalOverlay" class="luxury-center-modal-overlay">
+    <div id="youMenuModalOverlay" class="luxury-center-modal-overlay" onclick="closeYouMenuModal()">
         <div class="luxury-center-modal-box" onclick="event.stopPropagation()">
             <button class="luxury-modal-close-btn" onclick="closeYouMenuModal()"><i class="fa-solid fa-xmark"></i></button>
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="luxury-modal-logo-large" onclick="navigateTo('https://rorraxy.com/')">
@@ -356,7 +356,7 @@
     </nav>
 
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
             updateCartBadgeCount();
             loadRetailProducts();
@@ -377,7 +377,6 @@
             }
         }
 
-        // রিটেইল প্রোডাক্ট ফেচ এবং ব্যাকএন্ড এপিআই মোড সহ সঠিক ফিল্টারিং
         async function loadRetailProducts() {
             const feedContainer = document.getElementById('productFeed');
             let products = [];
@@ -405,7 +404,6 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // ফ্রন্টএন্ডে রিটেইল বা ফাঁকা মোডের প্রোডাক্ট ফিল্টার করা
             let retailProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
                 return mode === 'retail' || mode === 'both' || mode === 'all' || mode === '';
@@ -472,6 +470,15 @@
             feedContainer.innerHTML = htmlContent;
         }
 
+        function openYouMenuModal(event) {
+            if(event) event.stopPropagation();
+            document.getElementById('youMenuModalOverlay').style.display = 'flex';
+        }
+
+        function closeYouMenuModal() {
+            document.getElementById('youMenuModalOverlay').style.display = 'none';
+        }
+
         function toggleLike(element) {
             const icon = element.querySelector('i');
             if (icon.classList.contains('fa-regular')) {
@@ -491,6 +498,16 @@
             } else {
                 navigator.clipboard.writeText(url);
                 alert("PRODUCT LINK COPIED TO CLIPBOARD!");
+            }
+        }
+
+        function updateCartBadgeCount() {
+            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+            let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
+            let badge = document.getElementById('floatingCartItemCountBadge');
+            if(badge) {
+                badge.innerText = totalQty;
+                totalQty > 0 ? badge.classList.remove('empty-badge') : badge.classList.add('empty-badge');
             }
         }
     </script>
