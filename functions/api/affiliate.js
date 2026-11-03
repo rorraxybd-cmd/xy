@@ -33,18 +33,22 @@ export async function onRequest(context) {
       const country = request.headers.get("cf-ipcountry") || "Unknown";
       const userAgent = request.headers.get("user-agent") || "Unknown";
       const now = new Date().toISOString();
+      const authProvider = "email";
+      const authId = email;
 
-      // সরাসরি এক টেবিলেই ভেরিফিকেশন স্ট্যাটাস ও আইপি সিকিউরিটি লগ এন্ট্রি
+      // master টেবিলে ভেরিফিকেশন, আইপি এবং auth_provider/auth_id সেভ করা
       await env.retail.prepare(`
-        INSERT INTO affiliate_info (email, is_verified, last_ip, ip_country, user_agent, verified_at, created_at)
-        VALUES (?, 1, ?, ?, ?, ?, COALESCE((SELECT created_at FROM affiliate_info WHERE email = ?), ?))
+        INSERT INTO affiliate_info (email, is_verified, auth_provider, auth_id, last_ip, ip_country, user_agent, verified_at, created_at)
+        VALUES (?, 1, ?, ?, ?, ?, ?, ?, COALESCE((SELECT created_at FROM affiliate_info WHERE email = ?), ?))
         ON CONFLICT(email) DO UPDATE SET
           is_verified = 1,
+          auth_provider = COALESCE(affiliate_info.auth_provider, excluded.auth_provider),
+          auth_id = COALESCE(affiliate_info.auth_id, excluded.auth_id),
           last_ip = excluded.last_ip,
           ip_country = excluded.ip_country,
           user_agent = excluded.user_agent,
           verified_at = excluded.verified_at
-      `).bind(email, clientIp, country, userAgent, now, email, now).run();
+      `).bind(email, authProvider, authId, clientIp, country, userAgent, now, email, now).run();
 
       return new Response(JSON.stringify({ success: true, message: "Verified successfully in master table" }), {
         status: 200,
@@ -62,6 +66,8 @@ export async function onRequest(context) {
       const country = request.headers.get("cf-ipcountry") || "Unknown";
       const userAgent = request.headers.get("user-agent") || "Unknown";
       const now = new Date().toISOString();
+      const authProvider = data.auth_provider || "email";
+      const authId = data.auth_id || email;
 
       if (!email) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -79,6 +85,8 @@ export async function onRequest(context) {
           promo_channel = excluded.promo_channel,
           payment_method = excluded.payment_method,
           account_details = excluded.account_details,
+          auth_provider = excluded.auth_provider,
+          auth_id = excluded.auth_id,
           last_ip = excluded.last_ip,
           ip_country = excluded.ip_country,
           user_agent = excluded.user_agent,
@@ -91,8 +99,8 @@ export async function onRequest(context) {
         data.promo_channel || "",
         data.payment_method || "",
         data.account_details || "",
-        data.auth_provider || "email",
-        data.auth_id || email,
+        authProvider,
+        authId,
         clientIp,
         country,
         userAgent,
