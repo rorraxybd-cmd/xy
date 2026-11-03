@@ -163,21 +163,28 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* পিন্টারেস্ট স্টাইল মেসনারি বা ফ্লেক্সিবল গ্রিড (ফাঁকা জায়গা দূরীকরণের ফিক্স) */
+        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (গ্যাপ ও ফাঁকা জায়গা দূর করার জন্য ফিক্সড) */
         .feed-container {
-            padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
-            align-items: start;
+            padding: 8px 6px;
+            column-count: 2;
+            column-gap: 8px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         @media (min-width: 768px) { 
-            .feed-container { grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px; } 
+            .feed-container { 
+                column-count: 4; 
+                column-gap: 12px; 
+                padding: 12px; 
+            } 
         }
 
         .product-card {
             background: var(--card-wholesale); border-radius: 12px; overflow: hidden; 
-            display: flex; flex-direction: column; width: 100%; 
+            display: inline-block; width: 100%; 
             border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
-            margin-bottom: 8px; break-inside: avoid;
+            margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
         }
         
         .product-media-box { 
@@ -185,7 +192,6 @@
             display: flex; align-items: center; justify-content: center; 
         }
         
-        /* ছবির অরিজিনাল রেশিও বজায় রাখার ফিক্স (গ্যাপহীন প্রদর্শন) */
         .product-media-box img { 
             width: 100%; height: auto; display: block; object-fit: contain; background: #000000; 
         }
