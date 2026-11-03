@@ -16,55 +16,25 @@ export async function onRequest(context) {
     const action = url.searchParams.get("action");
 
     // ==========================================
-    // ১. ম্যাজিক লিংক জেনারেট
+    // ১. ভেরিফিকেশন রিকোয়েস্ট (সরাসরি affiliate_info টেবিলে সেভ হবে)
     // ==========================================
-    if (url.pathname.includes("/send-magic-link") || action === "send-magic-link") {
+    if (action === "send-magic-link" || action === "verify") {
       if (request.method !== "POST") {
-        return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const { email } = await request.json();
+      const body = await request.json();
+      const email = (body.email || "").toLowerCase();
       if (!email) {
-        return new Response(JSON.stringify({ error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return new Response(JSON.stringify({ success: false, error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const token = crypto.randomUUID();
-      const expiresAt = Date.now() + 180 * 1000;
-
-      await env.retail.prepare(`
-        INSERT INTO verification_tokens (token, email, expires_at)
-        VALUES (?, ?, ?)
-      `).bind(token, email.toLowerCase(), expiresAt).run();
-
-      const magicLink = `https://${url.hostname}/api/affiliate/verify-magic?token=${token}`;
-
-      return new Response(JSON.stringify({ success: true, magicLink }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
-    }
-
-    // ==========================================
-    // ২. ম্যাজিক লিংক ভেরিফিকেশন ও সিকিউরিটি লগ
-    // ==========================================
-    if (url.pathname.includes("/verify-magic") || action === "verify-magic") {
-      const token = url.searchParams.get("token");
-      if (!token) return new Response("Invalid Token", { status: 400 });
-
-      const record = await env.retail.prepare(`
-        SELECT * FROM verification_tokens WHERE token = ?
-      `).bind(token).first();
-
-      if (!record || Date.now() > record.expires_at) {
-        return new Response("Link expired or invalid!", { status: 410 });
-      }
-
-      const email = record.email;
       const clientIp = request.headers.get("cf-connecting-ip") || "Unknown";
       const country = request.headers.get("cf-ipcountry") || "Unknown";
       const userAgent = request.headers.get("user-agent") || "Unknown";
       const now = new Date().toISOString();
 
+      // সরাসরি এক টেবিলেই ভেরিফিকেশন স্ট্যাটাস ও আইপি সিকিউরিটি লগ এন্ট্রি
       await env.retail.prepare(`
         INSERT INTO affiliate_info (email, is_verified, last_ip, ip_country, user_agent, verified_at, created_at)
         VALUES (?, 1, ?, ?, ?, ?, COALESCE((SELECT created_at FROM affiliate_info WHERE email = ?), ?))
@@ -76,13 +46,14 @@ export async function onRequest(context) {
           verified_at = excluded.verified_at
       `).bind(email, clientIp, country, userAgent, now, email, now).run();
 
-      await env.retail.prepare(`DELETE FROM verification_tokens WHERE token = ?`).bind(token).run();
-
-      return Response.redirect(`https://${url.hostname}/affiliate/dashboard.html?verified=true`, 302);
+      return new Response(JSON.stringify({ success: true, message: "Verified successfully in master table" }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
     }
 
     // ==========================================
-    // ৩. অ্যাফিলিয়েট ইনফো সেভ ও রেজিস্ট্রেশন
+    // ২. ইনফো রেজিস্ট্রেশন ও আপডেট (info.html থেকে)
     // ==========================================
     if (action === "register" && request.method === "POST") {
       const data = await request.json();
@@ -136,6 +107,9 @@ export async function onRequest(context) {
       });
     }
 
+    // ==========================================
+    // ৩. প্রোফাইল ডাটা ফেচ (GET)
+    // ==========================================
     if (action === "info" && request.method === "GET") {
       const affiliateId = url.searchParams.get("affiliate_id");
       if (!affiliateId) {
@@ -150,7 +124,7 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ৪. কনভার্শন এবং ক্লিক লগ (reports.html ও links.html এর জন্য)
+    // ৪. কনভার্শন এবং ক্লিক লগ (reports.html ও links.html)
     // ==========================================
     if (action === "conversion") {
       if (request.method === "POST") {
@@ -187,7 +161,7 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ৫. পেআউট রিকোয়েস্ট এবং হিস্ট্রি (payout.html এর জন্য)
+    // ৫. পেআউট রিকোয়েস্ট এবং হিস্ট্রি (payout.html)
     // ==========================================
     if (action === "payout" || action === "payout_request") {
       if (request.method === "POST") {
@@ -223,7 +197,7 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ৬. ড্যাশবোর্ড স্ট্যাটস বা সামারি (dashboard.html এর জন্য)
+    // ৬. ড্যাশবোর্ড স্ট্যাটস বা সামারি (dashboard.html)
     // ==========================================
     if (action === "stats" && request.method === "GET") {
       const affiliateId = (url.searchParams.get("affiliate_id") || "").toLowerCase();
@@ -256,7 +230,7 @@ export async function onRequest(context) {
       });
     }
 
-    return new Response(JSON.stringify({ message: "Affiliate Centralized API Active" }), { status: 200, headers: corsHeaders });
+    return new Response(JSON.stringify({ message: "Affiliate Master API Active" }), { status: 200, headers: corsHeaders });
 
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
