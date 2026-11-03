@@ -73,8 +73,8 @@
         
         .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
-        @media(min-width: 600px) { .mode-grid { grid-template-columns: repeat(4, 1fr); } }
+        .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        @media(min-width: 600px) { .mode-grid { grid-template-columns: repeat(3, 1fr); } }
 
         .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
         @media(min-width: 768px) { .category-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -175,8 +175,7 @@
                     <div class="mode-grid">
                         <div class="mode-box" onclick="selectUploadMode('retail', this)"><i class="fa-solid fa-store"></i><span>RETAIL</span></div>
                         <div class="mode-box" onclick="selectUploadMode('wholesale', this)"><i class="fa-solid fa-boxes-stacked"></i><span>WHOLESALE</span></div>
-                        <div class="mode-box" onclick="selectUploadMode('dropshipping', this)"><i class="fa-solid fa-truck-fast"></i><span>DROPSHIPPING</span></div>
-                        <div class="mode-box" onclick="selectUploadMode('all', this)"><i class="fa-solid fa-globe"></i><span>ALL MODES</span></div>
+                        <div class="mode-box" onclick="selectUploadMode('both', this)"><i class="fa-solid fa-globe"></i><span>BOTH</span></div>
                     </div>
                 </div>
                 <div class="btn-nav-container">
@@ -269,17 +268,6 @@
                         <div class="input-group">
                             <label for="market_price">MARKET PRICE ($)<span class="required-star">*</span></label>
                             <input type="number" step="0.01" min="0" id="market_price" placeholder="180.00">
-                        </div>
-                    </div>
-
-                    <div class="row-grid" id="dropshipping-price-row" style="margin-top: 12px; display: none;">
-                        <div class="input-group">
-                            <label for="dropship_base_price">DROPSHIP BASE PRICE ($)<span class="required-star">*</span></label>
-                            <input type="number" step="0.01" min="0" id="dropship_base_price" placeholder="80.00">
-                        </div>
-                        <div class="input-group">
-                            <label for="dropship_resell_price">RESELL PRICE ($)</label>
-                            <input type="number" step="0.01" min="0" id="dropship_resell_price" placeholder="120.00">
                         </div>
                     </div>
 
@@ -500,23 +488,18 @@
             document.getElementById('next-btn-1').disabled = false;
 
             const retailRow = document.getElementById('retail-price-row');
-            const dropshipRow = document.getElementById('dropshipping-price-row');
             const wholesaleRow = document.getElementById('wholesale-price-row');
             const moqGroup = document.getElementById('moq-input-group');
 
             retailRow.style.display = 'none';
-            dropshipRow.style.display = 'none';
             wholesaleRow.style.display = 'none';
             moqGroup.style.display = 'none';
 
-            if (mode === 'dropshipping') {
-                dropshipRow.style.display = 'grid';
-            } else if (mode === 'wholesale') {
+            if (mode === 'wholesale') {
                 wholesaleRow.style.display = 'grid';
                 moqGroup.style.display = 'block';
-            } else if (mode === 'all') {
+            } else if (mode === 'both') {
                 retailRow.style.display = 'grid';
-                dropshipRow.style.display = 'grid';
                 wholesaleRow.style.display = 'grid';
                 moqGroup.style.display = 'block';
             } else {
@@ -698,7 +681,7 @@
             const rawSellerEmail = localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
             const finalSellerId = rawSellerId ? rawSellerId : (rawSellerEmail || "Unknown");
 
-            // নিশ্চিত করা হচ্ছে যে মোড 'all' বা 'both' হলে সেটি ব্যাকএন্ডে সঠিকভাবে পাস হবে
+            // নিশ্চিত করা হচ্ছে যে মোড 'both' হলে সেটি ব্যাকএন্ডে সঠিকভাবে পাস হবে
             const finalUploadMode = selectedModeValue ? selectedModeValue.toLowerCase().trim() : "retail";
 
             const productPayload = {
@@ -706,12 +689,10 @@
                 seller_email: rawSellerEmail,
                 product_code: `PROD_${Date.now()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
-                upload_mode: finalUploadMode, // 'all', 'both', 'retail', 'wholesale', 'dropshipping'
+                upload_mode: finalUploadMode, // 'both', 'retail', 'wholesale'
                 category: selectedCategoryValue,
-                price: parseFloat(document.getElementById('selling_price').value) || parseFloat(document.getElementById('dropship_base_price').value) || parseFloat(document.getElementById('price_sample').value) || 0,
+                price: parseFloat(document.getElementById('selling_price').value) || parseFloat(document.getElementById('price_sample').value) || 0,
                 market_price: parseFloat(document.getElementById('market_price').value) || 0,
-                dropship_base_price: parseFloat(document.getElementById('dropship_base_price').value) || 0,
-                dropship_resell_price: parseFloat(document.getElementById('dropship_resell_price').value) || 0,
                 price_sample: parseFloat(document.getElementById('price_sample').value) || 0,
                 price_min_whole: parseFloat(document.getElementById('price_min_whole').value) || 0,
                 price_bulk: parseFloat(document.getElementById('price_bulk').value) || 0,
