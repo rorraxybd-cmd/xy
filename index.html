@@ -161,22 +161,31 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+        /* গ্যাপ এবং অতিরিক্ত ফাঁকা জায়গা দূর করার জন্য কলামভিত্তিক মেসনারি লেআউট */
         .feed-container {
-            padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
+            padding: 8px 6px; 
+            column-count: 2;
+            column-gap: 8px;
+            width: 100%; 
+            max-width: 1400px; 
+            margin: 0 auto;
         }
         @media (min-width: 768px) { 
-            .feed-container { grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 12px; } 
+            .feed-container { 
+                column-count: 4;
+                column-gap: 14px; 
+                padding: 12px; 
+            } 
         }
 
         .product-card {
             background: var(--card-retail); border-radius: 14px; overflow: hidden; 
-            display: flex; flex-direction: column; width: 100%; 
+            display: inline-block; width: 100%; 
             border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
             break-inside: avoid; margin-bottom: 8px;
         }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: cover; background: #050508; }
+        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
         
         .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
@@ -257,7 +266,6 @@
             <select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
                 <option value="retail" selected>RETAIL STORE</option>
                 <option value="wholesale">WHOLESALE</option>
-                <option value="dropshipping">DROPSHIPPING</option>
             </select>
         </div>
     </header>
@@ -353,8 +361,6 @@
         function switchEcosystemMode(selectedMode) {
             if(selectedMode === 'wholesale') {
                 window.location.href = '/wholesale/index.html';
-            } else if(selectedMode === 'dropshipping') {
-                window.location.href = '/dropship/index.html';
             } else {
                 localStorage.setItem('rorraxy_mode', selectedMode);
                 loadLiveProducts();
