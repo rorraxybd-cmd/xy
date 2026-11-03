@@ -47,17 +47,10 @@
         }
 
         .info-card-title {
-            font-size: 0.9rem;
-            font-weight: 800;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-            padding-bottom: 12px;
+            font-size: 0.9rem; font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 12px;
         }
 
         .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 16px; }
@@ -133,7 +126,7 @@
                 <span id="cardTitleText">SELLER PROFILE PREVIEW</span>
             </div>
 
-            <!-- ১. প্রফেশনাল সিভি স্টাইল প্রিভিউ সেকশন -->
+            <!-- প্রফেশনাল সিভি স্টাইল প্রিভিউ সেকশন -->
             <div id="profilePreviewSection" style="display: none;">
                 <div class="cv-preview-box">
                     <div class="cv-header-section">
@@ -144,38 +137,14 @@
                         </div>
                     </div>
                     <div class="cv-grid">
-                        <div class="cv-item">
-                            <span class="lbl">BUSINESS EMAIL</span>
-                            <span class="val" id="prevEmail">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl">FULL NAME</span>
-                            <span class="val" id="prevFullName">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl">WHATSAPP</span>
-                            <span class="val" id="prevWhatsapp">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl">EMERGENCY PHONE</span>
-                            <span class="val" id="prevPhone">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl">COUNTRY</span>
-                            <span class="val" id="prevCountry">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl">ADDRESS</span>
-                            <span class="val" id="prevAddress">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl" id="prevDocTypeLbl">NID NUMBER</span>
-                            <span class="val" id="prevDocNum">--</span>
-                        </div>
-                        <div class="cv-item">
-                            <span class="lbl">TRADE LICENSE</span>
-                            <span class="val" id="prevTradeLicense">--</span>
-                        </div>
+                        <div class="cv-item"><span class="lbl">BUSINESS EMAIL</span><span class="val" id="prevEmail">--</span></div>
+                        <div class="cv-item"><span class="lbl">FULL NAME</span><span class="val" id="prevFullName">--</span></div>
+                        <div class="cv-item"><span class="lbl">WHATSAPP</span><span class="val" id="prevWhatsapp">--</span></div>
+                        <div class="cv-item"><span class="lbl">EMERGENCY PHONE</span><span class="val" id="prevPhone">--</span></div>
+                        <div class="cv-item"><span class="lbl">COUNTRY</span><span class="val" id="prevCountry">--</span></div>
+                        <div class="cv-item"><span class="lbl">ADDRESS</span><span class="val" id="prevAddress">--</span></div>
+                        <div class="cv-item"><span class="lbl" id="prevDocTypeLbl">NID NUMBER</span><span class="val" id="prevDocNum">--</span></div>
+                        <div class="cv-item"><span class="lbl">TRADE LICENSE</span><span class="val" id="prevTradeLicense">--</span></div>
                     </div>
                     <div>
                         <button type="button" class="edit-profile-btn" onclick="switchToEditMode()">
@@ -185,7 +154,7 @@
                 </div>
             </div>
 
-            <!-- ২. ইনফো আপডেট ফর্ম সেকশন -->
+            <!-- ইনফো আপডেট ফর্ম সেকশন -->
             <form id="businessInfoForm" style="display: none;">
                 <div class="avatar-upload-container">
                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="avatar-preview" id="avatarPreview">
@@ -336,9 +305,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            // ১. ভেরিফিকেশন প্যানেল বা সঠিক সেশন থেকে বর্তমান ইউজারের ইমেইল নেওয়া (পুরনো ক্যাশ ইমেইল এড়িয়ে চলা)
-            const urlParams = new URLSearchParams(window.location.search);
-            let userEmail = urlParams.get('email') || localStorage.getItem('rorraxy_seller_verified_email') || localStorage.getItem('rorraxy_seller_email');
+            let userEmail = localStorage.getItem('rorraxy_seller_verified_email') || localStorage.getItem('rorraxy_seller_email');
 
             if (!userEmail) {
                 userEmail = "seller_" + Date.now() + "@rorraxy.com";
@@ -347,40 +314,28 @@
             localStorage.setItem('rorraxy_current_seller_email', userEmail);
             document.getElementById('businessEmail').value = userEmail;
 
-            // ২. এই নির্দিষ্ট ইমেইলের জন্য আলাদা লোকাল স্টোরেজ কী (Key) চেক
-            const storageKey = `rorraxy_seller_profile_${userEmail}`;
-            const savedProfile = JSON.parse(localStorage.getItem(storageKey) || 'null');
-
-            if (savedProfile && savedProfile.brandName) {
-                fillFormValues(savedProfile);
-                renderPreview(savedProfile);
-                return;
-            }
-
-            // ৩. ক্লাউডফায়ার ডেটাবেস থেকে ইউনিক ইমেল দিয়ে রিয়েল-টাইম ফেচ
+            // ক্লাউডফায়ার D1 ডেটাবেস থেকে সরাসরি রিয়েল-টাইম ডেটা ফেচ করা
             try {
-                const response = await fetch(`/api/seller?action=profile&email=${encodeURIComponent(userEmail)}`);
+                const response = await fetch(`/api/seller?email=${encodeURIComponent(userEmail)}`);
                 const result = await response.json();
                 if (result.success && result.data && result.data.length > 0) {
                     const dbProfile = result.data[0];
                     if(dbProfile.brand_name) {
-                        const formattedData = {
+                        renderPreview(dbProfile);
+                        fillFormValues({
                             brandName: dbProfile.brand_name,
-                            businessEmail: dbProfile.email || userEmail,
-                            fullName: dbProfile.full_name || '',
-                            businessDesc: dbProfile.business_desc || '',
-                            whatsapp: dbProfile.whatsapp || '',
-                            phone: dbProfile.emergency_phone || '',
-                            country: dbProfile.country || 'Bangladesh',
-                            address: dbProfile.full_address || '',
-                            docType: dbProfile.doc_type || 'NID',
-                            docNum: dbProfile.doc_number || '',
-                            tradeLicense: dbProfile.default_payout_details || '',
-                            logo: dbProfile.logo_url || compressedAvatarData
-                        };
-                        localStorage.setItem(storageKey, JSON.stringify(formattedData));
-                        fillFormValues(formattedData);
-                        renderPreview(formattedData);
+                            businessEmail: dbProfile.email,
+                            fullName: dbProfile.full_name,
+                            businessDesc: dbProfile.business_desc,
+                            whatsapp: dbProfile.whatsapp,
+                            phone: dbProfile.emergency_phone,
+                            country: dbProfile.country,
+                            address: dbProfile.full_address,
+                            docType: dbProfile.doc_type,
+                            docNum: dbProfile.doc_number,
+                            tradeLicense: dbProfile.trade_license,
+                            logo: dbProfile.logo_url
+                        });
                         return;
                     }
                 }
@@ -388,7 +343,7 @@
                 console.log("Cloudflare load notice:", err);
             }
 
-            // ৪. নতুন বা ভিন্ন জিমেইল হলে কোনো ডেটা দেখাবে না, সরাসরি একদম ফাঁকা ফর্ম দেখাবে
+            // যদি ডাটা না থাকে তবে ফর্ম দেখাবে
             document.getElementById('businessInfoForm').style.display = 'block';
             document.getElementById('profilePreviewSection').style.display = 'none';
         });
@@ -417,13 +372,13 @@
             e.preventDefault();
             const btn = document.getElementById('saveInfoBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING TO D1...';
             
             const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
             const profileData = {
                 seller_id: userEmail,
-                brand_name: document.getElementById('brandName').value.trim(),
                 email: userEmail,
+                brand_name: document.getElementById('brandName').value.trim(),
                 full_name: document.getElementById('fullName').value.trim(),
                 business_desc: businessDesc.value.trim(),
                 whatsapp: document.getElementById('whatsappNum').value.trim(),
@@ -432,41 +387,28 @@
                 full_address: document.getElementById('fullAddress').value.trim(),
                 doc_type: document.getElementById('docTypeSelect').value,
                 doc_number: document.getElementById('docNumberInput').value.trim(),
-                default_payout_details: document.getElementById('tradeLicenseInput').value.trim() || "N/A",
+                trade_license: document.getElementById('tradeLicenseInput').value.trim() || "N/A",
                 logo_url: compressedAvatarData
             };
 
-            const cleanData = {
-                brandName: profileData.brand_name,
-                businessEmail: profileData.email,
-                fullName: profileData.full_name,
-                businessDesc: profileData.business_desc,
-                whatsapp: profileData.whatsapp,
-                phone: profileData.emergency_phone,
-                country: profileData.country,
-                address: profileData.full_address,
-                docType: profileData.doc_type,
-                docNum: profileData.doc_number,
-                tradeLicense: profileData.default_payout_details,
-                logo: profileData.logo_url
-            };
-
-            // নির্দিষ্ট জিমেইলের আন্ডারে আলাদা লোকাল স্টোরেজে সংরক্ষণ
-            localStorage.setItem(`rorraxy_seller_profile_${userEmail}`, JSON.stringify(cleanData));
-
             try {
-                await fetch('/api/seller?action=profile', {
+                // ক্লাউডফায়ার পেজেস ফাংশন এপিআই এর মাধ্যমে ডাটা সেভ করা
+                const res = await fetch('/api/seller', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(profileData)
                 });
+                const resData = await res.json();
+                if(resData.success) {
+                    alert('PROFILE SAVED SUCCESSFULLY TO CLOUDFLARE D1!');
+                }
             } catch (err) {
-                console.error("API Sync notice:", err);
+                console.error("API Sync Error:", err);
             }
 
             btn.disabled = false;
             btn.innerHTML = 'SAVE INFO <i class="fa-solid fa-check"></i>';
-            renderPreview(cleanData);
+            renderPreview(profileData);
         });
     </script>
 </body>
