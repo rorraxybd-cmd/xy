@@ -258,7 +258,7 @@
         </div>
 
         <div class="mode-selector-wrapper">
-            <select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
+            <select class="mode-selector-corner" id="userModeSelector">
                 <option value="retail">RETAIL STORE</option>
                 <option value="wholesale" selected>WHOLESALE</option>
             </select>
@@ -344,7 +344,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            initSelectedMode();
+            const selector = document.getElementById('userModeSelector');
+            if (selector) {
+                selector.value = 'wholesale';
+                selector.addEventListener('change', function() {
+                    if(this.value === 'retail') {
+                        window.location.href = '/';
+                    } else {
+                        window.location.href = '/wholesale/';
+                    }
+                });
+            }
+
             updateCartBadgeCount();
             loadWholesaleProducts();
             
@@ -352,22 +363,19 @@
             const youNavBtn = document.getElementById('wholesaleYouNavBtn');
             const closeBtn = document.getElementById('wholesaleModalCloseBtn');
 
-            // ইউ বাটনে ক্লিক করলে মোডাল ওপেন হবে
-            if (youNavBtn) {
+            if (youNavBtn && overlay) {
                 youNavBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    if (overlay) overlay.style.display = 'flex';
+                    overlay.style.display = 'flex';
                 });
             }
 
-            // ক্লোজ বাটনে ক্লিক করলে বন্ধ হবে
-            if (closeBtn) {
+            if (closeBtn && overlay) {
                 closeBtn.addEventListener('click', () => {
-                    if (overlay) overlay.style.display = 'none';
+                    overlay.style.display = 'none';
                 });
             }
 
-            // ওভারলে ব্যাকগ্রাউন্ডে ক্লিক করলে বন্ধ হবে
             if (overlay) {
                 overlay.addEventListener('click', (e) => {
                     if (e.target === overlay) {
@@ -376,36 +384,22 @@
                 });
             }
 
-            // পোর্টাল বাটনগুলোর নেভিগেশন লিংক
-            document.getElementById('wholesaleModalLogo').addEventListener('click', () => {
-                window.location.href = 'https://rorraxy.com/';
-            });
-            document.getElementById('wholesaleModalTitle').addEventListener('click', () => {
-                window.location.href = '/wholesale/account.html';
-            });
-            document.getElementById('wholesaleBtnAccount').addEventListener('click', () => {
-                window.location.href = '/wholesale/account.html';
-            });
-            document.getElementById('wholesaleBtnSeller').addEventListener('click', () => {
-                window.location.href = '/seller/index.html';
-            });
-            document.getElementById('wholesaleBtnAffiliate').addEventListener('click', () => {
-                window.location.href = '/affiliate/index.html';
-            });
+            const bindClick = (id, url) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.location.href = url;
+                    });
+                }
+            };
+
+            bindClick('wholesaleModalLogo', 'https://rorraxy.com/');
+            bindClick('wholesaleModalTitle', '/wholesale/account.html');
+            bindClick('wholesaleBtnAccount', '/wholesale/account.html');
+            bindClick('wholesaleBtnSeller', '/seller/index.html');
+            bindClick('wholesaleBtnAffiliate', '/affiliate/index.html');
         });
-
-        function initSelectedMode() {
-            const selector = document.getElementById('userModeSelector');
-            if (selector) selector.value = 'wholesale';
-        }
-
-        function switchEcosystemMode(selectedMode) {
-            if(selectedMode === 'retail') {
-                window.location.href = '/';
-            } else {
-                window.location.href = '/wholesale/';
-            }
-        }
 
         async function loadWholesaleProducts() {
             const feedContainer = document.getElementById('productFeed');
