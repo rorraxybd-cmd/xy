@@ -160,22 +160,31 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+        /* ফিড কন্টেইনার ও প্রোডাক্ট কার্ড সাইজিং ফিক্স (কোনো ফাঁকা জায়গা ছাড়া মূল সাইজে প্রদর্শনের জন্য) */
         .feed-container {
             padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
             gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
         }
         @media (min-width: 768px) { 
-            .feed-container { grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 12px; } 
+            .feed-container { grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px; } 
         }
 
         .product-card {
-            background: var(--card-dropship); border-radius: 14px; overflow: hidden; 
+            background: var(--card-dropship); border-radius: 12px; overflow: hidden; 
             display: flex; flex-direction: column; width: 100%; 
             border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
-            break-inside: avoid; margin-bottom: 8px;
+            margin-bottom: 8px; height: max-content;
         }
-        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: cover; background: #050508; content-visibility: auto; }
+        
+        .product-media-box { 
+            position: relative; width: 100%; background: #000000; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        
+        /* সেলারের আপলোড করা ছবির অরিজিনাল সাইজ বা রেশিও বজায় রাখার জন্য height auto করা হলো */
+        .product-media-box img { 
+            width: 100%; height: auto; display: block; object-fit: contain; background: #000000; 
+        }
         
         .dropship-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
@@ -305,6 +314,7 @@
         </div>
     </div>
 
+    <!-- প্রোডাক্ট ফিড কন্টেইনার -->
     <main class="feed-container" id="productFeed">
         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
@@ -357,6 +367,123 @@
                 window.location.href = '/wholesale/';
             } else {
                 window.location.href = '/dropship/';
+            }
+        }
+
+        // ক্লাউডফ্লেয়ার এবং লোকালস্টোরেজ থেকে ড্রপশিপিং প্রোডাক্ট ফেচ ও রেন্ডার করার ফাংশন
+        async function loadDropshipProducts() {
+            const feedContainer = document.getElementById('productFeed');
+            let products = [];
+
+            try {
+                const response = await fetch('/api/products');
+                const result = await response.json();
+                let rawData = result.data || result.results || result;
+                if (result.success && Array.isArray(rawData) && rawData.length > 0) {
+                    products = rawData;
+                } else if (Array.isArray(result) && result.length > 0) {
+                    products = result;
+                }
+            } catch (err) {
+                console.warn("API Fetch Warning:", err);
+            }
+
+            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+            
+            let mergedMap = new Map();
+            [...localProducts, ...products].forEach(p => {
+                let pId = p.id || p.product_id || p.product_code || p.title;
+                if(pId) mergedMap.set(String(pId), p);
+            });
+
+            let allProducts = Array.from(mergedMap.values());
+
+            // ড্রপশিপিং বা অল মোডের প্রোডাক্ট ফিল্টার করা
+            let dropshipProducts = allProducts.filter(p => {
+                const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
+                return mode === 'dropshipping' || mode === 'dropship' || mode === 'all' || mode === 'both';
+            });
+
+            if (dropshipProducts.length === 0) {
+                feedContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-gray);">
+                        <i class="fa-solid fa-box-open fa-2x" style="color: var(--gold-solid); margin-bottom: 12px;"></i>
+                        <p style="font-size: 0.8rem; font-weight: 600;">NO DROPSHIPPING PRODUCTS AVAILABLE RIGHT NOW.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let htmlContent = '';
+            dropshipProducts.forEach(p => {
+                const pTitle = p.title || 'DROPSHIP ITEM';
+                const basePrice = p.dropship_base_price || p.price || 0;
+                const resellPrice = p.dropship_resell_price || (basePrice * 1.35) || 0;
+                
+                let pImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                if (p.image_url) {
+                    pImg = p.image_url;
+                } else if (p.imageUrl) {
+                    pImg = p.imageUrl;
+                } else if (p.images_json) {
+                    try {
+                        let parsed = JSON.parse(p.images_json);
+                        if (Array.isArray(parsed) && parsed.length > 0) pImg = parsed[0];
+                    } catch (e) {
+                        if (typeof p.images_json === 'string' && p.images_json.trim() !== '') {
+                            pImg = p.images_json.split(',')[0].trim();
+                        }
+                    }
+                }
+
+                const productId = p.id || p.product_code || '';
+
+                htmlContent += `
+                    <div class="product-card" onclick="location.href='/product-details.html?id=${productId}'">
+                        <div class="product-media-box">
+                            <div class="dropship-badge"><i class="fa-solid fa-truck-fast"></i> DROPSHIP</div>
+                            <img src="${pImg}" alt="${pTitle}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';">
+                        </div>
+                        <div class="card-footer-actions">
+                            <div class="dropship-pricing-row">
+                                <span class="product-price-tag">BASE: $${parseFloat(basePrice).toFixed(2)}</span>
+                                <span class="resell-tag">RESELL: $${parseFloat(resellPrice).toFixed(2)}</span>
+                            </div>
+                            <div class="card-single-line-row">
+                                <div class="love-action" onclick="event.stopPropagation(); toggleLike(this)">
+                                    <i class="fa-solid fa-heart"></i> <span>LIKE</span>
+                                </div>
+                                <div class="love-action" onclick="event.stopPropagation(); shareProduct('${pTitle}', window.location.origin + '/product-details.html?id=${productId}')">
+                                    <i class="fa-solid fa-share-nodes" style="color: var(--gold-solid);"></i> <span>SHARE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            feedContainer.innerHTML = htmlContent;
+        }
+
+        function toggleLike(element) {
+            const icon = element.querySelector('i');
+            if (icon.classList.contains('fa-regular')) {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+                element.classList.add('gold-active');
+            } else {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+                element.classList.remove('gold-active');
+            }
+        }
+
+        function shareProduct(title, url) {
+            if (navigator.share) {
+                navigator.share({ title: title, url: url }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url);
+                alert("PRODUCT LINK COPIED TO CLIPBOARD!");
             }
         }
     </script>
