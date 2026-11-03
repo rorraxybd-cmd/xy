@@ -105,31 +105,31 @@
             background: #0a0a0f; color: #ffffff; -webkit-text-fill-color: #ffffff; font-weight: 600; padding: 10px;
         }
 
-        .luxury-center-modal-overlay {
+        .wholesale-unique-modal-overlay {
             display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important;
             background: rgba(0, 0, 0, 0.85) !important; z-index: 999999 !important; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); align-items: center; justify-content: center; padding: 16px;
         }
-        .luxury-center-modal-box {
+        .wholesale-unique-modal-box {
             background: #0d0d12; width: 100%; max-width: 450px; border-radius: 24px; 
             padding: 28px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; 
             position: relative; border: 1px solid rgba(212,175,55,0.2); max-height: 90vh; overflow-y: auto;
             z-index: 1000000; pointer-events: auto !important;
         }
-        .luxury-modal-close-btn { 
+        .wholesale-unique-close-btn { 
             position: absolute; top: 16px; right: 16px;
             background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2); color: var(--gold-solid); 
             font-size: 1rem; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 10;
         }
-        .luxury-modal-logo-large { width: 75px; height: 75px; object-fit: contain; margin-bottom: 12px; cursor: pointer; }
+        .wholesale-unique-logo { width: 75px; height: 75px; object-fit: contain; margin-bottom: 12px; cursor: pointer; }
         
         .modal-material-info-text {
             font-size: 0.68rem; font-weight: 600; color: var(--text-gray) !important; text-align: center;
             margin-bottom: 16px; line-height: 1.4; text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .luxury-modal-title-top {
+        .wholesale-unique-title {
             font-size: 1rem; font-weight: 600; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px;
             margin-bottom: 16px; text-transform: uppercase; cursor: pointer;
@@ -265,16 +265,16 @@
         </div>
     </header>
 
-    <div id="youMenuModalOverlay" class="luxury-center-modal-overlay">
-        <div class="luxury-center-modal-box" onclick="event.stopPropagation()">
-            <button class="luxury-modal-close-btn" onclick="closeYouMenuModal()"><i class="fa-solid fa-xmark"></i></button>
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="luxury-modal-logo-large" id="modalLogoLink">
+    <div id="wholesaleUniqueModalOverlay" class="wholesale-unique-modal-overlay">
+        <div class="wholesale-unique-modal-box" onclick="event.stopPropagation()">
+            <button class="wholesale-unique-close-btn" id="wholesaleModalCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="wholesale-unique-logo" id="wholesaleModalLogo">
             
             <div class="modal-material-info-text">B2B PORTAL</div>
 
-            <h2 class="luxury-modal-title-top" id="modalUserPortalTitle">USER PORTAL</h2>
+            <h2 class="wholesale-unique-title" id="wholesaleModalTitle">USER PORTAL</h2>
             <div class="luxury-options-fullstack">
-                <div class="luxury-action-btn-item" id="btnMyAccount">
+                <div class="luxury-action-btn-item" id="wholesaleBtnAccount">
                     <div class="btn-left-part">
                         <i class="fa-solid fa-user"></i>
                         <div class="btn-text-stack">
@@ -284,7 +284,7 @@
                     </div>
                     <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
                 </div>
-                <div class="luxury-action-btn-item" id="btnSellerPortal">
+                <div class="luxury-action-btn-item" id="wholesaleBtnSeller">
                     <div class="btn-left-part">
                         <i class="fa-solid fa-chart-line"></i>
                         <div class="btn-text-stack">
@@ -294,7 +294,7 @@
                     </div>
                     <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
                 </div>
-                <div class="luxury-action-btn-item" id="btnAffiliatePortal">
+                <div class="luxury-action-btn-item" id="wholesaleBtnAffiliate">
                     <div class="btn-left-part">
                         <i class="fa-solid fa-handshake"></i>
                         <div class="btn-text-stack">
@@ -321,7 +321,7 @@
             <i class="fa-solid fa-earth-americas"></i>
             <span>World</span>
         </a>
-        <div class="nav-item" id="youNavBtn" onclick="openYouMenuModal(event)">
+        <div class="nav-item" id="wholesaleYouNavBtn">
             <i class="fa-solid fa-user"></i>
             <span>You</span>
         </div>
@@ -348,31 +348,50 @@
             updateCartBadgeCount();
             loadWholesaleProducts();
             
-            // মোডাল ওভারলে ক্লিক হ্যান্ডলার
-            const overlay = document.getElementById('youMenuModalOverlay');
+            const overlay = document.getElementById('wholesaleUniqueModalOverlay');
+            const youNavBtn = document.getElementById('wholesaleYouNavBtn');
+            const closeBtn = document.getElementById('wholesaleModalCloseBtn');
+
+            // ইউ বাটনে ক্লিক করলে মোডাল ওপেন হবে
+            if (youNavBtn) {
+                youNavBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (overlay) overlay.style.display = 'flex';
+                });
+            }
+
+            // ক্লোজ বাটনে ক্লিক করলে বন্ধ হবে
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    if (overlay) overlay.style.display = 'none';
+                });
+            }
+
+            // ওভারলে ব্যাকগ্রাউন্ডে ক্লিক করলে বন্ধ হবে
             if (overlay) {
                 overlay.addEventListener('click', (e) => {
                     if (e.target === overlay) {
-                        closeYouMenuModal();
+                        overlay.style.display = 'none';
                     }
                 });
             }
 
-            // বাটনগুলোর ইভেন্ট লিসেনার নিশ্চিতকরণ
-            const logoLink = document.getElementById('modalLogoLink');
-            if(logoLink) logoLink.addEventListener('click', () => { window.location.href = 'https://rorraxy.com/'; });
-
-            const portalTitle = document.getElementById('modalUserPortalTitle');
-            if(portalTitle) portalTitle.addEventListener('click', () => { window.location.href = '/wholesale/account.html'; });
-
-            const btnAccount = document.getElementById('btnMyAccount');
-            if(btnAccount) btnAccount.addEventListener('click', () => { window.location.href = '/wholesale/account.html'; });
-
-            const btnSeller = document.getElementById('btnSellerPortal');
-            if(btnSeller) btnSeller.addEventListener('click', () => { window.location.href = '/seller/index.html'; });
-
-            const btnAffiliate = document.getElementById('btnAffiliatePortal');
-            if(btnAffiliate) btnAffiliate.addEventListener('click', () => { window.location.href = '/affiliate/index.html'; });
+            // পোর্টাল বাটনগুলোর নেভিগেশন লিংক
+            document.getElementById('wholesaleModalLogo').addEventListener('click', () => {
+                window.location.href = 'https://rorraxy.com/';
+            });
+            document.getElementById('wholesaleModalTitle').addEventListener('click', () => {
+                window.location.href = '/wholesale/account.html';
+            });
+            document.getElementById('wholesaleBtnAccount').addEventListener('click', () => {
+                window.location.href = '/wholesale/account.html';
+            });
+            document.getElementById('wholesaleBtnSeller').addEventListener('click', () => {
+                window.location.href = '/seller/index.html';
+            });
+            document.getElementById('wholesaleBtnAffiliate').addEventListener('click', () => {
+                window.location.href = '/affiliate/index.html';
+            });
         });
 
         function initSelectedMode() {
@@ -479,17 +498,6 @@
             });
 
             feedContainer.innerHTML = htmlContent;
-        }
-
-        function openYouMenuModal(event) {
-            if(event) event.stopPropagation();
-            const modal = document.getElementById('youMenuModalOverlay');
-            if(modal) modal.style.display = 'flex';
-        }
-        
-        function closeYouMenuModal() {
-            const modal = document.getElementById('youMenuModalOverlay');
-            if(modal) modal.style.display = 'none';
         }
 
         function toggleLike(element) {
