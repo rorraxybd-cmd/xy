@@ -73,8 +73,8 @@
         
         .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
-        @media(min-width: 600px) { .mode-grid { grid-template-columns: repeat(3, 1fr); } }
+        .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+        @media(min-width: 600px) { .mode-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
         @media(min-width: 768px) { .category-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -175,7 +175,6 @@
                     <div class="mode-grid">
                         <div class="mode-box" onclick="selectUploadMode('retail', this)"><i class="fa-solid fa-store"></i><span>RETAIL</span></div>
                         <div class="mode-box" onclick="selectUploadMode('wholesale', this)"><i class="fa-solid fa-boxes-stacked"></i><span>WHOLESALE</span></div>
-                        <div class="mode-box" onclick="selectUploadMode('both', this)"><i class="fa-solid fa-globe"></i><span>BOTH</span></div>
                     </div>
                 </div>
                 <div class="btn-nav-container">
@@ -498,10 +497,6 @@
             if (mode === 'wholesale') {
                 wholesaleRow.style.display = 'grid';
                 moqGroup.style.display = 'block';
-            } else if (mode === 'both') {
-                retailRow.style.display = 'grid';
-                wholesaleRow.style.display = 'grid';
-                moqGroup.style.display = 'block';
             } else {
                 retailRow.style.display = 'grid';
             }
@@ -688,7 +683,7 @@
                 seller_email: rawSellerEmail,
                 product_code: `PROD_${Date.now()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
-                upload_mode: finalUploadMode, // 'both', 'retail', 'wholesale'
+                upload_mode: finalUploadMode, // 'retail', 'wholesale'
                 category: selectedCategoryValue,
                 price: parseFloat(document.getElementById('selling_price').value) || parseFloat(document.getElementById('price_sample').value) || 0,
                 market_price: parseFloat(document.getElementById('market_price').value) || 0,
