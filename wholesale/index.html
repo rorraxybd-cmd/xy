@@ -375,22 +375,21 @@
                 });
             }
 
-            // বাটনগুলোর ইভেন্ট লিসেনার
-            document.getElementById('modalLogoLink').addEventListener('click', () => {
-                window.location.href = 'https://rorraxy.com/';
-            });
-            document.getElementById('modalUserPortalTitle').addEventListener('click', () => {
-                window.location.href = '/wholesale/account.html';
-            });
-            document.getElementById('btnMyAccount').addEventListener('click', () => {
-                window.location.href = '/wholesale/account.html';
-            });
-            document.getElementById('btnSellerPortal').addEventListener('click', () => {
-                window.location.href = '/seller/index.html';
-            });
-            document.getElementById('btnAffiliatePortal').addEventListener('click', () => {
-                window.location.href = '/affiliate/index.html';
-            });
+            // বাটনগুলোর ইভেন্ট লিসেনার নিশ্চিতকরণ
+            const logoLink = document.getElementById('modalLogoLink');
+            if(logoLink) logoLink.addEventListener('click', () => { window.location.href = 'https://rorraxy.com/'; });
+
+            const portalTitle = document.getElementById('modalUserPortalTitle');
+            if(portalTitle) portalTitle.addEventListener('click', () => { window.location.href = '/wholesale/account.html'; });
+
+            const btnAccount = document.getElementById('btnMyAccount');
+            if(btnAccount) btnAccount.addEventListener('click', () => { window.location.href = '/wholesale/account.html'; });
+
+            const btnSeller = document.getElementById('btnSellerPortal');
+            if(btnSeller) btnSeller.addEventListener('click', () => { window.location.href = '/seller/index.html'; });
+
+            const btnAffiliate = document.getElementById('btnAffiliatePortal');
+            if(btnAffiliate) btnAffiliate.addEventListener('click', () => { window.location.href = '/affiliate/index.html'; });
         });
 
         function initSelectedMode() {
@@ -501,11 +500,13 @@
 
         function openYouMenuModal(event) {
             if(event) event.stopPropagation();
-            document.getElementById('youMenuModalOverlay').style.display = 'flex';
+            const modal = document.getElementById('youMenuModalOverlay');
+            if(modal) modal.style.display = 'flex';
         }
         
         function closeYouMenuModal() {
-            document.getElementById('youMenuModalOverlay').style.display = 'none';
+            const modal = document.getElementById('youMenuModalOverlay');
+            if(modal) modal.style.display = 'none';
         }
 
         function toggleLike(element) {
