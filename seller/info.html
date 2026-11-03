@@ -123,7 +123,7 @@
         <div class="info-card">
             <div class="info-card-title">
                 <i class="fa-solid fa-id-card"></i>
-                <span id="cardTitleText">SELLER PROFILE PREVIEW</span>
+                <span id="cardTitleText">SELLER PROFILE REGISTRATION</span>
             </div>
 
             <!-- প্রফেশনাল সিভি স্টাইল প্রিভিউ সেকশন -->
@@ -154,12 +154,12 @@
                 </div>
             </div>
 
-            <!-- ইনফো আপডেট ফর্ম সেকশন -->
-            <form id="businessInfoForm" style="display: none;">
+            <!-- ইনফো আপডেট ফর্ম সেকশন (ডিফল্টভাবে দৃশ্যমান থাকবে যদি প্রথমবার হয়) -->
+            <form id="businessInfoForm">
                 <div class="avatar-upload-container">
                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="avatar-preview" id="avatarPreview">
                     <div class="avatar-upload-info">
-                        <label for="profilePhotoInput" class="avatar-upload-lbl"><i class="fa-solid fa-upload"></i> UPLOAD BRAND LOGO</label>
+                        <label for="profilePhotoInput" class="avatar-upload-lbl"><i class="fa-solid fa-upload"></i> UPLOAD BRAND LOGO (AUTO WEBP)</label>
                         <input type="file" id="profilePhotoInput" class="file-input-hidden" accept="image/*">
                     </div>
                 </div>
@@ -224,7 +224,7 @@
                     </div>
                 </div>
                 <button type="submit" id="saveInfoBtn" class="section-save-btn">SAVE INFO <i class="fa-solid fa-check"></i></button>
-                <button type="button" class="edit-profile-btn" style="background: transparent; color: var(--text-gray); border: 1px solid var(--border-gold); margin-right: 10px; float: right;" onclick="cancelEditMode()">CANCEL</button>
+                <button type="button" id="cancelEditBtn" class="edit-profile-btn" style="background: transparent; color: var(--text-gray); border: 1px solid var(--border-gold); margin-right: 10px; float: right; display: none;" onclick="cancelEditMode()">CANCEL</button>
                 <div style="clear: both;"></div>
             </form>
         </div>
@@ -250,29 +250,69 @@
             else if(type === 'BirthCert') label.innerHTML = 'BIRTH CERTIFICATE NUMBER<span class="req-star">*</span>';
         }
 
+        // ছবি অটোমেটিক WebP ফরম্যাটে অপ্টিমাইজ ও সাইজ (KB) কমানোর ফাংশন
         let compressedAvatarData = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
-        document.getElementById('profilePhotoInput').addEventListener('change', (e) => {
+        
+        document.getElementById('profilePhotoInput').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 300; canvas.height = 300;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, 300, 300);
-                    compressedAvatarData = canvas.toDataURL('image/webp', 0.85);
+
+            try {
+                const optimizedBlob = await compressImageToWebP(file, 300, 300, 0.75);
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    compressedAvatarData = event.target.result;
                     document.getElementById('avatarPreview').src = compressedAvatarData;
                 };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+                reader.readAsDataURL(optimizedBlob);
+            } catch (err) {
+                console.error("Image optimization error:", err);
+            }
         });
+
+        function compressImageToWebP(file, maxWidth, maxHeight, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/webp', quality);
+                    };
+                    img.onerror = reject;
+                };
+                reader.onerror = reject;
+            });
+        }
 
         function switchToEditMode() {
             document.getElementById('profilePreviewSection').style.display = 'none';
             document.getElementById('businessInfoForm').style.display = 'block';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
             document.getElementById('cardTitleText').innerText = "EDIT BUSINESS INFO & VERIFICATION";
         }
 
@@ -297,10 +337,11 @@
             const docLabel = docType === 'BirthCert' ? 'BIRTH CERTIFICATE NUMBER' : 'NID NUMBER';
             document.getElementById('prevDocTypeLbl').innerText = docLabel;
             document.getElementById('prevDocNum').innerText = data.doc_number || data.docNum || "---";
-            document.getElementById('prevTradeLicense').innerText = data.default_payout_details || data.tradeLicense || "---";
+            document.getElementById('prevTradeLicense').innerText = data.trade_license || data.default_payout_details || data.tradeLicense || "---";
 
             document.getElementById('profilePreviewSection').style.display = 'block';
             document.getElementById('businessInfoForm').style.display = 'none';
+            document.getElementById('cancelEditBtn').style.display = 'none';
             document.getElementById('cardTitleText').innerText = "SELLER PROFILE PREVIEW";
         }
 
@@ -314,13 +355,14 @@
             localStorage.setItem('rorraxy_current_seller_email', userEmail);
             document.getElementById('businessEmail').value = userEmail;
 
-            // ক্লাউডফায়ার D1 ডেটাবেস থেকে সরাসরি রিয়েল-টাইম ডেটা ফেচ করা
+            // ক্লাউডফায়ার D1 ডেটাবেস থেকে রিয়েল-টাইম ডেটা ফেচ করা
             try {
                 const response = await fetch(`/api/seller?email=${encodeURIComponent(userEmail)}`);
                 const result = await response.json();
                 if (result.success && result.data && result.data.length > 0) {
                     const dbProfile = result.data[0];
                     if(dbProfile.brand_name) {
+                        // যদি আগে থেকেই ইনফো পূরণ করা থাকে তবে প্রিভিউ দেখাবে
                         renderPreview(dbProfile);
                         fillFormValues({
                             brandName: dbProfile.brand_name,
@@ -343,9 +385,10 @@
                 console.log("Cloudflare load notice:", err);
             }
 
-            // যদি ডাটা না থাকে তবে ফর্ম দেখাবে
+            // প্রথমবার লগইন করলে বা ইনফো না থাকলে মাস্ট বি ফর্ম দেখাবে
             document.getElementById('businessInfoForm').style.display = 'block';
             document.getElementById('profilePreviewSection').style.display = 'none';
+            document.getElementById('cancelEditBtn').style.display = 'none';
         });
 
         function fillFormValues(data) {
@@ -368,11 +411,12 @@
             }
         }
 
+        // ফর্ম সাবমিট করার সময় কোনো অ্যালার্ট বা পপআপ আসবে না, ব্যাকগ্রাউন্ডে D1 ডেটাবেসে সেভ হবে
         document.getElementById('businessInfoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('saveInfoBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING TO D1...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
             
             const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
             const profileData = {
@@ -392,22 +436,19 @@
             };
 
             try {
-                // ক্লাউডফায়ার পেজেস ফাংশন এপিআই এর মাধ্যমে ডাটা সেভ করা
-                const res = await fetch('/api/seller', {
+                await fetch('/api/seller', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(profileData)
                 });
-                const resData = await res.json();
-                if(resData.success) {
-                    alert('PROFILE SAVED SUCCESSFULLY TO CLOUDFLARE D1!');
-                }
             } catch (err) {
                 console.error("API Sync Error:", err);
             }
 
             btn.disabled = false;
             btn.innerHTML = 'SAVE INFO <i class="fa-solid fa-check"></i>';
+            
+            // সফলভাবে সেভ হওয়ার পর সরাসরি প্রিভিউ মোডে চলে যাবে, কোনো ওকে বা পপআপ দেখাবে না
             renderPreview(profileData);
         });
     </script>
