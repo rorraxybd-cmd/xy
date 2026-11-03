@@ -1,86 +1,84 @@
 /**
- * rorraxy - Advanced Storage & Caching Manager
- * Description: Handles secure client-side storage (localStorage & sessionStorage) 
- * with automatic JSON serialization, error handling, and fallback support.
+ * rorraxy management - Local & Session Storage Utility
+ * Safely stores, retrieves, and manages client-side data.
  */
 
-class RorraxyStorageManager {
-    constructor() {
-        this.prefix = 'rorraxy_sys_';
-    }
-
-    setLocal(key, value) {
+const storage = {
+    /**
+     * লোকাল স্টোরেজে ডাটা সেভ করা
+     */
+    setLocal: (key, value) => {
         try {
             const serializedValue = JSON.stringify(value);
-            localStorage.setItem(this.prefix + key, serializedValue);
+            localStorage.setItem(key, serializedValue);
             return true;
         } catch (error) {
+            console.error('[Storage Error - setLocal]:', error);
             return false;
         }
-    }
+    },
 
-    getLocal(key) {
+    /**
+     * লোকাল স্টোরেজ থেকে ডাটা রিড বা বের করা
+     */
+    getLocal: (key) => {
         try {
-            const item = localStorage.getItem(this.prefix + key);
-            return item ? JSON.parse(item) : null;
+            const serializedValue = localStorage.getItem(key);
+            if (serializedValue === null) return null;
+            return JSON.parse(serializedValue);
         } catch (error) {
+            console.error('[Storage Error - getLocal]:', error);
             return null;
         }
-    }
+    },
 
-    removeLocal(key) {
+    /**
+     * লোকাল স্টোরেজ থেকে নির্দিষ্ট কি রিমুভ করা
+     */
+    removeLocal: (key) => {
         try {
-            localStorage.removeItem(this.prefix + key);
+            localStorage.removeItem(key);
             return true;
         } catch (error) {
+            console.error('[Storage Error - removeLocal]:', error);
             return false;
         }
-    }
+    },
 
-    setSession(key, value) {
+    /**
+     * সেশন স্টোরেজে ডাটা সেভ করা (ট্যাব খোলা থাকা পর্যন্ত থাকবে)
+     */
+    setSession: (key, value) => {
         try {
-            const serializedValue = JSON.stringify(value);
-            sessionStorage.setItem(this.prefix + key, serializedValue);
+            sessionStorage.setItem(key, JSON.stringify(value));
             return true;
         } catch (error) {
+            console.error('[Storage Error - setSession]:', error);
             return false;
         }
-    }
+    },
 
-    getSession(key) {
+    /**
+     * সেশন স্টোরেজ থেকে ডাটা রিড করা
+     */
+    getSession: (key) => {
         try {
-            const item = sessionStorage.getItem(this.prefix + key);
-            return item ? JSON.parse(item) : null;
+            const serializedValue = sessionStorage.getItem(key);
+            if (serializedValue === null) return null;
+            return JSON.parse(serializedValue);
         } catch (error) {
+            console.error('[Storage Error - getSession]:', error);
             return null;
         }
+    },
+
+    /**
+     * সমস্ত স্টোরেজ পরিষ্কার করা
+     */
+    clearAll: () => {
+        localStorage.clear();
+        sessionStorage.clear();
     }
+};
 
-    clearAll() {
-        try {
-            Object.keys(localStorage).forEach(key => {
-                if (key.startsWith(this.prefix)) {
-                    localStorage.removeItem(key);
-                }
-            });
-            Object.keys(sessionStorage).forEach(key => {
-                if (key.startsWith(this.prefix)) {
-                    sessionStorage.removeItem(key);
-                }
-            });
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
-}
-
-const rorraxyStorage = new RorraxyStorageManager();
-
-if (typeof window !== 'undefined') {
-    window.RorraxyStorage = RorraxyStorageManager;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = RorraxyStorageManager;
-}
+module.exports = storage;
