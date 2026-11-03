@@ -377,7 +377,7 @@
             
             <a href="mailto:seller@rorraxy.com?subject=Seller%20Product%20Query" class="header-email-box">
                 <i class="fa-solid fa-envelope"></i>
-                <span>seller@rorraxy.com</span>
+                <span id="sellerEmailDisplay">seller@rorraxy.com</span>
             </a>
         </header>
 
@@ -436,17 +436,26 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
+            // হেডার ইমেল আপডেট করা
+            const currentEmail = localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "";
+            if (currentEmail) {
+                document.getElementById('sellerEmailDisplay').textContent = currentEmail;
+            }
             fetchProductsFromCloudflare();
         });
 
         async function fetchProductsFromCloudflare() {
             let products = [];
+            
+            // বর্তমান লগইন করা সেলারের আইডি এবং ইমেল লোকালস্টোরেজ থেকে সংগ্রহ
+            const currentSellerId = String(localStorage.getItem('seller_id') || "").trim();
+            const currentSellerEmail = String(localStorage.getItem('seller_email') || localStorage.getItem('rorraxy_seller_email') || "").toLowerCase().trim();
+
             try {
-                // পুরনো ওয়ার্কার লিংক বাদ দিয়ে এখন সরাসরি ক্লাউডফায়ার ফাংশন এপিআই কল করা হচ্ছে
+                // সরাসরি ব্যাকএন্ড API থেকে সব প্রোডাক্ট নিয়ে আসা
                 const response = await fetch('/api/products');
                 const result = await response.json();
                 
-                // এপিআই রেসপন্স ফরম্যাট অনুযায়ী ডেটা হ্যান্ডেল করা
                 let rawData = result.data || result.results || result;
                 if (result.success && Array.isArray(rawData) && rawData.length > 0) {
                     products = rawData;
@@ -457,6 +466,7 @@
                 console.warn("Cloudflare API Fetch Warning:", err);
             }
 
+            // লোকালস্টোরেজে সংরক্ষিত সেলারের নিজস্ব প্রোডাক্টস ফেচ করা
             let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
             
             let mergedMap = new Map();
@@ -465,8 +475,22 @@
                 if(pId) mergedMap.set(String(pId), p);
             });
 
-            products = Array.from(mergedMap.values());
-            renderProductsList(products);
+            let allProducts = Array.from(mergedMap.values());
+
+            // **মূল ফিল্টারিং লজিক:** কেবল বর্তমান লগইন করা সেলারের আইডি বা ইমেল মিলে এমন প্রোডাক্টগুলোই ফিল্টার করা হবে
+            let filteredProducts = allProducts.filter(p => {
+                const pSellerId = String(p.seller_id || p.sellerId || "").trim();
+                const pSellerEmail = String(p.email || p.seller_email || "").toLowerCase().trim();
+
+                // যদি আইডি অথবা ইমেলের যেকোনো একটি মিলে যায়, তবেই সে এই সেলারের প্রোডাক্ট হিসেবে গণ্য হবে
+                if (currentSellerId && pSellerId === currentSellerId) return true;
+                if (currentSellerEmail && (pSellerEmail === currentSellerEmail || pSellerId.includes(currentSellerEmail))) return true;
+                
+                // ব্যাকএন্ডে যদি পুরনো কোনো প্রোডাক্টে seller_id না থাকে বা নাল থাকে, সুরক্ষার জন্য তা এভয়েড করা বা আলাদা রাখা যায়
+                return false;
+            });
+
+            renderProductsList(filteredProducts);
         }
 
         function renderProductsList(products) {
