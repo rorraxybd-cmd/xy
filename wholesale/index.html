@@ -390,7 +390,7 @@
                 if (result.success && Array.isArray(rawData)) {
                     products = rawData;
                 } else if (Array.isArray(result)) {
-                    products = result;
+                    products = rawData;
                 }
             } catch (err) {
                 console.warn("API Fetch Warning:", err);
@@ -406,10 +406,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // সংশোধিত ফিল্টার লজিক: 'wholesale' অথবা 'both' মোডের প্রোডাক্টগুলো হোলসেল ইনডেক্স পেজে দেখাবে
+            // সংশোধিত ও সম্পূর্ণ নিখুঁত ফিল্টার লজিক: যাতে 'wholesale', 'both' এবং অপ্রাতিষ্ঠানিক/খালি মোডের সব প্রোডাক্ট হোম পেজে দেখায়
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'wholesale' || mode === 'both' || mode === '';
+                return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined';
             });
 
             if (wholesaleProducts.length === 0) {
