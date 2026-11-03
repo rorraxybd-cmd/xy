@@ -163,7 +163,7 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (গ্যাপ ও ফাঁকা জায়গা দূর করার জন্য ফিক্সড) */
+        /* পিন্টারেস্ট স্টাইল মেসনারি লেআউট (গ্যাপ দূর করার জন্য) */
         .feed-container {
             padding: 8px 6px;
             column-count: 2;
@@ -382,7 +382,7 @@
             }
         }
 
-        // হোলসেল প্রোডাক্ট ফেচ এবং পিন্টারেস্ট স্টাইলে রেন্ডার করার ফাংশন (All ও Both মোড সহ)
+        // হোলসেল প্রোডাক্ট ফেচ এবং পিন্টারেস্ট স্টাইলে নিখুঁত সিঙ্গেল মোড ফিল্টারিং
         async function loadWholesaleProducts() {
             const feedContainer = document.getElementById('productFeed');
             let products = [];
@@ -410,10 +410,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // হোলসেল, অল, বোথ বা ফাঁকা মোডের প্রোডাক্ট ফিল্টার করা
+            // শুধুমাত্র হোলসেল মোডের প্রোডাক্ট ফিল্টার করা (সিঙ্গেল মোড)
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'wholesale' || mode === 'all' || mode === 'both' || mode === '';
+                return mode === 'wholesale' || mode === '';
             });
 
             if (wholesaleProducts.length === 0) {
