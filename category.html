@@ -9,10 +9,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://img.rorraxy.com">
+    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
 
-    <link rel="icon" type="image/png" sizes="32x32" href="https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png">
-    <link rel="apple-touch-icon" href="https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -96,7 +96,7 @@
         .sub-cat-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.68rem; color: var(--text-white); font-weight: 600; }
 
-        /* ডাইনামিক প্রোডাক্ট ডিসপ্লে সেকশন (Pinterest Style Feed) */
+        /* ডাইনামিক প্রোডাক্ট ডিসপ্লে সেকশন (Pinterest Style Masonry Grid) */
         .dynamic-product-section { display: none; margin-top: 15px; padding: 10px 0; }
         .dynamic-product-section.active { display: block; }
         .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
@@ -108,16 +108,26 @@
         }
 
         .feed-container {
-            padding: 8px 6px; display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
+            padding: 4px 0; 
+            column-count: 2; 
+            column-gap: 10px; 
+            width: 100%; 
+            max-width: 1400px; 
+            margin: 0 auto;
         }
-        @media (min-width: 768px) { .feed-container { grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px; } }
+        @media (min-width: 768px) { 
+            .feed-container { 
+                column-count: 4; 
+                column-gap: 14px; 
+            } 
+        }
 
         .product-card {
             background: var(--card-retail); border-radius: 14px; overflow: hidden; 
-            display: flex; flex-direction: column; width: 100%; 
+            display: inline-block; width: 100%; 
             border: 1px solid rgba(212,175,55,0.12); position: relative;
-            cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer; margin-bottom: 10px; break-inside: avoid; page-break-inside: avoid;
+            transition: transform 0.2s, border-color 0.2s;
         }
         .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
 
@@ -389,14 +399,14 @@
 
     </main>
 
-    <!-- ডাইনামিক প্রোডাক্ট ফিড সেকশন (Pinterest Style Feed) -->
+    <!-- ডাইনামিক প্রোডাক্ট ফিড সেকশন (Pinterest Style Masonry Grid) -->
     <div class="category-fullscreen-view dynamic-product-section" id="dynamicProductSection">
         <div class="section-header-row">
             <span class="section-title-result" id="resultCategoryTitle">PRODUCTS</span>
             <button class="back-to-cat-btn" onclick="goBackToCategories()"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORIES</button>
         </div>
         <div class="feed-container" id="categoryProductFeed">
-            <!-- ক্লাউডফ্লেয়ার থেকে ডাইনামিক প্রোডাক্ট গ্রিড এখানে লোড হবে -->
+            <!-- ক্লাউডফ্লেয়ার ও লোকাল স্টোরেজ থেকে ডাইনামিক প্রোডাক্ট গ্রিড এখানে লোড হবে -->
         </div>
     </div>
 
@@ -444,6 +454,8 @@
     </div>
 
     <script>
+        const API_BASE_URL = '';
+
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
             const isOpen = targetBox.classList.contains('active');
@@ -458,10 +470,10 @@
             document.getElementById('resultCategoryTitle').innerText = `RESULTS FOR: ${queryKey.replace(/-/g, ' ')}`;
 
             const feedContainer = document.getElementById('categoryProductFeed');
-            feedContainer.innerHTML = `<p style="grid-column: span 2; text-align: center; color: var(--gold-solid); padding: 40px;"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><br><span style="font-size: 0.75rem; margin-top: 10px; display:inline-block;">LOADING PRODUCTS...</span></p>`;
+            feedContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--gold-solid); padding: 40px;"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><br><span style="font-size: 0.75rem; margin-top: 10px; display:inline-block;">LOADING PRODUCTS...</span></p>`;
 
             try {
-                const response = await fetch(`/api/products?mode=retail`);
+                const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
                 const result = await response.json();
                 let products = [];
                 if (result && result.success && Array.isArray(result.data)) {
@@ -470,20 +482,36 @@
                     products = result;
                 }
 
-                if (products.length > 0) {
-                    const filtered = products.filter(item => {
+                // লোকাল স্টোরেজ থেকে সেলার প্রোডাক্টগুলো মার্জ করা
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
+                let mergedMap = new Map();
+                [...localProducts, ...cachedFeed, ...products].forEach(p => {
+                    let pId = p.id || p.product_id || p.product_code || p.title;
+                    if(pId) mergedMap.set(String(pId), p);
+                });
+                let allProducts = Array.from(mergedMap.values());
+
+                if (allProducts.length > 0) {
+                    const filtered = allProducts.filter(item => {
                         const title = (item.title || '').toLowerCase();
-                        const cat = (item.category || item.tag || '').toLowerCase();
+                        const cat = (item.category || item.tag || item.description || '').toLowerCase();
                         const query = queryKey.toLowerCase();
                         return title.includes(query) || cat.includes(query) || query === 'all';
                     });
-                    renderProductFeed(filtered.length > 0 ? filtered : products);
+                    renderProductFeed(filtered.length > 0 ? filtered : allProducts);
                 } else {
-                    feedContainer.innerHTML = `<p style="grid-column: span 2; text-align: center; color: var(--text-gray); padding: 40px;">NO PRODUCTS FOUND</p>`;
+                    feedContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 40px;">NO PRODUCTS FOUND</p>`;
                 }
             } catch (err) {
                 console.error('Error fetching category products:', err);
-                feedContainer.innerHTML = `<p style="grid-column: span 2; text-align: center; color: var(--text-gray); padding: 40px;">FAILED TO LOAD PRODUCTS</p>`;
+                // ফেইল করলে অন্তত লোকাল ক্যাশ বা ফলব্যাক ডেটা দেখানোর ব্যবস্থা
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                if(localProducts.length > 0) {
+                    renderProductFeed(localProducts);
+                } else {
+                    feedContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 40px;">FAILED TO LOAD PRODUCTS</p>`;
+                }
             }
         }
 
@@ -493,18 +521,35 @@
                 const productId = item.id || item.product_id || item.product_code || '101';
                 const title = item.title || 'rorraxy Luxury Item';
                 const priceVal = item.price ? parseFloat(item.price).toFixed(2) : '35.00';
-                const discount = item.discount_rate || item.discountRate || '40';
+                const discount = item.discount_rate || item.discountRate || 0;
                 const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
                 const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
-                const imageUrl = item.image_url || item.imageUrl || 'https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                
+                // সমস্ত সোর্স থেকে ছবি নিখুঁতভাবে পার্স করা
+                let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+                try {
+                    if (item.images_json) {
+                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
+                        if (Array.isArray(parsed) && parsed.length > 0) imageUrl = parsed[0];
+                    } else if (item.image_url) {
+                        imageUrl = typeof item.image_url === 'string' && item.image_url.startsWith('[') ? JSON.parse(item.image_url)[0] : item.image_url;
+                    }
+                } catch(e) {
+                    imageUrl = item.image_url || imageUrl;
+                }
+
+                // ডিসকাউন্ট জিরো বা ফাকা থাকলে ব্যাজ হাইড রাখার লজিক
+                let badgeDisplay = (discount && discount > 0) ? `
+                    <div class="product-country-discount-badge">
+                        <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
+                    </div>
+                ` : '';
 
                 return `
                     <div class="product-card" onclick="openProductDetails('${productId}')">
                         <div class="product-media-box">
-                            <div class="product-country-discount-badge">
-                                <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
-                            </div>
-                            <img src="${imageUrl}" alt="${title}" loading="lazy">
+                            ${badgeDisplay}
+                            <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
                             <span class="product-price-tag">$${priceVal}</span>
