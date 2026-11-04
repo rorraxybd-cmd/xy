@@ -22,7 +22,7 @@ export async function onRequest(context) {
   try {
     const url = new URL(request.url);
     
-    // 1. GET Request
+    // 1. GET Request (উন্নত ও নমনীয় ফিল্টারিং যাতে কোনো প্রোডাক্ট মিস না হয়)
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
       const sellerId = url.searchParams.get("seller_id");
@@ -40,9 +40,18 @@ export async function onRequest(context) {
         conditions.push("seller_id = ?");
         params.push(sellerId);
       }
-      if (mode) {
-        conditions.push("LOWER(upload_mode) = ?");
-        params.push(mode.toLowerCase().trim());
+      
+      // মোড ফিল্টারটি যদি একান্তই দেওয়া হয়, তবে যেন wholesale, both বা ফাঁকা সব রিলায়েবল ডাটা নিয়ে আসে
+      if (mode && mode.toLowerCase() !== 'all') {
+        const cleanMode = mode.toLowerCase().trim();
+        if (cleanMode === 'wholesale') {
+          conditions.push("(LOWER(upload_mode) = 'wholesale' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')");
+        } else if (cleanMode === 'retail') {
+          conditions.push("(LOWER(upload_mode) = 'retail' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')");
+        } else {
+          conditions.push("LOWER(upload_mode) = ?");
+          params.push(cleanMode);
+        }
       }
 
       if (conditions.length > 0) {
@@ -125,7 +134,7 @@ export async function onRequest(context) {
       });
     }
 
-    // 4. DELETE Request (Fixed id extraction)
+    // 4. DELETE Request
     if (request.method === "DELETE") {
       const deleteId = url.searchParams.get("id") || url.pathname.split('/').pop();
 
