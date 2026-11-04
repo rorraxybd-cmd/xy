@@ -54,29 +54,37 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. ছবি এবং গ্যালারি ইমেজ নিখুঁতভাবে হ্যান্ডেল করার লজিক (লোগো আসা রোধ করতে)
+    // ৪. সমস্ত গ্যালারি ছবি এবং মূল ছবি নিখুঁতভাবে এক্সট্রাক্ট করার লজিক (লোগো আসা রোধ করতে)
     let imagesArray = [];
+    
+    // CJ API-এর বিভিন্ন সম্ভাব্য ইমেজ প্রপার্টি চেক করা
     if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       imagesArray = p.productImageList;
     } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
       imagesArray = p.productImages;
+    } else if (p.carouselImage && Array.isArray(p.carouselImage)) {
+      imagesArray = p.carouselImage;
     }
 
-    // মূল ছবি একাধিক ফিল্ড চেক করে নিশ্চিত করা
     const mainImage = p.productImage || p.bigImage || p.imageUrl || (imagesArray.length > 0 ? imagesArray[0] : '');
 
+    // যদি অ্যারে খালি থাকে কিন্তু মেইন ইমেজ থাকে, তবে সেটিকে অ্যারেতে রূপান্তর করা
     if (imagesArray.length === 0 && mainImage) {
       imagesArray = [mainImage];
+    } else if (mainImage && !imagesArray.includes(mainImage)) {
+      imagesArray.unshift(mainImage); // মূল ছবিটিকে সবার প্রথমে রাখা
     }
 
-    const imagesList = JSON.stringify(imagesArray);
+    const imagesListJson = JSON.stringify(imagesArray);
     const videoUrl = p.productVideo || '';
 
-    // ডেসক্রিপশনের র-এইচটিএমএল বা হজবরল ট্যাগ ক্লিন করা
+    // ৫. ডেসক্রিপশনের র-এইচটিএমএল ক্লিন করা (ভাঙা ট্যাগ দূর করা)
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
-    const cleanDescription = rawDesc.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').trim();
+    const cleanDescription = rawDesc.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                                    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+                                    .trim();
 
-    // ৫. Save to D1 (upload_mode = 'both' সেট করা হয়েছে যাতে রিটেইল ও হোলসেল দুটো পেজেই পায়)
+    // ৬. Save to D1 Database (upload_mode = 'both' যাতে রিটেইল ও হোলসেল উভয় পেজে দেখায়)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -104,16 +112,16 @@ export async function onRequestPost(context) {
       priceMinWhole,
       priceBulk,
       baseCost,
-      mainImage,
-      imagesList,
+      mainImage || '',
+      imagesListJson,
       videoUrl,
       p.inventory || 500
     ).run();
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত ছবি ও ক্লিন ডেসক্রিপশনসহ সফলভাবে রিটেইল ও হোলসেল উভয় পেজে সেভ হয়েছে!",
-      data: { title: p.productNameEn, retailPrice, priceSample, priceMinWhole, priceBulk, imagesCount: imagesArray.length }
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ ও ক্লিন ডেসক্রিপশনসহ সফলভাবে সেভ হয়েছে!",
+      data: { title: p.productNameEn, retailPrice, priceSample, imagesCount: imagesArray.length }
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (err) {
