@@ -416,12 +416,13 @@
                 }
             }
 
-            // ২. ব্যাকগ্রাউন্ডে নতুন ডাটা ফেচিং
+            // ২. ব্যাকগ্রাউন্ডে সব প্রোডাক্ট (CJ + Vendor) ফেচিং
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 6000);
 
-                const response = await fetch(`/api/products?mode=retail`, {
+                // ফিল্টার তুলে দিয়ে সব প্রোডাক্ট ফেচ করা হচ্ছে যাতে ভেন্ডর প্রোডাক্টগুলোও আসে
+                const response = await fetch(`/api/products`, {
                     signal: controller.signal,
                     cache: 'force-cache'
                 });
@@ -459,13 +460,36 @@
                 const productId = item.id || item.product_id || item.product_code || item.code || '101';
                 const title = item.title || 'rorraxy Luxury Item';
                 const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
-                const discount = item.discount_rate || item.discountRate || '50';
+                const discount = item.discount_rate || item.discountRate || '30';
                 const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
                 const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
                 
+                // সমস্ত সম্ভাব্য ইমেজ সোর্স সুরক্ষিতভাবে পার্স করার লজিক
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                if (item.image_url) resolvedImageUrl = item.image_url;
-                else if (item.imageUrl) resolvedImageUrl = item.imageUrl;
+                
+                try {
+                    if (item.images_json) {
+                        if (typeof item.images_json === 'string') {
+                            let parsed = JSON.parse(item.images_json);
+                            if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
+                        } else if (Array.isArray(item.images_json) && item.images_json.length > 0) {
+                            resolvedImageUrl = item.images_json[0];
+                        }
+                    }
+                } catch(e) {}
+
+                if (resolvedImageUrl === 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png' && item.image_url) {
+                    if (typeof item.image_url === 'string' && item.image_url.startsWith('[')) {
+                        try {
+                            let parsed = JSON.parse(item.image_url);
+                            if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
+                        } catch(e) { resolvedImageUrl = item.image_url; }
+                    } else {
+                        resolvedImageUrl = item.image_url;
+                    }
+                } else if (resolvedImageUrl === 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png' && item.imageUrl) {
+                    resolvedImageUrl = item.imageUrl;
+                }
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card';
