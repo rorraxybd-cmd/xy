@@ -166,8 +166,19 @@
         ? `<span class="cj-badge cj-badge-dropship">CJ Dropship</span>` 
         : `<span class="cj-badge cj-badge-vendor">Vendor</span>`;
 
-      // ডাটাবেজ থেকে image_url রেন্ডার করার সঠিক লজিক
-      const imgSrc = (p.image_url && p.image_url.trim() !== '') ? p.image_url : 'https://via.placeholder.com/45?text=No+Img';
+      // ইমেজ পার্সিং ও সঠিক থাম্বনেইল এক্সট্রাক্ট করার সুরক্ষিত লজিক
+      let imgSrc = 'https://via.placeholder.com/45?text=No+Img';
+      if (p.image_url && p.image_url.trim() !== '') {
+        if (p.image_url.startsWith('[')) {
+          try {
+            let parsed = JSON.parse(p.image_url);
+            if (Array.isArray(parsed) && parsed.length > 0) imgSrc = parsed[0];
+          } catch(e) { imgSrc = p.image_url; }
+        } else {
+          imgSrc = p.image_url;
+        }
+      }
+
       const rawDate = p.created_at ? new Date(p.created_at).toLocaleDateString() : 'N/A';
 
       tbody.innerHTML += `
@@ -176,11 +187,11 @@
             <strong>#${p.id}</strong>
             <span class="cj-date-sub">${rawDate}</span>
           </td>
-          <td><img src="${imgSrc}" class="cj-product-thumb" alt="Product"></td>
+          <td><img src="${imgSrc}" class="cj-product-thumb" alt="Product" onerror="this.src='https://via.placeholder.com/45?text=Error'"></td>
           <td>${sourceBadge}</td>
           <td>${p.title}</td>
-          <td>$${parseFloat(p.price).toFixed(2)}</td>
-          <td>$${parseFloat(p.price_min_whole).toFixed(2)}</td>
+          <td>$${parseFloat(p.price || 0).toFixed(2)}</td>
+          <td>$${parseFloat(p.price_min_whole || 0).toFixed(2)}</td>
           <td>${p.stock || 500}</td>
           <td>
             <button class="cj-btn-action cj-btn-edit" onclick="openEdit(${p.id})">Edit</button>
@@ -215,7 +226,7 @@
     const sourceFilter = document.getElementById('sourceFilter').value;
 
     const filtered = allProducts.filter(p => {
-      const matchesSearch = p.title.toLowerCase().includes(searchTerm) || String(p.id).includes(searchTerm);
+      const matchesSearch = (p.title && p.title.toLowerCase().includes(searchTerm)) || String(p.id).includes(searchTerm);
       const matchesSource = sourceFilter === 'all' || p.vendor_type === sourceFilter;
       return matchesSearch && matchesSource;
     });
@@ -229,9 +240,9 @@
     if (!p) return;
 
     document.getElementById('editId').value = p.id;
-    document.getElementById('editTitle').value = p.title;
-    document.getElementById('editRetailPrice').value = p.price;
-    document.getElementById('editWholesalePrice').value = p.price_min_whole;
+    document.getElementById('editTitle').value = p.title || '';
+    document.getElementById('editRetailPrice').value = p.price || 0;
+    document.getElementById('editWholesalePrice').value = p.price_min_whole || 0;
     document.getElementById('editStock').value = p.stock || 500;
     document.getElementById('editModal').style.display = 'flex';
   }
@@ -254,12 +265,15 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, price, price_min_whole, stock })
       });
-      const result = await res.json();
+      const textRes = await res.text();
+      let result = {};
+      try { result = JSON.parse(textRes); } catch(e) { result = { success: res.ok }; }
+
       if (result.success) {
         closeModal();
         loadProducts();
       } else {
-        alert('আপডেট ব্যর্থ হয়েছে: ' + result.error);
+        alert('আপডেট ব্যর্থ হয়েছে: ' + (result.error || 'Unknown error'));
       }
     } catch (err) {
       alert('সার্ভার এরর: ' + err.message);
@@ -270,11 +284,14 @@
     if (confirm('আপনি কি নিশ্চিতভাবে এই প্রোডাক্টটি ডাটাবেজ থেকে মুছে ফেলতে চান?')) {
       try {
         const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
-        const result = await res.json();
+        const textRes = await res.text();
+        let result = {};
+        try { result = JSON.parse(textRes); } catch(e) { result = { success: res.ok }; }
+
         if (result.success) {
           loadProducts();
         } else {
-          alert('ডিলিট ব্যর্থ হয়েছে: ' + result.error);
+          alert('ডিলিট ব্যর্থ হয়েছে: ' + (result.error || 'Unknown error'));
         }
       } catch (err) {
         alert('সার্ভার এরর: ' + err.message);
