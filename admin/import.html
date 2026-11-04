@@ -3,13 +3,13 @@
   <div class="cj-content-container">
     <div class="cj-import-header">
       <h2>Global CJ Product Importer</h2>
-      <p>Advanced Retail (Free Shipping) & Wholesale Custom Pricing Engine</p>
+      <p>Advanced Retail (Free Shipping) & Wholesale 3-Tier Pricing Engine</p>
     </div>
     
     <form id="cjImportForm">
       <div class="cj-form-group">
         <label for="cjProductId">CJ Product ID (PID)</label>
-        <input type="text" id="cjProductId" placeholder="e.g. 1765243142718795776" required>
+        <input type="text" id="cjProductId" placeholder="e.g. 1379254578851221504" required>
       </div>
 
       <div class="cj-form-row">
@@ -27,11 +27,11 @@
       <div class="cj-form-group">
         <label for="wholesaleMargin">Wholesale Sample Markup Margin (%) [Default: 25%]</label>
         <input type="number" id="wholesaleMargin" value="25" placeholder="25" required>
-        <small class="cj-hint">হোলসেল বা স্যাম্পল অর্ডারের জন্য আলাদা মার্জিন পার্সেন্টেজ।</small>
+        <small class="cj-hint">হোলসেলের স্যাম্পল, মিনিমাম ও বাল্ক প্রাইস স্বয়ংক্রয়ভাবে ক্যালকুলেট হবে।</small>
       </div>
 
       <button type="submit" id="importBtn" class="cj-btn-gold">
-        <span>Sync & Import to Store</span>
+        <span>Sync & Import with 3-Tier Wholesale</span>
       </button>
     </form>
 
@@ -51,126 +51,20 @@
     --font-main: 'Poppins', sans-serif;
   }
 
-  .cj-fullscreen-wrapper {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-pure);
-    font-family: var(--font-main);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-
-  .cj-content-container {
-    width: 100%;
-    max-width: 700px;
-    padding: 40px;
-    background-color: var(--card-soft);
-    box-sizing: border-box;
-  }
-
-  .cj-import-header {
-    margin-bottom: 30px;
-  }
-
-  .cj-import-header h2 {
-    font-size: 26px;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.5px;
-  }
-
-  .cj-import-header p {
-    color: var(--text-gray);
-    font-size: 14px;
-    margin: 0;
-  }
-
-  .cj-form-row {
-    display: flex;
-    gap: 20px;
-  }
-
-  .cj-form-row .cj-form-group {
-    flex: 1;
-  }
-
-  .cj-form-group {
-    margin-bottom: 22px;
-  }
-
-  .cj-form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-white);
-    margin-bottom: 8px;
-  }
-
-  .cj-form-group input {
-    width: 100%;
-    padding: 14px 16px;
-    background: #000000;
-    border: none;
-    border-radius: 8px;
-    color: var(--text-white);
-    font-size: 15px;
-    outline: none;
-    box-sizing: border-box;
-    transition: box-shadow 0.3s ease;
-  }
-
-  .cj-form-group input:focus {
-    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4);
-  }
-
-  .cj-hint {
-    color: var(--text-gray);
-    font-size: 12px;
-    margin-top: 6px;
-    display: block;
-    line-height: 1.5;
-  }
-
-  .cj-btn-gold {
-    width: 100%;
-    padding: 16px;
-    background: var(--gold-gradient);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 15px;
-    color: #000000;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    margin-top: 10px;
-  }
-
-  .cj-btn-gold:hover {
-    opacity: 0.93;
-    transform: translateY(-1px);
-  }
-
-  .cj-btn-gold:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .cj-status-box {
-    margin-top: 24px;
-    font-size: 14px;
-    line-height: 1.6;
-    border-radius: 8px;
-    display: none;
-  }
+  .cj-fullscreen-wrapper { margin: 0; padding: 0; width: 100%; min-height: 100vh; background-color: var(--bg-pure); font-family: var(--font-main); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  .cj-content-container { width: 100%; max-width: 700px; padding: 40px; background-color: var(--card-soft); box-sizing: border-box; border-radius: 12px; border: 1px solid rgba(212,175,55,0.2); }
+  .cj-import-header { margin-bottom: 30px; }
+  .cj-import-header h2 { font-size: 26px; font-weight: 700; margin: 0 0 8px 0; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .cj-import-header p { color: var(--text-gray); font-size: 14px; margin: 0; }
+  .cj-form-row { display: flex; gap: 20px; }
+  .cj-form-row .cj-form-group { flex: 1; }
+  .cj-form-group { margin-bottom: 22px; }
+  .cj-form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-white); margin-bottom: 8px; }
+  .cj-form-group input { width: 100%; padding: 14px 16px; background: #000000; border: none; border-radius: 8px; color: var(--text-white); font-size: 15px; outline: none; box-sizing: border-box; }
+  .cj-form-group input:focus { box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4); }
+  .cj-hint { color: var(--text-gray); font-size: 12px; margin-top: 6px; display: block; line-height: 1.5; }
+  .cj-btn-gold { width: 100%; padding: 16px; background: var(--gold-gradient); border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; color: #000000; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
+  .cj-status-box { margin-top: 24px; font-size: 14px; line-height: 1.6; border-radius: 8px; display: none; padding: 15px; }
 </style>
 
 <script>
@@ -185,10 +79,9 @@
     const wholesaleMargin = document.getElementById('wholesaleMargin').value.trim();
 
     statusDiv.style.display = 'block';
-    statusDiv.style.padding = '15px';
     statusDiv.style.background = 'rgba(212, 175, 55, 0.08)';
     statusDiv.style.color = 'var(--gold-solid)';
-    statusDiv.innerHTML = 'Connecting to CJ API & calculating global pricing...';
+    statusDiv.innerHTML = 'Connecting to CJ API & calculating 3-tier wholesale pricing...';
     btn.disabled = true;
 
     try {
@@ -207,7 +100,9 @@
           <strong>Product:</strong> ${result.data.title}<br>
           <strong>Base Cost:</strong> $${result.data.cost}<br>
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
-          <strong>Wholesale Price:</strong> $${result.data.wholesalePrice}`;
+          <strong>Sample Price:</strong> $${result.data.priceSample}<br>
+          <strong>Min Wholesale:</strong> $${result.data.priceMinWhole}<br>
+          <strong>Bulk Price:</strong> $${result.data.priceBulk}`;
         document.getElementById('cjImportForm').reset();
       } else {
         statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
