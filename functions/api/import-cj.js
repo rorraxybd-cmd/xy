@@ -11,7 +11,7 @@ export async function onRequestPost(context) {
       });
     }
 
-    // ১. CJ API Token
+    // ১. CJ API Access Token জেনারেট করা
     const tokenRes = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
 
     const accessToken = tokenData.data.accessToken;
 
-    // ২. Query Product Details with Full Description
+    // ২. CJ API থেকে প্রোডাক্টের ডিটেইলস ফেচ করা
     const productRes = await fetch(`https://developers.cjdropshipping.com/api2.0/v1/product/query?pid=${cjProductId}`, {
       headers: { "CJ-Access-Token": accessToken }
     });
@@ -42,9 +42,11 @@ export async function onRequestPost(context) {
     }
 
     const p = productData.data;
-    const baseCost = parseFloat(p.sellPrice || 0);
 
-    // ৩. Dynamic Pricing
+    // সঠিক বেস কস্ট বা প্রাইস ফিল্ড ট্র্যাক করা (undefined সমস্যা সমাধান)
+    const baseCost = parseFloat(p.sellPrice || p.productPrice || p.discountPrice || 0);
+
+    // ৩. ডায়নামিক প্রাইসিং ক্যালকুলেশন
     const rMargin = retailMargin ? (1 + parseFloat(retailMargin) / 100) : 1.70;
     const shipFee = shippingCushion ? parseFloat(shippingCushion) : 6.00;
     const wMargin = wholesaleMargin ? (1 + parseFloat(wholesaleMargin) / 100) : 1.25;
@@ -55,10 +57,11 @@ export async function onRequestPost(context) {
     const mainImage = p.productImage || '';
     const imagesList = p.productImageList ? JSON.stringify(p.productImageList) : JSON.stringify([mainImage]);
     const videoUrl = p.productVideo || '';
-    // ফুল ডেসক্রিপশন ও স্পেসিফিকেশন ক্যাপচার করা
-    const fullDescription = p.description || p.productNameEn || 'High-grade global product with premium specifications.';
+    
+    // ফুল ডেসক্রিপশন হ্যান্ডেলিং
+    const fullDescription = p.description || p.productNameEn || 'High-grade global product with professional specifications.';
 
-    // ৪. Save/Update D1 Database
+    // ৪. D1 Database-এ ডেটা ইনসার্ট করা
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -90,8 +93,13 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের ফুল ডেসক্রিপশনসহ D1 ডাটাবেজে আপডেট ও সেভ হয়েছে!",
-      data: { title: p.productNameEn, retailPrice, wholesalePrice }
+      message: "প্রোডাক্টের ফুল ডেসক্রিপশনসহ D1 ডাটাবেজে সফলভাবে আপডেট ও সেভ হয়েছে!",
+      data: { 
+        title: p.productNameEn, 
+        baseCost: baseCost.toFixed(2),
+        retailPrice, 
+        wholesalePrice 
+      }
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (err) {
