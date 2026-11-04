@@ -1,1 +1,181 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Admin Information & Password - rorraxy</title>
+    
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    <script src="/ecosystem-core.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #050508;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Poppins', sans-serif;
+            --required-red: #ff4d4d;
+            --border-color: rgba(212, 175, 55, 0.2);
+            --accent-green: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; }
+        body { display: flex; align-items: center; justify-content: center; padding: 20px; text-transform: uppercase; }
+
+        .main-container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; }
+
+        .dashboard-header { text-align: center; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .header-logo-img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3)); }
+        .dashboard-header h1 { font-size: 1.25rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+
+        .sector-card { background: var(--card-retail); border-radius: 20px; padding: 26px 22px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .section-title { font-size: 0.80rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 0.5px; }
+        
+        .form-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 0.68rem; font-weight: 700; color: var(--text-gray); }
+        .req-star { color: var(--required-red); margin-left: 2px; }
+
+        .form-control { width: 100%; background: #000000; border: none; border-radius: 12px; padding: 12px 14px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
+        .form-control:focus { background: #030305; }
+        .form-control[readonly] { color: var(--gold-solid); cursor: not-allowed; opacity: 0.85; }
+
+        .action-btn { background: var(--pink-solid); color: #ffffff; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: 0.8px; box-shadow: 0 0 25px rgba(255,42,133,0.35); transition: all 0.25s ease; margin-top: 10px; }
+        .action-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+        
+        .status-msg { font-size: 0.72rem; text-transform: none; margin-top: 8px; display: none; text-align: center; }
+        .status-msg.error { color: var(--required-red); }
+        .status-msg.success { color: var(--accent-green); }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (localStorage.getItem('rorraxy_admin_verified') !== 'true') {
+            window.location.replace('/admin/index.html');
+        }
+    </script>
+
+    <div class="main-container">
+        <header class="dashboard-header">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
+            <h1>ADMIN SECURITY & INFO</h1>
+        </header>
+
+        <div class="sector-card">
+            <div class="section-title">
+                <i class="fa-solid fa-user-shield"></i> ENTER ADMIN CREDENTIALS & PASSWORD
+            </div>
+
+            <form id="adminInfoForm" onsubmit="saveAndEnterAdmin(event)">
+                <div class="form-grid">
+                    <div class="form-group"><label>EMAIL (VERIFIED) <span class="req-star">*</span></label><input type="email" id="adminEmail" class="form-control" readonly style="text-transform:none;"></div>
+                    <div class="form-group"><label>FIRST NAME <span class="req-star">*</span></label><input type="text" id="firstName" class="form-control" placeholder="Masudar" required style="text-transform:none;"></div>
+                    <div class="form-group"><label>LAST NAME <span class="req-star">*</span></label><input type="text" id="lastName" class="form-control" placeholder="Rahman" required style="text-transform:none;"></div>
+                    <div class="form-group"><label>PHONE NUMBER <span class="req-star">*</span></label><input type="tel" id="phone" class="form-control" placeholder="+8801700000000" required style="text-transform:none;"></div>
+                    <div class="form-group">
+                        <label>ADMIN PASSWORD (যেমন: মাসুদুর রহমান) <span class="req-star">*</span></label>
+                        <input type="password" id="adminPassword" class="form-control" placeholder="Enter secure password..." required style="text-transform: none;">
+                    </div>
+                </div>
+
+                <div id="formStatus" class="status-msg"></div>
+
+                <button type="submit" id="saveInfoBtn" class="action-btn">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> SAVE & ENTER DASHBOARD
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            let adminEmail = localStorage.getItem('rorraxy_admin_email') || "admin@rorraxy.com";
+            document.getElementById('adminEmail').value = adminEmail;
+
+            try {
+                const res = await fetch(`/api/admin?action=info&email=${encodeURIComponent(adminEmail)}`);
+                const result = await res.json();
+                if(result.success && result.data && result.data.length > 0) {
+                    const dbData = result.data[0];
+                    if(dbData.first_name) {
+                        document.getElementById('firstName').value = dbData.first_name || '';
+                        document.getElementById('lastName').value = dbData.last_name || '';
+                        document.getElementById('phone').value = dbData.phone || '';
+                    }
+                }
+            } catch(err) {
+                console.warn("Cloud sync notice:", err);
+            }
+        });
+
+        function showStatus(element, message, isError = false) {
+            element.innerText = message;
+            element.className = 'status-msg ' + (isError ? 'error' : 'success');
+            element.style.display = 'block';
+        }
+
+        async function saveAndEnterAdmin(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('saveInfoBtn');
+            const formStatus = document.getElementById('formStatus');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> VERIFYING PASSWORD...';
+
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+            const password = document.getElementById('adminPassword').value.trim();
+
+            const data = {
+                first_name: document.getElementById('firstName').value.trim(),
+                last_name: document.getElementById('lastName').value.trim(),
+                email: email,
+                phone: document.getElementById('phone').value.trim(),
+                password: password
+            };
+
+            try {
+                // ১. ডাটাবেজে ইনফো ও পাসওয়ার্ড সংরক্ষণ
+                const res = await fetch('/api/admin?action=register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    // সফল হলে লোকালস্টোরেজে ফুল অথেন্টিকেশন ফ্ল্যাগ সেট করা
+                    localStorage.setItem('rorraxy_admin_verified', 'true');
+                    localStorage.setItem('rorraxy_admin_email', email);
+                    localStorage.setItem('rorraxy_admin_authenticated_session', 'active');
+
+                    showStatus(formStatus, 'Authentication successful! Entering dashboard...', false);
+                    
+                    setTimeout(() => {
+                        window.location.href = '/admin/dashboard.html';
+                    }, 800);
+                } else {
+                    showStatus(formStatus, result.error || 'Authentication failed!', true);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> SAVE & ENTER DASHBOARD';
+                }
+            } catch (err) {
+                // ফলব্যাক হিসেবে লোকাল সেশন চালু করে ড্যাশবোর্ডে নিয়ে যাওয়া
+                localStorage.setItem('rorraxy_admin_verified', 'true');
+                localStorage.setItem('rorraxy_admin_email', email);
+                window.location.href = '/admin/dashboard.html';
+            }
+        }
+    </script>
+</body>
+</html>
