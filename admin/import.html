@@ -1,94 +1,339 @@
-<!-- Global CJ Importer - Full Screen Soft Dark Design -->
+<!-- Global Product Importer - Full Screen Soft Dark Design -->
 <div class="cj-fullscreen-wrapper">
   <div class="cj-content-container">
     <div class="cj-import-header">
-      <h2>Global CJ Product Importer</h2>
-      <p>Advanced Retail (Free Shipping) & Wholesale 3-Tier Pricing Engine</p>
+      <h2>GLOBAL PRODUCT IMPORTER</h2>
     </div>
     
     <form id="cjImportForm">
+      
+      <!-- সিজে কুইক লিঙ্ক ও ইন-পেজ পপআপ ট্রিগার -->
       <div class="cj-form-group">
-        <label for="cjProductId">CJ Product ID (PID)</label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+          <label for="cjProductUrl" style="margin-bottom: 0;">CJ PRODUCT LINK (URL)</label>
+          <button type="button" onclick="openCjModal()" class="cj-quick-link-btn">
+            <i class="fa-solid fa-globe"></i> OPEN CJ
+          </button>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="cjProductUrl" placeholder="PASTE CJ PRODUCT URL HERE..." style="flex: 1;">
+          <button type="button" id="getPidBtn" onclick="extractPidFromUrl()" class="cj-btn-secondary">GET PID</button>
+        </div>
+        <small class="cj-hint">লিংক পেস্ট করে GET PID এ ক্লিক করলে নিচে আইডি চলে আসবে।</small>
+      </div>
+
+      <!-- প্রোডাক্ট আইডি বক্স -->
+      <div class="cj-form-group">
+        <label for="cjProductId">CJ PRODUCT ID (PID)</label>
         <input type="text" id="cjProductId" placeholder="e.g. 1379254578851221504" required>
       </div>
 
       <div class="cj-form-row">
         <div class="cj-form-group">
-          <label for="retailMargin">Retail Markup Margin (%) [Default: 70%]</label>
+          <label for="retailMargin">RETAIL MARGIN (%)</label>
           <input type="number" id="retailMargin" value="70" placeholder="70" required>
         </div>
 
         <div class="cj-form-group">
-          <label for="shippingCushion">Shipping Cushion ($) [Default: $6]</label>
+          <label for="shippingCushion">SHIPPING CUSHION ($)</label>
           <input type="number" step="0.1" id="shippingCushion" value="6.00" placeholder="6.00" required>
         </div>
       </div>
 
       <div class="cj-form-group">
-        <label for="wholesaleMargin">Wholesale Sample Markup Margin (%) [Default: 25%]</label>
+        <label for="wholesaleMargin">WHOLESALE MARGIN (%)</label>
         <input type="number" id="wholesaleMargin" value="25" placeholder="25" required>
-        <small class="cj-hint">হোলসেলের স্যাম্পল, মিনিমাম ও বাল্ক প্রাইস স্বয়ংক্রয়ভাবে ক্যালকুলেট হবে।</small>
       </div>
 
-      <button type="submit" id="importBtn" class="cj-btn-gold">
-        <span>Sync & Import with 3-Tier Wholesale</span>
-      </button>
+      <!-- পতাকা সহ ক্লিন কান্ট্রি ড্রপডাউন এবং ডিসকাউন্ট (0%) -->
+      <div class="cj-form-row">
+        <div class="cj-form-group">
+          <label for="targetCountry">TARGET MARKET & FLAG</label>
+          <select id="targetCountry" class="cj-form-select">
+            <option value="all" selected>🌐 ALL COUNTRIES (GLOBAL)</option>
+            <option value="us">🇺🇸 UNITED STATES (US)</option>
+            <option value="gb">🇬🇧 UNITED KINGDOM (GB)</option>
+            <option value="ca">🇨🇦 CANADA (CA)</option>
+            <option value="au">🇦🇺 AUSTRALIA (AU)</option>
+            <option value="de">🇩🇪 GERMANY (DE)</option>
+            <option value="fr">🇫🇷 FRANCE (FR)</option>
+            <option value="ae">🇦🇪 UNITED ARAB EMIRATES (AE)</option>
+            <option value="sa">🇸🇦 SAUDI ARABIA (SA)</option>
+            <option value="sg">🇸🇬 SINGAPORE (SG)</option>
+            <option value="my">🇲🇾 MALAYSIA (MY)</option>
+            <option value="jp">🇯🇵 JAPAN (JP)</option>
+            <option value="kr">🇰🇷 SOUTH KOREA (KR)</option>
+            <option value="it">🇮🇹 ITALY (IT)</option>
+            <option value="es">🇪🇸 SPAIN (ES)</option>
+            <option value="nl">🇳🇱 NETHERLANDS (NL)</option>
+            <option value="se">🇸🇪 SWEDEN (SE)</option>
+            <option value="no">🇳🇴 NORWAY (NO)</option>
+            <option value="dk">🇩🇰 DENMARK (DK)</option>
+            <option value="ch">🇨🇭 SWITZERLAND (CH)</option>
+            <option value="qa">🇶🇦 QATAR (QA)</option>
+            <option value="kw">🇰🇼 KUWAIT (KW)</option>
+            <option value="in">🇮🇳 INDIA (IN)</option>
+            <option value="bd">🇧🇩 BANGLADESH (BD)</option>
+            <option value="br">🇧🇷 BRAZIL (BR)</option>
+            <option value="za">🇿🇦 SOUTH AFRICA (ZA)</option>
+          </select>
+        </div>
+
+        <div class="cj-form-group">
+          <label for="discountRate">DISCOUNT (%)</label>
+          <input type="number" id="discountRate" value="0" placeholder="0" min="0" max="90" required>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; margin-top: 5px;">
+        <button type="submit" id="importBtn" class="cj-btn-gold">
+          <span>SYNC & IMPORT</span>
+        </button>
+      </div>
     </form>
 
     <div id="importStatus" class="cj-status-box"></div>
   </div>
 </div>
 
+<!-- ফুল-স্ক্রিন ইন-পেজ সিজে ড্রপশিপিং পপআপ মডাল (ক্লিন হেডার ও লাল ক্রস বাটনসহ) -->
+<div id="cjWebModal" class="cj-modal-overlay">
+  <div class="cj-modal-container">
+    <div class="cj-modal-header">
+      <span></span>
+      <button type="button" onclick="closeCjModal()" class="cj-modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cj-modal-body" id="cjModalBodyWrapper"></div>
+  </div>
+</div>
+
 <style>
   :root {
-    --bg-pure: #050505;
-    --card-soft: #0d0d12;
+    --bg-pure: #000000;
+    --card-soft: #0c0c12;
     --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
     --gold-solid: #d4af37;
     --pink-love: #ff2a85;
     --text-white: #ffffff;
-    --text-gray: #9e9eb0;
+    --text-gray: #a0a0b5;
     --font-main: 'Poppins', sans-serif;
   }
 
-  .cj-fullscreen-wrapper { margin: 0; padding: 0; width: 100%; min-height: 100vh; background-color: var(--bg-pure); font-family: var(--font-main); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
-  .cj-content-container { width: 100%; max-width: 700px; padding: 40px; background-color: var(--card-soft); box-sizing: border-box; border-radius: 12px; border: 1px solid rgba(212,175,55,0.2); }
-  .cj-import-header { margin-bottom: 30px; }
-  .cj-import-header h2 { font-size: 26px; font-weight: 700; margin: 0 0 8px 0; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .cj-import-header p { color: var(--text-gray); font-size: 14px; margin: 0; }
-  .cj-form-row { display: flex; gap: 20px; }
-  .cj-form-row .cj-form-group { flex: 1; }
-  .cj-form-group { margin-bottom: 22px; }
-  .cj-form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-white); margin-bottom: 8px; }
-  .cj-form-group input { width: 100%; padding: 14px 16px; background: #000000; border: none; border-radius: 8px; color: var(--text-white); font-size: 15px; outline: none; box-sizing: border-box; }
-  .cj-form-group input:focus { box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4); }
-  .cj-hint { color: var(--text-gray); font-size: 12px; margin-top: 6px; display: block; line-height: 1.5; }
-  .cj-btn-gold { width: 100%; padding: 16px; background: var(--gold-gradient); border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; color: #000000; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
-  .cj-status-box { margin-top: 24px; font-size: 14px; line-height: 1.6; border-radius: 8px; display: none; padding: 15px; }
+  html, body {
+    width: 100%; max-width: 100%; overflow-x: hidden;
+    background: var(--bg-pure) !important; color: var(--text-white);
+    font-family: var(--font-main); margin: 0; padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .cj-fullscreen-wrapper {
+    width: 100%; min-height: 100vh; background-color: var(--bg-pure);
+    display: flex; align-items: center; justify-content: center;
+    box-sizing: border-box; padding: 12px;
+  }
+
+  .cj-content-container {
+    width: 100%; max-width: 520px; padding: 24px 20px;
+    background-color: var(--card-soft); box-sizing: border-box;
+    border-radius: 16px; border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 15px rgba(212, 175, 55, 0.08);
+  }
+
+  .cj-import-header { margin-bottom: 20px; text-align: center; }
+  .cj-import-header h2 {
+    font-size: 1.05rem; font-weight: 800; margin: 0;
+    background: var(--gold-gradient); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .cj-quick-link-btn {
+    font-size: 0.62rem; font-weight: 800; color: #000000;
+    background: var(--gold-gradient); border: none;
+    padding: 5px 12px; border-radius: 8px; cursor: pointer;
+    font-family: var(--font-main); transition: transform 0.1s;
+    box-shadow: 0 2px 8px rgba(212,175,55,0.3);
+  }
+  .cj-quick-link-btn:active { transform: scale(0.95); }
+
+  .cj-form-row { display: flex; gap: 12px; width: 100%; }
+  .cj-form-row .cj-form-group { flex: 1; min-width: 0; }
+  .cj-form-group { margin-bottom: 14px; width: 100%; }
+
+  .cj-form-group label {
+    display: block; font-size: 0.62rem; font-weight: 700;
+    color: var(--text-white); margin-bottom: 5px; letter-spacing: 0.5px;
+  }
+
+  .cj-form-group input, .cj-form-select {
+    width: 100%; padding: 11px 14px; background: #040406;
+    border: none; border-radius: 10px;
+    color: var(--text-white); font-size: 0.8rem; outline: none;
+    box-sizing: border-box; font-family: var(--font-main);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .cj-form-group input:focus, .cj-form-select:focus {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2), inset 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  .cj-form-select option { background: #0c0c12; color: var(--text-white); padding: 8px; }
+
+  .cj-btn-secondary {
+    background: rgba(212, 175, 55, 0.15); border: none; border-radius: 10px;
+    color: var(--gold-solid); font-weight: 700; font-size: 0.7rem; padding: 0 14px;
+    cursor: pointer; font-family: var(--font-main); flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+  .cj-btn-secondary.active-pink {
+    background: var(--pink-love) !important;
+    color: #ffffff !important;
+  }
+  .cj-btn-secondary:active { transform: scale(0.95); }
+
+  .cj-hint {
+    color: var(--text-gray); font-size: 0.56rem; margin-top: 4px;
+    display: block; text-transform: none !important; font-weight: 500;
+  }
+
+  .cj-btn-gold {
+    width: 100%; max-width: 200px; padding: 11px 16px;
+    background: var(--gold-gradient); border: none; border-radius: 20px;
+    cursor: pointer; font-weight: 800; font-size: 0.74rem; color: #000000;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+    transition: transform 0.1s ease;
+  }
+  .cj-btn-gold:active { transform: scale(0.97); }
+
+  .cj-status-box {
+    margin-top: 16px; font-size: 0.72rem; line-height: 1.5;
+    border-radius: 10px; display: none; padding: 12px;
+    text-transform: none !important; background: #040406;
+  }
+
+  /* ইন-পেজ সিজে মডাল স্টাইল */
+  .cj-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    z-index: 999999; display: none; align-items: center; justify-content: center;
+    padding: 8px; box-sizing: border-box;
+  }
+  .cj-modal-container {
+    background: #0c0c12; width: 100%; max-width: 96vw; height: 92vh;
+    border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+  }
+  .cj-modal-header {
+    background: #040406; padding: 8px 14px; display: flex;
+    justify-content: flex-end; align-items: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  }
+  .cj-modal-close-btn {
+    background: #ff3b30; border: none; color: #ffffff;
+    width: 30px; height: 30px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; cursor: pointer; font-size: 0.95rem;
+    box-shadow: 0 2px 10px rgba(255,59,48,0.5);
+    transition: transform 0.1s;
+  }
+  .cj-modal-close-btn:active { transform: scale(0.9); }
+
+  .cj-modal-body { flex: 1; width: 100%; background: #ffffff; }
+  .cj-iframe-view { width: 100%; height: 100%; border: none; }
 </style>
 
 <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    let modalBody = document.getElementById('cjModalBodyWrapper');
+    if (!document.getElementById('cjActiveIframe')) {
+      let iframe = document.createElement('iframe');
+      iframe.id = 'cjActiveIframe';
+      iframe.src = 'https://cjdropshipping.com';
+      iframe.className = 'cj-iframe-view';
+      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');
+      modalBody.appendChild(iframe);
+    }
+  });
+
+  function openCjModal() {
+    document.getElementById('cjWebModal').style.display = 'flex';
+  }
+  function closeCjModal() {
+    document.getElementById('cjWebModal').style.display = 'none';
+  }
+
+  function extractPidFromUrl() {
+    let urlInput = document.getElementById('cjProductUrl');
+    let pidInput = document.getElementById('cjProductId');
+    let getPidBtn = document.getElementById('getPidBtn');
+    let val = urlInput.value.trim();
+    
+    if (!val) {
+      alert("দয়া করে প্রথমে সিজে প্রোডাক্টের লিংক পেস্ট করুন।");
+      return;
+    }
+
+    // পিঙ্ক কালर ইফেক্ট ট্রিগার
+    getPidBtn.classList.add('active-pink');
+
+    try {
+      let cleanUrl = val.split('?')[0];
+      let segments = cleanUrl.split('/').filter(Boolean);
+      let possibleId = segments[segments.length - 1];
+
+      if (possibleId && possibleId.length > 10) {
+        pidInput.value = possibleId;
+        urlInput.value = ""; 
+      } else {
+        let match = val.match(/([0-9a-zA-Z]{15,})/);
+        if (match) {
+          pidInput.value = match[0];
+          urlInput.value = "";
+        } else {
+          alert("সঠিক প্রোডাক্ট আইডি বা লিংক পাওয়া যায়নি।");
+        }
+      }
+    } catch(e) {
+      alert("লিংক থেকে আইডি এক্সট্রাক্ট করতে সমস্যা হয়েছে।");
+    }
+
+    // ১ সেকেন্ড পর পিঙ্ক কালার রিসেট হয়ে আগের গোল্ড স্টাইলে ফিরে আসবে
+    setTimeout(() => {
+      getPidBtn.classList.remove('active-pink');
+    }, 1000);
+  }
+
   document.getElementById('cjImportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const statusDiv = document.getElementById('importStatus');
     const btn = document.getElementById('importBtn');
     
-    const cjProductId = document.getElementById('cjProductId').value.trim();
+    let cjProductId = document.getElementById('cjProductId').value.trim();
     const retailMargin = document.getElementById('retailMargin').value.trim();
     const shippingCushion = document.getElementById('shippingCushion').value.trim();
     const wholesaleMargin = document.getElementById('wholesaleMargin').value.trim();
+    const targetCountry = document.getElementById('targetCountry').value;
+    const discountRate = document.getElementById('discountRate').value.trim();
 
     statusDiv.style.display = 'block';
     statusDiv.style.background = 'rgba(212, 175, 55, 0.08)';
     statusDiv.style.color = 'var(--gold-solid)';
-    statusDiv.innerHTML = 'Connecting to CJ API & calculating 3-tier wholesale pricing...';
+    statusDiv.innerHTML = 'SYNCING WITH CLOUDFLARE D1 & CJ API...';
     btn.disabled = true;
 
     try {
       const res = await fetch('/api/import-cj', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cjProductId, retailMargin, shippingCushion, wholesaleMargin })
+        body: JSON.stringify({ 
+          cjProductId, 
+          retailMargin, 
+          shippingCushion, 
+          wholesaleMargin,
+          targetCountry,
+          discountRate 
+        })
       });
       
       const result = await res.json();
@@ -98,21 +343,19 @@
         statusDiv.style.color = '#00ff80';
         statusDiv.innerHTML = `✓ ${result.message}<br><br>
           <strong>Product:</strong> ${result.data.title}<br>
-          <strong>Base Cost:</strong> $${result.data.cost}<br>
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}<br>
-          <strong>Min Wholesale:</strong> $${result.data.priceMinWhole}<br>
           <strong>Bulk Price:</strong> $${result.data.priceBulk}`;
         document.getElementById('cjImportForm').reset();
       } else {
         statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
         statusDiv.style.color = 'var(--pink-love)';
-        statusDiv.innerHTML = `✕ Error: ${result.error}`;
+        statusDiv.innerHTML = `✕ ERROR: ${result.error}`;
       }
     } catch (err) {
       statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
       statusDiv.style.color = 'var(--pink-love)';
-      statusDiv.innerHTML = `✕ Connection Failed: ${err.message}`;
+      statusDiv.innerHTML = `✕ CONNECTION FAILED: ${err.message}`;
     } finally {
       btn.disabled = false;
     }
