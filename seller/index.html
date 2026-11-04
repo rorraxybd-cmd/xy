@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Seller Portal - rorraxy</title>
    
-    <!-- Favicon Logo -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
-
-    <!-- Ecosystem Core Script -->
     <script src="/ecosystem-core.js"></script>
 
-    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -77,22 +73,18 @@
         .status-msg { font-size: 0.72rem; text-transform: none; margin-top: -2px; display: none; text-align: center; }
         .status-msg.error { color: var(--required-red); }
         .status-msg.success { color: #2ecc71; }
-
-        .action-link-box { display: none; margin-top: 6px; text-align: center; }
-        .verify-action-btn {
-            width: 100%; background: var(--pink-solid); border: none; border-radius: 14px;
-            padding: 15px; color: #ffffff; font-weight: 800; font-size: 0.85rem; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 0 25px rgba(255, 42, 133, 0.4);
-        }
     </style>
 </head>
 <body>
 
     <script>
+        // যদি আগেই ইনফো পূরণ করা থাকে তবে সরাসরি ড্যাশবোর্ডে যাবে, অন্যথায় ইনফো পেজে পাঠাবে
         if (localStorage.getItem('rorraxy_seller_verified') === 'true') {
-            window.location.replace('/seller/dashboard.html');
+            if (localStorage.getItem('rorraxy_seller_info_completed') === 'true') {
+                window.location.replace('/seller/dashboard.html');
+            } else {
+                window.location.replace('/seller/info.html');
+            }
         }
     </script>
 
@@ -110,14 +102,8 @@
                 </div>
                 
                 <div id="formStatus" class="status-msg"></div>
-                
-                <div id="actionLinkBox" class="action-link-box">
-                    <a id="verifyDirectBtn" href="/seller/dashboard.html" class="verify-action-btn">
-                        <i class="fa-solid fa-arrow-right-to-bracket"></i> ENTER DASHBOARD
-                    </a>
-                </div>
 
-                <button type="submit" class="auth-btn" id="sendLinkBtn">CONTINUE TO DASHBOARD</button>
+                <button type="submit" class="auth-btn" id="sendLinkBtn">VERIFY & PROCEED</button>
             </form>
         </div>
     </div>
@@ -127,8 +113,6 @@
         const sellerEmailInput = document.getElementById('sellerEmail');
         const sendLinkBtn = document.getElementById('sendLinkBtn');
         const formStatus = document.getElementById('formStatus');
-        const actionLinkBox = document.getElementById('actionLinkBox');
-        const verifyDirectBtn = document.getElementById('verifyDirectBtn');
 
         function isAuthenticEmail(email) {
             const blockedDomains = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable', 'trashmail'];
@@ -160,10 +144,8 @@
             sendLinkBtn.disabled = true;
             sendLinkBtn.innerText = "VERIFYING...";
             formStatus.style.display = 'none';
-            actionLinkBox.style.display = 'none';
 
             try {
-                // ক্লাউডফায়ার পেজেস ফাংশন এন্ডপয়েন্ট কল
                 const response = await fetch(`/api/seller/send-magic-link`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -176,33 +158,25 @@
                     localStorage.setItem('rorraxy_seller_verified', 'true');
                     localStorage.setItem('rorraxy_seller_email', email);
                     
-                    let profile = JSON.parse(localStorage.getItem('rorraxy_seller_profile') || '{}');
-                    profile.businessEmail = email;
-                    localStorage.setItem('rorraxy_seller_profile', JSON.stringify(profile));
-
-                    showStatus(formStatus, 'Verified successfully! Click below:', false);
+                    showStatus(formStatus, 'Verified successfully! Redirecting...', false);
                     
-                    if (data.magicLink) {
-                        verifyDirectBtn.href = data.magicLink;
-                    } else {
-                        verifyDirectBtn.href = '/seller/dashboard.html';
-                    }
-
-                    actionLinkBox.style.display = 'block';
-                    sendLinkBtn.style.display = 'none';
+                    // ভেরিফিকেশন সফল হওয়ার সাথে সাথেই ইনফরমেশন পেজে রিডাইরেক্ট হবে
+                    setTimeout(() => {
+                        window.location.replace('/seller/info.html');
+                    }, 800);
                 } else {
                     showStatus(formStatus, (data && data.error) ? data.error : 'Verification failed. Try again.', true);
                     sendLinkBtn.disabled = false;
-                    sendLinkBtn.innerText = "CONTINUE TO DASHBOARD";
+                    sendLinkBtn.innerText = "VERIFY & PROCEED";
                 }
             } catch (err) {
                 localStorage.setItem('rorraxy_seller_verified', 'true');
                 localStorage.setItem('rorraxy_seller_email', email);
                 
-                showStatus(formStatus, 'Verified successfully! Click below:', false);
-                verifyDirectBtn.href = '/seller/dashboard.html';
-                actionLinkBox.style.display = 'block';
-                sendLinkBtn.style.display = 'none';
+                showStatus(formStatus, 'Verified successfully! Redirecting...', false);
+                setTimeout(() => {
+                    window.location.replace('/seller/info.html');
+                }, 800);
             }
         });
     </script>
