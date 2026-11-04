@@ -207,7 +207,7 @@
         }
         
         .product-media-box img { 
-            width: 100%; height: auto; max-height: 550px; display: block; object-fit: contain; background: #000000; 
+            width: 100%; height: auto; display: block; object-fit: contain; background: #000000; 
             transition: opacity 0.3s ease;
         }
         
@@ -443,6 +443,7 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 6000);
 
+                // সব প্রোডাক্ট ফেচ করা যাতে ভেন্ডর ও সিজে প্রোডাক্টগুলো একসাথে আসে
                 const response = await fetch('/api/products', {
                     signal: controller.signal,
                     cache: 'force-cache'
@@ -470,6 +471,7 @@
 
             let allProducts = Array.from(mergedMap.values());
 
+            // হোলসেল বা বোথ মোডের প্রোডাক্ট ফিল্টার করা
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
                 return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined';
@@ -497,32 +499,43 @@
                 const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
                 const moq = p.moq || 10;
                 
-                let pImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                if (p.image_url) {
-                    pImg = p.image_url;
-                } else if (p.imageUrl) {
-                    pImg = p.imageUrl;
-                } else if (p.images_json) {
-                    try {
-                        let parsed = JSON.parse(p.images_json);
-                        if (Array.isArray(parsed) && parsed.length > 0) pImg = parsed[0];
-                    } catch (e) {
-                        if (typeof p.images_json === 'string' && p.images_json.trim() !== '') {
-                            pImg = p.images_json.split(',')[0].trim();
+                // সমস্ত সম্ভাব্য ইমেজ পাথ সুরক্ষিতভাবে পার্স করার লজিক
+                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                
+                try {
+                    if (p.images_json) {
+                        if (typeof p.images_json === 'string') {
+                            let parsed = JSON.parse(p.images_json);
+                            if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
+                        } else if (Array.isArray(p.images_json) && p.images_json.length > 0) {
+                            resolvedImageUrl = p.images_json[0];
                         }
                     }
+                } catch(e) {}
+
+                if (resolvedImageUrl === 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png' && p.image_url) {
+                    if (typeof p.image_url === 'string' && p.image_url.startsWith('[')) {
+                        try {
+                            let parsed = JSON.parse(p.image_url);
+                            if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
+                        } catch(e) { resolvedImageUrl = p.image_url; }
+                    } else {
+                        resolvedImageUrl = p.image_url;
+                    }
+                } else if (resolvedImageUrl === 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png' && p.imageUrl) {
+                    resolvedImageUrl = p.imageUrl;
                 }
 
-                const productId = p.id || p.product_code || '';
+                const productId = p.id || p.product_id || p.product_code || '';
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card';
-                cardDiv.onclick = () => location.href = `/wholesale/pd.html?id=${productId}`;
+                cardDiv.onclick = () => location.href = `pd.html?id=${productId}`;
 
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <div class="wholesale-badge"><i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS</div>
-                        <img src="${pImg}" alt="${pTitle}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';">
+                        <img src="${resolvedImageUrl}" alt="${pTitle}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';">
                     </div>
                     <div class="card-footer-actions">
                         <div class="wholesale-pricing-row">
