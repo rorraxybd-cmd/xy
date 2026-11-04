@@ -10,10 +10,10 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://img.rorraxy.com">
+    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
 
     <!-- Icons -->
-    <link rel="icon" type="image/png" href="https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -167,7 +167,6 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px;
         }
         
-        /* ফাঁকা জায়গার সমস্যা দূর করার জন্য কলামভিত্তিক মেসনারি লেআউট */
         .feed-container {
             padding: 4px 0; 
             column-count: 2; 
@@ -379,7 +378,6 @@
     </div>
 
     <script>
-        // ডাইরেক্ট ক্লাউডফ্লেয়ার পেজ ফাংশন কানেকশন
         const API_BASE_URL = '';
         let currentActiveProduct = null;
         let currentItemQuantity = 10;
@@ -400,7 +398,7 @@
 
         async function fetchWholesaleProductDetails(productId) {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/products?mode=wholesale`);
+                const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
                 const result = await response.json();
                 let products = [];
                 if (result && result.success && Array.isArray(result.data)) {
@@ -409,11 +407,20 @@
                     products = result;
                 }
 
-                if (Array.isArray(products) && products.length > 0) {
-                    const matchedProduct = products.find(p => String(p.id) === String(productId) || String(p.product_id) === String(productId) || String(p.product_code) === String(productId));
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
+                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache')) || [];
+                let mergedMap = new Map();
+                [...localProducts, ...cachedFeed, ...products].forEach(p => {
+                    let pId = p.id || p.product_id || p.product_code || p.title;
+                    if(pId) mergedMap.set(String(pId), p);
+                });
+                let allProducts = Array.from(mergedMap.values());
+
+                if (allProducts.length > 0) {
+                    const matchedProduct = allProducts.find(p => String(p.id) === String(productId) || String(p.product_id) === String(productId) || String(p.product_code) === String(productId));
                     if (matchedProduct) {
                         renderProductDetails(matchedProduct);
-                        renderRelatedWholesaleProducts(products, matchedProduct);
+                        renderRelatedWholesaleProducts(allProducts, matchedProduct);
                         return;
                     }
                 }
@@ -432,7 +439,7 @@
                 moq: 10,
                 stock: 1500,
                 description: "High-grade bulk wholesale manufacturing supply meeting international commercial standards.",
-                image_url: "https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png"
+                image_url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png"
             };
             renderProductDetails(sampleProduct);
             renderRelatedWholesaleProducts([sampleProduct], sampleProduct);
@@ -440,9 +447,9 @@
 
         function renderProductDetails(prod) {
             currentActiveProduct = prod;
-            let priceVal = parseFloat(prod.price_bulk || prod.price) || 25.00;
+            let priceVal = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
             let oldP = priceVal * 1.35;
-            let moqVal = prod.moq || 10;
+            let moqVal = parseInt(prod.moq || prod.min_order_qty) || 10;
 
             currentItemQuantity = moqVal;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
@@ -460,15 +467,25 @@
             let mediaList = [];
             
             let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
-            if (primaryImg) mediaList.push({ type: 'image', url: primaryImg });
+            if (primaryImg && typeof primaryImg === 'string' && primaryImg.startsWith('[')) {
+                try {
+                    let parsedArr = JSON.parse(primaryImg);
+                    if (Array.isArray(parsedArr) && parsedArr.length > 0) primaryImg = parsedArr[0];
+                } catch(e) {}
+            }
+            if (primaryImg && !primaryImg.includes('mr masudar logo')) {
+                mediaList.push({ type: 'image', url: primaryImg });
+            }
 
             if (prod.images_json) {
                 try {
-                    let parsedImages = JSON.parse(prod.images_json);
+                    let parsedImages = typeof prod.images_json === 'string' ? JSON.parse(prod.images_json) : prod.images_json;
                     if (Array.isArray(parsedImages)) {
                         parsedImages.forEach(imgUrl => {
                             if (imgUrl && !mediaList.some(m => m.url === imgUrl)) mediaList.push({ type: 'image', url: imgUrl });
                         });
+                    } else if (typeof parsedImages === 'string') {
+                        if (!mediaList.some(m => m.url === parsedImages)) mediaList.push({ type: 'image', url: parsedImages });
                     }
                 } catch (e) {
                     if (typeof prod.images_json === 'string') {
@@ -480,11 +497,22 @@
                 }
             }
 
+            if (mediaList.length === 0 && prod.image_url) {
+                if (typeof prod.image_url === 'string' && prod.image_url.startsWith('[')) {
+                    try {
+                        let parsed = JSON.parse(prod.image_url);
+                        if (Array.isArray(parsed)) parsed.forEach(u => mediaList.push({ type: 'image', url: u }));
+                    } catch(e) { mediaList.push({ type: 'image', url: prod.image_url }); }
+                } else {
+                    mediaList.push({ type: 'image', url: prod.image_url });
+                }
+            }
+
             let videoFileUrl = prod.video_url || prod.videoUrl || "";
             if (videoFileUrl) mediaList.push({ type: 'video', url: videoFileUrl });
 
             if(mediaList.length === 0) {
-                mediaList.push({ type: 'image', url: "https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png" });
+                mediaList.push({ type: 'image', url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" });
             }
 
             updateMainViewport(mediaList[0]);
@@ -495,7 +523,7 @@
                 if(m.type === 'video') {
                     thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><video src="${m.url}" muted></video></div>`;
                 } else {
-                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><img src="${m.url}" alt="Thumb" onerror="this.src='https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png'"></div>`;
+                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><img src="${m.url}" alt="Thumb" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'"></div>`;
                 }
             });
             strip.innerHTML = thumbHtml;
@@ -516,7 +544,18 @@
                 const title = item.title || 'rorraxy Bulk Item';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
                 const moq = item.moq || 10;
-                const imageUrl = item.image_url || item.imageUrl || 'https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                
+                let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+                try {
+                    if (item.images_json) {
+                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
+                        if (Array.isArray(parsed) && parsed.length > 0) imageUrl = parsed[0];
+                    } else if (item.image_url) {
+                        imageUrl = typeof item.image_url === 'string' && item.image_url.startsWith('[') ? JSON.parse(item.image_url)[0] : item.image_url;
+                    }
+                } catch(e) {
+                    imageUrl = item.image_url || imageUrl;
+                }
 
                 return `
                     <div class="product-card" onclick="window.location.href='pd.html?id=${prodId}'">
@@ -524,7 +563,7 @@
                             <div class="wholesale-card-badge">
                                 <i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS
                             </div>
-                            <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                            <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
                             <div class="wholesale-pricing-row">
@@ -551,7 +590,7 @@
             if(mediaObj.type === 'video') {
                 viewport.innerHTML = `<video src="${mediaObj.url}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
             } else {
-                viewport.innerHTML = `<img src="${mediaObj.url}" class="main-media-element" alt="Product View" onerror="this.src='https://img.rorraxy.com/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
+                viewport.innerHTML = `<img src="${mediaObj.url}" class="main-media-element" alt="Product View" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
             }
         }
 
@@ -661,8 +700,8 @@
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code;
             let existingItem = cart.find(item => item.productId === prodId && item.size === chosenSize);
-            let priceNum = parseFloat(currentActiveProduct.price_bulk || currentActiveProduct.price) || 25.00;
-            let primaryImgUrl = currentActiveProduct.image_url || currentActiveProduct.imageUrl || currentActiveProduct.img || "";
+            let priceNum = parseFloat(currentActiveProduct.price_bulk || currentActiveProduct.price || currentActiveProduct.wholesale_price) || 25.00;
+            let primaryImgUrl = currentActiveProduct.image_url || currentActiveProduct.imageUrl || currentActiveProduct.img || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
 
             if(existingItem) {
                 existingItem.qty += currentItemQuantity;
