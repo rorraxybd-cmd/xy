@@ -54,17 +54,17 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সঠিক ছবি এবং গ্যালারি ইমেজ হ্যান্ডেলিং (লোগো আসা রোধ করতে নিখুঁত লজিক)
+    // ৪. ছবি এবং গ্যালারি ইমেজ নিখুঁতভাবে হ্যান্ডেল করার লজিক (লোগো আসা রোধ করতে)
     let imagesArray = [];
     if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       imagesArray = p.productImageList;
-    } else if (p.productImages && Array.isArray(p.productImages) && p.productImages.length > 0) {
+    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
       imagesArray = p.productImages;
     }
 
-    // মূল ছবি নির্ধারণ
+    // মূল ছবি একাধিক ফিল্ড চেক করে নিশ্চিত করা
     const mainImage = p.productImage || p.bigImage || p.imageUrl || (imagesArray.length > 0 ? imagesArray[0] : '');
-    
+
     if (imagesArray.length === 0 && mainImage) {
       imagesArray = [mainImage];
     }
@@ -72,13 +72,11 @@ export async function onRequestPost(context) {
     const imagesList = JSON.stringify(imagesArray);
     const videoUrl = p.productVideo || '';
 
-    // ডেসক্রিপশনের র-এইচটিএমএল ও হজবরল ট্যাগ ক্লিন করা
+    // ডেসক্রিপশনের র-এইচটিএমএল বা হজবরল ট্যাগ ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
-    const cleanDescription = rawDesc.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-                                    .replace(/style="[^"]*"/g, '')
-                                    .trim();
+    const cleanDescription = rawDesc.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').trim();
 
-    // ৫. Save to D1 Database
+    // ৫. Save to D1 (upload_mode = 'both' সেট করা হয়েছে যাতে রিটেইল ও হোলসেল দুটো পেজেই পায়)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
