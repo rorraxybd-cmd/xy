@@ -137,11 +137,36 @@
                             rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
                         }
 
+                        // সব ইমেজ সুরক্ষিতভাবে এক্সট্রাক্ট করার লজিক
+                        let extractedImages = [];
+                        try {
+                            if (item.images_json) {
+                                if (typeof item.images_json === 'string') {
+                                    let parsed = JSON.parse(item.images_json);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } else if (Array.isArray(item.images_json)) {
+                                    extractedImages = item.images_json;
+                                }
+                            }
+                        } catch(e) {}
+
+                        if (extractedImages.length === 0 && item.image_url) {
+                            if (item.image_url.startsWith('[')) {
+                                try {
+                                    let parsed = JSON.parse(item.image_url);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } catch(e) { extractedImages = [item.image_url]; }
+                            } else {
+                                extractedImages = [item.image_url];
+                            }
+                        }
+
+                        extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
+
                         return {
                             id: String(item.id || item.product_code || '101'),
                             videoUrl: rawVid,
-                            image_url: item.image_url || '',
-                            images_json: item.images_json || '',
+                            imagesList: extractedImages,
                             price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
                             baseLikes: item.like_count || 5200,
                             baseShares: 180,
@@ -253,10 +278,11 @@
             } else {
                 let thumbsHtml = '';
                 savedObjects.forEach(v => {
+                    let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
                     thumbsHtml += `
                         <div class="saved-thumb-card" onclick="selectSavedVideo('${v.id}')">
                             <div class="saved-thumb-preview">
-                                <video src="${v.videoUrl}" muted preload="metadata"></video>
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;">
                                 <i class="fa-solid fa-play play-overlay-icon"></i>
                             </div>
                             <div class="saved-thumb-footer">
@@ -336,9 +362,10 @@
 
             let videosHtml = '';
             currentBatchVideos.forEach((v) => {
+                let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
                 videosHtml += `
                     <div class="fullscreen-thumb-card" onclick="selectFullscreenSellerVideo('${v.id}')">
-                        <div class="fs-thumb-preview"><i class="fa-solid fa-play"></i></div>
+                        <div class="fs-thumb-preview"><img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;"></div>
                         <div class="fs-thumb-info">
                             <span class="fs-thumb-title">ID: ${v.id}</span>
                             <span class="fs-thumb-price">${v.price || '$85.00'}</span>
@@ -431,22 +458,11 @@
 
             let mediaElement = '';
 
-            // কঠোর চেক: যদি সত্যি সত্যি কোনো ভ্যালিড ভিডিও লিংক থাকে তবেই ভিডিও ট্যাগ রেন্ডার করবে, অন্যথায় নয়
+            // ভিডিও লিংক থাকলে ভিডিও দেখাবে, না থাকলে ছবি দিয়ে স্লাইডশো দেখাবে
             if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
                 mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
             } else {
-                let images = [];
-                if (product.images_json) {
-                    try { images = JSON.parse(product.images_json); } catch(e) { images = [product.image_url]; }
-                } else if (product.image_url) {
-                    if (product.image_url.startsWith('[')) {
-                        try { images = JSON.parse(product.image_url); } catch(e) { images = [product.image_url]; }
-                    } else {
-                        images = [product.image_url];
-                    }
-                }
-
-                images = images.filter(img => img && typeof img === 'string' && img.trim() !== '' && !img.includes('PRODUCT MEDIA'));
+                let images = product.imagesList || [];
                 if (images.length === 0) {
                     images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
                 }
@@ -636,7 +652,7 @@
         .saved-thumb-preview video { width: 100%; height: 100%; object-fit: cover; }
         .play-overlay-icon { position: absolute; font-size: 1.2rem; color: #fcf6ba; text-shadow: 0 2px 8px rgba(0,0,0,0.8); z-index: 2; pointer-events: none; }
         
-        .fs-thumb-preview { width: 100%; height: 100px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold-solid); font-size: 1.1rem; }
+        .fs-thumb-preview { width: 100%; height: 100px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold-solid); font-size: 1.1rem; overflow: hidden; }
         .fs-thumb-info { display: flex; flex-direction: column; width: 100%; text-align: center; gap: 2px; }
         .fs-thumb-title { font-size: 0.68rem; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .fs-thumb-price { font-size: 0.68rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
