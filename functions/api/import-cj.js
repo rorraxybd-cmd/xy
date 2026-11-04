@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
 
     const accessToken = tokenData.data.accessToken;
 
-    // ২. CJ API থেকে প্রোডাক্টের ডিটেইলস ফেচ করা
+    // ২. CJ API থেকে প্রোডাক্টের তথ্য ফেচ করা
     const productRes = await fetch(`https://developers.cjdropshipping.com/api2.0/v1/product/query?pid=${cjProductId}`, {
       headers: { "CJ-Access-Token": accessToken }
     });
@@ -42,26 +42,26 @@ export async function onRequestPost(context) {
     }
 
     const p = productData.data;
-
-    // সঠিক বেস কস্ট বা প্রাইস ফিল্ড ট্র্যাক করা (undefined সমস্যা সমাধান)
     const baseCost = parseFloat(p.sellPrice || p.productPrice || p.discountPrice || 0);
 
-    // ৩. ডায়নামিক প্রাইসিং ক্যালকুলেশন
+    // ৩. প্রাইসিং ক্যালকুলেশন (রিটেইল এবং ৩টি হোলসেল টায়ার)
     const rMargin = retailMargin ? (1 + parseFloat(retailMargin) / 100) : 1.70;
     const shipFee = shippingCushion ? parseFloat(shippingCushion) : 6.00;
-    const wMargin = wholesaleMargin ? (1 + parseFloat(wholesaleMargin) / 100) : 1.25;
+    const wMargin = wholesaleMargin ? parseFloat(wholesaleMargin) / 100 : 0.25;
 
     const retailPrice = ((baseCost * rMargin) + shipFee).toFixed(2);
-    const wholesalePrice = (baseCost * wMargin).toFixed(2);
+    
+    // হোলসেলে ৩টি স্তরের দাম হিসাব:
+    const priceSample = (baseCost * (1 + wMargin)).toFixed(2);         // স্যাম্পল প্রাইস (যেমন +২৫%)
+    const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2); // মিনিমাম হোলসেল প্রাইস
+    const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);     // বাল্ক বা বড় অর্ডার প্রাইস
 
     const mainImage = p.productImage || '';
     const imagesList = p.productImageList ? JSON.stringify(p.productImageList) : JSON.stringify([mainImage]);
     const videoUrl = p.productVideo || '';
-    
-    // ফুল ডেসক্রিপশন হ্যান্ডেলিং
     const fullDescription = p.description || p.productNameEn || 'High-grade global product with professional specifications.';
 
-    // ৪. D1 Database-এ ডেটা ইনসার্ট করা
+    // ৪. D1 Database-এ সব কলামসহ ডেটা সেভ করা
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -69,7 +69,9 @@ export async function onRequestPost(context) {
         title, 
         description,
         price, 
+        price_sample,
         price_min_whole, 
+        price_bulk,
         cj_cost_price, 
         image_url, 
         images_json,
@@ -77,13 +79,15 @@ export async function onRequestPost(context) {
         upload_mode,
         stock,
         created_at
-      ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, 'retail', ?, CURRENT_TIMESTAMP)
+      ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'retail', ?, CURRENT_TIMESTAMP)
     `).bind(
       cjProductId,
       p.productNameEn || 'Global Custom Product',
       fullDescription,
       retailPrice,
-      wholesalePrice,
+      priceSample,
+      priceMinWhole,
+      priceBulk,
       baseCost,
       mainImage,
       imagesList,
@@ -93,12 +97,14 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের ফুল ডেসক্রিপশনসহ D1 ডাটাবেজে সফলভাবে আপডেট ও সেভ হয়েছে!",
+      message: "প্রোডাক্টের রিটেইল ও ৩টি হোলসেল টায়ার প্রাইসসহ D1 ডাটাবেজে সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
-        baseCost: baseCost.toFixed(2),
+        cost: baseCost.toFixed(2),
         retailPrice, 
-        wholesalePrice 
+        priceSample,
+        priceMinWhole,
+        priceBulk
       }
     }), { headers: { "Content-Type": "application/json" } });
 
