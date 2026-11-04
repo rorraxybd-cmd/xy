@@ -54,37 +54,39 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি ছবি এবং মূল ছবি নিখুঁতভাবে এক্সট্রাক্ট করার লজিক (লোগো আসা রোধ করতে)
-    let imagesArray = [];
-    
-    // CJ API-এর বিভিন্ন সম্ভাব্য ইমেজ প্রপার্টি চেক করা
-    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
-      imagesArray = p.productImageList;
-    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
-      imagesArray = p.productImages;
-    } else if (p.carouselImage && Array.isArray(p.carouselImage)) {
-      imagesArray = p.carouselImage;
+    // ৪. লোগো বা অপ্রাসঙ্গিক ইমেজ ফিল্টার করে শুধুমাত্র আসল প্রোডাক্টের গ্যালারি ছবি তোলার লজিক
+    let rawImages = [];
+    if (Array.isArray(p.productImageList)) {
+      rawImages = p.productImageList;
+    } else if (p.productImage) {
+      rawImages = [p.productImage];
+    } else if (p.bigImage) {
+      rawImages = [p.bigImage];
     }
 
-    const mainImage = p.productImage || p.bigImage || p.imageUrl || (imagesArray.length > 0 ? imagesArray[0] : '');
+    // লোগো বা rorraxy সংবলিত লিংকগুলো গ্যালারি থেকে বাদ দেওয়ার ফিল্টার
+    let imagesArray = rawImages.filter(img => img && typeof img === 'string' && !img.includes('rorraxy') && img.startsWith('http'));
 
-    // যদি অ্যারে খালি থাকে কিন্তু মেইন ইমেজ থাকে, তবে সেটিকে অ্যারেতে রূপান্তর করা
-    if (imagesArray.length === 0 && mainImage) {
-      imagesArray = [mainImage];
-    } else if (mainImage && !imagesArray.includes(mainImage)) {
-      imagesArray.unshift(mainImage); // মূল ছবিটিকে সবার প্রথমে রাখা
+    // যদি ফিল্টার করার পর কোনো ছবি না থাকে, তবে ফলব্যাক হিসেবে মূল ছবি রাখা
+    if (imagesArray.length === 0 && p.productImage && !p.productImage.includes('rorraxy')) {
+      imagesArray = [p.productImage];
     }
 
+    const mainImage = imagesArray.length > 0 ? imagesArray[0] : '';
     const imagesListJson = JSON.stringify(imagesArray);
     const videoUrl = p.productVideo || '';
 
-    // ৫. ডেসক্রিপশনের র-এইচটিএমএল ক্লিন করা (ভাঙা ট্যাগ দূর করা)
+    // ৫. ডেসক্রিপশনের এইচটিএমএল ট্যাগগুলো নিখুঁতভাবে ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
-    const cleanDescription = rawDesc.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-                                    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-                                    .trim();
+    const cleanDescription = rawDesc
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<br\s*[\/]?>/gi, '\n')
+      .replace(/<[^>]+>/g, '') // সমস্ত এইচটিএমএল ট্যাগ রিমোভ
+      .trim();
 
-    // ৬. Save to D1 Database (upload_mode = 'both' যাতে রিটেইল ও হোলসেল উভয় পেজে দেখায়)
+    // ৬. Save to D1 Database
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -112,7 +114,7 @@ export async function onRequestPost(context) {
       priceMinWhole,
       priceBulk,
       baseCost,
-      mainImage || '',
+      mainImage,
       imagesListJson,
       videoUrl,
       p.inventory || 500
@@ -120,7 +122,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ ও ক্লিন ডেসক্রিপশনসহ সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ ও ক্লিন ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
       data: { title: p.productNameEn, retailPrice, priceSample, imagesCount: imagesArray.length }
     }), { headers: { "Content-Type": "application/json" } });
 
