@@ -166,7 +166,7 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* অপ্টিমাইজড মেসনারি লেআউট (Dynamic Ratio Support) */
+        /* অপ্টিমাইজড মেসনারি লেআউট */
         .feed-container {
             padding: 8px 6px; 
             column-count: 2;
@@ -201,11 +201,10 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* যেকোনো ইমেজের জন্য ডাইনামিক এবং জিরো-গ্যাপ হোল্ডার */
+        /* ফিক্সড গ্যাপ রিমুভড: ন্যাচারাল ইমেজ ফিটিং কন্টেইনার */
         .product-media-box { 
             position: relative; 
             width: 100%; 
-            min-height: 140px;
             background: #050508; 
             overflow: hidden; 
             display: flex; 
@@ -215,11 +214,9 @@
         .product-media-box img { 
             width: 100%; 
             height: auto; 
-            max-height: 550px;
             display: block; 
-            object-fit: cover; 
+            object-fit: contain; 
             background: #050508;
-            transition: opacity 0.3s ease;
         }
         
         .product-country-discount-badge {
@@ -232,7 +229,7 @@
 
         .card-footer-actions { 
             display: flex; justify-content: space-between; align-items: center; padding: 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto;
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: 0;
         }
         .product-price-tag { font-size: 0.85rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .card-sub-actions { display: flex; align-items: center; gap: 12px; justify-content: center; }
@@ -406,7 +403,7 @@
         }
 
         async function loadLiveProducts() {
-            // ১. ইনস্ট্যান্ট লোকাল স্টোরেজ রেন্ডারিং
+            // ১. ইনস্ট্যান্ট লোকাল স্টোরেজ থেকে রেন্ডার (Zero Waiting Time)
             const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
             if (cachedData) {
                 try {
@@ -419,7 +416,7 @@
                 }
             }
 
-            // ২. ব্যাকগ্রাউন্ড সাইলেন্ট ফেচিং (Stale-While-Revalidate)
+            // ২. ব্যাকগ্রাউন্ডে নতুন ডাটা ফেচিং
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 6000);
