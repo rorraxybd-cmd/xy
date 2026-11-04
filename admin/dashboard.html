@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Admin Dashboard - rorraxy Ecosystem</title>
+    
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
+    <script src="/ecosystem-core.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #050508;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Poppins', sans-serif;
+            --border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; }
+        body { padding: 24px 16px 110px 16px; text-transform: uppercase; }
+
+        .main-container { width: 100%; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+        .dashboard-header { background: var(--card-retail); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .brand-box { display: flex; align-items: center; gap: 14px; }
+        .brand-box img { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); }
+        .brand-box h1 { font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; }
+
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .settings-btn { background: var(--gold-gradient); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; box-shadow: 0 0 15px rgba(212,175,55,0.25); transition: all 0.25s ease; }
+        .settings-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        .section-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
+
+        /* ৭টি পেজের জন্য চমৎকার গোল্ডেন গ্রিড কার্ড লেআউট */
+        .pages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; width: 100%; }
+        .page-card { background: var(--card-retail); border: 1px solid var(--border-color); border-radius: 18px; padding: 22px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-white); transition: all 0.25s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.7); }
+        .page-card:hover { border-color: var(--gold-solid); transform: translateY(-3px); box-shadow: 0 12px 35px rgba(212,175,55,0.15); }
+        
+        .page-info { display: flex; align-items: center; gap: 14px; }
+        .page-info i { font-size: 1.4rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-info div h3 { font-size: 0.85rem; font-weight: 800; margin-bottom: 2px; }
+        .page-info div p { font-size: 0.62rem; color: var(--text-gray); text-transform: none; }
+        .page-card .fa-chevron-right { color: var(--gold-solid); font-size: 0.85rem; }
+
+        /* বটম নেভিগেশন (৫টি নির্দিষ্ট অপশন) */
+        .admin-bottom-nav { position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; background: rgba(3, 3, 5, 0.98) !important; border-top: 1px solid var(--border-color) !important; display: flex !important; justify-content: space-around !important; align-items: center !important; padding: 10px 4px !important; z-index: 1000 !important; }
+        .nav-item { display: flex !important; flex-direction: column !important; align-items: center !important; text-decoration: none !important; flex: 1 !important; background: none !important; border: none !important; cursor: pointer !important; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-gray); }
+        .nav-item span { font-size: 0.58rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.3px; }
+
+        @media (max-width: 600px) { body { padding: 16px 12px 100px 12px; } }
+    </style>
+</head>
+<body>
+
+    <!-- সিকিউরিটি গার্ড চেক -->
+    <script>
+        if (localStorage.getItem('rorraxy_admin_verified') !== 'true' || localStorage.getItem('rorraxy_admin_authenticated_session') !== 'active') {
+            window.location.replace('/admin/index.html');
+        }
+    </script>
+
+    <div class="main-container">
+        <header class="dashboard-header">
+            <div class="brand-box">
+                <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo">
+                <h1>ADMIN MASTER DASHBOARD</h1>
+            </div>
+            <div class="header-actions">
+                <a href="/admin/info.html" class="settings-btn">
+                    <i class="fa-solid fa-user-gear"></i> SETTINGS & INFO
+                </a>
+            </div>
+        </header>
+
+        <section>
+            <div class="section-title">
+                <i class="fa-solid fa-folder-tree"></i> ADMIN SYSTEM MODULES (7 PAGES)
+            </div>
+            
+            <div class="pages-grid">
+                <a href="/admin/seller.html" class="page-card">
+                    <div class="page-info">
+                        <i class="fa-solid fa-store"></i>
+                        <div>
+                            <h3>SELLER PORTAL</h3>
+                            <p>Manage vendors & approvals</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <a href="/admin/affiliate.html" class="page-card">
+                    <div class="page-info">
+                        <i class="fa-solid fa-handshake-angle"></i>
+                        <div>
+                            <h3>AFFILIATE PORTAL</h3>
+                            <p>Track partners & commissions</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <a href="/admin/business.html" class="page-card">
+                    <div class="page-info">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <div>
+                            <h3>BUSINESS PORTAL</h3>
+                            <p>Operations & enterprise tools</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <a href="/admin/products.html" class="page-card">
+                    <div class="page-info">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <div>
+                            <h3>PRODUCTS MANAGEMENT</h3>
+                            <p>Inventory & items catalog</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <a href="/admin/import.html" class="page-card">
+                    <div class="page-info">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <div>
+                            <h3>DATA IMPORT</h3>
+                            <p>Bulk batch uploads & sync</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <a href="/admin/info.html" class="page-card">
+                    <div class="page-info">
+                        <i class="fa-solid fa-id-card-clip"></i>
+                        <div>
+                            <h3>ADMIN INFO & SETTINGS</h3>
+                            <p>Credentials & security info</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <a href="/admin/index.html" class="page-card" onclick="localStorage.removeItem('rorraxy_admin_verified');">
+                    <div class="page-info" style="color: #ff4d4d;">
+                        <i class="fa-solid fa-right-from-bracket" style="background: none; -webkit-text-fill-color: #ff4d4d;"></i>
+                        <div>
+                            <h3 style="color: #ff4d4d;">LOGOUT / VERIFY</h3>
+                            <p>Secure session exit</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #ff4d4d;"></i>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- বটম নেভিগেশন (আপনার নির্দেশিত ৫টি প্রধান অপশন) -->
+    <nav class="admin-bottom-nav">
+        <a href="/admin/seller.html" class="nav-item">
+            <i class="fa-solid fa-store"></i>
+            <span>SELLER</span>
+        </a>
+        <a href="/admin/affiliate.html" class="nav-item">
+            <i class="fa-solid fa-handshake-angle"></i>
+            <span>AFFILIATE</span>
+        </a>
+        <a href="/admin/business.html" class="nav-item">
+            <i class="fa-solid fa-briefcase"></i>
+            <span>BUSINESS</span>
+        </a>
+        <a href="/admin/import.html" class="nav-item">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            <span>IMPORT</span>
+        </a>
+        <a href="/admin/products.html" class="nav-item">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>PRODUCTS</span>
+        </a>
+    </nav>
+</body>
+</html>
