@@ -11,7 +11,7 @@ export async function onRequestPost(context) {
       });
     }
 
-    // ১. CJ API Access Token জেনারেট করা
+    // ১. CJ Access Token
     const tokenRes = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
 
     const accessToken = tokenData.data.accessToken;
 
-    // ২. CJ API থেকে প্রোডাক্টের তথ্য ফেচ করা
+    // ২. Query Product Details
     const productRes = await fetch(`https://developers.cjdropshipping.com/api2.0/v1/product/query?pid=${cjProductId}`, {
       headers: { "CJ-Access-Token": accessToken }
     });
@@ -44,24 +44,22 @@ export async function onRequestPost(context) {
     const p = productData.data;
     const baseCost = parseFloat(p.sellPrice || p.productPrice || p.discountPrice || 0);
 
-    // ৩. প্রাইসিং ক্যালকুলেশন (রিটেইল এবং ৩টি হোলসেল টায়ার)
+    // ৩. Pricing Calculations
     const rMargin = retailMargin ? (1 + parseFloat(retailMargin) / 100) : 1.70;
     const shipFee = shippingCushion ? parseFloat(shippingCushion) : 6.00;
     const wMargin = wholesaleMargin ? parseFloat(wholesaleMargin) / 100 : 0.25;
 
     const retailPrice = ((baseCost * rMargin) + shipFee).toFixed(2);
-    
-    // হোলসেলে ৩টি স্তরের দাম হিসাব:
-    const priceSample = (baseCost * (1 + wMargin)).toFixed(2);         // স্যাম্পল প্রাইস (যেমন +২৫%)
-    const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2); // মিনিমাম হোলসেল প্রাইস
-    const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);     // বাল্ক বা বড় অর্ডার প্রাইস
+    const priceSample = (baseCost * (1 + wMargin)).toFixed(2);
+    const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
+    const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
     const mainImage = p.productImage || '';
     const imagesList = p.productImageList ? JSON.stringify(p.productImageList) : JSON.stringify([mainImage]);
     const videoUrl = p.productVideo || '';
-    const fullDescription = p.description || p.productNameEn || 'High-grade global product with professional specifications.';
+    const fullDescription = p.description || p.productNameEn || 'High-grade global product.';
 
-    // ৪. D1 Database-এ সব কলামসহ ডেটা সেভ করা
+    // ৪. Save to D1 (upload_mode = 'both' সেট করা হয়েছে যাতে রিটেইল ও হোলসেল দুটো পেজেই পায়)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -79,10 +77,10 @@ export async function onRequestPost(context) {
         upload_mode,
         stock,
         created_at
-      ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'retail', ?, CURRENT_TIMESTAMP)
+      ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'both', ?, CURRENT_TIMESTAMP)
     `).bind(
       cjProductId,
-      p.productNameEn || 'Global Custom Product',
+      p.productNameEn || 'Global Product',
       fullDescription,
       retailPrice,
       priceSample,
@@ -97,15 +95,8 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের রিটেইল ও ৩টি হোলসেল টায়ার প্রাইসসহ D1 ডাটাবেজে সফলভাবে সেভ হয়েছে!",
-      data: { 
-        title: p.productNameEn, 
-        cost: baseCost.toFixed(2),
-        retailPrice, 
-        priceSample,
-        priceMinWhole,
-        priceBulk
-      }
+      message: "প্রোডাক্ট সফলভাবে রিটেইল ও হোলসেল উভয় পেজের জন্য সেভ হয়েছে!",
+      data: { title: p.productNameEn, retailPrice, priceSample, priceMinWhole, priceBulk }
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (err) {
