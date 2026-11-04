@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail Reels & Video Feed</title>
+    <title>rorraxy - Wholesale Reels & Video Feed</title>
     
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
@@ -117,9 +117,10 @@
             }, {passive: true});
         });
 
+        // ক্লাউডফ্লেয়ার D1 ডাটাবেজ থেকে হোলসেল মোড অনুযায়ী ভিডিও ফেচ করা
         async function loadLiveVideosFromBackend() {
             try {
-                const response = await fetch(`/api/products?mode=retail`);
+                const response = await fetch(`/api/products?mode=wholesale`);
                 const result = await response.json();
                 
                 let productsList = [];
@@ -136,27 +137,30 @@
                             rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
                         }
 
+                        let bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
+                        let moqVal = item.moq || 10;
+
                         return {
-                            id: String(item.id || item.product_code || '101'),
+                            id: item.id || item.product_code || '101',
                             videoUrl: rawVid || 'https://www.w3schools.com/html/mov_bbb.mp4',
-                            price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
-                            baseLikes: item.like_count || 5200,
-                            baseShares: 180,
-                            discount: (item.discount_rate || '30') + '% OFF',
+                            price: `${bulkPrice} / pc`,
+                            baseLikes: item.like_count || 3400,
+                            baseShares: 120,
+                            discount: `MOQ: ${moqVal} PCS`,
                             category: item.category || 'video',
-                            sellerName: item.brand_name || 'rorraxy Merchant',
+                            sellerName: item.brand_name || 'rorraxy Wholesale Hub',
                             sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
-                            sellerDesc: 'Verified merchant on rorraxy ecosystem.'
+                            sellerDesc: 'Verified commercial bulk supplier on rorraxy ecosystem.'
                         };
                     });
-                    sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
+                    sessionStorage.setItem('rorraxy_wholesale_cached_videos', JSON.stringify(globalVideoList));
                     renderBatchVideos();
                 } else {
                     renderFallbackVideos();
                 }
             } catch (error) {
-                console.error('Failed to load retail videos from backend:', error);
-                let cachedData = sessionStorage.getItem('rorraxy_cached_videos');
+                console.error('Failed to load wholesale videos from backend:', error);
+                let cachedData = sessionStorage.getItem('rorraxy_wholesale_cached_videos');
                 if (cachedData) {
                     globalVideoList = JSON.parse(cachedData);
                     renderBatchVideos();
@@ -168,13 +172,13 @@
 
         function renderFallbackVideos() {
             globalVideoList = [
-                { id: 'RRX-001', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4', price: '$85.00', baseLikes: 5200, baseShares: 180, discount: '30% OFF', category: 'video', sellerName: 'rorraxy Hub', sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png', sellerDesc: 'Primary supplier across global digital ecosystem.' }
+                { id: 'RRX-W01', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4', price: '$25.00 / pc', baseLikes: 3400, baseShares: 120, discount: 'MOQ: 10 PCS', category: 'video', sellerName: 'rorraxy Wholesale Hub', sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png', sellerDesc: 'Primary bulk supplier across global digital ecosystem.' }
             ];
             renderBatchVideos();
         }
 
         function getDynamicEngagement(productId, baseVal, type) {
-            let storageKey = `rorraxy_retail_${type}_${productId}`;
+            let storageKey = `rorraxy_wholesale_${type}_${productId}`;
             let storedData = localStorage.getItem(storageKey);
             let currentTime = new Date().getTime();
             let currentVal = baseVal;
@@ -183,7 +187,7 @@
                 let parsed = JSON.parse(storedData);
                 currentVal = parsed.value;
             } else {
-                currentVal = baseVal + Math.floor(Math.random() * 300) + 100;
+                currentVal = baseVal + Math.floor(Math.random() * 200) + 50;
                 localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: currentTime }));
             }
 
@@ -196,7 +200,7 @@
         window.executeSearch = function(keyword) {
             let query = keyword.toLowerCase().trim();
             let foundIndex = globalVideoList.findIndex(p => 
-                (p.id && String(p.id).toLowerCase().includes(query)) ||
+                (p.id && p.id.toLowerCase().includes(query)) ||
                 (p.sellerName && p.sellerName.toLowerCase().includes(query))
             );
             if (foundIndex !== -1) currentIndex = foundIndex;
@@ -221,33 +225,28 @@
             }
         };
 
-        // সম্পূর্ণ অবজেক্ট সেভ লজিক (নিশ্চিত কানেকশন)
         window.toggleSaveItem = function(e, btn, pId) {
             e.stopPropagation();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
-            
-            if(existingIndex > -1) {
-                savedObjects.splice(existingIndex, 1);
+            let savedIds = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
+            let index = savedIds.indexOf(pId);
+            if(index > -1) {
+                savedIds.splice(index, 1);
                 btn.classList.remove('active');
             } else {
-                let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
-                if(targetProduct) {
-                    savedObjects.push(targetProduct);
-                    btn.classList.add('active');
-                }
+                savedIds.push(pId);
+                btn.classList.add('active');
             }
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+            localStorage.setItem('rorraxy_wholesale_saved_videos', JSON.stringify(savedIds));
         };
 
-        // সেভড গ্যালারি মোডাল প্রদর্শন
         window.openSavedGalleryModal = function() {
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let savedIds = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
+            let savedVideos = globalVideoList.filter(p => savedIds.includes(p.id));
             let overlay = document.getElementById('savedGalleryOverlay');
             let containerBody = document.getElementById('savedGalleryBody');
             if(!overlay || !containerBody) return;
 
-            if (savedObjects.length === 0) {
+            if (savedVideos.length === 0) {
                 containerBody.innerHTML = `
                     <div class="fs-profile-header-box">
                         <h2 class="fs-profile-name">SAVED VIDEOS</h2>
@@ -258,16 +257,12 @@
                     </div>`;
             } else {
                 let thumbsHtml = '';
-                savedObjects.forEach(v => {
+                savedVideos.forEach(v => {
                     thumbsHtml += `
                         <div class="saved-thumb-card" onclick="selectSavedVideo('${v.id}')">
-                            <div class="saved-thumb-preview">
-                                <video src="${v.videoUrl}" muted preload="metadata"></video>
-                                <i class="fa-solid fa-play play-overlay-icon"></i>
-                            </div>
+                            <div class="saved-thumb-preview"><i class="fa-solid fa-play"></i></div>
                             <div class="saved-thumb-footer">
                                 <span class="saved-thumb-title">ID: ${v.id}</span>
-                                <span class="saved-thumb-price">${v.price || ''}</span>
                                 <button class="saved-clean-delete-btn" onclick="removeSavedVideo(event, '${v.id}')"><i class="fa-solid fa-trash"></i> DELETE</button>
                             </div>
                         </div>`;
@@ -275,7 +270,7 @@
                 containerBody.innerHTML = `
                     <div class="fs-profile-header-box">
                         <h2 class="fs-profile-name">SAVED VIDEOS</h2>
-                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedObjects.length}</strong></div>
+                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedVideos.length}</strong></div>
                     </div>
                     <div class="fs-videos-grid">${thumbsHtml}</div>
                     <div class="fs-bottom-back-action">
@@ -290,28 +285,20 @@
         };
 
         window.selectSavedVideo = function(videoId) {
-            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
+            let foundIdx = globalVideoList.findIndex(p => p.id === videoId);
             if(foundIdx !== -1) {
                 currentIndex = foundIdx;
-            } else {
-                let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-                let target = savedObjects.find(p => String(p.id) === String(videoId));
-                if(target) {
-                    globalVideoList.unshift(target);
-                    currentIndex = 0;
-                }
+                document.getElementById('savedGalleryOverlay').style.display = 'none';
+                renderBatchVideos();
             }
-            document.getElementById('savedGalleryOverlay').style.display = 'none';
-            renderBatchVideos();
         };
 
         window.removeSavedVideo = function(e, videoId) {
             e.stopPropagation();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            savedObjects = savedObjects.filter(item => String(item.id) !== String(videoId));
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+            let saved = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
+            saved = saved.filter(id => id !== videoId);
+            localStorage.setItem('rorraxy_wholesale_saved_videos', JSON.stringify(saved));
             openSavedGalleryModal();
-            renderBatchVideos();
         };
 
         function updateBottomSellerProfile(product) {
@@ -326,9 +313,9 @@
             if (activeList.length === 0) return;
             let currentProduct = activeList[currentIndex] || activeList[0];
 
-            let sName = currentProduct.sellerName || 'rorraxy Merchant';
+            let sName = currentProduct.sellerName || 'rorraxy Bulk Merchant';
             let sAvatar = currentProduct.sellerAvatar || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-            let sDesc = currentProduct.sellerDesc || 'Verified merchant on rorraxy ecosystem.';
+            let sDesc = currentProduct.sellerDesc || 'Verified commercial bulk supplier on rorraxy ecosystem.';
 
             let sellerVideos = globalVideoList.filter(p => (p.sellerName || 'rorraxy Hub') === sName);
             let containerBody = document.getElementById('sellerFullscreenBody');
@@ -347,7 +334,7 @@
                         <div class="fs-thumb-preview"><i class="fa-solid fa-play"></i></div>
                         <div class="fs-thumb-info">
                             <span class="fs-thumb-title">ID: ${v.id}</span>
-                            <span class="fs-thumb-price">${v.price || '$85.00'}</span>
+                            <span class="fs-thumb-price">${v.price || '$25.00'}</span>
                         </div>
                     </div>`;
             });
@@ -383,7 +370,7 @@
         };
 
         window.selectFullscreenSellerVideo = function(videoId) {
-            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
+            let foundIdx = globalVideoList.findIndex(p => p.id === videoId);
             if(foundIdx !== -1) {
                 currentIndex = foundIdx;
                 document.getElementById('sellerFullscreenOverlay').style.display = 'none';
@@ -392,7 +379,7 @@
         };
 
         window.openProductDetail = function(productId) {
-            window.location.href = `pd.html?id=${encodeURIComponent(productId)}`;
+            window.location.href = `/wholesale/pd.html?id=${encodeURIComponent(productId)}`;
         };
 
         window.scrollVideo = function(direction) {
@@ -417,17 +404,16 @@
             let product = activeList[currentIndex];
             updateBottomSellerProfile(product);
 
-            let pId = String(product.id || '101');
+            let pId = product.id || '101';
             let pVideo = product.videoUrl || 'https://www.w3schools.com/html/mov_bbb.mp4';
-            let pPrice = product.price ? product.price : '$85.00';
-            let pDiscount = product.discount || '30% OFF';
+            let pPrice = product.price ? product.price : '$25.00 / pc';
+            let pDiscount = product.discount || 'MOQ: 10 PCS';
 
-            let pLikes = getDynamicEngagement(pId, product.baseLikes || 5200, 'likes');
-            let pShares = getDynamicEngagement(pId, product.baseShares || 180, 'shares');
+            let pLikes = getDynamicEngagement(pId, product.baseLikes || 3400, 'likes');
+            let pShares = getDynamicEngagement(pId, product.baseShares || 120, 'shares');
 
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let isSaved = savedObjects.some(item => String(item.id) === String(pId));
-            let savedActiveClass = isSaved ? 'active' : '';
+            let savedIds = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
+            let savedActiveClass = savedIds.includes(pId) ? 'active' : '';
             let soundActiveClass = !isGlobalMuted ? 'active-sound' : '';
 
             let mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata" loading="lazy"></video>`;
@@ -482,8 +468,10 @@
 
         window.openNativeShare = async function(e, pId) {
             e.stopPropagation();
-            const shareUrl = `${window.location.origin}/pd.html?id=${encodeURIComponent(pId)}`;
+            const shareUrl = `${window.location.origin}/wholesale/pd.html?id=${encodeURIComponent(pId)}`;
             const shareData = {
+                title: 'rorraxy',
+                text: 'rorraxy',
                 url: shareUrl
             };
 
@@ -505,8 +493,8 @@
 
     <style>
         :root {
-            --bg-retail: #000000;
-            --card-retail: #08080c;
+            --bg-wholesale: #000000;
+            --card-wholesale: #08080c;
             --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
             --gold-solid: #d4af37;
             --pink-accent: #ff2a85;
@@ -517,7 +505,7 @@
 
         html, body { 
             width: 100%; max-width: 100vw; overflow: hidden; 
-            background: var(--bg-retail) !important; 
+            background: var(--bg-wholesale) !important; 
             color: var(--text-white); font-family: var(--font-main); 
             height: 100vh; height: 100dvh; font-size: 15px;
             -webkit-font-smoothing: antialiased;
@@ -559,7 +547,7 @@
             background: rgba(3, 3, 5, 0.94); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(212,175,55,0.15);
-            display: flex; justify-around; align-items: center;
+            display: flex; justify-content: space-around; align-items: center;
             z-index: 1500; padding: 0 6px;
         }
         .bottom-nav-item {
@@ -596,25 +584,16 @@
         .fs-profile-desc { font-size: 0.75rem; color: #a0a0ab; max-width: 550px; line-height: 1.5; margin-bottom: 14px; }
         .fs-stats-pill { background: rgba(12, 12, 18, 0.8); border: 1px solid rgba(212,175,55,0.2); padding: 6px 16px; border-radius: 20px; font-size: 0.68rem; color: #fcf6ba; }
         .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .fullscreen-thumb-card, .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; position: relative; }
+        .fullscreen-thumb-card, .saved-thumb-card { background: var(--card-wholesale); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; }
         .fullscreen-thumb-card:hover, .saved-thumb-card:hover { transform: translateY(-2px); }
-        
-        .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .saved-thumb-preview video { width: 100%; height: 100%; object-fit: cover; }
-        .play-overlay-icon { position: absolute; font-size: 1.2rem; color: #fcf6ba; text-shadow: 0 2px 8px rgba(0,0,0,0.8); z-index: 2; pointer-events: none; }
-        
-        .fs-thumb-preview { width: 100%; height: 100px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold-solid); font-size: 1.1rem; }
+        .fs-thumb-preview, .saved-thumb-preview { width: 100%; height: 100px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold-solid); font-size: 1.1rem; }
         .fs-thumb-info { display: flex; flex-direction: column; width: 100%; text-align: center; gap: 2px; }
         .fs-thumb-title { font-size: 0.68rem; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .fs-thumb-price { font-size: 0.68rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
-        
-        .saved-thumb-footer { display: flex; flex-direction: column; width: 100%; align-items: center; gap: 4px; }
-        .saved-thumb-title { font-size: 0.68rem; font-weight: 700; color: #fff; }
-        .saved-thumb-price { font-size: 0.65rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
-        .saved-clean-delete-btn { background: var(--pink-accent); border: none; border-radius: 6px; color: #fff; font-size: 0.58rem; font-weight: 700; padding: 6px 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; }
-        
+        .saved-thumb-footer { display: flex; flex-direction: column; width: 100%; align-items: center; gap: 6px; }
+        .saved-clean-delete-btn { background: var(--pink-accent); border: none; border-radius: 6px; color: #fff; font-size: 0.58rem; font-weight: 700; padding: 6px 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; }
         .fs-pagination-box { display: flex; gap: 8px; justify-content: center; align-items: center; margin: 20px 0; width: 100%; }
-        .fs-page-btn { background: var(--card-retail); color: #a0a0ab; font-size: 0.75rem; font-weight: 700; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .fs-page-btn { background: var(--card-wholesale); color: #a0a0ab; font-size: 0.75rem; font-weight: 700; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .fs-page-btn.active-page { background: var(--gold-gradient); color: #000; }
         .fs-bottom-back-action { width: 100%; display: flex; justify-content: center; margin: 30px 0 20px 0; }
         .fs-bottom-back-home-btn { background: var(--gold-gradient); border: none; border-radius: 30px; color: #000; font-size: 0.8rem; font-weight: 800; padding: 14px 32px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
@@ -622,7 +601,7 @@
         .search-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(15px); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .search-modal-box { position: relative; width: 100%; max-width: 480px; display: flex; gap: 12px; flex-direction: column; }
         .search-modal-close { position: absolute; top: -50px; right: 0; background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
-        .modal-search-input { width: 100%; background: var(--card-retail); border-radius: 25px; padding: 14px 20px 14px 48px; color: #fff; font-size: 0.85rem; outline: none; }
+        .modal-search-input { width: 100%; background: var(--card-wholesale); border-radius: 25px; padding: 14px 20px 14px 48px; color: #fff; font-size: 0.85rem; outline: none; }
         .modal-search-icon { position: absolute; left: 18px; top: 16px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; font-size: 1rem; }
         .modal-search-submit { background: var(--gold-gradient); border: none; border-radius: 25px; color: #000; font-weight: 800; font-size: 0.8rem; padding: 14px; cursor: pointer; text-transform: uppercase; width: 100%; }
 
