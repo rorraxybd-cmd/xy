@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail Reels & Video Feed</title>
+    <title>rorraxy - Retail & Vendor Reels Feed</title>
     
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
@@ -120,7 +120,8 @@
 
         async function loadLiveVideosFromBackend() {
             try {
-                const response = await fetch(`/api/products?mode=retail`);
+                // ক্যোয়ারী ফিল্টার ছাড়া সব প্রোডাক্ট (CJ + Vendor) ফেচ করা হচ্ছে
+                const response = await fetch(`/api/products`);
                 const result = await response.json();
                 
                 let productsList = [];
@@ -137,7 +138,7 @@
                             rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
                         }
 
-                        // সব ইমেজ সুরক্ষিতভাবে এক্সট্রাক্ট করার লজিক
+                        // সব ধরনের ইমেজ এক্সট্রাক্ট করা (Vendor এবং CJ উভয়ের জন্য)
                         let extractedImages = [];
                         try {
                             if (item.images_json) {
@@ -151,7 +152,7 @@
                         } catch(e) {}
 
                         if (extractedImages.length === 0 && item.image_url) {
-                            if (item.image_url.startsWith('[')) {
+                            if (typeof item.image_url === 'string' && item.image_url.startsWith('[')) {
                                 try {
                                     let parsed = JSON.parse(item.image_url);
                                     if (Array.isArray(parsed)) extractedImages = parsed;
@@ -163,6 +164,9 @@
 
                         extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
 
+                        // ভেন্ডর / সেলার নাম ও তথ্য নির্ধারণ
+                        let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
+
                         return {
                             id: String(item.id || item.product_code || '101'),
                             videoUrl: rawVid,
@@ -172,18 +176,18 @@
                             baseShares: 180,
                             discount: (item.discount_rate || '30') + '% OFF',
                             category: item.category || 'video',
-                            sellerName: item.brand_name || 'rorraxy Merchant',
+                            sellerName: sellerTitle,
                             sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
-                            sellerDesc: 'Verified merchant on rorraxy ecosystem.'
+                            sellerDesc: 'Verified seller on rorraxy ecosystem.'
                         };
                     });
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
                     renderBatchVideos();
                 } else {
-                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO LIVE PRODUCTS FOUND</div>`;
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 }
             } catch (error) {
-                console.error('Failed to load retail videos from backend:', error);
+                console.error('Failed to load products from backend:', error);
                 let cachedData = sessionStorage.getItem('rorraxy_cached_videos');
                 if (cachedData) {
                     globalVideoList = JSON.parse(cachedData);
@@ -350,7 +354,7 @@
             let sAvatar = currentProduct.sellerAvatar || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
             let sDesc = currentProduct.sellerDesc || 'Verified merchant on rorraxy ecosystem.';
 
-            let sellerVideos = globalVideoList.filter(p => (p.sellerName || 'rorraxy Hub') === sName);
+            let sellerVideos = globalVideoList.filter(p => (p.sellerName || 'rorraxy Merchant') === sName);
             let containerBody = document.getElementById('sellerFullscreenBody');
             if(!containerBody) return;
 
@@ -458,7 +462,7 @@
 
             let mediaElement = '';
 
-            // ভিডিও লিংক থাকলে ভিডিও দেখাবে, না থাকলে ছবি দিয়ে স্লাইডশো দেখাবে
+            // ভিডিও থাকলে প্লে হবে, না থাকলে ছবির চমৎকার স্লাইডশো চলবে
             if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
                 mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
             } else {
