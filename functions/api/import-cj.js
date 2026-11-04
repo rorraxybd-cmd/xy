@@ -54,12 +54,29 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    const mainImage = p.productImage || '';
-    const imagesList = p.productImageList ? JSON.stringify(p.productImageList) : JSON.stringify([mainImage]);
-    const videoUrl = p.productVideo || '';
-    const fullDescription = p.description || p.productNameEn || 'High-grade global product.';
+    // ৪. ছবি এবং গ্যালারি নিখুঁতভাবে হ্যান্ডেল করার লজিক (লোগো আসা রোধ করতে)
+    let imagesArray = [];
+    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
+      imagesArray = p.productImageList;
+    } else if (p.productImage) {
+      imagesArray = [p.productImage];
+    } else if (p.bigImage) {
+      imagesArray = [p.bigImage];
+    }
 
-    // ৪. Save to D1 (upload_mode = 'both' সেট করা হয়েছে যাতে রিটেইল ও হোলসেল দুটো পেজেই পায়)
+    // মূল ছবি নির্ধারণ (যদি CJ থেকে ছবি না আসে তবে ডিফল্ট কোনো লোগো নয়, বরং এমটি বা ভ্যালিড লিংক রাখা)
+    const mainImage = imagesArray.length > 0 ? imagesArray[0] : (p.productImage || p.bigImage || '');
+    const imagesList = JSON.stringify(imagesArray.length > 0 ? imagesArray : [mainImage]);
+    
+    const videoUrl = p.productVideo || '';
+    
+    // ডেসক্রিপশনের হজবরল এইচটিএমএল ট্যাগ ক্লিন করার ব্যবস্থা
+    let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
+    const cleanDescription = rawDesc.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // স্ক্রিপ্ট ট্যাগ রিমোভ
+                                    .replace(/style="[^"]*"/g, '') // অপ্রয়োজনীয় ইনলাইন স্টাইল রিমোভ
+                                    .trim();
+
+    // ৫. Save to D1 Database
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -81,7 +98,7 @@ export async function onRequestPost(context) {
     `).bind(
       cjProductId,
       p.productNameEn || 'Global Product',
-      fullDescription,
+      cleanDescription,
       retailPrice,
       priceSample,
       priceMinWhole,
@@ -95,8 +112,8 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্ট সফলভাবে রিটেইল ও হোলসেল উভয় পেজের জন্য সেভ হয়েছে!",
-      data: { title: p.productNameEn, retailPrice, priceSample, priceMinWhole, priceBulk }
+      message: "প্রোডাক্টের সমস্ত ছবি ও ক্লিন ডেসক্রিপশনসহ সফলভাবে ইমপোর্ট হয়েছে!",
+      data: { title: p.productNameEn, retailPrice, priceSample, imagesCount: imagesArray.length }
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (err) {
