@@ -3,7 +3,7 @@ export async function onRequest(context) {
   
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
 
@@ -11,7 +11,7 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // অটো-ডিটেক্ট D1 ডাটাবেজ বাইন্ডিং (retail অথবা DB)[cite: 12]
+  // অটো-ডিটেক্ট D1 ডাটাবেজ বাইন্ডিং (retail অথবা DB)
   const db = env.retail || env.DB;
   if (!db) {
     return new Response(JSON.stringify({ success: false, error: "Database binding not found in environment (env.retail or env.DB)" }), {
@@ -23,7 +23,7 @@ export async function onRequest(context) {
   try {
     const url = new URL(request.url);
     
-    // ১. GET রিকোয়েস্ট: প্রোডাক্ট বা মোড অনুযায়ী ডাটা ফেচ করা[cite: 12]
+    // ১. GET রিকোয়েস্ট: প্রোডাক্ট বা মোড অনুযায়ী ডাটা ফেচ করা
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
       const sellerId = url.searchParams.get("seller_id");
@@ -71,7 +71,7 @@ export async function onRequest(context) {
       });
     }
 
-    // ২. POST রিকোয়েস্ট: নতুন প্রোডাক্ট ইনপুট দেওয়া[cite: 12]
+    // ২. POST রিকোয়েস্ট: নতুন প্রোডাক্ট ইনপুট দেওয়া
     if (request.method === "POST") {
       const body = await request.json();
       
@@ -117,7 +117,7 @@ export async function onRequest(context) {
         seller_id || null,
         product_code || null,
         title || null,
-        upload_mode || "retail",
+        upload_mode || "both", // 'both' সেভ হবে যাতে রিটেইল ও হোলসেল দুটিতেই দেখায়
         category || null,
         price || 0,
         market_price || 0,
@@ -146,27 +146,66 @@ export async function onRequest(context) {
       });
     }
 
-    // ৩. PUT রিকোয়েস্ট: লাইক কাউন্ট আপডেট করা[cite: 12]
+    // ৩. PUT রিকোয়েস্ট: প্রোডাক্ট আপডেট (এডিট) বা লাইক বাড়ানো
     if (request.method === "PUT") {
       const body = await request.json();
-      const { product_code } = body;
+      const targetId = url.pathname.split('/').pop() || body.id || body.product_code;
 
-      if (!product_code) {
-        return new Response(JSON.stringify({ success: false, error: "Product code is required" }), {
+      if (!targetId) {
+        return new Response(JSON.stringify({ success: false, error: "Product ID or Code is required" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
+      // যদি লাইক আপডেট রিকোয়েস্ট হয়
+      if (body.action === 'like') {
+        const updateLike = `UPDATE products SET like_count = COALESCE(like_count, 0) + 1 WHERE id = ? OR product_code = ?`;
+        await db.prepare(updateLike).bind(targetId, targetId).run();
+        return new Response(JSON.stringify({ success: true, message: "Like count updated!" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      // সাধারণ অ্যাডমিন এডিট (Title, Price, Wholesale Price, Stock)
       const updateQuery = `
         UPDATE products 
-        SET like_count = COALESCE(like_count, 0) + 1 
-        WHERE product_code = ? OR id = ?
+        SET title = COALESCE(?, title),
+            price = COALESCE(?, price),
+            price_min_whole = COALESCE(?, price_min_whole),
+            stock = COALESCE(?, stock)
+        WHERE id = ? OR product_code = ?
       `;
 
-      await db.prepare(updateQuery).bind(product_code, product_code).run();
+      await db.prepare(updateQuery).bind(
+        body.title || null,
+        body.price || null,
+        body.price_min_whole || null,
+        body.stock || null,
+        targetId,
+        targetId
+      ).run();
 
-      return new Response(JSON.stringify({ success: true, message: "Like count updated successfully!" }), {
+      return new Response(JSON.stringify({ success: true, message: "Product updated successfully!" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    // ৪. DELETE রিকোয়েস্ট: প্রোডাক্ট মুছে ফেলা
+    if (request.method === "DELETE") {
+      const deleteId = url.pathname.split('/').pop() || url.searchParams.get("id");
+
+      if (!deleteId) {
+        return new Response(JSON.stringify({ success: false, error: "Product ID is required for deletion" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      const deleteQuery = `DELETE FROM products WHERE id = ? OR product_code = ?`;
+      await db.prepare(deleteQuery).bind(deleteId, deleteId).run();
+
+      return new Response(JSON.stringify({ success: true, message: "Product deleted successfully!" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
