@@ -1,225 +1,206 @@
-<!-- Global CJ Importer - Full Screen Soft Dark Design -->
-<div class="cj-fullscreen-wrapper">
-  <div class="cj-content-container">
-    <div class="cj-import-header">
-      <h2>Global CJ Product Importer</h2>
-      <p>Advanced Retail (Free Shipping) & Wholesale Custom Pricing Engine</p>
-    </div>
+<!-- Full Optimized Product Details View (Gold & Black Theme) -->
+<div class="product-page-wrapper">
+  <div class="product-container">
     
-    <form id="cjImportForm">
-      <div class="cj-form-group">
-        <label for="cjProductId">CJ Product ID (PID)</label>
-        <input type="text" id="cjProductId" placeholder="e.g. 1765243142718795776" required>
+    <!-- Left: Gallery & Video Preview -->
+    <div class="product-media-section">
+      <div class="main-image-box">
+        <img id="mainImage" src="https://via.placeholder.com/600?text=Loading..." alt="Product Image">
       </div>
+      <div class="thumbnail-gallery" id="thumbGallery">
+        <!-- Dynamic Thumbnails Render Here -->
+      </div>
+    </div>
 
-      <div class="cj-form-row">
-        <div class="cj-form-group">
-          <label for="retailMargin">Retail Markup Margin (%) [Default: 70%]</label>
-          <input type="number" id="retailMargin" value="70" placeholder="70" required>
+    <!-- Right: Pricing, Stock, Quantity & Specifications -->
+    <div class="product-info-section">
+      
+      <!-- Top Pricing & Cushion Info -->
+      <div class="price-card">
+        <div class="price-header">
+          <span class="currency-symbol">$</span>
+          <span id="productPrice" class="price-amount">0.00</span>
+          <span class="shipping-badge">FREE GLOBAL SHIPPING</span>
         </div>
-
-        <div class="cj-form-group">
-          <label for="shippingCushion">Shipping Cushion ($) [Default: $6]</label>
-          <input type="number" step="0.1" id="shippingCushion" value="6.00" placeholder="6.00" required>
+        <div class="stock-status">
+          <span class="status-indicator"></span>
+          <span id="stockCount">IN STOCK: 500 UNITS - READY TO DISPATCH</span>
         </div>
       </div>
 
-      <div class="cj-form-group">
-        <label for="wholesaleMargin">Wholesale Sample Markup Margin (%) [Default: 25%]</label>
-        <input type="number" id="wholesaleMargin" value="25" placeholder="25" required>
-        <small class="cj-hint">হোলসেল বা স্যাম্পল অর্ডারের জন্য আলাদা মার্জিন পার্সেন্টেজ।</small>
+      <!-- Quantity Selector -->
+      <div class="quantity-card">
+        <label>QUANTITY</label>
+        <div class="qty-controls">
+          <button type="button" class="qty-btn" onclick="updateQty(-1)">-</button>
+          <input type="number" id="itemQty" value="1" min="1" readonly>
+          <button type="button" class="qty-btn" onclick="updateQty(1)">+</button>
+        </div>
       </div>
 
-      <button type="submit" id="importBtn" class="cj-btn-gold">
-        <span>Sync & Import to Store</span>
+      <!-- Seller Chat Action -->
+      <button class="chat-seller-btn" onclick="openSellerChat()">
+        💬 CHAT WITH SELLER
       </button>
-    </form>
 
-    <div id="importStatus" class="cj-status-box"></div>
+      <!-- Full Specifications & Description Box -->
+      <div class="specifications-card">
+        <div class="spec-header">
+          <span class="info-icon">ℹ</span> SPECIFICATIONS & DETAILS
+        </div>
+        <h1 id="productTitle" class="product-title-text">Loading Product Title...</h1>
+        <div id="productDescription" class="product-description-body">
+          Loading detailed product specifications...
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
 <style>
   :root {
-    --bg-pure: #050505;
-    --card-soft: #0d0d12;
+    --bg-black: #000000;
+    --card-bg: #0b0b10;
     --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-    --gold-solid: #d4af37;
-    --pink-love: #ff2a85;
+    --gold-color: #d4af37;
     --text-white: #ffffff;
-    --text-gray: #9e9eb0;
-    --font-main: 'Poppins', sans-serif;
+    --text-dim: #9d9dae;
+    --border-gold: rgba(212, 175, 55, 0.25);
   }
 
-  .cj-fullscreen-wrapper {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-pure);
-    font-family: var(--font-main);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-
-  .cj-content-container {
-    width: 100%;
-    max-width: 700px;
-    padding: 40px;
-    background-color: var(--card-soft);
-    box-sizing: border-box;
-  }
-
-  .cj-import-header {
-    margin-bottom: 30px;
-  }
-
-  .cj-import-header h2 {
-    font-size: 26px;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.5px;
-  }
-
-  .cj-import-header p {
-    color: var(--text-gray);
-    font-size: 14px;
-    margin: 0;
-  }
-
-  .cj-form-row {
-    display: flex;
-    gap: 20px;
-  }
-
-  .cj-form-row .cj-form-group {
-    flex: 1;
-  }
-
-  .cj-form-group {
-    margin-bottom: 22px;
-  }
-
-  .cj-form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
+  .product-page-wrapper {
+    width: 100%; min-height: 100vh;
+    background-color: var(--bg-black);
     color: var(--text-white);
-    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+    padding: 40px 20px; box-sizing: border-box;
   }
 
-  .cj-form-group input {
-    width: 100%;
-    padding: 14px 16px;
-    background: #000000;
-    border: none;
-    border-radius: 8px;
-    color: var(--text-white);
-    font-size: 15px;
-    outline: none;
-    box-sizing: border-box;
-    transition: box-shadow 0.3s ease;
+  .product-container {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
   }
 
-  .cj-form-group input:focus {
-    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4);
+  @media(max-width: 900px) {
+    .product-container { grid-template-columns: 1fr; }
   }
 
-  .cj-hint {
-    color: var(--text-gray);
-    font-size: 12px;
-    margin-top: 6px;
-    display: block;
-    line-height: 1.5;
+  /* Media Section */
+  .main-image-box {
+    width: 100%; height: 480px; background: #050508;
+    border-radius: 12px; border: 1px solid var(--border-gold);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .main-image-box img { width: 100%; height: 100%; object-fit: contain; }
+
+  .thumbnail-gallery {
+    display: flex; gap: 12px; margin-top: 15px; overflow-x: auto; padding-bottom: 5px;
+  }
+  .thumb-img {
+    width: 70px; height: 70px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border-gold); background: #111; object-fit: cover;
+  }
+  .thumb-img.active { border-color: var(--gold-color); box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+
+  /* Info Section Cards */
+  .price-card, .quantity-card, .specifications-card {
+    background: var(--card-bg); border: 1px solid var(--border-gold);
+    border-radius: 12px; padding: 22px; margin-bottom: 20px;
   }
 
-  .cj-btn-gold {
-    width: 100%;
-    padding: 16px;
-    background: var(--gold-gradient);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 15px;
-    color: #000000;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    margin-top: 10px;
+  .price-header { display: flex; align-items: center; gap: 10px; }
+  .price-amount { font-size: 32px; font-weight: 700; color: var(--gold-color); }
+  .shipping-badge {
+    background: rgba(0, 255, 128, 0.1); color: #00ff80; border: 1px solid rgba(0, 255, 128, 0.3);
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: auto;
   }
 
-  .cj-btn-gold:hover {
-    opacity: 0.93;
-    transform: translateY(-1px);
+  .stock-status { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: #00ff80; font-weight: 600; }
+  .status-indicator { width: 8px; height: 8px; background: #00ff80; border-radius: 50%; box-shadow: 0 0 8px #00ff80; }
+
+  .qty-controls { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .qty-btn {
+    width: 38px; height: 38px; background: var(--gold-gradient); border: none; border-radius: 50%;
+    color: #000; font-weight: 700; font-size: 18px; cursor: pointer;
+  }
+  .qty-controls input {
+    width: 60px; text-align: center; background: #000; border: 1px solid var(--border-gold);
+    color: #fff; padding: 8px; border-radius: 6px; font-size: 16px; font-weight: 600;
   }
 
-  .cj-btn-gold:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  .chat-seller-btn {
+    width: 100%; padding: 16px; background: #000000; color: var(--text-white);
+    border: 1px solid var(--border-gold); border-radius: 10px; font-weight: 700;
+    cursor: pointer; margin-bottom: 20px; letter-spacing: 1px; transition: background 0.3s;
   }
+  .chat-seller-btn:hover { background: rgba(212, 175, 55, 0.1); }
 
-  .cj-status-box {
-    margin-top: 24px;
-    font-size: 14px;
-    line-height: 1.6;
-    border-radius: 8px;
-    display: none;
-  }
+  .spec-header { color: var(--gold-color); font-size: 12px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.5px; }
+  .product-title-text { font-size: 20px; font-weight: 700; color: #fff; margin: 0 0 15px 0; line-height: 1.4; }
+  .product-description-body { color: var(--text-dim); font-size: 14px; line-height: 1.7; word-break: break-word; }
 </style>
 
 <script>
-  document.getElementById('cjImportForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const statusDiv = document.getElementById('importStatus');
-    const btn = document.getElementById('importBtn');
-    
-    const cjProductId = document.getElementById('cjProductId').value.trim();
-    const retailMargin = document.getElementById('retailMargin').value.trim();
-    const shippingCushion = document.getElementById('shippingCushion').value.trim();
-    const wholesaleMargin = document.getElementById('wholesaleMargin').value.trim();
+  // Dynamic Product Load Logic
+  async function loadProductDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
 
-    statusDiv.style.display = 'block';
-    statusDiv.style.padding = '15px';
-    statusDiv.style.background = 'rgba(212, 175, 55, 0.08)';
-    statusDiv.style.color = 'var(--gold-solid)';
-    statusDiv.innerHTML = 'Connecting to CJ API & calculating global pricing...';
-    btn.disabled = true;
+    if (!productId) return;
 
     try {
-      const res = await fetch('/api/import-cj', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cjProductId, retailMargin, shippingCushion, wholesaleMargin })
-      });
-      
+      const res = await fetch(`/api/products/${productId}`);
       const result = await res.json();
 
-      if (result.success) {
-        statusDiv.style.background = 'rgba(0, 255, 128, 0.08)';
-        statusDiv.style.color = '#00ff80';
-        statusDiv.innerHTML = `✓ ${result.message}<br><br>
-          <strong>Product:</strong> ${result.data.title}<br>
-          <strong>Base Cost:</strong> $${result.data.cost}<br>
-          <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
-          <strong>Wholesale Price:</strong> $${result.data.wholesalePrice}`;
-        document.getElementById('cjImportForm').reset();
-      } else {
-        statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
-        statusDiv.style.color = 'var(--pink-love)';
-        statusDiv.innerHTML = `✕ Error: ${result.error}`;
+      if (result.success && result.data) {
+        const p = result.data;
+
+        document.getElementById('productPrice').innerText = parseFloat(p.price).toFixed(2);
+        document.getElementById('productTitle').innerText = p.title;
+        document.getElementById('productDescription').innerHTML = p.description || 'No additional details provided.';
+        document.getElementById('stockCount').innerText = `IN STOCK: ${p.stock || 500} UNITS - READY TO DISPATCH`;
+
+        // Image Handling
+        let images = [];
+        if (p.images_json) {
+          try { images = JSON.parse(p.images_json); } catch(e) { images = [p.image_url]; }
+        } else if (p.image_url) {
+          images = [p.image_url];
+        }
+
+        if (images.length > 0) {
+          document.getElementById('mainImage').src = images[0];
+          const gallery = document.getElementById('thumbGallery');
+          gallery.innerHTML = '';
+          images.forEach((img, idx) => {
+            gallery.innerHTML += `<img src="${img}" class="thumb-img ${idx === 0 ? 'active' : ''}" onclick="changeMainImage('${img}', this)">`;
+          });
+        }
       }
     } catch (err) {
-      statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
-      statusDiv.style.color = 'var(--pink-love)';
-      statusDiv.innerHTML = `✕ Connection Failed: ${err.message}`;
-    } finally {
-      btn.disabled = false;
+      console.error("Error loading product:", err);
     }
-  });
+  }
+
+  function changeMainImage(src, el) {
+    document.getElementById('mainImage').src = src;
+    document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function updateQty(val) {
+    const input = document.getElementById('itemQty');
+    let current = parseInt(input.value) || 1;
+    current += val;
+    if (current < 1) current = 1;
+    input.value = current;
+  }
+
+  function openSellerChat() {
+    alert("Connecting to verified merchant support...");
+  }
+
+  loadProductDetails();
 </script>
