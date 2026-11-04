@@ -447,10 +447,10 @@
                     products = result;
                 }
 
-                // লোকাল স্টোরেজ থেকেও সেলার প্রোডাক্টগুলো মার্জ করা
                 let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
                 let mergedMap = new Map();
-                [...localProducts, ...products].forEach(p => {
+                [...localProducts, ...cachedFeed, ...products].forEach(p => {
                     let pId = p.id || p.product_id || p.product_code || p.title;
                     if(pId) mergedMap.set(String(pId), p);
                 });
@@ -493,14 +493,20 @@
 
             document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY RETAIL PRODUCT";
             document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)}`;
-            document.getElementById('old-crossed-price`' in window ? '' : 'activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
+            document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
             document.getElementById('unlimitedDescriptionContent').innerText = prod.description || prod.desc || "Crafted with precision engineering and high-grade sustainable materials.";
             
             let stockNum = prod.stock || 100;
             document.getElementById('inStockBadgeLabel').innerText = `IN STOCK: ${stockNum} UNITS - READY TO DISPATCH`;
 
-            let discountPercent = prod.discount_rate || prod.discountRate || 40;
-            document.getElementById('activeDiscountText').innerText = `${discountPercent}% OFF`;
+            let discountPercent = prod.discount_rate || prod.discountRate || 0;
+            const discountBadgeEl = document.getElementById('activeProductDiscountBadge');
+            if (discountPercent && discountPercent > 0) {
+                document.getElementById('activeDiscountText').innerText = `${discountPercent}% OFF`;
+                discountBadgeEl.style.display = 'inline-flex';
+            } else {
+                discountBadgeEl.style.display = 'none';
+            }
 
             let countryCode = (prod.target_country || prod.targetCountry || 'bd').toLowerCase();
             document.getElementById('activeProductFlagImg').src = `https://flagcdn.com/w40/${countryCode}.png`;
@@ -508,8 +514,14 @@
             const strip = document.getElementById('productThumbnailsStrip');
             let mediaList = [];
             
-            // সিজে এবং ভেন্ডর প্রোডাক্টের সমস্ত সম্ভাব্য ইমেজ প্রপার্টি সুরক্ষিতভাবে পার্স করা
+            // সিজে এবং ভেন্ডর প্রোডাক্টের সমস্ত সম্ভাব্য ইমেজ প্রপার্টি সুরক্ষিতভাবে পার্স করার আপডেটেড লজিক
             let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
+            if (primaryImg && typeof primaryImg === 'string' && primaryImg.startsWith('[')) {
+                try {
+                    let parsedArr = JSON.parse(primaryImg);
+                    if (Array.isArray(parsedArr) && parsedArr.length > 0) primaryImg = parsedArr[0];
+                } catch(e) {}
+            }
             if (primaryImg && !primaryImg.includes('mr masudar logo')) {
                 mediaList.push({ type: 'image', url: primaryImg });
             }
@@ -522,7 +534,7 @@
                             if (imgUrl && !mediaList.some(m => m.url === imgUrl)) mediaList.push({ type: 'image', url: imgUrl });
                         });
                     } else if (typeof parsedImages === 'string') {
-                        mediaList.push({ type: 'image', url: parsedImages });
+                        if (!mediaList.some(m => m.url === parsedImages)) mediaList.push({ type: 'image', url: parsedImages });
                     }
                 } catch (e) {
                     if (typeof prod.images_json === 'string') {
@@ -534,7 +546,6 @@
                 }
             }
 
-            // সিজে ড্রপশিপিং বা অন্যান্য ফরম্যাটের ইমেজ সাপোর্ট
             if (mediaList.length === 0 && prod.image_url) {
                 if (typeof prod.image_url === 'string' && prod.image_url.startsWith('[')) {
                     try {
@@ -581,11 +592,10 @@
                 const prodId = item.id || item.product_id || item.product_code || '101';
                 const title = item.title || 'rorraxy Luxury Item';
                 const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$35.00';
-                const discount = item.discount_rate || item.discountRate || '40';
+                const discount = item.discount_rate || item.discountRate || 0;
                 const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
                 const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
                 
-                // সম্পর্কিত প্রোডাক্টের ইমেজ নিখুঁতভাবে পার্স করা
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
                 try {
                     if (item.images_json) {
@@ -598,12 +608,16 @@
                     imageUrl = item.image_url || imageUrl;
                 }
 
+                let badgeDisplay = (discount && discount > 0) ? `
+                    <div class="product-country-discount-badge">
+                        <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
+                    </div>
+                ` : '';
+
                 return `
                     <div class="product-card" onclick="window.location.href='pd.html?id=${prodId}'">
                         <div class="product-media-box">
-                            <div class="product-country-discount-badge">
-                                <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
-                            </div>
+                            ${badgeDisplay}
                             <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
