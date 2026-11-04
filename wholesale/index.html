@@ -437,17 +437,12 @@
                 }
             }
 
+            // ২. রিয়েল-টাইমে API থেকে সব প্রোডাক্ট ফেচ করা (ক্যাশ বাইপাস করে)
             let products = [];
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-                const response = await fetch('/api/products', {
-                    signal: controller.signal,
-                    cache: 'force-cache'
+                const response = await fetch('/api/products?t=' + Date.now(), {
+                    cache: 'no-store'
                 });
-                clearTimeout(timeoutId);
-
                 const result = await response.json();
                 let rawData = result.data || result.results || result;
                 if (result.success && Array.isArray(rawData)) {
@@ -469,10 +464,10 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // হোলসেল বা বোথ মোডের প্রোডাক্ট ফিল্টার করা
+            // হোলসেল পেজের জন্য নমনীয় ফিল্টারিং (সিজে প্রোডাক্ট বা যেকোনো মোডের প্রোডাক্ট অন্তর্ভুক্ত করার জন্য)
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
-                return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined';
+                return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined' || p.is_cj || p.product_code;
             });
 
             if (wholesaleProducts.length > 0) {
