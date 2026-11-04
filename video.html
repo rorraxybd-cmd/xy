@@ -43,6 +43,7 @@
         let currentSellerPage = 1;
         const itemsPerPage = 20;
         let isGlobalMuted = true;
+        let slideInterval = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLiveVideosFromBackend();
@@ -138,7 +139,9 @@
 
                         return {
                             id: String(item.id || item.product_code || '101'),
-                            videoUrl: rawVid || 'https://www.w3schools.com/html/mov_bbb.mp4',
+                            videoUrl: rawVid,
+                            image_url: item.image_url || '',
+                            images_json: item.images_json || '',
                             price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
                             baseLikes: item.like_count || 5200,
                             baseShares: 180,
@@ -221,7 +224,6 @@
             }
         };
 
-        // সম্পূর্ণ অবজেক্ট সেভ করার ফিক্স
         window.toggleSaveItem = function(e, btn, pId) {
             e.stopPropagation();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
@@ -240,7 +242,6 @@
             localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
         };
 
-        // সেভড গ্যালারি প্রদর্শনের স্ক্রিপ্ট
         window.openSavedGalleryModal = function() {
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let overlay = document.getElementById('savedGalleryOverlay');
@@ -407,7 +408,7 @@
 
             let activeList = globalVideoList;
             if (activeList.length === 0) {
-                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO VIDEOS FOUND</div>`;
+                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 updateBottomSellerProfile(null);
                 return;
             }
@@ -418,7 +419,7 @@
             updateBottomSellerProfile(product);
 
             let pId = String(product.id || '101');
-            let pVideo = product.videoUrl || 'https://www.w3schools.com/html/mov_bbb.mp4';
+            let pVideo = product.videoUrl || '';
             let pPrice = product.price ? product.price : '$85.00';
             let pDiscount = product.discount || '30% OFF';
 
@@ -430,7 +431,46 @@
             let savedActiveClass = isSaved ? 'active' : '';
             let soundActiveClass = !isGlobalMuted ? 'active-sound' : '';
 
-            let mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata" loading="lazy"></video>`;
+            // পুরনো স্লাইডশো ইন্টারভাল রিমুভ
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+
+            let mediaElement = '';
+
+            // এমপিফোর ভিডিও না থাকলে ছবি দিয়ে ১.৫ সেকেন্ডের রিলস স্লাইডশো তৈরি
+            if (pVideo && pVideo.trim() !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
+            } else {
+                let images = [];
+                if (product.images_json) {
+                    try { images = JSON.parse(product.images_json); } catch(e) { images = [product.image_url]; }
+                } else if (product.image_url) {
+                    if (product.image_url.startsWith('[')) {
+                        try { images = JSON.parse(product.image_url); } catch(e) { images = [product.image_url]; }
+                    } else {
+                        images = [product.image_url];
+                    }
+                }
+
+                images = images.filter(img => img && img.trim() !== '');
+                if (images.length === 0) {
+                    images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
+                }
+
+                mediaElement = `<img id="reelSlideImg" src="${images[0]}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="Product Media">`;
+                
+                if (images.length > 1) {
+                    let imgIdx = 0;
+                    slideInterval = setInterval(() => {
+                        imgIdx = (imgIdx + 1) % images.length;
+                        const imgElem = document.getElementById('reelSlideImg');
+                        if (imgElem) imgElem.src = images[imgIdx];
+                    }, 1500);
+                }
+            }
+
             let soundIconClass = isGlobalMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
 
             let htmlContent = `
@@ -555,7 +595,6 @@
             display: inline-block;
         }
 
-        /* Bottom Nav Bar Luxury Golden Gradient Fix */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.94); backdrop-filter: blur(20px);
@@ -642,7 +681,6 @@
         }
         .side-action-item:active { transform: scale(0.85); }
         
-        /* Action icons luxury gold gradient fix */
         .action-pure-icon {
             font-size: 1.7rem;
             background: var(--gold-gradient);
