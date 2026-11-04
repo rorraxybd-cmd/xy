@@ -431,7 +431,7 @@
             let savedActiveClass = isSaved ? 'active' : '';
             let soundActiveClass = !isGlobalMuted ? 'active-sound' : '';
 
-            // পুরনো স্লাইডশো ইন্টারভাল রিমুভ
+            // পুরনো স্লাইডশো ইন্টারভাল ক্লিয়ার করা
             if (slideInterval) {
                 clearInterval(slideInterval);
                 slideInterval = null;
@@ -439,7 +439,7 @@
 
             let mediaElement = '';
 
-            // এমপিফোর ভিডিও না থাকলে ছবি দিয়ে ১.৫ সেকেন্ডের রিলস স্লাইডশো তৈরি
+            // ভিডিও থাকলে ভিডিও দেখাবে, না থাকলে ছবি দিয়ে ১.৫ সেকেন্ডের স্লাইডশো দেখাবে
             if (pVideo && pVideo.trim() !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
                 mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
             } else {
@@ -459,7 +459,8 @@
                     images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
                 }
 
-                mediaElement = `<img id="reelSlideImg" src="${images[0]}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="Product Media">`;
+                // object-fit: contain দেওয়া হয়েছে যাতে ছবি কেটে না যায় বা বেশি জুম না হয়
+                mediaElement = `<img id="reelSlideImg" src="${images[0]}" class="reel-fit-img" alt="Product Media">`;
                 
                 if (images.length > 1) {
                     let imgIdx = 0;
@@ -670,6 +671,15 @@
         .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
         .reel-media-box { position: relative; width: 100%; flex: 1; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+        
+        /* ইমেজ রিলসে পারফেক্ট ফিট রাখার জন্য ফিক্সড স্টাইল */
+        .reel-fit-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000000;
+            display: block;
+        }
 
         .right-vertical-actions {
             position: absolute; right: 18px; bottom: 85px; z-index: 50;
