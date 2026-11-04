@@ -1,0 +1,328 @@
+<!-- Advanced Store Inventory Management with Live Search & Filters -->
+<div class="cj-fullscreen-wrapper">
+  <div class="cj-content-container">
+    <div class="cj-import-header">
+      <h2>Advanced Store Inventory & Product Management</h2>
+      <p>Search, Filter, Edit, and Delete Products Across CJ Dropshipping & Multi-Vendors</p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="cj-controls-bar">
+      <input type="text" id="searchInput" placeholder="Search by product name or ID..." onkeyup="filterProducts()">
+      <select id="vendorFilter" onchange="filterProducts()">
+        <option value="all">All Sources (CJ & Vendors)</option>
+        <option value="dropship">CJ Dropship Only</option>
+        <option value="vendor">Custom / Other Sellers</option>
+      </select>
+    </div>
+
+    <!-- Products Table -->
+    <div class="cj-table-responsive">
+      <table class="cj-table">
+        <thead>
+          <tr>
+            <th>ID / Date</th>
+            <th>Source</th>
+            <th>Title</th>
+            <th>Retail Price</th>
+            <th>Wholesale Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody">
+          <!-- Dynamic Products Loaded Here -->
+        </tbody>
+      </table>
+      <div id="loadingText" style="color: var(--gold-solid); font-size: 13px; padding: 20px 0; text-align: center;">Loading inventory from D1 database...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="cj-modal">
+  <div class="cj-modal-content">
+    <h3>Edit Product Information</h3>
+    <form id="editForm">
+      <input type="hidden" id="editId">
+      <div class="cj-form-group">
+        <label>Product Title</label>
+        <input type="text" id="editTitle" required>
+      </div>
+      <div class="cj-form-row">
+        <div class="cj-form-group">
+          <label>Retail Price ($)</label>
+          <input type="number" step="0.01" id="editRetailPrice" required>
+        </div>
+        <div class="cj-form-group">
+          <label>Wholesale Price ($)</label>
+          <input type="number" step="0.01" id="editWholesalePrice" required>
+        </div>
+      </div>
+      <div class="cj-form-group">
+        <label>Stock Quantity</label>
+        <input type="number" id="editStock" required>
+      </div>
+      <div class="cj-modal-actions">
+        <button type="button" class="cj-btn-cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="cj-btn-gold">Update Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  :root {
+    --bg-pure: #050505;
+    --card-soft: #0d0d12;
+    --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+    --gold-solid: #d4af37;
+    --pink-love: #ff2a85;
+    --text-white: #ffffff;
+    --text-gray: #9e9eb0;
+    --font-main: 'Poppins', sans-serif;
+  }
+
+  .cj-fullscreen-wrapper {
+    margin: 0; padding: 0;
+    width: 100%; min-height: 100vh;
+    background-color: var(--bg-pure);
+    font-family: var(--font-main);
+    box-sizing: border-box;
+    padding: 40px 20px;
+  }
+
+  .cj-content-container {
+    width: 100%; max-width: 1200px;
+    margin: 0 auto; padding: 30px;
+    background-color: var(--card-soft);
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
+  .cj-import-header h2 {
+    font-size: 26px; font-weight: 700; margin: 0 0 6px 0;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .cj-import-header p { color: var(--text-gray); font-size: 13px; margin: 0 0 20px 0; }
+
+  /* Search & Filter Controls Layout */
+  .cj-controls-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .cj-controls-bar input, .cj-controls-bar select {
+    padding: 12px 16px;
+    background: #000000;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    color: var(--text-white);
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .cj-controls-bar input {
+    flex: 2;
+  }
+
+  .cj-controls-bar select {
+    flex: 1;
+    cursor: pointer;
+  }
+
+  .cj-controls-bar input:focus, .cj-controls-bar select:focus {
+    border-color: var(--gold-solid);
+  }
+
+  .cj-table-responsive { width: 100%; overflow-x: auto; }
+
+  .cj-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+
+  .cj-table th {
+    color: var(--gold-solid); padding: 12px 15px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2); font-weight: 600;
+  }
+
+  .cj-table td {
+    padding: 14px 15px; color: var(--text-white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .cj-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+  .cj-badge {
+    padding: 4px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase; font-weight: 600; display: inline-block;
+  }
+  .cj-badge-dropship { background: rgba(212, 175, 55, 0.15); color: var(--gold-solid); }
+  .cj-badge-vendor { background: rgba(0, 255, 128, 0.15); color: #00ff80; }
+
+  .cj-date-sub {
+    display: block; font-size: 11px; color: var(--text-gray); margin-top: 3px;
+  }
+
+  .cj-btn-action {
+    padding: 6px 12px; border-radius: 4px; font-size: 12px;
+    cursor: pointer; font-weight: 600; border: none; margin-right: 5px;
+  }
+  .cj-btn-edit { background: rgba(212, 175, 55, 0.2); color: var(--gold-solid); }
+  .cj-btn-delete { background: rgba(255, 42, 133, 0.2); color: var(--pink-love); }
+
+  /* Modal Styling */
+  .cj-modal {
+    display: none; position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center; justify-content: center; z-index: 1000;
+  }
+  .cj-modal-content {
+    background: var(--card-soft); padding: 30px;
+    border-radius: 12px; width: 100%; max-width: 480px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+  .cj-modal-content h3 { margin-top: 0; color: var(--gold-solid); font-size: 20px; }
+  .cj-form-row { display: flex; gap: 15px; }
+  .cj-form-row .cj-form-group { flex: 1; }
+  .cj-form-group { margin-bottom: 16px; }
+  .cj-form-group label { display: block; font-size: 13px; color: var(--text-white); margin-bottom: 6px; }
+  .cj-form-group input {
+    width: 100%; padding: 12px; background: #000000;
+    border: none; border-radius: 6px; color: var(--text-white);
+    font-size: 14px; box-sizing: border-box; outline: none;
+  }
+  .cj-modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .cj-btn-cancel { flex: 1; padding: 12px; background: #222; color: var(--text-gray); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  .cj-btn-gold { flex: 1; padding: 12px; background: var(--gold-gradient); color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; }
+</style>
+
+<script>
+  let allProducts = [];
+
+  async function loadProducts() {
+    try {
+      const res = await fetch('/api/products'); 
+      const result = await res.json();
+      document.getElementById('loadingText').style.display = 'none';
+
+      if (result.success && result.data.length > 0) {
+        allProducts = result.data;
+        displayProducts(allProducts);
+      } else {
+        document.getElementById('productTableBody').innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-gray);">কোনো প্রোডাক্ট পাওয়া যায়নি।</td></tr>`;
+      }
+    } catch (err) {
+      document.getElementById('loadingText').innerText = 'ডেটা লোড করতে সমস্যা হয়েছে!';
+    }
+  }
+
+  function displayProducts(products) {
+    const tbody = document.getElementById('productTableBody');
+    tbody.innerHTML = '';
+
+    products.forEach(p => {
+      const vendorBadge = p.vendor_type === 'dropship' 
+        ? `<span class="cj-badge cj-badge-dropship">CJ Dropship</span>` 
+        : `<span class="cj-badge cj-badge-vendor">${p.vendor_type || 'Vendor'}</span>`;
+
+      // তারিখ ফরম্যাট করা
+      const rawDate = p.created_at ? new Date(p.created_at).toLocaleDateString() : 'N/A';
+
+      tbody.innerHTML += `
+        <tr>
+          <td>
+            <strong>#${p.id}</strong>
+            <span class="cj-date-sub">${rawDate}</span>
+          </td>
+          <td>${vendorBadge}</td>
+          <td>${p.title}</td>
+          <td>$${parseFloat(p.price).toFixed(2)}</td>
+          <td>$${parseFloat(p.price_min_whole).toFixed(2)}</td>
+          <td>${p.stock || 500}</td>
+          <td>
+            <button class="cj-btn-action cj-btn-edit" onclick="openEdit(${p.id})">Edit</button>
+            <button class="cj-btn-action cj-btn-delete" onclick="deleteProduct(${p.id})">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  // লাইভ সার্চ এবং ফিল্টার লজিক
+  function filterProducts() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const sourceFilter = document.getElementById('vendorFilter').value;
+
+    const filtered = allProducts.filter(p => {
+      const matchesSearch = p.title.toLowerCase().includes(searchTerm) || String(p.id).includes(searchTerm);
+      const matchesSource = sourceFilter === 'all' || p.vendor_type === sourceFilter;
+      return matchesSearch && matchesSource;
+    });
+
+    displayProducts(filtered);
+  }
+
+  function openEdit(id) {
+    const p = allProducts.find(item => item.id === id);
+    if (!p) return;
+
+    document.getElementById('editId').value = p.id;
+    document.getElementById('editTitle').value = p.title;
+    document.getElementById('editRetailPrice').value = p.price;
+    document.getElementById('editWholesalePrice').value = p.price_min_whole;
+    document.getElementById('editStock').value = p.stock || 500;
+    document.getElementById('editModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  document.getElementById('editForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('editId').value;
+    const title = document.getElementById('editTitle').value;
+    const price = document.getElementById('editRetailPrice').value;
+    const price_min_whole = document.getElementById('editWholesalePrice').value;
+    const stock = document.getElementById('editStock').value;
+
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, price, price_min_whole, stock })
+      });
+      const result = await res.json();
+      if (result.success) {
+        closeModal();
+        loadProducts(); // রিফ্রেশ লিস্ট
+      } else {
+        alert('আপডেট ব্যর্থ হয়েছে: ' + result.error);
+      }
+    } catch (err) {
+      alert('সার্ভার এরর: ' + err.message);
+    }
+  });
+
+  async function deleteProduct(id) {
+    if (confirm('আপনি কি নিশ্চিতভাবে এই প্রোডাক্টটি ডাটাবেজ থেকে মুছে ফেলতে চান?')) {
+      try {
+        const res = await fetch(`/api/products/${id}`, { method: 'DELETE' }, );
+        const result = await res.json();
+        if (result.success) {
+          loadProducts(); // রিফ্রেশ লিস্ট
+        } else {
+          alert('ডিলিট ব্যর্থ হয়েছে: ' + result.error);
+        }
+      } catch (err) {
+        alert('সার্ভার এরর: ' + err.message);
+      }
+    }
+  }
+
+  loadProducts();
+</script>
