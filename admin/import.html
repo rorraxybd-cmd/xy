@@ -1,0 +1,196 @@
+<!-- CJ Dropshipping Global Import Module -->
+<div class="cj-import-card">
+  <div class="cj-import-header">
+    <h2>Global CJ Product Importer</h2>
+    <p>Automated Retail (Free Shipping) & Wholesale Sync Engine</p>
+  </div>
+  
+  <form id="cjImportForm">
+    <div class="cj-form-group">
+      <label for="cjProductId">CJ Product ID (PID)</label>
+      <input type="text" id="cjProductId" placeholder="e.g. 1765243142718795776" required>
+    </div>
+
+    <div class="cj-form-group">
+      <label for="customMargin">Retail Markup Margin (%) [Default: 70%]</label>
+      <input type="number" id="customMargin" value="70" placeholder="70" required>
+      <small style="color: var(--text-gray); font-size: 11px; margin-top: 4px; display: block;">Includes global shipping cushion & 10% affiliate commission buffer.</small>
+    </div>
+
+    <button type="submit" id="importBtn" class="cj-btn-gold">
+      <span>Sync & Import to Store</span>
+    </button>
+  </form>
+
+  <div id="importStatus" class="cj-status-box"></div>
+</div>
+
+<style>
+  :root {
+    --bg-retail: #0b0b0b;
+    --card-retail: #0a0a0f;
+    --header-retail: rgba(11, 11, 11, 0.95);
+    --footer-retail: rgba(6, 6, 8, 0.95);
+    --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+    --gold-solid: #d4af37;
+    --pink-love: #ff2a85;
+    --text-white: #ffffff;
+    --text-gray: #a0a0b5;
+    --font-main: 'Poppins', sans-serif;
+  }
+
+  .cj-import-card {
+    background: var(--card-retail);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 520px;
+    margin: 30px auto;
+    font-family: var(--font-main);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cj-import-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gold-gradient);
+  }
+
+  .cj-import-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+  }
+
+  .cj-import-header p {
+    color: var(--text-gray);
+    font-size: 13px;
+    margin: 0 0 24px 0;
+  }
+
+  .cj-form-group {
+    margin-bottom: 20px;
+  }
+
+  .cj-form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-white);
+    margin-bottom: 8px;
+  }
+
+  .cj-form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    color: var(--text-white);
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+
+  .cj-form-group input:focus {
+    border-color: var(--gold-solid);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  }
+
+  .cj-btn-gold {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold-gradient);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .cj-btn-gold:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+  }
+
+  .cj-btn-gold:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .cj-status-box {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    border-radius: 6px;
+    display: none;
+  }
+</style>
+
+<script>
+  document.getElementById('cjImportForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusDiv = document.getElementById('importStatus');
+    const btn = document.getElementById('importBtn');
+    
+    const cjProductId = document.getElementById('cjProductId').value.trim();
+    const customMargin = document.getElementById('customMargin').value.trim();
+
+    statusDiv.style.display = 'block';
+    statusDiv.style.padding = '12px';
+    statusDiv.style.background = 'rgba(212, 175, 55, 0.1)';
+    statusDiv.style.border = '1px solid rgba(212, 175, 55, 0.3)';
+    statusDiv.style.color = 'var(--gold-solid)';
+    statusDiv.innerHTML = 'Connecting to CJ API & calculating global pricing...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/import-cj', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cjProductId, customMargin })
+      });
+      
+      const result = await res.json();
+
+      if (result.success) {
+        statusDiv.style.background = 'rgba(0, 255, 128, 0.1)';
+        statusDiv.style.border = '1px solid rgba(0, 255, 128, 0.3)';
+        statusDiv.style.color = '#00ff80';
+        statusDiv.innerHTML = `✓ ${result.message}<br><br>
+          <strong>Product:</strong> ${result.data.title}<br>
+          <strong>Base Cost:</strong> $${result.data.cost}<br>
+          <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
+          <strong>Wholesale Base:</strong> $${result.data.wholesalePrice}`;
+        document.getElementById('cjImportForm').reset();
+      } else {
+        statusDiv.style.background = 'rgba(255, 42, 133, 0.1)';
+        statusDiv.style.border = '1px solid var(--pink-love)';
+        statusDiv.style.color = 'var(--pink-love)';
+        statusDiv.innerHTML = `✕ Error: ${result.error}`;
+      }
+    } catch (err) {
+      statusDiv.style.background = 'rgba(255, 42, 133, 0.1)';
+      statusDiv.style.border = '1px solid var(--pink-love)';
+      statusDiv.style.color = 'var(--pink-love)';
+      statusDiv.innerHTML = `✕ Connection Failed: ${err.message}`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
