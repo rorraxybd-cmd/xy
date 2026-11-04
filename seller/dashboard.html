@@ -179,7 +179,6 @@
             document.getElementById('deviceSyncModal').style.display = 'none';
         }
 
-        // ক্লাউডফ্লেয়ার এবং লোকালস্টোরেজ থেকে বর্তমান সেলারের প্রোডাক্ট কাউন্ট ফেচ করে ড্যাশবোর্ডে আপডেট করার ফাংশন
         async function loadDashboardStats() {
             let cloudflareProducts = [];
             
@@ -209,7 +208,6 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // বর্তমান লগইন করা সেলারের প্রোডাক্টগুলো ফিল্টার করা
             let sellerProducts = allProducts.filter(p => {
                 const pSellerId = String(p.seller_id || p.sellerId || "").trim();
                 const pSellerEmail = String(p.email || p.seller_email || "").toLowerCase().trim();
@@ -219,9 +217,7 @@
                 return false;
             });
 
-            // মোট প্রোডাক্টের সংখ্যা ড্যাশবোর্ডে বসানো
-            const totalProductsCount = sellerProducts.length;
-            document.getElementById('statProductsVal').innerText = totalProductsCount;
+            document.getElementById('statProductsVal').innerText = sellerProducts.length;
             document.getElementById('statOrdersVal').innerText = "0";
             document.getElementById('statRevenueVal').innerText = "$0.00";
             document.getElementById('statBalanceVal').innerText = "$0.00";
