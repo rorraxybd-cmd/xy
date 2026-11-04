@@ -155,7 +155,8 @@
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
                     renderBatchVideos();
                 } else {
-                    renderFallbackVideos();
+                    // কোনো প্রোডাক্ট না থাকলে একদম পরিষ্কার মেসেজ দেখাবে, কোনো ডেমো ভিডিও দেখাবে না
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO LIVE PRODUCTS FOUND</div>`;
                 }
             } catch (error) {
                 console.error('Failed to load retail videos from backend:', error);
@@ -164,16 +165,9 @@
                     globalVideoList = JSON.parse(cachedData);
                     renderBatchVideos();
                 } else {
-                    renderFallbackVideos();
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 }
             }
-        }
-
-        function renderFallbackVideos() {
-            globalVideoList = [
-                { id: 'RRX-001', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4', price: '$85.00', baseLikes: 5200, baseShares: 180, discount: '30% OFF', category: 'video', sellerName: 'rorraxy Hub', sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png', sellerDesc: 'Primary supplier across global digital ecosystem.' }
-            ];
-            renderBatchVideos();
         }
 
         function getDynamicEngagement(productId, baseVal, type) {
@@ -431,7 +425,6 @@
             let savedActiveClass = isSaved ? 'active' : '';
             let soundActiveClass = !isGlobalMuted ? 'active-sound' : '';
 
-            // পুরনো স্লাইডশো ইন্টারভাল ক্লিয়ার করা
             if (slideInterval) {
                 clearInterval(slideInterval);
                 slideInterval = null;
@@ -439,7 +432,6 @@
 
             let mediaElement = '';
 
-            // ভিডিও থাকলে ভিডিও দেখাবে, না থাকলে ছবি দিয়ে ১.৫ সেকেন্ডের স্লাইডশো দেখাবে
             if (pVideo && pVideo.trim() !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
                 mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
             } else {
@@ -459,7 +451,6 @@
                     images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
                 }
 
-                // object-fit: contain দেওয়া হয়েছে যাতে ছবি কেটে না যায় বা বেশি জুম না হয়
                 mediaElement = `<img id="reelSlideImg" src="${images[0]}" class="reel-fit-img" alt="Product Media">`;
                 
                 if (images.length > 1) {
@@ -672,7 +663,6 @@
         .reel-media-box { position: relative; width: 100%; flex: 1; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         
-        /* ইমেজ রিলসে পারফেক্ট ফিট রাখার জন্য ফিক্সড স্টাইল */
         .reel-fit-img {
             width: 100%;
             height: 100%;
