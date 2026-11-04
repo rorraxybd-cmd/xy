@@ -166,7 +166,6 @@
         ? `<span class="cj-badge cj-badge-dropship">CJ Dropship</span>` 
         : `<span class="cj-badge cj-badge-vendor">Vendor</span>`;
 
-      // ইমেজ পার্সিং ও সঠিক থাম্বনেইল এক্সট্রাক্ট করার সুরক্ষিত লজিক
       let imgSrc = 'https://via.placeholder.com/45?text=No+Img';
       if (p.image_url && p.image_url.trim() !== '') {
         if (p.image_url.startsWith('[')) {
@@ -260,10 +259,10 @@
     const stock = document.getElementById('editStock').value;
 
     try {
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(`/api/products`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, price, price_min_whole, stock })
+        body: JSON.stringify({ id, title, price, price_min_whole, stock })
       });
       const textRes = await res.text();
       let result = {};
@@ -283,7 +282,7 @@
   async function deleteProduct(id) {
     if (confirm('আপনি কি নিশ্চিতভাবে এই প্রোডাক্টটি ডাটাবেজ থেকে মুছে ফেলতে চান?')) {
       try {
-        const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
         const textRes = await res.text();
         let result = {};
         try { result = JSON.parse(textRes); } catch(e) { result = { success: res.ok }; }
