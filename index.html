@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>rorraxy - Retail Store Ecosystem</title>
     
+    <!-- Ultra-Fast DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
     
@@ -24,10 +32,6 @@
 
     <!-- Popup JS Link -->
     <script src="/popup.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
 
     <!-- Correct Cloudflare R2 Icons & Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
@@ -69,6 +73,7 @@
             -webkit-backdrop-filter: blur(20px);
             display: flex; flex-direction: row; align-items: center; justify-content: space-between;
             border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding: 0 0 0 8px; height: 42px;
+            transform: translateZ(0);
         }
 
         /* অবিরাম এবং স্মুথ মারকুই বার */
@@ -161,7 +166,7 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* গ্যাপ এবং অতিরিক্ত ফাঁকা জায়গা দূর করার জন্য কলামভিত্তিক মেসনারি লেআউট */
+        /* অপ্টিমাইজড মেসনারি লেআউট (Dynamic Ratio Support) */
         .feed-container {
             padding: 8px 6px; 
             column-count: 2;
@@ -169,6 +174,7 @@
             width: 100%; 
             max-width: 1400px; 
             margin: 0 auto;
+            contain: content;
         }
         @media (min-width: 768px) { 
             .feed-container { 
@@ -178,14 +184,43 @@
             } 
         }
 
+        /* কার্ডের স্মুথ এন্ট্রান্স অ্যানিমেশন */
         .product-card {
             background: var(--card-retail); border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; 
             border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
             break-inside: avoid; margin-bottom: 8px;
+            will-change: transform, opacity;
+            animation: cardSoftFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            backface-visibility: hidden;
+            transform: translateZ(0);
         }
-        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
+
+        @keyframes cardSoftFade {
+            0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* যেকোনো ইমেজের জন্য ডাইনামিক এবং জিরো-গ্যাপ হোল্ডার */
+        .product-media-box { 
+            position: relative; 
+            width: 100%; 
+            min-height: 140px;
+            background: #050508; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .product-media-box img { 
+            width: 100%; 
+            height: auto; 
+            max-height: 550px;
+            display: block; 
+            object-fit: cover; 
+            background: #050508;
+            transition: opacity 0.3s ease;
+        }
         
         .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
@@ -212,6 +247,7 @@
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-retail);
             display: flex; justify-content: space-around; align-items: center; padding: 8px 4px 10px 4px;
             z-index: 1000; backdrop-filter: blur(20px); border-top: none !important;
+            transform: translateZ(0);
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; text-decoration: none;
@@ -347,6 +383,8 @@
     </nav>
 
     <script>
+        const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
+
         window.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
             updateCartBadgeCount();
@@ -368,8 +406,30 @@
         }
 
         async function loadLiveProducts() {
+            // ১. ইনস্ট্যান্ট লোকাল স্টোরেজ রেন্ডারিং
+            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        renderProductCards(parsed);
+                    }
+                } catch (e) {
+                    console.warn("Cache parse error", e);
+                }
+            }
+
+            // ২. ব্যাকগ্রাউন্ড সাইলেন্ট ফেচিং (Stale-While-Revalidate)
             try {
-                const response = await fetch(`/api/products?mode=retail`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+                const response = await fetch(`/api/products?mode=retail`, {
+                    signal: controller.signal,
+                    cache: 'force-cache'
+                });
+                clearTimeout(timeoutId);
+
                 const result = await response.json();
                 
                 let productsList = [];
@@ -380,8 +440,9 @@
                 }
 
                 if (productsList.length > 0) {
+                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     renderProductCards(productsList);
-                } else {
+                } else if (!cachedData) {
                     document.getElementById('productFeed').innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-gray);">
                             <i class="fa-solid fa-box-open fa-2x" style="color:var(--gold-solid);"></i>
@@ -389,13 +450,13 @@
                         </div>`;
                 }
             } catch (error) {
-                console.error('Failed to load products:', error);
+                console.error('Failed to load live products:', error);
             }
         }
 
         function renderProductCards(products) {
             const feedContainer = document.getElementById('productFeed');
-            feedContainer.innerHTML = '';
+            const fragment = document.createDocumentFragment();
 
             products.forEach(item => {
                 const productId = item.id || item.product_id || item.product_code || item.code || '101';
@@ -409,29 +470,34 @@
                 if (item.image_url) resolvedImageUrl = item.image_url;
                 else if (item.imageUrl) resolvedImageUrl = item.imageUrl;
 
-                const cardHtml = `
-                    <div class="product-card" onclick="openProductDetails('${productId}')">
-                        <div class="product-media-box">
-                            <div class="product-country-discount-badge">
-                                <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
-                            </div>
-                            <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'product-card';
+                cardDiv.onclick = () => openProductDetails(productId);
+
+                cardDiv.innerHTML = `
+                    <div class="product-media-box">
+                        <div class="product-country-discount-badge">
+                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy" onerror="this.style.display='none'"> ${discount}% OFF
                         </div>
-                        <div class="card-footer-actions" onclick="event.stopPropagation()">
-                            <span class="product-price-tag">${price}</span>
-                            <div class="card-sub-actions">
-                                <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 128}</span>
-                                </div>
-                                <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
-                                    <i class="fa-solid fa-share-nodes"></i> Share
-                                </button>
+                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                        <span class="product-price-tag">${price}</span>
+                        <div class="card-sub-actions">
+                            <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
+                                <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 128}</span>
                             </div>
+                            <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
+                                <i class="fa-solid fa-share-nodes"></i> Share
+                            </button>
                         </div>
                     </div>
                 `;
-                feedContainer.insertAdjacentHTML('beforeend', cardHtml);
+                fragment.appendChild(cardDiv);
             });
+
+            feedContainer.innerHTML = '';
+            feedContainer.appendChild(fragment);
         }
 
         function openProductDetails(productId) {
