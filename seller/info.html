@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Seller Info - rorraxy Ecosystem</title>
     
-    <!-- Favicon Logo -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
-    
     <script src="/ecosystem-core.js"></script>
    
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,8 +107,9 @@
 <body>
 
     <script>
+        // ভেরিফাই না থাকলে সরাসরি ভেরিফিকেশন পেজে ফেরত পাঠাবে
         if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
-            window.location.href = '/seller/index.html';
+            window.location.replace('/seller/index.html');
         }
     </script>
 
@@ -146,15 +145,18 @@
                         <div class="cv-item"><span class="lbl" id="prevDocTypeLbl">NID NUMBER</span><span class="val" id="prevDocNum">--</span></div>
                         <div class="cv-item"><span class="lbl">TRADE LICENSE</span><span class="val" id="prevTradeLicense">--</span></div>
                     </div>
-                    <div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
                         <button type="button" class="edit-profile-btn" onclick="switchToEditMode()">
                             <i class="fa-solid fa-pen-to-square"></i> EDIT INFO
+                        </button>
+                        <button type="button" class="edit-profile-btn" style="background: var(--gold-gradient); color: #000;" onclick="location.href='/seller/dashboard.html'">
+                            <i class="fa-solid fa-arrow-right"></i> GO TO DASHBOARD
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- ইনফো আপডেট ফর্ম সেকশন (ডিফল্টভাবে দৃশ্যমান থাকবে যদি প্রথমবার হয়) -->
+            <!-- ইনফো আপডেট ফর্ম সেকশন -->
             <form id="businessInfoForm">
                 <div class="avatar-upload-container">
                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="avatar-preview" id="avatarPreview">
@@ -223,7 +225,7 @@
                         <input type="text" class="form-control" id="tradeLicenseInput" placeholder="Enter Trade License number or details..." required style="text-transform: none;">
                     </div>
                 </div>
-                <button type="submit" id="saveInfoBtn" class="section-save-btn">SAVE INFO <i class="fa-solid fa-check"></i></button>
+                <button type="submit" id="saveInfoBtn" class="section-save-btn">SAVE & PROCEED TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                 <button type="button" id="cancelEditBtn" class="edit-profile-btn" style="background: transparent; color: var(--text-gray); border: 1px solid var(--border-gold); margin-right: 10px; float: right; display: none;" onclick="cancelEditMode()">CANCEL</button>
                 <div style="clear: both;"></div>
             </form>
@@ -250,7 +252,6 @@
             else if(type === 'BirthCert') label.innerHTML = 'BIRTH CERTIFICATE NUMBER<span class="req-star">*</span>';
         }
 
-        // ছবি অটোমেটিক WebP ফরম্যাটে অপ্টিমাইজ ও সাইজ (KB) কমানোর ফাংশন
         let compressedAvatarData = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
         
         document.getElementById('profilePhotoInput').addEventListener('change', async (e) => {
@@ -337,7 +338,7 @@
             const docLabel = docType === 'BirthCert' ? 'BIRTH CERTIFICATE NUMBER' : 'NID NUMBER';
             document.getElementById('prevDocTypeLbl').innerText = docLabel;
             document.getElementById('prevDocNum').innerText = data.doc_number || data.docNum || "---";
-            document.getElementById('prevTradeLicense').innerText = data.trade_license || data.default_payout_details || data.tradeLicense || "---";
+            document.getElementById('prevTradeLicense').innerText = data.trade_license || data.tradeLicense || "---";
 
             document.getElementById('profilePreviewSection').style.display = 'block';
             document.getElementById('businessInfoForm').style.display = 'none';
@@ -346,23 +347,18 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            let userEmail = localStorage.getItem('rorraxy_seller_verified_email') || localStorage.getItem('rorraxy_seller_email');
-
-            if (!userEmail) {
-                userEmail = "seller_" + Date.now() + "@rorraxy.com";
-            }
+            let userEmail = localStorage.getItem('rorraxy_seller_email') || "seller_" + Date.now() + "@rorraxy.com";
 
             localStorage.setItem('rorraxy_current_seller_email', userEmail);
             document.getElementById('businessEmail').value = userEmail;
 
-            // ক্লাউডফায়ার D1 ডেটাবেস থেকে রিয়েল-টাইম ডেটা ফেচ করা
             try {
                 const response = await fetch(`/api/seller?email=${encodeURIComponent(userEmail)}`);
                 const result = await response.json();
                 if (result.success && result.data && result.data.length > 0) {
                     const dbProfile = result.data[0];
                     if(dbProfile.brand_name) {
-                        // যদি আগে থেকেই ইনফো পূরণ করা থাকে তবে প্রিভিউ দেখাবে
+                        localStorage.setItem('rorraxy_seller_info_completed', 'true');
                         renderPreview(dbProfile);
                         fillFormValues({
                             brandName: dbProfile.brand_name,
@@ -385,7 +381,6 @@
                 console.log("Cloudflare load notice:", err);
             }
 
-            // প্রথমবার লগইন করলে বা ইনফো না থাকলে মাস্ট বি ফর্ম দেখাবে
             document.getElementById('businessInfoForm').style.display = 'block';
             document.getElementById('profilePreviewSection').style.display = 'none';
             document.getElementById('cancelEditBtn').style.display = 'none';
@@ -411,12 +406,12 @@
             }
         }
 
-        // ফর্ম সাবমিট করার সময় কোনো অ্যালার্ট বা পপআপ আসবে না, ব্যাকগ্রাউন্ডে D1 ডেটাবেসে সেভ হবে
+        // ফর্ম সাবমিট করার পর ক্লাউডফায়ারে সেভ হয়ে সরাসরি ড্যাশবোর্ডে চলে যাবে
         document.getElementById('businessInfoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('saveInfoBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING & REDIRECTING...';
             
             const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
             const profileData = {
@@ -445,11 +440,12 @@
                 console.error("API Sync Error:", err);
             }
 
-            btn.disabled = false;
-            btn.innerHTML = 'SAVE INFO <i class="fa-solid fa-check"></i>';
+            localStorage.setItem('rorraxy_seller_info_completed', 'true');
             
-            // সফলভাবে সেভ হওয়ার পর সরাসরি প্রিভিউ মোডে চলে যাবে, কোনো ওকে বা পপআপ দেখাবে না
-            renderPreview(profileData);
+            // সফলভাবে সেভ হওয়ার পর সরাসরি ড্যাশবোর্ডে চলে যাবে
+            setTimeout(() => {
+                window.location.replace('/seller/dashboard.html');
+            }, 600);
         });
     </script>
 </body>
