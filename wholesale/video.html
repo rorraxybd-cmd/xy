@@ -43,6 +43,7 @@
         let currentSellerPage = 1;
         const itemsPerPage = 20;
         let isGlobalMuted = true;
+        let slideInterval = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLiveVideosFromBackend();
@@ -86,7 +87,7 @@
                 bottomBuyInfoBtn.addEventListener('click', () => {
                     let activeList = globalVideoList;
                     if(activeList.length > 0 && activeList[currentIndex]) {
-                        window.location.href = `/wholesale/pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
+                        window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
                     }
                 });
             }
@@ -117,10 +118,10 @@
             }, {passive: true});
         });
 
-        // ক্লাউডফ্লেয়ার D1 ডাটাবেজ থেকে হোলসেল মোড অনুযায়ী ভিডিও ফেচ করা
+        // ক্লাউডফ্লেয়ার D1 ডাটাবেজ থেকে সমস্ত প্রোডাক্ট (CJ + Vendor) ফেচ করা
         async function loadLiveVideosFromBackend() {
             try {
-                const response = await fetch(`/api/products?mode=wholesale`);
+                const response = await fetch(`/api/products`);
                 const result = await response.json();
                 
                 let productsList = [];
@@ -137,18 +138,46 @@
                             rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
                         }
 
-                        let bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
+                        // সব ধরনের ইমেজ এক্সট্রাক্ট করা
+                        let extractedImages = [];
+                        try {
+                            if (item.images_json) {
+                                if (typeof item.images_json === 'string') {
+                                    let parsed = JSON.parse(item.images_json);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } else if (Array.isArray(item.images_json)) {
+                                    extractedImages = item.images_json;
+                                }
+                            }
+                        } catch(e) {}
+
+                        if (extractedImages.length === 0 && item.image_url) {
+                            if (typeof item.image_url === 'string' && item.image_url.startsWith('[')) {
+                                try {
+                                    let parsed = JSON.parse(item.image_url);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } catch(e) { extractedImages = [item.image_url]; }
+                            } else {
+                                extractedImages = [item.image_url];
+                            }
+                        }
+
+                        extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
+
+                        let bulkPrice = item.price_min_whole ? `$${parseFloat(item.price_min_whole).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
                         let moqVal = item.moq || 10;
+                        let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Wholesale Vendor' : 'rorraxy Wholesale Hub');
 
                         return {
-                            id: item.id || item.product_code || '101',
-                            videoUrl: rawVid || 'https://www.w3schools.com/html/mov_bbb.mp4',
+                            id: String(item.id || item.product_code || '101'),
+                            videoUrl: rawVid,
+                            imagesList: extractedImages,
                             price: `${bulkPrice} / pc`,
                             baseLikes: item.like_count || 3400,
                             baseShares: 120,
                             discount: `MOQ: ${moqVal} PCS`,
                             category: item.category || 'video',
-                            sellerName: item.brand_name || 'rorraxy Wholesale Hub',
+                            sellerName: sellerTitle,
                             sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
                             sellerDesc: 'Verified commercial bulk supplier on rorraxy ecosystem.'
                         };
@@ -156,7 +185,7 @@
                     sessionStorage.setItem('rorraxy_wholesale_cached_videos', JSON.stringify(globalVideoList));
                     renderBatchVideos();
                 } else {
-                    renderFallbackVideos();
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO WHOLESALE PRODUCTS FOUND</div>`;
                 }
             } catch (error) {
                 console.error('Failed to load wholesale videos from backend:', error);
@@ -165,16 +194,9 @@
                     globalVideoList = JSON.parse(cachedData);
                     renderBatchVideos();
                 } else {
-                    renderFallbackVideos();
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO WHOLESALE PRODUCTS FOUND</div>`;
                 }
             }
-        }
-
-        function renderFallbackVideos() {
-            globalVideoList = [
-                { id: 'RRX-W01', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4', price: '$25.00 / pc', baseLikes: 3400, baseShares: 120, discount: 'MOQ: 10 PCS', category: 'video', sellerName: 'rorraxy Wholesale Hub', sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png', sellerDesc: 'Primary bulk supplier across global digital ecosystem.' }
-            ];
-            renderBatchVideos();
         }
 
         function getDynamicEngagement(productId, baseVal, type) {
@@ -200,7 +222,7 @@
         window.executeSearch = function(keyword) {
             let query = keyword.toLowerCase().trim();
             let foundIndex = globalVideoList.findIndex(p => 
-                (p.id && p.id.toLowerCase().includes(query)) ||
+                (p.id && String(p.id).toLowerCase().includes(query)) ||
                 (p.sellerName && p.sellerName.toLowerCase().includes(query))
             );
             if (foundIndex !== -1) currentIndex = foundIndex;
@@ -227,29 +249,32 @@
 
         window.toggleSaveItem = function(e, btn, pId) {
             e.stopPropagation();
-            let savedIds = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
-            let index = savedIds.indexOf(pId);
-            if(index > -1) {
-                savedIds.splice(index, 1);
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_video_objects') || '[]');
+            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
+            
+            if(existingIndex > -1) {
+                savedObjects.splice(existingIndex, 1);
                 btn.classList.remove('active');
             } else {
-                savedIds.push(pId);
-                btn.classList.add('active');
+                let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
+                if(targetProduct) {
+                    savedObjects.push(targetProduct);
+                    btn.classList.add('active');
+                }
             }
-            localStorage.setItem('rorraxy_wholesale_saved_videos', JSON.stringify(savedIds));
+            localStorage.setItem('rorraxy_wholesale_saved_video_objects', JSON.stringify(savedObjects));
         };
 
         window.openSavedGalleryModal = function() {
-            let savedIds = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
-            let savedVideos = globalVideoList.filter(p => savedIds.includes(p.id));
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_video_objects') || '[]');
             let overlay = document.getElementById('savedGalleryOverlay');
             let containerBody = document.getElementById('savedGalleryBody');
             if(!overlay || !containerBody) return;
 
-            if (savedVideos.length === 0) {
+            if (savedObjects.length === 0) {
                 containerBody.innerHTML = `
                     <div class="fs-profile-header-box">
-                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
+                        <h2 class="fs-profile-name">SAVED WHOLESALE VIDEOS</h2>
                     </div>
                     <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>
                     <div class="fs-bottom-back-action">
@@ -257,20 +282,25 @@
                     </div>`;
             } else {
                 let thumbsHtml = '';
-                savedVideos.forEach(v => {
+                savedObjects.forEach(v => {
+                    let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
                     thumbsHtml += `
                         <div class="saved-thumb-card" onclick="selectSavedVideo('${v.id}')">
-                            <div class="saved-thumb-preview"><i class="fa-solid fa-play"></i></div>
+                            <div class="saved-thumb-preview">
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;">
+                                <i class="fa-solid fa-play play-overlay-icon"></i>
+                            </div>
                             <div class="saved-thumb-footer">
                                 <span class="saved-thumb-title">ID: ${v.id}</span>
+                                <span class="saved-thumb-price">${v.price || ''}</span>
                                 <button class="saved-clean-delete-btn" onclick="removeSavedVideo(event, '${v.id}')"><i class="fa-solid fa-trash"></i> DELETE</button>
                             </div>
                         </div>`;
                 });
                 containerBody.innerHTML = `
                     <div class="fs-profile-header-box">
-                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
-                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedVideos.length}</strong></div>
+                        <h2 class="fs-profile-name">SAVED WHOLESALE VIDEOS</h2>
+                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedObjects.length}</strong></div>
                     </div>
                     <div class="fs-videos-grid">${thumbsHtml}</div>
                     <div class="fs-bottom-back-action">
@@ -285,20 +315,28 @@
         };
 
         window.selectSavedVideo = function(videoId) {
-            let foundIdx = globalVideoList.findIndex(p => p.id === videoId);
+            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
             if(foundIdx !== -1) {
                 currentIndex = foundIdx;
-                document.getElementById('savedGalleryOverlay').style.display = 'none';
-                renderBatchVideos();
+            } else {
+                let savedObjects = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_video_objects') || '[]');
+                let target = savedObjects.find(p => String(p.id) === String(videoId));
+                if(target) {
+                    globalVideoList.unshift(target);
+                    currentIndex = 0;
+                }
             }
+            document.getElementById('savedGalleryOverlay').style.display = 'none';
+            renderBatchVideos();
         };
 
         window.removeSavedVideo = function(e, videoId) {
             e.stopPropagation();
-            let saved = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
-            saved = saved.filter(id => id !== videoId);
-            localStorage.setItem('rorraxy_wholesale_saved_videos', JSON.stringify(saved));
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_video_objects') || '[]');
+            savedObjects = savedObjects.filter(item => String(item.id) !== String(videoId));
+            localStorage.setItem('rorraxy_wholesale_saved_video_objects', JSON.stringify(savedObjects));
             openSavedGalleryModal();
+            renderBatchVideos();
         };
 
         function updateBottomSellerProfile(product) {
@@ -313,11 +351,11 @@
             if (activeList.length === 0) return;
             let currentProduct = activeList[currentIndex] || activeList[0];
 
-            let sName = currentProduct.sellerName || 'rorraxy Bulk Merchant';
+            let sName = currentProduct.sellerName || 'rorraxy Wholesale Hub';
             let sAvatar = currentProduct.sellerAvatar || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
             let sDesc = currentProduct.sellerDesc || 'Verified commercial bulk supplier on rorraxy ecosystem.';
 
-            let sellerVideos = globalVideoList.filter(p => (p.sellerName || 'rorraxy Hub') === sName);
+            let sellerVideos = globalVideoList.filter(p => (p.sellerName || 'rorraxy Wholesale Hub') === sName);
             let containerBody = document.getElementById('sellerFullscreenBody');
             if(!containerBody) return;
 
@@ -329,9 +367,10 @@
 
             let videosHtml = '';
             currentBatchVideos.forEach((v) => {
+                let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
                 videosHtml += `
                     <div class="fullscreen-thumb-card" onclick="selectFullscreenSellerVideo('${v.id}')">
-                        <div class="fs-thumb-preview"><i class="fa-solid fa-play"></i></div>
+                        <div class="fs-thumb-preview"><img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;"></div>
                         <div class="fs-thumb-info">
                             <span class="fs-thumb-title">ID: ${v.id}</span>
                             <span class="fs-thumb-price">${v.price || '$25.00'}</span>
@@ -370,7 +409,7 @@
         };
 
         window.selectFullscreenSellerVideo = function(videoId) {
-            let foundIdx = globalVideoList.findIndex(p => p.id === videoId);
+            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
             if(foundIdx !== -1) {
                 currentIndex = foundIdx;
                 document.getElementById('sellerFullscreenOverlay').style.display = 'none';
@@ -379,7 +418,7 @@
         };
 
         window.openProductDetail = function(productId) {
-            window.location.href = `/wholesale/pd.html?id=${encodeURIComponent(productId)}`;
+            window.location.href = `pd.html?id=${encodeURIComponent(productId)}`;
         };
 
         window.scrollVideo = function(direction) {
@@ -394,7 +433,7 @@
 
             let activeList = globalVideoList;
             if (activeList.length === 0) {
-                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO VIDEOS FOUND</div>`;
+                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO WHOLESALE PRODUCTS FOUND</div>`;
                 updateBottomSellerProfile(null);
                 return;
             }
@@ -404,19 +443,47 @@
             let product = activeList[currentIndex];
             updateBottomSellerProfile(product);
 
-            let pId = product.id || '101';
-            let pVideo = product.videoUrl || 'https://www.w3schools.com/html/mov_bbb.mp4';
+            let pId = String(product.id || '101');
+            let pVideo = product.videoUrl ? product.videoUrl.trim() : '';
             let pPrice = product.price ? product.price : '$25.00 / pc';
             let pDiscount = product.discount || 'MOQ: 10 PCS';
 
             let pLikes = getDynamicEngagement(pId, product.baseLikes || 3400, 'likes');
             let pShares = getDynamicEngagement(pId, product.baseShares || 120, 'shares');
 
-            let savedIds = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_videos') || '[]');
-            let savedActiveClass = savedIds.includes(pId) ? 'active' : '';
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_wholesale_saved_video_objects') || '[]');
+            let isSaved = savedObjects.some(item => String(item.id) === String(pId));
+            let savedActiveClass = isSaved ? 'active' : '';
             let soundActiveClass = !isGlobalMuted ? 'active-sound' : '';
 
-            let mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata" loading="lazy"></video>`;
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+
+            let mediaElement = '';
+
+            // ভিডিও থাকলে ভিডিও দেখাবে, না থাকলে ছবি দিয়ে ১.৫ সেকেন্ডের স্লাইডশো চলবে
+            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
+                mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
+            } else {
+                let images = product.imagesList || [];
+                if (images.length === 0) {
+                    images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
+                }
+
+                mediaElement = `<img id="reelSlideImg" src="${images[0]}" class="reel-fit-img" alt="Product Media">`;
+                
+                if (images.length > 1) {
+                    let imgIdx = 0;
+                    slideInterval = setInterval(() => {
+                        imgIdx = (imgIdx + 1) % images.length;
+                        const imgElem = document.getElementById('reelSlideImg');
+                        if (imgElem) imgElem.src = images[imgIdx];
+                    }, 1500);
+                }
+            }
+
             let soundIconClass = isGlobalMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
 
             let htmlContent = `
@@ -583,14 +650,23 @@
         .fs-profile-desc { font-size: 0.75rem; color: #a0a0ab; max-width: 550px; line-height: 1.5; margin-bottom: 14px; }
         .fs-stats-pill { background: rgba(12, 12, 18, 0.8); border: 1px solid rgba(212,175,55,0.2); padding: 6px 16px; border-radius: 20px; font-size: 0.68rem; color: #fcf6ba; }
         .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .fullscreen-thumb-card, .saved-thumb-card { background: var(--card-wholesale); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; }
+        .fullscreen-thumb-card, .saved-thumb-card { background: var(--card-wholesale); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; position: relative; }
         .fullscreen-thumb-card:hover, .saved-thumb-card:hover { transform: translateY(-2px); }
-        .fs-thumb-preview, .saved-thumb-preview { width: 100%; height: 100px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold-solid); font-size: 1.1rem; }
+        
+        .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .saved-thumb-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .play-overlay-icon { position: absolute; font-size: 1.2rem; color: #fcf6ba; text-shadow: 0 2px 8px rgba(0,0,0,0.8); z-index: 2; pointer-events: none; }
+        
+        .fs-thumb-preview { width: 100%; height: 100px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold-solid); font-size: 1.1rem; overflow: hidden; }
         .fs-thumb-info { display: flex; flex-direction: column; width: 100%; text-align: center; gap: 2px; }
         .fs-thumb-title { font-size: 0.68rem; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .fs-thumb-price { font-size: 0.68rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
-        .saved-thumb-footer { display: flex; flex-direction: column; width: 100%; align-items: center; gap: 6px; }
-        .saved-clean-delete-btn { background: var(--pink-accent); border: none; border-radius: 6px; color: #fff; font-size: 0.58rem; font-weight: 700; padding: 6px 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        
+        .saved-thumb-footer { display: flex; flex-direction: column; width: 100%; align-items: center; gap: 4px; }
+        .saved-thumb-title { font-size: 0.68rem; font-weight: 700; color: #fff; }
+        .saved-thumb-price { font-size: 0.65rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
+        .saved-clean-delete-btn { background: var(--pink-accent); border: none; border-radius: 6px; color: #fff; font-size: 0.58rem; font-weight: 700; padding: 6px 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; }
+        
         .fs-pagination-box { display: flex; gap: 8px; justify-content: center; align-items: center; margin: 20px 0; width: 100%; }
         .fs-page-btn { background: var(--card-wholesale); color: #a0a0ab; font-size: 0.75rem; font-weight: 700; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .fs-page-btn.active-page { background: var(--gold-gradient); color: #000; }
@@ -607,6 +683,14 @@
         .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
         .reel-media-box { position: relative; width: 100%; flex: 1; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+        
+        .reel-fit-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000000;
+            display: block;
+        }
 
         .right-vertical-actions {
             position: absolute; right: 18px; bottom: 85px; z-index: 50;
