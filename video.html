@@ -155,7 +155,6 @@
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
                     renderBatchVideos();
                 } else {
-                    // কোনো প্রোডাক্ট না থাকলে একদম পরিষ্কার মেসেজ দেখাবে, কোনো ডেমো ভিডিও দেখাবে না
                     document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO LIVE PRODUCTS FOUND</div>`;
                 }
             } catch (error) {
@@ -413,7 +412,7 @@
             updateBottomSellerProfile(product);
 
             let pId = String(product.id || '101');
-            let pVideo = product.videoUrl || '';
+            let pVideo = product.videoUrl ? product.videoUrl.trim() : '';
             let pPrice = product.price ? product.price : '$85.00';
             let pDiscount = product.discount || '30% OFF';
 
@@ -432,7 +431,8 @@
 
             let mediaElement = '';
 
-            if (pVideo && pVideo.trim() !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+            // কঠোর চেক: যদি সত্যি সত্যি কোনো ভ্যালিড ভিডিও লিংক থাকে তবেই ভিডিও ট্যাগ রেন্ডার করবে, অন্যথায় নয়
+            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
                 mediaElement = `<video src="${pVideo}" autoplay loop ${isGlobalMuted ? 'muted' : ''} playsinline preload="metadata"></video>`;
             } else {
                 let images = [];
@@ -446,7 +446,7 @@
                     }
                 }
 
-                images = images.filter(img => img && img.trim() !== '');
+                images = images.filter(img => img && typeof img === 'string' && img.trim() !== '' && !img.includes('PRODUCT MEDIA'));
                 if (images.length === 0) {
                     images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
                 }
