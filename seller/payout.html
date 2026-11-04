@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Seller Payout - rorraxy Ecosystem</title>
     
-    <!-- Favicon Logo -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     
     <script src="/ecosystem-core.js"></script>
@@ -55,7 +54,6 @@
         .form-control:focus, .form-select:focus { background: #030305; }
         .form-select option { background: #08080c; color: #fff; }
 
-        /* পিংক কালার সিকিউর উইথড্র বাটন */
         .withdraw-btn { width: 100%; background: var(--pink-solid); border: none; border-radius: 14px; padding: 14px; color: #ffffff; font-weight: 800; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px rgba(255, 42, 133, 0.35); transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .withdraw-btn:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 0 30px rgba(255, 42, 133, 0.55); }
 
@@ -83,7 +81,6 @@
 </head>
 <body>
 
-    <!-- সিকিউরিটি গেটিং চেক -->
     <script>
         if (localStorage.getItem('rorraxy_seller_verified') !== 'true') {
             window.location.href = '/seller/index.html';
@@ -154,14 +151,14 @@
     </nav>
 
     <script>
-        const WORKER_URL = "https://email.rorraxybd.workers.dev";
-
         window.addEventListener('DOMContentLoaded', () => {
             loadPayoutRealtimeData();
         });
 
         async function loadPayoutRealtimeData() {
             let payoutRequests = [];
+            const currentEmail = localStorage.getItem('rorraxy_seller_email') || localStorage.getItem('rorraxy_current_seller_email') || "";
+
             try {
                 const response = await fetch(`/api/get?table=payouts`);
                 const result = await response.json();
@@ -180,6 +177,14 @@
             });
             payoutRequests = Array.from(mergedMap.values());
 
+            // বর্তমান সেলারের পে-আউট ফিল্টার করা
+            let filteredPayouts = payoutRequests.filter(p => {
+                const pEmail = String(p.email || p.seller_email || "").toLowerCase().trim();
+                if (currentEmail && pEmail && pEmail === currentEmail.toLowerCase()) return true;
+                if (!pEmail) return true;
+                return false;
+            });
+
             try {
                 let sellerNotifs = JSON.parse(localStorage.getItem('rorraxy_seller_notifications') || '[]');
                 let totalEarned = 0, pendingClearance = 0;
@@ -196,7 +201,7 @@
                 let netEarned = totalEarned * 0.90;
                 let availBalance = netEarned; 
                 
-                payoutRequests.forEach(req => {
+                filteredPayouts.forEach(req => {
                     if (req.status === 'PAID' || req.status === 'PENDING') availBalance -= parseFloat(req.amount || 0);
                 });
 
@@ -207,7 +212,7 @@
                 document.getElementById('pendBal').innerText = `$${(pendingClearance * 0.90).toFixed(2)}`;
             } catch(e) { console.error(e); }
 
-            renderPayoutHistory(payoutRequests);
+            renderPayoutHistory(filteredPayouts);
         }
 
         function renderPayoutHistory(payoutRequests) {
@@ -246,12 +251,11 @@
             }
         });
 
-        // অটো-ভেরিফাইড ওয়ান-ক্লিক পে-আউট সাবমিট
         document.getElementById('payoutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const savedProfile = JSON.parse(localStorage.getItem('rorraxy_seller_profile') || 'null');
-            if (!savedProfile || !savedProfile.brandName || !savedProfile.businessEmail) {
+            const currentEmail = localStorage.getItem('rorraxy_seller_email') || localStorage.getItem('rorraxy_current_seller_email');
+            if (!currentEmail) {
                 alert('PLEASE COMPLETE YOUR BUSINESS INFORMATION & EMAIL IN SETTINGS FIRST!');
                 window.location.href = '/seller/info.html';
                 return;
@@ -275,7 +279,7 @@
             if (amount > currentAvail) { alert('INSUFFICIENT BALANCE!'); return; }
 
             const today = new Date().toLocaleDateString();
-            const payoutData = { date: today, method: method, details: detailText, amount: amount, status: 'PENDING', email: savedProfile.businessEmail };
+            const payoutData = { date: today, method: method, details: detailText, amount: amount, status: 'PENDING', email: currentEmail };
 
             const requestBtn = document.getElementById('requestBtn');
             requestBtn.disabled = true;
