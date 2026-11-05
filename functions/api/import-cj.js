@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. মাল্টিপল ইমেজ এক্সট্রাকশন লজিক
+    // ৪. নির্ভুল মাল্টিপল ইমেজ এক্সট্রাকশন লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -99,7 +99,7 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)];
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট ফিল্টার
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -118,89 +118,68 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও গ্যালারি এক্সট্রাকশন লজিক
+    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক (ম্যানুয়াল ইনপুট থাকলে তা অগ্রাধিকার পাবে)
     let videoUrl = (manualVideoUrl && typeof manualVideoUrl === 'string') ? manualVideoUrl.trim() : '';
     
     if (!videoUrl) {
-      const directVideoFields = [
-        p.materialVideo, p.productVideo, p.video, p.videoUrl, p.vedio,
-        p.goodsVideo, p.itemVideo, p.mediaVideo, p.mp4Url, p.watchVideo
-      ];
-      for (let field of directVideoFields) {
-        if (field && typeof field === 'string' && field.trim().startsWith('http')) {
-          videoUrl = field.trim();
-          break;
+      if (p.productVideo) videoUrl = p.productVideo;
+      else if (p.video) videoUrl = p.video;
+      else if (p.videoUrl) videoUrl = p.videoUrl;
+      else if (p.materialVideo) videoUrl = p.materialVideo;
+      else if (p.vedio) videoUrl = p.vedio;
+      
+      if (!videoUrl && p.videos) {
+        if (Array.isArray(p.videos) && p.videos.length > 0) {
+          videoUrl = p.videos[0].url || p.videos[0].videoUrl || p.videos[0].path || '';
+        } else if (typeof p.videos === 'string') {
+          videoUrl = p.videos;
         }
       }
-    }
-
-    if (!videoUrl) {
-      const videoSources = [p.videos, p.videoList, p.materialVideoList, p.productVideoList];
-      for (let src of videoSources) {
-        if (Array.isArray(src) && src.length > 0) {
-          let firstVid = src[0];
-          if (typeof firstVid === 'string' && firstVid.startsWith('http')) {
-            videoUrl = firstVid.trim();
-            break;
-          } else if (firstVid && typeof firstVid === 'object') {
-            videoUrl = (firstVid.url || firstVid.videoUrl || firstVid.path || firstVid.videoPath || '').trim();
-            if (videoUrl) break;
-          }
-        }
+      
+      if (!videoUrl && p.productVo && p.productVo.productVideo) {
+        videoUrl = p.productVo.productVideo;
       }
     }
 
-    if (!videoUrl && p.productVo && typeof p.productVo === 'object') {
-      let voVid = p.productVo.productVideo || p.productVo.video || p.productVo.videoUrl;
-      if (voVid && typeof voVid === 'string' && voVid.startsWith('http')) {
-        videoUrl = voVid.trim();
-      }
-    }
-
-    // ৬. ডেসক্রিপশন পরিষ্কার করার নিরাপদ ও সাধারণ লজিক
+    // ৬. ডেসক্রিপশন পরিষ্কার ও সুন্দরভাবে ফরম্যাট করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
-      .replace(/<img[^>]*>/gi, '')
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
+      .replace(/<\/tr>/gi, '\n')
+      .replace(/<\/td>/gi, ' : ')
       .replace(/<[^>]+>/g, '')
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
+      .replace(/\s\s+/g, ' ')
+      .replace(/\n\s*\n/g, '\n\n')
       .trim();
 
-    let productTitle = p.productNameEn || 'Global Product';
-    let materialInfo = p.material || p.productMaterial || 'Standard Material';
-    let sizesText = sizesList.length > 0 ? sizesList.join(', ') : 'Standard / Free Size';
+    if (sizesList.length > 0) {
+      cleanDescription = `AVAILABLE SIZES / OPTIONS:\n${sizesList.join(', ')}\n\n------------------------------------\n\n` + cleanDescription;
+    }
 
-    let structuredHeader = `PRODUCT OVERVIEW:\n` +
-      `• Title: ${productTitle}\n` +
-      `• Available Sizes: ${sizesText}\n` +
-      `• Material: ${materialInfo}\n\n` +
-      `------------------------------------\n\n`;
-
-    cleanDescription = structuredHeader + cleanDescription;
-
+    // প্রিভিউ মোডের জন্য রেসপন্স
     if (previewOnly) {
       return new Response(JSON.stringify({ 
         success: true, 
         data: { 
-          title: productTitle, 
+          title: p.productNameEn || 'Global Product', 
           retailPrice, 
           priceSample, 
           imagesCount: imagesArray.length,
           imagesArray: imagesArray,
           sizes: sizesList,
-          material: materialInfo,
           videoUrl: videoUrl
         }
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database[cite: 5]
+    // ৭. Save to D1 Database (সকল ইমেজ JSON ও ভিডিও সহ সেভ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -221,7 +200,7 @@ export async function onRequestPost(context) {
       ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'both', ?, CURRENT_TIMESTAMP)
     `).bind(
       cjProductId,
-      productTitle,
+      p.productNameEn || 'Global Product',
       cleanDescription,
       retailPrice,
       priceSample,
@@ -236,9 +215,9 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",[cite: 5]
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
       data: { 
-        title: productTitle, 
+        title: p.productNameEn, 
         retailPrice, 
         priceSample, 
         imagesCount: imagesArray.length,
@@ -255,6 +234,3 @@ export async function onRequestPost(context) {
     });
   }
 }
-```[cite: 5]
-
-এই কোডটি বসিয়ে সেভ করার সাথে সাথে ক্লাউডফ্লাওয়ার পেজের বিল্ড সফলভাবে সম্পন্ন হয়ে যাবে এবং আপনি প্রোডাক্ট ইমপোর্ট করতে পারবেন।
