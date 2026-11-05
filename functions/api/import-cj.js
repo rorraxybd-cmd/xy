@@ -54,38 +54,66 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি ছবি এবং ভিডিও সংগ্রহ করার লজিক
+    // ৪. নির্ভুল ইমেজ এক্সট্রাকশন লজিক (লোগো বা রর্যাক্সি ফিল্টার করে বাদ দেওয়া)
     let rawImages = [];
-    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
-      rawImages = p.productImageList;
-    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
-      rawImages = p.productImages;
-    } else if (p.productImage) {
-      rawImages = [p.productImage];
+
+    const extract = (source) => {
+      if (!source) return;
+      if (Array.isArray(source)) {
+        source.forEach(item => {
+          if (typeof item === 'string') rawImages.push(item);
+          else if (item && typeof item === 'object') {
+            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path);
+          }
+        });
+      } else if (typeof source === 'string') {
+        rawImages.push(...source.split(',').map(s => s.trim()));
+      }
+    };
+
+    extract(p.productImageList);
+    extract(p.productImages);
+    extract(p.materialImageList);
+    extract(p.carouselImage);
+    extract(p.entryImageList);
+    extract(p.productImage);
+    extract(p.bigImage);
+    extract(p.imageUrl);
+
+    // কঠোরভাবে লোগো বা rorraxy যুক্ত লিংক ফিল্টার করে বাদ দেওয়া
+    let imagesArray = rawImages.filter(img => {
+      if (!img || typeof img !== 'string') return false;
+      let clean = img.trim();
+      return clean.startsWith('http') && 
+             !clean.includes('rorraxy') && 
+             !clean.includes('placeholder') &&
+             (clean.endsWith('.jpg') || clean.endsWith('.png') || clean.endsWith('.jpeg') || clean.includes('cj') || clean.includes('product'));
+    });
+
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট দূর করা
+
+    // যদি কোনো ছবি না পাওয়া যায়, তবে একটি নিরাপদ ডিফল্ট প্রোডাক্ট ইমেজ রাখা (লোগো নয়)
+    if (imagesArray.length === 0) {
+      imagesArray = [p.productImage && p.productImage.startsWith('http') ? p.productImage : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30'];
     }
 
-    let imagesArray = rawImages.filter(img => img && typeof img === 'string' && !img.includes('rorraxy') && img.startsWith('http'));
-
-    let mainImage = p.productImage || '';
-    if (mainImage.includes('rorraxy') || !mainImage.startsWith('http')) {
-      mainImage = imagesArray.length > 0 ? imagesArray[0] : '';
-    }
-
-    if (imagesArray.length === 0 && mainImage) {
-      imagesArray = [mainImage];
-    }
-
+    const mainImage = imagesArray[0]; // লোগো ছাড়া একদম প্রথম আসল প্রোডাক্ট ইমেজ
     const imagesListJson = JSON.stringify(imagesArray);
-    const videoUrl = p.productVideo || p.videoUrl || '';
+    
+    // ভিডিও লিংক ফেচ করা
+    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
 
-    // ৫. ডেসক্রিপশন ক্লিন করা
+    // ৫. ডেসক্রিপশন গুছিয়ে নেওয়া
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-      .replace(/<\/p>/gi, '\n')
+      .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
+      .replace(/<\/tr>/gi, '\n')
+      .replace(/<\/td>/gi, ' : ')
       .replace(/<[^>]+>/g, '')
+      .replace(/\n\s*\n/g, '\n')
       .trim();
 
     // ৬. Save to D1 Database
@@ -124,7 +152,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্য সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
