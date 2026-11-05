@@ -39,6 +39,7 @@
 
     <script>
         let globalVideoList = [];
+        let activeReelsList = []; // ক্যাটাগরি ফিল্টারকৃত রিলস তালিকা
         let currentIndex = 0;
         let slideInterval = null;
 
@@ -57,14 +58,14 @@
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
             const categoryFullscreenOverlay = document.getElementById('categoryFullscreenOverlay');
 
-            // 1. HOME Click: Direct link to rorraxy.com
+            // 1. HOME Click: Direct link to rorraxy.com[cite: 1, 4]
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
                     window.location.href = 'https://rorraxy.com';
                 });
             }
 
-            // 2. CATEGORY Toggle (On/Off System)
+            // 2. CATEGORY Toggle (On/Off System)[cite: 3, 4]
             if(bottomCategoryBtn && categoryFullscreenOverlay) {
                 bottomCategoryBtn.addEventListener('click', () => {
                     const isVisible = categoryFullscreenOverlay.style.display === 'flex';
@@ -78,17 +79,17 @@
                 });
             }
 
-            // 3. BUY & INFO Click: Open Product Detail Page
+            // 3. BUY & INFO Click: Open Product Detail Page[cite: 1, 4]
             if(bottomBuyInfoBtn) {
                 bottomBuyInfoBtn.addEventListener('click', () => {
-                    let activeList = globalVideoList;
+                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
                     if(activeList.length > 0 && activeList[currentIndex]) {
                         window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
                     }
                 });
             }
 
-            // 4. SEARCH Toggle (On/Off System)
+            // 4. SEARCH Toggle (On/Off System)[cite: 1, 4]
             if(bottomSearchBtn && floatingSearchContainer) {
                 bottomSearchBtn.addEventListener('click', () => {
                     const isVisible = floatingSearchContainer.style.display === 'flex';
@@ -103,7 +104,7 @@
                 });
             }
 
-            // 5. SAVED Toggle (On/Off System)
+            // 5. SAVED Toggle (On/Off System)[cite: 1, 4]
             if(bottomSavedBtn && savedGalleryOverlay) {
                 bottomSavedBtn.addEventListener('click', () => {
                     const isVisible = savedGalleryOverlay.style.display === 'flex';
@@ -201,12 +202,15 @@
                             discountNum: discountVal,
                             discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
                             category: item.category || 'video',
+                            description: item.description || '',
+                            title: item.title || '',
                             sellerName: sellerTitle,
                             sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
                             sellerDesc: 'Verified seller on rorraxy ecosystem.'
                         };
                     });
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
+                    activeReelsList = globalVideoList;
                     renderBatchVideos();
                 } else {
                     document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
@@ -216,6 +220,7 @@
                 let cachedData = sessionStorage.getItem('rorraxy_cached_videos');
                 if (cachedData) {
                     globalVideoList = JSON.parse(cachedData);
+                    activeReelsList = globalVideoList;
                     renderBatchVideos();
                 } else {
                     document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
@@ -248,11 +253,35 @@
             if(!query) return;
             let foundIndex = globalVideoList.findIndex(p => 
                 (p.id && String(p.id).toLowerCase().includes(query)) ||
-                (p.sellerName && p.sellerName.toLowerCase().includes(query))
+                (p.sellerName && p.sellerName.toLowerCase().includes(query)) ||
+                (p.title && p.title.toLowerCase().includes(query))
             );
-            if (foundIndex !== -1) currentIndex = foundIndex;
-            renderBatchVideos();
+            if (foundIndex !== -1) {
+                activeReelsList = globalVideoList;
+                currentIndex = foundIndex;
+                renderBatchVideos();
+            }
             document.getElementById('floatingSearchContainer').style.display = 'none';
+        };
+
+        // ক্যাটাগরি বা সাব-ক্যাটাগরিতে ক্লিক করলে রিলস আকারে ভিডিও ফিল্টার করে দেখাবে
+        window.filterReelsByCategory = function(queryKey) {
+            document.getElementById('categoryFullscreenOverlay').style.display = 'none';
+            let query = queryKey.toLowerCase().replace(/-/g, ' ');
+            
+            let filtered = globalVideoList.filter(item => {
+                const title = (item.title || '').toLowerCase();
+                const cat = (item.category || item.description || '').toLowerCase();
+                return title.includes(query) || cat.includes(query);
+            });
+
+            if (filtered.length > 0) {
+                activeReelsList = filtered;
+            } else {
+                activeReelsList = globalVideoList; // না মিললে সব দেখাবে
+            }
+            currentIndex = 0;
+            renderBatchVideos();
         };
 
         window.toggleSaveItem = function(e, btn, pId) {
@@ -313,14 +342,8 @@
         window.selectSavedVideo = function(videoId) {
             let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
             if(foundIdx !== -1) {
+                activeReelsList = globalVideoList;
                 currentIndex = foundIdx;
-            } else {
-                let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-                let target = savedObjects.find(p => String(p.id) === String(videoId));
-                if(target) {
-                    globalVideoList.unshift(target);
-                    currentIndex = 0;
-                }
             }
             document.getElementById('savedGalleryOverlay').style.display = 'none';
             renderBatchVideos();
@@ -342,113 +365,8 @@
             if (!isOpen) targetBox.classList.add('active');
         }
 
-        async function fetchAndDisplayProducts(queryKey) {
-            document.getElementById('categoryMainListView').style.display = 'none';
-            const dynamicSection = document.getElementById('dynamicProductSection');
-            dynamicSection.classList.add('active');
-            document.getElementById('resultCategoryTitle').innerText = `RESULTS FOR: ${queryKey.replace(/-/g, ' ')}`;
-
-            const feedContainer = document.getElementById('categoryProductFeed');
-            feedContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--gold-solid); padding: 40px;"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><br><span style="font-size: 0.75rem; margin-top: 10px; display:inline-block;">LOADING PRODUCTS...</span></p>`;
-
-            try {
-                const response = await fetch(`/api/products?t=` + Date.now(), { cache: 'no-store' });
-                const result = await response.json();
-                let products = [];
-                if (result && result.success && Array.isArray(result.data)) {
-                    products = result.data;
-                } else if (Array.isArray(result)) {
-                    products = result;
-                }
-
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
-                let mergedMap = new Map();
-                [...localProducts, ...cachedFeed, ...products].forEach(p => {
-                    let pId = p.id || p.product_id || p.product_code || p.title;
-                    if(pId) mergedMap.set(String(pId), p);
-                });
-                let allProducts = Array.from(mergedMap.values());
-
-                if (allProducts.length > 0) {
-                    const filtered = allProducts.filter(item => {
-                        const title = (item.title || '').toLowerCase();
-                        const cat = (item.category || item.tag || item.description || '').toLowerCase();
-                        const query = queryKey.toLowerCase();
-                        return title.includes(query) || cat.includes(query) || query === 'all';
-                    });
-                    renderCategoryProductFeed(filtered.length > 0 ? filtered : allProducts);
-                } else {
-                    feedContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 40px;">NO PRODUCTS FOUND</p>`;
-                }
-            } catch (err) {
-                console.error('Error fetching category products:', err);
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-                if(localProducts.length > 0) {
-                    renderCategoryProductFeed(localProducts);
-                } else {
-                    feedContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 40px;">FAILED TO LOAD PRODUCTS</p>`;
-                }
-            }
-        }
-
-        function renderCategoryProductFeed(products) {
-            const feedContainer = document.getElementById('categoryProductFeed');
-            feedContainer.innerHTML = products.map(item => {
-                const productId = item.id || item.product_id || item.product_code || '101';
-                const title = item.title || 'rorraxy Luxury Item';
-                const priceVal = item.price ? parseFloat(item.price).toFixed(2) : '35.00';
-                const discount = item.discount_rate || item.discountRate || 0;
-                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
-                const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
-                
-                let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
-                try {
-                    if (item.images_json) {
-                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
-                        if (Array.isArray(parsed) && parsed.length > 0) imageUrl = parsed[0];
-                    } else if (item.image_url) {
-                        imageUrl = typeof item.image_url === 'string' && item.image_url.startsWith('[') ? JSON.parse(item.image_url)[0] : item.image_url;
-                    }
-                } catch(e) {
-                    imageUrl = item.image_url || imageUrl;
-                }
-
-                let badgeDisplay = (discount && discount > 0) ? `
-                    <div class="product-country-discount-badge">
-                        <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
-                    </div>
-                ` : '';
-
-                return `
-                    <div class="product-card" onclick="openProductDetail('${productId}')">
-                        <div class="product-media-box">
-                            ${badgeDisplay}
-                            <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
-                        </div>
-                        <div class="card-footer-actions" onclick="event.stopPropagation()">
-                            <span class="product-price-tag">$${priceVal}</span>
-                            <div class="card-sub-actions">
-                                <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 124}</span>
-                                </div>
-                                <button class="share-action-btn" onclick="openNativeShare(event, '${productId}')">
-                                    <i class="fa-solid fa-share-nodes"></i> Share
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.goBackToCategories = function() {
-            document.getElementById('dynamicProductSection').classList.remove('active');
-            document.getElementById('categoryMainListView').style.display = 'flex';
-        };
-
         window.scrollVideo = function(direction) {
-            let activeList = globalVideoList;
+            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
             if (direction === 1 && currentIndex < activeList.length - 1) { currentIndex++; renderBatchVideos(); }
             else if (direction === -1 && currentIndex > 0) { currentIndex--; renderBatchVideos(); }
         };
@@ -457,7 +375,7 @@
             const feedContainer = document.getElementById('videoFeed');
             if(!feedContainer) return;
 
-            let activeList = globalVideoList;
+            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
             if (activeList.length === 0) {
                 feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 return;
@@ -663,7 +581,7 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
         }
 
-        /* Bottom Navigation Bar (z-index 4000 to remain visible above overlays) */
+        /* Bottom Navigation Bar (Always Visible at z-index 4000) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
@@ -716,40 +634,6 @@
         .sub-cat-item:hover { background: #161622; border-color: rgba(212, 175, 55, 0.2); transform: translateY(-2px); }
         .sub-cat-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.68rem; color: var(--text-white); font-weight: 600; }
-
-        .dynamic-product-section { display: none; margin-top: 15px; padding: 10px 0; }
-        .dynamic-product-section.active { display: block; }
-        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
-        .section-title-result { font-size: 0.85rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
-        .back-to-cat-btn {
-            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3);
-            color: var(--gold-solid); padding: 6px 14px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-weight: 600; text-transform: uppercase;
-        }
-
-        .feed-container-grid { padding: 4px 0; column-count: 2; column-gap: 10px; width: 100%; }
-        @media (min-width: 768px) { .feed-container-grid { column-count: 4; column-gap: 14px; } }
-
-        .product-card {
-            background: var(--card-retail); border-radius: 14px; overflow: hidden; display: inline-block; width: 100%; 
-            border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer; margin-bottom: 10px; break-inside: avoid; transition: transform 0.2s, border-color 0.2s;
-        }
-        .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
-        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
-        
-        .product-country-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 10; background: rgba(255, 42, 133, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2); padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
-        }
-        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
-
-        .card-footer-actions { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto; }
-        .product-price-tag { font-size: 0.85rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-sub-actions { display: flex; align-items: center; gap: 12px; justify-content: center; }
-        .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
-        .love-action i { color: var(--pink-accent); }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
-        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
         .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; position: relative; }
         .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -831,16 +715,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-handbags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-lingerie')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-traditional')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-crafts')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('women-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-handbags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-lingerie')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-traditional')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-crafts')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -853,11 +737,11 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-grooming')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('men-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-grooming')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -870,16 +754,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-clothing')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-hair-accessories')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-sleepwear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-party-dresses')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('girls-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-clothing')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-hair-accessories')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-sleepwear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-party-dresses')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -892,11 +776,11 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-clothing')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('boys-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-clothing')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -909,16 +793,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('couple-matchingsets')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('family-matchingsets')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mom-me-sets')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('dad-me-sets')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('sibling-matchingsets')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('team-matchingsets')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('bff-matchingsets')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('pet-owner-sets')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('holiday-matchingsets')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('value-bundles')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('couple-matchingsets')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('family-matchingsets')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mom-me-sets')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('dad-me-sets')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('sibling-matchingsets')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('team-matchingsets')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('bff-matchingsets')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('pet-owner-sets')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('holiday-matchingsets')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('value-bundles')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
                         </div>
                     </div>
                 </div>
@@ -931,12 +815,12 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('corporate-gifts')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('luxury-giftitems')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('premium-handicrafts')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('wood-resincrafts')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('bamboo-brass-decor')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('gift-sets-hampers')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('corporate-gifts')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('luxury-giftitems')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('premium-handicrafts')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('wood-resincrafts')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('bamboo-brass-decor')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('gift-sets-hampers')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
                         </div>
                     </div>
                 </div>
@@ -949,25 +833,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('eco-baby-toys')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
-                            <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mother-baby-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('eco-baby-toys')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mother-baby-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
 
-            </div>
-
-            <!-- Dynamic Product Feed Section Inside Category Overlay -->
-            <div class="category-fullscreen-view dynamic-product-section" id="dynamicProductSection">
-                <div class="section-header-row">
-                    <span class="section-title-result" id="resultCategoryTitle">PRODUCTS</span>
-                    <button class="back-to-cat-btn" onclick="goBackToCategories()"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORIES</button>
-                </div>
-                <div class="feed-container-grid" id="categoryProductFeed"></div>
             </div>
         </div>
     </div>
