@@ -314,7 +314,7 @@
 
     <!-- SOFT FIXED BOTTOM SEARCH & CLOSE BAR -->
     <div class="bottom-nav-bar">
-        <a href="index.html" class="close-icon-btn" title="Close">
+        <a href="./index.html" class="close-icon-btn" title="Close" onclick="event.preventDefault(); window.location.replace('./index.html');">
             <i class="fa-solid fa-xmark"></i>
         </a>
         <div class="search-tracking-box">
@@ -402,7 +402,7 @@
             const container = document.getElementById('accountDynamicContent');
             container.innerHTML = `
                 <div class="empty-orders-screen">
-                    <div onclick="window.location.href='index.html'" class="shop-now-trigger">
+                    <div onclick="window.location.href='./index.html'" class="shop-now-trigger">
                         <i class="fa-solid fa-bag-shopping shop-now-icon"></i>
                         <span class="shop-now-text">SHOPPING NOW</span>
                     </div>
@@ -502,7 +502,7 @@
 
             html2pdf().from(element).set(options).save().then(() => {
                 setTimeout(() => {
-                    window.location.href = '/';
+                    window.location.href = './index.html';
                 }, 1000);
             });
         }
