@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
 
     const accessToken = tokenData.data.accessToken;
 
-    // ২. Query Product Details
+    // ২. Query Product Details from CJ
     const productRes = await fetch(`https://developers.cjdropshipping.com/api2.0/v1/product/query?pid=${cjProductId}`, {
       headers: { "CJ-Access-Token": accessToken }
     });
@@ -54,17 +54,18 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. মাল্টিপল ইমেজ এক্সট্রাকশন লজিক
+    // ৪. সমস্ত গ্যালারি ইমেজ নিখুঁতভাবে এক্সট্রাক্ট করার লজিক
     let rawImages = [];
 
-    const extract = (source) => {
+    const extractImages = (source) => {
       if (!source) return;
       if (Array.isArray(source)) {
         source.forEach(item => {
           if (typeof item === 'string') {
             rawImages.push(item);
           } else if (item && typeof item === 'object') {
-            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path || item.variantImage);
+            const img = item.imageUrl || item.url || item.imgUrl || item.path || item.variantImage || item.enlargeImage;
+            if (img) rawImages.push(img);
           }
         });
       } else if (typeof source === 'string') {
@@ -76,21 +77,23 @@ export async function onRequestPost(context) {
       }
     };
 
-    extract(p.productImageList);
-    extract(p.productImages);
-    extract(p.materialImageList);
-    extract(p.carouselImage);
-    extract(p.entryImageList);
-    extract(p.productImage);
-    extract(p.bigImage);
-    extract(p.imageUrl);
-    
+    // সিজে ড্রপশিপিংয়ের সব সম্ভাব্য ইমেজ ফিল্ড চেক করা হচ্ছে
+    extractImages(p.productImageList);
+    extractImages(p.productImages);
+    extractImages(p.materialImageList);
+    extractImages(p.carouselImage);
+    extractImages(p.entryImageList);
+    extractImages(p.productImage);
+    extractImages(p.bigImage);
+    extractImages(p.imageUrl);
+
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
       });
     }
 
+    // ইমেজ ক্লিন করা এবং ডুপ্লিকেট দূর করে সব ছবি রাখা
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
@@ -101,7 +104,7 @@ export async function onRequestPost(context) {
 
     imagesArray = [...new Set(imagesArray)];
 
-    if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
+    if (imagesArray.length === 0 && p.productImage && typeof p.productImage === 'string' && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
     }
 
@@ -179,7 +182,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database[cite: 5]
+    // ৭. Save to Cloudflare D1 Database[cite: 5]
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -215,11 +218,10 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",[cite: 5]
+      message: "সিজে ড্রপশিপিং থেকে প্রোডাক্টের সমস্ত গ্যালারি ইমেজ সফলভাবে সিঙ্ক ও সেভ হয়েছে!",[cite: 5]
       data: { 
         title: p.productNameEn, 
         retailPrice, 
-        priceSample, 
         imagesCount: imagesArray.length,
         imagesArray: imagesArray,
         videoUrl: videoUrl,
@@ -234,6 +236,3 @@ export async function onRequestPost(context) {
     });
   }
 }
-```[cite: 5]
-
-এটি সেভ করার সাথে সাথেই ক্লাউডফ্লাওয়ার বিল্ড সফলভাবে পাস হয়ে যাবে এবং আগের মতো সমস্ত ছবি ও তথ্য সঠিকভাবে ইমপোর্ট হতে শুরু করবে।
