@@ -199,7 +199,6 @@
             transform: scale(0.98);
         }
         
-        /* Prevents Image Jerk and Layout Shifts */
         .product-media-box { 
             position: relative; 
             width: 100%; 
@@ -237,32 +236,24 @@
         .product-media-box img.loaded-img {
             opacity: 1;
         }
-        
-        .wholesale-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 10;
-            background: rgba(212, 175, 55, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 700; color: #000000 !important; text-transform: uppercase;
-        }
 
         .card-footer-actions { 
-            display: flex; flex-direction: column; padding: 10px; 
+            display: flex; align-items: center; justify-content: space-between; padding: 10px; 
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
         }
         
-        .wholesale-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .moq-tag { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
+        .wholesale-info-stack { display: flex; flex-direction: column; align-items: flex-start; }
+        .product-price-tag { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        .moq-tag { font-size: 0.58rem; color: var(--text-gray); font-weight: 600; margin-top: 1px; }
         
         .card-sub-actions { 
-            display: flex; align-items: center; justify-content: space-between; width: 100%; 
-            border-top: 1px solid rgba(255,255,255,0.04); padding-top: 6px; gap: 4px;
+            display: flex; align-items: center; gap: 10px; justify-content: flex-end; 
         }
-        .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
+        .love-action { display: flex; align-items: center; gap: 3px; cursor: pointer; font-size: 0.68rem; font-weight: 500; color: var(--text-gray) !important; }
         .love-action i { color: var(--pink-love); }
         .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
         
-        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        .share-action-btn { background: none; border: none; font-size: 0.68rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
         nav.bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-wholesale);
@@ -473,20 +464,15 @@
 
             let list = [...rawList];
 
-            // ১. রিটেইলের বিপরীতে পুরো প্রোডাক্টের সিকোয়েন্স উল্টে দেওয়া (Invert Sequence)
             let invertedList = list.reverse();
-
-            // ২. নতুন ও ট্রেন্ডিং প্রোডাক্টগুলোকে রিটেইলের ঠিক উল্টো ভাগে ভাগ করা
             let splitPoint = Math.floor(invertedList.length * 0.6);
             let partA = invertedList.slice(0, splitPoint);
             let partB = invertedList.slice(splitPoint);
 
-            // ৩. ডাইনামিক পেজ রিফ্রেশ সিড দিয়ে দুটো পার্টকে আলাদাভাবে ইনভার্ট-শাফল করা
             const sessionSeed = Math.floor(Date.now() / 10000); 
             partA = seededShuffle(partA, sessionSeed + 101);
             partB = seededShuffle(partB, sessionSeed + 202);
 
-            // ৪. বিপরীতে অল্টারনেট করে হোলসেল ফিডে প্রেজেন্ট করা
             let wholesaleFeed = [];
             while (partA.length > 0 || partB.length > 0) {
                 if (partB.length > 0) wholesaleFeed.push(partB.shift());
@@ -500,7 +486,6 @@
         async function loadWholesaleProducts() {
             const feedContainer = document.getElementById('productFeed');
             
-            // ১. ইনস্ট্যান্ট লোকাল স্টোরেজ থেকে রেন্ডার (Zero Waiting Time)
             const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
             if (cachedData) {
                 try {
@@ -513,7 +498,6 @@
                 }
             }
 
-            // ২. রিয়েল-টাইমে API থেকে সব প্রোডাক্ট ফেচ করা (ক্যাশ বাইপাস করে)
             let products = [];
             try {
                 const response = await fetch('/api/products?t=' + Date.now(), {
@@ -540,7 +524,6 @@
 
             let allProducts = Array.from(mergedMap.values());
 
-            // হোলসেল পেজের জন্য সব প্রোডাক্ট অন্তর্ভুক্ত করার নমনীয় ফিল্টার
             let wholesaleProducts = allProducts.filter(p => {
                 const mode = String(p.upload_mode || p.mode || "").toLowerCase().trim();
                 return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined' || p.is_cj || p.product_code || p.cj_product_id;
@@ -548,7 +531,6 @@
 
             if (wholesaleProducts.length > 0) {
                 localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(wholesaleProducts));
-                // রিটেইলের বিপরীতে ডাইনামিক প্রেজেন্টেশন
                 renderWholesaleCards(getReverseOppositeWholesaleProducts(wholesaleProducts));
             } else if (!cachedData) {
                 feedContainer.innerHTML = `
@@ -567,9 +549,8 @@
             wholesaleProducts.forEach(p => {
                 const pTitle = p.title || 'WHOLESALE ITEM';
                 const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
-                const moq = p.moq || 10;
+                const moq = p.moq || 1; // ডিফল্ট মিনিমাম ১ পিস স্যাম্পল/হোলসেল
                 
-                // সিজে এবং ভেন্ডর প্রোডাক্টের সমস্ত সম্ভাব্য ইমেজ ফরম্যাট পার্স করার আল্টিমেট লজিক
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 
                 try {
@@ -607,7 +588,6 @@
                     resolvedImageUrl = p.imageUrl;
                 }
 
-                // সিজে ড্রপশিপিংয়ের নিজস্ব ইমেজ প্রপার্টি সাপোর্ট
                 if ((!resolvedImageUrl || resolvedImageUrl.includes('mr masudar logo')) && (p.productImage || p.jiImageUrl || p.cjImage)) {
                     resolvedImageUrl = p.productImage || p.jiImageUrl || p.cjImage;
                 }
@@ -620,11 +600,10 @@
 
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
-                        <div class="wholesale-badge"><i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS</div>
                         <img src="${resolvedImageUrl}" alt="${pTitle}" loading="lazy" decoding="async" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
                     </div>
                     <div class="card-footer-actions">
-                        <div class="wholesale-pricing-row">
+                        <div class="wholesale-info-stack">
                             <span class="product-price-tag">$${parseFloat(bulkPrice).toFixed(2)} / pc</span>
                             <span class="moq-tag">Min ${moq} Pcs</span>
                         </div>
@@ -632,9 +611,9 @@
                             <div class="love-action" onclick="event.stopPropagation(); toggleLike(this)">
                                 <i class="fa-solid fa-heart"></i> <span>LIKE</span>
                             </div>
-                            <div class="share-action-btn" onclick="event.stopPropagation(); shareProduct('${pTitle.replace(/'/g, "\\'")}', window.location.origin + '/wholesale/pd.html?id=${productId}')">
-                                <i class="fa-solid fa-share-nodes" style="color: var(--gold-solid);"></i> <span>SHARE</span>
-                            </div>
+                            <button class="share-action-btn" onclick="event.stopPropagation(); shareProduct('${pTitle.replace(/'/g, "\\'")}', window.location.origin + '/wholesale/pd.html?id=${productId}')">
+                                <i class="fa-solid fa-share-nodes" style="color: var(--gold-solid);"></i> SHARE
+                            </button>
                         </div>
                     </div>
                 `;
