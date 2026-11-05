@@ -35,6 +35,7 @@
             width: 100%; max-width: 100%; background: var(--bg-retail) !important; color: var(--text-white);
             font-family: var(--font-main); font-size: 14px; text-transform: uppercase !important;
             -webkit-font-smoothing: antialiased; overflow-x: hidden !important; position: relative;
+            scroll-behavior: smooth;
         }
 
         body { padding-bottom: 95px; }
@@ -42,40 +43,27 @@
         .ecommerce-main-wrapper {
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 15px 12px 60px 12px;
             display: flex; flex-direction: column; gap: 20px; overflow-x: hidden;
+            contain: layout style paint;
         }
         @media(min-width: 768px) {
             .ecommerce-main-wrapper { padding: 30px 30px 80px 30px; gap: 28px; }
         }
 
-        /* Affiliate Referral Generator Banner */
-        .affiliate-link-generator-box {
-            display: none; background: #0c0c14; border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 14px; padding: 12px 16px; flex-direction: column; gap: 8px;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.12);
-        }
-        .affiliate-link-generator-box.active { display: flex; }
-        .aff-top-info { display: flex; justify-content: space-between; align-items: center; }
-        .aff-title { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
-        .aff-id-tag { font-size: 0.65rem; color: #00e676; font-weight: 700; background: rgba(0, 230, 118, 0.1); padding: 2px 8px; border-radius: 6px; }
-        .aff-input-flex { display: flex; gap: 8px; width: 100%; }
-        .aff-link-input { flex: 1; background: #040407; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 8px 12px; color: #ffffff; font-size: 0.70rem; outline: none; font-family: var(--font-main); }
-        .aff-copy-btn { background: var(--gold-gradient); color: #000; border: none; font-weight: 800; font-size: 0.68rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
-
         .product-details-clean-section { 
             width: 100%; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;
+            max-width: 100%; overflow: hidden;
         }
         @media(min-width: 950px) {
             .product-details-clean-section { grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
         }
 
-        .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+        .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 14px; min-width: 0; overflow: hidden; }
 
         .media-viewport { 
             width: 100%; position: relative; border-radius: 16px; overflow: hidden; background: #050508; 
             display: flex; align-items: center; justify-content: center; min-height: 320px; 
             border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.3s ease;
         }
-        .media-viewport:hover { border-color: rgba(212, 175, 55, 0.5); }
         @media(min-width: 768px) { .media-viewport { min-height: 520px; } }
         
         .main-media-element { width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block; background: #000; }
@@ -92,22 +80,42 @@
         .thumb-item:hover { border-color: rgba(212, 175, 55, 0.5); }
         .thumb-item.active { border-color: var(--gold-solid); transform: scale(1.05); }
 
-        .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
+        .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; overflow: hidden; }
 
-        /* টাইটেলের ফিক্সড লাইন বা ক্যারেক্টার লিমিট সরিয়ে দেওয়া হয়েছে যাতে পুরো টাইটেল দেখায় */
-        .product-title-restricted { 
-            font-size: 1.25rem; font-weight: 800; color: #ffffff !important; letter-spacing: 0.8px; line-height: 1.35; 
-            width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        @media(min-width: 768px) { .product-title-restricted { font-size: 1.65rem; } }
-
-        .stock-shipping-banner, .price-discount-card, .qty-section-card, .seller-chat-full-btn, .product-info-section-box, .custom-note-section-box {
+        /* প্রাইস, ডিসকাউন্ট ও কোয়ান্টিটি কার্ড */
+        .price-discount-card { 
+            padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; 
             background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: border-color 0.25s ease;
+            flex-wrap: wrap;
         }
+        .price-left-stack { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+        
+        .int-discount-badge {
+            background: #ff2a85; color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 4px 10px;
+            border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; width: max-content;
+        }
+        .country-flag-icon { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
 
-        .stock-shipping-banner { padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .price-row-bottom { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+        .current-main-price {
+            font-size: 1.45rem; font-weight: 800; background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2;
+            word-break: break-all;
+        }
+        .old-crossed-price { font-size: 0.8rem; font-weight: 600; color: var(--text-gray); text-decoration: line-through; }
+
+        .price-right-qty { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+        .qty-label-mini { font-size: 0.60rem; font-weight: 700; color: var(--gold-solid); text-align: center; letter-spacing: 0.5px; }
+        .qty-controls-inline { display: flex; align-items: center; gap: 6px; background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 20px; padding: 3px 6px; }
+        .qty-btn-ch { 
+            background: var(--gold-gradient); border: none; color: #000; font-size: 0.85rem; font-weight: 800; 
+            width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; flex-shrink: 0; transition: transform 0.2s; 
+        }
+        .qty-btn-ch:active { transform: scale(0.92); }
+        .qty-num-input { font-size: 0.95rem; font-weight: 800; color: #ffffff; width: 35px; text-align: center; background: transparent; border: none; outline: none; }
+
+        .stock-shipping-banner { padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; width: 100%; background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04); }
         .free-shipping-text {
             font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px;
@@ -119,52 +127,41 @@
             content: ""; width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block;
         }
 
-        .price-discount-card { padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; width: 100%; }
-        .price-left-stack { display: flex; flex-direction: column; gap: 4px; }
-        .current-main-price {
-            font-size: 1.6rem; font-weight: 800; background: var(--gold-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2;
+        /* স্পেসিফিকেশন বক্স (টাইটেল, ডেসক্রিপশন, কাস্টম সাইজ নোট এবং ছোট চ্যাট উইথ সেলার বাটন সম্বলিত) */
+        .product-info-section-box { 
+            display: flex; flex-direction: column; gap: 14px; padding: 18px 20px; width: 100%; 
+            background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .old-crossed-price { font-size: 0.85rem; font-weight: 600; color: var(--text-gray); text-decoration: line-through; }
-
-        .price-right-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-        .int-discount-badge {
-            background: #ff2a85; color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 6px 12px;
-            border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;
+        .section-box-title { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
+        
+        /* অত্যন্ত প্রিমিয়াম, লাক্সারি এবং পরিপাটি টাইটেল ফন্ট স্টাইল (ক্যাজুয়াল বা অতিরিক্ত বোল্ড ভাব দূর করা হয়েছে) */
+        .product-title-restricted { 
+            font-size: 1.15rem; font-weight: 600; color: #ffffff !important; letter-spacing: 0.5px; line-height: 1.45; 
+            width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
+            font-family: var(--font-main);
         }
-        .country-flag-icon { width: 18px; height: 13px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
+        @media(min-width: 768px) { .product-title-restricted { font-size: 1.4rem; } }
 
-        .qty-section-card { display: flex; flex-direction: column; gap: 12px; padding: 16px 20px; width: 100%; }
-        .qty-label-mini { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); text-align: center; }
-        .qty-controls-flex { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .qty-btn-ch { 
-            background: var(--gold-gradient); border: none; color: #000; font-size: 1rem; font-weight: 800; 
-            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; flex-shrink: 0; transition: transform 0.2s; 
+        .standard-description-box { font-size: 0.75rem; color: var(--text-gray); line-height: 1.7; text-transform: none !important; word-break: break-word; }
+
+        .integrated-custom-note-group {
+            display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px;
         }
-        .qty-btn-ch:active { transform: scale(0.92); }
-        .qty-num-input { font-size: 1.1rem; font-weight: 800; color: #ffffff; width: 75px; text-align: center; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; outline: none; padding: 6px 0; }
-
-        .seller-chat-full-btn {
-            color: #ffffff; font-size: 0.75rem; font-weight: 700; padding: 16px 20px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.25s ease; width: 100%; background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .seller-chat-full-btn:hover { background: #12121c; }
-
-        .product-info-section-box { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; width: 100%; }
-        .section-box-title { font-size: 0.75rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 8px; }
-        .standard-description-box { font-size: 0.75rem; color: var(--text-gray); line-height: 1.6; text-transform: none !important; word-break: break-word; }
-
-        .custom-note-section-box { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; width: 100%; }
-        .custom-input-group { display: flex; gap: 10px; align-items: center; width: 100%; }
+        .integrated-note-label { font-size: 0.65rem; font-weight: 600; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
         .custom-note-input { 
-            flex: 1; min-width: 0; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; 
-            color: #ffffff; font-size: 0.75rem; outline: none; font-family: var(--font-main); text-transform: uppercase; 
+            width: 100%; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; 
+            color: #ffffff; font-size: 0.72rem; outline: none; font-family: var(--font-main); text-transform: uppercase; 
         }
-        .custom-save-btn {
-            background: var(--gold-gradient); color: #000; border: none; font-weight: 800; font-size: 0.72rem; 
-            padding: 14px 18px; border-radius: 12px; cursor: pointer; white-space: nowrap;
+
+        /* আরও সুন্দর এবং ছোট সাইজের চ্যাট উইথ সেলার বাটন */
+        .seller-chat-compact-btn {
+            color: var(--gold-solid); font-size: 0.68rem; font-weight: 700; padding: 10px 16px; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s ease; 
+            width: max-content; background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
+            margin-top: 2px;
         }
+        .seller-chat-compact-btn:hover { background: rgba(212, 175, 55, 0.18); transform: translateY(-1px); }
 
         /* --- Related Products Section (Pinterest Style Masonry Grid) --- */
         .related-products-wrapper {
@@ -181,6 +178,7 @@
             column-count: 2; 
             column-gap: 10px; 
             width: 100%;
+            will-change: transform;
         }
         @media (min-width: 768px) { 
             .feed-container { 
@@ -194,11 +192,14 @@
             display: inline-block; width: 100%; 
             border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
             margin-bottom: 10px; break-inside: avoid; page-break-inside: avoid;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            backface-visibility: hidden;
+            transform: translateZ(0);
         }
         .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
+        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; content-visibility: auto; }
+        
         .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
             background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
@@ -206,6 +207,7 @@
             font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
         }
         .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
+        
         .card-footer-actions { 
             display: flex; justify-content: space-between; align-items: center; padding: 10px; 
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto;
@@ -215,9 +217,14 @@
         .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
         .love-action i { color: var(--pink-love); }
         .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
-        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        
+        .share-icon-only-btn { 
+            background: none; border: none; font-size: 1rem; cursor: pointer; 
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            display: flex; align-items: center; justify-content: center; padding: 4px;
+        }
 
-        /* ফুটার বার */
+        /* ফুটার বার ও গোল্ডেন গ্রাডিয়েন্ট মেনু কালার */
         .fixed-bottom-checkout-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 16px; 
@@ -232,15 +239,28 @@
             border: none !important; padding: 6px 12px; transition: transform 0.2s ease; white-space: nowrap;
         }
         .footer-menu-item:hover { transform: translateY(-2px); }
-        .footer-menu-icon { font-size: 1.25rem; color: var(--gold-solid); }
-        .footer-menu-label { font-size: 0.62rem; font-weight: 700; color: #ffffff !important; letter-spacing: 0.5px; }
+        
+        .footer-menu-icon { 
+            font-size: 1.25rem; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        .footer-menu-label { 
+            font-size: 0.62rem; 
+            font-weight: 700; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            letter-spacing: 0.5px; 
+        }
 
         .footer-menu-item.order-now-highlight {
             background: var(--gold-gradient) !important; border-radius: 14px !important; padding: 12px 24px !important;
             transition: transform 0.2s ease;
         }
         .footer-menu-item.order-now-highlight:active { transform: scale(0.96); }
-        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; font-size: 0.75rem; font-weight: 800; }
+        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.75rem; font-weight: 800; background: none !important; }
 
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
@@ -256,24 +276,23 @@
             border: 1.5px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
         }
+
+        /* অটোমেটিক অ্যানিমেটেড ওয়েলকাম টেক্সট স্টাইল */
+        @keyframes welcomeFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animated-welcome-msg {
+            background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid);
+            font-weight: 600; max-width: 85%; animation: welcomeFadeIn 0.5s ease forwards;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
     </style>
 </head>
 <body>
 
     <div class="ecommerce-main-wrapper" id="mainStoreContainer">
         
-        <!-- Affiliate Referral Generator Banner -->
-        <div class="affiliate-link-generator-box" id="affiliateBannerBox">
-            <div class="aff-top-info">
-                <span class="aff-title"><i class="fa-solid fa-handshake"></i> AFFILIATE MARKETING LINK</span>
-                <span class="aff-id-tag" id="affiliateIdTag">ID: AFF-101</span>
-            </div>
-            <div class="aff-input-flex">
-                <input type="text" id="affiliateGeneratedLinkInput" class="aff-link-input" readonly value="">
-                <button type="button" class="aff-copy-btn" id="affCopyBtn" onclick="copyAffiliateLink()">COPY LINK</button>
-            </div>
-        </div>
-
         <div class="product-details-clean-section" id="productDetailsViewSection">
             <div class="product-left-col">
                 <div class="media-viewport" id="mediaViewportContainer">
@@ -286,16 +305,26 @@
             </div>
 
             <div class="product-right-col">
+                <!-- ডিসকাউন্ট, প্রাইস এবং কোয়ান্টিটি কার্ড -->
                 <div class="price-discount-card">
                     <div class="price-left-stack">
-                        <div class="current-main-price" id="activeProductPriceTag">$0.00</div>
-                        <div class="old-crossed-price" id="activeProductOldPriceTag">$0.00</div>
-                    </div>
-                    <div class="price-right-stack">
                         <span class="int-discount-badge" id="activeProductDiscountBadge">
                             <img id="activeProductFlagImg" class="country-flag-icon" src="https://flagcdn.com/w40/bd.png" alt="Country Flag">
                             <span id="activeDiscountText">35% OFF</span>
                         </span>
+                        <div class="price-row-bottom">
+                            <div class="current-main-price" id="activeProductPriceTag">$0.00</div>
+                            <div class="old-crossed-price" id="activeProductOldPriceTag">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="price-right-qty">
+                        <span class="qty-label-mini">QUANTITY</span>
+                        <div class="qty-controls-inline">
+                            <button class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
+                            <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" oninput="manualQuantityInput(this)">
+                            <button class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+                        </div>
                     </div>
                 </div>
 
@@ -304,35 +333,27 @@
                     <span class="in-stock-clean-badge" id="inStockBadgeLabel">IN STOCK - READY TO DISPATCH</span>
                 </div>
 
-                <!-- Quantities Container -->
-                <div class="qty-section-card">
-                    <span class="qty-label-mini">QUANTITY</span>
-                    <div class="qty-controls-flex">
-                        <button class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
-                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" oninput="manualQuantityInput(this)">
-                        <button class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
-                    </div>
-                </div>
-
-                <div>
-                    <button class="seller-chat-full-btn" onclick="toggleChatModal()">
-                        <i class="fa-solid fa-comments"></i> <span>CHAT WITH SELLER</span>
-                    </button>
-                </div>
-
+                <!-- সুসংহত স্পেসিফিকেশন ও বিবরণ বক্স -->
                 <div class="product-info-section-box">
-                    <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS</span>
+                    <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
+                    
                     <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING PRODUCT...</h1>
+                    
                     <div class="standard-description-box" id="unlimitedDescriptionContent">
                         Fetching ecosystem details from Cloudflare database...
                     </div>
-                </div>
 
-                <div class="custom-note-section-box">
-                    <span class="section-box-title"><i class="fa-solid fa-pen-to-square"></i> CUSTOM SIZE / NOTE</span>
-                    <div class="custom-input-group">
-                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM SIZE / NOTE..." value="" autocomplete="off">
-                        <button type="button" class="custom-save-btn" id="customSaveBtnElement" onclick="saveCustomSizeNote()">SAVE</button>
+                    <!-- কাস্টম সাইজ নোট ইনপুট বক্স -->
+                    <div class="integrated-custom-note-group">
+                        <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM SIZE / NOTE</span>
+                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM SIZE / NOTE (OPTIONAL)..." value="" autocomplete="off">
+                    </div>
+
+                    <!-- ছোট ও সুন্দর চ্যাট উইথ সেলার বাটন -->
+                    <div>
+                        <button class="seller-chat-compact-btn" onclick="toggleChatModal()">
+                            <i class="fa-solid fa-comments"></i> <span>CHAT WITH SELLER</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -373,20 +394,18 @@
         </a>
     </div>
 
-    <!-- চ্যাট মডাল -->
+    <!-- চ্যাট মডাল (শুধুমাত্র অ্যানিমেটেড ওয়েলকাম সহ) -->
     <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
         <div style="background:#0c0c12; border-radius:16px; padding:18px; max-width:400px; width:100%; display:flex; flex-direction:column; gap:12px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
-                <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">SUPPORT DESK</span>
+                <span style="font-size:0.72rem; font-weight:700; color:var(--gold-solid);">SELLER SUPPORT DESK</span>
                 <button onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
             </div>
-            <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-                <div style="background:#12121c; padding:8px 10px; border-radius:8px; font-size:0.68rem; color:#ffffff; max-width:85%;">
-                    Welcome to rorraxy retail support! How can we help you with your order?
-                </div>
+            <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                <div class="animated-welcome-msg">WELCOME</div>
             </div>
             <div style="display:flex; gap:8px;">
-                <input type="text" id="chatMessageInput" placeholder="TYPE MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:#ffffff; font-size:0.68rem; outline:none;">
+                <input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:#ffffff; font-size:0.68rem; outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
                 <button onclick="sendChatMessage()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 14px; border-radius:10px; font-weight:800; font-size:0.68rem; cursor:pointer;">SEND</button>
             </div>
         </div>
@@ -396,10 +415,8 @@
         const API_BASE_URL = '';
         let currentActiveProduct = null;
         let currentItemQuantity = 1;
-        let savedCustomNote = "";
 
         window.addEventListener('DOMContentLoaded', () => {
-            checkAffiliateSession();
             const urlParams = new URLSearchParams(window.location.search);
             const reqId = urlParams.get('id');
 
@@ -412,33 +429,18 @@
             updateCartBadgeCount();
         });
 
-        function checkAffiliateSession() {
-            const affiliateId = localStorage.getItem('affiliate_id') || new URLSearchParams(window.location.search).get('ref');
-            if (affiliateId) {
-                const banner = document.getElementById('affiliateBannerBox');
-                const affTag = document.getElementById('affiliateIdTag');
-                const linkInput = document.getElementById('affiliateGeneratedLinkInput');
-                
-                if (banner && linkInput) {
-                    affTag.innerText = `ID: ${affiliateId}`;
-                    linkInput.value = `${window.location.origin}/pd.html?id=${new URLSearchParams(window.location.search).get('id') || '101'}&ref=${affiliateId}`;
-                    banner.classList.add('active');
-                }
-            }
-        }
-
-        function copyAffiliateLink() {
-            const linkInput = document.getElementById('affiliateGeneratedLinkInput');
-            const copyBtn = document.getElementById('affCopyBtn');
-            if (linkInput && navigator.clipboard) {
-                navigator.clipboard.writeText(linkInput.value);
-                copyBtn.innerText = "COPIED ✓";
-                setTimeout(() => { copyBtn.innerText = "COPY LINK"; }, 2000);
-            }
-        }
-
         async function fetchProductDetailsFromCloudflareD1(productId) {
             try {
+                // সুপার ফাস্ট লোডিংয়ের জন্য মেমোরি ও ক্যাশ আগে চেক করা
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
+                let foundItem = [...localProducts, ...cachedFeed].find(p => String(p.id || p.product_id || p.product_code) === String(productId));
+                
+                if (foundItem) {
+                    renderProductDetails(foundItem);
+                    renderRelatedProducts([...localProducts, ...cachedFeed], foundItem);
+                }
+
                 const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
                 const result = await response.json();
                 let products = [];
@@ -448,8 +450,6 @@
                     products = result;
                 }
 
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
                 let mergedMap = new Map();
                 [...localProducts, ...cachedFeed, ...products].forEach(p => {
                     let pId = p.id || p.product_id || p.product_code || p.title;
@@ -465,9 +465,8 @@
                         return;
                     }
                 }
-                renderFallbackProductDetails(productId);
+                if (!foundItem) renderFallbackProductDetails(productId);
             } catch (err) {
-                console.error("Error fetching product details from Cloudflare:", err);
                 renderFallbackProductDetails(productId);
             }
         }
@@ -487,10 +486,8 @@
             renderRelatedProducts([sampleProduct], sampleProduct);
         }
 
-        // প্যাকিং লিস্ট এবং অনাকাঙ্ক্ষিত টেক্সট রিমুভ করার ফাংশন
         function cleanDescriptionText(text) {
             if (!text) return '';
-            // "Packing list:" থেকে শুরু করে পরবর্তী অংশ বা Product Image পর্যন্ত রিমুভ করা
             let cleaned = text.replace(/Packing\s*list\s*:[\s\S]*?(Product\s*Image\s*:?|$)/gi, '');
             cleaned = cleaned.replace(/Product\s*Image\s*:?/gi, '');
             return cleaned.trim();
@@ -505,7 +502,6 @@
             document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)}`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
             
-            // ডেসক্রিপশন প্রসেস করে প্যাকিং লিস্ট অংশ বাদ দেওয়া হচ্ছে
             let rawDesc = prod.description || prod.desc || "Crafted with precision engineering and high-grade sustainable materials.";
             document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
             
@@ -630,7 +626,7 @@
                     <div class="product-card" onclick="window.location.href='pd.html?id=${prodId}'">
                         <div class="product-media-box">
                             ${badgeDisplay}
-                            <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                            <img src="${imageUrl}" alt="${title}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
                             <span class="product-price-tag">${price}</span>
@@ -638,8 +634,8 @@
                                 <div class="love-action" onclick="toggleLove(event, this)">
                                     <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 124}</span>
                                 </div>
-                                <button class="share-action-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')">
-                                    <i class="fa-solid fa-share-nodes"></i> Share
+                                <button class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
+                                    <i class="fa-solid fa-share-nodes"></i>
                                 </button>
                             </div>
                         </div>
@@ -673,18 +669,6 @@
         function manualQuantityInput(input) {
             let val = parseInt(input.value);
             currentItemQuantity = (isNaN(val) || val < 1) ? 1 : val;
-        }
-
-        function saveCustomSizeNote() {
-            let inputVal = document.getElementById('customSizeInputField').value.trim();
-            savedCustomNote = inputVal !== "" ? inputVal : "STANDARD";
-            let saveBtn = document.getElementById('customSaveBtnElement');
-            saveBtn.innerText = "SAVED ✓";
-            saveBtn.classList.add('saved-success');
-            setTimeout(() => {
-                saveBtn.innerText = "SAVE";
-                saveBtn.classList.remove('saved-success');
-            }, 2000);
         }
 
         function playCoinDropChime() {
@@ -752,16 +736,18 @@
 
         function executeOrderNow(event) {
             if (!currentActiveProduct) return;
-            let chosenSize = savedCustomNote !== "" ? savedCustomNote : (document.getElementById('customSizeInputField').value.trim() || "STANDARD");
+            let inputVal = document.getElementById('customSizeInputField').value.trim();
+            let chosenSize = inputVal !== "" ? inputVal : "STANDARD";
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code;
             let existingItem = cart.find(item => item.productId === prodId && item.size === chosenSize);
             let priceNum = parseFloat(currentActiveProduct.price) || 0.00;
-            let primaryImgUrl = currentActiveProduct.image_url || currentActiveProduct.imageUrl || currentActiveProduct.img || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+            let primaryImgUrl = document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
 
             if(existingItem) {
                 existingItem.qty += currentItemQuantity;
+                existingItem.img = primaryImgUrl;
             } else {
                 cart.push({
                     productId: prodId,
@@ -796,8 +782,15 @@
             let box = document.getElementById('chatMessagesContainer');
             if(input.value.trim() !== "") {
                 box.innerHTML += `<div style="background:var(--gold-gradient); color:#000; padding:8px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end;">${input.value}</div>`;
+                let userMsg = input.value;
                 input.value = "";
                 box.scrollTop = box.scrollHeight;
+                
+                // সেলার ইনবক্সে বা ব্যাকএন্ডে বার্তা প্রেরণের সিমুলেশন
+                setTimeout(() => {
+                    box.innerHTML += `<div class="animated-welcome-msg" style="background:#1a1a2e; color:#00e676;">MESSAGE SENT TO SELLER ✓</div>`;
+                    box.scrollTop = box.scrollHeight;
+                }, 600);
             }
         }
 
@@ -823,7 +816,7 @@
                 await navigator.clipboard.writeText(shareUrl);
                 const btn = event.currentTarget;
                 const orig = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> COPIED!`;
+                btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
                 setTimeout(() => { btn.innerHTML = orig; }, 1500);
             }
         }
