@@ -1,4 +1,4 @@
-<!-- RORRAXY CJ HUB - Professional Smart Media Engine -->
+<!-- RORRAXY CJ HUB - Pure Video Master Edition -->
 <div class="cj-app-wrapper">
 
   <!-- 1. LINKS & VIDEO VIEW -->
@@ -7,7 +7,7 @@
       <div id="cjVideoListContainer">
         <div class="cj-empty-state">
           <span>🎬</span>
-          <p>Product video previews, media & URLs will appear here instantly.</p>
+          <p>Paste product link below. All available product videos will appear here.</p>
         </div>
       </div>
     </div>
@@ -16,7 +16,7 @@
     <div class="cj-bottom-input-bar">
       <div class="cj-input-group">
         <input type="text" id="cjInputPid" placeholder="Paste CJ Product Link or PID..." onfocus="this.select()">
-        <button type="button" onclick="fetchCJMediaData()" class="cj-action-btn">FETCH</button>
+        <button type="button" onclick="fetchCJVideoData()" class="cj-action-btn">FETCH</button>
       </div>
     </div>
   </div>
@@ -119,7 +119,7 @@
   }
 
   .cj-video-player {
-    width: 100%; max-height: 220px; border-radius: 8px;
+    width: 100%; max-height: 240px; border-radius: 8px;
     background: #000000; margin-bottom: 8px; object-fit: contain;
   }
 
@@ -192,7 +192,7 @@
     return cleanVal;
   }
 
-  async function fetchCJMediaData() {
+  async function fetchCJVideoData() {
     let inputField = document.getElementById('cjInputPid');
     let rawInput = inputField.value.trim();
     let container = document.getElementById('cjVideoListContainer');
@@ -200,7 +200,7 @@
     if (!rawInput) return;
 
     let cjProductId = parseCJUrlOrId(rawInput);
-    container.innerHTML = '<div class="cj-empty-state"><span>⏳</span>Fetching product media & videos...</div>';
+    container.innerHTML = '<div class="cj-empty-state"><span>⏳</span>Scanning product for videos...</div>';
 
     try {
       const res = await fetch('/api/import-cj', {
@@ -225,19 +225,28 @@
           </div>
         `;
 
-        // ২. ভিডিও স্ক্যানিং লজিক (একাধিক ভিডিও বা সিঙ্গেল ভিডিও হ্যান্ডেল করার জন্য)
+        // ২. ডিপ স্ক্যানিং ভিডিও লজিক (সিজে এপিআই থেকে যেকোনো উপায়ে আসা সব ভিডিও সংগ্রহ করা)
         let videos = [];
         if (result.data.videoUrl) videos.push(result.data.videoUrl);
         if (result.data.videosArray && Array.isArray(result.data.videosArray)) {
           videos = videos.concat(result.data.videosArray);
         }
-        videos = [...new Set(videos)];
+        
+        // যদি অন্য কোনো প্রপার্টিতে বা বর্ণনায় ভিডিও লিংক লুকিয়ে থাকে
+        if (result.data.description && typeof result.data.description === 'string') {
+          let urlMatches = result.data.description.match(/https?:\/\/[^\s"'<>]+?\.(mp4|webm|ogg)/gi);
+          if (urlMatches) {
+            videos = videos.concat(urlMatches);
+          }
+        }
+
+        videos = [...new Set(videos)]; // ডুপ্লিকেট রিমুভ
 
         if (videos.length > 0) {
           videos.forEach((vidUrl, index) => {
             htmlContent += `
               <div class="cj-single-video-card">
-                <span class="cj-label">VIDEO PREVIEW ${videos.length > 1 ? '#' + (index + 1) : ''}</span>
+                <span class="cj-label">PRODUCT VIDEO PREVIEW ${videos.length > 1 ? '#' + (index + 1) : ''}</span>
                 <video src="${vidUrl}" controls class="cj-video-player"></video>
                 <span class="cj-label">DIRECT MP4 VIDEO URL</span>
                 <div class="cj-input-group">
@@ -247,29 +256,11 @@
               </div>
             `;
           });
-        }
-
-        // ৩. প্রোডাক্টের সমস্ত গ্যালারি ছবি ও থাম্বনেইল রেন্ডার করা (ভিডিও না থাকলেও যাতে ছবিগুলো মিস না হয়)
-        if (result.data.imagesArray && result.data.imagesArray.length > 0) {
-          result.data.imagesArray.forEach((imgUrl, imgIdx) => {
-            htmlContent += `
-              <div class="cj-single-video-card">
-                <span class="cj-label">PRODUCT IMAGE #${imgIdx + 1}</span>
-                <img src="${imgUrl}" style="width:100%; max-height:200px; object-fit:contain; border-radius:8px; margin-bottom:8px; background:#000;">
-                <span class="cj-label">IMAGE URL</span>
-                <div class="cj-input-group">
-                  <input type="text" id="imgUrlField_${imgIdx}" readonly value="${imgUrl}">
-                  <button type="button" onclick="copyValue('imgUrlField_${imgIdx}', this)" class="cj-action-btn">COPY</button>
-                </div>
-              </div>
-            `;
-          });
-        }
-
-        if (videos.length === 0 && (!result.data.imagesArray || result.data.imagesArray.length === 0)) {
+        } else {
           htmlContent += `
-            <div class="cj-empty-state">
-              <p style="color: #ff2a85;">✕ No media or video streams found for this product ID.</p>
+            <div class="cj-single-video-card" style="text-align:center; padding: 30px;">
+              <span style="font-size: 1.8rem; display:block; margin-bottom:6px;">⚠️</span>
+              <p style="color: #ff2a85; font-size: 0.78rem; margin:0;">এই প্রোডাক্টটিতে সিজে ড্রপশিপিংয়ের কোনো অফিশিয়াল ভিডিও যুক্ত করা নেই।</p>
             </div>
           `;
         }
@@ -280,7 +271,7 @@
       } else {
         container.innerHTML = `
           <div class="cj-empty-state">
-            <p style="color: #ff2a85;">✕ No product data found. Please verify the link.</p>
+            <p style="color: #ff2a85;">✕ Product data could not be fetched.</p>
           </div>
         `;
       }
@@ -289,7 +280,7 @@
     }
   }
 
-  // কোনো পপআপ বা পারমিশন ছাড়াই ব্যাকগ্রাউন্ডে কপি করার ফাংশন
+  // পারমিশন বা অ্যালার্ট ছাড়াই সরাসরি ব্যাকগ্রাউন্ডে কপি করার ফাংশন
   function copyValue(elementId, btnElement) {
     let input = document.getElementById(elementId);
     if (!input || !input.value) return;
