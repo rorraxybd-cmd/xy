@@ -68,7 +68,6 @@ export async function onRequestPost(context) {
           }
         });
       } else if (typeof source === 'string') {
-        // যদি কমা সেপারেটেড বা স্পেস সেপারেটেড স্ট্রিং হয়
         if (source.includes(',')) {
           rawImages.push(...source.split(',').map(s => s.trim()));
         } else {
@@ -77,7 +76,6 @@ export async function onRequestPost(context) {
       }
     };
 
-    // সিজে এপিআই-এর বিভিন্ন সম্ভাব্য প্রপার্টি চেক করা
     extract(p.productImageList);
     extract(p.productImages);
     extract(p.materialImageList);
@@ -87,7 +85,6 @@ export async function onRequestPost(context) {
     extract(p.bigImage);
     extract(p.imageUrl);
     
-    // ভ্যারিয়েন্ট ইমেজগুলোও যুক্ত করা যাতে সব ছবি পাওয়া যায়
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
@@ -102,7 +99,7 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
+    imagesArray = [...new Set(imagesArray)];
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -121,10 +118,13 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ভিডিও লিংক
-    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
+    // ৫. ভিডিও লিংক নির্ভুলভাবে এক্সট্রাক্ট করার লজিক (আপডেট করা হয়েছে)
+    let videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || p.vedio || '';
+    if (!videoUrl && p.videos && Array.isArray(p.videos) && p.videos.length > 0) {
+      videoUrl = p.videos[0].url || p.videos[0].videoUrl || '';
+    }
 
-    // ৫. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা এবং সাইজ টেবিল বা ইনফো যুক্ত করা
+    // ৬. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা এবং সাইজ টেবিল বা ইনফো যুক্ত করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -133,16 +133,15 @@ export async function onRequestPost(context) {
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' : ')
-      .replace(/<[^>]+>/g, '')         // সমস্ত এইচটিএমএল ট্যাগ রিমোভ
-      .replace(/&nbsp;/g, ' ')         // নন-ব্র্রেকিং স্পেস ক্লিন করা
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
-      .replace(/\s\s+/g, ' ')          // অতিরিক্ত স্পেস দূর করা
-      .replace(/\n\s*\n/g, '\n\n')     // প্যারাগ্রাফ গুছিয়ে রাখা
+      .replace(/\s\s+/g, ' ')
+      .replace(/\n\s*\n/g, '\n\n')
       .trim();
 
-    // ডেসক্রিপশনের শুরুতে সাইজ বা ভ্যারিয়েন্ট ইনফো সুন্দরভাবে জুড়ে দেওয়া যাতে পিডিএফ বা স্টোরে দেখতে সুন্দর লাগে
     if (sizesList.length > 0) {
       cleanDescription = `AVAILABLE SIZES / OPTIONS:\n${sizesList.join(', ')}\n\n------------------------------------\n\n` + cleanDescription;
     }
@@ -163,7 +162,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৬. Save to D1 Database (মাল্টিপল ইমেজ JSON সহ পার্মানেন্ট সেভ)
+    // ৭. Save to D1 Database
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -192,7 +191,7 @@ export async function onRequestPost(context) {
       priceBulk,
       baseCost,
       mainImage,
-      imagesListJson, // সমস্ত ছবির অ্যারে JSON ফরম্যাটে সেভ হচ্ছে
+      imagesListJson,
       videoUrl,
       p.inventory || 500
     ).run();
