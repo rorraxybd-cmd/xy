@@ -237,23 +237,36 @@
             opacity: 1;
         }
 
+        /* ফুটার সেকশন এখন একদম পরিষ্কার এক লাইনে সাজানো */
         .card-footer-actions { 
-            display: flex; align-items: center; justify-content: space-between; padding: 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
+            display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; 
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: 0;
+            white-space: nowrap;
         }
         
-        .wholesale-info-stack { display: flex; flex-direction: column; align-items: flex-start; }
-        .product-price-tag { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
-        .moq-tag { font-size: 0.58rem; color: var(--text-gray); font-weight: 600; margin-top: 1px; }
+        .wholesale-info-stack { display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; }
+        .product-price-tag { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
+        .moq-tag { font-size: 0.55rem; color: var(--text-gray); font-weight: 600; margin-top: 2px; }
         
         .card-sub-actions { 
-            display: flex; align-items: center; gap: 10px; justify-content: flex-end; 
+            display: flex; align-items: center; gap: 8px; justify-content: flex-end; flex-shrink: 0;
         }
-        .love-action { display: flex; align-items: center; gap: 3px; cursor: pointer; font-size: 0.68rem; font-weight: 500; color: var(--text-gray) !important; }
-        .love-action i { color: var(--pink-love); }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
         
-        .share-action-btn { background: none; border: none; font-size: 0.68rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        /* আরও সুন্দর এবং বড় লাইক বাটন */
+        .love-action { 
+            display: flex; align-items: center; gap: 4px; cursor: pointer; 
+            font-size: 0.72rem; font-weight: 600; color: var(--text-gray) !important; 
+            padding: 2px 4px;
+        }
+        .love-action i { color: var(--pink-love); font-size: 0.85rem; }
+        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* আইকন ছাড়া শুধুমাত্র সুন্দর টেক্সট শেয়ার বাটন */
+        .share-action-btn { 
+            background: none; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; 
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            text-transform: uppercase; padding: 2px 2px;
+        }
 
         nav.bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-wholesale);
@@ -549,7 +562,7 @@
             wholesaleProducts.forEach(p => {
                 const pTitle = p.title || 'WHOLESALE ITEM';
                 const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
-                const moq = p.moq || 1; // ডিফল্ট মিনিমাম ১ পিস স্যাম্পল/হোলসেল
+                const moq = p.moq || 1; // সেলারের কনফিগার করা মিনিমাম পিস (যেমন ১ পিস বা ২ পিস)
                 
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 
@@ -612,7 +625,7 @@
                                 <i class="fa-solid fa-heart"></i> <span>LIKE</span>
                             </div>
                             <button class="share-action-btn" onclick="event.stopPropagation(); shareProduct('${pTitle.replace(/'/g, "\\'")}', window.location.origin + '/wholesale/pd.html?id=${productId}')">
-                                <i class="fa-solid fa-share-nodes" style="color: var(--gold-solid);"></i> SHARE
+                                SHARE
                             </button>
                         </div>
                     </div>
