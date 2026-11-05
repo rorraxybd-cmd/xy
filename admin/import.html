@@ -32,6 +32,9 @@
         <div id="previewTitle" style="font-size: 0.72rem; color: var(--text-white); font-weight: 600; margin-bottom: 8px; line-height: 1.3;"></div>
         <div id="previewPrice" style="font-size: 0.65rem; color: var(--text-gray); margin-bottom: 8px;"></div>
         
+        <!-- সাইজ ও ভ্যারিয়েন্ট ইনফো -->
+        <div id="previewSizes" style="font-size: 0.62rem; color: #00ff80; margin-bottom: 8px; font-weight: 600;"></div>
+
         <!-- ছোট ছোট থাম্বনেইল গ্যালারি -->
         <div style="font-size: 0.62rem; font-weight: 700; color: var(--text-gray); margin-bottom: 4px;">GALLERY IMAGES:</div>
         <div id="previewImagesGrid" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; max-height: 75px;"></div>
@@ -216,6 +219,7 @@
     const previewBox = document.getElementById('productPreviewBox');
     const previewTitle = document.getElementById('previewTitle');
     const previewPrice = document.getElementById('previewPrice');
+    const previewSizes = document.getElementById('previewSizes');
     const previewImagesGrid = document.getElementById('previewImagesGrid');
     const previewVideoContainer = document.getElementById('previewVideoContainer');
     const previewBtn = document.getElementById('previewBtn');
@@ -223,6 +227,7 @@
     previewBox.style.display = 'block';
     previewTitle.innerHTML = 'Loading product details from CJ...';
     previewPrice.innerHTML = '';
+    previewSizes.innerHTML = '';
     previewImagesGrid.innerHTML = '';
     previewVideoContainer.innerHTML = '';
     previewBtn.disabled = true;
@@ -244,8 +249,14 @@
 
       if (result.success) {
         previewTitle.innerHTML = result.data.title;
-        previewPrice.innerHTML = `Retail Price: <strong>$${result.data.retailPrice}</strong> | Sample Price: <strong>$${result.data.priceSample}</strong> | Total Images: <strong>${result.imagesArray ? result.imagesArray.length : 'Multiple'}</strong>`;
+        previewPrice.innerHTML = `Retail Price: <strong>$${result.data.retailPrice}</strong> | Sample Price: <strong>$${result.data.priceSample}</strong> | Total Images: <strong>${result.imagesArray ? result.imagesArray.length : 0}</strong>`;
         
+        if (result.data.sizes && result.data.sizes.length > 0) {
+          previewSizes.innerHTML = `Available Sizes / Variants: ${result.data.sizes.join(', ')}`;
+        } else {
+          previewSizes.innerHTML = `Available Sizes: Standard / Free Size`;
+        }
+
         // ছবিগুলোর ছোট ছোট থাম্বনেইল রেন্ডার করা
         if (result.imagesArray && Array.isArray(result.imagesArray)) {
           result.imagesArray.forEach(imgUrl => {
@@ -314,7 +325,7 @@
         statusDiv.style.color = '#00ff80';
         statusDiv.innerHTML = `✓ ${result.message}<br><br>
           <strong>Product:</strong> ${result.data.title}<br>
-          <strong>Images Count:</strong> ${result.data.imagesCount || 'Multiple'} Images Synced<br>
+          <strong>Images Count:</strong> ${result.data.imagesCount || 0} Images Synced<br>
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}`;
         document.getElementById('cjImportForm').reset();
