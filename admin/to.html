@@ -1,7 +1,7 @@
-<!-- RORRAXY CJ HUB - 3-Icon Clean Master Edition -->
+<!-- RORRAXY CJ HUB - Video Master Edition -->
 <div class="cj-app-wrapper">
 
-  <!-- 1. LINKS & VIDEO VIEW (Default Active) -->
+  <!-- 1. LINKS & VIDEO VIEW -->
   <div id="tabVideoLinks" class="cj-tab-view active-tab">
     <div class="cj-view-scroll-content">
       <div id="cjVideoListContainer">
@@ -26,19 +26,16 @@
     <iframe src="/admin/import.html" class="cj-full-iframe"></iframe>
   </div>
 
-  <!-- 3. BOTTOM 3-ICON NAVIGATION BAR (Larger Icons, Pure Black Background) -->
+  <!-- 3. BOTTOM 3-ICON NAVIGATION BAR -->
   <nav class="cj-bottom-nav">
-    <!-- Icon 1: CJ Site -->
     <div class="cj-nav-item" onclick="openCjSite()" title="CJ Site">
       <span class="cj-icon">🛍️</span>
     </div>
     
-    <!-- Icon 2: Links & Video -->
     <div class="cj-nav-item active" id="nav-video" onclick="switchTab('video')" title="Links & Video">
       <span class="cj-icon">🎬</span>
     </div>
     
-    <!-- Icon 3: Import Page -->
     <div class="cj-nav-item" id="nav-import" onclick="switchTab('import')" title="Import Page">
       <span class="cj-icon">⚡</span>
     </div>
@@ -69,7 +66,6 @@
     position: relative; overflow: hidden;
   }
 
-  /* TAB VIEWS */
   .cj-tab-view {
     position: absolute; top: 0; left: 0; right: 0; bottom: 65px;
     display: none; width: 100%; height: calc(100% - 65px);
@@ -81,14 +77,12 @@
     width: 100%; height: 100%; border: none; background: #ffffff;
   }
 
-  /* SCROLLABLE MAIN CONTENT */
   .cj-view-scroll-content {
     flex: 1; padding: 16px; overflow-y: auto;
     max-width: 650px; margin: 0 auto; width: 100%;
     padding-bottom: 90px;
   }
 
-  /* FIXED BOTTOM INPUT BAR */
   .cj-bottom-input-bar {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: #000000; border-top: 1px solid #000000;
@@ -134,7 +128,6 @@
   }
   .cj-empty-state span { font-size: 2.2rem; display: block; margin-bottom: 8px; }
 
-  /* BOTTOM 3-ICON NAVIGATION BAR (Larger Icons, Pure Black) */
   .cj-bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
     background: #000000; border-top: 1px solid #000000;
@@ -180,55 +173,115 @@
     }
   }
 
+  function parseCJUrlOrId(rawInput) {
+    let cleanVal = rawInput.trim();
+    if (!cleanVal) return null;
+
+    if (/^[0-9a-zA-Z]{15,}$/.test(cleanVal)) {
+      return cleanVal;
+    }
+
+    let match = cleanVal.match(/[?&]pid=([0-9a-zA-Z]{10,})/) ||
+                cleanVal.match(/\/(?:productDetails|detail|product)\/([0-9a-zA-Z]{10,})/) ||
+                cleanVal.match(/-([0-9a-zA-Z]{15,})\.html/) ||
+                cleanVal.match(/([0-9a-zA-Z]{15,})/);
+
+    if (match && match[1]) {
+      return match[1];
+    }
+    return cleanVal;
+  }
+
   async function fetchCJMediaData() {
-    let inputVal = document.getElementById('cjInputPid').value.trim();
+    let rawInput = document.getElementById('cjInputPid').value.trim();
     let container = document.getElementById('cjVideoListContainer');
 
-    if (!inputVal) {
+    if (!rawInput) {
       alert("Please enter CJ product URL or PID.");
       return;
     }
 
-    let cjProductId = inputVal;
-    if (!/^[0-9a-zA-Z]{15,}$/.test(inputVal)) {
-      let match = inputVal.match(/pid=([0-9a-zA-Z]{15,})/) || 
-                  inputVal.match(/(?:productDetails|detail|product-detail)\/([0-9a-zA-Z]{15,})/) ||
-                  inputVal.match(/([0-9a-zA-Z]{15,})/);
-      if (match && match[1]) cjProductId = match[1];
-    }
-
+    let cjProductId = parseCJUrlOrId(rawInput);
     container.innerHTML = '<div class="cj-empty-state"><span>⏳</span>Fetching video & links...</div>';
 
     try {
       const res = await fetch('/api/import-cj', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cjProductId, previewOnly: true })
+        body: JSON.stringify({ cjProductId, rawUrl: rawInput, previewOnly: true })
       });
 
       const result = await res.json();
 
-      if (result.success && result.data.videoUrl) {
-        container.innerHTML = `
+      if (result.success && result.data) {
+        let htmlContent = '';
+        let foundAnyMedia = false;
+
+        // ১. প্রোডাক্ট ডিটেইলস লিংক
+        let productLink = result.data.productUrl || `https://cjdropshipping.com/product/detail/${cjProductId}`;
+        htmlContent += `
           <div class="cj-single-video-card">
-            <span class="cj-label">VIDEO PREVIEW</span>
-            <video src="${result.data.videoUrl}" controls class="cj-video-player"></video>
-            <span class="cj-label">DIRECT MP4 VIDEO URL</span>
+            <span class="cj-label">PRODUCT DETAIL LINK</span>
             <div class="cj-input-group">
-              <input type="text" id="vidUrlField_0" readonly value="${result.data.videoUrl}">
-              <button type="button" onclick="copyValue('vidUrlField_0')" class="cj-action-btn">COPY</button>
+              <input type="text" id="finalProdUrl" readonly value="${productLink}">
+              <button type="button" onclick="copyValue('finalProdUrl')" class="cj-action-btn">COPY</button>
             </div>
           </div>
         `;
+
+        // ২. মূল ভিডিও বা একাধিক ভিডিও থাকলে সেগুলোর প্রিভিউ ও লিংক রেন্ডার করা
+        let videos = [];
+        if (result.data.videoUrl) videos.push(result.data.videoUrl);
+        if (result.data.videosArray && Array.isArray(result.data.videosArray)) {
+          videos = videos.concat(result.data.videosArray);
+        }
+        // ইউনিক ভিডিও লিংক ফিল্টার
+        videos = [...new Set(videos)];
+
+        if (videos.length > 0) {
+          foundAnyMedia = true;
+          videos.forEach((vidUrl, index) => {
+            htmlContent += `
+              <div class="cj-single-video-card">
+                <span class="cj-label">VIDEO PREVIEW ${videos.length > 1 ? '#' + (index + 1) : ''}</span>
+                <video src="${vidUrl}" controls class="cj-video-player"></video>
+                <span class="cj-label">DIRECT MP4 VIDEO URL</span>
+                <div class="cj-input-group">
+                  <input type="text" id="vidUrlField_${index}" readonly value="${vidUrl}">
+                  <button type="button" onclick="copyValue('vidUrlField_${index}')" class="cj-action-btn">COPY</button>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        // ৩. যদি ভিডিও না থাকে, তবে প্রোডাক্টের মূল থাম্বনেইল ছবি দেখাবে
+        if (!foundAnyMedia && result.data.imagesArray && result.data.imagesArray.length > 0) {
+          let mainImg = result.data.imagesArray[0];
+          htmlContent += `
+            <div class="cj-single-video-card">
+              <span class="cj-label" style="color:#ff2a85;">NO VIDEO FOUND - SHOWING THUMBNAIL</span>
+              <img src="${mainImg}" style="width:100%; max-height:200px; object-fit:contain; border-radius:8px; margin-bottom:8px; background:#000;">
+              <span class="cj-label">THUMBNAIL IMAGE URL</span>
+              <div class="cj-input-group">
+                <input type="text" id="imgUrlField_0" readonly value="${mainImg}">
+                <button type="button" onclick="copyValue('imgUrlField_0')" class="cj-action-btn">COPY</button>
+              </div>
+            </div>
+          `;
+        }
+
+        container.innerHTML = htmlContent;
+
       } else {
         container.innerHTML = `
           <div class="cj-empty-state">
-            <p style="color: #ff2a85;">No direct MP4 video stream found for this product.</p>
+            <p style="color: #ff2a85;">✕ No product data found. Please check the link.</p>
           </div>
         `;
       }
     } catch (err) {
-      container.innerHTML = `<div class="cj-empty-state" style="color: #ff2a85;">Error: ${err.message}</div>`;
+      container.innerHTML = `<div class="cj-empty-state" style="color: #ff2a85;">✕ Error: ${err.message}</div>`;
     }
   }
 
