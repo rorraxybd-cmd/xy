@@ -11,7 +11,7 @@ export async function onRequestPost(context) {
       });
     }
 
-    // ১. CJ Access Token
+    // ১. CJ Access Token সংগ্রহ
     const tokenRes = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -99,7 +99,7 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)];
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট ফিল্টার
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -118,13 +118,29 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও লিংক নির্ভুলভাবে এক্সট্রাক্ট করার লজিক (আপডেট করা হয়েছে)
-    let videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || p.vedio || '';
-    if (!videoUrl && p.videos && Array.isArray(p.videos) && p.videos.length > 0) {
-      videoUrl = p.videos[0].url || p.videos[0].videoUrl || '';
+    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক (সব ফিল্ড ডিটেক্ট করবে)
+    let videoUrl = '';
+    
+    if (p.productVideo) videoUrl = p.productVideo;
+    else if (p.video) videoUrl = p.video;
+    else if (p.videoUrl) videoUrl = p.videoUrl;
+    else if (p.materialVideo) videoUrl = p.materialVideo;
+    else if (p.vedio) videoUrl = p.vedio;
+    
+    // ভিডিও যদি অ্যারে বা নেস্টেড অবজেক্ট আকারে থাকে
+    if (!videoUrl && p.videos) {
+      if (Array.isArray(p.videos) && p.videos.length > 0) {
+        videoUrl = p.videos[0].url || p.videos[0].videoUrl || p.videos[0].path || '';
+      } else if (typeof p.videos === 'string') {
+        videoUrl = p.videos;
+      }
+    }
+    
+    if (!videoUrl && p.productVo && p.productVo.productVideo) {
+      videoUrl = p.productVo.productVideo;
     }
 
-    // ৬. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা এবং সাইজ টেবিল বা ইনফো যুক্ত করা
+    // ৬. ডেসক্রিপশন পরিষ্কার ও সুন্দরভাবে ফরম্যাট করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -146,7 +162,7 @@ export async function onRequestPost(context) {
       cleanDescription = `AVAILABLE SIZES / OPTIONS:\n${sizesList.join(', ')}\n\n------------------------------------\n\n` + cleanDescription;
     }
 
-    // শুধু প্রিভিউ মোডের জন্য ডেটা রিটার্ন করা
+    // প্রিভিউ মোডের জন্য রেসপন্স
     if (previewOnly) {
       return new Response(JSON.stringify({ 
         success: true, 
@@ -162,7 +178,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database
+    // ৭. Save to D1 Database (সকল ইমেজ JSON ও ভিডিও সহ সেভ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
