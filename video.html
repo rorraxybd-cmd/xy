@@ -65,7 +65,7 @@
                 });
             }
 
-            // 2. CATEGORY Toggle (Super Fast Instant Response)
+            // 2. CATEGORY Toggle (Zero Lag Instant Open)
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', () => {
                     const isVisible = categoryTransparentOverlay.style.display === 'flex';
@@ -264,7 +264,7 @@
             document.getElementById('floatingSearchContainer').style.display = 'none';
         };
 
-        // Super Fast Instant Category Filtering
+        // Instant Lightning Fast Category Filter
         window.filterReelsByCategory = function(queryKey) {
             document.getElementById('categoryTransparentOverlay').style.display = 'none';
             let query = queryKey.toLowerCase().replace(/-/g, ' ');
@@ -354,12 +354,26 @@
             renderBatchVideos();
         };
 
-        // Instant Accordion Toggle without delay
+        // Zero-Lag Instant Accordion Toggle (Display show/hide instead of height animation)
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
+            const content = targetBox.querySelector('.accordion-content');
             const isOpen = targetBox.classList.contains('active');
-            document.querySelectorAll('.accordion-category-box').forEach(box => box.classList.remove('active'));
-            if (!isOpen) targetBox.classList.add('active');
+
+            // Close all others instantly
+            document.querySelectorAll('.accordion-category-box').forEach(box => {
+                box.classList.remove('active');
+                let c = box.querySelector('.accordion-content');
+                if(c) c.style.display = 'none';
+            });
+
+            // Toggle target instantly
+            if (!isOpen) {
+                targetBox.classList.add('active');
+                if(content) content.style.display = 'block';
+            } else {
+                if(content) content.style.display = 'none';
+            }
         }
 
         window.scrollVideo = function(direction) {
@@ -602,37 +616,39 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Super Fast & Crystal Clear Transparent Background Overlay (Zero background color, Zero blur outside buttons) */
+        /* Transparent Overlay with Instant Open */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
             z-index: 3000; overflow-y: auto; overflow-x: hidden; flex-direction: column; align-items: center;
             padding: 25px 15px 85px 15px;
-            transition: none !important;
         }
         .seller-fullscreen-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; position: relative; }
         
         .category-fullscreen-view { padding: 10px; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
-        /* Glassmorphism strictly on individual category buttons so background video is 100% visible and clear */
-        .accordion-category-box { background: rgba(5, 5, 8, 0.82) !important; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
+        /* Glassmorphism on category boxes with zero delay show/hide */
+        .accordion-category-box { background: rgba(5, 5, 8, 0.88) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
         .accordion-main-title { font-size: 0.9rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
         .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; background: transparent !important; padding: 0 10px; }
-        .accordion-category-box.active .accordion-content { max-height: 1200px; transition: max-height 0.3s ease-in; padding: 6px 10px 12px 10px; }
+        
+        /* Instant Display Logic */
+        .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
+        .accordion-category-box.active .accordion-content { display: block; }
         
         .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .sub-cat-item {
-            background: rgba(12, 12, 18, 0.9); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s ease; border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(12, 12, 18, 0.92); border-radius: 8px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
         }
-        .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); transform: translateY(-1px); }
+        .sub-cat-item:active { transform: scale(0.96); }
+        .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
@@ -703,7 +719,7 @@
     <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
-    <!-- Completely Transparent Category Overlay Menu (Clear background with crystal buttons) -->
+    <!-- Completely Transparent Category Overlay Menu (Instant Fast Response) -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
