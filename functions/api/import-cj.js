@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. নির্ভুল মাল্টিপল ইমেজ এক্সট্রাকশন লজিক
+    // ৪. সমস্ত গ্যালারি ও ভ্যারিয়েন্ট ইমেজ শতভাগ কালেকশন করার নিখুঁত লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -64,7 +64,10 @@ export async function onRequestPost(context) {
           if (typeof item === 'string') {
             rawImages.push(item);
           } else if (item && typeof item === 'object') {
-            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path || item.variantImage);
+            rawImages.push(
+              item.imageUrl || item.url || item.imgUrl || item.path || 
+              item.variantImage || item.imageUrlList || item.image || item.img
+            );
           }
         });
       } else if (typeof source === 'string') {
@@ -84,10 +87,13 @@ export async function onRequestPost(context) {
     extract(p.productImage);
     extract(p.bigImage);
     extract(p.imageUrl);
+    extract(p.images);
+    extract(p.galleryImages);
     
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
+        if (v.imageUrl) rawImages.push(v.imageUrl);
       });
     }
 
@@ -99,7 +105,7 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট ফিল্টার
+    imagesArray = [...new Set(imagesArray)];
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -118,7 +124,7 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক (ম্যানুয়াল ইনপুট থাকলে তা অগ্রাধিকার পাবে)
+    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক
     let videoUrl = (manualVideoUrl && typeof manualVideoUrl === 'string') ? manualVideoUrl.trim() : '';
     
     if (!videoUrl) {
@@ -179,7 +185,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database (সকল ইমেজ JSON ও ভিডিও সহ সেভ)
+    // ৭. Save to D1 Database[cite: 5]
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -215,7 +221,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",[cite: 5]
       data: { 
         title: p.productNameEn, 
         retailPrice, 
@@ -234,3 +240,6 @@ export async function onRequestPost(context) {
     });
   }
 }
+```[cite: 5, 12]
+
+এই কোডটি আপনার `functions/api/import-cj.js` ফাইলে হুবহু বসিয়ে সেভ করুন।
