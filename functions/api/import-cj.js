@@ -168,7 +168,7 @@ export async function onRequestPost(context) {
       } catch (e) {}
     }
 
-    // ৬. ডেসক্রিপশন নিখুঁতভাবে পরিষ্কার ও ঝকঝকে ফরম্যাট করা (প্যাকিং লিস্ট বা অপ্রয়োজনীয় টেক্সট বাদ দিয়ে)
+    // ৬. ডেসক্রিপশন নিখুঁতভাবে পরিষ্কার ও ঝকঝকে ফরম্যাট করা (শেষে আসা সমস্ত বাজে টেক্সট রিমুভ)
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
       .replace(/<img[^>]*>/gi, '') // ব্রোকেন ইমেজ ট্যাগ রিমুভ
@@ -183,11 +183,11 @@ export async function onRequestPost(context) {
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
-      // নিচে থেকে সমস্ত অপ্রয়োজনীয় প্যাকেজিং ও ইমেজ লিস্ট স্বয়ংক্রিয়ভাবে ফিল্টার করে বাদ দেওয়া হলো
-      .replace(/Packing list:.*?$/gim, '')
-      .replace(/Product Image:.*?$/gim, '')
-      .replace(/Package List:.*?$/gim, '')
-      .replace(/1\*T-shirt Product Image:.*?$/gim, '')
+      // ডেসক্রিপশনের শেষের সমস্ত ধরনের Packing list, Dress *1, Product Image ইত্যাদি ডাইনামিক্যালি রিমুভ করার লজিক
+      .replace(/(?:Packing list|Package list|Packing List|Package List)[\s\S]*$/gim, '')
+      .replace(/(?:[a-zA-Z0-9\s*-]+\s*)?\*1\s*Product Image:?/gim, '')
+      .replace(/Product Image:?/gim, '')
+      .replace(/(?:Dress|T-shirt|Pants|Shirt|Top|Shoes|Bag|Hoodie)\s*\*[0-9]+/gim, '')
       .replace(/\s\s+/g, ' ')
       .replace(/\n\s*\n/g, '\n\n')
       .trim();
@@ -222,7 +222,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database (সকল তথ্য সহ সেভ)
+    // ৭. Save to D1 Database (সকল তথ্য সহ সেভ)[cite: 5]
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -258,7 +258,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",[cite: 5]
       data: { 
         title: productTitle, 
         retailPrice, 
@@ -277,3 +277,4 @@ export async function onRequestPost(context) {
     });
   }
 }
+```[cite: 5]
