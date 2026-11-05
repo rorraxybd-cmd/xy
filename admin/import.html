@@ -26,11 +26,17 @@
         <button type="button" id="previewBtn" onclick="fetchProductPreview()" class="cj-btn-secondary" style="height: 41px; background: rgba(212, 175, 55, 0.25); color: var(--gold-solid);">PREVIEW</button>
       </div>
 
-      <!-- লাইভ প্রিভিউ সেクション -->
+      <!-- লাইভ থাম্বনেইল প্রিভিউ বক্স -->
       <div id="productPreviewBox" style="display: none; background: #040406; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
-        <div style="font-size: 0.68rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 8px; text-transform: uppercase;">Product Preview</div>
-        <div id="previewContent" style="font-size: 0.7rem; color: var(--text-white); line-height: 1.4;"></div>
-        <div id="previewImagesGrid" style="display: flex; gap: 6px; overflow-x: auto; margin-top: 10px; padding-bottom: 4px;"></div>
+        <div style="font-size: 0.68rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 6px; text-transform: uppercase;">Product Preview</div>
+        <div id="previewTitle" style="font-size: 0.72rem; color: var(--text-white); font-weight: 600; margin-bottom: 8px; line-height: 1.3;"></div>
+        <div id="previewPrice" style="font-size: 0.65rem; color: var(--text-gray); margin-bottom: 8px;"></div>
+        
+        <!-- ছোট ছোট থাম্বনেইল গ্যালারি -->
+        <div style="font-size: 0.62rem; font-weight: 700; color: var(--text-gray); margin-bottom: 4px;">GALLERY IMAGES:</div>
+        <div id="previewImagesGrid" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; max-height: 75px;"></div>
+        
+        <!-- ভিডিও প্রিভিউ সেকশন -->
         <div id="previewVideoContainer" style="margin-top: 8px;"></div>
       </div>
 
@@ -199,7 +205,7 @@
     }, 1000);
   }
 
-  // নতুন প্রিভিউ ফাংশন
+  // থাম্বনেইল সহ লাইভ প্রিভিউ ফেচ করার ফাংশন
   async function fetchProductPreview() {
     let cjProductId = document.getElementById('cjProductId').value.trim();
     if (!cjProductId) {
@@ -208,19 +214,20 @@
     }
 
     const previewBox = document.getElementById('productPreviewBox');
-    const previewContent = document.getElementById('previewContent');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewPrice = document.getElementById('previewPrice');
     const previewImagesGrid = document.getElementById('previewImagesGrid');
     const previewVideoContainer = document.getElementById('previewVideoContainer');
     const previewBtn = document.getElementById('previewBtn');
 
     previewBox.style.display = 'block';
-    previewContent.innerHTML = 'Loading preview from CJ...';
+    previewTitle.innerHTML = 'Loading product details from CJ...';
+    previewPrice.innerHTML = '';
     previewImagesGrid.innerHTML = '';
     previewVideoContainer.innerHTML = '';
     previewBtn.disabled = true;
 
     try {
-      // ব্যাকএন্ডে একটি প্রিভিউ এন্ডপইন্ট বা সেইম API কল করা যেতে পারে (অথবা ইমপোর্ট এপিআই)
       const res = await fetch('/api/import-cj', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -229,21 +236,43 @@
           retailMargin: document.getElementById('retailMargin').value, 
           shippingCushion: document.getElementById('shippingCushion').value, 
           wholesaleMargin: document.getElementById('wholesaleMargin').value,
-          previewOnly: true // প্রিভিউ মোড চাইলে ব্যাকএন্ডে হ্যান্ডেল করতে পারেন
+          previewOnly: true 
         })
       });
       
       const result = await res.json();
 
       if (result.success) {
-        previewContent.innerHTML = `<strong>Title:</strong> ${result.data.title}<br><strong>Retail Price:</strong> $${result.data.retailPrice} | <strong>Images:</strong> ${result.data.imagesCount}`;
+        previewTitle.innerHTML = result.data.title;
+        previewPrice.innerHTML = `Retail Price: <strong>$${result.data.retailPrice}</strong> | Sample Price: <strong>$${result.data.priceSample}</strong> | Total Images: <strong>${result.imagesArray ? result.imagesArray.length : 'Multiple'}</strong>`;
         
-        // এখানে সফলভাবে ডেটা শো করবে
+        // ছবিগুলোর ছোট ছোট থাম্বনেইল রেন্ডার করা
+        if (result.imagesArray && Array.isArray(result.imagesArray)) {
+          result.imagesArray.forEach(imgUrl => {
+            let img = document.createElement('img');
+            img.src = imgUrl;
+            img.style.width = '55px';
+            img.style.height = '55px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '6px';
+            img.style.border = '1px solid rgba(212, 175, 55, 0.3)';
+            previewImagesGrid.appendChild(img);
+          });
+        }
+
+        // ভিডিও থাকলে থাম্বনেইল বা ভিডিও প্লেয়ার দেখানো
+        if (result.videoUrl) {
+          previewVideoContainer.innerHTML = `<div style="font-size: 0.62rem; font-weight: 700; color: #00ff80; margin-bottom: 4px;">✓ VIDEO AVAILABLE</div>
+            <video src="${result.videoUrl}" controls style="width: 100%; max-height: 120px; border-radius: 6px; background: #000;"></video>`;
+        } else {
+          previewVideoContainer.innerHTML = `<div style="font-size: 0.6rem; color: var(--text-gray);">No video available for this product.</div>`;
+        }
+
       } else {
-        previewContent.innerHTML = `<span style="color: var(--pink-love);">Error: ${result.error}</span>`;
+        previewTitle.innerHTML = `<span style="color: var(--pink-love);">Error: ${result.error}</span>`;
       }
     } catch (err) {
-      previewContent.innerHTML = `<span style="color: var(--pink-love);">Preview Failed: ${err.message}</span>`;
+      previewTitle.innerHTML = `<span style="color: var(--pink-love);">Preview Failed: ${err.message}</span>`;
     } finally {
       previewBtn.disabled = false;
     }
