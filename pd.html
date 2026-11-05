@@ -94,9 +94,10 @@
 
         .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
 
+        /* টাইটেলের ফিক্সড লাইন বা ক্যারেক্টার লিমিট সরিয়ে দেওয়া হয়েছে যাতে পুরো টাইটেল দেখায় */
         .product-title-restricted { 
             font-size: 1.25rem; font-weight: 800; color: #ffffff !important; letter-spacing: 0.8px; line-height: 1.35; 
-            width: 100%; word-break: break-word; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @media(min-width: 768px) { .product-title-restricted { font-size: 1.65rem; } }
@@ -486,6 +487,15 @@
             renderRelatedProducts([sampleProduct], sampleProduct);
         }
 
+        // প্যাকিং লিস্ট এবং অনাকাঙ্ক্ষিত টেক্সট রিমুভ করার ফাংশন
+        function cleanDescriptionText(text) {
+            if (!text) return '';
+            // "Packing list:" থেকে শুরু করে পরবর্তী অংশ বা Product Image পর্যন্ত রিমুভ করা
+            let cleaned = text.replace(/Packing\s*list\s*:[\s\S]*?(Product\s*Image\s*:?|$)/gi, '');
+            cleaned = cleaned.replace(/Product\s*Image\s*:?/gi, '');
+            return cleaned.trim();
+        }
+
         function renderProductDetails(prod) {
             currentActiveProduct = prod;
             let priceVal = parseFloat(prod.price) || 0.00;
@@ -494,7 +504,10 @@
             document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY RETAIL PRODUCT";
             document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)}`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
-            document.getElementById('unlimitedDescriptionContent').innerText = prod.description || prod.desc || "Crafted with precision engineering and high-grade sustainable materials.";
+            
+            // ডেসক্রিপশন প্রসেস করে প্যাকিং লিস্ট অংশ বাদ দেওয়া হচ্ছে
+            let rawDesc = prod.description || prod.desc || "Crafted with precision engineering and high-grade sustainable materials.";
+            document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
             
             let stockNum = prod.stock || 100;
             document.getElementById('inStockBadgeLabel').innerText = `IN STOCK: ${stockNum} UNITS - READY TO DISPATCH`;
@@ -514,7 +527,6 @@
             const strip = document.getElementById('productThumbnailsStrip');
             let mediaList = [];
             
-            // সিজে এবং ভেন্ডর প্রোডাক্টের সমস্ত সম্ভাব্য ইমেজ প্রপার্টি সুরক্ষিতভাবে পার্স করার আপডেটেড লজিক
             let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
             if (primaryImg && typeof primaryImg === 'string' && primaryImg.startsWith('[')) {
                 try {
