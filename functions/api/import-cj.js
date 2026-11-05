@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি ইমেজ (একাধিক ছবি) এবং ভিডিও নিখুঁতভাবে এক্সট্রাক্ট করার লজিক
+    // ৪. সমস্ত গ্যালারি ছবি নিখুঁতভাবে সংগ্রহ করা এবং লোগো ফিল্টার করে বাদ দেওয়া
     let rawImages = [];
     if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       rawImages = p.productImageList;
@@ -64,11 +64,15 @@ export async function onRequestPost(context) {
       rawImages = [p.productImage];
     }
 
-    // লোগো বা অপ্রাসঙ্গিক লিংক ফিল্টার করে আসল ছবিগুলো রাখা
+    // লোগো বা rorraxy সংবলিত যেকোনো লিংক কঠোরভাবে ফিল্টার করে বাদ দেওয়া
     let imagesArray = rawImages.filter(img => img && typeof img === 'string' && !img.includes('rorraxy') && img.startsWith('http'));
 
-    // মূল ছবি নির্ধারণ
-    const mainImage = imagesArray.length > 0 ? imagesArray[0] : (p.productImage || '');
+    // যদি মূল ছবিতেও লোগো থাকে তা বাদ দেওয়া
+    let mainImage = p.productImage || '';
+    if (mainImage.includes('rorraxy') || !mainImage.startsWith('http')) {
+      mainImage = imagesArray.length > 0 ? imagesArray[0] : '';
+    }
+
     if (imagesArray.length === 0 && mainImage) {
       imagesArray = [mainImage];
     }
@@ -76,7 +80,7 @@ export async function onRequestPost(context) {
     const imagesListJson = JSON.stringify(imagesArray);
     const videoUrl = p.productVideo || p.videoUrl || '';
 
-    // ৫. ডেসক্রিপশনের র-এইচটিএমএল ক্লিন করা
+    // ৫. ডেসক্রিপশন ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -86,7 +90,7 @@ export async function onRequestPost(context) {
       .replace(/<[^>]+>/g, '')
       .trim();
 
-    // ৬. Save to D1 Database (সমস্ত ছবি ও ভিডিওসহ)
+    // ৬. Save to D1 Database
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -122,7 +126,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্যসহ সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্য সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
