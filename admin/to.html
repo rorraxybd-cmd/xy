@@ -1,13 +1,13 @@
-<!-- RORRAXY CJ HUB - Pure Video Master Edition -->
+<!-- RORRAXY CJ HUB - Complete Final Master Edition -->
 <div class="cj-app-wrapper">
 
-  <!-- 1. LINKS & VIDEO VIEW -->
+  <!-- 1. DIRECT VIDEO & MEDIA VIEW -->
   <div id="tabVideoLinks" class="cj-tab-view active-tab">
     <div class="cj-view-scroll-content">
       <div id="cjVideoListContainer">
         <div class="cj-empty-state">
           <span>🎬</span>
-          <p>Paste product link below. All available product videos will appear here.</p>
+          <p>Paste any direct CJ video URL or product link below to play preview.</p>
         </div>
       </div>
     </div>
@@ -15,8 +15,8 @@
     <!-- Clean Fixed Input Bar -->
     <div class="cj-bottom-input-bar">
       <div class="cj-input-group">
-        <input type="text" id="cjInputPid" placeholder="Paste CJ Product Link or PID..." onfocus="this.select()">
-        <button type="button" onclick="fetchCJVideoData()" class="cj-action-btn">FETCH</button>
+        <input type="text" id="cjInputPid" placeholder="Paste Video Link or Product URL..." onfocus="this.select()">
+        <button type="button" onclick="handleDirectVideoLink()" class="cj-action-btn">FETCH</button>
       </div>
     </div>
   </div>
@@ -192,15 +192,34 @@
     return cleanVal;
   }
 
-  async function fetchCJVideoData() {
+  async function handleDirectVideoLink() {
     let inputField = document.getElementById('cjInputPid');
     let rawInput = inputField.value.trim();
     let container = document.getElementById('cjVideoListContainer');
 
     if (!rawInput) return;
 
+    let isDirectVideoUrl = /\.(mp4|webm|m3u8|ogg)($|\?)/i.test(rawInput);
+
+    if (isDirectVideoUrl) {
+      let htmlContent = `
+        <div class="cj-single-video-card">
+          <span class="cj-label">DIRECT VIDEO PREVIEW</span>
+          <video src="${rawInput}" controls autoplay class="cj-video-player"></video>
+          <span class="cj-label">DIRECT MP4 VIDEO URL</span>
+          <div class="cj-input-group">
+            <input type="text" id="directVidField" readonly value="${rawInput}">
+            <button type="button" onclick="copyValue('directVidField', this)" class="cj-action-btn">COPY</button>
+          </div>
+        </div>
+      `;
+      container.innerHTML = htmlContent;
+      inputField.value = '';
+      return;
+    }
+
     let cjProductId = parseCJUrlOrId(rawInput);
-    container.innerHTML = '<div class="cj-empty-state"><span>⏳</span>Scanning product for videos...</div>';
+    container.innerHTML = '<div class="cj-empty-state"><span>⏳</span>Fetching product media...</div>';
 
     try {
       const res = await fetch('/api/import-cj', {
@@ -214,7 +233,6 @@
       if (result.success && result.data) {
         let htmlContent = '';
 
-        // ১. প্রোডাক্ট আইডি সেকশন
         htmlContent += `
           <div class="cj-single-video-card">
             <span class="cj-label">PRODUCT ID</span>
@@ -225,28 +243,18 @@
           </div>
         `;
 
-        // ২. ডিপ স্ক্যানিং ভিডিও লজিক (সিজে এপিআই থেকে যেকোনো উপায়ে আসা সব ভিডিও সংগ্রহ করা)
         let videos = [];
         if (result.data.videoUrl) videos.push(result.data.videoUrl);
         if (result.data.videosArray && Array.isArray(result.data.videosArray)) {
           videos = videos.concat(result.data.videosArray);
         }
-        
-        // যদি অন্য কোনো প্রপার্টিতে বা বর্ণনায় ভিডিও লিংক লুকিয়ে থাকে
-        if (result.data.description && typeof result.data.description === 'string') {
-          let urlMatches = result.data.description.match(/https?:\/\/[^\s"'<>]+?\.(mp4|webm|ogg)/gi);
-          if (urlMatches) {
-            videos = videos.concat(urlMatches);
-          }
-        }
-
-        videos = [...new Set(videos)]; // ডুপ্লিকেট রিমুভ
+        videos = [...new Set(videos)];
 
         if (videos.length > 0) {
           videos.forEach((vidUrl, index) => {
             htmlContent += `
               <div class="cj-single-video-card">
-                <span class="cj-label">PRODUCT VIDEO PREVIEW ${videos.length > 1 ? '#' + (index + 1) : ''}</span>
+                <span class="cj-label">VIDEO PREVIEW ${videos.length > 1 ? '#' + (index + 1) : ''}</span>
                 <video src="${vidUrl}" controls class="cj-video-player"></video>
                 <span class="cj-label">DIRECT MP4 VIDEO URL</span>
                 <div class="cj-input-group">
@@ -258,20 +266,21 @@
           });
         } else {
           htmlContent += `
-            <div class="cj-single-video-card" style="text-align:center; padding: 30px;">
-              <span style="font-size: 1.8rem; display:block; margin-bottom:6px;">⚠️</span>
-              <p style="color: #ff2a85; font-size: 0.78rem; margin:0;">এই প্রোডাক্টটিতে সিজে ড্রপশিপিংয়ের কোনো অফিশিয়াল ভিডিও যুক্ত করা নেই।</p>
+            <div class="cj-single-video-card" style="text-align:center; padding: 25px 15px;">
+              <span style="font-size: 1.8rem; display:block; margin-bottom:6px;">🎬</span>
+              <p style="color: #ff2a85; font-size: 0.78rem; margin:0 0 6px 0; font-weight: 700;">API-তে সরাসরি ভিডিও পাওয়া যায়নি।</p>
+              <p style="color: #a0a0b5; font-size: 0.72rem; margin:0;">CJ সাইট থেকে ভিডিওর কাস্টম URL এনে নিচের বক্সে পেস্ট করুন, সরাসরি প্লে হবে!</p>
             </div>
           `;
         }
 
         container.innerHTML = htmlContent;
-        inputField.value = ''; // ফেচ হওয়ার সাথে সাথে ইনপুট বক্স খালি হয়ে যাবে
+        inputField.value = '';
 
       } else {
         container.innerHTML = `
           <div class="cj-empty-state">
-            <p style="color: #ff2a85;">✕ Product data could not be fetched.</p>
+            <p style="color: #ff2a85;">✕ Unable to load product. Paste direct MP4 URL instead.</p>
           </div>
         `;
       }
@@ -280,7 +289,6 @@
     }
   }
 
-  // পারমিশন বা অ্যালার্ট ছাড়াই সরাসরি ব্যাকগ্রাউন্ডে কপি করার ফাংশন
   function copyValue(elementId, btnElement) {
     let input = document.getElementById(elementId);
     if (!input || !input.value) return;
@@ -291,8 +299,6 @@
       setTimeout(() => {
         btnElement.textContent = originalText;
       }, 1200);
-    }).catch(err => {
-      console.error('Failed to copy text: ', err);
     });
   }
 </script>
