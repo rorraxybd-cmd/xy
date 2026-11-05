@@ -39,7 +39,7 @@
 
     <script>
         let globalVideoList = [];
-        let activeReelsList = []; // ক্যাটাগরি ফিল্টারকৃত রিলস তালিকা
+        let activeReelsList = []; 
         let currentIndex = 0;
         let slideInterval = null;
 
@@ -56,7 +56,7 @@
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
-            const categoryFullscreenOverlay = document.getElementById('categoryFullscreenOverlay');
+            const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
             // 1. HOME Click: Direct link to rorraxy.com[cite: 1, 4]
             if(bottomHomeBtn) {
@@ -65,16 +65,16 @@
                 });
             }
 
-            // 2. CATEGORY Toggle (On/Off System)[cite: 3, 4]
-            if(bottomCategoryBtn && categoryFullscreenOverlay) {
+            // 2. CATEGORY Toggle (Transparent On/Off System)
+            if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', () => {
-                    const isVisible = categoryFullscreenOverlay.style.display === 'flex';
+                    const isVisible = categoryTransparentOverlay.style.display === 'flex';
                     if (isVisible) {
-                        categoryFullscreenOverlay.style.display = 'none';
+                        categoryTransparentOverlay.style.display = 'none';
                     } else {
                         if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
                         if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
-                        categoryFullscreenOverlay.style.display = 'flex';
+                        categoryTransparentOverlay.style.display = 'flex';
                     }
                 });
             }
@@ -97,7 +97,7 @@
                         floatingSearchContainer.style.display = 'none';
                     } else {
                         if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
-                        if(categoryFullscreenOverlay) categoryFullscreenOverlay.style.display = 'none';
+                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
                         floatingSearchContainer.style.display = 'flex';
                         if(searchInput) searchInput.focus();
                     }
@@ -111,7 +111,7 @@
                     if (isVisible) {
                         savedGalleryOverlay.style.display = 'none';
                     } else {
-                        if(categoryFullscreenOverlay) categoryFullscreenOverlay.style.display = 'none';
+                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
                         if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
                         renderSavedGalleryContent();
                         savedGalleryOverlay.style.display = 'flex';
@@ -210,7 +210,7 @@
                         };
                     });
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
-                    activeReelsList = globalVideoList;
+                    activeReelsList = globalVideoList; // ডিফল্টভাবে নতুন ও পুরাতন সব রিলস একসাথে দেখাবে
                     renderBatchVideos();
                 } else {
                     document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
@@ -264,9 +264,9 @@
             document.getElementById('floatingSearchContainer').style.display = 'none';
         };
 
-        // ক্যাটাগরি বা সাব-ক্যাটাগরিতে ক্লিক করলে রিলস আকারে ভিডিও ফিল্টার করে দেখাবে
+        // সাব-ক্যাটাগরি সিলেক্ট করলে ভিডিওর উপরেই ট্রান্সপারেন্ট মেনু বন্ধ হয়ে রিলস ভিডিও ফিল্টার হবে
         window.filterReelsByCategory = function(queryKey) {
-            document.getElementById('categoryFullscreenOverlay').style.display = 'none';
+            document.getElementById('categoryTransparentOverlay').style.display = 'none';
             let query = queryKey.toLowerCase().replace(/-/g, ' ');
             
             let filtered = globalVideoList.filter(item => {
@@ -278,7 +278,7 @@
             if (filtered.length > 0) {
                 activeReelsList = filtered;
             } else {
-                activeReelsList = globalVideoList; // না মিললে সব দেখাবে
+                activeReelsList = globalVideoList; 
             }
             currentIndex = 0;
             renderBatchVideos();
@@ -605,35 +605,38 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Overlay Styling for Saved and Category Popups */
-        .category-fullscreen-overlay, .saved-gallery-overlay {
+        /* Transparent Glassmorphism Overlay for Category and Saved Menus */
+        .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: #000000; z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center;
-            padding: 30px 20px 95px 20px;
+            background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center;
+            padding: 25px 15px 85px 15px;
         }
-        .seller-fullscreen-container { width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .seller-fullscreen-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; position: relative; }
         
-        .category-fullscreen-view { padding: 12px 14px; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; width: 100%; }
-        .accordion-category-box { background: transparent !important; border-radius: 14px; overflow: hidden; transition: all 0.3s ease; border: none !important; box-shadow: none !important; }
-        .accordion-header { padding: 14px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.03) !important; }
+        .category-fullscreen-view { padding: 10px; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        
+        /* Transparent Accordion Box with Premium Look */
+        .accordion-category-box { background: rgba(10, 10, 15, 0.45) !important; backdrop-filter: blur(8px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.15) !important; margin-bottom: 6px; }
+        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
+        .accordion-header:hover { background: rgba(212, 175, 55, 0.08) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
-        .accordion-main-title { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
-        .accordion-arrow { font-size: 0.9rem; color: var(--gold-solid); transition: transform 0.3s ease; flex-shrink: 0; }
+        .accordion-main-title { font-size: 0.9rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.3s ease; flex-shrink: 0; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0, 1, 0, 1); background: transparent !important; padding: 0 10px; }
-        .accordion-category-box.active .accordion-content { max-height: 1400px; transition: max-height 0.4s ease-in-out; padding: 10px 10px 14px 10px; }
+        .accordion-category-box.active .accordion-content { max-height: 1200px; transition: max-height 0.4s ease-in-out; padding: 6px 10px 12px 10px; }
         
-        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .sub-cat-item {
-            background: #0f0f17; border-radius: 10px; padding: 12px 10px;
-            display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.03);
+            background: rgba(15, 15, 23, 0.65); border-radius: 8px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.05);
         }
-        .sub-cat-item:hover { background: #161622; border-color: rgba(212, 175, 55, 0.2); transform: translateY(-2px); }
-        .sub-cat-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.68rem; color: var(--text-white); font-weight: 600; }
+        .sub-cat-item:hover { background: rgba(25, 25, 38, 0.85); border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); }
+        .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
         .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; position: relative; }
         .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -699,11 +702,11 @@
         <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
     </nav>
 
-    <!-- Saved Gallery Overlay (On/Off Toggle) -->
+    <!-- Saved Gallery Overlay (Transparent On/Off Toggle) -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
-    <!-- Category Fullscreen Overlay Menu (On/Off Toggle) -->
-    <div id="categoryFullscreenOverlay" class="category-fullscreen-overlay">
+    <!-- Transparent Category Overlay Menu (On/Off Toggle over video)[cite: 5] -->
+    <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
                 
