@@ -54,42 +54,48 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. অত্যন্ত শক্তিশালী মাল্টি-সোর্স ইমেজ এক্সট্রাকশন লজিক
+    // ৪. সিজে এপিআই থেকে সমস্ত ছবি নিখুঁতভাবে বের করার চূড়ান্ত লজিক
     let rawImages = [];
-    
-    const extractImagesFromSource = (source) => {
-      if (!source) return;
-      if (Array.isArray(source)) {
-        source.forEach(item => {
+
+    // যদি productImage কমা দিয়ে আলাদা করা স্ট্রিং বা অ্যারে হয়
+    if (p.productImage) {
+      if (typeof p.productImage === 'string') {
+        // অনেক সময় সিজে কমা দিয়ে একাধিক ছবি দেয়
+        let splitImgs = p.productImage.split(',').map(img => img.trim());
+        rawImages.push(...splitImgs);
+      } else if (Array.isArray(p.productImage)) {
+        rawImages.push(...p.productImage);
+      }
+    }
+
+    // যদি productImageList বা অন্য কোনো প্রপার্টি থাকে
+    if (p.productImageList) {
+      if (Array.isArray(p.productImageList)) {
+        p.productImageList.forEach(item => {
           if (typeof item === 'string') rawImages.push(item);
-          else if (item && typeof item === 'object') {
-            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path || item.img);
-          }
+          else if (item && item.imageUrl) rawImages.push(item.imageUrl);
+          else if (item && item.url) rawImages.push(item.url);
         });
-      } else if (typeof source === 'string') {
-        try {
-          let parsed = JSON.parse(source);
-          extractImagesFromSource(parsed);
-        } catch(e) {
-          rawImages.push(source);
+      } else if (typeof p.productImageList === 'string') {
+        rawImages.push(...p.productImageList.split(',').map(s => s.trim()));
+      }
+    }
+
+    // অন্যান্য সম্ভাব্য ইমেজ ফিল্ড স্ক্যান করা
+    ['materialImageList', 'carouselImage', 'entryImageList', 'productImages', 'bigImage', 'imageUrl'].forEach(field => {
+      if (p[field]) {
+        if (Array.isArray(p[field])) {
+          p[field].forEach(it => {
+            if (typeof it === 'string') rawImages.push(it);
+            else if (it && (it.imageUrl || it.url)) rawImages.push(it.imageUrl || it.url);
+          });
+        } else if (typeof p[field] === 'string') {
+          rawImages.push(...p[field].split(',').map(s => s.trim()));
         }
       }
-    };
+    });
 
-    // সিজে-র সব সম্ভাব্য ইমেজ প্রপার্টি স্ক্যান করা
-    extractImagesFromSource(p.productImageList);
-    extractImagesFromSource(p.productImages);
-    extractImagesFromSource(p.materialImageList);
-    extractImagesFromSource(p.carouselImage);
-    extractImagesFromSource(p.entryImageList);
-    
-    // সিঙ্গেল ইমেজ ব্যাকআপ ফিল্ডগুলো স্ক্যান করা
-    if (p.productImage) rawImages.push(p.productImage);
-    if (p.bigImage) rawImages.push(p.bigImage);
-    if (p.imageUrl) rawImages.push(p.imageUrl);
-    if (p.cardImage) rawImages.push(p.cardImage);
-
-    // লোগো বা rorraxy ফিল্টার করে শুধুমাত্র বৈধ ও আসল প্রোডাক্টের ছবিগুলো রাখা
+    // লোগো বা ভুল লিংক ফিল্টার করে শুধু আসল http লিংক রাখা
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
@@ -105,10 +111,10 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray[0];
     const imagesListJson = JSON.stringify(imagesArray);
     
-    // ভিডিও লিংক ফেচ করার লজিক (একাধিক প্রপার্টি চেক করবে)
-    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || p.vdUrl || '';
+    // ভিডিও লিংক ফেচ করা
+    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
 
-    // ৫. ডেসক্রিপশন সুন্দর প্যারাগ্রাফ আকারে সাজানো
+    // ৫. ডেসক্রিপশন গুছিয়ে নেওয়া
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -117,7 +123,6 @@ export async function onRequestPost(context) {
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' : ')
-      .replace(/<[^>]+>0/g, '')
       .replace(/<[^>]+>/g, '')
       .replace(/\n\s*\n/g, '\n')
       .trim();
@@ -168,7 +173,7 @@ export async function onRequestPost(context) {
       }
     }), { headers: { "Content-Type": "application/json" } });
 
-  } catch (err) {
+  } cppatch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       headers: { "Content-Type": "application/json" },
       status: 500
