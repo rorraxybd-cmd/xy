@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. নির্ভুল ইমেজ এক্সট্রাকশন লজিক (সিজে-র সব সম্ভাব্য ইমেজ ফিল্ড স্ক্যান করা)
+    // ৪. নির্ভুল ইমেজ এক্সট্রাকশন লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -80,7 +80,6 @@ export async function onRequestPost(context) {
     extract(p.bigImage);
     extract(p.imageUrl);
 
-    // লোগো বা ভুল লিংক ফিল্টার করে বাদ দেওয়া
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
@@ -89,7 +88,7 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট দূর করা
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -98,10 +97,10 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray.length > 0 ? imagesArray[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30';
     const imagesListJson = JSON.stringify(imagesArray);
     
-    // ভিডিও লিংক ফেচ করা
+    // ভিডিও লিংক
     const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
 
-    // যদি রিকোয়েস্টটি শুধু প্রিভিউ দেখার জন্য হয়, তবে ডাটাবেজে সেভ না করে ডেটা রিটার্ন করে দেবো
+    // শুধু প্রিভিউ মোডের জন্য ডেটা রিটার্ন করা
     if (previewOnly) {
       return new Response(JSON.stringify({ 
         success: true, 
@@ -116,7 +115,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৫. ডেসক্রিপশন গুছিয়ে নেওয়া
+    // ৫. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা (সব হিজিবিজি ও &nbsp; রিমোভ করার লজিক)
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -125,11 +124,16 @@ export async function onRequestPost(context) {
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' : ')
-      .replace(/<[^>]+>/g, '')
-      .replace(/\n\s*\n/g, '\n')
+      .replace(/<[^>]+>/g, '')         // সমস্ত এইচটিএমএল ট্যাগ রিমোভ
+      .replace(/&nbsp;/g, ' ')         // নন-ব্র্রেকিং স্পেস ক্লিন করা
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s\s+/g, ' ')          // অতিরিক্ত স্পেস দূর করা
+      .replace(/\n\s*\n/g, '\n\n')     // প্যারাগ্রাফ গুছিয়ে রাখা
       .trim();
 
-    // ৬. Save to D1 Database (পূর্ণাঙ্গ ইমপোর্ট)
+    // ৬. Save to D1 Database (মাল্টিপল ইমেজ JSON সহ পার্মানেন্ট সেভ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -158,7 +162,7 @@ export async function onRequestPost(context) {
       priceBulk,
       baseCost,
       mainImage,
-      imagesListJson,
+      imagesListJson, // এখানে সমস্ত ছবির অ্যারে JSON ফরম্যাটে সেভ হচ্ছে
       videoUrl,
       p.inventory || 500
     ).run();
