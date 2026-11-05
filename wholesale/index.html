@@ -174,7 +174,7 @@
             width: 100%;
             max-width: 1400px;
             margin: 0 auto;
-            contain: content;
+            contain: layout style paint;
         }
         @media (min-width: 768px) { 
             .feed-container { 
@@ -190,24 +190,52 @@
             border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
             margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
             will-change: transform, opacity;
-            animation: cardSoftFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             backface-visibility: hidden;
             transform: translateZ(0);
+            transition: transform 0.2s ease;
         }
 
-        @keyframes cardSoftFade {
-            0% { opacity: 0; transform: translateY(10px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        .product-card:active {
+            transform: scale(0.98);
         }
         
+        /* Prevents Image Jerk and Layout Shifts */
         .product-media-box { 
-            position: relative; width: 100%; background: #000000; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; 
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 1 / 1;
+            background: #08080d linear-gradient(90deg, #08080d 0%, #12121c 50%, #08080d 100%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        @keyframes skeletonLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .product-media-box.loaded {
+            animation: none;
+            background: #000000;
         }
         
         .product-media-box img { 
-            width: 100%; height: auto; display: block; object-fit: contain; background: #000000; 
-            transition: opacity 0.3s ease;
+            width: 100%; 
+            height: 100%; 
+            display: block; 
+            object-fit: cover; 
+            background: transparent; 
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            content-visibility: auto;
+        }
+
+        .product-media-box img.loaded-img {
+            opacity: 1;
         }
         
         .wholesale-badge {
@@ -421,6 +449,54 @@
             }
         }
 
+        // Deterministic Pseudo-Random Shuffle Generator
+        function seededShuffle(array, seed) {
+            let m = array.length, t, i;
+            let arr = [...array];
+            while (m) {
+                i = Math.floor(random(seed++) * m--);
+                t = arr[m];
+                arr[m] = arr[i];
+                arr[i] = t;
+            }
+            return arr;
+        }
+
+        function random(seed) {
+            let x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
+        // Reverse & Inverted Mix Logic (Retail-এর বিপরীত প্রেজেন্টেশন)
+        function getReverseOppositeWholesaleProducts(rawList) {
+            if (!Array.isArray(rawList) || rawList.length === 0) return [];
+
+            let list = [...rawList];
+
+            // ১. রিটেইলের বিপরীতে পুরো প্রোডাক্টের সিকোয়েন্স উল্টে দেওয়া (Invert Sequence)
+            let invertedList = list.reverse();
+
+            // ২. নতুন ও ট্রেন্ডিং প্রোডাক্টগুলোকে রিটেইলের ঠিক উল্টো ভাগে ভাগ করা
+            let splitPoint = Math.floor(invertedList.length * 0.6);
+            let partA = invertedList.slice(0, splitPoint);
+            let partB = invertedList.slice(splitPoint);
+
+            // ৩. ডাইনামিক পেজ রিফ্রেশ সিড দিয়ে দুটো পার্টকে আলাদাভাবে ইনভার্ট-শাফল করা
+            const sessionSeed = Math.floor(Date.now() / 10000); 
+            partA = seededShuffle(partA, sessionSeed + 101);
+            partB = seededShuffle(partB, sessionSeed + 202);
+
+            // ৪. বিপরীতে অল্টারনেট করে হোলসেল ফিডে প্রেজেন্ট করা
+            let wholesaleFeed = [];
+            while (partA.length > 0 || partB.length > 0) {
+                if (partB.length > 0) wholesaleFeed.push(partB.shift());
+                if (partA.length > 0) wholesaleFeed.push(partA.shift());
+                if (partA.length > 0) wholesaleFeed.push(partA.shift());
+            }
+
+            return wholesaleFeed;
+        }
+
         async function loadWholesaleProducts() {
             const feedContainer = document.getElementById('productFeed');
             
@@ -430,7 +506,7 @@
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        renderWholesaleCards(parsed);
+                        renderWholesaleCards(getReverseOppositeWholesaleProducts(parsed));
                     }
                 } catch (e) {
                     console.warn("Cache parse error", e);
@@ -472,7 +548,8 @@
 
             if (wholesaleProducts.length > 0) {
                 localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(wholesaleProducts));
-                renderWholesaleCards(wholesaleProducts);
+                // রিটেইলের বিপরীতে ডাইনামিক প্রেজেন্টেশন
+                renderWholesaleCards(getReverseOppositeWholesaleProducts(wholesaleProducts));
             } else if (!cachedData) {
                 feedContainer.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-gray);">
@@ -544,7 +621,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <div class="wholesale-badge"><i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS</div>
-                        <img src="${resolvedImageUrl}" alt="${pTitle}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';">
+                        <img src="${resolvedImageUrl}" alt="${pTitle}" loading="lazy" decoding="async" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
                     </div>
                     <div class="card-footer-actions">
                         <div class="wholesale-pricing-row">
