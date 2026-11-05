@@ -164,6 +164,7 @@
 </style>
 
 <script>
+  // উন্নত পিআইডি এক্সট্রাকশন লজিক (লিংক থেকে পিআইডি আলাদা করা)
   function extractPidFromUrl() {
     let urlInput = document.getElementById('cjProductUrl');
     let pidInput = document.getElementById('cjProductId');
@@ -178,26 +179,30 @@
     getPidBtn.classList.add('active-pink');
 
     try {
+      // যদি সরাসরি পিআইডি দেওয়া হয়
       if (/^[0-9a-zA-Z]{15,}$/.test(val)) {
         pidInput.value = val;
         urlInput.value = "";
       } else {
-        let match = val.match(/(?:productDetails|detail)\/([0-9a-zA-Z]{15,})/) || val.match(/([0-9a-zA-Z]{15,})/);
-        if (match && match[1]) {
-          pidInput.value = match[1];
-        } else if (match && match[0]) {
-          pidInput.value = match[0];
+        // ইউআরএল বা কুয়েরি প্যারামিটার থেকে PID খুঁজে বের করা
+        let pidMatch = val.match(/pid=([0-9a-zA-Z]{15,})/) || 
+                       val.match(/(?:productDetails|detail|product-detail)\/([0-9a-zA-Z]{15,})/) ||
+                       val.match(/([0-9a-zA-Z]{15,})/);
+        
+        if (pidMatch && pidMatch[1]) {
+          pidInput.value = pidMatch[1];
+          urlInput.value = "";
         } else {
           let cleanUrl = val.split('?')[0].split('#')[0];
           let segments = cleanUrl.split('/').filter(Boolean);
           let possibleId = segments[segments.length - 1];
-          if (possibleId && possibleId.length >= 10) {
+          if (possibleId && possibleId.length >= 12) {
             pidInput.value = possibleId;
+            urlInput.value = "";
           } else {
             alert("সঠিক প্রোডাক্ট আইডি বা লিংক পাওয়া যায়নি।");
           }
         }
-        urlInput.value = "";
       }
     } catch(e) {
       alert("লিংক থেকে আইডি এক্সট্রাক্ট করতে সমস্যা হয়েছে।");
@@ -272,7 +277,7 @@
           });
         }
 
-        // ভিডিও থাকলে তা প্রিভিউ বক্সে রেন্ডার করার লজিক
+        // ভিডিও থাকলে তা প্রিভিউ বক্সে রেন্ডার করা
         if (result.data.videoUrl && result.data.videoUrl.trim() !== '') {
           let videoWrapper = document.createElement('div');
           videoWrapper.innerHTML = `
@@ -300,7 +305,7 @@
 
   document.getElementById('cjImportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const statusDiv =.getElementById('importStatus');
+    const statusDiv = document.getElementById('importStatus');
     const btn = document.getElementById('importBtn');
     
     let cjProductId = document.getElementById('cjProductId').value.trim();
