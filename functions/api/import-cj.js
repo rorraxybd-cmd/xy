@@ -54,77 +54,38 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সিজে এপিআই থেকে সমস্ত ছবি নিখুঁতভাবে বের করার চূড়ান্ত লজিক
+    // ৪. সমস্ত গ্যালারি ছবি এবং ভিডিও সংগ্রহ করার লজিক
     let rawImages = [];
-
-    // যদি productImage কমা দিয়ে আলাদা করা স্ট্রিং বা অ্যারে হয়
-    if (p.productImage) {
-      if (typeof p.productImage === 'string') {
-        // অনেক সময় সিজে কমা দিয়ে একাধিক ছবি দেয়
-        let splitImgs = p.productImage.split(',').map(img => img.trim());
-        rawImages.push(...splitImgs);
-      } else if (Array.isArray(p.productImage)) {
-        rawImages.push(...p.productImage);
-      }
+    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
+      rawImages = p.productImageList;
+    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
+      rawImages = p.productImages;
+    } else if (p.productImage) {
+      rawImages = [p.productImage];
     }
 
-    // যদি productImageList বা অন্য কোনো প্রপার্টি থাকে
-    if (p.productImageList) {
-      if (Array.isArray(p.productImageList)) {
-        p.productImageList.forEach(item => {
-          if (typeof item === 'string') rawImages.push(item);
-          else if (item && item.imageUrl) rawImages.push(item.imageUrl);
-          else if (item && item.url) rawImages.push(item.url);
-        });
-      } else if (typeof p.productImageList === 'string') {
-        rawImages.push(...p.productImageList.split(',').map(s => s.trim()));
-      }
+    let imagesArray = rawImages.filter(img => img && typeof img === 'string' && !img.includes('rorraxy') && img.startsWith('http'));
+
+    let mainImage = p.productImage || '';
+    if (mainImage.includes('rorraxy') || !mainImage.startsWith('http')) {
+      mainImage = imagesArray.length > 0 ? imagesArray[0] : '';
     }
 
-    // অন্যান্য সম্ভাব্য ইমেজ ফিল্ড স্ক্যান করা
-    ['materialImageList', 'carouselImage', 'entryImageList', 'productImages', 'bigImage', 'imageUrl'].forEach(field => {
-      if (p[field]) {
-        if (Array.isArray(p[field])) {
-          p[field].forEach(it => {
-            if (typeof it === 'string') rawImages.push(it);
-            else if (it && (it.imageUrl || it.url)) rawImages.push(it.imageUrl || it.url);
-          });
-        } else if (typeof p[field] === 'string') {
-          rawImages.push(...p[field].split(',').map(s => s.trim()));
-        }
-      }
-    });
-
-    // লোগো বা ভুল লিংক ফিল্টার করে শুধু আসল http লিংক রাখা
-    let imagesArray = rawImages.filter(img => {
-      if (!img || typeof img !== 'string') return false;
-      let clean = img.trim();
-      return clean.startsWith('http') && !clean.includes('rorraxy');
-    });
-
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
-
-    if (imagesArray.length === 0) {
-      imagesArray = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/placeholder.png'];
+    if (imagesArray.length === 0 && mainImage) {
+      imagesArray = [mainImage];
     }
 
-    const mainImage = imagesArray[0];
     const imagesListJson = JSON.stringify(imagesArray);
-    
-    // ভিডিও লিংক ফেচ করা
-    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
+    const videoUrl = p.productVideo || p.videoUrl || '';
 
-    // ৫. ডেসক্রিপশন গুছিয়ে নেওয়া
+    // ৫. ডেসক্রিপশন ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-      .replace(/<\/p>/gi, '\n\n')
+      .replace(/<\/p>/gi, '\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
-      .replace(/<\/tr>/gi, '\n')
-      .replace(/<\/td>/gi, ' : ')
       .replace(/<[^>]+>/g, '')
-      .replace(/\n\s*\n/g, '\n')
       .trim();
 
     // ৬. Save to D1 Database
@@ -163,7 +124,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্য সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
@@ -173,7 +134,7 @@ export async function onRequestPost(context) {
       }
     }), { headers: { "Content-Type": "application/json" } });
 
-  } cppatch (err) {
+  } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       headers: { "Content-Type": "application/json" },
       status: 500
