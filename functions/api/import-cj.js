@@ -168,7 +168,7 @@ export async function onRequestPost(context) {
       } catch (e) {}
     }
 
-    // ৬. ডেসক্রিপশন পরিষ্কার করার লজিক
+    // ৬. ডেসক্রিপশন পরিষ্কার করার নিরাপদ লজিক (বিল্ড এরর মুক্ত)
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
       .replace(/<img[^>]*>/gi, '')
@@ -183,10 +183,9 @@ export async function onRequestPost(context) {
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
-      .replace(/(?:Packing list|Package list|Packing List|Package List)[\s\S]*$/gim, '')
-      .replace(/(?:[a-zA-Z0-9\s*-]+\s*)?\*1\s*Product Image:?/gim, '')
-      .replace(/Product Image:?/gim, '')
-      .replace(/(?:Dress|T-shirt|Pants|Shirt|Top|Shoes|Bag|Hoodie)\s*\*[0-9]+/gim, '')
+      .replace(/Packing list:[\s\S]*$/gi, '')
+      .replace(/Package list:[\s\S]*$/gi, '')
+      .replace(/Product Image:/gi, '')
       .replace(/\s\s+/g, ' ')
       .replace(/\n\s*\n/g, '\n\n')
       .trim();
@@ -276,4 +275,4 @@ export async function onRequestPost(context) {
 }
 ```[cite: 5]
 
-কোডটি বসিয়ে সেভ করার সাথে সাথেই ক্লাউডফ্লাওয়ারে নতুন সাকসেসফুল ডিপ্লয়মেন্ট চলে আসবে এবং ত্রুটি সমাধান হয়ে যাবে।
+কোডটি বসিয়ে সেভ করার পর ক্লাউডফ্লাওয়ারে ডিপ্লয়মেন্ট সফলভাবে সম্পন্ন হয়ে যাবে।
