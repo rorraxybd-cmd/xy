@@ -65,7 +65,7 @@
                 });
             }
 
-            // 2. CATEGORY Toggle (Transparent On/Off System)
+            // 2. CATEGORY Toggle (Crystal Clear Glassmorphism On/Off)
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', () => {
                     const isVisible = categoryTransparentOverlay.style.display === 'flex';
@@ -210,7 +210,7 @@
                         };
                     });
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
-                    activeReelsList = globalVideoList; // ডিফল্টভাবে নতুন ও পুরাতন সব রিলস একসাথে দেখাবে
+                    activeReelsList = globalVideoList; // ডিফল্টভাবে সব ভিডিও রিলস আকারে দেখাবে
                     renderBatchVideos();
                 } else {
                     document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
@@ -264,7 +264,6 @@
             document.getElementById('floatingSearchContainer').style.display = 'none';
         };
 
-        // সাব-ক্যাটাগরি সিলেক্ট করলে ভিডিওর উপরেই ট্রান্সপারেন্ট মেনু বন্ধ হয়ে রিলস ভিডিও ফিল্টার হবে
         window.filterReelsByCategory = function(queryKey) {
             document.getElementById('categoryTransparentOverlay').style.display = 'none';
             let query = queryKey.toLowerCase().replace(/-/g, ' ');
@@ -527,7 +526,7 @@
         }
 
         html, body { 
-            width: 100%; max-width: 100vw; overflow: hidden; 
+            width: 100%; max-width: 100vw; overflow-x: hidden; overflow-y: hidden; 
             background: var(--bg-retail) !important; 
             color: var(--text-white); font-family: var(--font-main); 
             height: 100vh; height: 100dvh; font-size: 15px;
@@ -605,21 +604,21 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Transparent Glassmorphism Overlay for Category and Saved Menus */
+        /* Ultra-Clear Crystal Glassmorphism Overlay (Zero Heavy Blur, Perfect Transparency to see video clearly) */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center;
+            background: rgba(0, 0, 0, 0.18); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+            z-index: 3000; overflow-y: auto; overflow-x: hidden; flex-direction: column; align-items: center;
             padding: 25px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; position: relative; }
         
         .category-fullscreen-view { padding: 10px; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
-        /* Transparent Accordion Box with Premium Look */
-        .accordion-category-box { background: rgba(10, 10, 15, 0.45) !important; backdrop-filter: blur(8px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.15) !important; margin-bottom: 6px; }
+        /* Crystal Clear Glass Category Box */
+        .accordion-category-box { background: rgba(5, 5, 8, 0.55) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.25) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.08) !important; }
+        .accordion-header:hover { background: rgba(212, 175, 55, 0.12) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
         .accordion-main-title { font-size: 0.9rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
         .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.3s ease; flex-shrink: 0; }
@@ -631,10 +630,10 @@
         @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .sub-cat-item {
-            background: rgba(15, 15, 23, 0.65); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(12, 12, 18, 0.75); border-radius: 8px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.08);
         }
-        .sub-cat-item:hover { background: rgba(25, 25, 38, 0.85); border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); }
+        .sub-cat-item:hover { background: rgba(22, 22, 32, 0.9); border-color: rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
@@ -702,10 +701,10 @@
         <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
     </nav>
 
-    <!-- Saved Gallery Overlay (Transparent On/Off Toggle) -->
+    <!-- Saved Gallery Overlay (Crystal Clear Glassmorphism) -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
-    <!-- Transparent Category Overlay Menu (On/Off Toggle over video)[cite: 5] -->
+    <!-- Ultra-Clear Transparent Category Overlay Menu (On/Off Toggle over video) -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
