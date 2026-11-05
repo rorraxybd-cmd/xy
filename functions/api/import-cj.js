@@ -54,39 +54,39 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. লোগো বা অপ্রাসঙ্গিক ইমেজ ফিল্টার করে শুধুমাত্র আসল প্রোডাক্টের গ্যালারি ছবি তোলার লজিক
+    // ৪. সমস্ত গ্যালারি ইমেজ (একাধিক ছবি) এবং ভিডিও নিখুঁতভাবে এক্সট্রাক্ট করার লজিক
     let rawImages = [];
-    if (Array.isArray(p.productImageList)) {
+    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       rawImages = p.productImageList;
+    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
+      rawImages = p.productImages;
     } else if (p.productImage) {
       rawImages = [p.productImage];
-    } else if (p.bigImage) {
-      rawImages = [p.bigImage];
     }
 
-    // লোগো বা rorraxy সংবলিত লিংকগুলো গ্যালারি থেকে বাদ দেওয়ার ফিল্টার
+    // লোগো বা অপ্রাসঙ্গিক লিংক ফিল্টার করে আসল ছবিগুলো রাখা
     let imagesArray = rawImages.filter(img => img && typeof img === 'string' && !img.includes('rorraxy') && img.startsWith('http'));
 
-    // যদি ফিল্টার করার পর কোনো ছবি না থাকে, তবে ফলব্যাক হিসেবে মূল ছবি রাখা
-    if (imagesArray.length === 0 && p.productImage && !p.productImage.includes('rorraxy')) {
-      imagesArray = [p.productImage];
+    // মূল ছবি নির্ধারণ
+    const mainImage = imagesArray.length > 0 ? imagesArray[0] : (p.productImage || '');
+    if (imagesArray.length === 0 && mainImage) {
+      imagesArray = [mainImage];
     }
 
-    const mainImage = imagesArray.length > 0 ? imagesArray[0] : '';
     const imagesListJson = JSON.stringify(imagesArray);
-    const videoUrl = p.productVideo || '';
+    const videoUrl = p.productVideo || p.videoUrl || '';
 
-    // ৫. ডেসক্রিপশনের এইচটিএমএল ট্যাগগুলো নিখুঁতভাবে ক্লিন করা
+    // ৫. ডেসক্রিপশনের র-এইচটিএমএল ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
-      .replace(/<[^>]+>/g, '') // সমস্ত এইচটিএমএল ট্যাগ রিমোভ
+      .replace(/<[^>]+>/g, '')
       .trim();
 
-    // ৬. Save to D1 Database
+    // ৬. Save to D1 Database (সমস্ত ছবি ও ভিডিওসহ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -122,8 +122,14 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ ও ক্লিন ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
-      data: { title: p.productNameEn, retailPrice, priceSample, imagesCount: imagesArray.length }
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্যসহ সফলভাবে সেভ হয়েছে!",
+      data: { 
+        title: p.productNameEn, 
+        retailPrice, 
+        priceSample, 
+        imagesCount: imagesArray.length,
+        hasVideo: !!videoUrl 
+      }
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (err) {
