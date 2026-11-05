@@ -164,6 +164,7 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+        /* Feed container optimizing layout & prevents flickering */
         .feed-container {
             padding: 8px 6px; 
             column-count: 2;
@@ -171,7 +172,7 @@
             width: 100%; 
             max-width: 1400px; 
             margin: 0 auto;
-            contain: content;
+            contain: layout style paint;
         }
         @media (min-width: 768px) { 
             .feed-container { 
@@ -187,31 +188,52 @@
             border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
             break-inside: avoid; margin-bottom: 8px;
             will-change: transform, opacity;
-            animation: cardSoftFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             backface-visibility: hidden;
             transform: translateZ(0);
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
-        @keyframes cardSoftFade {
-            0% { opacity: 0; transform: translateY(10px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        .product-card:active {
+            transform: scale(0.98);
         }
 
+        /* Prevents Image Jerk and Layout Shifts */
         .product-media-box { 
             position: relative; 
             width: 100%; 
-            background: #050508; 
+            aspect-ratio: 1 / 1;
+            background: #08080d linear-gradient(90deg, #08080d 0%, #12121c 50%, #08080d 100%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
             overflow: hidden; 
             display: flex; 
             align-items: center; 
             justify-content: center;
         }
+
+        @keyframes skeletonLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .product-media-box.loaded {
+            animation: none;
+            background: #050508;
+        }
+
         .product-media-box img { 
             width: 100%; 
-            height: auto; 
+            height: 100%; 
             display: block; 
-            object-fit: contain; 
-            background: #050508;
+            object-fit: cover; 
+            background: transparent;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            content-visibility: auto;
+        }
+
+        .product-media-box img.loaded-img {
+            opacity: 1;
         }
         
         .product-country-discount-badge {
@@ -397,13 +419,53 @@
             }
         }
 
+        // Fisher-Yates Random Shuffle Algorithm
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            let shuffled = [...array];
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
+            }
+            return shuffled;
+        }
+
+        // Smart Mixed Feed (New Products + Trending Products Shuffle)
+        function getSmartMixedProducts(rawList) {
+            if (!Array.isArray(rawList) || rawList.length === 0) return [];
+
+            // Cloning array
+            let list = [...rawList];
+
+            // ১. নতুন ও ট্রেন্ডিং আলাদা করা (created_at অথবা id ভিত্তিক)
+            let newProducts = list.slice(0, Math.ceil(list.length * 0.4)); // সর্বশেষ ৪০% নতুন
+            let trendingProducts = list.slice(Math.ceil(list.length * 0.4)); // বাকি ৬০% ট্রেন্ডিং
+
+            // ২. উভয় অ্যারে ইন্ডিভিজুয়ালি শাফল/এলোমেলো করা
+            newProducts = shuffleArray(newProducts);
+            trendingProducts = shuffleArray(trendingProducts);
+
+            // ৩. নতুন ও ট্রেন্ডিং প্রোডাক্ট ইন্টারলিভ (স্মার্ট মিক্স) করা
+            let mixed = [];
+            while (newProducts.length > 0 || trendingProducts.length > 0) {
+                if (newProducts.length > 0) mixed.push(newProducts.shift());
+                if (newProducts.length > 0) mixed.push(newProducts.shift());
+                if (trendingProducts.length > 0) mixed.push(trendingProducts.shift());
+            }
+
+            // ৪. ফাইনাল এলোমেলো ফিল্টার
+            return shuffleArray(mixed);
+        }
+
         async function loadLiveProducts() {
             const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
             if (cachedData) {
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        renderProductCards(parsed);
+                        // ক্যাশ ডেটাও সুন্দর এলোমেলোভাবে প্রেজেন্ট করা হবে
+                        renderProductCards(getSmartMixedProducts(parsed));
                     }
                 } catch (e) {
                     console.warn("Cache parse error", e);
@@ -416,7 +478,7 @@
 
                 const response = await fetch(`/api/products`, {
                     signal: controller.signal,
-                    cache: 'force-cache'
+                    cache: 'no-store' // রিয়েল টাইমে লাইভ সার্ভার থেকে প্রতিবার টাটকা ডেটা পাবে
                 });
                 clearTimeout(timeoutId);
 
@@ -431,7 +493,8 @@
 
                 if (productsList.length > 0) {
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    renderProductCards(productsList);
+                    // নতুন লাইভ প্রোডাক্টসহ ট্রেন্ডিং প্রোডাক্ট এলোমেলো করে প্রেজেন্ট করা হবে
+                    renderProductCards(getSmartMixedProducts(productsList));
                 } else if (!cachedData) {
                     document.getElementById('productFeed').innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-gray);">
@@ -501,7 +564,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadgeHtml}
-                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
                     </div>
                     <div class="card-footer-actions" onclick="event.stopPropagation()">
                         <span class="product-price-tag">${price}</span>
