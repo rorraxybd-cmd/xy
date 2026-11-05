@@ -31,6 +31,53 @@
         <input type="text" id="manualVideoUrl" placeholder="PASTE DIRECT VIDEO MP4 LINK..." style="text-transform: none;">
       </div>
 
+      <!-- আন্তর্জাতিক কান্ট্রি ড্রপডাউন ও ডিসকাউন্ট ইনপুট বক্স -->
+      <div class="cj-form-row">
+        <div class="cj-form-group">
+          <label for="targetCountry">TARGET COUNTRY & FLAG</label>
+          <select id="targetCountry" class="cj-custom-select" required>
+            <option value="us">🇺🇸 UNITED STATES (US)</option>
+            <option value="gb">🇬🇧 UNITED KINGDOM (GB)</option>
+            <option value="ca">🇨🇦 CANADA (CA)</option>
+            <option value="au">🇦🇺 AUSTRALIA (AU)</option>
+            <option value="bd">🇧🇩 BANGLADESH (BD)</option>
+            <option value="ae">🇦🇪 UNITED ARAB EMIRATES (UAE)</option>
+            <option value="sa">🇸🇦 SAUDI ARABIA (SA)</option>
+            <option value="de">🇩🇪 GERMANY (DE)</option>
+            <option value="fr">🇫🇷 FRANCE (FR)</option>
+            <option value="it">🇮🇹 ITALY (IT)</option>
+            <option value="es">🇪🇸 SPAIN (ES)</option>
+            <option value="nl">🇳🇱 NETHERLANDS (NL)</option>
+            <option value="se">🇸🇪 SWEDEN (SE)</option>
+            <option value="ch">🇨🇭 SWITZERLAND (CH)</option>
+            <option value="jp">🇯🇵 JAPAN (JP)</option>
+            <option value="sg">🇸🇬 SINGAPORE (SG)</option>
+            <option value="my">🇲🇾 MALAYSIA (MY)</option>
+            <option value="nz">🇳🇿 NEW ZEALAND (NZ)</option>
+            <option value="br">🇧🇷 BRAZIL (BR)</option>
+            <option value="mx">🇲🇽 MEXICO (MX)</option>
+          </select>
+        </div>
+
+        <div class="cj-form-group">
+          <label for="discountOffer">DISCOUNT (%)</label>
+          <input type="number" id="discountOffer" value="0" placeholder="e.g. 15" required>
+        </div>
+      </div>
+
+      <!-- ক্যাটাগরি সিলেকশন ট্রিগার বাটন -->
+      <div class="cj-form-group">
+        <label>PRODUCT CATEGORY</label>
+        <div id="categoryPickerTrigger" class="category-picker-trigger">
+          <div class="picker-left">
+            <i class="fa-solid fa-list-check"></i>
+            <span id="selectedCategoryLabel" class="picker-title">SELECT CATEGORY...</span>
+          </div>
+          <i class="fa-solid fa-chevron-down picker-arrow"></i>
+        </div>
+        <input type="hidden" id="selectedCategoryValue" required>
+      </div>
+
       <!-- লাইভ থাম্বনেইল প্রিভিউ বক্স -->
       <div id="productPreviewBox" style="display: none; background: #040406; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
         <div style="font-size: 0.68rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 6px; text-transform: uppercase;">Product Preview</div>
@@ -74,6 +121,172 @@
 
     <div id="importStatus" class="cj-status-box"></div>
   </div>
+</div>
+
+<!-- Centered Transparent Category Overlay Menu -->
+<div id="categoryTransparentOverlay" class="category-transparent-overlay">
+    <div class="seller-fullscreen-container">
+        <div class="category-fullscreen-view" id="categoryMainListView">
+            
+            <!-- ১. WOMEN'S FASHION -->
+            <div class="accordion-category-box" id="cat-women">
+                <div class="accordion-header" onclick="toggleAccordion('cat-women')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-person-dress cat-main-icon"></i>
+                        <span class="accordion-main-title">WOMEN'S FASHION</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-clothing', 'WOMEN CLOTHING')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-handbags', 'WOMEN HANDBAGS')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-shoes', 'WOMEN SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-jewelry', 'WOMEN JEWELRY')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-watches', 'WOMEN WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-lingerie', 'WOMEN LINGERIE')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-activewear', 'WOMEN ACTIVEWEAR')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-traditional', 'WOMEN TRADITIONAL')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-crafts', 'WOMEN CRAFTS & ACCENTS')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('women-accessories', 'WOMEN ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ২. MEN'S FASHION -->
+            <div class="accordion-category-box" id="cat-men">
+                <div class="accordion-header" onclick="toggleAccordion('cat-men')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-user-tie cat-main-icon"></i>
+                        <span class="accordion-main-title">MEN'S FASHION</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('men-clothing', 'MEN CLOTHING')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('men-shoes', 'MEN SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('men-watches', 'MEN WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('men-grooming', 'MEN GROOMING & WALLETS')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('men-accessories', 'MEN ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ৩. GIRLS' FASHION -->
+            <div class="accordion-category-box" id="cat-girls">
+                <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-crown cat-main-icon"></i>
+                        <span class="accordion-main-title">GIRLS' FASHION</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-clothing', 'GIRLS CLOTHING')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-shoes', 'GIRLS SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-bags', 'GIRLS BAGS')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-jewelry', 'GIRLS JEWELRY')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-watches', 'GIRLS WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-hair-accessories', 'GIRLS HAIR ACCESSORIES')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-activewear', 'GIRLS ACTIVEWEAR')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-sleepwear', 'GIRLS SLEEPWEAR')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-party-dresses', 'GIRLS PARTY DRESSES')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('girls-accessories', 'GIRLS ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ৪. BOYS' FASHION -->
+            <div class="accordion-category-box" id="cat-boys">
+                <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-child cat-main-icon"></i>
+                        <span class="accordion-main-title">BOYS' FASHION</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('boys-clothing', 'BOYS CLOTHING')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('boys-shoes', 'BOYS SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('boys-watches', 'BOYS WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('boys-bags', 'BOYS BAGS & WALLETS')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('boys-accessories', 'BOYS ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ৫. MATCHING SETS -->
+            <div class="accordion-category-box" id="cat-matching">
+                <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-people-arrows cat-main-icon"></i>
+                        <span class="accordion-main-title">MATCHING SETS</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('couple-matchingsets', 'COUPLE SETS')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('family-matchingsets', 'FAMILY SETS')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('mom-me-sets', 'MOM & ME SETS')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('dad-me-sets', 'DAD & ME SETS')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('sibling-matchingsets', 'SIBLING SETS')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('team-matchingsets', 'TEAM SETS')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('bff-matchingsets', 'BFF SETS')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('pet-owner-sets', 'PET & OWNER SETS')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('holiday-matchingsets', 'HOLIDAY SETS')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('value-bundles', 'VALUE BUNDLES')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ৬. LUXURY GIFTS -->
+            <div class="accordion-category-box" id="cat-gifts">
+                <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-gift cat-main-icon"></i>
+                        <span class="accordion-main-title">LUXURY GIFTS</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('corporate-gifts', 'CORPORATE GIFTS')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('luxury-giftitems', 'LUXURY GIFT ITEMS')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('premium-handicrafts', 'PREMIUM HANDICRAFTS')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('wood-resincrafts', 'WOOD & RESIN CRAFTS')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('bamboo-brass-decor', 'BAMBOO & BRASS DECOR')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('gift-sets-hampers', 'GIFT SETS & HAMPERS')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ৭. MOTHER & BABY -->
+            <div class="accordion-category-box" id="cat-mother">
+                <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
+                    <div class="accordion-title-wrap">
+                        <i class="fa-solid fa-baby cat-main-icon"></i>
+                        <span class="accordion-main-title">MOTHER & BABY</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="sub-categories-grid">
+                        <div class="sub-cat-item" onclick="selectUploadCategory('mother-baby-clothing', 'MOTHER & BABY CLOTHING')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('pregnancy-maternity', 'PREGNANCY & MATERNITY')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('baby-care-feeding', 'BABY CARE & FEEDING')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('nursery-baby-gear', 'NURSERY & BABY GEAR')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('eco-baby-toys', 'ECO BABY TOYS')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
+                        <div class="sub-cat-item" onclick="selectUploadCategory('mother-baby-accessories', 'MOTHER & BABY ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <style>
@@ -125,7 +338,7 @@
     color: var(--text-white); margin-bottom: 5px; letter-spacing: 0.5px;
   }
 
-  .cj-form-group input {
+  .cj-form-group input, .cj-custom-select {
     width: 100%; padding: 11px 14px; background: #040406;
     border: none; border-radius: 10px;
     color: var(--text-white); font-size: 0.8rem; outline: none;
@@ -133,9 +346,65 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
   }
 
-  .cj-form-group input:focus {
+  .cj-custom-select {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4af37'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+    padding-right: 30px; cursor: pointer; text-transform: uppercase;
+  }
+  .cj-custom-select option { background: #0a0a0f; color: #fff; }
+
+  .cj-form-group input:focus, .cj-custom-select:focus {
     box-shadow: 0 0 10px rgba(212, 175, 55, 0.2), inset 0 1px 3px rgba(0,0,0,0.5);
   }
+
+  /* Category Picker Trigger Box */
+  .category-picker-trigger {
+    width: 100%; background: #040406; border: none;
+    border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); transition: box-shadow 0.2s;
+  }
+  .category-picker-trigger:hover {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2), inset 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .picker-left { display: flex; align-items: center; gap: 10px; }
+  .picker-left i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .picker-title { font-size: 0.8rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+  .picker-arrow { font-size: 0.8rem; color: var(--gold-solid); }
+
+  /* Centered Transparent Category Overlay Menu */
+  .category-transparent-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+      background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); z-index: 3000; overflow-y: auto; overflow-x: hidden;
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px 15px;
+  }
+  .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
+  .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  
+  .accordion-category-box { background: rgba(5, 5, 8, 0.95) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
+  .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
+  .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
+  .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
+  .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
+  .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+  .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
+  .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
+  
+  .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
+  .accordion-category-box.active .accordion-content { display: block; }
+  
+  .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  .sub-cat-item {
+      background: rgba(12, 12, 18, 0.95); border-radius: 8px; padding: 10px;
+      display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
+  }
+  .sub-cat-item:active { transform: scale(0.96); }
+  .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
+  .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+  .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
   .cj-btn-secondary {
     background: rgba(212, 175, 55, 0.15); border: none; border-radius: 10px;
@@ -164,6 +433,58 @@
 </style>
 
 <script>
+  window.addEventListener('DOMContentLoaded', () => {
+      const categoryPickerTrigger = document.getElementById('categoryPickerTrigger');
+      const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
+
+      if(categoryPickerTrigger && categoryTransparentOverlay) {
+          categoryPickerTrigger.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isVisible = categoryTransparentOverlay.style.display === 'flex';
+              categoryTransparentOverlay.style.display = isVisible ? 'none' : 'flex';
+          });
+      }
+
+      window.addEventListener('click', (e) => {
+          if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
+              if (!e.target.closest('#categoryMainListView') && !e.target.closest('#categoryPickerTrigger')) {
+                  categoryTransparentOverlay.style.display = 'none';
+              }
+          }
+      });
+  });
+
+  function toggleAccordion(boxId) {
+      const targetBox = document.getElementById(boxId);
+      const content = targetBox.querySelector('.accordion-content');
+      const isOpen = targetBox.classList.contains('active');
+
+      document.querySelectorAll('.accordion-category-box').forEach(box => {
+          box.classList.remove('active');
+          let c = box.querySelector('.accordion-content');
+          if(c) c.style.display = 'none';
+      });
+
+      if (!isOpen) {
+          targetBox.classList.add('active');
+          if(content) content.style.display = 'block';
+      } else {
+          if(content) content.style.display = 'none';
+      }
+  }
+
+  function selectUploadCategory(categoryKey, categoryName) {
+      document.getElementById('categoryTransparentOverlay').style.display = 'none';
+      const labelElem = document.getElementById('selectedCategoryLabel');
+      const hiddenInput = document.getElementById('selectedCategoryValue');
+      if(labelElem) {
+          labelElem.innerText = categoryName;
+      }
+      if(hiddenInput) {
+          hiddenInput.value = categoryKey;
+      }
+  }
+
   function extractPidFromUrl() {
     let urlInput = document.getElementById('cjProductUrl');
     let pidInput = document.getElementById('cjProductId');
@@ -243,6 +564,9 @@
           shippingCushion: document.getElementById('shippingCushion').value, 
           wholesaleMargin: document.getElementById('wholesaleMargin').value,
           manualVideoUrl: document.getElementById('manualVideoUrl').value.trim(),
+          targetCountry: document.getElementById('targetCountry').value,
+          discountOffer: document.getElementById('discountOffer').value,
+          category: document.getElementById('selectedCategoryValue').value,
           previewOnly: true 
         })
       });
@@ -309,6 +633,14 @@
     const shippingCushion = document.getElementById('shippingCushion').value.trim();
     const wholesaleMargin = document.getElementById('wholesaleMargin').value.trim();
     const manualVideoUrl = document.getElementById('manualVideoUrl').value.trim();
+    const targetCountry = document.getElementById('targetCountry').value;
+    const discountOffer = document.getElementById('discountOffer').value;
+    const category = document.getElementById('selectedCategoryValue').value;
+
+    if (!category) {
+      alert("Please select a product category before syncing.");
+      return;
+    }
 
     statusDiv.style.display = 'block';
     statusDiv.style.background = 'rgba(212, 175, 55, 0.08)';
@@ -326,6 +658,9 @@
           shippingCushion, 
           wholesaleMargin,
           manualVideoUrl,
+          targetCountry,
+          discountOffer,
+          category,
           fetchAllImages: true
         })
       });
@@ -337,11 +672,14 @@
         statusDiv.style.color = '#00ff80';
         statusDiv.innerHTML = `✓ ${result.message}<br><br>
           <strong>Product:</strong> ${result.data.title}<br>
+          <strong>Category:</strong> ${category.toUpperCase()}<br>
+          <strong>Target Country:</strong> ${targetCountry.toUpperCase()}<br>
+          <strong>Discount:</strong> ${discountOffer}% OFF<br>
           <strong>Images Count:</strong> ${result.data.imagesCount || 0} Images Synced<br>
-          <strong>Video Synced:</strong> ${result.data.hasVideo ? 'Yes (✓)' : 'No'}<br>
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}`;
         document.getElementById('cjImportForm').reset();
+        document.getElementById('selectedCategoryLabel').innerText = 'SELECT CATEGORY...';
         document.getElementById('productPreviewBox').style.display = 'none';
       } else {
         statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
