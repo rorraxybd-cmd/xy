@@ -237,23 +237,30 @@
             opacity: 1;
         }
 
-        /* কার্ডের ফুটার সেকশন একদম নিখুঁত এক লাইনে সেট করা হয়েছে */
+        /* প্রাইস, মিনিমাম পিস এবং শেয়ার বাটন একদম নিখুঁত এক লাইনে সেট করা হয়েছে */
         .card-footer-actions { 
             display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 8px; margin-top: 0;
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
             white-space: nowrap; overflow: hidden;
         }
         
-        .wholesale-info-stack { display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
-        .moq-tag { font-size: 0.60rem; color: var(--text-gray); font-weight: 600; margin-top: 2px; text-transform: uppercase; }
+        .wholesale-info-inline { 
+            display: flex; align-items: baseline; gap: 6px; overflow: hidden; 
+        }
+        .product-price-tag { 
+            font-size: 0.80rem; font-weight: 700; background: var(--gold-gradient); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .moq-tag { 
+            font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; 
+        }
         
-        /* আরও স্পষ্ট এবং বড় আকর্ষনীয় শেয়ার আইকন বাটন */
+        /* শেয়ার আইকনটি আরেকটু বড় ও সুন্দর করা হয়েছে */
         .share-icon-btn { 
             background: none; border: none; cursor: pointer; 
-            font-size: 1.1rem; background: var(--gold-gradient); 
+            font-size: 1.15rem; background: var(--gold-gradient); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            padding: 4px 2px; display: flex; align-items: center; justify-content: center;
+            padding: 4px; display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
 
@@ -551,7 +558,7 @@
             wholesaleProducts.forEach(p => {
                 const pTitle = p.title || 'WHOLESALE ITEM';
                 const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
-                const moqCount = p.moq || 1; // সেলারের সেট করা মিনিমাম পিস (যেমন ১ পিস, ২ পিস ইত্যাদি)[cite: 2]
+                const moqCount = p.moq || 1; // সেলারের কনফিগার করা মিনিমাম পিস (যেমন ১ পিস, ২ পিস ইত্যাদি)[cite: 2]
                 
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 
@@ -605,7 +612,7 @@
                         <img src="${resolvedImageUrl}" alt="${pTitle}" loading="lazy" decoding="async" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
                     </div>
                     <div class="card-footer-actions">
-                        <div class="wholesale-info-stack">
+                        <div class="wholesale-info-inline">
                             <span class="product-price-tag">$${parseFloat(bulkPrice).toFixed(2)}</span>
                             <span class="moq-tag">Min ${moqCount} Pcs</span>
                         </div>
