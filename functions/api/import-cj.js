@@ -54,23 +54,30 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. নির্ভুল ইমেজ এক্সট্রাকশন লজিক
+    // ৪. নির্ভুল মাল্টিপল ইমেজ এক্সট্রাকশন লজিক
     let rawImages = [];
 
     const extract = (source) => {
       if (!source) return;
       if (Array.isArray(source)) {
         source.forEach(item => {
-          if (typeof item === 'string') rawImages.push(item);
-          else if (item && typeof item === 'object') {
-            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path);
+          if (typeof item === 'string') {
+            rawImages.push(item);
+          } else if (item && typeof item === 'object') {
+            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path || item.variantImage);
           }
         });
       } else if (typeof source === 'string') {
-        rawImages.push(...source.split(',').map(s => s.trim()));
+        // যদি কমা সেপারেটেড বা স্পেস সেপারেটেড স্ট্রিং হয়
+        if (source.includes(',')) {
+          rawImages.push(...source.split(',').map(s => s.trim()));
+        } else {
+          rawImages.push(source.trim());
+        }
       }
     };
 
+    // সিজে এপিআই-এর বিভিন্ন সম্ভাব্য প্রপার্টি চেক করা
     extract(p.productImageList);
     extract(p.productImages);
     extract(p.materialImageList);
@@ -79,6 +86,13 @@ export async function onRequestPost(context) {
     extract(p.productImage);
     extract(p.bigImage);
     extract(p.imageUrl);
+    
+    // ভ্যারিয়েন্ট ইমেজগুলোও যুক্ত করা যাতে সব ছবি পাওয়া যায়
+    if (p.variants && Array.isArray(p.variants)) {
+      p.variants.forEach(v => {
+        if (v.variantImage) rawImages.push(v.variantImage);
+      });
+    }
 
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
@@ -97,27 +111,22 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray.length > 0 ? imagesArray[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30';
     const imagesListJson = JSON.stringify(imagesArray);
     
+    // সাইজ বা ভ্যারিয়েন্ট এক্সট্রাক্ট করা
+    let sizesList = [];
+    if (p.variants && Array.isArray(p.variants)) {
+      p.variants.forEach(v => {
+        if (v.variantName) sizesList.push(v.variantName);
+        else if (v.size) sizesList.push(v.size);
+      });
+    }
+    sizesList = [...new Set(sizesList)];
+
     // ভিডিও লিংক
     const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
 
-    // শুধু প্রিভিউ মোডের জন্য ডেটা রিটার্ন করা
-    if (previewOnly) {
-      return new Response(JSON.stringify({ 
-        success: true, 
-        data: { 
-          title: p.productNameEn || 'Global Product', 
-          retailPrice, 
-          priceSample, 
-          imagesCount: imagesArray.length,
-          imagesArray: imagesArray,
-          videoUrl: videoUrl
-        }
-      }), { headers: { "Content-Type": "application/json" } });
-    }
-
-    // ৫. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা (সব হিজিবিজি ও &nbsp; রিমোভ করার লজিক)
+    // ৫. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা এবং সাইজ টেবিল বা ইনফো যুক্ত করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
-    const cleanDescription = rawDesc
+    let cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
@@ -132,6 +141,27 @@ export async function onRequestPost(context) {
       .replace(/\s\s+/g, ' ')          // অতিরিক্ত স্পেস দূর করা
       .replace(/\n\s*\n/g, '\n\n')     // প্যারাগ্রাফ গুছিয়ে রাখা
       .trim();
+
+    // ডেসক্রিপশনের শুরুতে সাইজ বা ভ্যারিয়েন্ট ইনফো সুন্দরভাবে জুড়ে দেওয়া যাতে পিডিএফ বা স্টোরে দেখতে সুন্দর লাগে
+    if (sizesList.length > 0) {
+      cleanDescription = `AVAILABLE SIZES / OPTIONS:\n${sizesList.join(', ')}\n\n------------------------------------\n\n` + cleanDescription;
+    }
+
+    // শুধু প্রিভিউ মোডের জন্য ডেটা রিটার্ন করা
+    if (previewOnly) {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        data: { 
+          title: p.productNameEn || 'Global Product', 
+          retailPrice, 
+          priceSample, 
+          imagesCount: imagesArray.length,
+          imagesArray: imagesArray,
+          sizes: sizesList,
+          videoUrl: videoUrl
+        }
+      }), { headers: { "Content-Type": "application/json" } });
+    }
 
     // ৬. Save to D1 Database (মাল্টিপল ইমেজ JSON সহ পার্মানেন্ট সেভ)
     await env.retail.prepare(`
@@ -162,7 +192,7 @@ export async function onRequestPost(context) {
       priceBulk,
       baseCost,
       mainImage,
-      imagesListJson, // এখানে সমস্ত ছবির অ্যারে JSON ফরম্যাটে সেভ হচ্ছে
+      imagesListJson, // সমস্ত ছবির অ্যারে JSON ফরম্যাটে সেভ হচ্ছে
       videoUrl,
       p.inventory || 500
     ).run();
