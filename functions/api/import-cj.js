@@ -99,13 +99,13 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট ফিল্টার
+    imagesArray = [...new Set(imagesArray)];
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
     }
 
-    const mainImage = imagesArray.length > 0 ? imagesArray[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30';
+    const mainImage = imagesArray.length > 0 ? imagesArray.length > 0 ? imagesArray[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30' : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30';
     const imagesListJson = JSON.stringify(imagesArray);
     
     // সাইজ বা ভ্যারিয়েন্ট এক্সট্রাক্ট করা
@@ -118,26 +118,64 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক (সব ফিল্ড ডিটেক্ট করবে)
+    // ৫. আল্ট্রা-পাওয়ারফুল ভিডিও ডিটেকশন ও অটো-ম্যাচিং লজিক
     let videoUrl = '';
-    
-    if (p.productVideo) videoUrl = p.productVideo;
-    else if (p.video) videoUrl = p.video;
-    else if (p.videoUrl) videoUrl = p.videoUrl;
-    else if (p.materialVideo) videoUrl = p.materialVideo;
-    else if (p.vedio) videoUrl = p.vedio;
-    
-    // ভিডিও যদি অ্যারে বা নেস্টেড অবজেক্ট আকারে থাকে
-    if (!videoUrl && p.videos) {
-      if (Array.isArray(p.videos) && p.videos.length > 0) {
-        videoUrl = p.videos[0].url || p.videos[0].videoUrl || p.videos[0].path || '';
-      } else if (typeof p.videos === 'string') {
-        videoUrl = p.videos;
+
+    // ক) সরাসরি পরিচিত প্রপার্টিগুলো চেক করা
+    const directVideoFields = [
+      p.productVideo, p.video, p.videoUrl, p.materialVideo, p.vedio,
+      p.goodsVideo, p.itemVideo, p.mediaVideo, p.mp4Url, p.watchVideo
+    ];
+    for (let field of directVideoFields) {
+      if (field && typeof field === 'string' && field.trim().startsWith('http')) {
+        videoUrl = field.trim();
+        break;
       }
     }
-    
-    if (!videoUrl && p.productVo && p.productVo.productVideo) {
-      videoUrl = p.productVo.productVideo;
+
+    // খ) যদি ভিডিও অ্যারে বা অবজেক্ট আকারে থাকে
+    if (!videoUrl) {
+      const videoSources = [p.videos, p.videoList, p.materialVideoList, p.productVideoList];
+      for (let src of videoSources) {
+        if (Array.isArray(src) && src.length > 0) {
+          let firstVid = src[0];
+          if (typeof firstVid === 'string' && firstVid.startsWith('http')) {
+            videoUrl = firstVid.trim();
+            break;
+          } else if (firstVid && typeof firstVid === 'object') {
+            videoUrl = (firstVid.url || firstVid.videoUrl || firstVid.path || firstVid.videoPath || '').trim();
+            if (videoUrl) break;
+          }
+        }
+      }
+    }
+
+    // গ) নেস্টেড অবজেক্ট (যেমন productVo বা similarVo) চেক করা
+    if (!videoUrl) {
+      const nestedObjects = [p.productVo, p.goodsVo, p.itemVo, p.detailVo];
+      for (let obj of nestedObjects) {
+        if (obj && typeof obj === 'object') {
+          let found = obj.productVideo || obj.video || obj.videoUrl;
+          if (found && typeof found === 'string' && found.startsWith('http')) {
+            videoUrl = found.trim();
+            break;
+          }
+        }
+      }
+    }
+
+    // ঘ) শেষ চেষ্টা: পুরো প্রোডাক্টের জোন (JSON) থেকে রেগুলার এক্সপ্রেশন (Regex) দিয়ে যেকোনো .mp4 বা ভিডিও লিঙ্ক খুঁজে বের করা
+    if (!videoUrl) {
+      try {
+        let jsonStr = JSON.stringify(p);
+        let urlRegex = /https?:\/\/[^\s"'<>]+?\.(?:mp4|webm|ogg|mov)/gi;
+        let matches = jsonStr.match(urlRegex);
+        if (matches && matches.length > 0) {
+          videoUrl = matches[0];
+        }
+      } catch (e) {
+        // ইগ্নোর এরর
+      }
     }
 
     // ৬. ডেসক্রিপশন পরিষ্কার ও সুন্দরভাবে ফরম্যাট করা
