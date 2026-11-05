@@ -54,48 +54,49 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. মাল্টিপল গ্যালারি ইমেজ নিখুঁতভাবে এক্সট্রাক্ট করার শক্তিশালী লজিক
+    // ৪. অত্যন্ত শক্তিশালী মাল্টি-সোর্স ইমেজ এক্সট্রাকশন লজিক
     let rawImages = [];
     
-    // productImageList যদি অ্যারে হয় (তাতে অবজেক্ট বা স্ট্রিং যাই থাকুক না কেন)
-    if (Array.isArray(p.productImageList)) {
-      p.productImageList.forEach(img => {
-        if (typeof img === 'string') rawImages.push(img);
-        else if (img && typeof img === 'object') {
-          rawImages.push(img.imageUrl || img.url || img.imgUrl || img.path);
+    const extractImagesFromSource = (source) => {
+      if (!source) return;
+      if (Array.isArray(source)) {
+        source.forEach(item => {
+          if (typeof item === 'string') rawImages.push(item);
+          else if (item && typeof item === 'object') {
+            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path || item.img);
+          }
+        });
+      } else if (typeof source === 'string') {
+        try {
+          let parsed = JSON.parse(source);
+          extractImagesFromSource(parsed);
+        } catch(e) {
+          rawImages.push(source);
         }
-      });
-    } else if (typeof p.productImageList === 'string') {
-      try { 
-        let parsed = JSON.parse(p.productImageList);
-        if (Array.isArray(parsed)) {
-          parsed.forEach(img => {
-            if (typeof img === 'string') rawImages.push(img);
-            else if (img && typeof img === 'object') rawImages.push(img.imageUrl || img.url || img.imgUrl);
-          });
-        }
-      } catch(e) { rawImages = [p.productImageList]; }
-    }
+      }
+    };
 
-    if (Array.isArray(p.productImages)) {
-      p.productImages.forEach(img => {
-        if (typeof img === 'string') rawImages.push(img);
-      });
-    }
-
-    // সিঙ্গেল ইমেজ ফিল্ডগুলো ব্যাকআপ হিসেবে যুক্ত করা
+    // সিজে-র সব সম্ভাব্য ইমেজ প্রপার্টি স্ক্যান করা
+    extractImagesFromSource(p.productImageList);
+    extractImagesFromSource(p.productImages);
+    extractImagesFromSource(p.materialImageList);
+    extractImagesFromSource(p.carouselImage);
+    extractImagesFromSource(p.entryImageList);
+    
+    // সিঙ্গেল ইমেজ ব্যাকআপ ফিল্ডগুলো স্ক্যান করা
     if (p.productImage) rawImages.push(p.productImage);
     if (p.bigImage) rawImages.push(p.bigImage);
     if (p.imageUrl) rawImages.push(p.imageUrl);
+    if (p.cardImage) rawImages.push(p.cardImage);
 
-    // লোগো বা rorraxy ফিল্টার করে শুধুমাত্র আসল প্রোডাক্টের ছবিগুলো রাখা
+    // লোগো বা rorraxy ফিল্টার করে শুধুমাত্র বৈধ ও আসল প্রোডাক্টের ছবিগুলো রাখা
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
       return clean.startsWith('http') && !clean.includes('rorraxy');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট দূর করা
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
 
     if (imagesArray.length === 0) {
       imagesArray = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/placeholder.png'];
@@ -104,10 +105,10 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray[0];
     const imagesListJson = JSON.stringify(imagesArray);
     
-    // ভিডিও লিংক ফেচ করা
-    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
+    // ভিডিও লিংক ফেচ করার লজিক (একাধিক প্রপার্টি চেক করবে)
+    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || p.vdUrl || '';
 
-    // ৫. ডেসক্রিপশন সুন্দর প্যারাগ্রাফ আকারে সাজানোর লজিক
+    // ৫. ডেসক্রিপশন সুন্দর প্যারাগ্রাফ আকারে সাজানো
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -116,11 +117,10 @@ export async function onRequestPost(context) {
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' : ')
-      .replace(/<[^>]+>/g, '') // সব এইচটিএমএল ট্যাগ রিমোভ
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0)
-      .join('\n'); // সুন্দর গোছানো প্যারাগ্রাফ লাইন তৈরি
+      .replace(/<[^>]+>0/g, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n\s*\n/g, '\n')
+      .trim();
 
     // ৬. Save to D1 Database
     await env.retail.prepare(`
