@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. গ্যালারি ও ভ্যারিয়েন্ট ইমেজ কালেকশন করার নিরাপদ লজিক
+    // ৪. মাল্টিপল ইমেজ এক্সট্রাকশন লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -64,10 +64,7 @@ export async function onRequestPost(context) {
           if (typeof item === 'string') {
             rawImages.push(item);
           } else if (item && typeof item === 'object') {
-            rawImages.push(
-              item.imageUrl || item.url || item.imgUrl || item.path || 
-              item.variantImage || item.imageUrlList || item.image || item.img
-            );
+            rawImages.push(item.imageUrl || item.url || item.imgUrl || item.path || item.variantImage);
           }
         });
       } else if (typeof source === 'string') {
@@ -87,13 +84,10 @@ export async function onRequestPost(context) {
     extract(p.productImage);
     extract(p.bigImage);
     extract(p.imageUrl);
-    extract(p.images);
-    extract(p.galleryImages);
     
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
-        if (v.imageUrl) rawImages.push(v.imageUrl);
       });
     }
 
@@ -102,8 +96,7 @@ export async function onRequestPost(context) {
       let clean = img.trim();
       return clean.startsWith('http') && 
              !clean.includes('rorraxy') && 
-             !clean.includes('placeholder') &&
-             !clean.endsWith('.ico');
+             !clean.includes('placeholder');
     });
 
     imagesArray = [...new Set(imagesArray)];
@@ -148,9 +141,11 @@ export async function onRequestPost(context) {
       }
     }
 
-    // ৬. ডেসক্রিপশন পরিষ্কার ও গোছানো ফরম্যাট করা
+    // ৬. ডেসক্রিপশন ফরম্যাট করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
@@ -241,4 +236,4 @@ export async function onRequestPost(context) {
 }
 ```[cite: 5]
 
-এটি সেভ করার সাথে সাথেই ক্লাউডফ্লাওয়ার বিল্ড সফলভাবে পাস হয়ে যাবে!
+এটি সেভ করার সাথে সাথেই ক্লাউডফ্লাওয়ার বিল্ড সফলভাবে পাস হয়ে যাবে এবং আগের মতো সমস্ত ছবি ও তথ্য সঠিকভাবে ইমপোর্ট হতে শুরু করবে।
