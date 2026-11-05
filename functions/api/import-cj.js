@@ -11,7 +11,7 @@ export async function onRequestPost(context) {
       });
     }
 
-    // ১. CJ Access Token (সংশোধিত)
+    // ১. CJ Access Token
     const tokenRes = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -54,27 +54,39 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি ইমেজ (একাধিক ছবি) নিখুঁতভাবে এক্সট্রাক্ট করা
+    // ৪. মাল্টিপল গ্যালারি ইমেজ নিখুঁতভাবে এক্সট্রাক্ট করার শক্তিশালী লজিক
     let rawImages = [];
     
-    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
-      rawImages = p.productImageList;
-    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
-      rawImages = p.productImages;
-    } else if (p.carouselImage && Array.isArray(p.carouselImage)) {
-      rawImages = p.carouselImage;
+    // productImageList যদি অ্যারে হয় (তাতে অবজেক্ট বা স্ট্রিং যাই থাকুক না কেন)
+    if (Array.isArray(p.productImageList)) {
+      p.productImageList.forEach(img => {
+        if (typeof img === 'string') rawImages.push(img);
+        else if (img && typeof img === 'object') {
+          rawImages.push(img.imageUrl || img.url || img.imgUrl || img.path);
+        }
+      });
     } else if (typeof p.productImageList === 'string') {
       try { 
         let parsed = JSON.parse(p.productImageList);
-        if (Array.isArray(parsed)) rawImages = parsed;
+        if (Array.isArray(parsed)) {
+          parsed.forEach(img => {
+            if (typeof img === 'string') rawImages.push(img);
+            else if (img && typeof img === 'object') rawImages.push(img.imageUrl || img.url || img.imgUrl);
+          });
+        }
       } catch(e) { rawImages = [p.productImageList]; }
     }
 
-    if (rawImages.length === 0) {
-      if (p.productImage) rawImages.push(p.productImage);
-      if (p.bigImage) rawImages.push(p.bigImage);
-      if (p.imageUrl) rawImages.push(p.imageUrl);
+    if (Array.isArray(p.productImages)) {
+      p.productImages.forEach(img => {
+        if (typeof img === 'string') rawImages.push(img);
+      });
     }
+
+    // সিঙ্গেল ইমেজ ফিল্ডগুলো ব্যাকআপ হিসেবে যুক্ত করা
+    if (p.productImage) rawImages.push(p.productImage);
+    if (p.bigImage) rawImages.push(p.bigImage);
+    if (p.imageUrl) rawImages.push(p.imageUrl);
 
     // লোগো বা rorraxy ফিল্টার করে শুধুমাত্র আসল প্রোডাক্টের ছবিগুলো রাখা
     let imagesArray = rawImages.filter(img => {
@@ -83,7 +95,7 @@ export async function onRequestPost(context) {
       return clean.startsWith('http') && !clean.includes('rorraxy');
     });
 
-    imagesArray = [...new Set(imagesArray)];
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট দূর করা
 
     if (imagesArray.length === 0) {
       imagesArray = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/placeholder.png'];
@@ -93,20 +105,22 @@ export async function onRequestPost(context) {
     const imagesListJson = JSON.stringify(imagesArray);
     
     // ভিডিও লিংক ফেচ করা
-    const videoUrl = p.productVideo || p.videoUrl || p.materialVideo || p.video || '';
+    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
 
-    // ৫. ডেসক্রিপশন ক্লিন করা
+    // ৫. ডেসক্রিপশন সুন্দর প্যারাগ্রাফ আকারে সাজানোর লজিক
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-      .replace(/<\/p>/gi, '\n')
+      .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
-      .replace(/<\/td>/gi, ' | ')
-      .replace(/<[^>]+>/g, '')
-      .replace(/\n\s*\n/g, '\n')
-      .trim();
+      .replace(/<\/td>/gi, ' : ')
+      .replace(/<[^>]+>/g, '') // সব এইচটিএমএল ট্যাগ রিমোভ
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .join('\n'); // সুন্দর গোছানো প্যারাগ্রাফ লাইন তৈরি
 
     // ৬. Save to D1 Database
     await env.retail.prepare(`
@@ -144,7 +158,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্য সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
