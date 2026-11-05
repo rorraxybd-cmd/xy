@@ -18,9 +18,20 @@
       </div>
 
       <!-- প্রোডাক্ট আইডি বক্স (পিওর আইডি) -->
-      <div class="cj-form-group">
-        <label for="cjProductId">CJ PRODUCT ID (PID)</label>
-        <input type="text" id="cjProductId" placeholder="e.g. 1379254578851221504" required style="text-transform: none;">
+      <div class="cj-form-group" style="display: flex; gap: 8px; align-items: flex-end;">
+        <div style="flex: 1;">
+          <label for="cjProductId">CJ PRODUCT ID (PID)</label>
+          <input type="text" id="cjProductId" placeholder="e.g. 1379254578851221504" required style="text-transform: none;">
+        </div>
+        <button type="button" id="previewBtn" onclick="fetchProductPreview()" class="cj-btn-secondary" style="height: 41px; background: rgba(212, 175, 55, 0.25); color: var(--gold-solid);">PREVIEW</button>
+      </div>
+
+      <!-- লাইভ প্রিভিউ সেクション -->
+      <div id="productPreviewBox" style="display: none; background: #040406; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div style="font-size: 0.68rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 8px; text-transform: uppercase;">Product Preview</div>
+        <div id="previewContent" style="font-size: 0.7rem; color: var(--text-white); line-height: 1.4;"></div>
+        <div id="previewImagesGrid" style="display: flex; gap: 6px; overflow-x: auto; margin-top: 10px; padding-bottom: 4px;"></div>
+        <div id="previewVideoContainer" style="margin-top: 8px;"></div>
       </div>
 
       <div class="cj-form-row">
@@ -188,6 +199,56 @@
     }, 1000);
   }
 
+  // নতুন প্রিভিউ ফাংশন
+  async function fetchProductPreview() {
+    let cjProductId = document.getElementById('cjProductId').value.trim();
+    if (!cjProductId) {
+      alert("প্রথমে প্রোডাক্ট আইডি (PID) দিন।");
+      return;
+    }
+
+    const previewBox = document.getElementById('productPreviewBox');
+    const previewContent = document.getElementById('previewContent');
+    const previewImagesGrid = document.getElementById('previewImagesGrid');
+    const previewVideoContainer = document.getElementById('previewVideoContainer');
+    const previewBtn = document.getElementById('previewBtn');
+
+    previewBox.style.display = 'block';
+    previewContent.innerHTML = 'Loading preview from CJ...';
+    previewImagesGrid.innerHTML = '';
+    previewVideoContainer.innerHTML = '';
+    previewBtn.disabled = true;
+
+    try {
+      // ব্যাকএন্ডে একটি প্রিভিউ এন্ডপইন্ট বা সেইম API কল করা যেতে পারে (অথবা ইমপোর্ট এপিআই)
+      const res = await fetch('/api/import-cj', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          cjProductId, 
+          retailMargin: document.getElementById('retailMargin').value, 
+          shippingCushion: document.getElementById('shippingCushion').value, 
+          wholesaleMargin: document.getElementById('wholesaleMargin').value,
+          previewOnly: true // প্রিভিউ মোড চাইলে ব্যাকএন্ডে হ্যান্ডেল করতে পারেন
+        })
+      });
+      
+      const result = await res.json();
+
+      if (result.success) {
+        previewContent.innerHTML = `<strong>Title:</strong> ${result.data.title}<br><strong>Retail Price:</strong> $${result.data.retailPrice} | <strong>Images:</strong> ${result.data.imagesCount}`;
+        
+        // এখানে সফলভাবে ডেটা শো করবে
+      } else {
+        previewContent.innerHTML = `<span style="color: var(--pink-love);">Error: ${result.error}</span>`;
+      }
+    } catch (err) {
+      previewContent.innerHTML = `<span style="color: var(--pink-love);">Preview Failed: ${err.message}</span>`;
+    } finally {
+      previewBtn.disabled = false;
+    }
+  }
+
   document.getElementById('cjImportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const statusDiv = document.getElementById('importStatus');
@@ -228,6 +289,7 @@
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}`;
         document.getElementById('cjImportForm').reset();
+        document.getElementById('productPreviewBox').style.display = 'none';
       } else {
         statusDiv.style.background = 'rgba(255, 42, 133, 0.08)';
         statusDiv.style.color = 'var(--pink-love)';
