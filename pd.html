@@ -82,7 +82,6 @@
 
         .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; overflow: hidden; }
 
-        /* প্রাইস, ডিসকাউন্ট ও কোয়ান্টিটি কার্ড */
         .price-discount-card { 
             padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; 
             background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
@@ -127,14 +126,12 @@
             content: ""; width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block;
         }
 
-        /* স্পেসিফিকেশন বক্স */
         .product-info-section-box { 
             display: flex; flex-direction: column; gap: 14px; padding: 18px 20px; width: 100%; 
             background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .section-box-title { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
         
-        /* প্রোডাক্ট টাইটেল পুনরায় গোল্ডেন গ্রেডিয়েন্ট কালারে সেট করা হয়েছে */
         .product-title-restricted { 
             font-size: 1.2rem; font-weight: 700; letter-spacing: 0.5px; line-height: 1.45; 
             width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
@@ -162,7 +159,6 @@
         }
         .seller-chat-compact-btn:hover { background: rgba(212, 175, 55, 0.18); transform: translateY(-1px); }
 
-        /* --- Related Products Section --- */
         .related-products-wrapper {
             margin-top: 30px; width: 100%; display: flex; flex-direction: column; gap: 15px;
             border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 25px;
@@ -211,7 +207,6 @@
             display: flex; align-items: center; justify-content: center; padding: 4px;
         }
 
-        /* ফুটার বার ও গোল্ডেন গ্রাডিয়েন্ট মেনু কালার */
         .fixed-bottom-checkout-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 16px; 
@@ -349,7 +344,7 @@
             <span class="footer-menu-label">HOME</span>
         </a>
 
-        <!-- অর্ডার নাও বাটন সচল করা হয়েছে -->
+        <!-- অর্ডার নাও বাটন (সরাসরি সচল করা হয়েছে) -->
         <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
@@ -708,7 +703,6 @@
         }
 
         function executeOrderNow(event) {
-            // প্রোডাক্ট লোড না থাকলেও যেন ডিফল্ট ফলব্যাক দিয়ে কাজ করে
             if (!currentActiveProduct) {
                 currentActiveProduct = {
                     id: new URLSearchParams(window.location.search).get('id') || '101',
@@ -724,17 +718,20 @@
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize);
+            
+            // ইউজার সিলেক্টকৃত থাম্বনেইল বা প্রধান ভিউপোর্টের ছবিটি সরাসরি ধরবে যাতে নির্দিষ্ট কালারের ছবি কার্টে যায়
+            let selectedImageView = document.getElementById('mainDisplayMediaElement').src;
+            let primaryImgUrl = (selectedImageView && !selectedImageView.includes('svg')) ? selectedImageView : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+
+            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === primaryImgUrl);
             let priceNum = parseFloat(currentActiveProduct.price) || 35.00;
-            let primaryImgUrl = document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
 
             if(existingItem) {
                 existingItem.qty += currentItemQuantity;
-                existingItem.img = primaryImgUrl;
             } else {
                 cart.push({
                     productId: prodId,
-                    sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
+                    sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAxy-01",
                     title: currentActiveProduct.title,
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
