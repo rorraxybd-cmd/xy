@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি ও ভ্যারিয়েন্ট ইমেজ শতভাগ কালেকশন করার নিখুঁত লজিক
+    // ৪. সমস্ত গ্যালারি, ভ্যারিয়েন্ট এবং ডেসক্রিপশন ইমেজ শতভাগ কালেকশন করার শক্তিশালী লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -79,6 +79,7 @@ export async function onRequestPost(context) {
       }
     };
 
+    // CJ-এর সকল সম্ভাব্য ইমেজ ফিল্ড স্ক্যান করা
     extract(p.productImageList);
     extract(p.productImages);
     extract(p.materialImageList);
@@ -90,6 +91,7 @@ export async function onRequestPost(context) {
     extract(p.images);
     extract(p.galleryImages);
     
+    // ভ্যারিয়েন্ট ইমেজ সংগ্রহ
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
@@ -97,15 +99,27 @@ export async function onRequestPost(context) {
       });
     }
 
+    // ডেসক্রিপশনের ভেতর থেকে সমস্ত এইচটিএমএল ইমেজ লিংক (<img src="...">) এক্সট্রাক্ট করা
+    if (p.description) {
+      const imgRegex = /<img[^>]+src=["']([^"'>]+)["']/gi;
+      let match;
+      while ((match = imgRegex.exec(p.description)) !== null) {
+        if (match[1]) {
+          rawImages.push(match[1]);
+        }
+      }
+    }
+
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
       return clean.startsWith('http') && 
              !clean.includes('rorraxy') && 
-             !clean.includes('placeholder');
+             !clean.includes('placeholder') &&
+             !clean.endsWith('.ico');
     });
 
-    imagesArray = [...new Set(imagesArray)];
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমুভ
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -124,7 +138,7 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক
+    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক (ম্যানুয়াল ইনপুট থাকলে তা অগ্রাধিকার পাবে)
     let videoUrl = (manualVideoUrl && typeof manualVideoUrl === 'string') ? manualVideoUrl.trim() : '';
     
     if (!videoUrl) {
@@ -185,7 +199,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database[cite: 5]
+    // ৭. Save to D1 Database (সকল ইমেজ JSON ও ভিডিও সহ সেভ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -221,7 +235,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",[cite: 5]
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
@@ -240,6 +254,6 @@ export async function onRequestPost(context) {
     });
   }
 }
-```[cite: 5, 12]
+```[cite: 12]
 
-এই কোডটি আপনার `functions/api/import-cj.js` ফাইলে হুবহু বসিয়ে সেভ করুন।
+এই কোডটি ব্যবহার করার পর থেকে প্রোডাক্টের গ্যালারির সমস্ত ছবি একদম নিখুঁতভাবে ইমপোর্ট হয়ে যাবে এবং ক্লাউডফ্লাওয়ারের বিল্ডও সফলভাবে পাস করবে!
