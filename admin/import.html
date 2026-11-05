@@ -272,12 +272,12 @@
           });
         }
 
-        // ভিডিও থাকলে তা রেন্ডার করা
-        if (result.videoUrl) {
+        // ভিডিও থাকলে তা প্রিভিউ বক্সে রেন্ডার করার লজিক
+        if (result.data.videoUrl && result.data.videoUrl.trim() !== '') {
           let videoWrapper = document.createElement('div');
           videoWrapper.innerHTML = `
-            <div style="font-size: 0.62rem; font-weight: 700; color: #00ff80; margin-bottom: 4px;">✓ VIDEO AVAILABLE</div>
-            <video src="${result.videoUrl}" controls style="width: 100%; max-height: 120px; border-radius: 6px; background: #000;"></video>
+            <div style="font-size: 0.62rem; font-weight: 700; color: #00ff80; margin-bottom: 4px;">✓ GALLERY VIDEO AVAILABLE</div>
+            <video src="${result.data.videoUrl}" controls autoplay muted style="width: 100%; max-height: 150px; border-radius: 6px; background: #000;"></video>
           `;
           previewVideoContainer.appendChild(videoWrapper);
         } else {
@@ -300,7 +300,7 @@
 
   document.getElementById('cjImportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const statusDiv = document.getElementById('importStatus');
+    const statusDiv =.getElementById('importStatus');
     const btn = document.getElementById('importBtn');
     
     let cjProductId = document.getElementById('cjProductId').value.trim();
@@ -311,7 +311,7 @@
     statusDiv.style.display = 'block';
     statusDiv.style.background = 'rgba(212, 175, 55, 0.08)';
     statusDiv.style.color = 'var(--gold-solid)';
-    statusDiv.innerHTML = 'SYNCING ALL GALLERY IMAGES...';
+    statusDiv.innerHTML = 'SYNCING ALL GALLERY IMAGES & VIDEO...';
     btn.disabled = true;
 
     try {
@@ -335,6 +335,7 @@
         statusDiv.innerHTML = `✓ ${result.message}<br><br>
           <strong>Product:</strong> ${result.data.title}<br>
           <strong>Images Count:</strong> ${result.data.imagesCount || 0} Images Synced<br>
+          <strong>Video Synced:</strong> ${result.data.hasVideo ? 'Yes (✓)' : 'No'}<br>
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}`;
         document.getElementById('cjImportForm').reset();
