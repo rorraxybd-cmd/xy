@@ -168,21 +168,26 @@ export async function onRequestPost(context) {
       } catch (e) {}
     }
 
-    // ৬. ডেসক্রিপশন নিখুঁতভাবে পরিষ্কার ও ঝকঝকে ফরম্যাট করা
+    // ৬. ডেসক্রিপশন নিখুঁতভাবে পরিষ্কার ও ঝকঝকে ফরম্যাট করা (প্যাকিং লিস্ট বা অপ্রয়োজনীয় টেক্সট বাদ দিয়ে)
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
-      .replace(/<img[^>]*>/gi, '') // ব্রোকেন ইমেজ রিমুভ
+      .replace(/<img[^>]*>/gi, '') // ব্রোকেন ইমেজ ট্যাগ রিমুভ
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' : ')
-      .replace(/<[^>]+>/g, '')
+      .replace(/<[^>]+>/g, '') // সব এইচটিএমএল ট্যাগ রিমুভ
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
+      // নিচে থেকে সমস্ত অপ্রয়োজনীয় প্যাকেজিং ও ইমেজ লিস্ট স্বয়ংক্রিয়ভাবে ফিল্টার করে বাদ দেওয়া হলো
+      .replace(/Packing list:.*?$/gim, '')
+      .replace(/Product Image:.*?$/gim, '')
+      .replace(/Package List:.*?$/gim, '')
+      .replace(/1\*T-shirt Product Image:.*?$/gim, '')
       .replace(/\s\s+/g, ' ')
       .replace(/\n\s*\n/g, '\n\n')
       .trim();
@@ -191,6 +196,7 @@ export async function onRequestPost(context) {
     let materialInfo = p.material || p.productMaterial || 'Standard Material';
     let sizesText = sizesList.length > 0 ? sizesList.join(', ') : 'Standard / Free Size';
 
+    // ডেসক্রিপশনের উপরে গোছানো হেডার
     let structuredHeader = `PRODUCT OVERVIEW:\n` +
       `• Title: ${productTitle}\n` +
       `• Available Sizes: ${sizesText}\n` +
