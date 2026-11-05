@@ -244,18 +244,33 @@
         }
         .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
 
+        /* রিটেইল কার্ডের ফুটার সেকশন (এক লাইনে অপ্টিমাইজড ও সুন্দরভাবে সাজানো) */
         .card-footer-actions { 
-            display: flex; justify-content: space-between; align-items: center; padding: 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: 0;
+            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
+            white-space: nowrap; overflow: hidden;
         }
-        .product-price-tag { font-size: 0.85rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-sub-actions { display: flex; align-items: center; gap: 12px; justify-content: center; }
+        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
-        .love-action i { color: var(--pink-love); }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
+        .card-sub-actions { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
         
-        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        /* বড় এবং সহজে টাচ করার উপযোগী লাইক বাটন */
+        .love-action { 
+            display: flex; align-items: center; gap: 5px; cursor: pointer; 
+            font-size: 0.78rem; font-weight: 600; color: var(--text-gray) !important; 
+            padding: 4px;
+        }
+        .love-action i { color: var(--pink-love); font-size: 1rem; }
+        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* বড় এবং আকর্ষণীয় শেয়ার আইকন বাটন (লেখা ছাড়া) */
+        .share-icon-btn { 
+            background: none; border: none; cursor: pointer; 
+            font-size: 1.15rem; background: var(--gold-gradient); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            padding: 4px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
 
         nav.bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-retail);
@@ -435,18 +450,13 @@
         function getSmartMixedProducts(rawList) {
             if (!Array.isArray(rawList) || rawList.length === 0) return [];
 
-            // Cloning array
             let list = [...rawList];
+            let newProducts = list.slice(0, Math.ceil(list.length * 0.4)); 
+            let trendingProducts = list.slice(Math.ceil(list.length * 0.4)); 
 
-            // ১. নতুন ও ট্রেন্ডিং আলাদা করা (created_at অথবা id ভিত্তিক)
-            let newProducts = list.slice(0, Math.ceil(list.length * 0.4)); // সর্বশেষ ৪০% নতুন
-            let trendingProducts = list.slice(Math.ceil(list.length * 0.4)); // বাকি ৬০% ট্রেন্ডিং
-
-            // ২. উভয় অ্যারে ইন্ডিভিজুয়ালি শাফল/এলোমেলো করা
             newProducts = shuffleArray(newProducts);
             trendingProducts = shuffleArray(trendingProducts);
 
-            // ৩. নতুন ও ট্রেন্ডিং প্রোডাক্ট ইন্টারলিভ (স্মার্ট মিক্স) করা
             let mixed = [];
             while (newProducts.length > 0 || trendingProducts.length > 0) {
                 if (newProducts.length > 0) mixed.push(newProducts.shift());
@@ -454,7 +464,6 @@
                 if (trendingProducts.length > 0) mixed.push(trendingProducts.shift());
             }
 
-            // ৪. ফাইনাল এলোমেলো ফিল্টার
             return shuffleArray(mixed);
         }
 
@@ -464,7 +473,6 @@
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        // ক্যাশ ডেটাও সুন্দর এলোমেলোভাবে প্রেজেন্ট করা হবে
                         renderProductCards(getSmartMixedProducts(parsed));
                     }
                 } catch (e) {
@@ -478,7 +486,7 @@
 
                 const response = await fetch(`/api/products`, {
                     signal: controller.signal,
-                    cache: 'no-store' // রিয়েল টাইমে লাইভ সার্ভার থেকে প্রতিবার টাটকা ডেটা পাবে
+                    cache: 'no-store'
                 });
                 clearTimeout(timeoutId);
 
@@ -493,7 +501,6 @@
 
                 if (productsList.length > 0) {
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    // নতুন লাইভ প্রোডাক্টসহ ট্রেন্ডিং প্রোডাক্ট এলোমেলো করে প্রেজেন্ট করা হবে
                     renderProductCards(getSmartMixedProducts(productsList));
                 } else if (!cachedData) {
                     document.getElementById('productFeed').innerHTML = `
@@ -516,7 +523,12 @@
                 const title = item.title || 'rorraxy Luxury Item';
                 const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
                 
-                // ডায়নামিক কান্ট্রি ও ডিসকাউন্ট লজিক
+                // অটোমেটিক ডিফল্ট লাইক কাউন্ট জেনারেটর (যদি ডাটাবেজে লাইক না থাকে তবে ৩০০ থেকে ৫০০০ এর মধ্যে রেন্ডম দেখাবে)
+                const defaultRandomLikes = [300, 400, 500, 1000, 1200, 1500, 2000, 5000];
+                const randomSeed = Math.abs(productId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
+                const presetLikes = defaultRandomLikes[randomSeed % defaultRandomLikes.length];
+                const initialLikes = item.like_count || presetLikes;
+
                 const discount = item.discount_rate || item.discountRate || '0';
                 const rawCountry = item.target_country || item.targetCountry || 'bd';
                 const countryCode = String(rawCountry).toLowerCase().trim();
@@ -570,10 +582,10 @@
                         <span class="product-price-tag">${price}</span>
                         <div class="card-sub-actions">
                             <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
-                                <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 128}</span>
+                                <i class="fa-solid fa-heart"></i> <span class="love-count">${initialLikes}</span>
                             </div>
-                            <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
-                                <i class="fa-solid fa-share-nodes"></i> Share
+                            <button class="share-icon-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
+                                <i class="fa-solid fa-share-nodes"></i>
                             </button>
                         </div>
                     </div>
@@ -626,9 +638,9 @@
             } else if (navigator.clipboard) {
                 await navigator.clipboard.writeText(shareUrl);
                 const btn = event.currentTarget;
-                const orig = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> COPIED!`;
-                setTimeout(() => { btn.innerHTML = orig; }, 1500);
+                const origIcon = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                setTimeout(() => { btn.innerHTML = origIcon; }, 1500);
             }
         }
 
