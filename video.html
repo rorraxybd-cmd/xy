@@ -65,7 +65,7 @@
                 });
             }
 
-            // 2. CATEGORY Toggle (Crystal Clear Glassmorphism On/Off)
+            // 2. CATEGORY Toggle (Completely Transparent Background)
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', () => {
                     const isVisible = categoryTransparentOverlay.style.display === 'flex';
@@ -210,7 +210,7 @@
                         };
                     });
                     sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
-                    activeReelsList = globalVideoList; // ডিফল্টভাবে সব ভিডিও রিলস আকারে দেখাবে
+                    activeReelsList = globalVideoList; 
                     renderBatchVideos();
                 } else {
                     document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
@@ -604,10 +604,10 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Ultra-Clear Crystal Glassmorphism Overlay (Zero Heavy Blur, Perfect Transparency to see video clearly) */
+        /* Completely Transparent Background Overlay (Zero blur, zero dark layer behind buttons) */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.18); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+            background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
             z-index: 3000; overflow-y: auto; overflow-x: hidden; flex-direction: column; align-items: center;
             padding: 25px 15px 85px 15px;
         }
@@ -615,8 +615,8 @@
         
         .category-fullscreen-view { padding: 10px; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
-        /* Crystal Clear Glass Category Box */
-        .accordion-category-box { background: rgba(5, 5, 8, 0.55) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.25) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        /* Glassmorphism specifically on the Category Buttons/Boxes so video is fully clear outside/around them */
+        .accordion-category-box { background: rgba(5, 5, 8, 0.75) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.3) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.12) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
@@ -630,10 +630,10 @@
         @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .sub-cat-item {
-            background: rgba(12, 12, 18, 0.75); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(12, 12, 18, 0.85); border-radius: 8px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.1);
         }
-        .sub-cat-item:hover { background: rgba(22, 22, 32, 0.9); border-color: rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
+        .sub-cat-item:hover { background: rgba(22, 22, 32, 0.95); border-color: rgba(212, 175, 55, 0.5); transform: translateY(-2px); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
@@ -701,10 +701,10 @@
         <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
     </nav>
 
-    <!-- Saved Gallery Overlay (Crystal Clear Glassmorphism) -->
+    <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
-    <!-- Ultra-Clear Transparent Category Overlay Menu (On/Off Toggle over video) -->
+    <!-- Completely Transparent Category Overlay Menu (Clear background with crystal buttons) -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
