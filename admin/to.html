@@ -1,20 +1,18 @@
-<!-- RORRAXY CJ HUB - Final Master Edition -->
+<!-- RORRAXY CJ HUB - 4-Icon Minimal Edition -->
 <div class="cj-app-wrapper">
 
   <!-- 1. CJ SITE POPUP MODAL -->
   <div id="cjPopupModal" class="cj-modal-overlay">
     <div class="cj-modal-container">
       <iframe src="https://cjdropshipping.com" class="cj-modal-iframe"></iframe>
-      <!-- Bottom Center Golden Gradient Close Button -->
-      <button type="button" class="cj-center-gold-close" onclick="closeCjModal()">✕</button>
     </div>
   </div>
 
-  <!-- 2. LINKS & VIDEO VIEW -->
+  <!-- 2. MAIN LINKS & VIDEO VIEW -->
   <div id="tabVideoLinks" class="cj-tab-view active-tab">
     
     <div class="cj-view-scroll-content">
-      <!-- Video Preview and Direct Link Render Area -->
+      <!-- Dynamic Video Previews & MP4 Links -->
       <div id="cjVideoListContainer">
         <div class="cj-empty-state">
           <span>🎬</span>
@@ -23,40 +21,40 @@
       </div>
     </div>
 
-    <!-- Bottom Fixed Input Bar -->
+    <!-- Clean Fixed Input Bar (No Overlapping Buttons) -->
     <div class="cj-bottom-input-bar">
       <div class="cj-input-group">
         <input type="text" id="cjInputPid" placeholder="Paste CJ Product Link or PID..." onfocus="this.select()">
         <button type="button" onclick="fetchCJMediaData()" class="cj-action-btn">FETCH</button>
       </div>
     </div>
-
-    <!-- Bottom Center Golden Gradient Close Button -->
-    <button type="button" class="cj-center-gold-close" onclick="resetView()">✕</button>
   </div>
 
   <!-- 3. IMPORT PAGE VIEW (/admin/import.html) -->
   <div id="tabImportPage" class="cj-tab-view">
     <iframe src="/admin/import.html" class="cj-full-iframe"></iframe>
-    <!-- Bottom Center Golden Gradient Close Button -->
-    <button type="button" class="cj-center-gold-close" onclick="switchTab('video')">✕</button>
   </div>
 
-  <!-- 4. BOTTOM NAVIGATION BAR -->
+  <!-- 4. BOTTOM 4-ICON GOLDEN GRADIENT NAVIGATION BAR -->
   <nav class="cj-bottom-nav">
-    <div class="cj-nav-item" id="nav-cj" onclick="openCjModal()">
+    <!-- Icon 1: CJ Site -->
+    <div class="cj-nav-item" id="nav-cj" onclick="openCjModal()" title="CJ Site">
       <span class="cj-icon">🛍️</span>
-      <span class="cj-text">CJ Site</span>
     </div>
     
-    <div class="cj-nav-item active" id="nav-video" onclick="switchTab('video')">
+    <!-- Icon 2: Links & Video -->
+    <div class="cj-nav-item active" id="nav-video" onclick="switchTab('video')" title="Links & Video">
       <span class="cj-icon">🎬</span>
-      <span class="cj-text">Links & Video</span>
+    </div>
+
+    <!-- Icon 3: Close / Reset (In-Nav Cross Icon) -->
+    <div class="cj-nav-item cj-close-nav-item" onclick="closeAllViews()" title="Close / Reset">
+      <span class="cj-icon cj-cross-icon">✕</span>
     </div>
     
-    <div class="cj-nav-item" id="nav-import" onclick="switchTab('import')">
+    <!-- Icon 4: Import Page -->
+    <div class="cj-nav-item" id="nav-import" onclick="switchTab('import')" title="Import Page">
       <span class="cj-icon">⚡</span>
-      <span class="cj-text">Import</span>
     </div>
   </nav>
 
@@ -85,19 +83,18 @@
     position: relative; overflow: hidden;
   }
 
-  /* POPUP MODAL */
+  /* POPUP MODAL FOR CJ SITE */
   .cj-modal-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.92); z-index: 1000;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 55px;
+    background: rgba(0, 0, 0, 0.95); z-index: 50;
     display: none; align-items: center; justify-content: center;
-    backdrop-filter: blur(4px);
   }
   .cj-modal-overlay.open { display: flex; }
 
   .cj-modal-container {
     width: 100%; height: 100%;
     background: var(--bg-dark);
-    display: flex; flex-direction: column; position: relative;
+    display: flex; flex-direction: column;
   }
 
   .cj-modal-iframe {
@@ -116,26 +113,14 @@
     width: 100%; height: 100%; border: none; background: #ffffff;
   }
 
-  /* SCROLLABLE CONTENT */
+  /* SCROLLABLE MAIN CONTENT */
   .cj-view-scroll-content {
     flex: 1; padding: 14px; overflow-y: auto;
     max-width: 600px; margin: 0 auto; width: 100%;
-    padding-bottom: 120px;
+    padding-bottom: 75px;
   }
 
-  /* BOTTOM CENTER GOLDEN GRADIENT CLOSE BUTTON */
-  .cj-center-gold-close {
-    position: fixed; bottom: 68px; left: 50%; transform: translateX(-50%);
-    z-index: 999; width: 36px; height: 36px; border-radius: 50%;
-    background: var(--gold-grad); border: none;
-    color: #000000; font-size: 0.85rem; font-weight: 900;
-    cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.1s ease;
-  }
-  .cj-center-gold-close:active { transform: translateX(-50%) scale(0.92); }
-
-  /* FIXED INPUT BAR */
+  /* FIXED BOTTOM INPUT BAR */
   .cj-bottom-input-bar {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: #040406; border-top: 1px solid rgba(212, 175, 55, 0.15);
@@ -146,85 +131,87 @@
     width: 100%; max-width: 600px;
   }
 
-  .cj-input-group { display: flex; gap: 6px; }
+  .cj-input-group { display: flex; gap: 8px; }
 
   .cj-input-group input {
-    flex: 1; padding: 10px 12px; background: var(--card-bg);
-    border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px;
-    color: #ffffff; font-size: 0.78rem; outline: none;
+    flex: 1; padding: 11px 14px; background: var(--card-bg);
+    border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 10px;
+    color: #ffffff; font-size: 0.8rem; outline: none;
+    transition: border-color 0.2s;
   }
   .cj-input-group input:focus {
-    border-color: rgba(212, 175, 55, 0.5);
+    border-color: rgba(212, 175, 55, 0.6);
   }
 
   .cj-action-btn {
-    background: var(--gold-grad); border: none; border-radius: 8px;
-    color: #000000; font-weight: 800; font-size: 0.7rem; padding: 0 16px;
-    cursor: pointer; flex-shrink: 0;
+    background: var(--gold-grad); border: none; border-radius: 10px;
+    color: #000000; font-weight: 800; font-size: 0.72rem; padding: 0 18px;
+    cursor: pointer; flex-shrink: 0; transition: transform 0.1s;
   }
+  .cj-action-btn:active { transform: scale(0.95); }
 
   .cj-single-video-card {
     background: var(--card-bg); border: 1px solid rgba(212, 175, 55, 0.15);
-    border-radius: 10px; padding: 12px; margin-bottom: 14px;
+    border-radius: 12px; padding: 12px; margin-bottom: 14px;
   }
 
   .cj-label {
     display: block; font-size: 0.62rem; font-weight: 700;
     background: var(--gold-grad); -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; margin-bottom: 5px; letter-spacing: 0.5px;
+    -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: 0.5px;
   }
 
   .cj-video-player {
-    width: 100%; max-height: 200px; border-radius: 6px;
+    width: 100%; max-height: 200px; border-radius: 8px;
     background: #000000; margin-bottom: 8px; object-fit: contain;
   }
 
   .cj-empty-state {
-    text-align: center; padding: 40px 10px; color: #606075; font-size: 0.75rem;
+    text-align: center; padding: 50px 10px; color: #606075; font-size: 0.75rem;
   }
-  .cj-empty-state span { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  .cj-empty-state span { font-size: 2rem; display: block; margin-bottom: 6px; }
 
-  /* BOTTOM NAV BAR */
+  /* BOTTOM 4-ICON NAVIGATION BAR (NO TEXT, ONLY CLEAN GOLDEN ICONS) */
   .cj-bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 55px;
-    background: #040406; border-top: 1px solid rgba(212, 175, 55, 0.2);
+    background: #040406; border-top: 1px solid rgba(212, 175, 55, 0.25);
     display: flex; justify-content: space-around; align-items: center;
     z-index: 100; max-width: 600px; margin: 0 auto;
   }
 
   .cj-nav-item {
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; cursor: pointer; opacity: 0.45;
-    transition: opacity 0.2s; flex: 1; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0.45; transition: opacity 0.2s, transform 0.1s;
+    flex: 1; height: 100%;
   }
+  .cj-nav-item:active { transform: scale(0.9); }
 
   .cj-nav-item .cj-icon {
-    font-size: 1.1rem; margin-bottom: 2px;
+    font-size: 1.25rem;
     background: var(--gold-grad); -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.2));
   }
 
-  .cj-nav-item .cj-text { font-size: 0.65rem; font-weight: 700; color: #ffffff; }
+  .cj-cross-icon {
+    font-weight: 900; font-size: 1.15rem !important;
+  }
 
   .cj-nav-item.active { opacity: 1; }
-  .cj-nav-item.active .cj-text {
-    background: var(--gold-grad);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  .cj-nav-item.active .cj-icon {
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
   }
 </style>
 
 <script>
   function openCjModal() {
+    closeAllViews();
     document.getElementById('cjPopupModal').classList.add('open');
-  }
-
-  function closeCjModal() {
-    document.getElementById('cjPopupModal').classList.remove('open');
+    document.getElementById('nav-cj').classList.add('active');
   }
 
   function switchTab(tabName) {
-    document.querySelectorAll('.cj-tab-view').forEach(el => el.classList.remove('active-tab'));
-    document.querySelectorAll('.cj-nav-item').forEach(el => el.classList.remove('active'));
+    closeAllViews();
 
     if (tabName === 'video') {
       document.getElementById('tabVideoLinks').classList.add('active-tab');
@@ -235,14 +222,14 @@
     }
   }
 
-  function resetView() {
-    document.getElementById('cjInputPid').value = '';
-    document.getElementById('cjVideoListContainer').innerHTML = `
-      <div class="cj-empty-state">
-        <span>🎬</span>
-        <p>Product video previews & URLs will appear here after fetching.</p>
-      </div>
-    `;
+  function closeAllViews() {
+    document.getElementById('cjPopupModal').classList.remove('open');
+    document.querySelectorAll('.cj-tab-view').forEach(el => el.classList.remove('active-tab'));
+    document.querySelectorAll('.cj-nav-item').forEach(el => el.classList.remove('active'));
+
+    // Default to Links & Video View
+    document.getElementById('tabVideoLinks').classList.add('active-tab');
+    document.getElementById('nav-video').classList.add('active');
   }
 
   async function fetchCJMediaData() {
