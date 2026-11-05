@@ -1,0 +1,273 @@
+<!-- RORRAXY CJ HUB - Clean Minimal Assistant -->
+<div class="cj-app-wrapper">
+
+  <!-- 1. Default Running View: CJ Site -->
+  <div id="tabCJSite" class="cj-tab-view active-tab">
+    <iframe id="cjSiteIframe" src="https://cjdropshipping.com" class="cj-full-iframe"></iframe>
+  </div>
+
+  <!-- 2. Product Links & Media Gallery View -->
+  <div id="tabVideoLinks" class="cj-tab-view">
+    <button type="button" class="cj-floating-close" onclick="switchTab('cj')">✕</button>
+    
+    <div class="cj-view-scroll-content">
+      
+      <!-- Input Field for manual fetch / tracking -->
+      <div class="cj-clean-card">
+        <span class="cj-label">PRODUCT LINK / PID</span>
+        <div class="cj-input-group">
+          <input type="text" id="cjInputPid" placeholder="Paste CJ Product Link or PID..." onfocus="this.select()">
+          <button type="button" onclick="fetchCJMediaData()" class="cj-action-btn">FETCH</button>
+        </div>
+      </div>
+
+      <!-- Auto Extracted Product ID Link -->
+      <div class="cj-clean-card">
+        <span class="cj-label">EXTRACTED PRODUCT ID LINK</span>
+        <div class="cj-input-group">
+          <input type="text" id="finalProductIdLink" readonly placeholder="Auto tracked product ID link...">
+          <button type="button" onclick="copyValue('finalProductIdLink')" class="cj-action-btn">COPY ID</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Video Preview & MP4 Link Container -->
+      <div id="cjVideoListContainer">
+        <div class="cj-empty-state">
+          <span>🎬</span>
+          <p>Product video previews and direct MP4 URLs will appear here.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. Import Page View (/admin/import.html) -->
+  <div id="tabImportPage" class="cj-tab-view">
+    <button type="button" class="cj-floating-close" onclick="switchTab('cj')">✕</button>
+    <iframe src="/admin/import.html" class="cj-full-iframe"></iframe>
+  </div>
+
+  <!-- 4. Bottom Golden Gradient Icon Navigation Bar -->
+  <nav class="cj-bottom-nav">
+    <div class="cj-nav-item active" id="nav-cj" onclick="switchTab('cj')">
+      <span class="cj-icon">🛍️</span>
+      <span class="cj-text">CJ Site</span>
+    </div>
+    
+    <div class="cj-nav-item" id="nav-video" onclick="switchTab('video')">
+      <span class="cj-icon">🎬</span>
+      <span class="cj-text">Links & Video</span>
+    </div>
+    
+    <div class="cj-nav-item" id="nav-import" onclick="switchTab('import')">
+      <span class="cj-icon">⚡</span>
+      <span class="cj-text">Import</span>
+    </div>
+  </nav>
+
+</div>
+
+<style>
+  :root {
+    --bg-dark: #000000;
+    --gold-grad: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #aa771c 100%);
+    --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    background: var(--bg-dark); color: #ffffff;
+    font-family: var(--font-family); overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cj-app-wrapper {
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* Tab Views */
+  .cj-tab-view {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 55px;
+    display: none; width: 100%; height: calc(100% - 55px);
+    background: var(--bg-dark); z-index: 10;
+  }
+
+  .cj-tab-view.active-tab { display: flex; flex-direction: column; }
+
+  /* Fullscreen Iframe */
+  .cj-full-iframe {
+    width: 100%; height: 100%; border: none; background: #ffffff;
+  }
+
+  /* Scrollable Media Content */
+  .cj-view-scroll-content {
+    flex: 1; padding: 14px; overflow-y: auto;
+    max-width: 650px; margin: 0 auto; width: 100%;
+  }
+
+  /* Floating Close Button */
+  .cj-floating-close {
+    position: absolute; top: 10px; right: 12px; z-index: 99;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(212, 175, 55, 0.5);
+    color: #fcf6ba; font-size: 0.9rem; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; backdrop-filter: blur(4px);
+  }
+
+  /* Clean Input Groups */
+  .cj-clean-card { margin-bottom: 12px; }
+
+  .cj-label {
+    display: block; font-size: 0.65rem; font-weight: 700;
+    background: var(--gold-grad); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; margin-bottom: 4px; letter-spacing: 0.5px;
+  }
+
+  .cj-input-group { display: flex; gap: 6px; }
+
+  .cj-input-group input {
+    flex: 1; padding: 10px 12px; background: #08080c;
+    border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 8px;
+    color: #ffffff; font-size: 0.78rem; outline: none;
+  }
+
+  .cj-action-btn {
+    background: var(--gold-grad); border: none; border-radius: 8px;
+    color: #000000; font-weight: 800; font-size: 0.7rem; padding: 0 14px;
+    cursor: pointer; flex-shrink: 0;
+  }
+
+  /* Video Card with Thumbnail & Direct MP4 URL */
+  .cj-single-video-card {
+    background: #08080c; border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px; padding: 10px; margin-bottom: 12px;
+  }
+
+  .cj-video-player {
+    width: 100%; max-height: 180px; border-radius: 6px;
+    background: #000; margin-bottom: 8px; object-fit: contain;
+  }
+
+  .cj-empty-state {
+    text-align: center; padding: 35px 10px; color: #606075; font-size: 0.75rem;
+  }
+  .cj-empty-state span { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+
+  /* Bottom Navigation - Golden Gradient Icons */
+  .cj-bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 55px;
+    background: #040406; border-top: 1px solid rgba(212, 175, 55, 0.25);
+    display: flex; justify-content: space-around; align-items: center;
+    z-index: 100; max-width: 650px; margin: 0 auto;
+  }
+
+  .cj-nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; cursor: pointer; opacity: 0.5;
+    transition: opacity 0.2s; flex: 1; height: 100%;
+  }
+
+  .cj-nav-item .cj-icon {
+    font-size: 1.1rem; margin-bottom: 2px;
+    background: var(--gold-grad); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.3));
+  }
+
+  .cj-nav-item .cj-text { font-size: 0.65rem; font-weight: 700; color: #ffffff; }
+
+  .cj-nav-item.active { opacity: 1; }
+  .cj-nav-item.active .cj-text {
+    background: var(--gold-grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+</style>
+
+<script>
+  // Switch Tabs
+  function switchTab(tabName) {
+    document.querySelectorAll('.cj-tab-view').forEach(el => el.classList.remove('active-tab'));
+    document.querySelectorAll('.cj-nav-item').forEach(el => el.classList.remove('active'));
+
+    if (tabName === 'cj') {
+      document.getElementById('tabCJSite').classList.add('active-tab');
+      document.getElementById('nav-cj').classList.add('active');
+    } else if (tabName === 'video') {
+      document.getElementById('tabVideoLinks').classList.add('active-tab');
+      document.getElementById('nav-video').classList.add('active');
+    } else if (tabName === 'import') {
+      document.getElementById('tabImportPage').classList.add('active-tab');
+      document.getElementById('nav-import').classList.add('active');
+    }
+  }
+
+  // Fetch Media & Product Data
+  async function fetchCJMediaData() {
+    let inputVal = document.getElementById('cjInputPid').value.trim();
+    let container = document.getElementById('cjVideoListContainer');
+    let pidField = document.getElementById('finalProductIdLink');
+
+    if (!inputVal) {
+      alert("Please enter CJ product URL or PID.");
+      return;
+    }
+
+    let cjProductId = inputVal;
+    if (!/^[0-9a-zA-Z]{15,}$/.test(inputVal)) {
+      let match = inputVal.match(/pid=([0-9a-zA-Z]{15,})/) || 
+                  inputVal.match(/(?:productDetails|detail|product-detail)\/([0-9a-zA-Z]{15,})/) ||
+                  inputVal.match(/([0-9a-zA-Z]{15,})/);
+      if (match && match[1]) cjProductId = match[1];
+    }
+
+    pidField.value = `https://cjdropshipping.com/product/detail/${cjProductId}`;
+    container.innerHTML = '<div class="cj-empty-state"><span>⏳</span>Fetching video & links...</div>';
+
+    try {
+      const res = await fetch('/api/import-cj', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cjProductId, previewOnly: true })
+      });
+
+      const result = await res.json();
+
+      if (result.success && result.data.videoUrl) {
+        container.innerHTML = `
+          <div class="cj-single-video-card">
+            <span class="cj-label">VIDEO PREVIEW</span>
+            <video src="${result.data.videoUrl}" controls class="cj-video-player"></video>
+            <span class="cj-label">DIRECT MP4 VIDEO URL</span>
+            <div class="cj-input-group">
+              <input type="text" id="vidUrlField_0" readonly value="${result.data.videoUrl}">
+              <button type="button" onclick="copyValue('vidUrlField_0')" class="cj-action-btn">COPY VIDEO</button>
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="cj-empty-state">
+            <p style="color: #ff2a85;">No direct MP4 video stream found for this product.</p>
+          </div>
+        `;
+      }
+    } catch (err) {
+      container.innerHTML = `<div class="cj-empty-state" style="color: #ff2a85;">Error: ${err.message}</div>`;
+    }
+  }
+
+  // Copy Clipboard Helper
+  function copyValue(elementId) {
+    let input = document.getElementById(elementId);
+    if (!input || !input.value) {
+      alert("No data available to copy.");
+      return;
+    }
+    navigator.clipboard.writeText(input.value);
+    alert("Copied to clipboard!");
+  }
+</script>
