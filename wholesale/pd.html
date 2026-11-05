@@ -79,9 +79,10 @@
 
         .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
 
+        /* টাইটেলের ফিক্সড লাইন বা ক্যারেক্টার লিমিট সরিয়ে দেওয়া হয়েছে যাতে পুরো টাইটেল সুন্দরভাবে শো করে */
         .product-title-restricted { 
             font-size: 1.25rem; font-weight: 800; color: #ffffff !important; letter-spacing: 0.8px; line-height: 1.35; 
-            width: 100%; word-break: break-word; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @media(min-width: 768px) { .product-title-restricted { font-size: 1.65rem; } }
@@ -445,6 +446,14 @@
             renderRelatedWholesaleProducts([sampleProduct], sampleProduct);
         }
 
+        // প্যাকিং লিস্ট এবং অনাকাঙ্ক্ষিত টেক্সট ফিল্টার করার ফাংশন
+        function cleanDescriptionText(text) {
+            if (!text) return '';
+            let cleaned = text.replace(/Packing\s*list\s*:[\s\S]*?(Product\s*Image\s*:?|$)/gi, '');
+            cleaned = cleaned.replace(/Product\s*Image\s*:?/gi, '');
+            return cleaned.trim();
+        }
+
         function renderProductDetails(prod) {
             currentActiveProduct = prod;
             let priceVal = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
@@ -457,7 +466,10 @@
             document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY WHOLESALE PRODUCT";
             document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)} / pc`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
-            document.getElementById('unlimitedDescriptionContent').innerText = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+            
+            // ডেসক্রিপশন প্রসেস করে অনাকাঙ্ক্ষিত প্যাকিং লিস্ট অংশ ফিল্টার করে রেন্ডার করা
+            let rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+            document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
             
             let stockNum = prod.stock || 1000;
             document.getElementById('inStockBadgeLabel').innerText = `BULK STOCK: ${stockNum} UNITS READY`;
