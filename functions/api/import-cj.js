@@ -11,8 +11,8 @@ export async function onRequestPost(context) {
       });
     }
 
-    // ১. CJ Access Token
-    const tokenRes = aai = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
+    // ১. CJ Access Token (সংশোধিত)
+    const tokenRes = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ apiKey: env.CJ_API_KEY })
@@ -57,7 +57,6 @@ export async function onRequestPost(context) {
     // ৪. সমস্ত গ্যালারি ইমেজ (একাধিক ছবি) নিখুঁতভাবে এক্সট্রাক্ট করা
     let rawImages = [];
     
-    // CJ API-এর বিভিন্ন সম্ভাব্য ইমেজ অ্যারে ফিল্ড চেক করা
     if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       rawImages = p.productImageList;
     } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
@@ -71,7 +70,6 @@ export async function onRequestPost(context) {
       } catch(e) { rawImages = [p.productImageList]; }
     }
 
-    // যদি অ্যারেতে ইমেজ না পাওয়া যায়, তবে সিঙ্গেল ইমেজ ফিল্ডগুলো যোগ করা
     if (rawImages.length === 0) {
       if (p.productImage) rawImages.push(p.productImage);
       if (p.bigImage) rawImages.push(p.bigImage);
@@ -85,7 +83,7 @@ export async function onRequestPost(context) {
       return clean.startsWith('http') && !clean.includes('rorraxy');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
+    imagesArray = [...new Set(imagesArray)];
 
     if (imagesArray.length === 0) {
       imagesArray = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/placeholder.png'];
@@ -94,10 +92,10 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray[0];
     const imagesListJson = JSON.stringify(imagesArray);
     
-    // ভিডিও লিংক ফেচ করা (বিভিন্ন সম্ভাব্য প্রপার্টি চেক করে)
+    // ভিডিও লিংক ফেচ করা
     const videoUrl = p.productVideo || p.videoUrl || p.materialVideo || p.video || '';
 
-    // ৫. ডেসক্রিপশন গুছিয়ে ও পরিচ্ছন্ন করার লজিক
+    // ৫. ডেসক্রিপশন ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -106,8 +104,8 @@ export async function onRequestPost(context) {
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' | ')
-      .replace(/<[^>]+>/g, '') // সব অপ্রয়োজনীয় ট্যাগ রিমোভ
-      .replace(/\n\s*\n/g, '\n') // অতিরিক্ত ফাঁকা লাইন দূর করা
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n\s*\n/g, '\n')
       .trim();
 
     // ৬. Save to D1 Database
@@ -146,7 +144,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গুছানো তথ্য সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্য সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
