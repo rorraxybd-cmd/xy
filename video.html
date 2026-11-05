@@ -65,9 +65,10 @@
                 });
             }
 
-            // 2. CATEGORY Toggle (Zero Lag Instant Open)
+            // 2. CATEGORY Toggle
             if(bottomCategoryBtn && categoryTransparentOverlay) {
-                bottomCategoryBtn.addEventListener('click', () => {
+                bottomCategoryBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const isVisible = categoryTransparentOverlay.style.display === 'flex';
                     if (isVisible) {
                         categoryTransparentOverlay.style.display = 'none';
@@ -91,7 +92,8 @@
 
             // 4. SEARCH Toggle[cite: 1, 4]
             if(bottomSearchBtn && floatingSearchContainer) {
-                bottomSearchBtn.addEventListener('click', () => {
+                bottomSearchBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const isVisible = floatingSearchContainer.style.display === 'flex';
                     if (isVisible) {
                         floatingSearchContainer.style.display = 'none';
@@ -106,7 +108,8 @@
 
             // 5. SAVED Toggle[cite: 1, 4]
             if(bottomSavedBtn && savedGalleryOverlay) {
-                bottomSavedBtn.addEventListener('click', () => {
+                bottomSavedBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const isVisible = savedGalleryOverlay.style.display === 'flex';
                     if (isVisible) {
                         savedGalleryOverlay.style.display = 'none';
@@ -118,6 +121,28 @@
                     }
                 });
             }
+
+            // Outside Click Listener to close popups automatically
+            window.addEventListener('click', (e) => {
+                // If clicked outside category box content
+                if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
+                    if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
+                        categoryTransparentOverlay.style.display = 'none';
+                    }
+                }
+                // If clicked outside saved gallery content
+                if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
+                    if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
+                        savedGalleryOverlay.style.display = 'none';
+                    }
+                }
+                // If clicked outside search bar
+                if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
+                    if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
+                        floatingSearchContainer.style.display = 'none';
+                    }
+                }
+            });
 
             if(searchBtn && searchInput) {
                 searchBtn.addEventListener('click', () => {
@@ -264,7 +289,6 @@
             document.getElementById('floatingSearchContainer').style.display = 'none';
         };
 
-        // Instant Lightning Fast Category Filter
         window.filterReelsByCategory = function(queryKey) {
             document.getElementById('categoryTransparentOverlay').style.display = 'none';
             let query = queryKey.toLowerCase().replace(/-/g, ' ');
@@ -354,20 +378,18 @@
             renderBatchVideos();
         };
 
-        // Zero-Lag Instant Accordion Toggle (Display show/hide instead of height animation)
+        // Instant Accordion Toggle
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
             const content = targetBox.querySelector('.accordion-content');
             const isOpen = targetBox.classList.contains('active');
 
-            // Close all others instantly
             document.querySelectorAll('.accordion-category-box').forEach(box => {
                 box.classList.remove('active');
                 let c = box.querySelector('.accordion-content');
                 if(c) c.style.display = 'none';
             });
 
-            // Toggle target instantly
             if (!isOpen) {
                 targetBox.classList.add('active');
                 if(content) content.style.display = 'block';
@@ -616,32 +638,32 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Transparent Overlay with Instant Open */
+        /* Perfect Center Alignment & Transparent Overlay */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            z-index: 3000; overflow-y: auto; overflow-x: hidden; flex-direction: column; align-items: center;
-            padding: 25px 15px 85px 15px;
+            z-index: 3000; overflow-y: auto; overflow-x: hidden;
+            flex-direction: column; align-items: center; justify-content: center; /* Exactly Centered */
+            padding: 20px 15px 85px 15px;
         }
-        .seller-fullscreen-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
         
-        .category-fullscreen-view { padding: 10px; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
-        /* Glassmorphism on category boxes with zero delay show/hide */
+        /* Category Glassmorphism Boxes with Icons */
         .accordion-category-box { background: rgba(5, 5, 8, 0.88) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
-        .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
-        .accordion-main-title { font-size: 0.9rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
+        .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
+        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
         .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
         
-        /* Instant Display Logic */
         .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
         .accordion-category-box.active .accordion-content { display: block; }
         
         .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .sub-cat-item {
             background: rgba(12, 12, 18, 0.92); border-radius: 8px; padding: 10px;
@@ -696,7 +718,7 @@
 </head>
 <body id="mainBody">
 
-    <!-- Top Floating Search Bar (On/Off Toggle) -->
+    <!-- Top Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -719,7 +741,7 @@
     <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
-    <!-- Completely Transparent Category Overlay Menu (Instant Fast Response) -->
+    <!-- Centered Transparent Category Overlay Menu -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
@@ -727,7 +749,10 @@
                 <!-- ১. WOMEN'S FASHION -->
                 <div class="accordion-category-box" id="cat-women">
                     <div class="accordion-header" onclick="toggleAccordion('cat-women')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">WOMEN'S FASHION</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-person-dress cat-main-icon"></i>
+                            <span class="accordion-main-title">WOMEN'S FASHION</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
@@ -749,7 +774,10 @@
                 <!-- ২. MEN'S FASHION -->
                 <div class="accordion-category-box" id="cat-men">
                     <div class="accordion-header" onclick="toggleAccordion('cat-men')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">MEN'S FASHION</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-user-tie cat-main-icon"></i>
+                            <span class="accordion-main-title">MEN'S FASHION</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
@@ -766,7 +794,10 @@
                 <!-- ৩. GIRLS' FASHION -->
                 <div class="accordion-category-box" id="cat-girls">
                     <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">GIRLS' FASHION</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-crown cat-main-icon"></i>
+                            <span class="accordion-main-title">GIRLS' FASHION</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
@@ -788,7 +819,10 @@
                 <!-- ৪. BOYS' FASHION -->
                 <div class="accordion-category-box" id="cat-boys">
                     <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">BOYS' FASHION</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-child cat-main-icon"></i>
+                            <span class="accordion-main-title">BOYS' FASHION</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
@@ -805,7 +839,10 @@
                 <!-- ৫. MATCHING SETS -->
                 <div class="accordion-category-box" id="cat-matching">
                     <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">MATCHING SETS</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-people-arrows cat-main-icon"></i>
+                            <span class="accordion-main-title">MATCHING SETS</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
@@ -827,7 +864,10 @@
                 <!-- ৬. LUXURY GIFTS -->
                 <div class="accordion-category-box" id="cat-gifts">
                     <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">LUXURY GIFTS</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-gift cat-main-icon"></i>
+                            <span class="accordion-main-title">LUXURY GIFTS</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
@@ -845,7 +885,10 @@
                 <!-- ৭. MOTHER & BABY -->
                 <div class="accordion-category-box" id="cat-mother">
                     <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
-                        <div class="accordion-title-wrap"><span class="accordion-main-title">MOTHER & BABY</span></div>
+                        <div class="accordion-title-wrap">
+                            <i class="fa-solid fa-baby cat-main-icon"></i>
+                            <span class="accordion-main-title">MOTHER & BABY</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
                     <div class="accordion-content">
