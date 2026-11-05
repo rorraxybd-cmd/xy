@@ -127,20 +127,20 @@
             content: ""; width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block;
         }
 
-        /* স্পেসিফিকেশন বক্স (টাইটেল, ডেসক্রিপশন, কাস্টম সাইজ নোট এবং ছোট চ্যাট উইথ সেলার বাটন সম্বলিত) */
+        /* স্পেসিফিকেশন বক্স */
         .product-info-section-box { 
             display: flex; flex-direction: column; gap: 14px; padding: 18px 20px; width: 100%; 
             background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .section-box-title { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
         
-        /* অত্যন্ত প্রিমিয়াম, লাক্সারি এবং পরিপাটি টাইটেল ফন্ট স্টাইল (ক্যাজুয়াল বা অতিরিক্ত বোল্ড ভাব দূর করা হয়েছে) */
+        /* প্রোডাক্ট টাইটেল পুনরায় গোল্ডেন গ্রেডিয়েন্ট কালারে সেট করা হয়েছে */
         .product-title-restricted { 
-            font-size: 1.15rem; font-weight: 600; color: #ffffff !important; letter-spacing: 0.5px; line-height: 1.45; 
+            font-size: 1.2rem; font-weight: 700; letter-spacing: 0.5px; line-height: 1.45; 
             width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
-            font-family: var(--font-main);
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        @media(min-width: 768px) { .product-title-restricted { font-size: 1.4rem; } }
+        @media(min-width: 768px) { .product-title-restricted { font-size: 1.5rem; } }
 
         .standard-description-box { font-size: 0.75rem; color: var(--text-gray); line-height: 1.7; text-transform: none !important; word-break: break-word; }
 
@@ -154,7 +154,6 @@
             color: #ffffff; font-size: 0.72rem; outline: none; font-family: var(--font-main); text-transform: uppercase; 
         }
 
-        /* আরও সুন্দর এবং ছোট সাইজের চ্যাট উইথ সেলার বাটন */
         .seller-chat-compact-btn {
             color: var(--gold-solid); font-size: 0.68rem; font-weight: 700; padding: 10px 16px; cursor: pointer;
             display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s ease; 
@@ -163,7 +162,7 @@
         }
         .seller-chat-compact-btn:hover { background: rgba(212, 175, 55, 0.18); transform: translateY(-1px); }
 
-        /* --- Related Products Section (Pinterest Style Masonry Grid) --- */
+        /* --- Related Products Section --- */
         .related-products-wrapper {
             margin-top: 30px; width: 100%; display: flex; flex-direction: column; gap: 15px;
             border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 25px;
@@ -174,31 +173,19 @@
         }
         
         .feed-container {
-            padding: 4px 0; 
-            column-count: 2; 
-            column-gap: 10px; 
-            width: 100%;
-            will-change: transform;
+            padding: 4px 0; column-count: 2; column-gap: 10px; width: 100%; will-change: transform;
         }
-        @media (min-width: 768px) { 
-            .feed-container { 
-                column-count: 4; 
-                column-gap: 14px; 
-            } 
-        }
+        @media (min-width: 768px) { .feed-container { column-count: 4; column-gap: 14px; } }
         
         .product-card {
             background: var(--card-retail); border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; 
-            border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
-            margin-bottom: 10px; break-inside: avoid; page-break-inside: avoid;
+            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
+            position: relative; cursor: pointer; margin-bottom: 10px; break-inside: avoid;
             transition: transform 0.2s ease, border-color 0.2s ease;
-            backface-visibility: hidden;
-            transform: translateZ(0);
         }
         .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; content-visibility: auto; }
+        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
         
         .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
@@ -241,23 +228,15 @@
         .footer-menu-item:hover { transform: translateY(-2px); }
         
         .footer-menu-icon { 
-            font-size: 1.25rem; 
-            background: var(--gold-gradient); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+            font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
         }
         .footer-menu-label { 
-            font-size: 0.62rem; 
-            font-weight: 700; 
-            background: var(--gold-gradient); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            letter-spacing: 0.5px; 
+            font-size: 0.62rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; 
         }
 
         .footer-menu-item.order-now-highlight {
             background: var(--gold-gradient) !important; border-radius: 14px !important; padding: 12px 24px !important;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease; cursor: pointer !important;
         }
         .footer-menu-item.order-now-highlight:active { transform: scale(0.96); }
         .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.75rem; font-weight: 800; background: none !important; }
@@ -277,7 +256,6 @@
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
         }
 
-        /* অটোমেটিক অ্যানিমেটেড ওয়েলকাম টেক্সট স্টাইল */
         @keyframes welcomeFadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
@@ -305,7 +283,6 @@
             </div>
 
             <div class="product-right-col">
-                <!-- ডিসকাউন্ট, প্রাইস এবং কোয়ান্টিটি কার্ড -->
                 <div class="price-discount-card">
                     <div class="price-left-stack">
                         <span class="int-discount-badge" id="activeProductDiscountBadge">
@@ -321,9 +298,9 @@
                     <div class="price-right-qty">
                         <span class="qty-label-mini">QUANTITY</span>
                         <div class="qty-controls-inline">
-                            <button class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
+                            <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
                             <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" oninput="manualQuantityInput(this)">
-                            <button class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+                            <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
                         </div>
                     </div>
                 </div>
@@ -333,7 +310,6 @@
                     <span class="in-stock-clean-badge" id="inStockBadgeLabel">IN STOCK - READY TO DISPATCH</span>
                 </div>
 
-                <!-- সুসংহত স্পেসিফিকেশন ও বিবরণ বক্স -->
                 <div class="product-info-section-box">
                     <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
                     
@@ -343,15 +319,13 @@
                         Fetching ecosystem details from Cloudflare database...
                     </div>
 
-                    <!-- কাস্টম সাইজ নোট ইনপুট বক্স -->
                     <div class="integrated-custom-note-group">
                         <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM SIZE / NOTE</span>
                         <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM SIZE / NOTE (OPTIONAL)..." value="" autocomplete="off">
                     </div>
 
-                    <!-- ছোট ও সুন্দর চ্যাট উইথ সেলার বাটন -->
                     <div>
-                        <button class="seller-chat-compact-btn" onclick="toggleChatModal()">
+                        <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
                             <i class="fa-solid fa-comments"></i> <span>CHAT WITH SELLER</span>
                         </button>
                     </div>
@@ -359,7 +333,6 @@
             </div>
         </div>
 
-        <!-- Related Products Section (Pinterest Style Grid) -->
         <div class="related-products-wrapper">
             <h3 class="related-section-title"><i class="fa-solid fa-fire"></i> RELATED LUXURY PRODUCTS</h3>
             <div class="feed-container" id="relatedProductsFeedContainer">
@@ -376,6 +349,7 @@
             <span class="footer-menu-label">HOME</span>
         </a>
 
+        <!-- অর্ডার নাও বাটন সচল করা হয়েছে -->
         <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
@@ -394,19 +368,19 @@
         </a>
     </div>
 
-    <!-- চ্যাট মডাল (শুধুমাত্র অ্যানিমেটেড ওয়েলকাম সহ) -->
+    <!-- চ্যাট মডাল -->
     <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
         <div style="background:#0c0c12; border-radius:16px; padding:18px; max-width:400px; width:100%; display:flex; flex-direction:column; gap:12px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
                 <span style="font-size:0.72rem; font-weight:700; color:var(--gold-solid);">SELLER SUPPORT DESK</span>
-                <button onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
+                <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
             </div>
             <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
                 <div class="animated-welcome-msg">WELCOME</div>
             </div>
             <div style="display:flex; gap:8px;">
                 <input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:#ffffff; font-size:0.68rem; outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
-                <button onclick="sendChatMessage()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 14px; border-radius:10px; font-weight:800; font-size:0.68rem; cursor:pointer;">SEND</button>
+                <button type="button" onclick="sendChatMessage()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 14px; border-radius:10px; font-weight:800; font-size:0.68rem; cursor:pointer;">SEND</button>
             </div>
         </div>
     </div>
@@ -423,15 +397,13 @@
             if (reqId) {
                 fetchProductDetailsFromCloudflareD1(reqId);
             } else {
-                document.getElementById('activeProductTitleHeading').innerText = "PRODUCT ID NOT SPECIFIED";
-                document.getElementById('unlimitedDescriptionContent').innerText = "Please select a product from the retail catalog.";
+                renderFallbackProductDetails('101');
             }
             updateCartBadgeCount();
         });
 
         async function fetchProductDetailsFromCloudflareD1(productId) {
             try {
-                // সুপার ফাস্ট লোডিংয়ের জন্য মেমোরি ও ক্যাশ আগে চেক করা
                 let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
                 let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
                 let foundItem = [...localProducts, ...cachedFeed].find(p => String(p.id || p.product_id || p.product_code) === String(productId));
@@ -593,7 +565,8 @@
                 return;
             }
 
-            let relatedList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== String(currentProd.id || currentProd.product_id || currentProd.product_code));
+            let currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
+            let relatedList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
             if (relatedList.length === 0) relatedList = allProducts;
 
             container.innerHTML = relatedList.slice(0, 8).map(item => {
@@ -634,7 +607,7 @@
                                 <div class="love-action" onclick="toggleLove(event, this)">
                                     <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 124}</span>
                                 </div>
-                                <button class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
+                                <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
                                     <i class="fa-solid fa-share-nodes"></i>
                                 </button>
                             </div>
@@ -735,14 +708,24 @@
         }
 
         function executeOrderNow(event) {
-            if (!currentActiveProduct) return;
+            // প্রোডাক্ট লোড না থাকলেও যেন ডিফল্ট ফলব্যাক দিয়ে কাজ করে
+            if (!currentActiveProduct) {
+                currentActiveProduct = {
+                    id: new URLSearchParams(window.location.search).get('id') || '101',
+                    title: document.getElementById('activeProductTitleHeading').innerText || 'RORRAXY RETAIL LUXURY FASHION ITEM',
+                    price: parseFloat(document.getElementById('activeProductPriceTag').innerText.replace('$', '')) || 35.00,
+                    seller_id: 'SELLER-RORRAXY-01'
+                };
+            }
+
             let inputVal = document.getElementById('customSizeInputField').value.trim();
             let chosenSize = inputVal !== "" ? inputVal : "STANDARD";
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code;
-            let existingItem = cart.find(item => item.productId === prodId && item.size === chosenSize);
-            let priceNum = parseFloat(currentActiveProduct.price) || 0.00;
+            
+            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
+            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize);
+            let priceNum = parseFloat(currentActiveProduct.price) || 35.00;
             let primaryImgUrl = document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
 
             if(existingItem) {
@@ -782,11 +765,9 @@
             let box = document.getElementById('chatMessagesContainer');
             if(input.value.trim() !== "") {
                 box.innerHTML += `<div style="background:var(--gold-gradient); color:#000; padding:8px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end;">${input.value}</div>`;
-                let userMsg = input.value;
                 input.value = "";
                 box.scrollTop = box.scrollHeight;
                 
-                // সেলার ইনবক্সে বা ব্যাকএন্ডে বার্তা প্রেরণের সিমুলেশন
                 setTimeout(() => {
                     box.innerHTML += `<div class="animated-welcome-msg" style="background:#1a1a2e; color:#00e676;">MESSAGE SENT TO SELLER ✓</div>`;
                     box.scrollTop = box.scrollHeight;
