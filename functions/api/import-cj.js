@@ -54,42 +54,42 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. CJ এর সব সম্ভাব্য ফিল্ড থেকে নিখুঁতভাবে গ্যালারি ইমেজ সংগ্রহ করার লজিক
+    // ৪. সমস্ত গ্যালারি ছবি (একাধিক ছবি) এবং ভিডিও নিখুঁতভাবে এক্সট্রাক্ট করা
     let rawImages = [];
     
-    if (Array.isArray(p.productImageList)) {
+    if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       rawImages = p.productImageList;
-    } else if (Array.isArray(p.productImages)) {
+    } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
       rawImages = p.productImages;
     } else if (typeof p.productImageList === 'string') {
       try { rawImages = JSON.parse(p.productImageList); } catch(e) { rawImages = [p.productImageList]; }
     }
 
-    // যদি অ্যারেতে ইমেজ না থাকে, তবে সিঙ্গেল ইমেজ ফিল্ডগুলো চেক করা
+    // যদি অ্যারেতে না থাকে, তবে সিঙ্গেল ইমেজ ফিল্ডগুলো চেক করা
     if (rawImages.length === 0) {
       if (p.productImage) rawImages.push(p.productImage);
       if (p.bigImage) rawImages.push(p.bigImage);
       if (p.imageUrl) rawImages.push(p.imageUrl);
     }
 
-    // লোগো বা rorraxy সংবলিত লিংক কঠোরভাবে ফিল্টার করে বাদ দেওয়া এবং শুধু সঠিক http লিংক রাখা
+    // লোগো বা rorraxy ফিল্টার করে আসল ছবিগুলো রাখা
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
-      let cleanImg = img.trim();
-      return cleanImg.startsWith('http') && !cleanImg.includes('rorraxy');
+      let clean = img.trim();
+      return clean.startsWith('http') && !clean.includes('rorraxy');
     });
 
-    // ডুপ্লিকেট ইমেজ রিমোভ করা
-    imagesArray = [...new Set(imagesArray)];
+    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
 
-    // যদি কোনো ছবি না পাওয়া যায়, তবে ফলব্যাক
     if (imagesArray.length === 0) {
       imagesArray = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/placeholder.png'];
     }
 
     const mainImage = imagesArray[0];
     const imagesListJson = JSON.stringify(imagesArray);
-    const videoUrl = p.productVideo || p.videoUrl || '';
+    
+    // ভিডিও লিংক ক্যাচ করার লজিক
+    const videoUrl = p.productVideo || p.videoUrl || p.materialVideo || '';
 
     // ৫. ডেসক্রিপশন ক্লিন করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
