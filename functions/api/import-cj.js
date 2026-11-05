@@ -2,7 +2,7 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { cjProductId, retailMargin, shippingCushion, wholesaleMargin } = await request.json();
+    const { cjProductId, retailMargin, shippingCushion, wholesaleMargin, previewOnly } = await request.json();
 
     if (!cjProductId) {
       return new Response(JSON.stringify({ success: false, error: "CJ Product ID is required" }), {
@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. নির্ভুল ইমেজ এক্সট্রাকশন লজিক (লোগো বা রর্যাক্সি ফিল্টার করে বাদ দেওয়া)
+    // ৪. নির্ভুল ইমেজ এক্সট্রাকশন লজিক (সিজে-র সব সম্ভাব্য ইমেজ ফিল্ড স্ক্যান করা)
     let rawImages = [];
 
     const extract = (source) => {
@@ -80,28 +80,41 @@ export async function onRequestPost(context) {
     extract(p.bigImage);
     extract(p.imageUrl);
 
-    // কঠোরভাবে লোগো বা rorraxy যুক্ত লিংক ফিল্টার করে বাদ দেওয়া
+    // লোগো বা ভুল লিংক ফিল্টার করে বাদ দেওয়া
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
       return clean.startsWith('http') && 
              !clean.includes('rorraxy') && 
-             !clean.includes('placeholder') &&
-             (clean.endsWith('.jpg') || clean.endsWith('.png') || clean.endsWith('.jpeg') || clean.includes('cj') || clean.includes('product'));
+             !clean.includes('placeholder');
     });
 
     imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট দূর করা
 
-    // যদি কোনো ছবি না পাওয়া যায়, তবে একটি নিরাপদ ডিফল্ট প্রোডাক্ট ইমেজ রাখা (লোগো নয়)
-    if (imagesArray.length === 0) {
-      imagesArray = [p.productImage && p.productImage.startsWith('http') ? p.productImage : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30'];
+    if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
+      imagesArray = [p.productImage];
     }
 
-    const mainImage = imagesArray[0]; // লোগো ছাড়া একদম প্রথম আসল প্রোডাক্ট ইমেজ
+    const mainImage = imagesArray.length > 0 ? imagesArray[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30';
     const imagesListJson = JSON.stringify(imagesArray);
     
     // ভিডিও লিংক ফেচ করা
     const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || '';
+
+    // যদি রিকোয়েস্টটি শুধু প্রিভিউ দেখার জন্য হয়, তবে ডাটাবেজে সেভ না করে ডেটা রিটার্ন করে দেবো
+    if (previewOnly) {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        data: { 
+          title: p.productNameEn || 'Global Product', 
+          retailPrice, 
+          priceSample, 
+          imagesCount: imagesArray.length,
+          imagesArray: imagesArray,
+          videoUrl: videoUrl
+        }
+      }), { headers: { "Content-Type": "application/json" } });
+    }
 
     // ৫. ডেসক্রিপশন গুছিয়ে নেওয়া
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
@@ -116,7 +129,7 @@ export async function onRequestPost(context) {
       .replace(/\n\s*\n/g, '\n')
       .trim();
 
-    // ৬. Save to D1 Database
+    // ৬. Save to D1 Database (পূর্ণাঙ্গ ইমপোর্ট)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -158,6 +171,8 @@ export async function onRequestPost(context) {
         retailPrice, 
         priceSample, 
         imagesCount: imagesArray.length,
+        imagesArray: imagesArray,
+        videoUrl: videoUrl,
         hasVideo: !!videoUrl 
       }
     }), { headers: { "Content-Type": "application/json" } });
