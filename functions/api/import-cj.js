@@ -12,7 +12,7 @@ export async function onRequestPost(context) {
     }
 
     // ১. CJ Access Token
-    const tokenRes = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
+    const tokenRes = aai = await fetch("https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ apiKey: env.CJ_API_KEY })
@@ -54,25 +54,31 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি ছবি (একাধিক ছবি) এবং ভিডিও নিখুঁতভাবে এক্সট্রাক্ট করা
+    // ৪. সমস্ত গ্যালারি ইমেজ (একাধিক ছবি) নিখুঁতভাবে এক্সট্রাক্ট করা
     let rawImages = [];
     
+    // CJ API-এর বিভিন্ন সম্ভাব্য ইমেজ অ্যারে ফিল্ড চেক করা
     if (Array.isArray(p.productImageList) && p.productImageList.length > 0) {
       rawImages = p.productImageList;
     } else if (Array.isArray(p.productImages) && p.productImages.length > 0) {
       rawImages = p.productImages;
+    } else if (p.carouselImage && Array.isArray(p.carouselImage)) {
+      rawImages = p.carouselImage;
     } else if (typeof p.productImageList === 'string') {
-      try { rawImages = JSON.parse(p.productImageList); } catch(e) { rawImages = [p.productImageList]; }
+      try { 
+        let parsed = JSON.parse(p.productImageList);
+        if (Array.isArray(parsed)) rawImages = parsed;
+      } catch(e) { rawImages = [p.productImageList]; }
     }
 
-    // যদি অ্যারেতে না থাকে, তবে সিঙ্গেল ইমেজ ফিল্ডগুলো চেক করা
+    // যদি অ্যারেতে ইমেজ না পাওয়া যায়, তবে সিঙ্গেল ইমেজ ফিল্ডগুলো যোগ করা
     if (rawImages.length === 0) {
       if (p.productImage) rawImages.push(p.productImage);
       if (p.bigImage) rawImages.push(p.bigImage);
       if (p.imageUrl) rawImages.push(p.imageUrl);
     }
 
-    // লোগো বা rorraxy ফিল্টার করে আসল ছবিগুলো রাখা
+    // লোগো বা rorraxy ফিল্টার করে শুধুমাত্র আসল প্রোডাক্টের ছবিগুলো রাখা
     let imagesArray = rawImages.filter(img => {
       if (!img || typeof img !== 'string') return false;
       let clean = img.trim();
@@ -88,17 +94,20 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray[0];
     const imagesListJson = JSON.stringify(imagesArray);
     
-    // ভিডিও লিংক ক্যাচ করার লজিক
-    const videoUrl = p.productVideo || p.videoUrl || p.materialVideo || '';
+    // ভিডিও লিংক ফেচ করা (বিভিন্ন সম্ভাব্য প্রপার্টি চেক করে)
+    const videoUrl = p.productVideo || p.videoUrl || p.materialVideo || p.video || '';
 
-    // ৫. ডেসক্রিপশন ক্লিন করা
+    // ৫. ডেসক্রিপশন গুছিয়ে ও পরিচ্ছন্ন করার লজিক
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     const cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
-      .replace(/<[^>]+>/g, '')
+      .replace(/<\/tr>/gi, '\n')
+      .replace(/<\/td>/gi, ' | ')
+      .replace(/<[^>]+>/g, '') // সব অপ্রয়োজনীয় ট্যাগ রিমোভ
+      .replace(/\n\s*\n/g, '\n') // অতিরিক্ত ফাঁকা লাইন দূর করা
       .trim();
 
     // ৬. Save to D1 Database
@@ -137,7 +146,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং তথ্য সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গুছানো তথ্য সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
