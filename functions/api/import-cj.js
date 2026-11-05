@@ -2,7 +2,7 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { cjProductId, retailMargin, shippingCushion, wholesaleMargin, previewOnly } = await request.json();
+    const { cjProductId, retailMargin, shippingCushion, wholesaleMargin, previewOnly, manualVideoUrl } = await request.json();
 
     if (!cjProductId) {
       return new Response(JSON.stringify({ success: false, error: "CJ Product ID is required" }), {
@@ -118,22 +118,22 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও গ্যালারি এবং সকল সোর্স থেকে ভিডিও লিংক নিখুঁতভাবে এক্সট্রাক্ট করার আল্ট্রা-পাওয়ারফুল লজিক
-    let videoUrl = '';
+    // ৫. ভিডিও গ্যালারি এক্সট্রাকশন লজিক (ম্যানুয়াল ইনপুট থাকলে সেটি আগে নিবে)
+    let videoUrl = (manualVideoUrl && typeof manualVideoUrl === 'string') ? manualVideoUrl.trim() : '';
     
-    // ক) সরাসরি পরিচিত প্রপার্টিগুলো চেক করা
-    const directVideoFields = [
-      p.materialVideo, p.productVideo, p.video, p.videoUrl, p.vedio,
-      p.goodsVideo, p.itemVideo, p.mediaVideo, p.mp4Url, p.watchVideo
-    ];
-    for (let field of directVideoFields) {
-      if (field && typeof field === 'string' && field.trim().startsWith('http')) {
-        videoUrl = field.trim();
-        break;
+    if (!videoUrl) {
+      const directVideoFields = [
+        p.materialVideo, p.productVideo, p.video, p.videoUrl, p.vedio,
+        p.goodsVideo, p.itemVideo, p.mediaVideo, p.mp4Url, p.watchVideo
+      ];
+      for (let field of directVideoFields) {
+        if (field && typeof field === 'string' && field.trim().startsWith('http')) {
+          videoUrl = field.trim();
+          break;
+        }
       }
     }
 
-    // খ) যদি ভিডিও অ্যারে বা লিস্ট আকারে থাকে
     if (!videoUrl) {
       const videoSources = [p.videos, p.videoList, p.materialVideoList, p.productVideoList];
       for (let src of videoSources) {
@@ -150,7 +150,6 @@ export async function onRequestPost(context) {
       }
     }
 
-    // গ) নেস্টেড অবজেক্ট (যেমন productVo) চেক করা
     if (!videoUrl && p.productVo && typeof p.productVo === 'object') {
       let voVid = p.productVo.productVideo || p.productVo.video || p.productVo.videoUrl;
       if (voVid && typeof voVid === 'string' && voVid.startsWith('http')) {
@@ -158,18 +157,6 @@ export async function onRequestPost(context) {
       }
     }
 
-    // ঘ) যদি সিজে ভ্যারিয়েন্টস বা অন্য কোথাও ভিডিও লিংক লুকানো থাকে
-    if (!videoUrl && p.variants && Array.isArray(p.variants)) {
-      for (let v of p.variants) {
-        let vVid = v.variantVideo || v.video || v.videoUrl;
-        if (vVid && typeof vVid === 'string' && vVid.startsWith('http')) {
-          videoUrl = vVid.trim();
-          break;
-        }
-      }
-    }
-
-    // ঙ) ফাইনাল চেষ্টা: পুরো প্রোডাক্টের ডেটার ভেতর থেকে যেকোনো .mp4 বা ভিডিও লিঙ্ক Regex দিয়ে খুঁজে বের করা
     if (!videoUrl) {
       try {
         let jsonStr = JSON.stringify(p);
@@ -181,9 +168,10 @@ export async function onRequestPost(context) {
       } catch (e) {}
     }
 
-    // ৬. ডেসক্রিপশন পরিষ্কার ও সুন্দরভাবে ফরম্যাট করা
+    // ৬. ডেসক্রিপশন নিখুঁতভাবে পরিষ্কার ও ঝকঝকে ফরম্যাট করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
+      .replace(/<img[^>]*>/gi, '') // ব্রোকেন ইমেজ রিমুভ
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
@@ -199,27 +187,36 @@ export async function onRequestPost(context) {
       .replace(/\n\s*\n/g, '\n\n')
       .trim();
 
-    if (sizesList.length > 0) {
-      cleanDescription = `AVAILABLE SIZES / OPTIONS:\n${sizesList.join(', ')}\n\n------------------------------------\n\n` + cleanDescription;
-    }
+    let productTitle = p.productNameEn || 'Global Product';
+    let materialInfo = p.material || p.productMaterial || 'Standard Material';
+    let sizesText = sizesList.length > 0 ? sizesList.join(', ') : 'Standard / Free Size';
+
+    let structuredHeader = `PRODUCT OVERVIEW:\n` +
+      `• Title: ${productTitle}\n` +
+      `• Available Sizes: ${sizesText}\n` +
+      `• Material: ${materialInfo}\n\n` +
+      `------------------------------------\n\n`;
+
+    cleanDescription = structuredHeader + cleanDescription;
 
     // প্রিভিউ মোডের জন্য রেসপন্স
     if (previewOnly) {
       return new Response(JSON.stringify({ 
         success: true, 
         data: { 
-          title: p.productNameEn || 'Global Product', 
+          title: productTitle, 
           retailPrice, 
           priceSample, 
           imagesCount: imagesArray.length,
           imagesArray: imagesArray,
           sizes: sizesList,
+          material: materialInfo,
           videoUrl: videoUrl
         }
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database (সকল ইমেজ JSON ও ভিডিও সহ সেভ)
+    // ৭. Save to D1 Database (সকল তথ্য সহ সেভ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -240,7 +237,7 @@ export async function onRequestPost(context) {
       ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'both', ?, CURRENT_TIMESTAMP)
     `).bind(
       cjProductId,
-      p.productNameEn || 'Global Product',
+      productTitle,
       cleanDescription,
       retailPrice,
       priceSample,
@@ -257,7 +254,7 @@ export async function onRequestPost(context) {
       success: true, 
       message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
       data: { 
-        title: p.productNameEn, 
+        title: productTitle, 
         retailPrice, 
         priceSample, 
         imagesCount: imagesArray.length,
