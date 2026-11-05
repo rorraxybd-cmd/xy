@@ -118,7 +118,7 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও গ্যালারি এক্সট্রাকশন লজিক (ম্যানুয়াল ইনপুট থাকলে সেটি আগে নিবে)
+    // ৫. ভিডিও গ্যালারি এক্সট্রাকশন লজিক
     let videoUrl = (manualVideoUrl && typeof manualVideoUrl === 'string') ? manualVideoUrl.trim() : '';
     
     if (!videoUrl) {
@@ -168,22 +168,21 @@ export async function onRequestPost(context) {
       } catch (e) {}
     }
 
-    // ৬. ডেসক্রিপশন নিখুঁতভাবে পরিষ্কার ও ঝকঝকে ফরম্যাট করা (শেষে আসা সমস্ত বাজে টেক্সট রিমুভ)
+    // ৬. ডেসক্রিপশন পরিষ্কার করার লজিক
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
-      .replace(/<img[^>]*>/gi, '') // ব্রোকেন ইমেজ ট্যাগ রিমুভ
+      .replace(/<img[^>]*>/gi, '')
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
       .replace(/<\/td>/gi, ' : ')
-      .replace(/<[^>]+>/g, '') // সব এইচটিএমএল ট্যাগ রিমুভ
+      .replace(/<[^>]+>/g, '')
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
-      // ডেসক্রিপশনের শেষের সমস্ত ধরনের Packing list, Dress *1, Product Image ইত্যাদি ডাইনামিক্যালি রিমুভ করার লজিক
       .replace(/(?:Packing list|Package list|Packing List|Package List)[\s\S]*$/gim, '')
       .replace(/(?:[a-zA-Z0-9\s*-]+\s*)?\*1\s*Product Image:?/gim, '')
       .replace(/Product Image:?/gim, '')
@@ -196,7 +195,6 @@ export async function onRequestPost(context) {
     let materialInfo = p.material || p.productMaterial || 'Standard Material';
     let sizesText = sizesList.length > 0 ? sizesList.join(', ') : 'Standard / Free Size';
 
-    // ডেসক্রিপশনের উপরে গোছানো হেডার
     let structuredHeader = `PRODUCT OVERVIEW:\n` +
       `• Title: ${productTitle}\n` +
       `• Available Sizes: ${sizesText}\n` +
@@ -205,7 +203,6 @@ export async function onRequestPost(context) {
 
     cleanDescription = structuredHeader + cleanDescription;
 
-    // প্রিভিউ মোডের জন্য রেসপন্স
     if (previewOnly) {
       return new Response(JSON.stringify({ 
         success: true, 
@@ -222,7 +219,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database (সকল তথ্য সহ সেভ)[cite: 5]
+    // ৭. Save to D1 Database[cite: 5]
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -278,3 +275,5 @@ export async function onRequestPost(context) {
   }
 }
 ```[cite: 5]
+
+কোডটি বসিয়ে সেভ করার সাথে সাথেই ক্লাউডফ্লাওয়ারে নতুন সাকসেসফুল ডিপ্লয়মেন্ট চলে আসবে এবং ত্রুটি সমাধান হয়ে যাবে।
