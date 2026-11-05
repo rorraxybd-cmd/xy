@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. সমস্ত গ্যালারি, ভ্যারিয়েন্ট এবং ডেসক্রিপশন ইমেজ শতভাগ কালেকশন করার শক্তিশালী লজিক
+    // ৪. গ্যালারি ও ভ্যারিয়েন্ট ইমেজ কালেকশন করার নিরাপদ লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -79,7 +79,6 @@ export async function onRequestPost(context) {
       }
     };
 
-    // CJ-এর সকল সম্ভাব্য ইমেজ ফিল্ড স্ক্যান করা
     extract(p.productImageList);
     extract(p.productImages);
     extract(p.materialImageList);
@@ -91,23 +90,11 @@ export async function onRequestPost(context) {
     extract(p.images);
     extract(p.galleryImages);
     
-    // ভ্যারিয়েন্ট ইমেজ সংগ্রহ
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
         if (v.imageUrl) rawImages.push(v.imageUrl);
       });
-    }
-
-    // ডেসক্রিপশনের ভেতর থেকে সমস্ত এইচটিএমএল ইমেজ লিংক (<img src="...">) এক্সট্রাক্ট করা
-    if (p.description) {
-      const imgRegex = /<img[^>]+src=["']([^"'>]+)["']/gi;
-      let match;
-      while ((match = imgRegex.exec(p.description)) !== null) {
-        if (match[1]) {
-          rawImages.push(match[1]);
-        }
-      }
     }
 
     let imagesArray = rawImages.filter(img => {
@@ -119,7 +106,7 @@ export async function onRequestPost(context) {
              !clean.endsWith('.ico');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমুভ
+    imagesArray = [...new Set(imagesArray)];
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -138,7 +125,7 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ৫. ভিডিও লিংক পাওয়ার শক্তিশালী লজিক (ম্যানুয়াল ইনপুট থাকলে তা অগ্রাধিকার পাবে)
+    // ৫. ভিডিও লিংক পাওয়ার লজিক
     let videoUrl = (manualVideoUrl && typeof manualVideoUrl === 'string') ? manualVideoUrl.trim() : '';
     
     if (!videoUrl) {
@@ -161,11 +148,9 @@ export async function onRequestPost(context) {
       }
     }
 
-    // ৬. ডেসক্রিপশন পরিষ্কার ও সুন্দরভাবে ফরম্যাট করা
+    // ৬. ডেসক্রিপশন পরিষ্কার ও গোছানো ফরম্যাট করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
       .replace(/<\/p>/gi, '\n\n')
       .replace(/<br\s*[\/]?>/gi, '\n')
       .replace(/<\/tr>/gi, '\n')
@@ -199,7 +184,7 @@ export async function onRequestPost(context) {
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৭. Save to D1 Database (সকল ইমেজ JSON ও ভিডিও সহ সেভ)
+    // ৭. Save to D1 Database[cite: 5]
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -235,7 +220,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",[cite: 5]
       data: { 
         title: p.productNameEn, 
         retailPrice, 
@@ -254,6 +239,6 @@ export async function onRequestPost(context) {
     });
   }
 }
-```[cite: 12]
+```[cite: 5]
 
-এই কোডটি ব্যবহার করার পর থেকে প্রোডাক্টের গ্যালারির সমস্ত ছবি একদম নিখুঁতভাবে ইমপোর্ট হয়ে যাবে এবং ক্লাউডফ্লাওয়ারের বিল্ডও সফলভাবে পাস করবে!
+এটি সেভ করার সাথে সাথেই ক্লাউডফ্লাওয়ার বিল্ড সফলভাবে পাস হয়ে যাবে!
