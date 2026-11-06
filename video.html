@@ -58,14 +58,12 @@
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
-            // 1. HOME Click: Direct link to rorraxy.com[cite: 1, 4]
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
                     window.location.href = 'https://rorraxy.com';
                 });
             }
 
-            // 2. CATEGORY Toggle
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -80,7 +78,6 @@
                 });
             }
 
-            // 3. BUY & INFO Click: Open Product Detail Page[cite: 1, 4]
             if(bottomBuyInfoBtn) {
                 bottomBuyInfoBtn.addEventListener('click', () => {
                     let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
@@ -90,7 +87,6 @@
                 });
             }
 
-            // 4. SEARCH Toggle[cite: 1, 4]
             if(bottomSearchBtn && floatingSearchContainer) {
                 bottomSearchBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -106,7 +102,6 @@
                 });
             }
 
-            // 5. SAVED Toggle[cite: 1, 4]
             if(bottomSavedBtn && savedGalleryOverlay) {
                 bottomSavedBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -122,21 +117,17 @@
                 });
             }
 
-            // Outside Click Listener to close popups automatically
             window.addEventListener('click', (e) => {
-                // If clicked outside category box content
                 if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
                     if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
                         categoryTransparentOverlay.style.display = 'none';
                     }
                 }
-                // If clicked outside saved gallery content
                 if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
                     if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
                         savedGalleryOverlay.style.display = 'none';
                     }
                 }
-                // If clicked outside search bar
                 if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
                     if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
                         floatingSearchContainer.style.display = 'none';
@@ -215,6 +206,9 @@
                         let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
                         let discountVal = parseFloat(item.discount_rate || 0);
 
+                        // কান্ট্রি কোড হ্যান্ডেল করার জন্য (যেমন: item.country বা item.country_code, ডিফল্ট 'us')
+                        let countryCode = (item.country_code || item.country || 'us').toLowerCase();
+
                         let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
 
                         return {
@@ -226,6 +220,7 @@
                             baseShares: 180,
                             discountNum: discountVal,
                             discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
+                            countryCode: countryCode, // কান্ট্রি কোড যুক্ত করা হলো
                             category: item.category || 'video',
                             description: item.description || '',
                             title: item.title || '',
@@ -378,7 +373,6 @@
             renderBatchVideos();
         };
 
-        // Instant Accordion Toggle
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
             const content = targetBox.querySelector('.accordion-content');
@@ -458,9 +452,12 @@
 
             let discountBadgeHtml = '';
             if (product.discountNum && product.discountNum > 0) {
+                // ডাইনামিক পতাকার জন্য flagcdn ব্যবহার করা হয়েছে (যেমন: us, ca, bd ইত্যাদি)
+                let countryFlagUrl = `https://flagcdn.com/24x18/${product.countryCode || 'us'}.png`;
+                
                 discountBadgeHtml = `
                     <div class="image-style-discount-badge">
-                        <i class="fa-solid fa-flag offer-flag-icon"></i>
+                        <img src="${countryFlagUrl}" alt="Flag" style="width: 18px; height: 13px; object-fit: cover; border-radius: 2px;">
                         <span class="offer-text">${product.discountStr}</span>
                     </div>`;
             }
@@ -578,7 +575,6 @@
             .feed-container { max-width: 420px; }
         }
 
-        /* Top Floating Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: none;
@@ -614,7 +610,6 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
         }
 
-        /* Bottom Navigation Bar (Always Visible at z-index 4000) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
@@ -638,19 +633,16 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Perfect Center Alignment & Transparent Overlay */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
             z-index: 3000; overflow-y: auto; overflow-x: hidden;
-            flex-direction: column; align-items: center; justify-content: center; /* Exactly Centered */
+            flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
-        
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
-        /* Category Glassmorphism Boxes with Icons */
         .accordion-category-box { background: rgba(5, 5, 8, 0.88) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
@@ -712,13 +704,11 @@
             background: var(--pink-accent); color: #ffffff; padding: 4px 12px; border-radius: 18px;
             font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
         }
-        .offer-flag-icon { font-size: 0.75rem; color: #ffffff; }
         .offer-text { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
     </style>
 </head>
 <body id="mainBody">
 
-    <!-- Top Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -729,7 +719,6 @@
         <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (Always Visible at z-index 4000) -->
     <nav class="bottom-nav-bar">
         <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -738,15 +727,12 @@
         <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
     </nav>
 
-    <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
-    <!-- Centered Transparent Category Overlay Menu -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
                 
-                <!-- ১. WOMEN'S FASHION -->
                 <div class="accordion-category-box" id="cat-women">
                     <div class="accordion-header" onclick="toggleAccordion('cat-women')">
                         <div class="accordion-title-wrap">
@@ -771,7 +757,6 @@
                     </div>
                 </div>
 
-                <!-- ২. MEN'S FASHION -->
                 <div class="accordion-category-box" id="cat-men">
                     <div class="accordion-header" onclick="toggleAccordion('cat-men')">
                         <div class="accordion-title-wrap">
@@ -791,7 +776,6 @@
                     </div>
                 </div>
 
-                <!-- ৩. GIRLS' FASHION -->
                 <div class="accordion-category-box" id="cat-girls">
                     <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
                         <div class="accordion-title-wrap">
@@ -816,7 +800,6 @@
                     </div>
                 </div>
 
-                <!-- ৪. BOYS' FASHION -->
                 <div class="accordion-category-box" id="cat-boys">
                     <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
                         <div class="accordion-title-wrap">
@@ -836,7 +819,6 @@
                     </div>
                 </div>
 
-                <!-- ৫. MATCHING SETS -->
                 <div class="accordion-category-box" id="cat-matching">
                     <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
                         <div class="accordion-title-wrap">
@@ -861,7 +843,6 @@
                     </div>
                 </div>
 
-                <!-- ৬. LUXURY GIFTS -->
                 <div class="accordion-category-box" id="cat-gifts">
                     <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
                         <div class="accordion-title-wrap">
@@ -882,7 +863,6 @@
                     </div>
                 </div>
 
-                <!-- ৭. MOTHER & BABY -->
                 <div class="accordion-category-box" id="cat-mother">
                     <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
                         <div class="accordion-title-wrap">
@@ -893,7 +873,7 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterReelsByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReslByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
                             <div class="sub-cat-item" onclick="filterReelsByCategory('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
                             <div class="sub-cat-item" onclick="filterReelsByCategory('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
                             <div class="sub-cat-item" onclick="filterReelsByCategory('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
