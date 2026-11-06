@@ -55,11 +55,11 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         @keyframes softFadeInUp {
-            from { opacity: 0; transform: translateY(18px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-card-entry {
-            animation: softFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: softFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* Top Floating Search Bar */
@@ -80,7 +80,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar */
+        /* Bottom Navigation Bar (হুম বাটনের জায়গায় ইউ অ্যাকাউন্ট আইকন)[cite: 15] */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -126,12 +126,14 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
+        /* প্রাইসের নিচে সফট ব্ল্যাক শ্যাডো ইফেক্ট */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.85); padding: 4px 10px; border-radius: 8px;
+            background: rgba(0, 0, 0, 0.88); padding: 4px 10px; border-radius: 8px;
             font-size: 0.85rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.95);
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         /* Full Reels View */
@@ -141,22 +143,23 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে সেন্টারে প্রাইস ও ডিসকাউন্ট ওভারলে */
+        /* রিলস মোডে ঠিক মেডেলে (মাঝখানে) প্রাইস ও ডিসকাউন্ট */
         .reel-center-price-overlay {
             position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
             z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
         }
         .reel-center-price-badge {
-            font-size: 1.4rem; font-weight: 800;
+            font-size: 1.45rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.95));
+            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.98));
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
         .reel-center-discount-badge {
             background: var(--pink-accent); color: #fff; font-size: 0.7rem; font-weight: 800;
-            padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            padding: 3px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.85);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার */
+        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 15] */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -180,17 +183,17 @@
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
         }
 
-        /* একদম স্বচ্ছ (Transparent) ওভারলে এবং পপআপ স্টাইল */
+        /* ফুল-স্ক্রিন ট্রান্সপারেন্ট পপআপ ওভারলে */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.25); backdrop-filter: none; -webkit-backdrop-filter: none;
+            background: rgba(0, 0, 0, 0.35); backdrop-filter: none; -webkit-backdrop-filter: none;
             z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px;
         }
 
-        /* অর্ডার নাও প্রিভিউ মডাল */
+        /* বাই প্রিভিউ মডাল */
         .buy-preview-modal {
-            width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.95); border: 1.5px solid var(--gold-solid);
+            width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.96); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.9);
         }
@@ -222,6 +225,17 @@
             border-radius: 18px; padding: 20px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
+
+        /* ফুল-স্ক্রিন কার্ট এবং অ্যাকাউন্ট ফ্রেম ওভারলে */
+        .fullscreen-iframe-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+            background: rgba(0,0,0,0.92); z-index: 4500; flex-direction: column;
+        }
+        .fullscreen-iframe-header {
+            height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+            background: #050508; border-bottom: 1px solid rgba(212,175,55,0.3);
+        }
+        .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
 
         /* ক্যাটাগরি ও সেভ গ্যালারি ওভারলে মেনু */
         .category-transparent-overlay, .saved-gallery-overlay {
@@ -270,14 +284,23 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (হোম বাটনের পরিবর্তে ইউ অ্যাকাউন্ট আইকন)[cite: 15] -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
         <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
         <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <a href="/" class="bottom-nav-item" style="text-decoration:none;"><i class="fa-solid fa-house"></i><span>HOME</span></a>
+        <div onclick="openFullscreenModal('/account.html')" class="bottom-nav-item"><i class="fa-solid fa-user"></i><span>YOU</span></div>
     </nav>
+
+    <!-- Fullscreen Iframe Modal for Cart / Account -->
+    <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
+        <div class="fullscreen-iframe-header">
+            <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" id="iframeModalTitle">RORRAXY PORTAL</span>
+            <button onclick="closeFullscreenModal()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;">&times;</button>
+        </div>
+        <iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe>
+    </div>
 
     <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay" onclick="if(event.target===this) this.style.display='none'">
@@ -384,6 +407,24 @@
                 }
             }, {passive: true});
         });
+
+        function openFullscreenModal(pageUrl) {
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+            const iframe = document.getElementById('fullscreenIframeBody');
+            const titleElem = document.getElementById('iframeModalTitle');
+            if(pageUrl.includes('cart')) titleElem.innerText = 'RETAIL CART & CHECKOUT';
+            else if(pageUrl.includes('account')) titleElem.innerText = 'RETAIL ACCOUNT & ORDERS';
+            else titleElem.innerText = 'RORRAXY PORTAL';
+
+            iframe.src = pageUrl;
+            overlay.style.display = 'flex';
+        }
+
+        function closeFullscreenModal() {
+            document.getElementById('fullscreenIframeOverlay').style.display = 'none';
+            document.getElementById('fullscreenIframeBody').src = '';
+            updateCartBadgeCount();
+        }
 
         function buildCategoriesUI() {
             const listContainer = document.getElementById('categoryMainListView');
@@ -550,7 +591,7 @@
 
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <div class="side-action-item" onclick="window.location.href='/cart.html'" title="Cart">
+                    <div class="side-action-item" onclick="openFullscreenModal('/cart.html')" title="Cart">
                         <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
                         <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
@@ -570,7 +611,7 @@
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
 
-                    <div class="side-action-item" onclick="window.location.href='/account.html'" title="You">
+                    <div class="side-action-item" onclick="openFullscreenModal('/account.html')" title="You">
                         <i class="fa-solid fa-user action-pure-icon"></i>
                         <span class="side-count-text">YOU</span>
                     </div>
@@ -653,7 +694,7 @@
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
                     <div class="reel-media-box" onclick="openInpageDetailsModal(${JSON.stringify(product).replace(/"/g, '&quot;')})">
-                        <!-- রিলস মোডে সেন্টারে প্রাইস ও ডিসকাউন্ট -->
+                        <!-- রিলস মোডে একদম মেডেলে (মাঝখানে) প্রাইস ও ডিসকাউন্ট -->
                         <div class="reel-center-price-overlay">
                             <span class="reel-center-price-badge">${price}</span>
                             ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
@@ -685,7 +726,12 @@
             let price = `$${priceNum.toFixed(2)}`;
             let marketPrice = `$${marketPriceNum}`;
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
-            let desc = product.description || product.desc || 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
+            let rawDesc = product.description || product.desc || 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
+            
+            // অপ্রয়োজনীয় প্যাকেজিং ইমেজ বা সিসি ছবি ফিল্টার করা
+            let cleanDesc = rawDesc.replace(/https?:\/\/[^\s]+(\.jpg|\.png|\.webp)/gi, '').trim();
+            if(!cleanDesc) cleanDesc = 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
+
             let stock = product.stock || 500;
             currentProductQty = 1;
 
@@ -712,12 +758,14 @@
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
                 
+                <!-- ডিটেইলস পপআপে প্রাইস, মার্কেট প্রাইস ও ডিসকাউন্ট -->
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                    <span style="font-size:1.2rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
+                    <span style="font-size:1.3rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
                     <span style="font-size:0.85rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
                     <span style="background:var(--pink-accent); color:#fff; font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:4px;">${discountPercent}% OFF</span>
                 </div>
 
+                <!-- ছোট হাতের ক্লাসিক ফন্টে টাইটেল -->
                 <h3 style="font-size:0.92rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; font-weight:700;">
@@ -725,6 +773,7 @@
                     <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
                 </div>
 
+                <!-- কোয়ান্টিটি কমা ও বাড়ানো অপশন (প্লাস মাইনাস চাকা) -->
                 <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
                     <span style="font-size:0.7rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
@@ -734,8 +783,9 @@
                     </div>
                 </div>
 
+                <!-- ডেসক্রিপশন প্যারাগ্রাফ (ম্যাটেরিয়াল ও সাইজ সহ) -->
                 <div style="font-size:0.72rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
-                    ${desc}
+                    ${cleanDesc}
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:6px;">
