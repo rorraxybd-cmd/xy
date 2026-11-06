@@ -80,7 +80,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (হুম বাটনের জায়গায় ইউ অ্যাকাউন্ট আইকন)[cite: 15] */
+        /* Bottom Navigation Bar (গোছানো ফুটার মেনু)[cite: 26, 27] */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -126,14 +126,14 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* প্রাইসের নিচে সফট ব্ল্যাক শ্যাডো ইফেক্ট */
+        /* ডাবল টেক্সট ইফেক্টসহ প্রিমিয়াম প্রাইস ট্যাগ (কালো ব্যাকগ্রাউন্ড ও গোল্ডেন গ্রেডিয়েন্ট) */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.88); padding: 4px 10px; border-radius: 8px;
+            background: rgba(0, 0, 0, 0.92); padding: 5px 10px; border-radius: 8px;
             font-size: 0.85rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.95);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.98);
+            border: 1.2px solid rgba(212, 175, 55, 0.35);
         }
 
         /* Full Reels View */
@@ -143,23 +143,24 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে ঠিক মেডেলে (মাঝখানে) প্রাইস ও ডিসকাউন্ট */
-        .reel-center-price-overlay {
-            position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
-            z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
+        /* রিলস মোডে নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট গুছিয়ে রাখা */
+        .reel-bottom-price-overlay {
+            position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none;
+            background: rgba(0, 0, 0, 0.85); padding: 8px 20px; border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.9);
         }
         .reel-center-price-badge {
-            font-size: 1.45rem; font-weight: 800;
+            font-size: 1.4rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.98));
-            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.95));
         }
         .reel-center-discount-badge {
             background: var(--pink-accent); color: #fff; font-size: 0.7rem; font-weight: 800;
-            padding: 3px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.85);
+            padding: 2px 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 15] */
+        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 26, 27] */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -183,10 +184,10 @@
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
         }
 
-        /* ফুল-স্ক্রিন ট্রান্সপারেন্ট পপআপ ওভারলে */
+        /* সম্পূর্ণ ট্রান্সপারেন্ট পপআপ ওভারলে */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.35); backdrop-filter: none; -webkit-backdrop-filter: none;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: none; -webkit-backdrop-filter: none;
             z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px;
         }
@@ -226,10 +227,10 @@
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
-        /* ফুল-স্ক্রিন কার্ট এবং অ্যাকাউন্ট ফ্রেম ওভারলে */
+        /* ফুল-স্ক্রিন কার্ট এবং অ্যাকাউন্ট ফ্রেম ওভারলে[cite: 25] */
         .fullscreen-iframe-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0,0,0,0.92); z-index: 4500; flex-direction: column;
+            background: rgba(0,0,0,0.94); z-index: 4500; flex-direction: column;
         }
         .fullscreen-iframe-header {
             height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
@@ -284,7 +285,7 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (হোম বাটনের পরিবর্তে ইউ অ্যাকাউন্ট আইকন)[cite: 15] -->
+    <!-- Bottom Navigation Bar (গোছানো ফুটার মেনু)[cite: 26, 27] -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -293,7 +294,7 @@
         <div onclick="openFullscreenModal('/account.html')" class="bottom-nav-item"><i class="fa-solid fa-user"></i><span>YOU</span></div>
     </nav>
 
-    <!-- Fullscreen Iframe Modal for Cart / Account -->
+    <!-- Fullscreen Iframe Modal for Cart / Account[cite: 25] -->
     <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
         <div class="fullscreen-iframe-header">
             <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" id="iframeModalTitle">RORRAXY PORTAL</span>
@@ -324,7 +325,7 @@
         </div>
     </div>
 
-    <!-- Main Content Container -->
+    <!-- Main Content Container (Pinterest Dynamic Grid) -->
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
@@ -461,18 +462,6 @@
         }
 
         async function loadLiveProducts() {
-            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = parsed;
-                        activeProductList = parsed;
-                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
-                    }
-                } catch (e) {}
-            }
-
             try {
                 const response = await fetch(`/api/products`);
                 const result = await response.json();
@@ -481,12 +470,28 @@
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
+                    // ডাইনামিক বা এলোমেলোভাবে ট্রেন্ডিং প্রোডাক্ট দেখানোর জন্য শাফেল করা হলো
+                    productsList.sort(() => Math.random() - 0.5);
                     globalMasterProductsList = productsList;
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     activeProductList = productsList;
                     if(isPinterestHomeMode) renderPinterestHomeGrid(productsList);
+                    return;
                 }
             } catch (error) {}
+
+            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        parsed.sort(() => Math.random() - 0.5);
+                        globalMasterProductsList = parsed;
+                        activeProductList = parsed;
+                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
+                    }
+                } catch (e) {}
+            }
         }
 
         function executeHeaderSearch(keyword) {
@@ -559,7 +564,7 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
-                cardDiv.style.animationDelay = `${(index % 10) * 0.04}s`;
+                cardDiv.style.animationDelay = `${(index % 10) * 0.03}s`;
                 cardDiv.onclick = () => switchToReelsView(index);
 
                 cardDiv.innerHTML = `
@@ -694,8 +699,8 @@
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
                     <div class="reel-media-box" onclick="openInpageDetailsModal(${JSON.stringify(product).replace(/"/g, '&quot;')})">
-                        <!-- রিলস মোডে একদম মেডেলে (মাঝখানে) প্রাইস ও ডিসকাউন্ট -->
-                        <div class="reel-center-price-overlay">
+                        <!-- রিলস মোডে নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট -->
+                        <div class="reel-bottom-price-overlay">
                             <span class="reel-center-price-badge">${price}</span>
                             ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
                         </div>
@@ -728,7 +733,6 @@
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
             let rawDesc = product.description || product.desc || 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
             
-            // অপ্রয়োজনীয় প্যাকেজিং ইমেজ বা সিসি ছবি ফিল্টার করা
             let cleanDesc = rawDesc.replace(/https?:\/\/[^\s]+(\.jpg|\.png|\.webp)/gi, '').trim();
             if(!cleanDesc) cleanDesc = 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
 
@@ -758,14 +762,12 @@
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
                 
-                <!-- ডিটেইলস পপআপে প্রাইস, মার্কেট প্রাইস ও ডিসকাউন্ট -->
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                     <span style="font-size:1.3rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
                     <span style="font-size:0.85rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
                     <span style="background:var(--pink-accent); color:#fff; font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:4px;">${discountPercent}% OFF</span>
                 </div>
 
-                <!-- ছোট হাতের ক্লাসিক ফন্টে টাইটেল -->
                 <h3 style="font-size:0.92rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; font-weight:700;">
@@ -773,7 +775,6 @@
                     <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
                 </div>
 
-                <!-- কোয়ান্টিটি কমা ও বাড়ানো অপশন (প্লাস মাইনাস চাকা) -->
                 <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
                     <span style="font-size:0.7rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
@@ -783,7 +784,6 @@
                     </div>
                 </div>
 
-                <!-- ডেসক্রিপশন প্যারাগ্রাফ (ম্যাটেরিয়াল ও সাইজ সহ) -->
                 <div style="font-size:0.72rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
                     ${cleanDesc}
                 </div>
