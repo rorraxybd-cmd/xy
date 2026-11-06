@@ -55,11 +55,11 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         @keyframes softFadeInUp {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-card-entry {
-            animation: softFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: softFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* Top Floating Search Bar */
@@ -80,12 +80,12 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (গোছানো ফুটার মেনু)[cite: 26, 27] */
+        /* Bottom Navigation Bar (ফিক্সড মেনু) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
-            display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 4px;
+            display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -126,14 +126,15 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* ডাবল টেক্সট ইফেক্টসহ প্রিমিয়াম প্রাইস ট্যাগ (কালো ব্যাকগ্রাউন্ড ও গোল্ডেন গ্রেডিয়েন্ট) */
+        /* গোল্ডেন গ্রাডিয়েন্ট + ডাবল স্ট্রোক/শ্যাডো প্রাইস ট্যাগ (উচ্চমাত্রায় স্পষ্ট) */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.92); padding: 5px 10px; border-radius: 8px;
-            font-size: 0.85rem; font-weight: 800;
+            background: rgba(0, 0, 0, 0.92); padding: 4px 10px; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 800; color: #d4af37;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.98);
-            border: 1.2px solid rgba(212, 175, 55, 0.35);
+            text-shadow: 0 0 3px #000, 0 1px 5px #000, 0 0 8px rgba(0,0,0,0.9);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.95);
+            border: 1px solid rgba(212, 175, 55, 0.4);
         }
 
         /* Full Reels View */
@@ -143,24 +144,24 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট গুছিয়ে রাখা */
+        /* রিলস মোডে ক্লিন গোল্ডেন গ্রাডিয়েন্ট প্রাইস ওভারলে */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
-            z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none;
-            background: rgba(0, 0, 0, 0.85); padding: 8px 20px; border-radius: 14px;
+            position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
+            background: rgba(0, 0, 0, 0.82); padding: 6px 16px; border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.9);
         }
         .reel-center-price-badge {
-            font-size: 1.4rem; font-weight: 800;
+            font-size: 1.35rem; font-weight: 800; color: #d4af37;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.95));
+            text-shadow: 0 0 4px #000, 0 2px 8px #000;
         }
         .reel-center-discount-badge {
-            background: var(--pink-accent); color: #fff; font-size: 0.7rem; font-weight: 800;
+            background: var(--pink-accent); color: #fff; font-size: 0.65rem; font-weight: 800;
             padding: 2px 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 26, 27] */
+        /* ডানপাশের ভাসমান অ্যাকশন বার */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -184,11 +185,11 @@
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
         }
 
-        /* সম্পূর্ণ ট্রান্সপারেন্ট পপআপ ওভারলে */
+        /* পপআপ ওভারলে স্টাইল */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.4); backdrop-filter: none; -webkit-backdrop-filter: none;
-            z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.45); backdrop-filter: none; -webkit-backdrop-filter: none;
+            z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px;
         }
 
@@ -227,14 +228,10 @@
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
-        /* ফুল-স্ক্রিন কার্ট এবং অ্যাকাউন্ট ফ্রেম ওভারলে[cite: 25] */
+        /* ফুল-স্ক্রিন কার্ট এবং অ্যাকাউন্ট ফ্রেম ওভারলে (ক্লিন ভিউ) */
         .fullscreen-iframe-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0,0,0,0.94); z-index: 4500; flex-direction: column;
-        }
-        .fullscreen-iframe-header {
-            height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
-            background: #050508; border-bottom: 1px solid rgba(212,175,55,0.3);
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px);
+            background: #000000; z-index: 4500; flex-direction: column;
         }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
 
@@ -242,7 +239,7 @@
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: rgba(0, 0, 0, 0.3) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            z-index: 3500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
@@ -285,21 +282,17 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (গোছানো ফুটার মেনু)[cite: 26, 27] -->
+    <!-- Bottom Navigation Bar (অন-অফ টগল সিস্টেম) -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
         <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
         <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <div onclick="openFullscreenModal('/account.html')" class="bottom-nav-item"><i class="fa-solid fa-user"></i><span>YOU</span></div>
+        <div onclick="toggleFullscreenPortal('/account.html')" class="bottom-nav-item"><i class="fa-solid fa-user"></i><span>YOU</span></div>
     </nav>
 
-    <!-- Fullscreen Iframe Modal for Cart / Account[cite: 25] -->
+    <!-- Fullscreen Portal Overlay for Cart / Account -->
     <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
-        <div class="fullscreen-iframe-header">
-            <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" id="iframeModalTitle">RORRAXY PORTAL</span>
-            <button onclick="closeFullscreenModal()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;">&times;</button>
-        </div>
         <iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe>
     </div>
 
@@ -318,14 +311,14 @@
         <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
     </div>
 
-    <!-- Category Transparent Overlay Menu -->
+    <!-- Category Overlay Menu -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView"></div>
         </div>
     </div>
 
-    <!-- Main Content Container (Pinterest Dynamic Grid) -->
+    <!-- Main Content Container -->
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
@@ -343,6 +336,7 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
+        let currentPortalUrl = '';
 
         window.addEventListener('DOMContentLoaded', () => {
             buildCategoriesUI();
@@ -409,21 +403,20 @@
             }, {passive: true});
         });
 
-        function openFullscreenModal(pageUrl) {
+        /* টগল সিস্টেম (একবার ক্লিকে অন, আরেক ক্লিকে অফ) */
+        function toggleFullscreenPortal(pageUrl) {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
-            const titleElem = document.getElementById('iframeModalTitle');
-            if(pageUrl.includes('cart')) titleElem.innerText = 'RETAIL CART & CHECKOUT';
-            else if(pageUrl.includes('account')) titleElem.innerText = 'RETAIL ACCOUNT & ORDERS';
-            else titleElem.innerText = 'RORRAXY PORTAL';
 
-            iframe.src = pageUrl;
-            overlay.style.display = 'flex';
-        }
-
-        function closeFullscreenModal() {
-            document.getElementById('fullscreenIframeOverlay').style.display = 'none';
-            document.getElementById('fullscreenIframeBody').src = '';
+            if (overlay.style.display === 'flex' && currentPortalUrl === pageUrl) {
+                overlay.style.display = 'none';
+                iframe.src = '';
+                currentPortalUrl = '';
+            } else {
+                currentPortalUrl = pageUrl;
+                iframe.src = pageUrl;
+                overlay.style.display = 'flex';
+            }
             updateCartBadgeCount();
         }
 
@@ -470,7 +463,6 @@
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    // ডাইনামিক বা এলোমেলোভাবে ট্রেন্ডিং প্রোডাক্ট দেখানোর জন্য শাফেল করা হলো
                     productsList.sort(() => Math.random() - 0.5);
                     globalMasterProductsList = productsList;
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
@@ -596,7 +588,7 @@
 
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <div class="side-action-item" onclick="openFullscreenModal('/cart.html')" title="Cart">
+                    <div class="side-action-item" onclick="toggleFullscreenPortal('/cart.html')" title="Cart">
                         <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
                         <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
@@ -616,7 +608,7 @@
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
 
-                    <div class="side-action-item" onclick="openFullscreenModal('/account.html')" title="You">
+                    <div class="side-action-item" onclick="toggleFullscreenPortal('/account.html')" title="You">
                         <i class="fa-solid fa-user action-pure-icon"></i>
                         <span class="side-count-text">YOU</span>
                     </div>
@@ -699,7 +691,6 @@
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
                     <div class="reel-media-box" onclick="openInpageDetailsModal(${JSON.stringify(product).replace(/"/g, '&quot;')})">
-                        <!-- রিলস মোডে নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট -->
                         <div class="reel-bottom-price-overlay">
                             <span class="reel-center-price-badge">${price}</span>
                             ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
