@@ -263,12 +263,14 @@
             }
         }
 
-        // едиণ ও নিখুঁত প্রাইস ও ডিসকাউন্ট জেনারেটর ফাংশন (হোম এবং রিলস উভয়ের জন্য অভিন্ন)
+        // প্রাইস ও ডিসকাউন্ট বাটন লেআউট জেনারেটর
         function generatePriceDiscountHTML(product) {
             let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
-            let countryCode = (product.target_country || product.targetCountry || 'bd').toLowerCase();
-            let flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
+            
+            let rawCountry = (product.target_country || product.targetCountry || 'bd').toString().trim().toLowerCase();
+            if (!rawCountry || rawCountry.length !== 2) rawCountry = 'bd';
+            let flagUrl = `https://flagcdn.com/w40/${rawCountry}.png`;
 
             let discountBadgeHtml = '';
             if (discountPercent > 0) {
@@ -301,7 +303,6 @@
             }
 
             products.forEach((item, index) => {
-                const productId = item.id || item.product_id || item.product_code || '101';
                 const title = item.title || 'rorraxy Luxury Item';
 
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
@@ -335,7 +336,7 @@
             renderFixedGlobalActions(container, null);
         }
 
-        // ফিক্সড ডানপাশের অ্যাকশন বার ইনজেক্ট করার ফাংশন
+        // ফিক্সড ডানপাশের অ্যাকশন বার (পুরোপুরি ভাসমান)
         function renderFixedGlobalActions(container, pId) {
             let existingBar = document.getElementById('fixedGlobalActionsBar');
             if(existingBar) existingBar.remove();
@@ -395,7 +396,7 @@
             }
         }
 
-        // রিলস স্টাইল সিঙ্গেল ভিউ ও স্লাইডশো রেন্ডারিং
+        // রিলস ভিউ রেন্ডারিং
         function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
             const container = document.getElementById('appContainer');
@@ -638,7 +639,7 @@
         }
         .floating-search-btn-circle:active { transform: scale(0.9); }
 
-        /* Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) */
+        /* Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
@@ -658,13 +659,12 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
-
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Pinterest Style Feed Container */
+        /* Pinterest Style Feed Container (কালো প্যাডিং বাদ দিয়ে পূর্ণ স্ক্রিন ব্যবহার করা হয়েছে) */
         .pinterest-feed-container {
-            padding: 8px 50px 8px 6px; 
+            padding: 8px 6px; 
             column-count: 2;
             column-gap: 8px;
             width: 100%; 
@@ -676,8 +676,8 @@
         @media (min-width: 768px) { 
             .pinterest-feed-container { 
                 column-count: 4;
-                column-gap: 14px; 
-                padding: 12px 60px 12px 12px; 
+                column-gap: 12px; 
+                padding: 12px; 
             } 
         }
 
@@ -710,48 +710,58 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
 
-        /* একীভূত এবং সুবিন্যস্ত প্রাইস ও ডিসকাউন্ট ওভারলে বাটন (হোম এবং রিলস উভয়ের জন্য নিখুঁত) */
+        /* সমন্বিত প্রাইস ও ডিসকাউন্ট ওভারলে ক্যাপসুল */
         .unified-price-offer-box {
-            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            z-index: 40; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            background: rgba(10, 10, 14, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 5px 12px; border-radius: 30px; white-space: nowrap; width: max-content;
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+            z-index: 40; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            background: rgba(10, 10, 14, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 4px 10px; border-radius: 30px; white-space: nowrap; width: auto; max-width: 95%;
             box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid rgba(212,175,55,0.3);
+            pointer-events: none;
         }
-        .uni-price-txt { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+        .uni-price-txt { 
+            font-size: 0.78rem; font-weight: 800; background: var(--gold-gradient); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            flex-shrink: 0; line-height: 1;
+        }
         
         .uni-discount-badge {
-            background: var(--pink-accent); color: #ffffff; padding: 3px 8px; border-radius: 16px;
-            font-size: 0.6rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+            background: var(--pink-accent); color: #ffffff; padding: 2px 7px; border-radius: 14px;
+            font-size: 0.58rem; font-weight: 700; display: inline-flex; align-items: center; 
+            gap: 4px; flex-shrink: 0; line-height: 1; white-space: nowrap;
         }
-        .uni-flag-icon { width: 14px; height: 10px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+        .uni-flag-icon { 
+            width: 14px; height: 10px; border-radius: 2px; object-fit: cover; 
+            display: inline-block; vertical-align: middle; flex-shrink: 0;
+        }
 
-        /* Full Reels View Styles (9:16 Optimized for Mobile & Desktop) */
+        /* Full Reels View Styles */
         .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
         .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
         .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
         
-        /* Fixed Right Vertical Actions */
+        /* সম্পূর্ণ ভাসমান ডানপাশের অ্যাকশন বার (কোনো ফাঁকা জায়গা তৈরি করে না) */
         .right-vertical-actions {
-            position: fixed; right: 12px; bottom: 85px; z-index: 50;
-            display: flex; flex-direction: column; align-items: center; gap: 18px;
+            position: fixed; right: 10px; bottom: 80px; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
+            pointer-events: auto;
         }
         .side-action-item { 
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 3px; transition: transform 0.2s ease;
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; transition: transform 0.2s ease;
             background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
             padding: 0 !important; width: auto !important; height: auto !important;
         }
         .side-action-item:active { transform: scale(0.85); }
         .action-pure-icon { 
-            font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.7));
+            font-size: 1.5rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
         }
         .share-flip { transform: scaleX(-1); }
         .side-count-text { 
-            font-size: 0.7rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; 
-            text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+            font-size: 0.68rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; 
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.9);
         }
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
@@ -811,7 +821,7 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) -->
+    <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
