@@ -263,7 +263,7 @@
             }
         }
 
-        // Pinterest হোম গ্রিড রেন্ডারিং (ফিক্সড ডানপাশের অ্যাকশন বার সহ)
+        // Pinterest হোম গ্রিড রেন্ডারিং
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             container.className = 'pinterest-feed-container';
@@ -368,7 +368,6 @@
         window.handleHomeOrReelSave = function(e, btn, pId) {
             e.stopPropagation();
             if(isPinterestHomeMode) {
-                // হোম পেজে সেভ কাজ করবে না
                 return;
             }
             handleDualSaveAction(e, btn, pId);
@@ -722,21 +721,21 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
 
-        /* কার্ডের নিচে ওভারলে প্রাইস ও ডিসকাউন্ট বাটন */
+        /* কার্ডের নিচে ওভারলে প্রাইস ও ডিসকাউন্ট বাটন (সমান ও সুসজ্জিত) */
         .card-bottom-price-offer-box {
             position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
             z-index: 40; display: flex; align-items: center; gap: 8px;
-            background: rgba(10, 10, 14, 0.90); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            padding: 4px 12px; border-radius: 25px; white-space: nowrap;
+            background: rgba(10, 10, 14, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 5px 12px; border-radius: 30px; white-space: nowrap;
             box-shadow: 0 4px 12px rgba(0,0,0,0.6); border: 1px solid rgba(212,175,55,0.25);
         }
-        .product-price-tag { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .product-price-tag { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .reel-bottom-discount-badge {
-            background: var(--pink-accent); color: #fff; padding: 2px 8px; border-radius: 12px;
-            font-size: 0.58rem; font-weight: 700; display: flex; align-items: center; gap: 4px;
+            background: var(--pink-accent); color: #fff; padding: 3px 8px; border-radius: 16px;
+            font-size: 0.62rem; font-weight: 700; display: flex; align-items: center; gap: 5px; flex-shrink: 0;
         }
-        .country-flag-icon { width: 14px; height: 10px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
+        .country-flag-icon { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
 
         /* Full Reels View Styles (9:16 Optimized for Mobile & Desktop) */
         .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
