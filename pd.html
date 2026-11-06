@@ -79,7 +79,6 @@
 
         .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
 
-        /* গোল্ডেন গ্রাডিয়েন্ট কালারে সেট করা প্রোডাক্ট টাইটেল */
         .product-title-restricted { 
             font-size: 1.25rem; font-weight: 800; letter-spacing: 0.8px; line-height: 1.35; 
             width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
@@ -328,8 +327,8 @@
             <span class="footer-menu-label">HOME</span>
         </a>
 
-        <!-- অর্ডার নাও বাটন (সরাসরি সচল করা হয়েছে) -->
-        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn">
+        <!-- অর্ডার নাও বাটন -->
+        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
 
@@ -354,8 +353,8 @@
                 <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">SELLER SUPPORT DESK</span>
                 <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
             </div>
-            <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-                <div style="background:#12121c; padding:8px 10px; border-radius:8px; font-size:0.68rem; color:#ffffff; max-width:85%;">
+            <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                <div style="background:#12121c; padding:8px 10px; border-radius:8px; font-size:0.68rem; color:#ffffff; max-width:90%;">
                     WELCOME TO RORRAXY RETAIL SUPPORT! HOW CAN WE ASSIST WITH YOUR ORDER?
                 </div>
             </div>
@@ -371,6 +370,7 @@
         let currentActiveProduct = null;
         let currentItemQuantity = 1;
         let savedCustomNote = "";
+        let selectedProductColorImage = ""; // সিলেক্টেড ভ্যারিয়েন্ট/কালার ট্র্যাকিং
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -382,18 +382,6 @@
                 renderFallbackProduct('101');
             }
             updateCartBadgeCount();
-
-            // অর্ডার নাও বাটনে সরাসরি ক্লিক ও টাচ ইভেন্ট বাইন্ড করা হলো যাতে কোনো সমস্যা না হয়
-            const orderBtn = document.getElementById('orderNowMainBtn');
-            if (orderBtn) {
-                orderBtn.addEventListener('click', function(e) {
-                    executeOrderNow(e);
-                });
-                orderBtn.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    executeOrderNow(e);
-                });
-            }
         });
 
         async function fetchProductDetails(productId) {
@@ -538,6 +526,8 @@
                 mediaList.push({ type: 'image', url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" });
             }
 
+            // ডিফল্ট কালার/ছবি সেট করা
+            selectedProductColorImage = mediaList[0].url;
             updateMainViewport(mediaList[0]);
 
             let thumbHtml = '';
@@ -615,12 +605,13 @@
             if(mediaObj.type === 'video') {
                 viewport.innerHTML = `<video src="${mediaObj.url}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
             } else {
-                viewport.innerHTML = `<img src="${mediaObj.url}" class="main-media-element" alt="Product View" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
+                viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${mediaObj.url}" class="main-media-element" alt="Product View" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
             }
         }
 
         function switchMediaView(mediaObj, thumbElement) {
             updateMainViewport(mediaObj);
+            selectedProductColorImage = mediaObj.url; // কালার/ছবি ট্র্যাক রাখা
             document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
             thumbElement.classList.add('active');
         }
@@ -641,10 +632,8 @@
             savedCustomNote = inputVal !== "" ? inputVal : "STANDARD";
             let saveBtn = document.getElementById('customSaveBtnElement');
             saveBtn.innerText = "SAVED ✓";
-            saveBtn.classList.add('saved-success');
             setTimeout(() => {
                 saveBtn.innerText = "SAVE";
-                saveBtn.classList.remove('saved-success');
             }, 2000);
         }
 
@@ -711,7 +700,10 @@
             }, 750);
         }
 
+        // অর্ডার বাটনে ক্লিক করলে সমস্ত তথ্য কার্টে যোগ হবে এবং এনিমেশন চলবে
         function executeOrderNow(event) {
+            if (event) event.preventDefault();
+
             if (!currentActiveProduct) {
                 currentActiveProduct = {
                     id: new URLSearchParams(window.location.search).get('id') || '101',
@@ -721,16 +713,15 @@
                 };
             }
 
-            let chosenSize = savedCustomNote !== "" ? savedCustomNote : (document.getElementById('customSizeInputField').value.trim() || "STANDARD");
+            let chosenNote = savedCustomNote !== "" ? savedCustomNote : (document.getElementById('customSizeInputField').value.trim() || "STANDARD");
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
             
-            // ইউজারের সিলেক্টকৃত নির্দিষ্ট কালার বা থাম্বনেইলের ছবিটি কার্টে যুক্ত করার জন্য ভিউপোর্ট থেকে নেওয়া হয়েছে
-            let selectedImageView = document.getElementById('mainDisplayMediaElement').src;
-            let primaryImgUrl = (selectedImageView && !selectedImageView.includes('svg')) ? selectedImageView : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+            // সিলেক্টকৃত নির্দিষ্ট কালার/ভিউ এর ছবি কার্টে পাঠানো হচ্ছে
+            let finalSelectedImg = selectedProductColorImage || (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
 
-            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === primaryImgUrl);
+            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenNote && item.img === finalSelectedImg);
             let priceNum = parseFloat(currentActiveProduct.price) || 35.00;
 
             if(existingItem) {
@@ -739,14 +730,15 @@
                 cart.push({
                     productId: prodId,
                     sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
-                    title: currentActiveProduct.title,
+                    title: currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText,
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
-                    size: chosenSize,
+                    size: chosenNote,
                     mode: 'retail',
-                    img: primaryImgUrl
+                    img: finalSelectedImg
                 });
             }
+            
             localStorage.setItem(cartKey, JSON.stringify(cart));
             updateCartBadgeCount();
             triggerCoinDropAnimation(event);
@@ -759,9 +751,26 @@
             if(badge) badge.innerText = totalQty;
         }
 
+        // Chat modal implementation with item details
         function toggleChatModal() {
             let modal = document.getElementById('chatModalOverlay');
-            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+            let isOpening = modal.style.display !== 'flex';
+            modal.style.display = isOpening ? 'flex' : 'none';
+
+            if(isOpening && currentActiveProduct) {
+                let box = document.getElementById('chatMessagesContainer');
+                let prodTitle = currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText;
+                let activeNote = savedCustomNote || document.getElementById('customSizeInputField').value.trim() || "STANDARD";
+                
+                // সেলার চ্যাটে প্রডাক্ট তথ্য স্বয়ংক্রিয়ভাবে দেখানোর জন্য
+                let autoMsg = `INQUIRING ABOUT: ${prodTitle} | QTY: ${currentItemQuantity} | NOTE/SIZE: ${activeNote}`;
+                
+                let existingNote = document.getElementById('autoChatProductNote');
+                if(!existingNote) {
+                    box.innerHTML += `<div id="autoChatProductNote" style="background:#221d0a; border:1px solid var(--gold-solid); color:var(--gold-solid); padding:8px 10px; border-radius:8px; font-size:0.65rem; font-weight:700;">${autoMsg}</div>`;
+                    box.scrollTop = box.scrollHeight;
+                }
+            }
         }
 
         function sendChatMessage() {
