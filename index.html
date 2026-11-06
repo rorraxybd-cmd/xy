@@ -268,13 +268,19 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
         
+        /* Fixed Badge & Country Flag CSS Layering */
         .product-country-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 10;
-            background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
+            position: absolute; top: 8px; left: 8px; z-index: 100;
+            background: rgba(255, 42, 133, 0.95); border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
             font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5); pointer-events: none;
         }
-        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
+        .product-country-discount-badge img.flag-icon { 
+            width: 16px; height: 11px; object-fit: cover; border-radius: 2px;
+            display: inline-block; vertical-align: middle; flex-shrink: 0;
+            border: 0.5px solid rgba(255,255,255,0.5);
+        }
 
         .card-footer-actions { 
             display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
@@ -816,15 +822,20 @@
                 const initialLikes = item.like_count || presetLikes;
 
                 const discount = item.discount_rate || item.discountRate || item.discount || '0';
-                const rawCountry = item.target_country || item.targetCountry || item.country || 'bd';
-                const countryCode = String(rawCountry).toLowerCase().trim();
+                
+                // Smart Country Code Fallback Fix
+                let rawCountry = item.target_country || item.targetCountry || item.country || item.country_code || item.targetCountryCode || 'bd';
+                if (typeof rawCountry !== 'string' || !rawCountry.trim()) {
+                    rawCountry = 'bd';
+                }
+                const countryCode = rawCountry.toLowerCase().trim();
                 const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
                 
                 let discountBadgeHtml = '';
                 if (parseFloat(discount) > 0) {
                     discountBadgeHtml = `
                         <div class="product-country-discount-badge">
-                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy" onerror="this.style.display='none'"> ${discount}% OFF
+                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy"> ${discount}% OFF
                         </div>
                     `;
                 }
