@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>rorraxy - Retail & Reels Feed</title>
     
-    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
+    <!-- সেন্ট্রাল স্ক্রিপ্ট ও ক্যাটাগরি ডেটা -->
     <script src="/ecosystem-core.js"></script>
+    <script src="/categories.js"></script>
     <link rel="manifest" href="/manifest.json">
 
     <script>
@@ -71,7 +72,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (নিচের ৫টি নির্দিষ্ট মেনু) */
+        /* Bottom Navigation Bar (৫টি নির্দিষ্ট ফুটার মেনু)[cite: 14] */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -97,7 +98,7 @@
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 6px var(--pink-accent);
         }
 
-        /* Pinterest Style Home Grid (কালো ব্যাকগ্রাউন্ড রিমুভড, ছবি বড়) */
+        /* Pinterest Style Home Grid (কালো ব্যাকগ্রাউন্ড রিমুভড, ছবি বড় ও স্পষ্ট)[cite: 14] */
         .pinterest-feed-container {
             padding: 8px 6px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
         }
@@ -120,10 +121,10 @@
             padding: 3px 7px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
 
-        /* ছবির ওপর স্বচ্ছ প্রাইস ট্যাগ (কোনো কালো বক্স নেই)[cite: 14] */
+        /* ছবির ওপর স্বচ্ছ ও স্মুথ প্রাইস ট্যাগ[cite: 14] */
         .card-transparent-price-overlay {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
             padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.4);
         }
         .card-transparent-price-text { 
@@ -138,7 +139,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার (স্ট্যান্ডার্ড সাইজ ও নিখুঁত পজিশন)[cite: 15] */
+        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 15] */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -160,7 +161,7 @@
             z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* বাই প্রিভিউ মডাল পপআপ - ডানে-বামে হরিজন্টাল স্ক্রল সিস্টেম */
+        /* বাই প্রিভিউ মডাল পপআপ - হরিজন্টাল স্ক্রল সিস্টেম[cite: 14] */
         .buy-preview-modal {
             width: 90%; max-width: 380px; background: #0c0c14; border: 1.5px solid var(--gold-solid);
             border-radius: 16px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 12px;
@@ -179,7 +180,7 @@
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ফ্লায়িং গোল্ডেন কয়েন অ্যানিমেশন */
+        /* ফ্লায়িং গোল্ডেন কয়েন অ্যানিমেশন[cite: 14] */
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
@@ -235,7 +236,7 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (৫টি নির্দিষ্ট ফুটার মেনু) -->
+    <!-- Bottom Navigation Bar (৫টি নির্দিষ্ট ফুটার মেনু)[cite: 14] -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -249,7 +250,7 @@
         <div class="seller-fullscreen-container" id="savedGalleryBody"></div>
     </div>
 
-    <!-- Buy Variant Preview Modal (হরিজন্টাল স্ক্রল সহ) -->
+    <!-- Buy Variant Preview Modal (হরিজন্টাল স্ক্রল সহ)[cite: 14] -->
     <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()">
         <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
     </div>
@@ -605,7 +606,7 @@
             renderFixedGlobalActions(container, pId);
         }
 
-        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (ডানে-বামে হরিজন্টাল স্ক্রল সহ) --- */
+        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (হরিজন্টাল স্ক্রল সহ)[cite: 14] --- */
         function openBuyPreviewModal(product, event) {
             const overlay = document.getElementById('buyPreviewOverlay');
             const content = document.getElementById('buyPreviewModalContent');
@@ -674,13 +675,9 @@
         }
 
         function triggerCoinDropAnimation(e) {
-            const cartBtn = document.getElementById('footerCartMenuBtn') || document.querySelector('.bottom-nav-item');
-            const cartBadge = document.getElementById('sideCartBadgeCount');
-            if (!cartBtn) return;
-
-            const cartRect = cartBtn.getBoundingClientRect();
-            const targetX = cartRect.left + (cartRect.width / 2) - 16;
-            const targetY = cartRect.top + (cartRect.height / 2) - 16;
+            const cartBtn = document.getElementById('sideCartBadgeCount') ? document.getElementById('fixedGlobalActionsBar') : null;
+            let targetX = window.innerWidth - 40;
+            let targetY = window.innerHeight - 150;
 
             let startX = e ? e.clientX : window.innerWidth / 2;
             let startY = e ? e.clientY : window.innerHeight / 2;
