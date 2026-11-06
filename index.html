@@ -268,18 +268,18 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
         
-        /* Fixed Badge & Country Flag CSS Layering */
+        /* Fully Guaranteed High z-index & Display Badge CSS */
         .product-country-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 100;
-            background: rgba(255, 42, 133, 0.95); border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5); pointer-events: none;
+            position: absolute !important; top: 8px !important; left: 8px !important; z-index: 9999 !important;
+            background: rgba(255, 42, 133, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            padding: 4px 9px !important; border-radius: 8px !important; display: flex !important; align-items: center !important; gap: 6px !important;
+            font-size: 0.60rem !important; font-weight: 700 !important; color: #ffffff !important; text-transform: uppercase !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.8) !important; pointer-events: none !important;
         }
         .product-country-discount-badge img.flag-icon { 
-            width: 16px; height: 11px; object-fit: cover; border-radius: 2px;
-            display: inline-block; vertical-align: middle; flex-shrink: 0;
-            border: 0.5px solid rgba(255,255,255,0.5);
+            width: 16px !important; height: 12px !important; object-fit: cover !important; border-radius: 2px !important;
+            display: inline-block !important; vertical-align: middle !important; flex-shrink: 0 !important;
+            border: 0.5px solid rgba(255,255,255,0.7) !important; background: #222 !important;
         }
 
         .card-footer-actions { 
@@ -823,7 +823,7 @@
 
                 const discount = item.discount_rate || item.discountRate || item.discount || '0';
                 
-                // Smart Country Code Fallback Fix
+                // Enhanced Country Code Extraction & Fallback
                 let rawCountry = item.target_country || item.targetCountry || item.country || item.country_code || item.targetCountryCode || 'bd';
                 if (typeof rawCountry !== 'string' || !rawCountry.trim()) {
                     rawCountry = 'bd';
