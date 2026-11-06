@@ -815,8 +815,8 @@
                 const presetLikes = defaultRandomLikes[randomSeed % defaultRandomLikes.length];
                 const initialLikes = item.like_count || presetLikes;
 
-                const discount = item.discount_rate || item.discountRate || '0';
-                const rawCountry = item.target_country || item.targetCountry || 'bd';
+                const discount = item.discount_rate || item.discountRate || item.discount || '0';
+                const rawCountry = item.target_country || item.targetCountry || item.country || 'bd';
                 const countryCode = String(rawCountry).toLowerCase().trim();
                 const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
                 
