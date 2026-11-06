@@ -41,7 +41,7 @@
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
         let globalMasterProductsList = [];
         let activeProductList = [];
-        let isPinterestHomeMode = true; // ডিফল্ট হোম পেজ পিন্টারেস্ট গ্রিড মোড
+        let isPinterestHomeMode = true; 
         let currentReelIndex = 0;
         let slideInterval = null;
         let lastSaveClickTime = 0;
@@ -152,17 +152,6 @@
             }, {passive: true});
         });
 
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            let shuffled = [...array];
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
-            }
-            return shuffled;
-        }
-
         async function loadLiveProducts() {
             const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
             if (cachedData) {
@@ -250,7 +239,7 @@
             }
         }
 
-        // Pinterest হোম গ্রিড রেন্ডারিং
+        // Pinterest হোম গ্রিড রেন্ডারিং (উপরে কোনো ডিসকাউন্ট কার্ড বা অতিরিক্ত কালো জায়গা ছাড়াই)
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             container.className = 'pinterest-feed-container';
@@ -266,7 +255,6 @@
             `;
             container.innerHTML = htmlContent;
 
-            // Re-bind search input events
             const sInput = document.getElementById('topHomeSearchInput');
             const sBtn = document.getElementById('topHomeSearchBtn');
             if(sInput && sBtn) {
@@ -322,7 +310,6 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card';
-                // প্রডাক্টে ক্লিক করলে রিলস ভিউ মোডে চলে যাবে
                 cardDiv.onclick = () => switchToReelsView(index);
 
                 cardDiv.innerHTML = `
@@ -367,7 +354,7 @@
             }
         }
 
-        // রিলস স্টাইল সিঙ্গেল ভিউ ও স্লাইডশো রেন্ডারিং
+        // রিলস স্টাইল সিঙ্গেল ভিউ ও স্লাইডশো রেন্ডারিং (প্রাইস আগে এবং পরে ডিসকাউন্ট সহকারে নিচে সাজানো)
         function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
             const container = document.getElementById('appContainer');
@@ -454,9 +441,10 @@
                         </div>
                     </div>
 
+                    <!-- একদম নিচে প্রাইস প্রথমে এবং তার পরে ডিসকাউন্ট -->
                     <div class="center-price-offer-box">
-                        ${discountBadgeHtml}
                         <span class="reel-price-txt">${pPrice}</span>
+                        ${discountBadgeHtml}
                     </div>
                 </div>
             `;
@@ -784,10 +772,12 @@
             padding: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
 
-        /* Full Reels View Styles */
+        /* Full Reels View Styles (9:16 Optimized for Mobile & Desktop) */
         .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
         .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
         .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+        .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
         
         .right-vertical-actions {
             position: absolute; right: 18px; bottom: 85px; z-index: 50;
@@ -812,7 +802,7 @@
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
-        /* প্রাইস বারের সাথে পতাকাসহ ডিসকাউন্ট ব্যাচ একদম নিচে একসাথে */
+        /* প্রাইস প্রথমে এবং ডিসকাউন্ট ব্যাচ ঠিক তার পরে নিচে একসাথে সুন্দরভাবে সেট করা */
         .center-price-offer-box {
             position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
             z-index: 40; display: flex; align-items: center; gap: 10px;
@@ -820,12 +810,12 @@
             padding: 6px 16px; border-radius: 30px; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             border: 1px solid rgba(212,175,55,0.25);
         }
+        .reel-price-txt {
+            font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
         .reel-bottom-discount-badge {
             background: var(--pink-accent); color: #fff; padding: 3px 10px; border-radius: 14px;
             font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 5px;
-        }
-        .reel-price-txt {
-            font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         /* Overlays */
