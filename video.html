@@ -46,11 +46,11 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadLiveVideosFromBackend();
 
-            const bottomHomeBtn = document.getElementById('bottomHomeBtn');
+            const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
-            const bottomBuyInfoBtn = document.getElementById('bottomBuyInfoBtn');
-            const bottomSearchBtn = document.getElementById('bottomSearchBtn');
-            const bottomSavedBtn = document.getElementById('bottomSavedBtn');
+            const bottomBuyBtn = document.getElementById('bottomBuyBtn');
+            const bottomDetailsBtn = document.getElementById('bottomDetailsBtn');
+            const bottomHomeBtn = document.getElementById('bottomHomeBtn');
             
             const floatingSearchContainer = document.getElementById('floatingSearchContainer');
             const searchInput = document.getElementById('floatingSearchInput');
@@ -58,10 +58,10 @@
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
-            // 1. HOME Click: Direct link to rorraxy.com[cite: 1]
-            if(bottomHomeBtn) {
-                bottomHomeBtn.addEventListener('click', () => { 
-                    window.location.href = 'https://rorraxy.com';
+            // 1. WORLD Click
+            if(bottomWorldBtn) {
+                bottomWorldBtn.addEventListener('click', () => {
+                    alert('Explore World Products!');
                 });
             }
 
@@ -80,9 +80,19 @@
                 });
             }
 
-            // 3. BUY & INFO Click: Open Product Detail Page[cite: 1]
-            if(bottomBuyInfoBtn) {
-                bottomBuyInfoBtn.addEventListener('click', () => {
+            // 3. BUY Click: Direct Buy/Checkout
+            if(bottomBuyBtn) {
+                bottomBuyBtn.addEventListener('click', () => {
+                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+                    if(activeList.length > 0 && activeList[currentIndex]) {
+                        window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}&buy=true`;
+                    }
+                });
+            }
+
+            // 4. DETAILS Click: Open Product Detail Page
+            if(bottomDetailsBtn) {
+                bottomDetailsBtn.addEventListener('click', () => {
                     let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
                     if(activeList.length > 0 && activeList[currentIndex]) {
                         window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
@@ -90,10 +100,17 @@
                 });
             }
 
-            // 4. SEARCH Toggle[cite: 1]
-            if(bottomSearchBtn && floatingSearchContainer) {
-                bottomSearchBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
+            // 5. HOME Click: Direct link to rorraxy.com[cite: 1]
+            if(bottomHomeBtn) {
+                bottomHomeBtn.addEventListener('click', () => { 
+                    window.location.href = 'https://rorraxy.com';
+                });
+            }
+
+            // Toggle Search Bar Overlay
+            window.toggleSearchOverlay = function(e) {
+                if(e) e.stopPropagation();
+                if(floatingSearchContainer) {
                     const isVisible = floatingSearchContainer.style.display === 'flex';
                     if (isVisible) {
                         floatingSearchContainer.style.display = 'none';
@@ -103,26 +120,10 @@
                         floatingSearchContainer.style.display = 'flex';
                         if(searchInput) searchInput.focus();
                     }
-                });
-            }
+                }
+            };
 
-            // 5. SAVED Toggle[cite: 1]
-            if(bottomSavedBtn && savedGalleryOverlay) {
-                bottomSavedBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const isVisible = savedGalleryOverlay.style.display === 'flex';
-                    if (isVisible) {
-                        savedGalleryOverlay.style.display = 'none';
-                    } else {
-                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
-                        if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
-                        renderSavedGalleryContent();
-                        savedGalleryOverlay.style.display = 'flex';
-                    }
-                });
-            }
-
-            // Outside Click Listener to close popups automatically
+            // Outside Click Listener
             window.addEventListener('click', (e) => {
                 if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
                     if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
@@ -130,26 +131,20 @@
                     }
                 }
                 if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
-                    if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
+                    if (!e.target.closest('#savedGalleryBody') && !e.target.closest('.save-action-btn')) {
                         savedGalleryOverlay.style.display = 'none';
                     }
                 }
                 if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
-                    if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
+                    if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('.search-action-btn')) {
                         floatingSearchContainer.style.display = 'none';
                     }
                 }
             });
 
             if(searchBtn && searchInput) {
-                searchBtn.addEventListener('click', () => {
-                    executeSearch(searchInput.value);
-                });
-                searchInput.addEventListener('keypress', (e) => {
-                    if(e.key === 'Enter') {
-                        executeSearch(searchInput.value);
-                    }
-                });
+                searchBtn.addEventListener('click', () => { executeSearch(searchInput.value); });
+                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeSearch(searchInput.value); });
             }
 
             window.addEventListener('keydown', (e) => {
@@ -210,9 +205,7 @@
 
                         extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
                         let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
-                        
-                        // সরাসরি ডাটাবেজ থেকে target_country এবং discount_rate নেওয়া হচ্ছে[cite: 3]
-                        let targetCountry = item.target_country ? String(item.target_country).trim().toLowerCase() : '';
+                        let targetCountry = item.target_country ? String(item.target_country).trim().toLowerCase() : 'bd';
                         let discountVal = parseFloat(item.discount_rate || 0);
 
                         let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
@@ -305,22 +298,26 @@
             renderBatchVideos();
         };
 
-        window.toggleSaveItem = function(e, btn, pId) {
+        // ডুয়েল সেভ ফাংশন (১ম ক্লিকে সেভ, ২য় ক্লিকে বা অ্যাক্টিভ অবস্থায় গ্যালারি ওপেন)
+        window.handleDualSaveAction = function(e, btn, pId) {
             e.stopPropagation();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
             
-            if(existingIndex > -1) {
-                savedObjects.splice(existingIndex, 1);
-                btn.classList.remove('active');
+            // যদি আগে থেকেই সেভ থাকে (পিঙ্ক কালার), তবে সেভ গ্যালারি ওপেন করবে
+            if (btn.classList.contains('active') || existingIndex > -1) {
+                renderSavedGalleryContent();
+                const overlay = document.getElementById('savedGalleryOverlay');
+                if(overlay) overlay.style.display = 'flex';
             } else {
+                // ১ম ক্লিক: সেভ করবে এবং পিঙ্ক কালার করবে
                 let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
                 if(targetProduct) {
                     savedObjects.push(targetProduct);
                     btn.classList.add('active');
+                    localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
                 }
             }
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
         };
 
         function renderSavedGalleryContent() {
@@ -456,7 +453,7 @@
                 }
             }
 
-            // সরাসরি প্রোডাক্টের target_country থেকে ফ্ল্যাগ তৈরি করা (যেমন: bd, ca, us ইত্যাদি)[cite: 3]
+            // Cloudflare D1 ডাটাবেজের target_country অনুযায়ী সরাসরি পতাকা নেওয়া[cite: 3]
             let countryCode = product.targetCountry || 'bd';
             let flagIconHtml = `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`;
 
@@ -475,19 +472,27 @@
                         ${mediaElement}
                     </div>
 
-                    <!-- Right Vertical Actions (Share, Like, Save) -->
+                    <!-- Right Vertical Actions (1. Share, 2. Like, 3. Search, 4. Dual Save) -->
                     <div class="right-vertical-actions">
+                        <!-- 1. SHARE -->
                         <div class="side-action-item share-action-btn" onclick="openNativeShare(event, '${pId}')" title="Share">
                             <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
                             <span class="side-count-text">${pShares}</span>
                         </div>
 
+                        <!-- 2. LIKE -->
                         <div class="side-action-item love-action-btn" onclick="toggleLove(event, this, '${pId}')" title="Like">
                             <i class="fa-solid fa-heart action-pure-icon love-icon-elem"></i>
                             <span class="side-count-text love-count">${pLikes}</span>
                         </div>
 
-                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="toggleSaveItem(event, this, '${pId}')" title="Save">
+                        <!-- 3. SEARCH (লাইকের নিচে) -->
+                        <div class="side-action-item search-action-btn" onclick="toggleSearchOverlay(event)" title="Search">
+                            <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
+                        </div>
+
+                        <!-- 4. DUAL SAVE (সার্চের নিচে) -->
+                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleDualSaveAction(event, this, '${pId}')" title="Save / View Saved">
                             <i class="fa-solid fa-bookmark action-pure-icon"></i>
                         </div>
                     </div>
@@ -618,16 +623,16 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
         }
 
-        /* Bottom Navigation Bar */
+        /* Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212,175,55,0.15);
-            display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 6px;
+            display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 4px;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; color: #a0a0ab; font-size: 0.55rem; font-weight: 600; gap: 3px;
+            cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
             width: 100%; height: 100%; text-align: center; transition: transform 0.2s;
         }
         .bottom-nav-item:hover { transform: translateY(-2px); }
@@ -636,7 +641,7 @@
         }
         .bottom-nav-item span { 
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70px; 
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
@@ -690,17 +695,28 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-fit-img { width: 100%; height: 100%; object-fit: contain; background: #000000; display: block; }
 
+        /* Right Vertical Action Buttons */
         .right-vertical-actions {
             position: absolute; right: 18px; bottom: 85px; z-index: 50;
-            display: flex; flex-direction: column; align-items: center; gap: 20px;
+            display: flex; flex-direction: column; align-items: center; gap: 18px;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 3px; transition: transform 0.2s ease; }
+        .side-action-item { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; gap: 3px; transition: transform 0.2s ease;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(10, 10, 14, 0.65); backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
         .side-action-item:active { transform: scale(0.85); }
-        .action-pure-icon { font-size: 1.7rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
+        .action-pure-icon { font-size: 1.35rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
         .share-flip { transform: scaleX(-1); }
-        .side-count-text { font-size: 0.72rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; }
+        .side-count-text { font-size: 0.62rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; margin-top: -2px; }
+        
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
+        
+        .save-action-btn.active { border-color: var(--pink-accent) !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
         .center-price-offer-box {
@@ -733,13 +749,13 @@
         <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (WORLD, CATEGORY, BUY, DETAILS, HOME) -->
     <nav class="bottom-nav-bar">
-        <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
+        <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
-        <div id="bottomBuyInfoBtn" class="bottom-nav-item center-buy-btn"><i class="fa-solid fa-cart-shopping"></i><span>BUY & INFO</span></div>
-        <div id="bottomSearchBtn" class="bottom-nav-item"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span></div>
-        <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
+        <div id="bottomBuyBtn" class="bottom-nav-item center-buy-btn"><i class="fa-solid fa-cart-shopping"></i><span>BUY</span></div>
+        <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
+        <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
     </nav>
 
     <!-- Saved Gallery Overlay -->
