@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Single Page Ecosystem</title>
+    <title>rorraxy - Retail & Vendor Reels Feed</title>
     
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
@@ -26,425 +26,39 @@
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        :root {
-            --bg-retail: #000000;
-            --card-retail: #08080c;
-            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-            --gold-solid: #d4af37;
-            --pink-accent: #ff2a85;
-            --text-white: #ffffff;
-            --text-gray: #a0a0ab;
-            --font-main: 'Poppins', sans-serif;
-        }
-
-        html, body { 
-            width: 100%; max-width: 100vw; overflow-x: hidden; 
-            background: var(--bg-retail) !important; 
-            color: var(--text-white); font-family: var(--font-main); 
-            min-height: 100vh; font-size: 14px;
-            -webkit-font-smoothing: antialiased;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-        
-        body { margin: 0; padding: 0 0 75px 0; text-transform: uppercase !important; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        /* Top Floating Search Bar */
-        .top-floating-search-bar {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; z-index: 1800; display: none;
-            align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
-            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-        }
-        .floating-search-input {
-            flex: 1; background: transparent; border: none; outline: none;
-            color: #ffffff; font-size: 0.85rem; font-family: var(--font-main); letter-spacing: 0.5px;
-        }
-        .floating-search-input::placeholder { color: #7a7a85; }
-        .floating-search-btn-circle {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient);
-            border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #000; font-size: 0.9rem;
-        }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
-            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
-            display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 4px;
-        }
-        .bottom-nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; color: #a0a0ab; font-size: 0.55rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center;
-        }
-        .bottom-nav-item i { 
-            font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-        }
-        .bottom-nav-item span { 
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
-        }
-
-        /* Pinterest Style Feed Container */
-        .pinterest-feed-container {
-            padding: 8px 6px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1400px; margin: 0 auto;
-        }
-        @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 12px; } }
-
-        .product-card {
-            background: var(--card-retail); border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
-            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-        }
-
-        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; overflow: hidden; }
-        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
-
-        /* কর্নারে সুন্দর অফার ব্যাজ */
-        .corner-discount-badge {
-            position: absolute; top: 6px; left: 6px; z-index: 45;
-            background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
-            padding: 3px 7px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-        }
-
-        /* মিডিয়ার নিচে প্রাইস টেক্সট */
-        .bottom-price-overlay {
-            width: 100%; text-align: center; padding: 8px 4px; background: #040407;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        .bottom-price-text { 
-            font-size: 0.95rem; font-weight: 800;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        /* Full Reels View */
-        .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
-        .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
-        .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
-        .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
-        
-        /* ডানপাশের ভাসমান অ্যাকশন বার - সামঞ্জস্যপূর্ণ সাইজ */
-        .right-vertical-actions {
-            position: fixed; right: 10px; bottom: 80px; z-index: 100;
-            display: flex; flex-direction: column; align-items: center; gap: 14px;
-            pointer-events: auto;
-        }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; }
-        .action-pure-icon { 
-            font-size: 1.3rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.9));
-        }
-        .side-count-text { font-size: 0.60rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; }
-        .cart-top-badge {
-            position: absolute; top: -5px; right: -6px; background: var(--pink-accent); color: #fff;
-            font-size: 0.55rem; font-weight: 800; width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(255,42,133,0.8);
-        }
-
-        /* Overlays & Modals */
-        .overlay-sheet {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: flex-end;
-        }
-
-        /* বটম-শিট ডিটেইলস (ছবি ছাড়া টেক্সট ভিত্তিক) */
-        .details-bottom-sheet {
-            width: 100%; max-width: 500px; background: #0a0a0f; border-top: 1.5px solid var(--gold-solid);
-            border-radius: 20px 20px 0 0; padding: 20px 18px 80px 18px; display: flex; flex-direction: column; gap: 14px;
-            animation: slideUp 0.3s cubic-bezier(0.1, 1, 0.1, 1);
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        /* বাই প্রিভিউ মডাল পপআপ */
-        .buy-preview-modal {
-            width: 90%; max-width: 420px; background: #0c0c14; border: 1px solid var(--gold-solid);
-            border-radius: 16px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 12px;
-        }
-        .preview-images-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 250px; overflow-y: auto; }
-        .preview-img-item { width: 100%; aspect-ratio: 1/1; border-radius: 8px; overflow: hidden; border: 1.5px solid transparent; cursor: pointer; }
-        .preview-img-item.selected { border-color: var(--pink-accent); }
-        .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* ফ্লায়িং পিংক/গোল্ডেন কয়েন অ্যানিমেশন */
-        .flying-coin {
-            position: fixed; z-index: 99999; width: 28px; height: 28px; border-radius: 50%;
-            background: var(--pink-accent); border: 2px solid #fff; pointer-events: none;
-            display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff;
-            box-shadow: 0 0 12px var(--pink-accent);
-            transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        /* ক্যাটাগরি ট্রান্সপারেন্ট ওভারলে মেনু (আপনার দেওয়া সম্পূর্ণ সাব-ক্যাটাগরি সহ) */
-        .category-transparent-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.88) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important;
-            z-index: 3500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px;
-        }
-        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
-        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
-
-        .accordion-category-box { background: rgba(5, 5, 8, 0.95) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
-        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
-        .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
-        .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
-        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
-        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
-        .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
-        
-        .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
-        .accordion-category-box.active .accordion-content { display: block; }
-        
-        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-
-        .sub-cat-item {
-            background: rgba(12, 12, 18, 0.92); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
-        }
-        .sub-cat-item:active { transform: scale(0.96); }
-        .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
-        .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
-    </style>
-</head>
-<body id="mainBody">
-
-    <!-- Top Search Bar -->
-    <div id="floatingSearchContainer" class="top-floating-search-bar">
-        <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
-        <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="bottom-nav-bar">
-        <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
-        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
-        <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>BUY</span></div>
-        <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
-    </nav>
-
-    <!-- Product Details Sheet (No Images) -->
-    <div id="detailsOverlaySheet" class="overlay-sheet" onclick="if(event.target===this) closeDetailsSheet()">
-        <div class="details-bottom-sheet" id="detailsSheetContent"></div>
-    </div>
-
-    <!-- Buy Variant Preview Modal -->
-    <div id="buyPreviewOverlay" class="overlay-sheet" style="justify-content:center;" onclick="if(event.target===this) closeBuyPreview()">
-        <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
-    </div>
-
-    <!-- Category Transparent Overlay Menu (আপনার কাঙ্ক্ষিত সম্পূর্ণ ক্যাটাগরি লিস্ট) -->
-    <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
-        <div class="seller-fullscreen-container">
-            <div class="category-fullscreen-view" id="categoryMainListView">
-                
-                <!-- WOMEN'S FASHION -->
-                <div class="accordion-category-box" id="cat-women">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-women')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-person-dress cat-main-icon"></i>
-                            <span class="accordion-main-title">WOMEN'S FASHION</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-handbags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-lingerie')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-traditional')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-crafts')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MEN'S FASHION -->
-                <div class="accordion-category-box" id="cat-men">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-men')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-user-tie cat-main-icon"></i>
-                            <span class="accordion-main-title">MEN'S FASHION</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-grooming')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIRLS' FASHION -->
-                <div class="accordion-category-box" id="cat-girls">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-crown cat-main-icon"></i>
-                            <span class="accordion-main-title">GIRLS' FASHION</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-clothing')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-hair-accessories')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-sleepwear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-party-dresses')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BOYS' FASHION -->
-                <div class="accordion-category-box" id="cat-boys">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-child cat-main-icon"></i>
-                            <span class="accordion-main-title">BOYS' FASHION</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-clothing')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MATCHING SETS -->
-                <div class="accordion-category-box" id="cat-matching">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-people-arrows cat-main-icon"></i>
-                            <span class="accordion-main-title">MATCHING SETS</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('couple-matchingsets')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('family-matchingsets')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('mom-me-sets')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('dad-me-sets')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('sibling-matchingsets')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('team-matchingsets')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('bff-matchingsets')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('pet-owner-sets')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('holiday-matchingsets')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('value-bundles')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LUXURY GIFTS -->
-                <div class="accordion-category-box" id="cat-gifts">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-gift cat-main-icon"></i>
-                            <span class="accordion-main-title">LUXURY GIFTS</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('corporate-gifts')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('luxury-giftitems')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('premium-handicrafts')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('wood-resincrafts')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('bamboo-brass-decor')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('gift-sets-hampers')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MOTHER & BABY -->
-                <div class="accordion-category-box" id="cat-mother">
-                    <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
-                        <div class="accordion-title-wrap">
-                            <i class="fa-solid fa-baby cat-main-icon"></i>
-                            <span class="accordion-main-title">MOTHER & BABY</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('eco-baby-toys')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('mother-baby-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content Container -->
-    <main id="appContainer" class="pinterest-feed-container">
-        <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
-            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 10px; font-size: 0.75rem;">LOADING RORRAXY PRODUCTS...</p>
-        </div>
-    </main>
+    <!-- External CSS Link -->
+    <link rel="stylesheet" href="style.css">
+    <!-- External Categories Data -->
+    <script src="categories.js"></script>
 
     <script>
-        const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
-        let globalMasterProductsList = [];
-        let activeProductList = [];
-        let isPinterestHomeMode = true; 
-        let currentReelIndex = 0;
+        let globalVideoList = [];
+        let activeReelsList = []; 
+        let currentIndex = 0;
         let slideInterval = null;
-        let selectedVariantImg = '';
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadLiveProducts();
-            updateCartBadgeCount();
+            buildCategoriesUI();
+            loadLiveVideosFromBackend();
 
-            const bottomWorldBtn = document.getElementById('bottomWorldBtn');
-            const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
-            const bottomBuyBtn = document.getElementById('bottomBuyBtn');
-            const bottomDetailsBtn = document.getElementById('bottomDetailsBtn');
             const bottomHomeBtn = document.getElementById('bottomHomeBtn');
+            const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
+            const bottomBuyInfoBtn = document.getElementById('bottomBuyInfoBtn');
+            const bottomSearchBtn = document.getElementById('bottomSearchBtn');
+            const bottomSavedBtn = document.getElementById('bottomSavedBtn');
             
-            const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
             const floatingSearchContainer = document.getElementById('floatingSearchContainer');
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
+            const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
+            const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
-            if(bottomWorldBtn) {
-                bottomWorldBtn.addEventListener('click', () => {
-                    alert("World ecosystem view loaded in-app.");
+            if(bottomHomeBtn) {
+                bottomHomeBtn.addEventListener('click', () => { 
+                    window.location.href = 'https://rorraxy.com';
                 });
             }
 
@@ -452,124 +66,335 @@
                 bottomCategoryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const isVisible = categoryTransparentOverlay.style.display === 'flex';
-                    categoryTransparentOverlay.style.display = isVisible ? 'none' : 'flex';
-                });
-            }
-
-            if(bottomBuyBtn) {
-                bottomBuyBtn.addEventListener('click', (e) => {
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                    if(list.length > 0) {
-                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
-                        openBuyPreviewModal(targetProd, e);
+                    if (isVisible) {
+                        categoryTransparentOverlay.style.display = 'none';
+                    } else {
+                        if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
+                        if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
+                        categoryTransparentOverlay.style.display = 'flex';
                     }
                 });
             }
 
-            if(bottomDetailsBtn) {
-                bottomDetailsBtn.addEventListener('click', () => {
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                    if(list.length > 0) {
-                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
-                        toggleDetailsSheet(targetProd);
+            if(bottomBuyInfoBtn) {
+                bottomBuyInfoBtn.addEventListener('click', () => {
+                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+                    if(activeList.length > 0 && activeList[currentIndex]) {
+                        window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
                     }
                 });
             }
 
-            if(bottomHomeBtn) {
-                bottomHomeBtn.addEventListener('click', () => { 
-                    isPinterestHomeMode = true;
-                    if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
-                    closeDetailsSheet();
-                    closeBuyPreview();
-                    activeProductList = globalMasterProductsList;
-                    renderPinterestHomeGrid(globalMasterProductsList);
-                });
-            }
-
-            window.toggleSearchOverlay = function(e) {
-                if(e) e.stopPropagation();
-                if(floatingSearchContainer) {
+            if(bottomSearchBtn && floatingSearchContainer) {
+                bottomSearchBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const isVisible = floatingSearchContainer.style.display === 'flex';
-                    floatingSearchContainer.style.display = isVisible ? 'none' : 'flex';
-                    if(!isVisible && searchInput) searchInput.focus();
+                    if (isVisible) {
+                        floatingSearchContainer.style.display = 'none';
+                    } else {
+                        if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
+                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
+                        floatingSearchContainer.style.display = 'flex';
+                        if(searchInput) searchInput.focus();
+                    }
+                });
+            }
+
+            if(bottomSavedBtn && savedGalleryOverlay) {
+                bottomSavedBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isVisible = savedGalleryOverlay.style.display === 'flex';
+                    if (isVisible) {
+                        savedGalleryOverlay.style.display = 'none';
+                    } else {
+                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
+                        if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
+                        renderSavedGalleryContent();
+                        savedGalleryOverlay.style.display = 'flex';
+                    }
+                });
+            }
+
+            window.addEventListener('click', (e) => {
+                if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
+                    if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
+                        categoryTransparentOverlay.style.display = 'none';
+                    }
                 }
-            };
+                if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
+                    if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
+                        savedGalleryOverlay.style.display = 'none';
+                    }
+                }
+                if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
+                    if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
+                        floatingSearchContainer.style.display = 'none';
+                    }
+                }
+            });
 
             if(searchBtn && searchInput) {
-                searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
+                searchBtn.addEventListener('click', () => { executeSearch(searchInput.value); });
+                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeSearch(searchInput.value); });
             }
+
+            window.addEventListener('keydown', (e) => {
+                if(e.key === 'ArrowDown') { e.preventDefault(); scrollVideo(1); }
+                else if(e.key === 'ArrowUp') { e.preventDefault(); scrollVideo(-1); }
+            });
 
             let touchStartY = 0;
             window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive: true});
             window.addEventListener('touchend', (e) => {
-                if(!isPinterestHomeMode) {
-                    let diff = touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) > 40) diff > 0 ? scrollReels(1) : scrollReels(-1);
-                }
+                let diff = touchStartY - e.changedTouches[0].clientY;
+                if (Math.abs(diff) > 50) diff > 0 ? scrollVideo(1) : scrollVideo(-1);
             }, {passive: true});
         });
 
-        async function loadLiveProducts() {
-            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = parsed;
-                        activeProductList = parsed;
-                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
-                    }
-                } catch (e) {}
-            }
+        // categories.js থেকে ডাইনামিক ক্যাটাগরি রেন্ডার করার ফাংশন
+        function buildCategoriesUI() {
+            const listContainer = document.getElementById('categoryMainListView');
+            if(!listContainer || typeof rorraxyCategoriesData === 'undefined') return;
 
+            let html = '';
+            rorraxyCategoriesData.forEach(cat => {
+                let subHtml = '';
+                cat.subCategories.forEach(sub => {
+                    subHtml += `
+                        <div class="sub-cat-item" onclick="filterReelsByCategory('${sub.key}')">
+                            <i class="${sub.icon}"></i>
+                            <span class="sub-cat-name">${sub.name}</span>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="accordion-category-box" id="${cat.id}">
+                        <div class="accordion-header" onclick="toggleAccordion('${cat.id}')">
+                            <div class="accordion-title-wrap">
+                                <i class="${cat.icon} cat-main-icon"></i>
+                                <span class="accordion-main-title">${cat.title}</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="sub-categories-grid">${subHtml}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = html;
+        }
+
+        async function loadLiveVideosFromBackend() {
             try {
                 const response = await fetch(`/api/products`);
                 const result = await response.json();
+                
                 let productsList = [];
-                if (result && result.success && Array.isArray(result.data)) productsList = result.data;
-                else if (Array.isArray(result)) productsList = result;
+                if (result && result.success && Array.isArray(result.data)) {
+                    productsList = result.data;
+                } else if (Array.isArray(result)) {
+                    productsList = result;
+                }
 
                 if (productsList.length > 0) {
-                    globalMasterProductsList = productsList;
-                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    activeProductList = productsList;
-                    if(isPinterestHomeMode) renderPinterestHomeGrid(productsList);
+                    const randomLikeBases = [250, 500, 1000, 1500, 2000, 2500, 5000];
+                    globalVideoList = productsList.map(item => {
+                        let rawVid = item.video_url || item.youtube_video || '';
+                        if (rawVid.includes('.r2.dev')) {
+                            rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
+                        }
+
+                        let extractedImages = [];
+                        try {
+                            if (item.images_json) {
+                                if (typeof item.images_json === 'string') {
+                                    let parsed = JSON.parse(item.images_json);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } else if (Array.isArray(item.images_json)) {
+                                    extractedImages = item.images_json;
+                                }
+                            }
+                        } catch(e) {}
+
+                        if (extractedImages.length === 0 && item.image_url) {
+                            if (typeof item.image_url === 'string' && item.image_url.startsWith('[')) {
+                                try {
+                                    let parsed = JSON.parse(item.image_url);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } catch(e) { extractedImages = [item.image_url]; }
+                            } else {
+                                extractedImages = [item.image_url];
+                            }
+                        }
+
+                        extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
+                        let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
+                        
+                        let targetCountry = item.target_country ? String(item.target_country).trim().toLowerCase() : '';
+                        let discountVal = parseFloat(item.discount_rate || 0);
+                        let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
+
+                        return {
+                            id: String(item.id || item.product_code || '101'),
+                            videoUrl: rawVid,
+                            imagesList: extractedImages,
+                            price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
+                            baseLikes: calculatedBaseLikes,
+                            baseShares: 180,
+                            targetCountry: targetCountry,
+                            discountNum: discountVal,
+                            discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
+                            category: item.category || 'video',
+                            description: item.description || '',
+                            title: item.title || '',
+                            sellerName: sellerTitle,
+                            sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
+                            sellerDesc: 'Verified seller on rorraxy ecosystem.'
+                        };
+                    });
+                    sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
+                    activeReelsList = globalVideoList; 
+                    renderBatchVideos();
+                } else {
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 }
-            } catch (error) {}
-        }
-
-        function executeHeaderSearch(keyword) {
-            let query = keyword.toLowerCase().trim();
-            if (!query) {
-                activeProductList = globalMasterProductsList;
-                if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
-                return;
+            } catch (error) {
+                console.error('Failed to load products from backend:', error);
+                let cachedData = sessionStorage.getItem('rorraxy_cached_videos');
+                if (cachedData) {
+                    globalVideoList = JSON.parse(cachedData);
+                    activeReelsList = globalVideoList;
+                    renderBatchVideos();
+                } else {
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
+                }
             }
-            let filtered = globalMasterProductsList.filter(item => {
-                const title = (item.title || '').toLowerCase();
-                const cat = (item.category || item.description || '').toLowerCase();
-                return title.includes(query) || cat.includes(query);
-            });
-            activeProductList = filtered;
-            if(isPinterestHomeMode) renderPinterestHomeGrid(filtered);
-            document.getElementById('floatingSearchContainer').style.display = 'none';
         }
 
-        function filterProductsByCategory(queryKey) {
+        function getDynamicEngagement(productId, baseVal, type) {
+            let storageKey = `rorraxy_retail_${type}_${productId}`;
+            let storedData = localStorage.getItem(storageKey);
+            let currentTime = new Date().getTime();
+            let currentVal = baseVal;
+
+            if (storedData) {
+                let parsed = JSON.parse(storedData);
+                currentVal = parsed.value;
+            } else {
+                currentVal = baseVal + Math.floor(Math.random() * 150);
+                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: currentTime }));
+            }
+
+            if (currentVal >= 1000) {
+                return (currentVal / 1000).toFixed(1) + 'K';
+            }
+            return currentVal.toString();
+        }
+
+        window.executeSearch = function(keyword) {
+            let query = keyword.toLowerCase().trim();
+            if(!query) return;
+            let foundIndex = globalVideoList.findIndex(p => 
+                (p.id && String(p.id).toLowerCase().includes(query)) ||
+                (p.sellerName && p.sellerName.toLowerCase().includes(query)) ||
+                (p.title && p.title.toLowerCase().includes(query))
+            );
+            if (foundIndex !== -1) {
+                activeReelsList = globalVideoList;
+                currentIndex = foundIndex;
+                renderBatchVideos();
+            }
+            document.getElementById('floatingSearchContainer').style.display = 'none';
+        };
+
+        window.filterReelsByCategory = function(queryKey) {
             document.getElementById('categoryTransparentOverlay').style.display = 'none';
             let query = queryKey.toLowerCase().replace(/-/g, ' ');
-            let filtered = globalMasterProductsList.filter(item => {
+            
+            let filtered = globalVideoList.filter(item => {
                 const title = (item.title || '').toLowerCase();
                 const cat = (item.category || item.description || '').toLowerCase();
                 return title.includes(query) || cat.includes(query);
             });
-            activeProductList = filtered.length > 0 ? filtered : globalMasterProductsList;
-            isPinterestHomeMode = true;
-            renderPinterestHomeGrid(activeProductList);
+
+            activeReelsList = filtered.length > 0 ? filtered : globalVideoList;
+            currentIndex = 0;
+            renderBatchVideos();
+        };
+
+        window.toggleSaveItem = function(e, btn, pId) {
+            e.stopPropagation();
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
+            
+            if(existingIndex > -1) {
+                savedObjects.splice(existingIndex, 1);
+                btn.classList.remove('active');
+            } else {
+                let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
+                if(targetProduct) {
+                    savedObjects.push(targetProduct);
+                    btn.classList.add('active');
+                }
+            }
+            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+        };
+
+        function renderSavedGalleryContent() {
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let containerBody = document.getElementById('savedGalleryBody');
+            if(!containerBody) return;
+
+            if (savedObjects.length === 0) {
+                containerBody.innerHTML = `
+                    <div class="fs-profile-header-box"><h2 class="fs-profile-name">SAVED VIDEOS</h2></div>
+                    <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
+            } else {
+                let thumbsHtml = '';
+                savedObjects.forEach(v => {
+                    let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
+                    thumbsHtml += `
+                        <div class="saved-thumb-card" onclick="selectSavedVideo('${v.id}')">
+                            <div class="saved-thumb-preview">
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;">
+                                <i class="fa-solid fa-play play-overlay-icon"></i>
+                            </div>
+                            <div class="saved-thumb-footer">
+                                <span class="saved-thumb-title">ID: ${v.id}</span>
+                                <span class="saved-thumb-price">${v.price || ''}</span>
+                                <button class="saved-clean-delete-btn" onclick="removeSavedVideo(event, '${v.id}')"><i class="fa-solid fa-trash"></i> DELETE</button>
+                            </div>
+                        </div>`;
+                });
+                containerBody.innerHTML = `
+                    <div class="fs-profile-header-box">
+                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
+                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedObjects.length}</strong></div>
+                    </div>
+                    <div class="fs-videos-grid">${thumbsHtml}</div>`;
+            }
         }
+
+        window.selectSavedVideo = function(videoId) {
+            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
+            if(foundIdx !== -1) {
+                activeReelsList = globalVideoList;
+                currentIndex = foundIdx;
+            }
+            document.getElementById('savedGalleryOverlay').style.display = 'none';
+            renderBatchVideos();
+        };
+
+        window.removeSavedVideo = function(e, videoId) {
+            e.stopPropagation();
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            savedObjects = savedObjects.filter(item => String(item.id) !== String(videoId));
+            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+            renderSavedGalleryContent();
+            renderBatchVideos();
+        };
 
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
@@ -590,323 +415,112 @@
             }
         }
 
-        function renderPinterestHomeGrid(products) {
-            const container = document.getElementById('appContainer');
-            container.className = 'pinterest-feed-container';
-            const fragment = document.createDocumentFragment();
+        window.scrollVideo = function(direction) {
+            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+            if (direction === 1 && currentIndex < activeList.length - 1) { currentIndex++; renderBatchVideos(); }
+            else if (direction === -1 && currentIndex > 0) { currentIndex--; renderBatchVideos(); }
+        };
 
-            products.forEach((item, index) => {
-                const title = item.title || 'rorraxy Luxury Item';
-                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                try {
-                    if (item.images_json) {
-                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
-                        if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
-                    } else if (item.image_url) resolvedImageUrl = item.image_url;
-                } catch(e) {}
+        function renderBatchVideos() {
+            const feedContainer = document.getElementById('videoFeed');
+            if(!feedContainer) return;
 
-                let price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
-                let discountPercent = parseFloat(item.discount_rate || item.discountRate || 0);
-                let discountBadge = discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : '';
+            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+            if (activeList.length === 0) {
+                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
+                return;
+            }
 
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'product-card';
-                cardDiv.onclick = () => switchToReelsView(index);
+            if (currentIndex >= activeList.length) currentIndex = Math.max(0, activeList.length - 1);
+            let product = activeList[currentIndex];
 
-                cardDiv.innerHTML = `
-                    <div class="product-media-box">
-                        ${discountBadge}
-                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy">
-                    </div>
-                    <div class="bottom-price-overlay">
-                        <span class="bottom-price-text">${price}</span>
-                    </div>
-                `;
-                fragment.appendChild(cardDiv);
-            });
+            let pId = String(product.id || '101');
+            let pVideo = product.videoUrl ? product.videoUrl.trim() : '';
+            let pPrice = product.price ? product.price : '$85.00';
 
-            container.innerHTML = '';
-            container.appendChild(fragment);
-            renderFixedGlobalActions(container, null);
-        }
+            let pLikes = getDynamicEngagement(pId, product.baseLikes || 5200, 'likes');
+            let pShares = getDynamicEngagement(pId, product.baseShares || 180, 'shares');
 
-        function renderFixedGlobalActions(container, pId) {
-            let existingBar = document.getElementById('fixedGlobalActionsBar');
-            if(existingBar) existingBar.remove();
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let isSaved = savedObjects.some(item => String(item.id) === String(pId));
+            let savedActiveClass = isSaved ? 'active' : '';
 
-            let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
-            let pShares = getDynamicEngagement(targetId, 180, 'shares');
-
-            let actionsHtml = `
-                <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <!-- CART ICON (Top side) -->
-                    <div class="side-action-item" onclick="openCartViewInline()" title="Cart">
-                        <i class="fa-solid fa-basket-shopping action-pure-icon"></i>
-                        <span class="cart-top-badge" id="sideCartBadgeCount">0</span>
-                        <span class="side-count-text">CART</span>
-                    </div>
-
-                    <div class="side-action-item" onclick="openNativeShare(event, '${targetId}')" title="Share">
-                        <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
-                        <span class="side-count-text">${pShares}</span>
-                    </div>
-                    <div class="side-action-item love-action-btn" onclick="toggleReelLove(event, this, '${targetId}')" title="Like">
-                        <i class="fa-solid fa-heart action-pure-icon"></i>
-                    </div>
-                    <div class="side-action-item" onclick="toggleSearchOverlay(event)" title="Search">
-                        <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
-                    </div>
-                    <div class="side-action-item save-action-btn" onclick="handleHomeOrReelSave(event, this, '${targetId}')" title="Save">
-                        <i class="fa-solid fa-bookmark action-pure-icon"></i>
-                    </div>
-
-                    <!-- YOU ICON (Bottom side) -->
-                    <div class="side-action-item" onclick="openAccountViewInline()" title="You">
-                        <i class="fa-solid fa-user-gear action-pure-icon"></i>
-                        <span class="side-count-text">YOU</span>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', actionsHtml);
-            updateCartBadgeCount();
-        }
-
-        function switchToReelsView(index) {
-            isPinterestHomeMode = false;
-            currentReelIndex = index;
-            renderSingleReelView();
-        }
-
-        function scrollReels(direction) {
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if (direction === 1 && currentReelIndex < list.length - 1) { currentReelIndex++; renderSingleReelView(); }
-            else if (direction === -1 && currentReelIndex > 0) { currentReelIndex--; renderSingleReelView(); }
-        }
-
-        function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
-            const container = document.getElementById('appContainer');
-            container.className = 'reel-view-wrapper-outer';
 
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(currentReelIndex >= list.length) currentReelIndex = 0;
-            let product = list[currentReelIndex];
-            if(!product) return;
-
-            let pId = String(product.id || product.product_id || '101');
-            let pVideo = product.video_url || product.youtube_video || '';
-            let mediaElem = '';
-            let extractedImages = [];
-
-            try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) extractedImages = parsed;
-                } else if(product.image_url) extractedImages = [product.image_url];
-            } catch(e){}
-
-            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
+            let mediaElement = '';
+            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
+                mediaElement = `<video src="${pVideo}" autoplay loop muted playsinline preload="metadata"></video>`;
             } else {
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-                mediaElem = `<img id="reelSlideImg" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
+                let images = product.imagesList || [];
+                if (images.length === 0) images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
+
+                mediaElement = `<img id="reelSlideImg" src="${images[0]}" class="reel-fit-img" alt="Product Media">`;
                 
-                if (extractedImages.length > 1) {
+                if (images.length > 1) {
                     let imgIdx = 0;
                     slideInterval = setInterval(() => {
-                        imgIdx = (imgIdx + 1) % extractedImages.length;
+                        imgIdx = (imgIdx + 1) % images.length;
                         const imgElem = document.getElementById('reelSlideImg');
-                        if (imgElem) imgElem.src = extractedImages[imgIdx];
+                        if (imgElem) imgElem.src = images[imgIdx];
                     }, 1500);
                 }
             }
 
-            let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
-            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
+            let countryCode = product.targetCountry || 'bd';
+            let flagIconHtml = `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`;
 
-            container.innerHTML = `
+            let discountBadgeHtml = '';
+            if (product.discountNum && product.discountNum > 0) {
+                discountBadgeHtml = `
+                    <div class="image-style-discount-badge">
+                        <span class="dynamic-flag-box">${flagIconHtml}</span>
+                        <span class="offer-text">${product.discountStr}</span>
+                    </div>`;
+            }
+
+            feedContainer.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="toggleDetailsSheet(globalMasterProductsList[${currentReelIndex}])">
-                        ${discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : ''}
-                        ${mediaElem}
+                    <div class="reel-media-box" onclick="openProductDetail('${pId}')">${mediaElement}</div>
+
+                    <div class="right-vertical-actions">
+                        <div class="side-action-item share-action-btn" onclick="openNativeShare(event, '${pId}')" title="Share">
+                            <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
+                            <span class="side-count-text">${pShares}</span>
+                        </div>
+                        <div class="side-action-item love-action-btn" onclick="toggleLove(event, this, '${pId}')" title="Like">
+                            <i class="fa-solid fa-heart action-pure-icon love-icon-elem"></i>
+                            <span class="side-count-text love-count">${pLikes}</span>
+                        </div>
+                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="toggleSaveItem(event, this, '${pId}')" title="Save">
+                            <i class="fa-solid fa-bookmark action-pure-icon"></i>
+                        </div>
                     </div>
-                    <div class="bottom-price-overlay">
-                        <span class="bottom-price-text">${price}</span>
+
+                    <div class="center-price-offer-box">
+                        <span class="product-price-tag">${pPrice}</span>
+                        ${discountBadgeHtml}
                     </div>
                 </div>
             `;
-            renderFixedGlobalActions(container, pId);
         }
 
-        /* --- প্রোডাক্ট ডিটেইলস (নো-ইমেজ বটম শিট) --- */
-        function toggleDetailsSheet(product) {
-            const sheet = document.getElementById('detailsOverlaySheet');
-            const content = document.getElementById('detailsSheetContent');
-            if(sheet.style.display === 'flex') {
-                sheet.style.display = 'none';
-                return;
-            }
-
-            let priceVal = parseFloat(product.price) || 35.00;
-            let title = product.title || "RORRAXY RETAIL ITEM";
-            let rawDesc = product.description || "High-grade luxury materials for retail excellence.";
-            let stockNum = product.stock || 100;
-
-            content.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
-                    <span style="color:var(--gold-solid); font-weight:700; font-size:0.75rem;"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
-                    <button onclick="closeDetailsSheet()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
-                </div>
-                <h2 style="font-size:1.1rem; color:var(--gold-solid); font-weight:700;">${title}</h2>
-                <div style="font-size:1.3rem; font-weight:800; color:#fff;">$${priceVal.toFixed(2)}</div>
-                <div style="font-size:0.7rem; color:#00e676; font-weight:700;">IN STOCK: ${stockNum} UNITS READY</div>
-                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none;">${rawDesc}</div>
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                    <span style="font-size:0.65rem; color:var(--gold-solid); font-weight:700;">CUSTOM SIZE / NOTE</span>
-                    <input type="text" id="sheetCustomNote" placeholder="ENTER NOTE (OPTIONAL)..." style="width:100%; background:#040407; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:8px; color:#fff; font-size:0.7rem;">
-                </div>
-                <button onclick="alert('Seller Chat Opened')" style="background:rgba(212,175,55,0.15); border:1px solid var(--gold-solid); color:var(--gold-solid); padding:10px; border-radius:8px; font-weight:700; font-size:0.75rem; cursor:pointer; width:100%;">
-                    <i class="fa-solid fa-headset"></i> CHAT WITH SELLER
-                </button>
-            `;
-            sheet.style.display = 'flex';
-        }
-
-        function closeDetailsSheet() {
-            document.getElementById('detailsOverlaySheet').style.display = 'none';
-        }
-
-        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ --- */
-        function openBuyPreviewModal(product, event) {
-            const overlay = document.getElementById('buyPreviewOverlay');
-            const content = document.getElementById('buyPreviewModalContent');
-
-            let images = [];
-            try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) images = parsed;
-                } else if(product.image_url) images = [product.image_url];
-            } catch(e){}
-
-            if(images.length === 0) images = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-            selectedVariantImg = images[0];
-
-            let imgsHtml = images.map((img, i) => `
-                <div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')">
-                    <img src="${img}">
-                </div>
-            `).join('');
-
-            content.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">SELECT VARIANT / COLOR</span>
-                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">&times;</button>
-                </div>
-                <div class="preview-images-grid">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${product.title||'Item'}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%;">
-                    CONFIRM & ADD TO CART
-                </button>
-            `;
-            overlay.style.display = 'flex';
-        }
-
-        function selectPreviewImg(el, imgUrl) {
-            document.querySelectorAll('.preview-img-item').forEach(i => i.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedVariantImg = imgUrl;
-        }
-
-        function closeBuyPreview() {
-            document.getElementById('buyPreviewOverlay').style.display = 'none';
-        }
-
-        /* --- ফ্লায়িং পিংক কয়েন অ্যানিমেশন --- */
-        function triggerFlyingCoinAnimation(e) {
-            let startX = e ? e.clientX : window.innerWidth / 2;
-            let startY = e ? e.clientY : window.innerHeight / 2;
-
-            const targetBadge = document.getElementById('sideCartBadgeCount');
-            if(!targetBadge) return;
-            const targetRect = targetBadge.getBoundingClientRect();
-
-            const coin = document.createElement('div');
-            coin.className = 'flying-coin';
-            coin.innerHTML = '<i class="fa-solid fa-basket-shopping"></i>';
-            coin.style.left = `${startX - 14}px`;
-            coin.style.top = `${startY - 14}px`;
-            document.body.appendChild(coin);
-
-            requestAnimationFrame(() => {
-                coin.style.left = `${targetRect.left}px`;
-                coin.style.top = `${targetRect.top}px`;
-                coin.style.transform = 'scale(0.2)';
-                coin.style.opacity = '0.2';
-            });
-
-            setTimeout(() => {
-                if(coin.parentNode) coin.parentNode.removeChild(coin);
-            }, 750);
-        }
-
-        function confirmAddToCart(e, pId, title, price) {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg);
-
-            if(existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({
-                    productId: pId,
-                    title: title,
-                    price: `$${parseFloat(price).toFixed(2)}`,
-                    qty: 1,
-                    img: selectedVariantImg
-                });
-            }
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-            updateCartBadgeCount();
-            triggerFlyingCoinAnimation(e);
-            closeBuyPreview();
-        }
-
-        function updateCartBadgeCount() {
-            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
-            let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
-            let sideBadge = document.getElementById('sideCartBadgeCount');
-            if(sideBadge) sideBadge.innerText = totalQty;
-        }
-
-        function openCartViewInline() {
-            alert("Cart Checkout overlay loaded in-app.");
-        }
-
-        function openAccountViewInline() {
-            alert("User Account overlay loaded in-app.");
-        }
-
-        function getDynamicEngagement(productId, baseVal, type) {
-            let storageKey = `rorraxy_retail_${type}_${productId}`;
+        window.toggleLove = function(e, btn, productId) {
+            e.stopPropagation();
+            let countElem = btn.querySelector('.love-count');
+            let storageKey = `rorraxy_retail_likes_${productId}`;
             let storedData = localStorage.getItem(storageKey);
-            let currentVal = baseVal;
-            if (storedData) {
-                currentVal = JSON.parse(storedData).value;
+            let currentVal = storedData ? JSON.parse(storedData).value : 5200;
+
+            if(btn.classList.contains('liked-active')) {
+                btn.classList.remove('liked-active');
+                currentVal = Math.max(0, currentVal - 1);
             } else {
-                currentVal = baseVal + Math.floor(Math.random() * 50);
-                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
+                btn.classList.add('liked-active');
+                currentVal += 1;
             }
-            return currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
-        }
 
-        window.toggleReelLove = function(e, btn) {
-            e.stopPropagation();
-            btn.classList.toggle('liked-active');
-        };
-
-        window.handleHomeOrReelSave = function(e, btn) {
-            e.stopPropagation();
-            btn.classList.toggle('active');
+            localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: new Date().getTime() }));
+            if(countElem) countElem.innerText = currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
         };
 
         window.openNativeShare = async function(e, pId) {
@@ -915,10 +529,47 @@
             if (navigator.share) {
                 try { await navigator.share({ title: pId, url: shareUrl }); } catch (err) {}
             } else if (navigator.clipboard) {
-                await navigator.clipboard.writeText(shareUrl);
-                alert('Link copied to clipboard!');
+                navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard!'));
             }
         };
+
+        window.openProductDetail = function(productId) {
+            window.location.href = `pd.html?id=${encodeURIComponent(productId)}`;
+        };
     </script>
+</head>
+<body id="mainBody">
+
+    <!-- Top Floating Search Bar -->
+    <div id="floatingSearchContainer" class="top-floating-search-bar">
+        <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
+        <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="yt-nav-arrows">
+        <button class="yt-arrow-btn" onclick="scrollVideo(-1)"><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav-bar">
+        <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
+        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
+        <div id="bottomBuyInfoBtn" class="bottom-nav-item center-buy-btn"><i class="fa-solid fa-cart-shopping"></i><span>BUY & INFO</span></div>
+        <div id="bottomSearchBtn" class="bottom-nav-item"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span></div>
+        <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
+    </nav>
+
+    <!-- Saved Gallery Overlay -->
+    <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
+
+    <!-- Centered Transparent Category Overlay Menu (Dynamic Load via categories.js) -->
+    <div id="categoryTransparentOverlay" class="category-transparent-overlay">
+        <div class="seller-fullscreen-container">
+            <div class="category-fullscreen-view" id="categoryMainListView"></div>
+        </div>
+    </div>
+
+    <main class="feed-container" id="videoFeed"></main>
 </body>
 </html>
