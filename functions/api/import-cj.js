@@ -2,7 +2,17 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { cjProductId, retailMargin, shippingCushion, wholesaleMargin, previewOnly } = await request.json();
+    const { 
+      cjProductId, 
+      retailMargin, 
+      shippingCushion, 
+      wholesaleMargin, 
+      manualVideoUrl, 
+      targetCountry, 
+      discountOffer, 
+      category, 
+      previewOnly 
+    } = await request.json();
 
     if (!cjProductId) {
       return new Response(JSON.stringify({ success: false, error: "CJ Product ID is required" }), {
@@ -54,7 +64,7 @@ export async function onRequestPost(context) {
     const priceMinWhole = (baseCost * (1 + (wMargin * 0.75))).toFixed(2);
     const priceBulk = (baseCost * (1 + (wMargin * 0.5))).toFixed(2);
 
-    // ৪. নির্ভুল মাল্টিপল ইমেজ এক্সট্রাকশন লজিক (গ্যালারি ইমেজসহ)
+    // ৪. মাল্টিপল ইমেজ ও গ্যালারি এক্সট্রাকশন লজিক
     let rawImages = [];
 
     const extract = (source) => {
@@ -76,7 +86,6 @@ export async function onRequestPost(context) {
       }
     };
 
-    // সিজে এপিআই-এর সমস্ত সম্ভাব্য গ্যালারি ও ইমেজ প্রপার্টি চেক করা
     extract(p.productImageList);
     extract(p.productImages);
     extract(p.materialImageList);
@@ -88,7 +97,6 @@ export async function onRequestPost(context) {
     extract(p.bigImage);
     extract(p.imageUrl);
     
-    // ভ্যারিয়েন্ট ইমেজগুলোও যুক্ত করা
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
         if (v.variantImage) rawImages.push(v.variantImage);
@@ -104,7 +112,7 @@ export async function onRequestPost(context) {
              !clean.includes('placeholder');
     });
 
-    imagesArray = [...new Set(imagesArray)]; // ডুপ্লিকেট রিমোভ
+    imagesArray = [...new Set(imagesArray)];
 
     if (imagesArray.length === 0 && p.productImage && p.productImage.startsWith('http')) {
       imagesArray = [p.productImage];
@@ -113,7 +121,6 @@ export async function onRequestPost(context) {
     const mainImage = imagesArray.length > 0 ? imagesArray[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30';
     const imagesListJson = JSON.stringify(imagesArray);
     
-    // সাইজ বা ভ্যারিয়েন্ট এক্সট্রাক্ট করা
     let sizesList = [];
     if (p.variants && Array.isArray(p.variants)) {
       p.variants.forEach(v => {
@@ -123,10 +130,10 @@ export async function onRequestPost(context) {
     }
     sizesList = [...new Set(sizesList)];
 
-    // ভিডিও লিংক (সবগুলো সম্ভাব্য ফিল্ড কভার করা হয়েছে)
-    const videoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || p.mediaVideo || '';
+    // ৫. ভিডিও লিংক হ্যান্ডেলিং (API এবং Manual Input উভয় ব্যাকআপ সহ)
+    const apiVideoUrl = p.productVideo || p.video || p.videoUrl || p.materialVideo || p.mediaVideo || '';
+    const finalVideoUrl = manualVideoUrl && manualVideoUrl.startsWith('http') ? manualVideoUrl : apiVideoUrl;
 
-    // ৫. ডেসক্রিপশন সম্পূর্ণ গুছিয়ে পরিষ্কার করা এবং সাইজ টেবিল বা ইনফো যুক্ত করা
     let rawDesc = p.description || p.productNameEn || 'High-grade global product.';
     let cleanDescription = rawDesc
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -148,7 +155,6 @@ export async function onRequestPost(context) {
       cleanDescription = `AVAILABLE SIZES / OPTIONS:\n${sizesList.join(', ')}\n\n------------------------------------\n\n` + cleanDescription;
     }
 
-    // শুধু প্রিভিউ মোডের জন্য ডেটা রিটার্ন করা
     if (previewOnly) {
       return new Response(JSON.stringify({ 
         success: true, 
@@ -159,12 +165,12 @@ export async function onRequestPost(context) {
           imagesCount: imagesArray.length,
           imagesArray: imagesArray,
           sizes: sizesList,
-          videoUrl: videoUrl
+          videoUrl: finalVideoUrl
         }
       }), { headers: { "Content-Type": "application/json" } });
     }
 
-    // ৬. Save to D1 Database (মাল্টিপল ইমেজ JSON ও ভিডিও সহ পার্মানেন্ট সেভ)
+    // ৬. Database Save (Category, Target Country এবং Discount Rate সহ)
     await env.retail.prepare(`
       INSERT INTO products (
         cj_product_id, 
@@ -181,8 +187,11 @@ export async function onRequestPost(context) {
         video_url, 
         upload_mode,
         stock,
+        category,
+        target_country,
+        discount_rate,
         created_at
-      ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'both', ?, CURRENT_TIMESTAMP)
+      ) VALUES (?, 'dropship', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'both', ?, ?, ?, ?, CURRENT_TIMESTAMP)
     `).bind(
       cjProductId,
       p.productNameEn || 'Global Product',
@@ -194,21 +203,24 @@ export async function onRequestPost(context) {
       baseCost,
       mainImage,
       imagesListJson, 
-      videoUrl,
-      p.inventory || 500
+      finalVideoUrl,
+      p.inventory || 500,
+      category || 'uncategorized',
+      targetCountry || 'us',
+      parseFloat(discountOffer) || 0
     ).run();
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "প্রোডাক্টের সমস্ত গ্যালারি ইমেজ, ভিডিও এবং গোছানো ডেসক্রিপশন সফলভাবে সেভ হয়েছে!",
+      message: "প্রোডাক্টের ক্যাটাগরি, ডিসকাউন্ট, গ্যালারি ইমেজ এবং ভিডিও সফলভাবে সেভ হয়েছে!",
       data: { 
         title: p.productNameEn, 
         retailPrice, 
         priceSample, 
         imagesCount: imagesArray.length,
         imagesArray: imagesArray,
-        videoUrl: videoUrl,
-        hasVideo: !!videoUrl 
+        videoUrl: finalVideoUrl,
+        hasVideo: !!finalVideoUrl 
       }
     }), { headers: { "Content-Type": "application/json" } });
 
