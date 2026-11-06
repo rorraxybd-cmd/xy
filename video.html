@@ -42,45 +42,8 @@
         let activeReelsList = []; 
         let currentIndex = 0;
         let slideInterval = null;
-        let userCountryCode = null;
-
-        // Cloudflare Trace & Fallback API safe fetch
-        function initCountryFlagDetection() {
-            fetch('/cdn-cgi/trace')
-                .then(res => res.text())
-                .then(data => {
-                    let locLine = data.split('\n').find(line => line.startsWith('loc='));
-                    if (locLine) {
-                        let code = locLine.split('=')[1].toLowerCase();
-                        if (code && code !== 'xx') {
-                            userCountryCode = code;
-                            updateFlagsInDOM();
-                        }
-                    }
-                })
-                .catch(() => {
-                    fetch('https://ipapi.co/json/')
-                        .then(res => res.json())
-                        .then(ipData => {
-                            if (ipData && ipData.country_code) {
-                                userCountryCode = ipData.country_code.toLowerCase();
-                                updateFlagsInDOM();
-                            }
-                        })
-                        .catch(err => console.log('Flag detection error:', err));
-                });
-        }
-
-        function updateFlagsInDOM() {
-            if (!userCountryCode) return;
-            const flagContainers = document.querySelectorAll('.dynamic-flag-box');
-            flagContainers.forEach(el => {
-                el.innerHTML = `<img src="https://flagcdn.com/w40/${userCountryCode}.png" alt="${userCountryCode}" class="dynamic-country-flag">`;
-            });
-        }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initCountryFlagDetection();
             loadLiveVideosFromBackend();
 
             const bottomHomeBtn = document.getElementById('bottomHomeBtn');
@@ -247,6 +210,9 @@
 
                         extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
                         let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
+                        
+                        // সরাসরি ডাটাবেজ থেকে target_country এবং discount_rate নেওয়া হচ্ছে[cite: 3]
+                        let targetCountry = item.target_country ? String(item.target_country).trim().toLowerCase() : '';
                         let discountVal = parseFloat(item.discount_rate || 0);
 
                         let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
@@ -258,6 +224,7 @@
                             price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
                             baseLikes: calculatedBaseLikes,
                             baseShares: 180,
+                            targetCountry: targetCountry,
                             discountNum: discountVal,
                             discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
                             category: item.category || 'video',
@@ -489,10 +456,9 @@
                 }
             }
 
-            // Flag Container
-            let flagIconHtml = userCountryCode 
-                ? `<img src="https://flagcdn.com/w40/${userCountryCode}.png" alt="${userCountryCode}" class="dynamic-country-flag">`
-                : `<i class="fa-solid fa-flag offer-flag-icon"></i>`;
+            // সরাসরি প্রোডাক্টের target_country থেকে ফ্ল্যাগ তৈরি করা (যেমন: bd, ca, us ইত্যাদি)[cite: 3]
+            let countryCode = product.targetCountry || 'bd';
+            let flagIconHtml = `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`;
 
             let discountBadgeHtml = '';
             if (product.discountNum && product.discountNum > 0) {
