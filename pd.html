@@ -207,13 +207,14 @@
             display: flex; align-items: center; justify-content: center; padding: 4px;
         }
 
-        /* ফিক্সড ফুটার বার যেন টাচ ইভেন্টে কোনো বাধা না দেয় */
+        /* ফুটার বার ও অর্ডার নাও বাটন যাতে সরাসরি ক্লিক রিসিভ করে */
         .fixed-bottom-checkout-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 16px; 
             display: flex; justify-content: space-around; align-items: center; z-index: 999999; 
             border-top: 1px solid rgba(212, 175, 55, 0.25);
             box-shadow: 0 -10px 25px rgba(0,0,0,0.8);
+            pointer-events: auto !important;
         }
         @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 45px; padding: 14px 30px; } }
         
@@ -238,7 +239,7 @@
             box-shadow: 0 4px 15px rgba(212,175,55,0.4);
         }
         .footer-menu-item.order-now-highlight:active { transform: scale(0.95); }
-        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.78rem; font-weight: 800; background: none !important; }
+        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.78rem; font-weight: 800; background: none !important; pointer-events: none; }
 
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
@@ -349,8 +350,8 @@
             <span class="footer-menu-label">HOME</span>
         </a>
 
-        <!-- অর্ডার নাও বাটন (সরাসরি অনক্লিক ইভেন্ট সহ) -->
-        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
+        <!-- অর্ডার নাও বাটন (সরাসরি ইভেন্ট লিসেনার ও ক্লিক হ্যান্ডলার সহ) -->
+        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
 
@@ -400,6 +401,18 @@
                 renderFallbackProductDetails('101');
             }
             updateCartBadgeCount();
+
+            // অর্ডার নাও বাটনে সরাসরি ইভেন্ট লিসেনার বাইন্ড করা হলো যাতে কোনোভাবেই মিস না হয়
+            const orderBtn = document.getElementById('orderNowMainBtn');
+            if (orderBtn) {
+                orderBtn.addEventListener('click', function(e) {
+                    executeOrderNow(e);
+                });
+                orderBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    executeOrderNow(e);
+                });
+            }
         });
 
         async function fetchProductDetailsFromCloudflareD1(productId) {
@@ -724,6 +737,7 @@
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
             
+            // সিলেক্টকৃত কালার বা থাম্বনেইলের ছবিটি কার্টে যুক্ত হবে
             let selectedImageView = document.getElementById('mainDisplayMediaElement').src;
             let primaryImgUrl = (selectedImageView && !selectedImageView.includes('svg')) ? selectedImageView : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
 
