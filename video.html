@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail & Vendor Feed</title>
+    <title>rorraxy - Retail & Vendor Reels Feed</title>
     
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
@@ -38,15 +38,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
-        const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
-        let globalMasterProductsList = [];
-        let activeReelsList = [];
+        let globalVideoList = [];
+        let activeReelsList = []; 
         let currentIndex = 0;
         let slideInterval = null;
-        let isHomePinterestMode = true; // ডিফল্ট হোম পেজ Pinterest স্টাইল ফিড
+        let lastSaveClickTime = 0;
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadLiveProducts();
+            loadLiveVideosFromBackend();
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -85,10 +84,9 @@
             // 3. BUY Click
             if(bottomBuyBtn) {
                 bottomBuyBtn.addEventListener('click', () => {
-                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalMasterProductsList;
-                    if(activeList.length > 0) {
-                        let targetProd = activeList[isHomePinterestMode ? 0 : currentIndex];
-                        window.location.href = `pd.html?id=${encodeURIComponent(targetProd.id || targetProd.product_id)}&buy=true`;
+                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+                    if(activeList.length > 0 && activeList[currentIndex]) {
+                        window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}&buy=true`;
                     }
                 });
             }
@@ -96,20 +94,19 @@
             // 4. DETAILS Click
             if(bottomDetailsBtn) {
                 bottomDetailsBtn.addEventListener('click', () => {
-                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalMasterProductsList;
-                    if(activeList.length > 0) {
-                        let targetProd = activeList[isHomePinterestMode ? 0 : currentIndex];
-                        window.location.href = `pd.html?id=${encodeURIComponent(targetProd.id || targetProd.product_id)}`;
+                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+                    if(activeList.length > 0 && activeList[currentIndex]) {
+                        window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
                     }
                 });
             }
 
-            // 5. HOME Click: Return to Pinterest Home Grid View
+            // 5. HOME Click: Reset to first video/product
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
-                    isHomePinterestMode = true;
-                    if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
-                    renderPinterestHomeFeed(globalMasterProductsList);
+                    currentIndex = 0;
+                    activeReelsList = globalVideoList;
+                    renderBatchVideos();
                 });
             }
 
@@ -137,7 +134,7 @@
                     }
                 }
                 if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
-                    if (!e.target.closest('#savedGalleryBody')) {
+                    if (!e.target.closest('#savedGalleryBody') && !e.target.closest('.save-action-btn')) {
                         savedGalleryOverlay.style.display = 'none';
                     }
                 }
@@ -149,71 +146,33 @@
             });
 
             if(searchBtn && searchInput) {
-                searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
+                searchBtn.addEventListener('click', () => { executeSearch(searchInput.value); });
+                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeSearch(searchInput.value); });
             }
 
+            // Keyboard navigation (Arrow Up / Down)
             window.addEventListener('keydown', (e) => {
-                if(!isHomePinterestMode) {
-                    if(e.key === 'ArrowDown') { e.preventDefault(); scrollReels(1); }
-                    else if(e.key === 'ArrowUp') { e.preventDefault(); scrollReels(-1); }
-                }
+                if(e.key === 'ArrowDown') { e.preventDefault(); scrollVideo(1); }
+                else if(e.key === 'ArrowUp') { e.preventDefault(); scrollVideo(-1); }
             });
 
+            // Touch / Mobile swipe navigation
             let touchStartY = 0;
             window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive: true});
             window.addEventListener('touchend', (e) => {
-                if(!isHomePinterestMode) {
-                    let diff = touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) > 50) diff > 0 ? scrollReels(1) : scrollReels(-1);
+                let diff = touchStartY - e.changedTouches[0].clientY;
+                if (Math.abs(diff) > 50) {
+                    if(diff > 0) scrollVideo(1);
+                    else scrollVideo(-1);
                 }
             }, {passive: true});
         });
 
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            let shuffled = [...array];
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
-            }
-            return shuffled;
-        }
-
-        function getSmartMixedProducts(rawList) {
-            if (!Array.isArray(rawList) || rawList.length === 0) return [];
-            let list = [...rawList];
-            let newProducts = list.slice(0, Math.ceil(list.length * 0.4)); 
-            let trendingProducts = list.slice(Math.ceil(list.length * 0.4)); 
-            newProducts = shuffleArray(newProducts);
-            trendingProducts = shuffleArray(trendingProducts);
-            let mixed = [];
-            while (newProducts.length > 0 || trendingProducts.length > 0) {
-                if (newProducts.length > 0) mixed.push(newProducts.shift());
-                if (newProducts.length > 0) mixed.push(newProducts.shift());
-                if (trendingProducts.length > 0) mixed.push(trendingProducts.shift());
-            }
-            return shuffleArray(mixed);
-        }
-
-        async function loadLiveProducts() {
-            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = parsed;
-                        activeReelsList = getSmartMixedProducts(parsed);
-                        if(isHomePinterestMode) renderPinterestHomeFeed(activeReelsList);
-                    }
-                } catch (e) {}
-            }
-
+        async function loadLiveVideosFromBackend() {
             try {
                 const response = await fetch(`/api/products`);
                 const result = await response.json();
+                
                 let productsList = [];
                 if (result && result.success && Array.isArray(result.data)) {
                     productsList = result.data;
@@ -222,51 +181,210 @@
                 }
 
                 if (productsList.length > 0) {
-                    globalMasterProductsList = productsList;
-                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    activeReelsList = getSmartMixedProducts(productsList);
-                    if(isHomePinterestMode) renderPinterestHomeFeed(activeReelsList);
-                } else if (!cachedData) {
-                    document.getElementById('appMainContainer').innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-gray);">
-                            <i class="fa-solid fa-box-open fa-2x" style="color:var(--gold-solid);"></i>
-                            <p style="margin-top: 10px; font-size: 0.75rem;">NO PRODUCTS FOUND.</p>
-                        </div>`;
+                    const randomLikeBases = [250, 500, 1000, 1500, 2000, 2500, 5000];
+                    globalVideoList = productsList.map(item => {
+                        let rawVid = item.video_url || item.youtube_video || '';
+                        if (rawVid.includes('.r2.dev')) {
+                            rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
+                        }
+
+                        let extractedImages = [];
+                        try {
+                            if (item.images_json) {
+                                if (typeof item.images_json === 'string') {
+                                    let parsed = JSON.parse(item.images_json);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } else if (Array.isArray(item.images_json)) {
+                                    extractedImages = item.images_json;
+                                }
+                            }
+                        } catch(e) {}
+
+                        if (extractedImages.length === 0 && item.image_url) {
+                            if (typeof item.image_url === 'string' && item.image_url.startsWith('[')) {
+                                try {
+                                    let parsed = JSON.parse(item.image_url);
+                                    if (Array.isArray(parsed)) extractedImages = parsed;
+                                } catch(e) { extractedImages = [item.image_url]; }
+                            } else {
+                                extractedImages = [item.image_url];
+                            }
+                        }
+
+                        extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
+                        let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
+                        let targetCountry = item.target_country ? String(item.target_country).trim().toLowerCase() : 'bd';
+                        let discountVal = parseFloat(item.discount_rate || item.discountRate || 0);
+                        let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
+
+                        return {
+                            id: String(item.id || item.product_id || item.product_code || '101'),
+                            videoUrl: rawVid,
+                            imagesList: extractedImages,
+                            price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
+                            baseLikes: calculatedBaseLikes,
+                            baseShares: 180,
+                            targetCountry: targetCountry,
+                            discountNum: discountVal,
+                            discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
+                            category: item.category || 'video',
+                            description: item.description || '',
+                            title: item.title || '',
+                            sellerName: sellerTitle,
+                            sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'
+                        };
+                    });
+                    sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
+                    activeReelsList = globalVideoList; 
+                    renderBatchVideos();
+                } else {
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 }
-            } catch (error) {}
-        }
-
-        function executeHeaderSearch(keyword) {
-            let query = keyword.toLowerCase().trim();
-            if (!query) {
-                activeReelsList = getSmartMixedProducts(globalMasterProductsList);
-                if(isHomePinterestMode) renderPinterestHomeFeed(activeReelsList);
-                return;
+            } catch (error) {
+                console.error('Failed to load products from backend:', error);
+                let cachedData = sessionStorage.getItem('rorraxy_cached_videos');
+                if (cachedData) {
+                    globalVideoList = JSON.parse(cachedData);
+                    activeReelsList = globalVideoList;
+                    renderBatchVideos();
+                } else {
+                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
+                }
             }
-            let filtered = globalMasterProductsList.filter(item => {
-                const title = (item.title || '').toLowerCase();
-                const cat = (item.category || item.description || '').toLowerCase();
-                const brand = (item.brand_name || '').toLowerCase();
-                return title.includes(query) || cat.includes(query) || brand.includes(query);
-            });
-            activeReelsList = filtered.length > 0 ? filtered : globalMasterProductsList;
-            if(isHomePinterestMode) renderPinterestHomeFeed(activeReelsList);
-            document.getElementById('floatingSearchContainer').style.display = 'none';
         }
 
-        function filterProductsByCategory(queryKey) {
+        function getDynamicEngagement(productId, baseVal, type) {
+            let storageKey = `rorraxy_retail_${type}_${productId}`;
+            let storedData = localStorage.getItem(storageKey);
+            let currentTime = new Date().getTime();
+            let currentVal = baseVal;
+
+            if (storedData) {
+                let parsed = JSON.parse(storedData);
+                currentVal = parsed.value;
+            } else {
+                currentVal = baseVal + Math.floor(Math.random() * 150);
+                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: currentTime }));
+            }
+
+            if (currentVal >= 1000) {
+                return (currentVal / 1000).toFixed(1) + 'K';
+            }
+            return currentVal.toString();
+        }
+
+        window.executeSearch = function(keyword) {
+            let query = keyword.toLowerCase().trim();
+            if(!query) return;
+            let foundIndex = globalVideoList.findIndex(p => 
+                (p.id && String(p.id).toLowerCase().includes(query)) ||
+                (p.sellerName && p.sellerName.toLowerCase().includes(query)) ||
+                (p.title && p.title.toLowerCase().includes(query))
+            );
+            if (foundIndex !== -1) {
+                activeReelsList = globalVideoList;
+                currentIndex = foundIndex;
+                renderBatchVideos();
+            }
+            document.getElementById('floatingSearchContainer').style.display = 'none';
+        };
+
+        window.filterReelsByCategory = function(queryKey) {
             document.getElementById('categoryTransparentOverlay').style.display = 'none';
             let query = queryKey.toLowerCase().replace(/-/g, ' ');
-            let filtered = globalMasterProductsList.filter(item => {
+            
+            let filtered = globalVideoList.filter(item => {
                 const title = (item.title || '').toLowerCase();
                 const cat = (item.category || item.description || '').toLowerCase();
                 return title.includes(query) || cat.includes(query);
             });
-            activeReelsList = filtered.length > 0 ? filtered : globalMasterProductsList;
-            isHomePinterestMode = true;
-            renderPinterestHomeFeed(activeReelsList);
-            document.getElementById('floatingSearchContainer').style.display = 'none';
+
+            activeReelsList = filtered.length > 0 ? filtered : globalVideoList;
+            currentIndex = 0;
+            renderBatchVideos();
+        };
+
+        // ডুয়েল সেভ ফাংশন (১ম ক্লিকে সেভ, গোল্ডেন অবস্থায় ডাবল ক্লিকে সেভ গ্যালারি ওপেন)
+        window.handleDualSaveAction = function(e, btn, pId) {
+            e.stopPropagation();
+            let currentTime = new Date().getTime();
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
+            
+            // ডাবল ক্লিক বা গোল্ডেন অবস্থায় ক্লিক চেক
+            if (currentTime - lastSaveClickTime < 400 || btn.classList.contains('active') || existingIndex > -1) {
+                renderSavedGalleryContent();
+                const overlay = document.getElementById('savedGalleryOverlay');
+                if(overlay) overlay.style.display = 'flex';
+                lastSaveClickTime = 0;
+            } else {
+                lastSaveClickTime = currentTime;
+                let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
+                if(targetProduct && existingIndex === -1) {
+                    savedObjects.push(targetProduct);
+                    btn.classList.add('active');
+                    localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+                } else if(existingIndex > -1) {
+                    btn.classList.add('active');
+                }
+            }
+        };
+
+        function renderSavedGalleryContent() {
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let containerBody = document.getElementById('savedGalleryBody');
+            if(!containerBody) return;
+
+            if (savedObjects.length === 0) {
+                containerBody.innerHTML = `
+                    <div class="fs-profile-header-box">
+                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
+                    </div>
+                    <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
+            } else {
+                let thumbsHtml = '';
+                savedObjects.forEach(v => {
+                    let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
+                    thumbsHtml += `
+                        <div class="saved-thumb-card" onclick="selectSavedVideo('${v.id}')">
+                            <div class="saved-thumb-preview">
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;">
+                                <i class="fa-solid fa-play play-overlay-icon"></i>
+                            </div>
+                            <div class="saved-thumb-footer">
+                                <span class="saved-thumb-title">ID: ${v.id}</span>
+                                <span class="saved-thumb-price">${v.price || ''}</span>
+                                <button class="saved-clean-delete-btn" onclick="removeSavedVideo(event, '${v.id}')"><i class="fa-solid fa-trash"></i> DELETE</button>
+                            </div>
+                        </div>`;
+                });
+                containerBody.innerHTML = `
+                    <div class="fs-profile-header-box">
+                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
+                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedObjects.length}</strong></div>
+                    </div>
+                    <div class="fs-videos-grid">${thumbsHtml}</div>`;
+            }
         }
+
+        window.selectSavedVideo = function(videoId) {
+            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
+            if(foundIdx !== -1) {
+                activeReelsList = globalVideoList;
+                currentIndex = foundIdx;
+            }
+            document.getElementById('savedGalleryOverlay').style.display = 'none';
+            renderBatchVideos();
+        };
+
+        window.removeSavedVideo = function(e, videoId) {
+            e.stopPropagation();
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            savedObjects = savedObjects.filter(item => String(item.id) !== String(videoId));
+            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+            renderSavedGalleryContent();
+            renderBatchVideos();
+        };
 
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
@@ -287,184 +405,104 @@
             }
         }
 
-        // Pinterest হোম ফিড রেন্ডারিং ফাংশন
-        function renderPinterestHomeFeed(products) {
-            const container = document.getElementById('appMainContainer');
-            container.className = 'feed-container';
-            const fragment = document.createDocumentFragment();
+        window.scrollVideo = function(direction) {
+            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+            if (direction === 1 && currentIndex < activeList.length - 1) { currentIndex++; renderBatchVideos(); }
+            else if (direction === -1 && currentIndex > 0) { currentIndex--; renderBatchVideos(); }
+        };
 
-            if (!products || products.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-gray);">
-                        <i class="fa-solid fa-box-open fa-2x" style="color:var(--gold-solid);"></i>
-                        <p style="margin-top: 10px; font-size: 0.75rem;">NO PRODUCTS MATCHED YOUR SEARCH.</p>
-                    </div>`;
+        function renderBatchVideos() {
+            const feedContainer = document.getElementById('videoFeed');
+            if(!feedContainer) return;
+
+            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
+            if (activeList.length === 0) {
+                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
                 return;
             }
 
-            products.forEach((item, index) => {
-                const productId = item.id || item.product_id || item.product_code || item.code || '101';
-                const title = item.title || 'rorraxy Luxury Item';
-                const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
-                
-                const defaultRandomLikes = [300, 400, 500, 1000, 1200, 1500, 2000, 5000];
-                const randomSeed = Math.abs(productId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
-                const initialLikes = item.like_count || defaultRandomLikes[randomSeed % defaultRandomLikes.length];
+            if (currentIndex >= activeList.length) currentIndex = Math.max(0, activeList.length - 1);
 
-                const discountPercent = item.discount_rate || item.discountRate || 0;
-                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
-                const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
-
-                let discountBadgeHtml = '';
-                if (discountPercent && discountPercent > 0) {
-                    discountBadgeHtml = `
-                        <span class="int-discount-badge">
-                            <img class="country-flag-icon" src="${flagUrl}" alt="Flag" onerror="this.style.display='none'">
-                            <span>${discountPercent}% OFF</span>
-                        </span>
-                    `;
-                }
-
-                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                try {
-                    if (item.images_json) {
-                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
-                        if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
-                    } else if (item.image_url) {
-                        resolvedImageUrl = item.image_url;
-                    }
-                } catch(e) {}
-
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'product-card';
-                // হোম পেজের প্রডাক্টে ক্লিক করলে সরাসরি রিলস ফিড ভিউতে চলে যাবে
-                cardDiv.onclick = () => switchToReelsView(index);
-
-                cardDiv.innerHTML = `
-                    <div class="product-media-box">
-                        ${discountBadgeHtml}
-                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
-                    </div>
-                    <div class="card-footer-actions" onclick="event.stopPropagation()">
-                        <span class="product-price-tag">${price}</span>
-                        <div class="card-sub-actions">
-                            <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
-                                <i class="fa-solid fa-heart"></i> <span class="love-count">${initialLikes}</span>
-                            </div>
-                            <button class="share-icon-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')" title="Share">
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                fragment.appendChild(cardDiv);
-            });
-
-            container.innerHTML = '';
-            container.appendChild(fragment);
-        }
-
-        // রিলস ফিড ভিউতে রূপান্তর করার ফাংশন
-        function switchToReelsView(index) {
-            isHomePinterestMode = false;
-            currentIndex = index;
-            renderSingleReelView();
-        }
-
-        function scrollReels(direction) {
-            let activeList = activeReelsList.length > 0 ? activeReelsList : globalMasterProductsList;
-            if (direction === 1 && currentIndex < activeList.length - 1) { 
-                currentIndex++; 
-                renderSingleReelView(); 
-            } else if (direction === -1 && currentIndex > 0) { 
-                currentIndex--; 
-                renderSingleReelView(); 
-            }
-        }
-
-        // রিলস স্টাইল সিঙ্গেল ভিউ ও স্লাইডশো রেন্ডারিং
-        function renderSingleReelView() {
-            if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
-            const container = document.getElementById('appMainContainer');
-            container.className = 'reel-view-wrapper-outer';
-
-            let activeList = activeReelsList.length > 0 ? activeReelsList : globalMasterProductsList;
-            if(currentIndex >= activeList.length) currentIndex = 0;
             let product = activeList[currentIndex];
-            if(!product) return;
 
-            let pId = String(product.id || product.product_id || product.product_code || '101');
-            let pVideo = product.video_url || product.youtube_video || '';
-            if (pVideo.includes('.r2.dev')) {
-                pVideo = pVideo.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
-            }
-            let pPrice = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$85.00';
-            let countryCode = (product.target_country || product.targetCountry || 'bd').toLowerCase();
-            let flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
-            let discountPercent = product.discount_rate || product.discountRate || 0;
+            let pId = String(product.id || '101');
+            let pVideo = product.videoUrl ? product.videoUrl.trim() : '';
+            let pPrice = product.price ? product.price : '$85.00';
 
-            let discountBadgeHtml = '';
-            if (discountPercent > 0) {
-                discountBadgeHtml = `
-                    <div class="reel-discount-badge">
-                        <img src="${flagUrl}" class="country-flag-icon" alt="Flag">
-                        <span>${discountPercent}% OFF</span>
-                    </div>`;
-            }
-
-            let mediaElem = '';
-            let extractedImages = [];
-            try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) extractedImages = parsed;
-                } else if(product.image_url) {
-                    extractedImages = [product.image_url];
-                }
-            } catch(e){}
-
-            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline preload="metadata" style="width:100%; height:100%; object-fit:cover;"></video>`;
-            } else {
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-                mediaElem = `<img id="reelSlideImg" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
-                
-                if (extractedImages.length > 1) {
-                    let imgIdx = 0;
-                    slideInterval = setInterval(() => {
-                        imgIdx = (imgIdx + 1) % extractedImages.length;
-                        const imgElem = document.getElementById('reelSlideImg');
-                        if (imgElem) imgElem.src = extractedImages[imgIdx];
-                    }, 1500);
-                }
-            }
-
-            let pLikes = getDynamicEngagement(pId, product.like_count || 5200, 'likes');
-            let pShares = getDynamicEngagement(pId, 180, 'shares');
+            let pLikes = getDynamicEngagement(pId, product.baseLikes || 5200, 'likes');
+            let pShares = getDynamicEngagement(pId, product.baseShares || 180, 'shares');
 
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let isSaved = savedObjects.some(item => String(item.id) === String(pId));
             let savedActiveClass = isSaved ? 'active' : '';
 
-            container.innerHTML = `
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+
+            let mediaElement = '';
+
+            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
+                mediaElement = `<video src="${pVideo}" autoplay loop muted playsinline preload="metadata"></video>`;
+            } else {
+                let images = product.imagesList || [];
+                if (images.length === 0) {
+                    images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
+                }
+
+                mediaElement = `<img id="reelSlideImg" src="${images[0]}" class="reel-fit-img" alt="Product Media">`;
+                
+                if (images.length > 1) {
+                    let imgIdx = 0;
+                    slideInterval = setInterval(() => {
+                        imgIdx = (imgIdx + 1) % images.length;
+                        const imgElem = document.getElementById('reelSlideImg');
+                        if (imgElem) imgElem.src = images[imgIdx];
+                    }, 1500);
+                }
+            }
+
+            let countryCode = product.targetCountry || 'bd';
+            let flagIconHtml = `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`;
+
+            let discountBadgeHtml = '';
+            if (product.discountNum && product.discountNum > 0) {
+                discountBadgeHtml = `
+                    <div class="image-style-discount-badge">
+                        <span class="dynamic-flag-box">${flagIconHtml}</span>
+                        <span class="offer-text">${product.discountStr}</span>
+                    </div>`;
+            }
+
+            let htmlContent = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="openProductDetails('${pId}')">
-                        ${mediaElem}
+                    <div class="reel-media-box" onclick="openProductDetail('${pId}')">
+                        ${mediaElement}
                     </div>
+
                     ${discountBadgeHtml}
 
+                    <!-- Right Vertical Actions (Pure Icons Only) -->
                     <div class="right-vertical-actions">
-                        <div class="side-action-item" onclick="openNativeShare(event, '${pId}')" title="Share">
+                        <!-- 1. SHARE -->
+                        <div class="side-action-item share-action-btn" onclick="openNativeShare(event, '${pId}')" title="Share">
                             <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
                             <span class="side-count-text">${pShares}</span>
                         </div>
-                        <div class="side-action-item love-action-btn" onclick="toggleReelLove(event, this, '${pId}')" title="Like">
-                            <i class="fa-solid fa-heart action-pure-icon"></i>
+
+                        <!-- 2. LIKE -->
+                        <div class="side-action-item love-action-btn" onclick="toggleLove(event, this, '${pId}')" title="Like">
+                            <i class="fa-solid fa-heart action-pure-icon love-icon-elem"></i>
                             <span class="side-count-text love-count">${pLikes}</span>
                         </div>
-                        <div class="side-action-item" onclick="toggleSearchOverlay(event)" title="Search">
+
+                        <!-- 3. SEARCH -->
+                        <div class="side-action-item search-action-btn" onclick="toggleSearchOverlay(event)" title="Search">
                             <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
                         </div>
+
+                        <!-- 4. SAVE -->
                         <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleDualSaveAction(event, this, '${pId}')" title="Save">
                             <i class="fa-solid fa-bookmark action-pure-icon"></i>
                         </div>
@@ -475,22 +513,11 @@
                     </div>
                 </div>
             `;
+
+            feedContainer.innerHTML = htmlContent;
         }
 
-        function getDynamicEngagement(productId, baseVal, type) {
-            let storageKey = `rorraxy_retail_${type}_${productId}`;
-            let storedData = localStorage.getItem(storageKey);
-            let currentVal = baseVal;
-            if (storedData) {
-                currentVal = JSON.parse(storedData).value;
-            } else {
-                currentVal = baseVal + Math.floor(Math.random() * 50);
-                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
-            }
-            return currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
-        }
-
-        window.toggleReelLove = function(e, btn, productId) {
+        window.toggleLove = function(e, btn, productId) {
             e.stopPropagation();
             let countElem = btn.querySelector('.love-count');
             let storageKey = `rorraxy_retail_likes_${productId}`;
@@ -504,77 +531,32 @@
                 btn.classList.add('liked-active');
                 currentVal += 1;
             }
-            localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
+
+            localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: new Date().getTime() }));
             if(countElem) {
                 countElem.innerText = currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
             }
         };
 
-        window.handleDualSaveAction = function(e, btn, pId) {
-            e.stopPropagation();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
-            if (existingIndex > -1) {
-                btn.classList.remove('active');
-                savedObjects.splice(existingIndex, 1);
-            } else {
-                let targetProduct = globalMasterProductsList.find(item => String(item.id || item.product_id) === String(pId));
-                if(targetProduct) {
-                    savedObjects.push(targetProduct);
-                    btn.classList.add('active');
-                }
-            }
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
-        };
-
         window.openNativeShare = async function(e, pId) {
             e.stopPropagation();
             const shareUrl = `${window.location.origin}/pd.html?id=${encodeURIComponent(pId)}`;
+            const shareData = { title: pId, url: shareUrl };
+
             if (navigator.share) {
-                try { await navigator.share({ title: pId, url: shareUrl }); } catch (err) {}
-            } else if (navigator.clipboard) {
-                await navigator.clipboard.writeText(shareUrl);
-                alert('Link copied to clipboard!');
+                try { await navigator.share(shareData); } catch (err) {}
+            } else {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareUrl).then(() => {
+                        alert('Link copied to clipboard!');
+                    });
+                }
             }
         };
 
-        function openProductDetails(productId) {
-            window.location.href = `pd.html?id=${productId}`;
-        }
-
-        async function toggleLove(event, btn, productId) {
-            event.stopPropagation();
-            let countSpan = btn.querySelector('.love-count');
-            let currentLikes = parseInt(countSpan.innerText);
-            if(btn.classList.contains('gold-active')) {
-                btn.classList.remove('gold-active');
-                countSpan.innerText = currentLikes - 1;
-            } else {
-                btn.classList.add('gold-active');
-                countSpan.innerText = currentLikes + 1;
-                try {
-                    await fetch(`/api/products`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ product_code: productId })
-                    });
-                } catch (err) {}
-            }
-        }
-
-        async function triggerAutoShare(event, productId, productTitle) {
-            event.stopPropagation();
-            const shareUrl = `${window.location.origin}/pd.html?id=${productId}`;
-            if (navigator.share) {
-                try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
-            } else if (navigator.clipboard) {
-                await navigator.clipboard.writeText(shareUrl);
-                const btn = event.currentTarget;
-                const origIcon = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
-                setTimeout(() => { btn.innerHTML = origIcon; }, 1500);
-            }
-        }
+        window.openProductDetail = function(productId) {
+            window.location.href = `pd.html?id=${encodeURIComponent(productId)}`;
+        };
     </script>
 
     <style>
@@ -590,17 +572,21 @@
         }
 
         html, body { 
-            width: 100%; max-width: 100vw; overflow-x: hidden; 
+            width: 100%; max-width: 100vw; overflow-x: hidden; overflow-y: hidden; 
             background: var(--bg-retail) !important; 
             color: var(--text-white); font-family: var(--font-main); 
-            min-height: 100vh; font-size: 15px;
+            height: 100vh; height: 100dvh; font-size: 15px;
             -webkit-font-smoothing: antialiased;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
         }
         
         body { margin: 0; padding: 0 0 65px 0; text-transform: uppercase !important; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+        .feed-container { 
+            width: 100%; max-width: 480px; margin: 0 auto; 
+            height: calc(100vh - 65px); height: calc(100dvh - 65px); 
+            position: relative;
+        }
 
         /* Top Floating Search Bar */
         .top-floating-search-bar {
@@ -621,6 +607,23 @@
             transition: transform 0.2s ease;
         }
         .floating-search-btn-circle:active { transform: scale(0.9); }
+
+        /* Desktop Arrow navigation */
+        .yt-nav-arrows {
+            position: fixed; right: 25px; top: 50%; transform: translateY(-50%);
+            z-index: 1200; display: flex; flex-direction: column; gap: 12px;
+        }
+        @media (max-width: 768px) { .yt-nav-arrows { display: none !important; } }
+        .yt-arrow-btn {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: rgba(12, 12, 18, 0.85); backdrop-filter: blur(10px);
+            border: none; color: #fff; font-size: 1.1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
+        }
+        .yt-arrow-btn:hover { transform: scale(1.08); }
+        .yt-arrow-btn i { 
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+        }
 
         /* Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) */
         .bottom-nav-bar {
@@ -646,92 +649,71 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Pinterest Style Feed Container */
-        .feed-container {
-            padding: 8px 6px; 
-            column-count: 2;
-            column-gap: 8px;
-            width: 100%; 
-            max-width: 1400px; 
-            margin: 0 auto;
-            contain: layout style paint;
+        /* Overlays */
+        .category-transparent-overlay, .saved-gallery-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+            background: rgba(0,0,0,0.85) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 3000; overflow-y: auto; overflow-x: hidden;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 85px 15px;
         }
-        @media (min-width: 768px) { 
-            .feed-container { 
-                column-count: 4;
-                column-gap: 14px; 
-                padding: 12px; 
-            } 
-        }
+        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
+        
+        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        
+        .accordion-category-box { background: rgba(5, 5, 8, 0.95) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
+        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
+        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
+        .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
+        .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
+        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
+        .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
+        
+        .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
+        .accordion-category-box.active .accordion-content { display: block; }
+        
+        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 
-        .product-card {
-            background: var(--card-retail); border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; 
-            border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
-            break-inside: avoid; margin-bottom: 8px;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            transform: translateZ(0);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+        .sub-cat-item {
+            background: rgba(12, 12, 18, 0.92); border-radius: 8px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
         }
-        .product-card:active { transform: scale(0.98); }
+        .sub-cat-item:active { transform: scale(0.96); }
+        .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
+        .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
-        .product-media-box { 
-            position: relative; width: 100%; aspect-ratio: 1 / 1;
-            background: #08080d linear-gradient(90deg, #08080d 0%, #12121c 50%, #08080d 100%);
-            background-size: 200% 100%; animation: skeletonLoading 1.5s infinite;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-        }
-        @keyframes skeletonLoading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        .product-media-box.loaded { animation: none; background: #050508; }
-        .product-media-box img { 
-            width: 100%; height: 100%; display: block; object-fit: cover; background: transparent;
-            opacity: 0; transition: opacity 0.3s ease-in-out;
-        }
-        .product-media-box img.loaded-img { opacity: 1; }
+        .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; position: relative; border: 1px solid rgba(212,175,55,0.2); }
+        .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .play-overlay-icon { position: absolute; font-size: 1.2rem; color: #fcf6ba; text-shadow: 0 2px 8px rgba(0,0,0,0.8); z-index: 2; pointer-events: none; }
+        .saved-thumb-footer { display: flex; flex-direction: column; width: 100%; align-items: center; gap: 4px; }
+        .saved-thumb-title { font-size: 0.68rem; font-weight: 700; color: #fff; }
+        .saved-thumb-price { font-size: 0.65rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
+        .saved-clean-delete-btn { background: var(--pink-accent); border: none; border-radius: 6px; color: #fff; font-size: 0.58rem; font-weight: 700; padding: 6px 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; }
+        .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 5px; }
+        .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .fs-stats-pill { font-size: 0.7rem; color: #a0a0ab; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 12px; }
 
-        .int-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 99;
-            background: var(--pink-accent); color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 4px 10px;
-            border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; width: max-content;
+        /* Reels Card & Media */
+        .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
+        .reel-media-box { position: relative; width: 100%; flex: 1; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+        .reel-fit-img { width: 100%; height: 100%; object-fit: contain; background: #000000; display: block; }
+
+        /* Discount Badge with Flag */
+        .image-style-discount-badge {
+            position: absolute; top: 15px; left: 15px; z-index: 50;
+            background: var(--pink-accent); color: #ffffff; padding: 4px 12px; border-radius: 18px;
+            font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
-        .country-flag-icon { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
+        .offer-text { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+        .dynamic-country-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; }
+        .dynamic-flag-box { display: flex; align-items: center; justify-content: center; }
 
-        .card-footer-actions { 
-            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px;
-            white-space: nowrap; overflow: hidden;
-        }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-sub-actions { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
-        
-        .love-action { 
-            display: flex; align-items: center; gap: 5px; cursor: pointer; 
-            font-size: 0.78rem; font-weight: 600; color: var(--text-gray) !important; padding: 4px;
-        }
-        .love-action i { color: var(--pink-accent); font-size: 1rem; }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .share-icon-btn { 
-            background: none; border: none; cursor: pointer; 
-            font-size: 1.15rem; background: var(--gold-gradient); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            padding: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-
-        /* Full Reels View Styles */
-        .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
-        .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
-        .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        
-        .reel-discount-badge {
-            position: absolute; top: 15px; left: 15px; background: var(--pink-accent); color: #fff;
-            padding: 5px 12px; border-radius: 18px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 6px; z-index: 50;
-        }
+        /* Right Vertical Action Buttons */
         .right-vertical-actions {
             position: absolute; right: 18px; bottom: 85px; z-index: 50;
             display: flex; flex-direction: column; align-items: center; gap: 20px;
@@ -751,8 +733,10 @@
             font-size: 0.72rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; 
             text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
         }
+        
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
+        
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
         .center-price-offer-box {
@@ -761,38 +745,7 @@
             background: rgba(10, 10, 14, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             padding: 6px 18px; border-radius: 30px; white-space: nowrap;
         }
-
-        .category-transparent-overlay, .saved-gallery-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            z-index: 3000; overflow-y: auto; overflow-x: hidden;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px;
-        }
-        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
-        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
-        
-        .accordion-category-box { background: rgba(5, 5, 8, 0.88) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
-        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
-        .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
-        .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
-        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
-        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
-        .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
-        
-        .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
-        .accordion-category-box.active .accordion-content { display: block; }
-        
-        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .sub-cat-item {
-            background: rgba(12, 12, 18, 0.92); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
-        }
-        .sub-cat-item:active { transform: scale(0.96); }
-        .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
-        .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
+        .product-price-tag { font-size: 0.95rem; font-weight: 800; color: #ffffff; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
     </style>
 </head>
 <body id="mainBody">
@@ -801,6 +754,11 @@
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="yt-nav-arrows">
+        <button class="yt-arrow-btn" onclick="scrollVideo(-1)"><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
     </div>
 
     <!-- Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) -->
@@ -831,16 +789,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-handbags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-lingerie')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-traditional')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-crafts')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('women-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-handbags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-lingerie')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-traditional')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-crafts')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('women-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -856,11 +814,11 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-grooming')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('men-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-grooming')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('men-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -876,16 +834,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-clothing')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-hair-accessories')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-sleepwear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-party-dresses')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('girls-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-clothing')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-jewelry')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-hair-accessories')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-activewear')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-sleepwear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-party-dresses')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('girls-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -901,11 +859,11 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-clothing')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('boys-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-clothing')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-shoes')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-watches')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-bags')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('boys-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -921,16 +879,16 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('couple-matchingsets')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('family-matchingsets')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('mom-me-sets')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('dad-me-sets')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('sibling-matchingsets')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('team-matchingsets')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('bff-matchingsets')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('pet-owner-sets')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('holiday-matchingsets')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('value-bundles')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('couple-matchingsets')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('family-matchingsets')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mom-me-sets')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('dad-me-sets')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('sibling-matchingsets')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('team-matchingsets')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('bff-matchingsets')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('pet-owner-sets')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('holiday-matchingsets')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('value-bundles')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
                         </div>
                     </div>
                 </div>
@@ -946,12 +904,12 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('corporate-gifts')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('luxury-giftitems')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('premium-handicrafts')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('wood-resincrafts')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('bamboo-brass-decor')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('gift-sets-hampers')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('corporate-gifts')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('luxury-giftitems')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('premium-handicrafts')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('wood-resincrafts')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('bamboo-brass-decor')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('gift-sets-hampers')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
                         </div>
                     </div>
                 </div>
@@ -967,12 +925,12 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('eco-baby-toys')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
-                            <div class="sub-cat-item" onclick="filterProductsByCategory('mother-baby-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('eco-baby-toys')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mother-baby-accessories')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
                         </div>
                     </div>
                 </div>
@@ -981,13 +939,6 @@
         </div>
     </div>
 
-    <!-- Main App Container (Switches dynamically between Pinterest Grid & Reels Feed) -->
-    <main id="appMainContainer" class="feed-container">
-        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--gold-solid);">
-            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">LOADING RORRAXY PRODUCTS...</p>
-        </div>
-    </main>
-
+    <main class="feed-container" id="videoFeed"></main>
 </body>
 </html>
