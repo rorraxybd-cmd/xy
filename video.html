@@ -42,48 +42,45 @@
         let activeReelsList = []; 
         let currentIndex = 0;
         let slideInterval = null;
+        let userCountryCode = null; // Global storage for detected country code
 
-        // বিশ্বজুড়ে বিভিন্ন দেশের নাম থেকে 2-Letter ISO Country Code রূপান্তর করার ম্যাপ ফাংশন
-        function getCountryCode(inputCountry) {
-            if (!inputCountry) return 'us';
-            let c = String(inputCountry).trim().toLowerCase();
-            
-            // যদি ২ অক্ষরের ISO Code সরাসরি পাঠায় (যেমন: BD, US, CA, IN, GB)
-            if (c.length === 2) return c;
+        // Cloudflare বা Fallback API থেকে ব্যবহারকারীর দেশ সনাক্তকরণ
+        async function fetchUserCountryCode() {
+            if (userCountryCode) return userCountryCode;
+            try {
+                let response = await fetch('/cdn-cgi/trace');
+                if (response.ok) {
+                    let data = await response.text();
+                    let locLine = data.split('\n').find(line => line.startsWith('loc='));
+                    if (locLine) {
+                        let code = locLine.split('=')[1].toLowerCase();
+                        if (code && code !== 'xx') {
+                            userCountryCode = code;
+                            return userCountryCode;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log("Cloudflare trace fetch bypassed/failed, trying fallback.");
+            }
 
-            // সাধারণ দেশের নাম ব্যাকএন্ড থেকে আসলে তার ISO Code ম্যাপিং
-            const countryMap = {
-                'bangladesh': 'bd',
-                'united states': 'us',
-                'usa': 'us',
-                'us': 'us',
-                'canada': 'ca',
-                'united kingdom': 'gb',
-                'uk': 'gb',
-                'india': 'in',
-                'pakistan': 'pk',
-                'australia': 'au',
-                'germany': 'de',
-                'france': 'fr',
-                'japan': 'jp',
-                'china': 'cn',
-                'brazil': 'br',
-                'saudi arabia': 'sa',
-                'uae': 'ae',
-                'united arab emirates': 'ae',
-                'south africa': 'za',
-                'malaysia': 'my',
-                'singapore': 'sg',
-                'italy': 'it',
-                'spain': 'es',
-                'turkey': 'tr',
-                'russia': 'ru'
-            };
-
-            return countryMap[c] || 'us'; // না মিললে ডিফল্ট হিসেবে us ব্যবহার হবে
+            try {
+                let fallbackResp = await fetch('https://ipapi.co/json/');
+                if (fallbackResp.ok) {
+                    let ipData = await fallbackResp.json();
+                    if (ipData && ipData.country_code) {
+                        userCountryCode = ipData.country_code.toLowerCase();
+                        return userCountryCode;
+                    }
+                }
+            } catch (err) {
+                console.error("Country flag detection failed:", err);
+            }
+            return null;
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
+            fetchUserCountryCode(); // Start fetching country early
             loadLiveVideosFromBackend();
 
             const bottomHomeBtn = document.getElementById('bottomHomeBtn');
@@ -98,12 +95,14 @@
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
+            // 1. HOME Click: Direct link to rorraxy.com
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
                     window.location.href = 'https://rorraxy.com';
                 });
             }
 
+            // 2. CATEGORY Toggle
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -118,6 +117,7 @@
                 });
             }
 
+            // 3. BUY & INFO Click: Open Product Detail Page
             if(bottomBuyInfoBtn) {
                 bottomBuyInfoBtn.addEventListener('click', () => {
                     let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
@@ -127,6 +127,7 @@
                 });
             }
 
+            // 4. SEARCH Toggle
             if(bottomSearchBtn && floatingSearchContainer) {
                 bottomSearchBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -142,6 +143,7 @@
                 });
             }
 
+            // 5. SAVED Toggle
             if(bottomSavedBtn && savedGalleryOverlay) {
                 bottomSavedBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -157,17 +159,21 @@
                 });
             }
 
+            // Outside Click Listener to close popups automatically
             window.addEventListener('click', (e) => {
+                // If clicked outside category box content
                 if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
                     if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
                         categoryTransparentOverlay.style.display = 'none';
                     }
                 }
+                // If clicked outside saved gallery content
                 if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
                     if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
                         savedGalleryOverlay.style.display = 'none';
                     }
                 }
+                // If clicked outside search bar
                 if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
                     if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
                         floatingSearchContainer.style.display = 'none';
@@ -244,11 +250,7 @@
 
                         extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
                         let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
-                        let discountVal = parseFloat(item.discount_rate || item.discount || 0);
-
-                        // ক্লাউডফ্লেয়ার / সেলার প্যানেল থেকে সম্ভাব্য যেকোনো কান্ট্রি ফিল্ড অটো-ডিটেক্ট করবে
-                        let rawCountry = item.country_code || item.country || item.seller_country || item.vendor_country || item.origin_country || 'us';
-                        let dynamicCountryCode = getCountryCode(rawCountry);
+                        let discountVal = parseFloat(item.discount_rate || 0);
 
                         let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
 
@@ -261,7 +263,6 @@
                             baseShares: 180,
                             discountNum: discountVal,
                             discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
-                            countryCode: dynamicCountryCode, // ডাইনামিক কান্ট্রি কোড
                             category: item.category || 'video',
                             description: item.description || '',
                             title: item.title || '',
@@ -414,6 +415,7 @@
             renderBatchVideos();
         };
 
+        // Instant Accordion Toggle
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
             const content = targetBox.querySelector('.accordion-content');
@@ -439,7 +441,7 @@
             else if (direction === -1 && currentIndex > 0) { currentIndex--; renderBatchVideos(); }
         };
 
-        function renderBatchVideos() {
+        async function renderBatchVideos() {
             const feedContainer = document.getElementById('videoFeed');
             if(!feedContainer) return;
 
@@ -491,14 +493,17 @@
                 }
             }
 
+            // Fetch Country code if not present yet
+            let countryCode = userCountryCode || await fetchUserCountryCode();
+            let flagIconHtml = countryCode 
+                ? `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`
+                : `<i class="fa-solid fa-flag offer-flag-icon"></i>`;
+
             let discountBadgeHtml = '';
             if (product.discountNum && product.discountNum > 0) {
-                // পৃথিবীজুড়ে যেকোনো দেশের পতাকার জন্য High-Quality SVG/PNG API 
-                let countryFlagUrl = `https://flagcdn.com/w40/${product.countryCode}.png`;
-                
                 discountBadgeHtml = `
                     <div class="image-style-discount-badge">
-                        <img src="${countryFlagUrl}" alt="${product.countryCode}" class="dynamic-country-flag">
+                        ${flagIconHtml}
                         <span class="offer-text">${product.discountStr}</span>
                     </div>`;
             }
@@ -616,6 +621,7 @@
             .feed-container { max-width: 420px; }
         }
 
+        /* Top Floating Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: none;
@@ -651,6 +657,7 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
         }
 
+        /* Bottom Navigation Bar (Always Visible at z-index 4000) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
@@ -674,16 +681,19 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
+        /* Perfect Center Alignment & Transparent Overlay */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
             z-index: 3000; overflow-y: auto; overflow-x: hidden;
-            flex-direction: column; align-items: center; justify-content: center;
+            flex-direction: column; align-items: center; justify-content: center; /* Exactly Centered */
             padding: 20px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
+        
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
+        /* Category Glassmorphism Boxes with Icons */
         .accordion-category-box { background: rgba(5, 5, 8, 0.88) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
@@ -742,17 +752,17 @@
         }
         .product-price-tag { font-size: 0.95rem; font-weight: 800; color: #ffffff; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
         .image-style-discount-badge {
-            background: var(--pink-accent); color: #ffffff; padding: 4px 10px; border-radius: 18px;
+            background: var(--pink-accent); color: #ffffff; padding: 4px 12px; border-radius: 18px;
             font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
         }
-        .dynamic-country-flag {
-            width: 20px; height: 14px; object-fit: cover; border-radius: 2px; display: inline-block; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
+        .offer-flag-icon { font-size: 0.75rem; color: #ffffff; }
         .offer-text { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+        .dynamic-country-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; vertical-align: middle; }
     </style>
 </head>
 <body id="mainBody">
 
+    <!-- Top Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -763,6 +773,7 @@
         <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
     </div>
 
+    <!-- Bottom Navigation Bar (Always Visible at z-index 4000) -->
     <nav class="bottom-nav-bar">
         <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -771,12 +782,15 @@
         <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
     </nav>
 
+    <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
 
+    <!-- Centered Transparent Category Overlay Menu -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView">
                 
+                <!-- WOMEN'S FASHION -->
                 <div class="accordion-category-box" id="cat-women">
                     <div class="accordion-header" onclick="toggleAccordion('cat-women')">
                         <div class="accordion-title-wrap">
@@ -801,6 +815,7 @@
                     </div>
                 </div>
 
+                <!-- MEN'S FASHION -->
                 <div class="accordion-category-box" id="cat-men">
                     <div class="accordion-header" onclick="toggleAccordion('cat-men')">
                         <div class="accordion-title-wrap">
@@ -820,6 +835,7 @@
                     </div>
                 </div>
 
+                <!-- GIRLS' FASHION -->
                 <div class="accordion-category-box" id="cat-girls">
                     <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
                         <div class="accordion-title-wrap">
@@ -844,6 +860,7 @@
                     </div>
                 </div>
 
+                <!-- BOYS' FASHION -->
                 <div class="accordion-category-box" id="cat-boys">
                     <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
                         <div class="accordion-title-wrap">
@@ -863,6 +880,7 @@
                     </div>
                 </div>
 
+                <!-- MATCHING SETS -->
                 <div class="accordion-category-box" id="cat-matching">
                     <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
                         <div class="accordion-title-wrap">
@@ -887,6 +905,7 @@
                     </div>
                 </div>
 
+                <!-- LUXURY GIFTS -->
                 <div class="accordion-category-box" id="cat-gifts">
                     <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
                         <div class="accordion-title-wrap">
@@ -907,6 +926,7 @@
                     </div>
                 </div>
 
+                <!-- MOTHER & BABY -->
                 <div class="accordion-category-box" id="cat-mother">
                     <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
                         <div class="accordion-title-wrap">
