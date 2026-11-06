@@ -9,6 +9,17 @@
     <!-- Search & Filter Bar -->
     <div class="cj-controls-bar">
       <input type="text" id="searchInput" placeholder="Search by product name, ID, or attributes..." onkeyup="filterProducts()">
+      
+      <!-- Category Selection Filter Trigger -->
+      <div id="categoryPickerTrigger" class="category-picker-trigger" onclick="toggleCategoryModal()">
+        <div class="picker-left">
+          <i class="fa-solid fa-list-check"></i>
+          <span id="selectedCategoryLabel" class="picker-title">ALL CATEGORIES</span>
+        </div>
+        <i class="fa-solid fa-chevron-down picker-arrow"></i>
+      </div>
+      <input type="hidden" id="selectedCategoryValue" value="all">
+
       <select id="sourceFilter" onchange="filterProducts()">
         <option value="all">All Sources (CJ & Vendors)</option>
         <option value="dropship">CJ Dropship</option>
@@ -24,6 +35,7 @@
             <th>ID / Date</th>
             <th>Image</th>
             <th>Source</th>
+            <th>Category</th>
             <th>Title</th>
             <th>Retail Price</th>
             <th>Wholesale Price</th>
@@ -43,6 +55,177 @@
   </div>
 </div>
 
+<!-- Category Picker Modal Overlay -->
+<div id="categoryTransparentOverlay" class="category-transparent-overlay">
+  <div class="seller-fullscreen-container">
+    <div class="category-fullscreen-view" id="categoryMainListView">
+      
+      <div class="category-header-wrap">
+        <h3>Select Product Category</h3>
+        <button type="button" class="category-reset-btn" onclick="selectCategory('all', 'ALL CATEGORIES')">RESET / SHOW ALL</button>
+      </div>
+
+      <!-- ১. WOMEN'S FASHION -->
+      <div class="accordion-category-box" id="cat-women">
+        <div class="accordion-header" onclick="toggleAccordion('cat-women')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-person-dress cat-main-icon"></i>
+            <span class="accordion-main-title">WOMEN'S FASHION</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('women-clothing', 'WOMEN CLOTHING')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">CLOTHING</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-handbags', 'WOMEN HANDBAGS')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">HANDBAGS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-shoes', 'WOMEN SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">SHOES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-jewelry', 'WOMEN JEWELRY')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">JEWELRY</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-watches', 'WOMEN WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">WATCHES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-lingerie', 'WOMEN LINGERIE')"><i class="fa-solid fa-heart"></i><span class="sub-cat-name">LINGERIE</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-activewear', 'WOMEN ACTIVEWEAR')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-traditional', 'WOMEN TRADITIONAL')"><i class="fa-solid fa-vest"></i><span class="sub-cat-name">TRADITIONAL</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-crafts', 'WOMEN CRAFTS & ACCENTS')"><i class="fa-solid fa-feather"></i><span class="sub-cat-name">CRAFTS & ACCENTS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('women-accessories', 'WOMEN ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ২. MEN'S FASHION -->
+      <div class="accordion-category-box" id="cat-men">
+        <div class="accordion-header" onclick="toggleAccordion('cat-men')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-user-tie cat-main-icon"></i>
+            <span class="accordion-main-title">MEN'S FASHION</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('men-clothing', 'MEN CLOTHING')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MEN CLOTHING</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('men-shoes', 'MEN SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">MEN SHOES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('men-watches', 'MEN WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">MEN WATCHES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('men-grooming', 'MEN GROOMING & WALLETS')"><i class="fa-solid fa-wallet"></i><span class="sub-cat-name">GROOMING & WALLETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('men-accessories', 'MEN ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">MEN ACCESSORIES</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ৩. GIRLS' FASHION -->
+      <div class="accordion-category-box" id="cat-girls">
+        <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-crown cat-main-icon"></i>
+            <span class="accordion-main-title">GIRLS' FASHION</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('girls-clothing', 'GIRLS CLOTHING')"><i class="fa-solid fa-child-dress"></i><span class="sub-cat-name">GIRLS CLOTHING</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-shoes', 'GIRLS SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">GIRLS SHOES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-bags', 'GIRLS BAGS')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">GIRLS BAGS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-jewelry', 'GIRLS JEWELRY')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">GIRLS JEWELRY</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-watches', 'GIRLS WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">GIRLS WATCHES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-hair-accessories', 'GIRLS HAIR ACCESSORIES')"><i class="fa-solid fa-crown"></i><span class="sub-cat-name">HAIR ACCESSORIES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-activewear', 'GIRLS ACTIVEWEAR')"><i class="fa-solid fa-person-running"></i><span class="sub-cat-name">ACTIVEWEAR</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-sleepwear', 'GIRLS SLEEPWEAR')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">SLEEPWEAR</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-party-dresses', 'GIRLS PARTY DRESSES')"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sub-cat-name">PARTY DRESSES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('girls-accessories', 'GIRLS ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">GIRLS ACCESSORIES</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ৪. BOYS' FASHION -->
+      <div class="accordion-category-box" id="cat-boys">
+        <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-child cat-main-icon"></i>
+            <span class="accordion-main-title">BOYS' FASHION</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('boys-clothing', 'BOYS CLOTHING')"><i class="fa-solid fa-child"></i><span class="sub-cat-name">BOYS CLOTHING</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('boys-shoes', 'BOYS SHOES')"><i class="fa-solid fa-shoe-prints"></i><span class="sub-cat-name">BOYS SHOES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('boys-watches', 'BOYS WATCHES')"><i class="fa-solid fa-clock"></i><span class="sub-cat-name">BOYS WATCHES</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('boys-bags', 'BOYS BAGS & WALLETS')"><i class="fa-solid fa-bag-shopping"></i><span class="sub-cat-name">BAGS & WALLETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('boys-accessories', 'BOYS ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">BOYS ACCESSORIES</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ৫. MATCHING SETS -->
+      <div class="accordion-category-box" id="cat-matching">
+        <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-people-arrows cat-main-icon"></i>
+            <span class="accordion-main-title">MATCHING SETS</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('couple-matchingsets', 'COUPLE SETS')"><i class="fa-solid fa-people-arrows"></i><span class="sub-cat-name">COUPLE SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('family-matchingsets', 'FAMILY SETS')"><i class="fa-solid fa-people-group"></i><span class="sub-cat-name">FAMILY SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('mom-me-sets', 'MOM & ME SETS')"><i class="fa-solid fa-child-reaching"></i><span class="sub-cat-name">MOM & ME SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('dad-me-sets', 'DAD & ME SETS')"><i class="fa-solid fa-user-gear"></i><span class="sub-cat-name">DAD & ME SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('sibling-matchingsets', 'SIBLING SETS')"><i class="fa-solid fa-children"></i><span class="sub-cat-name">SIBLING SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('team-matchingsets', 'TEAM SETS')"><i class="fa-solid fa-users"></i><span class="sub-cat-name">TEAM SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('bff-matchingsets', 'BFF SETS')"><i class="fa-solid fa-handshake-angle"></i><span class="sub-cat-name">BFF SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('pet-owner-sets', 'PET & OWNER SETS')"><i class="fa-solid fa-paw"></i><span class="sub-cat-name">PET & OWNER SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('holiday-matchingsets', 'HOLIDAY SETS')"><i class="fa-solid fa-holly-berry"></i><span class="sub-cat-name">HOLIDAY SETS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('value-bundles', 'VALUE BUNDLES')"><i class="fa-solid fa-boxes-stacked"></i><span class="sub-cat-name">VALUE BUNDLES</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ৬. LUXURY GIFTS -->
+      <div class="accordion-category-box" id="cat-gifts">
+        <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-gift cat-main-icon"></i>
+            <span class="accordion-main-title">LUXURY GIFTS</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('corporate-gifts', 'CORPORATE GIFTS')"><i class="fa-solid fa-briefcase"></i><span class="sub-cat-name">CORPORATE GIFTS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('luxury-giftitems', 'LUXURY GIFT ITEMS')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">LUXURY GIFT ITEMS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('premium-handicrafts', 'PREMIUM HANDICRAFTS')"><i class="fa-solid fa-hand-holding-heart"></i><span class="sub-cat-name">PREMIUM HANDICRAFTS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('wood-resincrafts', 'WOOD & RESIN CRAFTS')"><i class="fa-solid fa-tree"></i><span class="sub-cat-name">WOOD & RESIN CRAFTS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('bamboo-brass-decor', 'BAMBOO & BRASS DECOR')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">BAMBOO & BRASS DECOR</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('gift-sets-hampers', 'GIFT SETS & HAMPERS')"><i class="fa-solid fa-gift"></i><span class="sub-cat-name">GIFT SETS & HAMPERS</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ৭. MOTHER & BABY -->
+      <div class="accordion-category-box" id="cat-mother">
+        <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
+          <div class="accordion-title-wrap">
+            <i class="fa-solid fa-baby cat-main-icon"></i>
+            <span class="accordion-main-title">MOTHER & BABY</span>
+          </div>
+          <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="sub-categories-grid">
+            <div class="sub-cat-item" onclick="selectCategory('mother-baby-clothing', 'MOTHER & BABY CLOTHING')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('pregnancy-maternity', 'PREGNANCY & MATERNITY')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('baby-care-feeding', 'BABY CARE & FEEDING')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('nursery-baby-gear', 'NURSERY & BABY GEAR')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('eco-baby-toys', 'ECO BABY TOYS')"><i class="fa-solid fa-puzzle-piece"></i><span class="sub-cat-name">ECO BABY TOYS</span></div>
+            <div class="sub-cat-item" onclick="selectCategory('mother-baby-accessories', 'MOTHER & BABY ACCESSORIES')"><i class="fa-solid fa-glasses"></i><span class="sub-cat-name">ACCESSORIES</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- Edit Modal -->
 <div id="editModal" class="cj-modal">
   <div class="cj-modal-content">
@@ -52,6 +235,10 @@
       <div class="cj-form-group">
         <label>Product Title</label>
         <input type="text" id="editTitle" required>
+      </div>
+      <div class="cj-form-group">
+        <label>Category Key</label>
+        <input type="text" id="editCategory" placeholder="e.g. women-clothing" required>
       </div>
       <div class="cj-form-row">
         <div class="cj-form-group">
@@ -88,31 +275,87 @@
   }
 
   .cj-fullscreen-wrapper { margin: 0; padding: 0; width: 100%; min-height: 100vh; background-color: var(--bg-pure); font-family: var(--font-main); box-sizing: border-box; padding: 30px 15px; }
-  .cj-content-container { width: 100%; max-width: 1300px; margin: 0 auto; padding: 35px; background-color: var(--card-soft); border-radius: 14px; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+  .cj-content-container { width: 100%; max-width: 1350px; margin: 0 auto; padding: 35px; background-color: var(--card-soft); border-radius: 14px; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
   .cj-import-header h2 { font-size: 28px; font-weight: 700; margin: 0 0 6px 0; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .cj-import-header p { color: var(--text-gray); font-size: 13px; margin: 0 0 25px 0; }
-  .cj-controls-bar { display: flex; gap: 15px; margin-bottom: 25px; }
-  .cj-controls-bar input, .cj-controls-bar select { padding: 14px 18px; background: #000000; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; color: var(--text-white); font-size: 14px; outline: none; box-sizing: border-box; }
+  
+  .cj-controls-bar { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
+  .cj-controls-bar input, .cj-controls-bar select { padding: 12px 18px; background: #000000; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; color: var(--text-white); font-size: 14px; outline: none; box-sizing: border-box; }
   .cj-controls-bar input { flex: 2.5; }
   .cj-controls-bar select { flex: 1; cursor: pointer; }
   .cj-controls-bar input:focus, .cj-controls-bar select:focus { border-color: var(--gold-solid); }
+
+  /* Category Picker Trigger Stylings */
+  .category-picker-trigger {
+    flex: 1.5; background: #000000; border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; box-sizing: border-box; transition: border-color 0.2s;
+  }
+  .category-picker-trigger:hover { border-color: var(--gold-solid); }
+  .picker-left { display: flex; align-items: center; gap: 10px; }
+  .picker-left i { font-size: 0.9rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .picker-title { font-size: 0.8rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+  .picker-arrow { font-size: 0.8rem; color: var(--gold-solid); }
+
+  /* Transparent Category Overlay Grid Modal */
+  .category-transparent-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.88) !important; backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); z-index: 3000; overflow-y: auto; overflow-x: hidden;
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px 15px; box-sizing: border-box;
+  }
+  .seller-fullscreen-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
+  .category-fullscreen-view { padding: 0; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+  
+  .category-header-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px; }
+  .category-header-wrap h3 { margin: 0; font-size: 0.95rem; color: var(--gold-solid); font-weight: 700; text-transform: uppercase; }
+  .category-reset-btn { background: rgba(255, 42, 133, 0.2); border: 1px solid rgba(255, 42, 133, 0.4); color: var(--pink-love); border-radius: 6px; padding: 5px 10px; font-size: 0.68rem; font-weight: 700; cursor: pointer; }
+
+  .accordion-category-box { background: rgba(5, 5, 8, 0.95) !important; border-radius: 10px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
+  .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
+  .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
+  .cat-main-icon { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; width: 20px; text-align: center; }
+  .accordion-main-title { font-size: 0.85rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .accordion-arrow { font-size: 0.8rem; color: var(--gold-solid); transition: transform 0.2s ease; }
+  .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
+  
+  .accordion-content { display: none; padding: 6px 10px 12px 10px; }
+  .accordion-category-box.active .accordion-content { display: block; }
+  
+  .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sub-cat-item {
+      background: rgba(12, 12, 18, 0.95); border-radius: 8px; padding: 9px 10px;
+      display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.12);
+  }
+  .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
+  .sub-cat-item i { font-size: 0.9rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+  .sub-cat-name { font-size: 0.64rem; color: var(--text-white); font-weight: 600; }
+
+  /* Table & Badge Styling */
   .cj-table-responsive { width: 100%; overflow-x: auto; }
   .cj-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
   .cj-table th { color: var(--gold-solid); padding: 14px 16px; border-bottom: 1px solid rgba(212, 175, 55, 0.25); font-weight: 600; }
   .cj-table td { padding: 14px 16px; color: var(--text-white); border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
   .cj-table tr:hover { background: rgba(255, 255, 255, 0.015); }
   .cj-product-thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(212, 175, 55, 0.2); background: #111; }
+  
   .cj-badge { padding: 4px 10px; border-radius: 5px; font-size: 11px; text-transform: uppercase; font-weight: 600; display: inline-block; }
   .cj-badge-dropship { background: rgba(212, 175, 55, 0.15); color: var(--gold-solid); border: 1px solid rgba(212, 175, 55, 0.3); }
   .cj-badge-vendor { background: rgba(0, 255, 128, 0.12); color: #00ff80; border: 1px solid rgba(0, 255, 128, 0.25); }
+  .cj-badge-category { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid rgba(255, 255, 255, 0.15); text-transform: uppercase; }
+
   .cj-date-sub { display: block; font-size: 11px; color: var(--text-gray); margin-top: 3px; }
   .cj-btn-action { padding: 7px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600; border: none; margin-right: 6px; }
   .cj-btn-edit { background: rgba(212, 175, 55, 0.2); color: var(--gold-solid); }
   .cj-btn-delete { background: rgba(255, 42, 133, 0.2); color: var(--pink-love); }
   .cj-loading-text { color: var(--gold-solid); font-size: 13px; padding: 25px 0; text-align: center; }
+  
   .cj-pagination-bar { display: flex; justify-content: center; gap: 8px; margin-top: 25px; }
   .cj-page-btn { padding: 8px 14px; background: #000; border: 1px solid rgba(212, 175, 55, 0.2); color: var(--text-white); border-radius: 6px; cursor: pointer; font-size: 13px; }
   .cj-page-btn.active { background: var(--gold-gradient); color: #000; font-weight: 700; border: none; }
+
   .cj-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.88); align-items: center; justify-content: center; z-index: 1000; }
   .cj-modal-content { background: var(--card-soft); padding: 35px; border-radius: 14px; width: 100%; max-width: 500px; border: 1px solid rgba(212, 175, 55, 0.3); }
   .cj-modal-content h3 { margin-top: 0; color: var(--gold-solid); font-size: 22px; margin-bottom: 20px; }
@@ -131,6 +374,49 @@
   let currentPage = 1;
   const rowsPerPage = 50;
 
+  window.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('categoryTransparentOverlay');
+    window.addEventListener('click', (e) => {
+      if (overlay && overlay.style.display === 'flex') {
+        if (!e.target.closest('#categoryMainListView') && !e.target.closest('#categoryPickerTrigger')) {
+          overlay.style.display = 'none';
+        }
+      }
+    });
+  });
+
+  function toggleCategoryModal() {
+    const overlay = document.getElementById('categoryTransparentOverlay');
+    if (overlay) {
+      const isVisible = overlay.style.display === 'flex';
+      overlay.style.display = isVisible ? 'none' : 'flex';
+    }
+  }
+
+  function toggleAccordion(boxId) {
+    const targetBox = document.getElementById(boxId);
+    const content = targetBox.querySelector('.accordion-content');
+    const isOpen = targetBox.classList.contains('active');
+
+    document.querySelectorAll('.accordion-category-box').forEach(box => {
+      box.classList.remove('active');
+      let c = box.querySelector('.accordion-content');
+      if(c) c.style.display = 'none';
+    });
+
+    if (!isOpen) {
+      targetBox.classList.add('active');
+      if(content) content.style.display = 'block';
+    }
+  }
+
+  function selectCategory(categoryKey, categoryName) {
+    document.getElementById('categoryTransparentOverlay').style.display = 'none';
+    document.getElementById('selectedCategoryLabel').innerText = categoryName;
+    document.getElementById('selectedCategoryValue').value = categoryKey;
+    filterProducts();
+  }
+
   async function loadProducts() {
     try {
       const res = await fetch('/api/products'); 
@@ -141,7 +427,7 @@
         allProducts = result.data;
         filterProducts();
       } else {
-        document.getElementById('productTableBody').innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--text-gray);">কোনো প্রোডাক্ট পাওয়া যায়নি।</td></tr>`;
+        document.getElementById('productTableBody').innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--text-gray);">কোনো প্রোডাক্ট পাওয়া যায়নি।</td></tr>`;
       }
     } catch (err) {
       document.getElementById('loadingText').innerText = 'ডেটা সিঙ্ক করতে সমস্যা হয়েছে!';
@@ -156,7 +442,7 @@
     const paginatedItems = products.slice(start, start + rowsPerPage);
 
     if (paginatedItems.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--text-gray);">মিল Product পাওয়া যায়নি।</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--text-gray);">মিল Product পাওয়া যায়নি।</td></tr>`;
       document.getElementById('paginationBar').innerHTML = '';
       return;
     }
@@ -165,6 +451,10 @@
       const sourceBadge = p.vendor_type === 'dropship' 
         ? `<span class="cj-badge cj-badge-dropship">CJ Dropship</span>` 
         : `<span class="cj-badge cj-badge-vendor">Vendor</span>`;
+
+      const catBadge = p.category 
+        ? `<span class="cj-badge cj-badge-category">${p.category}</span>` 
+        : `<span class="cj-badge cj-badge-category">N/A</span>`;
 
       let imgSrc = 'https://via.placeholder.com/45?text=No+Img';
       if (p.image_url && p.image_url.trim() !== '') {
@@ -188,6 +478,7 @@
           </td>
           <td><img src="${imgSrc}" class="cj-product-thumb" alt="Product" onerror="this.src='https://via.placeholder.com/45?text=Error'"></td>
           <td>${sourceBadge}</td>
+          <td>${catBadge}</td>
           <td>${p.title}</td>
           <td>$${parseFloat(p.price || 0).toFixed(2)}</td>
           <td>$${parseFloat(p.price_min_whole || 0).toFixed(2)}</td>
@@ -223,11 +514,13 @@
   function filterProducts() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const sourceFilter = document.getElementById('sourceFilter').value;
+    const selectedCategory = document.getElementById('selectedCategoryValue').value.toLowerCase();
 
     const filtered = allProducts.filter(p => {
       const matchesSearch = (p.title && p.title.toLowerCase().includes(searchTerm)) || String(p.id).includes(searchTerm);
       const matchesSource = sourceFilter === 'all' || p.vendor_type === sourceFilter;
-      return matchesSearch && matchesSource;
+      const matchesCategory = selectedCategory === 'all' || (p.category && p.category.toLowerCase() === selectedCategory);
+      return matchesSearch && matchesSource && matchesCategory;
     });
 
     currentPage = 1;
@@ -240,6 +533,7 @@
 
     document.getElementById('editId').value = p.id;
     document.getElementById('editTitle').value = p.title || '';
+    document.getElementById('editCategory').value = p.category || '';
     document.getElementById('editRetailPrice').value = p.price || 0;
     document.getElementById('editWholesalePrice').value = p.price_min_whole || 0;
     document.getElementById('editStock').value = p.stock || 500;
@@ -254,6 +548,7 @@
     e.preventDefault();
     const id = document.getElementById('editId').value;
     const title = document.getElementById('editTitle').value;
+    const category = document.getElementById('editCategory').value;
     const price = document.getElementById('editRetailPrice').value;
     const price_min_whole = document.getElementById('editWholesalePrice').value;
     const stock = document.getElementById('editStock').value;
@@ -262,7 +557,7 @@
       const res = await fetch(`/api/products`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, title, price, price_min_whole, stock })
+        body: JSON.stringify({ id, title, category, price, price_min_whole, stock })
       });
       const textRes = await res.text();
       let result = {};
