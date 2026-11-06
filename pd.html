@@ -38,7 +38,7 @@
             scroll-behavior: smooth;
         }
 
-        body { padding-bottom: 95px; }
+        body { padding-bottom: 110px; }
 
         .ecommerce-main-wrapper {
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 15px 12px 60px 12px;
@@ -184,7 +184,7 @@
         .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
         
         .product-country-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 10;
+            position: absolute; top: 8px; left: 8px; z-index: 999;
             background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
             font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
@@ -207,11 +207,13 @@
             display: flex; align-items: center; justify-content: center; padding: 4px;
         }
 
+        /* ফিক্সড ফুটার বার যেন টাচ ইভেন্টে কোনো বাধা না দেয় */
         .fixed-bottom-checkout-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 16px; 
-            display: flex; justify-content: space-around; align-items: center; z-index: 5000; 
-            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            display: flex; justify-content: space-around; align-items: center; z-index: 999999; 
+            border-top: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.8);
         }
         @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 45px; padding: 14px 30px; } }
         
@@ -219,6 +221,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; gap: 4px; background: transparent !important; 
             border: none !important; padding: 6px 12px; transition: transform 0.2s ease; white-space: nowrap;
+            pointer-events: auto !important;
         }
         .footer-menu-item:hover { transform: translateY(-2px); }
         
@@ -230,11 +233,12 @@
         }
 
         .footer-menu-item.order-now-highlight {
-            background: var(--gold-gradient) !important; border-radius: 14px !important; padding: 12px 24px !important;
-            transition: transform 0.2s ease; cursor: pointer !important;
+            background: var(--gold-gradient) !important; border-radius: 14px !important; padding: 12px 26px !important;
+            transition: transform 0.2s ease; cursor: pointer !important; pointer-events: auto !important;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.4);
         }
-        .footer-menu-item.order-now-highlight:active { transform: scale(0.96); }
-        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.75rem; font-weight: 800; background: none !important; }
+        .footer-menu-item.order-now-highlight:active { transform: scale(0.95); }
+        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.78rem; font-weight: 800; background: none !important; }
 
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
@@ -245,9 +249,10 @@
         .footer-cart-badge.pulse-badge { transform: scale(1.4); }
 
         .flying-gold-coin {
-            position: fixed; z-index: 999999; width: 28px; height: 28px; border-radius: 50%;
+            position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
-            border: 1.5px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
+            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8);
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
         }
 
@@ -337,14 +342,14 @@
 
     </div>
 
-    <!-- ফুটার বার -->
+    <!-- ফুটার বার (সরাসরি ক্লিক ট্রিগার করার জন্য সুসংহত) -->
     <div class="fixed-bottom-checkout-bar">
         <a href="/" class="footer-menu-item">
             <i class="fa-solid fa-house footer-menu-icon"></i>
             <span class="footer-menu-label">HOME</span>
         </a>
 
-        <!-- অর্ডার নাও বাটন (সরাসরি সচল করা হয়েছে) -->
+        <!-- অর্ডার নাও বাটন (সরাসরি অনক্লিক ইভেন্ট সহ) -->
         <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
@@ -364,7 +369,7 @@
     </div>
 
     <!-- চ্যাট মডাল -->
-    <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
+    <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
         <div style="background:#0c0c12; border-radius:16px; padding:18px; max-width:400px; width:100%; display:flex; flex-direction:column; gap:12px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
                 <span style="font-size:0.72rem; font-weight:700; color:var(--gold-solid);">SELLER SUPPORT DESK</span>
@@ -668,14 +673,14 @@
             if (!cartBtn) return;
 
             const cartRect = cartBtn.getBoundingClientRect();
-            const targetX = cartRect.left + (cartRect.width / 2) - 14;
-            const targetY = cartRect.top + (cartRect.height / 2) - 14;
+            const targetX = cartRect.left + (cartRect.width / 2) - 16;
+            const targetY = cartRect.top + (cartRect.height / 2) - 16;
 
-            let startX = window.innerWidth / 2 - 14;
-            let startY = window.innerHeight - 120;
+            let startX = window.innerWidth / 2 - 16;
+            let startY = window.innerHeight - 100;
             if (event && event.clientX && event.clientY) {
-                startX = event.clientX - 14;
-                startY = event.clientY - 14;
+                startX = event.clientX - 16;
+                startY = event.clientY - 16;
             }
 
             const coin = document.createElement('div');
@@ -719,7 +724,6 @@
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
             
-            // ইউজার সিলেক্টকৃত থাম্বনেইল বা প্রধান ভিউপোর্টের ছবিটি সরাসরি ধরবে যাতে নির্দিষ্ট কালারের ছবি কার্টে যায়
             let selectedImageView = document.getElementById('mainDisplayMediaElement').src;
             let primaryImgUrl = (selectedImageView && !selectedImageView.includes('svg')) ? selectedImageView : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
 
@@ -731,7 +735,7 @@
             } else {
                 cart.push({
                     productId: prodId,
-                    sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAxy-01",
+                    sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
                     title: currentActiveProduct.title,
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
