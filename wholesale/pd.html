@@ -63,6 +63,7 @@
             width: 100%; position: relative; border-radius: 16px; overflow: hidden; background: #050508; 
             display: flex; align-items: center; justify-content: center; min-height: 320px; 
             border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.3s ease;
+            will-change: transform;
         }
         @media(min-width: 768px) { .media-viewport { min-height: 520px; } }
         
@@ -74,7 +75,7 @@
         
         .thumb-item { 
             width: 65px; height: 65px; border-radius: 12px; overflow: hidden; cursor: pointer; flex-shrink: 0; 
-            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.25s ease; 
+            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: transform 0.2s ease, border-color 0.2s ease; 
         }
         .thumb-item img, .thumb-item video { width: 100%; height: 100%; object-fit: cover; }
         .thumb-item:hover { border-color: rgba(212, 175, 55, 0.5); }
@@ -132,7 +133,7 @@
         .qty-btn-ch { 
             background: var(--gold-gradient); border: none; color: #000; font-size: 1rem; font-weight: 800; 
             width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; flex-shrink: 0; transition: transform 0.2s; 
+            cursor: pointer; flex-shrink: 0; transition: transform 0.15s ease; 
         }
         .qty-btn-ch:active { transform: scale(0.92); }
         .qty-num-input { 
@@ -165,8 +166,8 @@
         }
 
         .seller-chat-compact-btn {
-            color: var(--gold-solid); font-size: 0.68rem; font-weight: 700; padding: 10px 16px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s ease; 
+            color: var(--gold-solid); font-size: 0.68rem; font-weight: 700; padding: 8px 14px; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s ease; 
             width: max-content; background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
             margin-top: 2px;
         }
@@ -191,7 +192,7 @@
             background: var(--card-wholesale); border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
             position: relative; cursor: pointer; margin-bottom: 10px; break-inside: avoid;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease; contain: content;
         }
         .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -269,7 +270,7 @@
         }
         .animated-welcome-msg {
             background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid);
-            font-weight: 600; max-width: 85%; animation: welcomeFadeIn 0.5s ease forwards;
+            font-weight: 600; max-width: 85%; animation: welcomeFadeIn 0.3s ease forwards;
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
     </style>
@@ -342,8 +343,9 @@
                     </div>
 
                     <div>
+                        <!-- চ্যাট উইথ সেলার বাটন পরিবর্তন করে ছোট সেলার বাটন করা হয়েছে -->
                         <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
-                            <i class="fa-solid fa-comments"></i> <span>CHAT WITH SELLER</span>
+                            <i class="fa-solid fa-headset"></i> <span>SELLER</span>
                         </button>
                     </div>
                 </div>
@@ -393,8 +395,9 @@
                 <span style="font-size:0.72rem; font-weight:700; color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
                 <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
             </div>
+            <!-- চ্যাটের ভেতরে শুধু পরিচ্ছন্ন WELCOME মেসেজ থাকবে -->
             <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-                <div class="animated-welcome-msg">WELCOME TO RORRAXY WHOLESALE SUPPORT! HOW CAN WE ASSIST WITH YOUR BULK ORDER?</div>
+                <div class="animated-welcome-msg">WELCOME</div>
             </div>
             <div style="display:flex; gap:8px;">
                 <input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:#ffffff; font-size:0.68rem; outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
@@ -408,6 +411,26 @@
         let currentActiveProduct = null;
         let currentItemQuantity = 300;
         let selectedProductColorImage = "";
+
+        // ডাইনামিক লাইকের দ্রুত অ্যাক্সেস এবং সেশন/লোকাল স্টোরেজ ক্যাশিং
+        const dynamicLikeOptions = [50, 100, 150, 200, 400, 500, 600, 1000, 2000, 3000, 5000];
+
+        function getStoredOrDynamicLikes(productId) {
+            let storageKey = `rorraxy_ws_like_${productId}`;
+            let cachedLike = localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey);
+            
+            if (cachedLike !== null) {
+                return parseInt(cachedLike, 10);
+            }
+            
+            const randomVal = dynamicLikeOptions[Math.floor(Math.random() * dynamicLikeOptions.length)];
+            try {
+                localStorage.setItem(storageKey, randomVal);
+            } catch(e) {
+                sessionStorage.setItem(storageKey, randomVal);
+            }
+            return randomVal;
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -569,7 +592,7 @@
                 if(m.type === 'video') {
                     thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><video src="${m.url}" muted></video></div>`;
                 } else {
-                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><img src="${m.url}" alt="Thumb" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'"></div>`;
+                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><img src="${m.url}" alt="Thumb" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'"></div>`;
                 }
             });
             strip.innerHTML = thumbHtml;
@@ -591,6 +614,9 @@
                 const title = item.title || 'rorraxy Bulk Item';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
                 
+                // ডাইনামিক ক্যাশড লাইক
+                const dynamicLikes = item.like_count ? item.like_count : getStoredOrDynamicLikes(prodId);
+
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
                 try {
                     if (item.images_json) {
@@ -611,8 +637,8 @@
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
                             <span class="product-price-tag">${bulkPrice}</span>
                             <div class="card-sub-actions">
-                                <div class="love-action" onclick="toggleLove(event, this)">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 45}</span>
+                                <div class="love-action" onclick="toggleLove(event, this, '${prodId}')">
+                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${dynamicLikes}</span>
                                 </div>
                                 <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
                                     <i class="fa-solid fa-share-nodes"></i>
@@ -630,7 +656,7 @@
             if(mediaObj.type === 'video') {
                 viewport.innerHTML = `<video src="${mediaObj.url}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
             } else {
-                viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${mediaObj.url}" class="main-media-element" alt="Product View" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
+                viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${mediaObj.url}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
             }
         }
 
@@ -778,20 +804,6 @@
             let modal = document.getElementById('chatModalOverlay');
             let isOpening = modal.style.display !== 'flex';
             modal.style.display = isOpening ? 'flex' : 'none';
-
-            if(isOpening && currentActiveProduct) {
-                let box = document.getElementById('chatMessagesContainer');
-                let prodTitle = currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText;
-                let activeNote = document.getElementById('customSizeInputField').value.trim() || "STANDARD BULK";
-                
-                let autoMsg = `WHOLESALE PRODUCT: ${prodTitle} | QTY: ${currentItemQuantity} | NOTE/SPEC: ${activeNote}`;
-                
-                let existingNote = document.getElementById('autoChatProductNote');
-                if(!existingNote) {
-                    box.innerHTML += `<div id="autoChatProductNote" style="background:#221d0a; border:1px solid var(--gold-solid); color:var(--gold-solid); padding:8px 10px; border-radius:8px; font-size:0.65rem; font-weight:700;">${autoMsg}</div>`;
-                    box.scrollTop = box.scrollHeight;
-                }
-            }
         }
 
         function sendChatMessage() {
@@ -801,24 +813,32 @@
                 box.innerHTML += `<div style="background:var(--gold-gradient); color:#000; padding:8px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end;">${input.value}</div>`;
                 input.value = "";
                 box.scrollTop = box.scrollHeight;
-                
-                setTimeout(() => {
-                    box.innerHTML += `<div class="animated-welcome-msg" style="background:#1a1a2e; color:#00e676;">MESSAGE SENT TO WHOLESALE MANAGER ✓</div>`;
-                    box.scrollTop = box.scrollHeight;
-                }, 600);
             }
         }
 
-        function toggleLove(event, btn) {
+        function toggleLove(event, btn, productId) {
             event.stopPropagation();
             let countSpan = btn.querySelector('.love-count');
-            let currentLikes = parseInt(countSpan.innerText);
+            let currentLikes = parseInt(countSpan.innerText) || 0;
+            let finalLikes = currentLikes;
+
             if(btn.classList.contains('gold-active')) {
                 btn.classList.remove('gold-active');
-                countSpan.innerText = currentLikes - 1;
+                finalLikes = Math.max(0, currentLikes - 1);
             } else {
                 btn.classList.add('gold-active');
-                countSpan.innerText = currentLikes + 1;
+                finalLikes = currentLikes + 1;
+            }
+
+            countSpan.innerText = finalLikes;
+
+            if(productId) {
+                let storageKey = `rorraxy_ws_like_${productId}`;
+                try {
+                    localStorage.setItem(storageKey, finalLikes);
+                } catch(e) {
+                    sessionStorage.setItem(storageKey, finalLikes);
+                }
             }
         }
 
