@@ -268,17 +268,14 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
         
-        /* Exact Product Detail Style Matching Badge & Flag CSS */
+        /* প্রপার ফ্লাগ ও ডিসকাউন্ট স্টাইল (প্রোডাক্ট ডিটেইলস পেজ থেকে আপডেটকৃত) */
         .product-country-discount-badge {
-            position: absolute !important; top: 8px !important; left: 8px !important; z-index: 999 !important;
-            background: #ff2a85 !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            padding: 3px 8px !important; border-radius: 8px !important; display: flex !important; align-items: center !important; gap: 5px !important;
-            font-size: 0.58rem !important; font-weight: 700 !important; color: #ffffff !important; text-transform: uppercase !important;
+            position: absolute; top: 8px; left: 8px; z-index: 999;
+            background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
+            font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
         }
-        .product-country-discount-badge img.flag-icon { 
-            width: 16px !important; height: 11px !important; object-fit: cover !important; border-radius: 2px !important;
-            display: inline-block !important; vertical-align: middle !important; flex-shrink: 0 !important;
-        }
+        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; }
 
         .card-footer-actions { 
             display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
@@ -819,14 +816,11 @@
                 const presetLikes = defaultRandomLikes[randomSeed % defaultRandomLikes.length];
                 const initialLikes = item.like_count || presetLikes;
 
-                const discount = item.discount_rate || item.discountRate || item.discount || '0';
+                const discount = item.discount_rate || item.discountRate || '0';
+                const rawCountry = item.target_country || item.targetCountry || 'bd';
+                const countryCode = String(rawCountry).toLowerCase().trim();
                 
-                // Synchronized Country Flag Logic matching pd.html
-                let rawCountry = item.target_country || item.targetCountry || item.country || item.country_code || item.targetCountryCode || 'bd';
-                if (typeof rawCountry !== 'string' || !rawCountry.trim()) {
-                    rawCountry = 'bd';
-                }
-                const countryCode = rawCountry.toLowerCase().trim();
+                // ডিটেইলস পেজের আদলে ফ্লাগের সঠিক ইউআরএল (w40 সাইজ)
                 const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
                 
                 let discountBadgeHtml = '';
