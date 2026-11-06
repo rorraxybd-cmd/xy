@@ -123,7 +123,7 @@
             background: #0a0a0f; color: #ffffff; -webkit-text-fill-color: #ffffff; font-weight: 600; padding: 10px;
         }
 
-        /* Top Floating Search Bar (Toggled from Bottom Nav Search Button) */
+        /* Top Floating Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 55px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: none;
@@ -268,15 +268,14 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
         
-        /* সম্পূর্ণ পুনর্গঠিত ও প্রিমিয়াম ডিসকাউন্ট ব্যাজ এবং ফ্লাগ স্টাইল */
+        /* প্রোডাক্ট ডিটেইলস পেজের আদলে প্রপার ডিসকাউন্ট ও কান্ট্রি ফ্লাগ ব্যাজ ডিজাইন */
         .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 999;
-            background: rgba(255, 42, 133, 0.95); border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 800; color: #ffffff !important; text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
+            font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
         }
-        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; }
+        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
 
         .card-footer-actions { 
             display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
@@ -817,19 +816,16 @@
                 const presetLikes = defaultRandomLikes[randomSeed % defaultRandomLikes.length];
                 const initialLikes = item.like_count || presetLikes;
 
-                // ডিসকাউন্ট এবং কান্ট্রি কোড নিরূপণ
-                const rawDiscount = item.discount_rate || item.discountRate || 0;
-                const discountPercent = parseFloat(rawDiscount) || 0;
-                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase().trim();
+                // প্রোডাক্ট ডিটেইলস পেজের আদলে ডিসকাউন্ট এবং কান্ট্রি ফ্লাগ লজিক
+                const discount = parseFloat(item.discount_rate || item.discountRate || 0);
+                const countryCode = String(item.target_country || item.targetCountry || 'bd').toLowerCase().trim();
                 const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
                 
-                // ডিসকাউন্ট যদি ০ বা তার কম হয়, তবে কোনো ব্যাজ রেন্ডার হবে না
                 let discountBadgeHtml = '';
-                if (discountPercent > 0) {
+                if (discount > 0) {
                     discountBadgeHtml = `
                         <div class="product-country-discount-badge">
-                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy" onerror="this.style.display='none'">
-                            <span>${discountPercent}% OFF</span>
+                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy" onerror="this.style.display='none'"> ${discount}% OFF
                         </div>
                     `;
                 }
