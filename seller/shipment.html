@@ -2,66 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Seller Shipment & Orders Portal | rorraxy</title>
 
     <script src="/ecosystem-core.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             --bg-body: #000000;
-            --card-bg: #08080c;
-            --border-color: rgba(212, 175, 55, 0.15);
+            --card-bg: #06060a;
+            --border-soft: rgba(212, 175, 55, 0.12);
             --gold-color: #d4af37;
             --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
             --text-main: #ffffff;
-            --text-muted: #a0a0b8;
-            --font-family: 'Plus Jakarta Sans', sans-serif;
-            --accent-green: #00e676;
-            --accent-red: #ff3b30;
+            --text-muted: #9999a6;
+            --font-family: 'Poppins', sans-serif;
+            --accent-green: #4ade80;
+            --accent-red: #ff4d4d;
         }
 
         * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; min-height: 100vh; background: var(--bg-body) !important; color: var(--text-main); font-family: var(--font-family); overflow-x: hidden; padding: 16px 16px 90px 16px; text-transform: uppercase !important; }
+        html, body { width: 100%; min-height: 100vh; background: var(--bg-body) !important; color: var(--text-main); font-family: var(--font-family); overflow-x: hidden; padding: 20px 14px 90px 14px; text-transform: uppercase !important; font-size: 14px; line-height: 1.4; }
 
         .seller-wrapper { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
         
-        .seller-header { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .seller-header { background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: 16px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .seller-brand { display: flex; align-items: center; gap: 12px; }
-        .seller-brand img { width: 38px; height: 38px; object-fit: contain; }
-        .seller-brand h1 { font-size: 0.95rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
+        .seller-brand img { width: 40px; height: 40px; object-fit: contain; filter: none !important; background: transparent !important; }
+        .seller-brand h1 { font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; word-break: break-word; }
 
-        .seller-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; width: 100%; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
-        .stat-card label { font-size: 0.60rem; color: var(--text-muted); font-weight: 700; }
-        .stat-card span { font-size: 1.10rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .seller-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: 16px; padding: 18px 14px; display: flex; flex-direction: column; gap: 6px; }
+        .stat-card label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; word-break: break-word; }
+        .stat-card span { font-size: 1.2rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all; }
 
-        .shipment-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-        .section-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; }
+        .shipment-section { background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; gap: 16px; }
+        .section-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; word-break: break-word; }
 
         .table-responsive { width: 100%; overflow-x: auto; }
-        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.68rem; text-align: left; white-space: nowrap; }
-        .seller-table th, .seller-table td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .seller-table th { color: var(--gold-color); font-weight: 800; background: #040407; }
+        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; text-align: left; white-space: nowrap; }
+        .seller-table th, .seller-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .seller-table th { color: var(--gold-color); font-weight: 700; background: #040407; }
+        .seller-table td { text-transform: none; color: var(--text-main); }
 
-        .badge-status { padding: 3px 6px; border-radius: 5px; font-size: 0.55rem; font-weight: 800; display: inline-block; }
-        .badge-pending { background: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
-        .badge-shipped { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.3); }
-        .badge-delivered { background: rgba(0, 176, 155, 0.15); color: #00b09b; border: 1px solid rgba(0, 176, 155, 0.3); }
-        .badge-cancelled { background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 59, 48, 0.3); }
+        .badge-status { padding: 3px 8px; border-radius: 12px; font-size: 0.6rem; font-weight: 700; display: inline-block; }
+        .badge-pending { background: rgba(234, 179, 8, 0.12); color: #facc15; }
+        .badge-shipped { background: rgba(74, 222, 128, 0.12); color: var(--accent-green); }
+        .badge-delivered { background: rgba(0, 176, 155, 0.12); color: #00b09b; }
+        .badge-cancelled { background: rgba(255, 77, 77, 0.12); color: var(--accent-red); }
 
-        .btn-shipment-action { background: var(--gold-gradient); color: #000; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.60rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-shipment-action { background: var(--gold-gradient); color: #000; border: none; padding: 7px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; }
+        .btn-shipment-action:hover { opacity: 0.9; }
         
-        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95); border-top: 1px solid rgba(212, 175, 55, 0.15); display: flex; justify-content: space-around; align-items: center; padding: 12px 6px; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; }
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(10px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
         .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-item i { font-size: 1.25rem; margin-bottom: 4px; color: var(--text-muted); }
-        .nav-item span { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-muted); }
+        .nav-item span { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+
+        @media (max-width: 768px) {
+            .seller-stats-grid { grid-template-columns: 1fr; gap: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -73,11 +79,11 @@
     <div class="seller-wrapper">
         <header class="seller-header">
             <div class="seller-brand">
-                <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo">
+                <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" width="40" height="40">
                 <h1>SELLER SHIPMENT PORTAL</h1>
             </div>
-            <div style="font-size: 0.62rem; color: var(--text-muted); font-weight: 700;">
-                <i class="fa-solid fa-store" style="color: var(--gold-color);"></i> VENDOR EMAIL: <strong id="vendorEmailHeader" style="text-transform: lowercase;">--</strong>
+            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; word-break: break-all;">
+                <i class="fa-solid fa-store" style="color: var(--gold-color);"></i> VENDOR: <strong id="vendorEmailHeader" style="text-transform: lowercase;">--</strong>
             </div>
         </header>
 
@@ -113,7 +119,7 @@
     <nav class="seller-bottom-nav">
         <a href="/seller/list.html" class="nav-item"><i class="fa-solid fa-list-check"></i><span>LIST</span></a>
         <a href="/seller/payout.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></a>
-        <button type="button" class="nav-item" onclick="location.href='/seller/dashboard.html'"><i class="fa-solid fa-house"></i><span>HOME</span></button>
+        <a href="/seller/dashboard.html" class="nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></a>
         <a href="/seller/shipment.html" class="nav-item active"><i class="fa-solid fa-truck-fast"></i><span>SHIPMENT</span></a>
         <a href="/seller/info.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span>SETTING</span></a>
     </nav>
@@ -134,12 +140,14 @@
 
             try {
                 const response = await fetch(`/api/get?table=orders`);
-                const result = await response.json();
-                if (result.success && Array.isArray(result.data)) {
-                    orders = result.data;
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && Array.isArray(result.data)) {
+                        orders = result.data;
+                    }
                 }
             } catch (err) {
-                console.warn("API fetch warning, fallback to local:", err);
+                console.warn("API fetch warning:", err);
             }
 
             let localOrders = JSON.parse(localStorage.getItem('rorraxy_seller_notifications') || '[]');
@@ -150,13 +158,12 @@
             });
             orders = Array.from(mergedMap.values());
 
-            // বর্তমান সেলারের অর্ডার ফিল্টারিং
             let filteredOrders = orders.filter(o => {
                 const oSellerId = String(o.seller_id || o.sellerId || "").trim();
                 const oSellerEmail = String(o.email || o.seller_email || "").toLowerCase().trim();
                 if (currentSellerId && oSellerId === currentSellerId) return true;
                 if (currentSellerEmail && (oSellerEmail === currentSellerEmail || oSellerId.includes(currentSellerEmail))) return true;
-                if (!oSellerId && !oSellerEmail) return true; // জেনারেল অর্ডার ফলব্যাক
+                if (!oSellerId && !oSellerEmail) return true;
                 return false;
             });
 
@@ -191,8 +198,8 @@
 
                     tableHtml += `
                         <tr>
-                            <td style="color:var(--text-muted); font-size:0.58rem;"><i class="fa-regular fa-clock"></i> ${timeStr}</td>
-                            <td style="font-weight:800; color:var(--gold-color);">${item.subOrderId || item.id || 'N/A'}</td>
+                            <td style="color:var(--text-muted); font-size:0.62rem;"><i class="fa-regular fa-clock"></i> ${timeStr}</td>
+                            <td style="font-weight:700; color:var(--gold-color);">${item.subOrderId || item.id || 'N/A'}</td>
                             <td>${item.productId || 'N/A'}</td>
                             <td>${item.title || 'Luxury Product'}</td>
                             <td>x${item.qty || 1}</td>
