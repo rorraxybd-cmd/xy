@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Single Page Ecosystem</title>
+    <title>rorraxy - Retail & Vendor Reels Feed</title>
     
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
@@ -35,27 +35,27 @@
 </head>
 <body id="mainBody">
 
-    <!-- Top Search Bar -->
+    <!-- Top Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (আপনার সুনির্দিষ্ট মেনু ডিজাইন) -->
     <nav class="bottom-nav-bar">
-        <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
-        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
-        <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>BUY</span></div>
-        <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
         <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
+        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
+        <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
+        <div id="bottomSearchBtn" class="bottom-nav-item"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span></div>
+        <a href="/account.html" class="bottom-nav-item" style="text-decoration:none;"><i class="fa-solid fa-user"></i><span>YOU</span></a>
+        <a href="/cart.html" class="bottom-nav-item" id="footerCartMenuBtn" style="text-decoration:none;">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="bottom-nav-badge" id="bottomCartBadgeCount">0</span>
+            <span>CART</span>
+        </a>
     </nav>
 
-    <!-- Product Details Sheet (No Images) -->
-    <div id="detailsOverlaySheet" class="overlay-sheet" onclick="if(event.target===this) closeDetailsSheet()">
-        <div class="details-bottom-sheet" id="detailsSheetContent"></div>
-    </div>
-
-    <!-- Buy Variant Preview Modal with Horizontal Scroll -->
+    <!-- Buy Variant Preview Modal (ডানে-বামে হরিজন্টাল স্ক্রল সিস্টেম) -->
     <div id="buyPreviewOverlay" class="overlay-sheet" style="justify-content:center;" onclick="if(event.target===this) closeBuyPreview()">
         <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
     </div>
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <!-- Main Content Container -->
+    <!-- Main Content Container (পিন্টারেস্ট স্টাইল হোম ফিড অথবা রিলস ফিড) -->
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
@@ -89,18 +89,24 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
-            const bottomWorldBtn = document.getElementById('bottomWorldBtn');
+            const bottomHomeBtn = document.getElementById('bottomHomeBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
             const bottomBuyBtn = document.getElementById('bottomBuyBtn');
-            const bottomDetailsBtn = document.getElementById('bottomDetailsBtn');
-            const bottomHomeBtn = document.getElementById('bottomHomeBtn');
+            const bottomSearchBtn = document.getElementById('bottomSearchBtn');
+            
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
             const floatingSearchContainer = document.getElementById('floatingSearchContainer');
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
 
-            if(bottomWorldBtn) {
-                bottomWorldBtn.addEventListener('click', () => { alert("World ecosystem view loaded in-app."); });
+            if(bottomHomeBtn) {
+                bottomHomeBtn.addEventListener('click', () => { 
+                    isPinterestHomeMode = true;
+                    if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
+                    closeBuyPreview();
+                    activeProductList = globalMasterProductsList;
+                    renderPinterestHomeGrid(globalMasterProductsList);
+                });
             }
 
             if(bottomCategoryBtn && categoryTransparentOverlay) {
@@ -121,35 +127,14 @@
                 });
             }
 
-            if(bottomDetailsBtn) {
-                bottomDetailsBtn.addEventListener('click', () => {
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                    if(list.length > 0) {
-                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
-                        toggleDetailsSheet(targetProd);
-                    }
-                });
-            }
-
-            if(bottomHomeBtn) {
-                bottomHomeBtn.addEventListener('click', () => { 
-                    isPinterestHomeMode = true;
-                    if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
-                    closeDetailsSheet();
-                    closeBuyPreview();
-                    activeProductList = globalMasterProductsList;
-                    renderPinterestHomeGrid(globalMasterProductsList);
-                });
-            }
-
-            window.toggleSearchOverlay = function(e) {
-                if(e) e.stopPropagation();
-                if(floatingSearchContainer) {
+            if(bottomSearchBtn && floatingSearchContainer) {
+                bottomSearchBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const isVisible = floatingSearchContainer.style.display === 'flex';
                     floatingSearchContainer.style.display = isVisible ? 'none' : 'flex';
                     if(!isVisible && searchInput) searchInput.focus();
-                }
-            };
+                });
+            }
 
             if(searchBtn && searchInput) {
                 searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
@@ -167,7 +152,6 @@
             }, {passive: true});
         });
 
-        // categories.js থেকে ডাইনামিক ক্যাটাগরি রেন্ডার
         function buildCategoriesUI() {
             const listContainer = document.getElementById('categoryMainListView');
             if(!listContainer || typeof rorraxyCategoriesData === 'undefined') return;
@@ -329,12 +313,6 @@
 
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <div class="side-action-item" onclick="openCartViewInline()" title="Cart">
-                        <i class="fa-solid fa-basket-shopping action-pure-icon"></i>
-                        <span class="cart-top-badge" id="sideCartBadgeCount">0</span>
-                        <span class="side-count-text">CART</span>
-                    </div>
-
                     <div class="side-action-item" onclick="openNativeShare(event, '${targetId}')" title="Share">
                         <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
                         <span class="side-count-text">${pShares}</span>
@@ -342,15 +320,11 @@
                     <div class="side-action-item love-action-btn" onclick="toggleReelLove(event, this, '${targetId}')" title="Like">
                         <i class="fa-solid fa-heart action-pure-icon"></i>
                     </div>
-                    <div class="side-action-item" onclick="toggleSearchOverlay(event)" title="Search">
+                    <div class="side-action-item" onclick="document.getElementById('floatingSearchContainer').style.display='flex'" title="Search">
                         <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
                     </div>
                     <div class="side-action-item save-action-btn" onclick="handleHomeOrReelSave(event, this, '${targetId}')" title="Save">
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
-                    </div>
-                    <div class="side-action-item" onclick="openAccountViewInline()" title="You">
-                        <i class="fa-solid fa-user-gear action-pure-icon"></i>
-                        <span class="side-count-text">YOU</span>
                     </div>
                 </div>
             `;
@@ -413,7 +387,7 @@
 
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="toggleDetailsSheet(globalMasterProductsList[${currentReelIndex}])">
+                    <div class="reel-media-box" onclick="window.location.href='pd.html?id=${pId}'">
                         ${discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : ''}
                         ${mediaElem}
                     </div>
@@ -423,43 +397,6 @@
                 </div>
             `;
             renderFixedGlobalActions(container, pId);
-        }
-
-        function toggleDetailsSheet(product) {
-            const sheet = document.getElementById('detailsOverlaySheet');
-            const content = document.getElementById('detailsSheetContent');
-            if(sheet.style.display === 'flex') {
-                sheet.style.display = 'none';
-                return;
-            }
-
-            let priceVal = parseFloat(product.price) || 35.00;
-            let title = product.title || "RORRAXY RETAIL ITEM";
-            let rawDesc = product.description || "High-grade luxury materials for retail excellence.";
-            let stockNum = product.stock || 100;
-
-            content.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
-                    <span style="color:var(--gold-solid); font-weight:700; font-size:0.75rem;"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
-                    <button onclick="closeDetailsSheet()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
-                </div>
-                <h2 style="font-size:1.1rem; color:var(--gold-solid); font-weight:700;">${title}</h2>
-                <div style="font-size:1.3rem; font-weight:800; color:#fff;">$${priceVal.toFixed(2)}</div>
-                <div style="font-size:0.7rem; color:#00e676; font-weight:700;">IN STOCK: ${stockNum} UNITS READY</div>
-                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none;">${rawDesc}</div>
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                    <span style="font-size:0.65rem; color:var(--gold-solid); font-weight:700;">CUSTOM SIZE / NOTE</span>
-                    <input type="text" id="sheetCustomNote" placeholder="ENTER NOTE (OPTIONAL)..." style="width:100%; background:#040407; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:8px; color:#fff; font-size:0.7rem;">
-                </div>
-                <button onclick="alert('Seller Chat Opened')" style="background:rgba(212,175,55,0.15); border:1px solid var(--gold-solid); color:var(--gold-solid); padding:10px; border-radius:8px; font-weight:700; font-size:0.75rem; cursor:pointer; width:100%;">
-                    <i class="fa-solid fa-headset"></i> CHAT WITH SELLER
-                </button>
-            `;
-            sheet.style.display = 'flex';
-        }
-
-        function closeDetailsSheet() {
-            document.getElementById('detailsOverlaySheet').style.display = 'none';
         }
 
         /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (ডানে-বামে হরিজন্টাল স্ক্রল সহ) --- */
@@ -507,30 +444,58 @@
             document.getElementById('buyPreviewOverlay').style.display = 'none';
         }
 
-        function triggerFlyingCoinAnimation(e) {
+        function playCoinDropChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+                const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01]; 
+                freqs.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.035));
+                    gain.gain.setValueAtTime(0, now + (idx * 0.035));
+                    gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.035) + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.035) + 1.1);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + (idx * 0.035));
+                    osc.stop(now + (idx * 0.035) + 1.1);
+                });
+            } catch (e) {}
+        }
+
+        function triggerCoinDropAnimation(e) {
+            const cartBtn = document.getElementById('footerCartMenuBtn');
+            const cartBadge = document.getElementById('bottomCartBadgeCount');
+            if (!cartBtn) return;
+
+            const cartRect = cartBtn.getBoundingClientRect();
+            const targetX = cartRect.left + (cartRect.width / 2) - 16;
+            const targetY = cartRect.top + (cartRect.height / 2) - 16;
+
             let startX = e ? e.clientX : window.innerWidth / 2;
             let startY = e ? e.clientY : window.innerHeight / 2;
 
-            const targetBadge = document.getElementById('sideCartBadgeCount');
-            if(!targetBadge) return;
-            const targetRect = targetBadge.getBoundingClientRect();
-
             const coin = document.createElement('div');
-            coin.className = 'flying-coin';
-            coin.innerHTML = '<i class="fa-solid fa-basket-shopping"></i>';
-            coin.style.left = `${startX - 14}px`;
-            coin.style.top = `${startY - 14}px`;
+            coin.className = 'flying-gold-coin';
+            coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
+            coin.style.left = `${startX - 16}px`;
+            coin.style.top = `${startY - 16}px`;
             document.body.appendChild(coin);
 
             requestAnimationFrame(() => {
-                coin.style.left = `${targetRect.left}px`;
-                coin.style.top = `${targetRect.top}px`;
-                coin.style.transform = 'scale(0.2)';
-                coin.style.opacity = '0.2';
+                coin.style.left = `${targetX}px`;
+                coin.style.top = `${targetY}px`;
+                coin.style.transform = 'scale(0.35) rotate(720deg)';
+                coin.style.opacity = '0';
             });
 
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
+                playCoinDropChime();
             }, 750);
         }
 
@@ -552,19 +517,16 @@
             }
             localStorage.setItem(cartKey, JSON.stringify(cart));
             updateCartBadgeCount();
-            triggerFlyingCoinAnimation(e);
+            triggerCoinDropAnimation(e);
             closeBuyPreview();
         }
 
         function updateCartBadgeCount() {
             let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
             let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
-            let sideBadge = document.getElementById('sideCartBadgeCount');
-            if(sideBadge) sideBadge.innerText = totalQty;
+            let badge = document.getElementById('bottomCartBadgeCount');
+            if(badge) badge.innerText = totalQty;
         }
-
-        function openCartViewInline() { alert("Cart Checkout overlay loaded in-app."); }
-        function openAccountViewInline() { alert("User Account overlay loaded in-app."); }
 
         function getDynamicEngagement(productId, baseVal, type) {
             let storageKey = `rorraxy_retail_${type}_${productId}`;
