@@ -34,7 +34,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -164,13 +164,13 @@
                 }
             });
 
-            // Touch swipe for reels view
+            // Touch swipe for reels view (সুপার স্মুথ সোয়াইপ Navigation)
             let touchStartY = 0;
             window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive: true});
             window.addEventListener('touchend', (e) => {
                 if(!isPinterestHomeMode) {
                     let diff = touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) > 50) diff > 0 ? scrollReels(1) : scrollReels(-1);
+                    if (Math.abs(diff) > 40) diff > 0 ? scrollReels(1) : scrollReels(-1);
                 }
             }, {passive: true});
         });
@@ -263,27 +263,21 @@
             }
         }
 
-        // প্রাইস ও ডিসকাউন্ট বাটন লেআউট জেনারেটর
-        function generatePriceDiscountHTML(product) {
+        // কোনো কালো শেপ ছাড়া একদম ডাইরেক্ট গোল্ডেন প্রাইস ও পিংক ডিসকাউন্ট টেক্সট রেন্ডারার
+        function generateDirectPriceDiscountHTML(product) {
             let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
-            
-            let rawCountry = (product.target_country || product.targetCountry || 'bd').toString().trim().toLowerCase();
-            if (!rawCountry || rawCountry.length !== 2) rawCountry = 'bd';
-            let flagUrl = `https://flagcdn.com/w40/${rawCountry}.png`;
 
-            let discountBadgeHtml = '';
+            let discountTextHtml = '';
             if (discountPercent > 0) {
-                discountBadgeHtml = `
-                    <div class="uni-discount-badge">
-                        <img src="${flagUrl}" class="uni-flag-icon" alt="Flag" crossorigin="anonymous">
-                        <span>${discountPercent}% OFF</span>
-                    </div>`;
+                discountTextHtml = `<span class="direct-discount-text">${discountPercent}% OFF</span>`;
             }
 
             return `
-                <span class="uni-price-txt">${price}</span>
-                ${discountBadgeHtml}
+                <div class="direct-price-overlay">
+                    <span class="direct-price-text">${price}</span>
+                    ${discountTextHtml}
+                </div>
             `;
         }
 
@@ -322,9 +316,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
-                        <div class="unified-price-offer-box">
-                            ${generatePriceDiscountHTML(item)}
-                        </div>
+                        ${generateDirectPriceDiscountHTML(item)}
                     </div>
                 `;
                 fragment.appendChild(cardDiv);
@@ -336,7 +328,7 @@
             renderFixedGlobalActions(container, null);
         }
 
-        // ফিক্সড ডানপাশের অ্যাকশন বার (পুরোপুরি ভাসমান)
+        // ফিক্সড ডানপাশের অ্যাকশন বার (কোনো ব্যাকগ্রাউন্ড বা শেপ ছাড়াই সম্পূর্ণ ভাসমান)
         function renderFixedGlobalActions(container, pId) {
             let existingBar = document.getElementById('fixedGlobalActionsBar');
             if(existingBar) existingBar.remove();
@@ -378,7 +370,7 @@
             handleDualSaveAction(e, btn, pId);
         };
 
-        // রিলস মোডে রূপান্তর
+        // রিলস মোডে ইনস্ট্যান্ট রূপান্তর
         function switchToReelsView(index) {
             isPinterestHomeMode = false;
             currentReelIndex = index;
@@ -396,7 +388,7 @@
             }
         }
 
-        // রিলস ভিউ রেন্ডারিং
+        // রিলস স্টাইল ভিউ
         function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
             const container = document.getElementById('appContainer');
@@ -446,9 +438,7 @@
                         ${mediaElem}
                     </div>
 
-                    <div class="unified-price-offer-box">
-                        ${generatePriceDiscountHTML(product)}
-                    </div>
+                    ${generateDirectPriceDiscountHTML(product)}
                 </div>
             `;
 
@@ -662,7 +652,7 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Pinterest Style Feed Container (কালো প্যাডিং বাদ দিয়ে পূর্ণ স্ক্রিন ব্যবহার করা হয়েছে) */
+        /* Pinterest Style Feed Container */
         .pinterest-feed-container {
             padding: 8px 6px; 
             column-count: 2;
@@ -710,29 +700,21 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
 
-        /* সমন্বিত প্রাইস ও ডিসকাউন্ট ওভারলে ক্যাপসুল */
-        .unified-price-offer-box {
+        /* কোনো ব্যাকগ্রাউন্ড শেপ ছাড়া সরাসরি ছবি/ভিডিওর ওপর প্রাইস ও ডিসকাউন্ট টেক্সট */
+        .direct-price-overlay {
             position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-            z-index: 40; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            background: rgba(10, 10, 14, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 4px 10px; border-radius: 30px; white-space: nowrap; width: auto; max-width: 95%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid rgba(212,175,55,0.3);
-            pointer-events: none;
+            z-index: 40; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            white-space: nowrap; width: auto; max-width: 95%; pointer-events: none;
+            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.95));
         }
-        .uni-price-txt { 
-            font-size: 0.78rem; font-weight: 800; background: var(--gold-gradient); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            flex-shrink: 0; line-height: 1;
+        .direct-price-text { 
+            font-size: 0.95rem; font-weight: 800; color: #fcf6ba;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1; letter-spacing: 0.3px;
         }
-        
-        .uni-discount-badge {
-            background: var(--pink-accent); color: #ffffff; padding: 2px 7px; border-radius: 14px;
-            font-size: 0.58rem; font-weight: 700; display: inline-flex; align-items: center; 
-            gap: 4px; flex-shrink: 0; line-height: 1; white-space: nowrap;
-        }
-        .uni-flag-icon { 
-            width: 14px; height: 10px; border-radius: 2px; object-fit: cover; 
-            display: inline-block; vertical-align: middle; flex-shrink: 0;
+        .direct-discount-text {
+            font-size: 0.85rem; font-weight: 800; color: var(--pink-accent);
+            line-height: 1; letter-spacing: 0.3px;
         }
 
         /* Full Reels View Styles */
@@ -742,7 +724,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
         
-        /* সম্পূর্ণ ভাসমান ডানপাশের অ্যাকশন বার (কোনো ফাঁকা জায়গা তৈরি করে না) */
+        /* সম্পূর্ণ ভাসমান ডানপাশের অ্যাকশন বার */
         .right-vertical-actions {
             position: fixed; right: 10px; bottom: 80px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
