@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail & Vendor Reels Feed</title>
+    <title>rorraxy - Retail & Reels Feed</title>
     
-    <!-- Central Script Tag -->
+    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
     <script src="/ecosystem-core.js"></script>
     <link rel="manifest" href="/manifest.json">
 
@@ -29,9 +29,192 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- External Files Linking -->
-    <link rel="stylesheet" href="./style.css">
-    <script src="./categories.js"></script>
+    <style>
+        :root {
+            --bg-retail: #000000;
+            --card-retail: #08080c;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --pink-accent: #ff2a85;
+            --text-white: #ffffff;
+            --text-gray: #a0a0ab;
+            --font-main: 'Poppins', sans-serif;
+        }
+
+        html, body { 
+            width: 100%; max-width: 100vw; overflow-x: hidden; 
+            background: var(--bg-retail) !important; 
+            color: var(--text-white); font-family: var(--font-main); 
+            min-height: 100vh; font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body { margin: 0; padding: 0 0 75px 0; text-transform: uppercase !important; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        /* Top Floating Search Bar */
+        .top-floating-search-bar {
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; z-index: 1800; display: none;
+            align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
+            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+        }
+        .floating-search-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: #ffffff; font-size: 0.85rem; font-family: var(--font-main); letter-spacing: 0.5px;
+        }
+        .floating-search-input::placeholder { color: #7a7a85; }
+        .floating-search-btn-circle {
+            width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient);
+            border: none; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #000; font-size: 0.9rem;
+        }
+
+        /* Bottom Navigation Bar (আপনার নির্দেশমতো সাজানো) */
+        .bottom-nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
+            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
+            display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 4px;
+        }
+        .bottom-nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
+            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.2s ease;
+        }
+        .bottom-nav-item:hover { transform: translateY(-2px); }
+        .bottom-nav-item i { 
+            font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+        }
+        .bottom-nav-item span { 
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
+        }
+        .bottom-nav-badge {
+            position: absolute; top: 4px; right: 28%; background: var(--pink-accent); color: #fff;
+            font-size: 0.52rem; font-weight: 800; width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 6px var(--pink-accent);
+        }
+
+        /* Pinterest Style Home Grid */
+        .pinterest-feed-container {
+            padding: 8px 6px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
+        }
+        @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 12px; } }
+
+        .product-card {
+            background: var(--card-retail); border-radius: 14px; overflow: hidden; 
+            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
+            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
+            transition: transform 0.2s ease;
+        }
+        .product-card:hover { transform: translateY(-2px); border-color: rgba(212,175,55,0.35); }
+
+        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; overflow: hidden; }
+        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+        .corner-discount-badge {
+            position: absolute; top: 6px; left: 6px; z-index: 45;
+            background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
+            padding: 3px 7px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+        }
+
+        .bottom-price-overlay {
+            width: 100%; text-align: center; padding: 8px 4px; background: #040407;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .bottom-price-text { 
+            font-size: 0.95rem; font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Full Reels View */
+        .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 68px); height: calc(100dvh - 68px); position: relative; background: #000; overflow: hidden; }
+        .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
+        .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+        .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+
+        /* ডানপাশের ভাসমান অ্যাকশন বার */
+        .right-vertical-actions {
+            position: fixed; right: 10px; bottom: 80px; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; gap: 14px;
+            pointer-events: auto;
+        }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; }
+        .action-pure-icon { 
+            font-size: 1.5rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.9));
+        }
+        .side-count-text { font-size: 0.60rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; }
+
+        /* Overlays & Modals */
+        .overlay-sheet {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: flex-end;
+        }
+
+        /* বাই প্রিভিউ মডাল পপআপ - ডানে-বামে হরিজন্টাল স্ক্রল সিস্টেম */
+        .buy-preview-modal {
+            width: 90%; max-width: 380px; background: #0c0c14; border: 1px solid var(--gold-solid);
+            border-radius: 16px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 12px;
+        }
+        .preview-horizontal-scroll {
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory;
+        }
+        .preview-horizontal-scroll::-webkit-scrollbar { height: 4px; }
+        .preview-horizontal-scroll::-webkit-scrollbar-thumb { background: var(--gold-solid); border-radius: 4px; }
+
+        .preview-img-item {
+            flex: 0 0 75px; width: 75px; height: 75px; border-radius: 8px; overflow: hidden;
+            border: 1.5px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
+        }
+        .preview-img-item.selected { border-color: var(--pink-accent); }
+        .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ফ্লায়িং গোল্ডেন কয়েন অ্যানিমেশন */
+        .flying-gold-coin {
+            position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
+            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8);
+            transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
+        }
+
+        /* ক্যাটাগরি ট্রান্সপারেন্ট ওভারলে মেনু */
+        .category-transparent-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+            background: rgba(0, 0, 0, 0.88) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important;
+            z-index: 3500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 85px 15px;
+        }
+        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
+        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+
+        .accordion-category-box { background: rgba(5, 5, 8, 0.95) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
+        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
+        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
+        .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
+        .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
+        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
+        .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
+
+        .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
+        .accordion-category-box.active .accordion-content { display: block; }
+
+        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .sub-cat-item {
+            background: rgba(12, 12, 18, 0.92); border-radius: 8px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
+        }
+        .sub-cat-item:active { transform: scale(0.96); }
+        .sub-cat-item:hover { background: rgba(22, 22, 32, 1); border-color: rgba(212, 175, 55, 0.6); }
+        .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
+    </style>
 </head>
 <body id="mainBody">
 
@@ -55,7 +238,7 @@
         </a>
     </nav>
 
-    <!-- Buy Variant Preview Modal (ডানে-বামে হরিজন্টাল স্ক্রল সিস্টেম) -->
+    <!-- Buy Variant Preview Modal (ডানে-বামে হরিজন্টাল স্ক্রল সহ) -->
     <div id="buyPreviewOverlay" class="overlay-sheet" style="justify-content:center;" onclick="if(event.target===this) closeBuyPreview()">
         <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
     </div>
