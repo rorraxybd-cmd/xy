@@ -1,28 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>rorraxy - Retail & Vendor Feed</title>
     
-    <!-- Central Script Tag -->
+    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
     <script src="/ecosystem-core.js"></script>
 
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="/manifest.json">
 
-    <!-- Service Worker Registration Script -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((reg) => console.log('Service Worker registered successfully:', reg.scope))
-            .catch((err) => console.log('Service Worker registration failed:', err));
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
         });
       }
     </script>
 
-    <!-- Popup JS Link -->
     <script src="/popup.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +26,6 @@
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
     <link rel="preconnect" href="https://vid.rorraxy.com">
 
-    <!-- Correct Cloudflare R2 Icons & Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
@@ -48,6 +43,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLiveProducts();
+            updateCartBadgeCount();
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -61,14 +57,12 @@
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
 
-            // 1. WORLD Click
             if(bottomWorldBtn) {
                 bottomWorldBtn.addEventListener('click', () => {
                     window.location.href = 'https://rorraxy.com/world.html';
                 });
             }
 
-            // 2. CATEGORY Toggle
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -83,29 +77,27 @@
                 });
             }
 
-            // 3. BUY Click
             if(bottomBuyBtn) {
                 bottomBuyBtn.addEventListener('click', () => {
                     let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                     if(list.length > 0) {
                         let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
-                        window.location.href = `pd.html?id=${encodeURIComponent(targetProd.id || targetProd.product_id)}&buy=true`;
+                        executeQuickOrderNow(targetProd);
                     }
                 });
             }
 
-            // 4. DETAILS Click
             if(bottomDetailsBtn) {
                 bottomDetailsBtn.addEventListener('click', () => {
                     let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                     if(list.length > 0) {
                         let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
-                        window.location.href = `pd.html?id=${encodeURIComponent(targetProd.id || targetProd.product_id)}`;
+                        let pId = targetProd.id || targetProd.product_id || targetProd.product_code || '101';
+                        openInlineProductDetailsView(pId);
                     }
                 });
             }
 
-            // 5. HOME Click: Reset to Pinterest Home Grid View
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
                     isPinterestHomeMode = true;
@@ -115,7 +107,6 @@
                 });
             }
 
-            // Toggle Search Bar Overlay
             window.toggleSearchOverlay = function(e) {
                 if(e) e.stopPropagation();
                 if(floatingSearchContainer) {
@@ -131,7 +122,6 @@
                 }
             };
 
-            // Outside Click Listener
             window.addEventListener('click', (e) => {
                 if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
                     if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
@@ -156,7 +146,6 @@
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
 
-            // Keyboard navigation for reels view
             window.addEventListener('keydown', (e) => {
                 if(!isPinterestHomeMode) {
                     if(e.key === 'ArrowDown') { e.preventDefault(); scrollReels(1); }
@@ -164,7 +153,6 @@
                 }
             });
 
-            // Touch swipe for reels view (সুপার স্মুথ সোয়াইপ Navigation)
             let touchStartY = 0;
             window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive: true});
             window.addEventListener('touchend', (e) => {
@@ -263,7 +251,6 @@
             }
         }
 
-        // কোনো কালো শেপ ছাড়া একদম ডাইরেক্ট গোল্ডেন প্রাইস ও পিংক ডিসকাউন্ট টেক্সট রেন্ডারার
         function generateDirectPriceDiscountHTML(product) {
             let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
@@ -281,7 +268,6 @@
             `;
         }
 
-        // Pinterest হোম গ্রিড রেন্ডারিং
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             container.className = 'pinterest-feed-container';
@@ -328,7 +314,7 @@
             renderFixedGlobalActions(container, null);
         }
 
-        // ফিক্সড ডানপাশের অ্যাকশন বার (কোনো ব্যাকগ্রাউন্ড বা শেপ ছাড়াই সম্পূর্ণ ভাসমান)
+        // আপনার নির্দেশনা অনুযায়ী ফিক্সড ডানপাশের অ্যাকশন বার (উপরে কার্ট, মাঝে শেয়ার/লাইক/সার্চ/সেভ, নিচে ইউ)
         function renderFixedGlobalActions(container, pId) {
             let existingBar = document.getElementById('fixedGlobalActionsBar');
             if(existingBar) existingBar.remove();
@@ -343,6 +329,12 @@
 
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
+                    <!-- ১. শেয়ার বাটনের উপরে হুবহু কার্ট মেনু -->
+                    <div class="side-action-item" onclick="window.location.href='/cart.html'" title="Cart">
+                        <i class="fa-solid fa-cart-shopping action-pure-icon"></i>
+                        <span class="side-count-text" id="sideCartBadgeCount">0</span>
+                    </div>
+
                     <div class="side-action-item" onclick="openNativeShare(event, '${targetId}')" title="Share">
                         <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
                         <span class="side-count-text">${pShares}</span>
@@ -357,9 +349,16 @@
                     <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleHomeOrReelSave(event, this, '${targetId}')" title="Save">
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
+
+                    <!-- ২. সেভ বাটনের নিচে হুবহু ইউ (YOU) মেনু -->
+                    <div class="side-action-item" onclick="window.location.href='/account.html'" title="You">
+                        <i class="fa-solid fa-user action-pure-icon"></i>
+                        <span class="side-count-text">YOU</span>
+                    </div>
                 </div>
             `;
             document.body.insertAdjacentHTML('beforeend', actionsHtml);
+            updateCartBadgeCount();
         }
 
         window.handleHomeOrReelSave = function(e, btn, pId) {
@@ -370,7 +369,6 @@
             handleDualSaveAction(e, btn, pId);
         };
 
-        // রিলস মোডে ইনস্ট্যান্ট রূপান্তর
         function switchToReelsView(index) {
             isPinterestHomeMode = false;
             currentReelIndex = index;
@@ -388,7 +386,6 @@
             }
         }
 
-        // রিলস স্টাইল ভিউ
         function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
             const container = document.getElementById('appContainer');
@@ -434,7 +431,7 @@
 
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="openProductDetails('${pId}')">
+                    <div class="reel-media-box" onclick="openInlineProductDetailsView('${pId}')">
                         ${mediaElem}
                     </div>
 
@@ -443,6 +440,120 @@
             `;
 
             renderFixedGlobalActions(container, pId);
+        }
+
+        // ইনলাইন প্রোডাক্ট ডিটেইলস পেজ রেন্ডার ফাংশন (যেটি এই পেজেই ওপেন হবে)
+        function openInlineProductDetailsView(productId) {
+            isPinterestHomeMode = false;
+            if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
+            
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            let product = list.find(p => String(p.id || p.product_id || p.product_code) === String(productId)) || list[0];
+            if (!product) return;
+
+            const container = document.getElementById('appContainer');
+            container.className = 'ecommerce-main-wrapper';
+            
+            let priceVal = parseFloat(product.price) || 35.00;
+            let oldP = priceVal * 1.45;
+            let title = product.title || "RORRAXY RETAIL LUXURY FASHION ITEM";
+            let rawDesc = product.description || product.desc || "Crafted with precision engineering and high-grade sustainable materials.";
+            let stockNum = product.stock || 100;
+            let discountPercent = product.discount_rate || product.discountRate || 0;
+
+            let primaryImg = product.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+            
+            container.innerHTML = `
+                <div class="product-details-clean-section">
+                    <div class="product-left-col">
+                        <div class="media-viewport" id="mediaViewportContainer">
+                            <img src="${primaryImg}" class="main-media-element" alt="Product">
+                        </div>
+                    </div>
+                    <div class="product-right-col">
+                        <div class="price-discount-card">
+                            <div class="price-left-stack">
+                                <span class="int-discount-badge" style="display:${discountPercent > 0 ? 'inline-flex':'none'}">${discountPercent}% OFF</span>
+                                <div class="price-row-bottom">
+                                    <div class="current-main-price">$${priceVal.toFixed(2)}</div>
+                                    <div class="old-crossed-price">$${oldP.toFixed(2)}</div>
+                                </div>
+                            </div>
+                            <div class="price-right-qty">
+                                <span class="qty-label-mini">QUANTITY</span>
+                                <div class="qty-controls-inline">
+                                    <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
+                                    <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1">
+                                    <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stock-shipping-banner">
+                            <span class="free-shipping-text"><i class="fa-solid fa-truck-fast"></i> FREE GLOBAL FULFILLMENT</span>
+                            <span class="in-stock-clean-badge">IN STOCK: ${stockNum} UNITS - READY TO DISPATCH</span>
+                        </div>
+
+                        <div class="product-info-section-box">
+                            <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
+                            <h1 class="product-title-restricted">${title}</h1>
+                            <div class="standard-description-box">${rawDesc}</div>
+                            
+                            <div class="integrated-custom-note-group">
+                                <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM SIZE / NOTE</span>
+                                <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM SIZE / NOTE (OPTIONAL)..." value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            renderFixedGlobalActions(container, productId);
+        }
+
+        function modifyQuantity(val) {
+            let input = document.getElementById('itemQtyInputVal');
+            if(!input) return;
+            let current = parseInt(input.value) || 1;
+            current += val;
+            if(current < 1) current = 1;
+            input.value = current;
+        }
+
+        function executeQuickOrderNow(prod) {
+            if(!prod) return;
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let prodId = prod.id || prod.product_id || prod.product_code || '101';
+            let priceNum = parseFloat(prod.price) || 35.00;
+            let title = prod.title || 'RORRAXY LUXURY ITEM';
+            let imgUrl = prod.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+
+            let existing = cart.find(i => String(i.productId) === String(prodId));
+            if(existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    productId: prodId,
+                    sellerId: prod.seller_id || "SELLER-RORRAXY-01",
+                    title: title,
+                    price: `$${priceNum.toFixed(2)}`,
+                    qty: 1,
+                    size: 'STANDARD',
+                    mode: 'retail',
+                    img: imgUrl
+                });
+            }
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+            updateCartBadgeCount();
+        }
+
+        function updateCartBadgeCount() {
+            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+            let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
+            let badge = document.getElementById('footerCartItemCountBadge');
+            let sideBadge = document.getElementById('sideCartBadgeCount');
+            if(badge) badge.innerText = totalQty;
+            if(sideBadge) sideBadge.innerText = totalQty;
         }
 
         function getDynamicEngagement(productId, baseVal, type) {
@@ -578,10 +689,6 @@
                 alert('Link copied to clipboard!');
             }
         };
-
-        function openProductDetails(productId) {
-            window.location.href = `pd.html?id=${productId}`;
-        }
     </script>
 
     <style>
@@ -606,7 +713,7 @@
             scroll-behavior: smooth;
         }
         
-        body { margin: 0; padding: 0 0 65px 0; text-transform: uppercase !important; }
+        body { margin: 0; padding: 0 0 75px 0; text-transform: uppercase !important; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         /* Top Floating Search Bar Overlay */
@@ -631,9 +738,9 @@
 
         /* Bottom Navigation Bar */
         .bottom-nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
-            background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border-top: none !important;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
+            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
             display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 4px;
         }
         .bottom-nav-item {
@@ -700,12 +807,12 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
 
-        /* কোনো ব্যাকগ্রাউন্ড শেপ ছাড়া সরাসরি ছবি/ভিডিওর ওপর প্রাইস ও ডিসকাউন্ট টেক্সট */
+        /* কোনো ব্যাকগ্রাউন্ড শেপ ছাড়া সরাসরি ছবি/ভিডিওর ওপর স্পষ্ট প্রাইস ও ডিসকাউন্ট টেক্সট */
         .direct-price-overlay {
             position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
             z-index: 40; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             white-space: nowrap; width: auto; max-width: 95%; pointer-events: none;
-            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.95));
+            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.95));
         }
         .direct-price-text { 
             font-size: 0.95rem; font-weight: 800; color: #fcf6ba;
@@ -718,32 +825,32 @@
         }
 
         /* Full Reels View Styles */
-        .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
+        .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 68px); height: calc(100dvh - 68px); position: relative; background: #000; overflow: hidden; }
         .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
         .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
         
-        /* সম্পূর্ণ ভাসমান ডানপাশের অ্যাকশন বার */
+        /* সম্পূর্ণ ভাসমান ডানপাশের অ্যাকশন বার (বড় সাইজ ও সুবিন্যস্ত) */
         .right-vertical-actions {
-            position: fixed; right: 10px; bottom: 80px; z-index: 100;
-            display: flex; flex-direction: column; align-items: center; gap: 16px;
+            position: fixed; right: 12px; bottom: 85px; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; gap: 18px;
             pointer-events: auto;
         }
         .side-action-item { 
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; transition: transform 0.2s ease;
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 3px; transition: transform 0.2s ease;
             background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
             padding: 0 !important; width: auto !important; height: auto !important;
         }
         .side-action-item:active { transform: scale(0.85); }
         .action-pure-icon { 
-            font-size: 1.5rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
+            font-size: 1.85rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.95));
         }
         .share-flip { transform: scaleX(-1); }
         .side-count-text { 
-            font-size: 0.68rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; 
-            text-shadow: 0px 2px 4px rgba(0,0,0,0.9);
+            font-size: 0.72rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; 
+            text-shadow: 0px 2px 5px rgba(0,0,0,0.95);
         }
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
@@ -793,6 +900,36 @@
         .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 5px; }
         .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .fs-stats-pill { font-size: 0.7rem; color: #a0a0ab; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 12px; }
+
+        /* ইনলাইন ডিটেইলস পেজ স্টাইল */
+        .ecommerce-main-wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 15px 12px 60px 12px; display: flex; flex-direction: column; gap: 20px; }
+        .product-details-clean-section { width: 100%; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
+        @media(min-width: 950px) { .product-details-clean-section { grid-template-columns: 1.2fr 0.8fr; gap: 40px; } }
+        .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+        .media-viewport { width: 100%; position: relative; border-radius: 16px; overflow: hidden; background: #050508; display: flex; align-items: center; justify-content: center; min-height: 320px; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .main-media-element { width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block; background: #000; }
+        .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+        .price-discount-card { padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04); }
+        .price-left-stack { display: flex; flex-direction: column; gap: 6px; }
+        .int-discount-badge { background: #ff2a85; color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; display: inline-flex; width: max-content; }
+        .price-row-bottom { display: flex; align-items: baseline; gap: 10px; }
+        .current-main-price { font-size: 1.45rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .old-crossed-price { font-size: 0.8rem; font-weight: 600; color: var(--text-gray); text-decoration: line-through; }
+        .price-right-qty { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .qty-label-mini { font-size: 0.60rem; font-weight: 700; color: var(--gold-solid); }
+        .qty-controls-inline { display: flex; align-items: center; gap: 6px; background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 20px; padding: 3px 6px; }
+        .qty-btn-ch { background: var(--gold-gradient); border: none; color: #000; font-size: 0.85rem; font-weight: 800; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .qty-num-input { font-size: 0.95rem; font-weight: 800; color: #ffffff; width: 35px; text-align: center; background: transparent; border: none; outline: none; }
+        .stock-shipping-banner { padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04); }
+        .free-shipping-text { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .in-stock-clean-badge { font-size: 0.75rem; font-weight: 700; color: #00e676; }
+        .product-info-section-box { display: flex; flex-direction: column; gap: 14px; padding: 18px 20px; background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04); }
+        .section-box-title { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); }
+        .product-title-restricted { font-size: 1.2rem; font-weight: 700; line-height: 1.45; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .standard-description-box { font-size: 0.75rem; color: var(--text-gray); line-height: 1.7; text-transform: none !important; }
+        .integrated-custom-note-group { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px; }
+        .integrated-note-label { font-size: 0.65rem; font-weight: 600; color: var(--gold-solid); }
+        .custom-note-input { width: 100%; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; color: #ffffff; font-size: 0.72rem; outline: none; text-transform: uppercase; }
     </style>
 </head>
 <body id="mainBody">
