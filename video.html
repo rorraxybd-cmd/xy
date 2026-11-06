@@ -93,7 +93,7 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
-        /* Pinterest Style Home Grid (কালো ব্যাকগ্রাউন্ড রিমুভড, ছবি বড় ও স্পষ্ট)[cite: 14] */
+        /* Pinterest Style Home Grid (কোনো বিশ্রী শেপ ছাড়া একদম ক্লিন ও স্পষ্ট প্রাইস)[cite: 14] */
         .pinterest-feed-container {
             padding: 8px 6px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
         }
@@ -116,14 +116,11 @@
             padding: 3px 7px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
 
-        /* ছবির ওপর স্বচ্ছ ও স্মুথ প্রাইস ট্যাগ[cite: 14] */
-        .card-transparent-price-overlay {
+        /* ছবির ওপর একদম স্মুথ ও ক্লিন প্রাইস ট্যাগ (কোনো বাড়তি শেপ ছাড়া)[cite: 14] */
+        .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
-            padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.4);
-        }
-        .card-transparent-price-text { 
-            font-size: 0.85rem; font-weight: 800;
+            background: rgba(0, 0, 0, 0.85); padding: 3px 8px; border-radius: 8px;
+            font-size: 0.82rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
@@ -134,7 +131,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার */
+        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 15] */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -149,6 +146,13 @@
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
+        /* Pink Badge Counter for Cart */
+        .cart-pink-badge {
+            position: absolute; top: -6px; right: -8px; background: var(--pink-accent); color: #fff;
+            font-size: 0.55rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
+        }
+
         /* Overlays & Modals */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
@@ -156,10 +160,10 @@
             z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* বাই প্রিভিউ মডাল পপআপ - হরিজন্টাল স্ক্রল সিস্টেম[cite: 14] */
+        /* ফিক্সড অর্ডার নাও / ভ্যারিয়েন্ট প্রিভিউ পপআপ (অতিরিক্ত লেখা ছাড়া শুধু কনফার্ম)[cite: 14] */
         .buy-preview-modal {
-            width: 90%; max-width: 380px; background: #0c0c14; border: 1.5px solid var(--gold-solid);
-            border-radius: 16px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 12px;
+            width: 92%; max-width: 360px; background: #0c0c14; border: 1.5px solid var(--gold-solid);
+            border-radius: 16px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.9);
         }
         .preview-horizontal-scroll {
@@ -182,6 +186,13 @@
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
             box-shadow: 0 0 15px rgba(212,175,55,0.8);
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
+        }
+
+        /* ইন-পেজ ডিটেইলস পপআপ ওভারলে (আলাদা পেজে না গিয়ে সরাসরি এই পেজেই দেখানোর জন্য) */
+        .inpage-details-modal {
+            width: 92%; max-width: 480px; max-height: 85vh; background: #08080c; border: 1.5px solid var(--gold-solid);
+            border-radius: 16px; padding: 20px; margin: auto; display: flex; flex-direction: column; gap: 14px;
+            overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.9);
         }
 
         /* ক্যাটাগরি ও সেভ গ্যালারি ওভারলে মেনু */
@@ -245,9 +256,14 @@
         <div class="seller-fullscreen-container" id="savedGalleryBody"></div>
     </div>
 
-    <!-- Buy Variant Preview Modal (হরিজন্টাল স্ক্রল সহ)[cite: 14] -->
+    <!-- Buy Variant Preview Modal (শুধুমাত্র কনফার্ম বাটনসহ ক্লিন ডিজাইন)[cite: 14] -->
     <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()">
         <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
+    </div>
+
+    <!-- In-Page Details Modal (আলাদা পেজে না গিয়ে এই পেজেই ডিটেইলস দেখানোর জন্য) -->
+    <div id="inpageDetailsOverlay" class="overlay-sheet" onclick="if(event.target===this) closeInpageDetails()">
+        <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
     </div>
 
     <!-- Category Transparent Overlay Menu -->
@@ -319,8 +335,7 @@
                     let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                     if(list.length > 0) {
                         let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
-                        let pId = targetProd.id || targetProd.product_id || '101';
-                        window.location.href = `pd.html?id=${pId}`;
+                        openInpageDetailsModal(targetProd);
                     }
                 });
             }
@@ -480,9 +495,7 @@
                     <div class="product-media-box">
                         ${discountBadge}
                         <img src="${resolvedImageUrl}" alt="${title}" loading="lazy">
-                        <div class="card-transparent-price-overlay">
-                            <span class="card-transparent-price-text">${price}</span>
-                        </div>
+                        <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
                 fragment.appendChild(cardDiv);
@@ -509,7 +522,7 @@
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
                     <div class="side-action-item" onclick="window.location.href='/cart.html'" title="Cart">
                         <i class="fa-solid fa-cart-shopping action-pure-icon"></i>
-                        <span class="side-count-text" id="sideCartBadgeCount">0</span>
+                        <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
 
                     <div class="side-action-item" onclick="openNativeShare(event, '${targetId}')" title="Share">
@@ -592,16 +605,69 @@
 
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="window.location.href='pd.html?id=${pId}'">
+                    <div class="reel-media-box" onclick="openInpageDetailsModal(${JSON.stringify(product).replace(/"/g, '&quot;')})">
                         ${discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : ''}
                         ${mediaElem}
+                        <div class="card-clean-price-badge">${price}</div>
                     </div>
                 </div>
             `;
             renderFixedGlobalActions(container, pId);
         }
 
-        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (হরিজন্টাল স্ক্রল সহ)[cite: 14] --- */
+        /* --- ইন-পেজ ডিটেইলস পপআপ রেন্ডার ফাংশন --- */
+        function openInpageDetailsModal(product) {
+            const overlay = document.getElementById('inpageDetailsOverlay');
+            const content = document.getElementById('inpageDetailsModalContent');
+            if(!product) return;
+
+            let title = product.title || 'RORRAXY LUXURY PRODUCT';
+            let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$35.00';
+            let desc = product.description || product.desc || 'Crafted with precision engineering and high-grade sustainable materials.';
+            let stock = product.stock || 500;
+
+            let images = [];
+            try {
+                if(product.images_json) {
+                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                    if(Array.isArray(parsed)) images = parsed;
+                } else if(product.image_url) images = [product.image_url];
+            } catch(e){}
+            if(images.length === 0) images = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+            selectedVariantImg = images[0];
+
+            let imgsHtml = images.map((img, i) => `
+                <div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')">
+                    <img src="${img}">
+                </div>
+            `).join('');
+
+            content.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">PRODUCT SPECIFICATIONS & DETAILS</span>
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
+                </div>
+                <div class="preview-horizontal-scroll">${imgsHtml}</div>
+                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">${title}</h3>
+                <div style="font-size:1.1rem; font-weight:800; color:var(--gold-solid);">${price}</div>
+                <div style="font-size:0.72rem; color:var(--text-gray); line-height:1.6; text-transform:none !important;">${desc}</div>
+                <div style="font-size:0.7rem; font-weight:700; color:#00e676;"><i class="fa-solid fa-circle" style="font-size:6px;"></i> IN STOCK: ${stock} UNITS - READY TO DISPATCH</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <span style="font-size:0.65rem; font-weight:600; color:var(--gold-solid);">CUSTOM NOTE / SIZE (OPTIONAL)</span>
+                    <input type="text" id="inpageCustomNoteInput" placeholder="ENTER NOTE..." style="background:#040407; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase;">
+                </div>
+                <button onclick="confirmAddToCartFromDetails(event, '${product.id||product.product_id||'101'}', '${title.replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%;">
+                    ORDER NOW (CONFIRM)
+                </button>
+            `;
+            overlay.style.display = 'flex';
+        }
+
+        function closeInpageDetails() {
+            document.getElementById('inpageDetailsOverlay').style.display = 'none';
+        }
+
+        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (শুধুমাত্র কনফার্ম বাটনসহ)[cite: 14] --- */
         function openBuyPreviewModal(product, event) {
             const overlay = document.getElementById('buyPreviewOverlay');
             const content = document.getElementById('buyPreviewModalContent');
@@ -630,7 +696,7 @@
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
                 <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${product.title||'Item'}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%;">
-                    ORDER NOW (CONFIRM)
+                    CONFIRM
                 </button>
             `;
             overlay.style.display = 'flex';
@@ -670,7 +736,6 @@
         }
 
         function triggerCoinDropAnimation(e) {
-            const cartBtn = document.getElementById('sideCartBadgeCount') ? document.getElementById('fixedGlobalActionsBar') : null;
             let targetX = window.innerWidth - 40;
             let targetY = window.innerHeight - 150;
 
@@ -717,6 +782,32 @@
             updateCartBadgeCount();
             triggerCoinDropAnimation(e);
             closeBuyPreview();
+        }
+
+        function confirmAddToCartFromDetails(e, pId, title, price) {
+            let noteInput = document.getElementById('inpageCustomNoteInput');
+            let customNote = noteInput && noteInput.value.trim() !== '' ? noteInput.value.trim() : 'STANDARD';
+            
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && i.size === customNote);
+
+            if(existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    productId: pId,
+                    title: title,
+                    price: `$${parseFloat(price).toFixed(2)}`,
+                    qty: 1,
+                    size: customNote,
+                    img: selectedVariantImg
+                });
+            }
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+            updateCartBadgeCount();
+            triggerCoinDropAnimation(e);
+            closeInpageDetails();
         }
 
         function updateCartBadgeCount() {
