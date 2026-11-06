@@ -57,8 +57,9 @@
             
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
-            const searchInput = document.getElementById('topHomeSearchInput');
-            const searchBtn = document.getElementById('topHomeSearchBtn');
+            const floatingSearchContainer = document.getElementById('floatingSearchContainer');
+            const searchInput = document.getElementById('floatingSearchInput');
+            const searchBtn = document.getElementById('floatingSearchBtn');
 
             // 1. WORLD Click
             if(bottomWorldBtn) {
@@ -76,6 +77,7 @@
                         categoryTransparentOverlay.style.display = 'none';
                     } else {
                         if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
+                        if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
                         categoryTransparentOverlay.style.display = 'flex';
                     }
                 });
@@ -113,6 +115,22 @@
                 });
             }
 
+            // Toggle Search Bar Overlay
+            window.toggleSearchOverlay = function(e) {
+                if(e) e.stopPropagation();
+                if(floatingSearchContainer) {
+                    const isVisible = floatingSearchContainer.style.display === 'flex';
+                    if (isVisible) {
+                        floatingSearchContainer.style.display = 'none';
+                    } else {
+                        if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
+                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
+                        floatingSearchContainer.style.display = 'flex';
+                        if(searchInput) searchInput.focus();
+                    }
+                }
+            };
+
             // Outside Click Listener
             window.addEventListener('click', (e) => {
                 if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
@@ -125,12 +143,17 @@
                         savedGalleryOverlay.style.display = 'none';
                     }
                 }
+                if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
+                    if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('.search-action-btn')) {
+                        floatingSearchContainer.style.display = 'none';
+                    }
+                }
             });
 
             if(searchBtn && searchInput) {
-                searchBtn.addEventListener('click', () => { executeHomeSearch(searchInput.value); });
-                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHomeSearch(searchInput.value); });
-                searchInput.addEventListener('input', (e) => { executeHomeSearch(e.target.value); });
+                searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
+                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
+                searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
 
             // Keyboard navigation for reels view
@@ -190,7 +213,7 @@
             } catch (error) {}
         }
 
-        function executeHomeSearch(keyword) {
+        function executeHeaderSearch(keyword) {
             let query = keyword.toLowerCase().trim();
             if (!query) {
                 activeProductList = globalMasterProductsList;
@@ -205,6 +228,7 @@
             });
             activeProductList = filtered;
             if(isPinterestHomeMode) renderPinterestHomeGrid(filtered);
+            document.getElementById('floatingSearchContainer').style.display = 'none';
         }
 
         function filterProductsByCategory(queryKey) {
@@ -239,35 +263,14 @@
             }
         }
 
-        // Pinterest হোম গ্রিড রেন্ডারিং (উপরে কোনো ডিসকাউন্ট কার্ড বা অতিরিক্ত কালো জায়গা ছাড়াই)
+        // Pinterest হোম গ্রিড রেন্ডারিং (প্রাইস ও ডিসকাউন্ট ওভারলে সহ, নিচের কালো ফুটার সম্পূর্ণ বাদ)
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             container.className = 'pinterest-feed-container';
-            
-            let htmlContent = `
-                <div class="top-home-search-wrapper">
-                    <div class="top-home-search-bar">
-                        <input type="text" id="topHomeSearchInput" class="top-home-search-input" placeholder="SEARCH PRODUCTS..." value="">
-                        <button id="topHomeSearchBtn" class="top-home-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
-                </div>
-                <div class="feed-grid-masonry" id="pinterestGridMasonry"></div>
-            `;
-            container.innerHTML = htmlContent;
-
-            const sInput = document.getElementById('topHomeSearchInput');
-            const sBtn = document.getElementById('topHomeSearchBtn');
-            if(sInput && sBtn) {
-                sBtn.addEventListener('click', () => executeHomeSearch(sInput.value));
-                sInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHomeSearch(sInput.value); });
-                sInput.addEventListener('input', (e) => { executeHomeSearch(e.target.value); });
-            }
-
-            const masonryContainer = document.getElementById('pinterestGridMasonry');
             const fragment = document.createDocumentFragment();
 
             if (!products || products.length === 0) {
-                masonryContainer.innerHTML = `
+                container.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--text-gray);">
                         <i class="fa-solid fa-box-open fa-2x" style="color:var(--gold-solid);"></i>
                         <p style="margin-top: 10px; font-size: 0.75rem;">NO PRODUCTS MATCHED.</p>
@@ -280,10 +283,6 @@
                 const title = item.title || 'rorraxy Luxury Item';
                 const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
                 
-                const defaultRandomLikes = [300, 400, 500, 1000, 1200, 1500, 2000, 5000];
-                const randomSeed = Math.abs(productId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
-                const initialLikes = item.like_count || defaultRandomLikes[randomSeed % defaultRandomLikes.length];
-
                 const discountPercent = item.discount_rate || item.discountRate || 0;
                 const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
                 const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
@@ -291,10 +290,19 @@
                 let discountBadgeHtml = '';
                 if (discountPercent && discountPercent > 0) {
                     discountBadgeHtml = `
-                        <span class="int-discount-badge">
-                            <img class="country-flag-icon" src="${flagUrl}" alt="Flag">
-                            <span>${discountPercent}% OFF</span>
-                        </span>
+                        <div class="card-bottom-price-offer-box">
+                            <span class="product-price-tag">${price}</span>
+                            <div class="reel-bottom-discount-badge">
+                                <img src="${flagUrl}" class="country-flag-icon" alt="Flag">
+                                <span>${discountPercent}% OFF</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    discountBadgeHtml = `
+                        <div class="card-bottom-price-offer-box">
+                            <span class="product-price-tag">${price}</span>
+                        </div>
                     `;
                 }
 
@@ -314,26 +322,15 @@
 
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
-                        ${discountBadgeHtml}
                         <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
-                    </div>
-                    <div class="card-footer-actions" onclick="event.stopPropagation()">
-                        <span class="product-price-tag">${price}</span>
-                        <div class="card-sub-actions">
-                            <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
-                                <i class="fa-solid fa-heart"></i> <span class="love-count">${initialLikes}</span>
-                            </div>
-                            <button class="share-icon-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')" title="Share">
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </button>
-                        </div>
+                        ${discountBadgeHtml}
                     </div>
                 `;
                 fragment.appendChild(cardDiv);
             });
 
-            masonryContainer.innerHTML = '';
-            masonryContainer.appendChild(fragment);
+            container.innerHTML = '';
+            container.appendChild(fragment);
         }
 
         // রিলস মোডে রূপান্তর
@@ -354,7 +351,7 @@
             }
         }
 
-        // রিলস স্টাইল সিঙ্গেল ভিউ ও স্লাইডশো রেন্ডারিং (প্রাইস আগে এবং পরে ডিসকাউন্ট সহকারে নিচে সাজানো)
+        // রিলস স্টাইল সিঙ্গেল ভিউ ও স্লাইডশো রেন্ডারিং
         function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
             const container = document.getElementById('appContainer');
@@ -441,7 +438,6 @@
                         </div>
                     </div>
 
-                    <!-- একদম নিচে প্রাইস প্রথমে এবং তার পরে ডিসকাউন্ট -->
                     <div class="center-price-offer-box">
                         <span class="reel-price-txt">${pPrice}</span>
                         ${discountBadgeHtml}
@@ -587,40 +583,6 @@
         function openProductDetails(productId) {
             window.location.href = `pd.html?id=${productId}`;
         }
-
-        async function toggleLove(event, btn, productId) {
-            event.stopPropagation();
-            let countSpan = btn.querySelector('.love-count');
-            let currentLikes = parseInt(countSpan.innerText);
-            if(btn.classList.contains('gold-active')) {
-                btn.classList.remove('gold-active');
-                countSpan.innerText = currentLikes - 1;
-            } else {
-                btn.classList.add('gold-active');
-                countSpan.innerText = currentLikes + 1;
-                try {
-                    await fetch(`/api/products`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ product_code: productId })
-                    });
-                } catch (err) {}
-            }
-        }
-
-        async function triggerAutoShare(event, productId, productTitle) {
-            event.stopPropagation();
-            const shareUrl = `${window.location.origin}/pd.html?id=${productId}`;
-            if (navigator.share) {
-                try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
-            } else if (navigator.clipboard) {
-                await navigator.clipboard.writeText(shareUrl);
-                const btn = event.currentTarget;
-                const origIcon = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
-                setTimeout(() => { btn.innerHTML = origIcon; }, 1500);
-            }
-        }
     </script>
 
     <style>
@@ -648,27 +610,25 @@
         body { margin: 0; padding: 0 0 65px 0; text-transform: uppercase !important; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* Top Home Search Bar Wrapper */
-        .top-home-search-wrapper {
-            width: 100%; padding: 16px 12px 10px 12px; display: flex; justify-content: center; z-index: 1000;
+        /* Top Floating Search Bar Overlay */
+        .top-floating-search-bar {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; z-index: 1800; display: none;
+            align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
+            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
         }
-        .top-home-search-bar {
-            width: 100%; max-width: 500px; display: flex; align-items: center; 
-            background: #090a0f; border: 1.5px solid #6b5523; border-radius: 40px; 
-            padding: 4px 6px 4px 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-        }
-        .top-home-search-input {
+        .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
             color: #ffffff; font-size: 0.85rem; font-family: var(--font-main); letter-spacing: 0.5px;
         }
-        .top-home-search-input::placeholder { color: #7a7a85; }
-        .top-home-search-btn {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient);
+        .floating-search-input::placeholder { color: #7a7a85; }
+        .floating-search-btn-circle {
+            width: 38px; height: 38px; border-radius: 50%; background: var(--gold-gradient);
             border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #000; font-size: 0.9rem; box-shadow: 0 2px 10px rgba(212,175,55,0.4);
+            cursor: pointer; color: #000; font-size: 0.95rem; box-shadow: 0 2px 10px rgba(212,175,55,0.4);
             transition: transform 0.2s ease;
         }
-        .top-home-search-btn:active { transform: scale(0.9); }
+        .floating-search-btn-circle:active { transform: scale(0.9); }
 
         /* Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) */
         .bottom-nav-bar {
@@ -696,17 +656,16 @@
 
         /* Pinterest Style Feed Container */
         .pinterest-feed-container {
-            width: 100%; max-width: 1400px; margin: 0 auto; padding-bottom: 20px;
-        }
-        .feed-grid-masonry {
             padding: 8px 6px; 
             column-count: 2;
             column-gap: 8px;
             width: 100%; 
+            max-width: 1400px; 
+            margin: 0 auto;
             contain: layout style paint;
         }
         @media (min-width: 768px) { 
-            .feed-grid-masonry { 
+            .pinterest-feed-container { 
                 column-count: 4;
                 column-gap: 14px; 
                 padding: 12px; 
@@ -742,35 +701,21 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
 
-        .int-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 99;
-            background: var(--pink-accent); color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 4px 10px;
-            border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; width: max-content;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        /* কার্ডের নিচে ওভারলে প্রাইস ও ডিসকাউন্ট বাটন */
+        .card-bottom-price-offer-box {
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            z-index: 40; display: flex; align-items: center; gap: 8px;
+            background: rgba(10, 10, 14, 0.90); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 4px 12px; border-radius: 25px; white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6); border: 1px solid rgba(212,175,55,0.25);
         }
-        .country-flag-icon { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
-
-        .card-footer-actions { 
-            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px;
-            white-space: nowrap; overflow: hidden;
-        }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-sub-actions { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+        .product-price-tag { font-size: 0.78rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .love-action { 
-            display: flex; align-items: center; gap: 5px; cursor: pointer; 
-            font-size: 0.78rem; font-weight: 600; color: var(--text-gray) !important; padding: 4px;
+        .reel-bottom-discount-badge {
+            background: var(--pink-accent); color: #fff; padding: 2px 8px; border-radius: 12px;
+            font-size: 0.58rem; font-weight: 700; display: flex; align-items: center; gap: 4px;
         }
-        .love-action i { color: var(--pink-accent); font-size: 1rem; }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .share-icon-btn { 
-            background: none; border: none; cursor: pointer; 
-            font-size: 1.15rem; background: var(--gold-gradient); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            padding: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
+        .country-flag-icon { width: 14px; height: 10px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
 
         /* Full Reels View Styles (9:16 Optimized for Mobile & Desktop) */
         .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
@@ -802,7 +747,6 @@
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
-        /* প্রাইস প্রথমে এবং ডিসকাউন্ট ব্যাচ ঠিক তার পরে নিচে একসাথে সুন্দরভাবে সেট করা */
         .center-price-offer-box {
             position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
             z-index: 40; display: flex; align-items: center; gap: 10px;
@@ -812,10 +756,6 @@
         }
         .reel-price-txt {
             font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .reel-bottom-discount-badge {
-            background: var(--pink-accent); color: #fff; padding: 3px 10px; border-radius: 14px;
-            font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 5px;
         }
 
         /* Overlays */
@@ -865,6 +805,12 @@
     </style>
 </head>
 <body id="mainBody">
+
+    <!-- Top Floating Search Bar Overlay -->
+    <div id="floatingSearchContainer" class="top-floating-search-bar">
+        <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
+        <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
 
     <!-- Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) -->
     <nav class="bottom-nav-bar">
