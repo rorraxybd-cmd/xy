@@ -51,10 +51,10 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        body { margin: 0; padding: 0 0 75px 0; text-transform: uppercase !important; }
+        body { margin: 0; padding: 0 0 75px 0; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* সফট এনিমেশন ক্লাস (প্রিন্টারেস্ট ফিডের জন্য) */
+        /* সফট এনিমেশন ক্লাস */
         @keyframes softFadeInUp {
             from { opacity: 0; transform: translateY(18px); }
             to { opacity: 1; transform: translateY(0); }
@@ -72,7 +72,7 @@
         }
         .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
-            color: #ffffff; font-size: 0.85rem; font-family: var(--font-main); letter-spacing: 0.5px;
+            color: #ffffff; font-size: 0.85rem; font-family: var(--font-main);
         }
         .floating-search-input::placeholder { color: #7a7a85; }
         .floating-search-btn-circle {
@@ -81,7 +81,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (৫টি নির্দিষ্ট ফুটার মেনু)[cite: 14] */
+        /* Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -96,9 +96,11 @@
         .bottom-nav-item:hover { transform: translateY(-2px); }
         .bottom-nav-item i { 
             font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
         .bottom-nav-item span { 
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
@@ -120,16 +122,17 @@
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
         .corner-discount-badge {
-            position: absolute; top: 6px; left: 6px; z-index: 45;
+            position: absolute; top: 8px; left: 8px; z-index: 45;
             background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
-            padding: 3px 7px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.85); padding: 3px 8px; border-radius: 8px;
-            font-size: 0.82rem; font-weight: 800;
+            background: rgba(0, 0, 0, 0.82); padding: 4px 10px; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
         }
 
         /* Full Reels View */
@@ -139,7 +142,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 15] */
+        /* ডানপাশের ভাসমান অ্যাকশন বার */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -150,7 +153,10 @@
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
         }
-        .side-count-text { font-size: 0.65rem; font-weight: 700; color: #ffffff; letter-spacing: 0.3px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
+        .side-count-text { 
+            font-size: 0.65rem; font-weight: 700; color: #ffffff; letter-spacing: 0.3px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9); 
+        }
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
@@ -163,16 +169,16 @@
         /* ট্রান্সপারেন্ট ওভারলে এবং পপআপ স্টাইল */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
             z-index: 3000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* গোল্ডেন গ্রাডিয়েন্ট বর্ডারযুক্ত প্রিভিউ মডাল */
+        /* অর্ডার নাও প্রিভিউ মডাল */
         .buy-preview-modal {
-            width: 92%; max-width: 360px; background: rgba(12, 12, 20, 0.95); border: 1.5px solid var(--gold-solid);
+            width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.96); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
         }
         .preview-horizontal-scroll {
             display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory;
@@ -187,7 +193,7 @@
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ফ্লায়িং গোল্ডেন কয়েন অ্যানিমেশন[cite: 14] */
+        /* ফ্লায়িং গোল্ডেন কয়েন অ্যানিমেশন (নিখুঁত কার্ট টার্গেটসহ)[cite: 14] */
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
@@ -196,29 +202,29 @@
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল */
+        /* ইন-পেজ ডিটেইলস পপআপ মডাল (ক্লাসিক ও লাক্সারি ডিজাইন) */
         .inpage-details-modal {
-            width: 92%; max-width: 440px; max-height: 82vh; background: rgba(8, 8, 14, 0.96); border: 1.5px solid var(--gold-solid);
+            width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 20px; margin: auto; display: flex; flex-direction: column; gap: 14px;
-            overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.9); backdrop-filter: blur(12px);
+            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
         /* ক্যাটাগরি ও সেভ গ্যালারি ওভারলে মেনু */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.55) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important;
+            background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important;
             z-index: 3500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
-        .accordion-category-box { background: rgba(10, 10, 15, 0.92) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
+        .accordion-category-box { background: rgba(10, 10, 15, 0.95) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
         .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
-        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
         .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
 
@@ -233,13 +239,13 @@
         .sub-cat-item:active { transform: scale(0.96); }
         .sub-cat-item:hover { background: rgba(25, 25, 35, 1); border-color: rgba(212, 175, 55, 0.6); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
+        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
         .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; border: 1px solid rgba(212,175,55,0.2); }
         .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 5px; }
-        .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body id="mainBody">
@@ -250,7 +256,7 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (৫টি নির্দিষ্ট ফুটার মেনু)[cite: 14] -->
+    <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -264,12 +270,12 @@
         <div class="seller-fullscreen-container" id="savedGalleryBody"></div>
     </div>
 
-    <!-- Buy Variant Preview Modal (স্বচ্ছ ব্যাকগ্রাউন্ড ও কনফার্ম বাটন)[cite: 14] -->
+    <!-- Buy Variant Preview Modal -->
     <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()">
         <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
     </div>
 
-    <!-- In-Page Details Modal (স্বচ্ছ ব্যাকগ্রাউন্ডসহ ইন-পেজ পপআপ) -->
+    <!-- In-Page Details Modal -->
     <div id="inpageDetailsOverlay" class="overlay-sheet" onclick="if(event.target===this) closeInpageDetails()">
         <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
     </div>
@@ -285,7 +291,7 @@
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 10px; font-size: 0.75rem;">LOADING RORRAXY PRODUCTS...</p>
+            <p style="margin-top: 10px; font-size: 0.75rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">LOADING RORRAXY PRODUCTS...</p>
         </div>
     </main>
 
@@ -298,6 +304,7 @@
         let slideInterval = null;
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
+        let currentProductQty = 1;
 
         window.addEventListener('DOMContentLoaded', () => {
             buildCategoriesUI();
@@ -482,7 +489,7 @@
             const fragment = document.createDocumentFragment();
 
             products.forEach((item, index) => {
-                const title = item.title || 'rorraxy Luxury Item';
+                const title = item.title || 'rorraxy luxury item';
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 try {
                     if (item.images_json) {
@@ -498,7 +505,6 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
                 cardDiv.style.animationDelay = `${(index % 10) * 0.04}s`;
-                // পিন্টারেস্ট মোডে যেকোনো জায়গায় ক্লিক করলে রিলস ভিউতে চলে যাবে
                 cardDiv.onclick = () => switchToReelsView(index);
 
                 cardDiv.innerHTML = `
@@ -531,7 +537,7 @@
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
                     <div class="side-action-item" onclick="window.location.href='/cart.html'" title="Cart">
-                        <i class="fa-solid fa-cart-shopping action-pure-icon"></i>
+                        <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
                         <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
 
@@ -560,7 +566,6 @@
             updateCartBadgeCount();
         }
 
-        /* পিন্টারেস্ট মোডে সাইড বার বা অন্যান্য বাটনে ক্লিক করলে রিলসে নিয়ে যাওয়ার লজিক */
         function handlePinterestInterception(event, actionType, targetId) {
             event.stopPropagation();
             if (isPinterestHomeMode) {
@@ -656,10 +661,16 @@
             const content = document.getElementById('inpageDetailsModalContent');
             if(!product) return;
 
-            let title = product.title || 'RORRAXY LUXURY PRODUCT';
-            let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$35.00';
-            let desc = product.description || product.desc || 'Crafted with precision engineering and high-grade sustainable materials.';
+            let rawTitle = product.title || 'luxury designer piece';
+            let title = rawTitle.toLowerCase();
+            let priceNum = parseFloat(product.price || 35.00);
+            let marketPriceNum = (priceNum * 1.35).toFixed(2);
+            let price = `$${priceNum.toFixed(2)}`;
+            let marketPrice = `$${marketPriceNum}`;
+            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
+            let desc = product.description || product.desc || 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
             let stock = product.stock || 500;
+            currentProductQty = 1;
 
             let images = [];
             try {
@@ -679,30 +690,72 @@
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
-                    <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">PRODUCT SPECIFICATIONS & DETAILS</span>
+                    <span style="font-size:0.72rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 2px rgba(0,0,0,0.8);">product specification & details</span>
                     <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">${title}</h3>
-                <div style="font-size:1.1rem; font-weight:800; color:var(--gold-solid);">${price}</div>
-                <div style="font-size:0.72rem; color:var(--text-gray); line-height:1.6; text-transform:none !important;">${desc}</div>
-                <div style="font-size:0.7rem; font-weight:700; color:#00e676;"><i class="fa-solid fa-circle" style="font-size:6px;"></i> IN STOCK: ${stock} UNITS - READY TO DISPATCH</div>
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                    <span style="font-size:0.65rem; font-weight:600; color:var(--gold-solid);">CUSTOM NOTE / SIZE (OPTIONAL)</span>
-                    <input type="text" id="inpageCustomNoteInput" placeholder="ENTER NOTE..." style="background:#040407; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase;">
+                
+                <!-- প্রাইস ও ডিসকাউন্ট সেকশন -->
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <span style="font-size:1.2rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
+                    <span style="font-size:0.85rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
+                    <span style="background:var(--pink-accent); color:#fff; font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:4px;">${discountPercent}% OFF</span>
                 </div>
-                <button onclick="confirmAddToCartFromDetails(event, '${product.id||product.product_id||'101'}', '${title.replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%;">
+
+                <!-- টাইটেল (ছোট হাতের ক্লাসিক ফন্ট) -->
+                <h3 style="font-size:0.92rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
+                
+                <!-- ফ্রি শিপিং ও স্টক স্ট্যাটাস -->
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; font-weight:700;">
+                    <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free worldwide shipping</span>
+                    <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
+                </div>
+
+                <!-- কোয়ান্টিটি কমা ও বাড়ানো অপশন -->
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
+                    <span style="font-size:0.7rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">quantity</span>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(255,255,255,0.2); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
+                        <span id="detailQtyDisplay" style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">1</span>
+                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(255,255,255,0.2); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">+</button>
+                    </div>
+                </div>
+
+                <!-- ডেসক্রিপশন প্যারাগ্রাফ (ম্যাটেরিয়াল ও সাইজ সহ) -->
+                <div style="font-size:0.72rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
+                    ${desc}
+                </div>
+
+                <!-- কাস্টম নোট ইনপুট বক্স ও টিক চিহ্ন অপশন -->
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.65rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">custom note / size (optional)</span>
+                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-size:0.65rem; color:var(--gold-solid);">
+                            <input type="checkbox" id="noteCheckbox" checked style="accent-color:var(--pink-accent);"> save note
+                        </label>
+                    </div>
+                    <input type="text" id="inpageCustomNoteInput" placeholder="ENTER SIZE, COLOR OR CUSTOM INSTRUCTIONS..." style="background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase;">
+                </div>
+
+                <button onclick="confirmAddToCartFromDetails(event, '${product.id||product.product_id||'101'}', '${title.replace(/'/g, "\\'")}', ${priceNum})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM
                 </button>
             `;
             overlay.style.display = 'flex';
         }
 
+        function adjustDetailQty(amount) {
+            currentProductQty += amount;
+            if (currentProductQty < 1) currentProductQty = 1;
+            let disp = document.getElementById('detailQtyDisplay');
+            if (disp) disp.innerText = currentProductQty;
+        }
+
         function closeInpageDetails() {
             document.getElementById('inpageDetailsOverlay').style.display = 'none';
         }
 
-        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (ক্লিন কনফার্ম বাটনসহ)[cite: 14] --- */
+        /* --- অর্ডার নাও প্রিভিউ পপআপ (ক্লিন কনফার্ম বাটনসহ)[cite: 14] --- */
         function openBuyPreviewModal(product, event) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -733,11 +786,11 @@
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">SELECT VARIANT / COLOR</span>
+                    <span style="font-size:0.75rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 2px rgba(0,0,0,0.8);">select color / variant</span>
                     <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">&times;</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${product.title||'Item'}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%;">
+                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM
                 </button>
             `;
@@ -778,8 +831,10 @@
         }
 
         function triggerCoinDropAnimation(e) {
-            let targetX = window.innerWidth - 40;
-            let targetY = window.innerHeight - 150;
+            const cartIconElem = document.getElementById('cartTargetIcon');
+            let targetRect = cartIconElem ? cartIconElem.getBoundingClientRect() : null;
+            let targetX = targetRect ? targetRect.left + (targetRect.width / 2) : window.innerWidth - 30;
+            let targetY = targetRect ? targetRect.top + (targetRect.height / 2) : window.innerHeight - 50;
 
             let startX = e ? e.clientX : window.innerWidth / 2;
             let startY = e ? e.clientY : window.innerHeight / 2;
@@ -792,9 +847,9 @@
             document.body.appendChild(coin);
 
             requestAnimationFrame(() => {
-                coin.style.left = `${targetX}px`;
-                coin.style.top = `${targetY}px`;
-                coin.style.transform = 'scale(0.35) rotate(720deg)';
+                coin.style.left = `${targetX - 16}px`;
+                coin.style.top = `${targetY - 16}px`;
+                coin.style.transform = 'scale(0.3) rotate(720deg)';
                 coin.style.opacity = '0';
             });
 
@@ -835,13 +890,13 @@
             let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && i.size === customNote);
 
             if(existing) {
-                existing.qty += 1;
+                existing.qty += currentProductQty;
             } else {
                 cart.push({
                     productId: pId,
                     title: title,
                     price: `$${parseFloat(price).toFixed(2)}`,
-                    qty: 1,
+                    qty: currentProductQty,
                     size: customNote,
                     img: selectedVariantImg
                 });
