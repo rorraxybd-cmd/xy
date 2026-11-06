@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>rorraxy - Wholesale Product Details & Related Grid</title>
+    <title>rorraxy - Retail Product Details & Related Grid</title>
     
     <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
     <script src="/ecosystem-core.js"></script>
@@ -19,8 +19,8 @@
 
     <style>
         :root {
-            --bg-wholesale: #000000;
-            --card-wholesale: #08080c;
+            --bg-retail: #000000;
+            --card-retail: #08080c;
             --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             --gold-solid: #d4af37;
             --pink-love: #ff2a85;
@@ -32,7 +32,7 @@
         * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
         html, body {
-            width: 100%; max-width: 100%; background: var(--bg-wholesale) !important; color: var(--text-white);
+            width: 100%; max-width: 100%; background: var(--bg-retail) !important; color: var(--text-white);
             font-family: var(--font-main); font-size: 14px; text-transform: uppercase !important;
             -webkit-font-smoothing: antialiased; overflow-x: hidden !important; position: relative;
         }
@@ -79,16 +79,16 @@
 
         .product-right-col { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
 
-        /* টাইটেলের ফিক্সড লাইন বা ক্যারেক্টার লিমিট সরিয়ে দেওয়া হয়েছে যাতে পুরো টাইটেল সুন্দরভাবে শো করে */
+        /* গোল্ডেন গ্রাডিয়েন্ট কালারে সেট করা প্রোডাক্ট টাইটেল */
         .product-title-restricted { 
-            font-size: 1.25rem; font-weight: 800; color: #ffffff !important; letter-spacing: 0.8px; line-height: 1.35; 
+            font-size: 1.25rem; font-weight: 800; letter-spacing: 0.8px; line-height: 1.35; 
             width: 100%; word-break: break-word; overflow: visible; text-overflow: unset; display: block;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @media(min-width: 768px) { .product-title-restricted { font-size: 1.65rem; } }
 
         .stock-shipping-banner, .price-discount-card, .qty-section-card, .seller-chat-full-btn, .product-info-section-box, .custom-note-section-box {
-            background: var(--card-wholesale); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
+            background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
             transition: border-color 0.25s ease;
         }
 
@@ -114,19 +114,13 @@
 
         .price-right-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
         .int-discount-badge {
-            background: #d4af37; color: #000; font-size: 0.75rem; font-weight: 800; padding: 6px 12px;
+            background: #ff2a85; color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 6px 12px;
             border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;
         }
+        .country-flag-icon { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; }
 
-        /* Wholesale Presets & Quantity */
+        /* Quantity Section */
         .qty-section-card { display: flex; flex-direction: column; gap: 12px; padding: 16px 20px; width: 100%; }
-        .wholesale-preset-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
-        .preset-btn {
-            background: #040407; border: 1px solid rgba(212, 175, 55, 0.2); color: #ffffff;
-            font-size: 0.65rem; font-weight: 700; padding: 10px 6px; border-radius: 10px; cursor: pointer; text-align: center; transition: 0.2s;
-        }
-        .preset-btn.active, .preset-btn:hover { background: var(--gold-gradient); color: #000; border-color: transparent; }
-
         .qty-label-mini { font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); text-align: center; }
         .qty-controls-flex { display: flex; align-items: center; justify-content: center; gap: 20px; }
         .qty-btn-ch { 
@@ -138,10 +132,11 @@
         .qty-num-input { font-size: 1.1rem; font-weight: 800; color: #ffffff; width: 75px; text-align: center; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; outline: none; padding: 6px 0; }
 
         .seller-chat-full-btn {
-            color: #ffffff; font-size: 0.75rem; font-weight: 700; padding: 16px 20px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.25s ease; width: 100%; background: var(--card-wholesale); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--gold-solid); font-size: 0.75rem; font-weight: 700; padding: 16px 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.25s ease; width: 100%; 
+            background: var(--card-retail); border-radius: 14px; border: 1px solid rgba(212, 175, 55, 0.25);
         }
-        .seller-chat-full-btn:hover { background: #12121c; }
+        .seller-chat-full-btn:hover { background: rgba(212, 175, 55, 0.1); }
 
         .product-info-section-box { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; width: 100%; }
         .section-box-title { font-size: 0.75rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 8px; }
@@ -158,7 +153,7 @@
             padding: 14px 18px; border-radius: 12px; cursor: pointer; white-space: nowrap;
         }
 
-        /* --- Related Wholesale Products Section (Pinterest Style Masonry Grid) --- */
+        /* --- Related Products Section --- */
         .related-products-wrapper {
             margin-top: 30px; width: 100%; display: flex; flex-direction: column; gap: 15px;
             border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 25px;
@@ -169,53 +164,47 @@
         }
         
         .feed-container {
-            padding: 4px 0; 
-            column-count: 2; 
-            column-gap: 10px; 
-            width: 100%;
+            padding: 4px 0; column-count: 2; column-gap: 10px; width: 100%;
         }
-        @media (min-width: 768px) { 
-            .feed-container { 
-                column-count: 4; 
-                column-gap: 14px; 
-            } 
-        }
+        @media (min-width: 768px) { .feed-container { column-count: 4; column-gap: 14px; } }
         
         .product-card {
-            background: var(--card-wholesale); border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; 
-            border: 1px solid rgba(212,175,55,0.12); position: relative; cursor: pointer;
-            margin-bottom: 10px; break-inside: avoid; page-break-inside: avoid;
+            background: var(--card-retail); border-radius: 14px; overflow: hidden; 
+            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
+            position: relative; cursor: pointer; margin-bottom: 10px; break-inside: avoid;
             transition: transform 0.2s, border-color 0.2s;
         }
         .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
-        .wholesale-card-badge {
+        
+        .product-country-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 10;
-            background: rgba(212, 175, 55, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 700; color: #000000 !important; text-transform: uppercase;
+            font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
         }
+        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
+        
         .card-footer-actions { 
             display: flex; flex-direction: column; padding: 10px; 
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: auto;
         }
-        .wholesale-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .moq-tag { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
+        .retail-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .product-price-tag { font-size: 0.85rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .card-sub-actions { display: flex; align-items: center; justify-content: space-between; width: 100%; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 6px; }
         .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
         .love-action i { color: var(--pink-love); }
         .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
         .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
-        /* ফুটার বার */
+        /* ফুটার বার ও অর্ডার নাও বাটন */
         .fixed-bottom-checkout-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.95);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 16px; 
-            display: flex; justify-content: space-around; align-items: center; z-index: 5000; 
-            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            display: flex; justify-content: space-around; align-items: center; z-index: 99999; 
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            pointer-events: auto !important;
         }
         @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 45px; padding: 14px 30px; } }
         
@@ -223,17 +212,19 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; gap: 4px; background: transparent !important; 
             border: none !important; padding: 6px 12px; transition: transform 0.2s ease; white-space: nowrap;
+            pointer-events: auto !important;
         }
         .footer-menu-item:hover { transform: translateY(-2px); }
-        .footer-menu-icon { font-size: 1.25rem; color: var(--gold-solid); }
-        .footer-menu-label { font-size: 0.62rem; font-weight: 700; color: #ffffff !important; letter-spacing: 0.5px; }
+        .footer-menu-icon { font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer-menu-label { font-size: 0.62rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
 
         .footer-menu-item.order-now-highlight {
-            background: var(--gold-gradient) !important; border-radius: 14px !important; padding: 12px 24px !important;
-            transition: transform 0.2s ease;
+            background: var(--gold-gradient) !important; border-radius: 14px !important; padding: 12px 26px !important;
+            transition: transform 0.2s ease; cursor: pointer !important; pointer-events: auto !important;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.4);
         }
-        .footer-menu-item.order-now-highlight:active { transform: scale(0.96); }
-        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; font-size: 0.75rem; font-weight: 800; }
+        .footer-menu-item.order-now-highlight:active { transform: scale(0.95); }
+        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.78rem; font-weight: 800; background: none !important; pointer-events: none; }
 
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
@@ -244,9 +235,10 @@
         .footer-cart-badge.pulse-badge { transform: scale(1.4); }
 
         .flying-gold-coin {
-            position: fixed; z-index: 999999; width: 28px; height: 28px; border-radius: 50%;
+            position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
-            border: 1.5px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
+            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8);
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
         }
     </style>
@@ -258,7 +250,7 @@
         <div class="product-details-clean-section" id="productDetailsViewSection">
             <div class="product-left-col">
                 <div class="media-viewport" id="mediaViewportContainer">
-                    <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%2308080c'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23d4af37' font-family='Poppins, sans-serif' font-size='14' font-weight='700'%3ELOADING WHOLESALE PRODUCT...%3C/text%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
+                    <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%2308080c'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23d4af37' font-family='Poppins, sans-serif' font-size='14' font-weight='700'%3ELOADING PRODUCT...%3C/text%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
                 </div>
 
                 <div class="thumbnail-slider-wrapper">
@@ -269,66 +261,61 @@
             <div class="product-right-col">
                 <div class="price-discount-card">
                     <div class="price-left-stack">
-                        <div class="current-main-price" id="activeProductPriceTag">$0.00 / pc</div>
+                        <div class="current-main-price" id="activeProductPriceTag">$0.00</div>
                         <div class="old-crossed-price" id="activeProductOldPriceTag">$0.00</div>
                     </div>
                     <div class="price-right-stack">
-                        <span class="int-discount-badge" id="activeProductMoqBadge">
-                            <i class="fa-solid fa-boxes-stacked"></i> <span id="activeMoqText">MOQ: 10 PCS</span>
+                        <span class="int-discount-badge" id="activeProductDiscountBadge">
+                            <img id="activeProductFlagImg" class="country-flag-icon" src="https://flagcdn.com/w40/bd.png" alt="Flag">
+                            <span id="activeDiscountText">35% OFF</span>
                         </span>
                     </div>
                 </div>
 
                 <div class="stock-shipping-banner">
-                    <span class="free-shipping-text"><i class="fa-solid fa-boxes-packing"></i> WHOLESALE BULK SHIPMENT</span>
-                    <span class="in-stock-clean-badge" id="inStockBadgeLabel">BULK STOCK READY</span>
+                    <span class="free-shipping-text"><i class="fa-solid fa-truck-fast"></i> FREE GLOBAL FULFILLMENT</span>
+                    <span class="in-stock-clean-badge" id="inStockBadgeLabel">IN STOCK - READY TO DISPATCH</span>
                 </div>
 
-                <!-- Wholesale Presets & Quantities -->
+                <!-- Quantity Section -->
                 <div class="qty-section-card">
-                    <div class="wholesale-preset-buttons">
-                        <button type="button" class="preset-btn active" onclick="setQuantityPreset(10, this)">SAMPLE (10)</button>
-                        <button type="button" class="preset-btn" onclick="setQuantityPreset(100, this)">MIN WHOLE (100)</button>
-                        <button type="button" class="preset-btn" onclick="setQuantityPreset(500, this)">BULK (500+)</button>
-                    </div>
-
-                    <span class="qty-label-mini">WHOLESALE QUANTITY</span>
+                    <span class="qty-label-mini">QUANTITY</span>
                     <div class="qty-controls-flex">
-                        <button class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
-                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="10" min="1" oninput="manualQuantityInput(this)">
-                        <button class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+                        <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
+                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" oninput="manualQuantityInput(this)">
+                        <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
                     </div>
                 </div>
 
                 <div>
-                    <button class="seller-chat-full-btn" onclick="toggleChatModal()">
-                        <i class="fa-solid fa-comments"></i> <span>CHAT WITH WHOLESALE MANAGER</span>
+                    <button type="button" class="seller-chat-full-btn" onclick="toggleChatModal()">
+                        <i class="fa-solid fa-comments"></i> <span>CHAT WITH SELLER</span>
                     </button>
                 </div>
 
                 <div class="product-info-section-box">
-                    <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
-                    <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
+                    <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
+                    <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING PRODUCT...</h1>
                     <div class="standard-description-box" id="unlimitedDescriptionContent">
-                        Fetching wholesale ecosystem details from Cloudflare D1 database...
+                        Fetching ecosystem details from Cloudflare database...
                     </div>
                 </div>
 
                 <div class="custom-note-section-box">
-                    <span class="section-box-title"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / SPEC</span>
+                    <span class="section-box-title"><i class="fa-solid fa-pen-to-square"></i> CUSTOM SIZE / NOTE</span>
                     <div class="custom-input-group">
-                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off">
+                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM SIZE / NOTE (OPTIONAL)..." value="" autocomplete="off">
                         <button type="button" class="custom-save-btn" id="customSaveBtnElement" onclick="saveCustomSizeNote()">SAVE</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Related Wholesale Products Section (Pinterest Style Grid) -->
+        <!-- Related Products Section -->
         <div class="related-products-wrapper">
-            <h3 class="related-section-title"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS</h3>
+            <h3 class="related-section-title"><i class="fa-solid fa-fire"></i> RELATED LUXURY PRODUCTS</h3>
             <div class="feed-container" id="relatedProductsFeedContainer">
-                <p style="grid-column: 1 / -1; text-align: center; color: var(--gold-solid); padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED BULK ITEMS...</p>
+                <p style="grid-column: 1 / -1; text-align: center; color: var(--gold-solid); padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED ITEMS...</p>
             </div>
         </div>
 
@@ -336,21 +323,22 @@
 
     <!-- ফুটার বার -->
     <div class="fixed-bottom-checkout-bar">
-        <a href="/wholesale/" class="footer-menu-item">
+        <a href="/" class="footer-menu-item">
             <i class="fa-solid fa-house footer-menu-icon"></i>
             <span class="footer-menu-label">HOME</span>
         </a>
 
-        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
-            <span class="footer-menu-label" id="orderBtnLabel">ADD TO WHOLESALE</span>
+        <!-- অর্ডার নাও বাটন (সরাসরি সচল করা হয়েছে) -->
+        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn">
+            <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
 
-        <a href="/wholesale/account.html" class="footer-menu-item">
+        <a href="/account.html" class="footer-menu-item">
             <i class="fa-solid fa-user footer-menu-icon"></i>
             <span class="footer-menu-label">YOU</span>
         </a>
 
-        <a href="/wholesale/cart.html" class="footer-menu-item" id="footerCartMenuBtn">
+        <a href="/cart.html" class="footer-menu-item" id="footerCartMenuBtn">
             <div class="footer-cart-icon-wrapper">
                 <i class="fa-solid fa-cart-shopping footer-menu-icon"></i>
                 <span class="footer-cart-badge" id="footerCartItemCountBadge">0</span>
@@ -360,20 +348,20 @@
     </div>
 
     <!-- চ্যাট মডাল -->
-    <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
+    <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
         <div style="background:#0c0c12; border-radius:16px; padding:18px; max-width:400px; width:100%; display:flex; flex-direction:column; gap:12px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
-                <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
-                <button onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
+                <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">SELLER SUPPORT DESK</span>
+                <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
             </div>
             <div id="chatMessagesContainer" style="background:#040407; border-radius:12px; padding:12px; height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
                 <div style="background:#12121c; padding:8px 10px; border-radius:8px; font-size:0.68rem; color:#ffffff; max-width:85%;">
-                    Welcome to rorraxy wholesale support! How can we assist with your bulk order?
+                    WELCOME TO RORRAXY RETAIL SUPPORT! HOW CAN WE ASSIST WITH YOUR ORDER?
                 </div>
             </div>
             <div style="display:flex; gap:8px;">
-                <input type="text" id="chatMessageInput" placeholder="TYPE MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:#ffffff; font-size:0.68rem; outline:none;">
-                <button onclick="sendChatMessage()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 14px; border-radius:10px; font-weight:800; font-size:0.68rem; cursor:pointer;">SEND</button>
+                <input type="text" id="chatMessageInput" placeholder="TYPE MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:#ffffff; font-size:0.68rem; outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+                <button type="button" onclick="sendChatMessage()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 14px; border-radius:10px; font-weight:800; font-size:0.68rem; cursor:pointer;">SEND</button>
             </div>
         </div>
     </div>
@@ -381,7 +369,7 @@
     <script>
         const API_BASE_URL = '';
         let currentActiveProduct = null;
-        let currentItemQuantity = 10;
+        let currentItemQuantity = 1;
         let savedCustomNote = "";
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -389,16 +377,36 @@
             const reqId = urlParams.get('id');
 
             if (reqId) {
-                fetchWholesaleProductDetails(reqId);
+                fetchProductDetails(reqId);
             } else {
-                document.getElementById('activeProductTitleHeading').innerText = "WHOLESALE PRODUCT ID NOT SPECIFIED";
-                document.getElementById('unlimitedDescriptionContent').innerText = "Please select a product from the wholesale catalog.";
+                renderFallbackProduct('101');
             }
             updateCartBadgeCount();
+
+            // অর্ডার নাও বাটনে সরাসরি ক্লিক ও টাচ ইভেন্ট বাইন্ড করা হলো যাতে কোনো সমস্যা না হয়
+            const orderBtn = document.getElementById('orderNowMainBtn');
+            if (orderBtn) {
+                orderBtn.addEventListener('click', function(e) {
+                    executeOrderNow(e);
+                });
+                orderBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    executeOrderNow(e);
+                });
+            }
         });
 
-        async function fetchWholesaleProductDetails(productId) {
+        async function fetchProductDetails(productId) {
             try {
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_retail_feed_cache')) || [];
+                let foundItem = [...localProducts, ...cachedFeed].find(p => String(p.id || p.product_id || p.product_code) === String(productId));
+                
+                if (foundItem) {
+                    renderProductDetails(foundItem);
+                    renderRelatedProducts([...localProducts, ...cachedFeed], foundItem);
+                }
+
                 const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
                 const result = await response.json();
                 let products = [];
@@ -408,8 +416,6 @@
                     products = result;
                 }
 
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
-                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache')) || [];
                 let mergedMap = new Map();
                 [...localProducts, ...cachedFeed, ...products].forEach(p => {
                     let pId = p.id || p.product_id || p.product_code || p.title;
@@ -421,32 +427,31 @@
                     const matchedProduct = allProducts.find(p => String(p.id) === String(productId) || String(p.product_id) === String(productId) || String(p.product_code) === String(productId));
                     if (matchedProduct) {
                         renderProductDetails(matchedProduct);
-                        renderRelatedWholesaleProducts(allProducts, matchedProduct);
+                        renderRelatedProducts(allProducts, matchedProduct);
                         return;
                     }
                 }
-                renderFallbackWholesaleProduct(productId);
+                if (!foundItem) renderFallbackProduct(productId);
             } catch (err) {
-                console.error("Error fetching wholesale product details:", err);
-                renderFallbackWholesaleProduct(productId);
+                renderFallbackProduct(productId);
             }
         }
 
-        function renderFallbackWholesaleProduct(productId) {
+        function renderFallbackProduct(productId) {
             let sampleProduct = {
                 id: productId,
-                title: "RORRAXY WHOLESALE BULK LUXURY ITEM",
-                price: 25.00,
-                moq: 10,
-                stock: 1500,
-                description: "High-grade bulk wholesale manufacturing supply meeting international commercial standards.",
+                title: "RORRAXY RETAIL LUXURY FASHION ITEM",
+                price: 35.00,
+                discount_rate: 40,
+                stock: 120,
+                target_country: 'bd',
+                description: "Crafted with precision engineering and high-grade sustainable materials for retail excellence.",
                 image_url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png"
             };
             renderProductDetails(sampleProduct);
-            renderRelatedWholesaleProducts([sampleProduct], sampleProduct);
+            renderRelatedProducts([sampleProduct], sampleProduct);
         }
 
-        // প্যাকিং লিস্ট এবং অনাকাঙ্ক্ষিত টেক্সট ফিল্টার করার ফাংশন
         function cleanDescriptionText(text) {
             if (!text) return '';
             let cleaned = text.replace(/Packing\s*list\s*:[\s\S]*?(Product\s*Image\s*:?|$)/gi, '');
@@ -456,24 +461,30 @@
 
         function renderProductDetails(prod) {
             currentActiveProduct = prod;
-            let priceVal = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
-            let oldP = priceVal * 1.35;
-            let moqVal = parseInt(prod.moq || prod.min_order_qty) || 10;
+            let priceVal = parseFloat(prod.price) || 35.00;
+            let oldP = priceVal * 1.45;
 
-            currentItemQuantity = moqVal;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-
-            document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY WHOLESALE PRODUCT";
-            document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)} / pc`;
+            document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY RETAIL PRODUCT";
+            document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)}`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
             
-            // ডেসক্রিপশন প্রসেস করে অনাকাঙ্ক্ষিত প্যাকিং লিস্ট অংশ ফিল্টার করে রেন্ডার করা
-            let rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+            let rawDesc = prod.description || prod.desc || "Crafted with precision engineering and high-grade sustainable materials.";
             document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
             
-            let stockNum = prod.stock || 1000;
-            document.getElementById('inStockBadgeLabel').innerText = `BULK STOCK: ${stockNum} UNITS READY`;
-            document.getElementById('activeMoqText').innerText = `MOQ: ${moqVal} PCS`;
+            let stockNum = prod.stock || 100;
+            document.getElementById('inStockBadgeLabel').innerText = `IN STOCK: ${stockNum} UNITS - READY TO DISPATCH`;
+
+            let discountPercent = prod.discount_rate || prod.discountRate || 40;
+            const discountBadgeEl = document.getElementById('activeProductDiscountBadge');
+            if (discountPercent && discountPercent > 0) {
+                document.getElementById('activeDiscountText').innerText = `${discountPercent}% OFF`;
+                discountBadgeEl.style.display = 'inline-flex';
+            } else {
+                discountBadgeEl.style.display = 'none';
+            }
+
+            let countryCode = (prod.target_country || prod.targetCountry || 'bd').toLowerCase();
+            document.getElementById('activeProductFlagImg').src = `https://flagcdn.com/w40/${countryCode}.png`;
 
             const strip = document.getElementById('productThumbnailsStrip');
             let mediaList = [];
@@ -541,21 +552,24 @@
             strip.innerHTML = thumbHtml;
         }
 
-        function renderRelatedWholesaleProducts(allProducts, currentProd) {
+        function renderRelatedProducts(allProducts, currentProd) {
             const container = document.getElementById('relatedProductsFeedContainer');
             if (!allProducts || allProducts.length <= 1) {
-                container.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); font-size: 0.75rem;">NO RELATED WHOLESALE PRODUCTS FOUND.</p>`;
+                container.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); font-size: 0.75rem;">NO RELATED PRODUCTS FOUND.</p>`;
                 return;
             }
 
-            let relatedList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== String(currentProd.id || currentProd.product_id || currentProd.product_code));
+            let currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
+            let relatedList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
             if (relatedList.length === 0) relatedList = allProducts;
 
             container.innerHTML = relatedList.slice(0, 8).map(item => {
                 const prodId = item.id || item.product_id || item.product_code || '101';
-                const title = item.title || 'rorraxy Bulk Item';
-                const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
-                const moq = item.moq || 10;
+                const title = item.title || 'rorraxy Luxury Item';
+                const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$35.00';
+                const discount = item.discount_rate || item.discountRate || 40;
+                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
+                const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
                 
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
                 try {
@@ -572,19 +586,18 @@
                 return `
                     <div class="product-card" onclick="window.location.href='pd.html?id=${prodId}'">
                         <div class="product-media-box">
-                            <div class="wholesale-card-badge">
-                                <i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS
+                            <div class="product-country-discount-badge">
+                                <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" onerror="this.style.display='none'"> ${discount}% OFF
                             </div>
                             <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
-                            <div class="wholesale-pricing-row">
-                                <span class="product-price-tag">${bulkPrice} / pc</span>
-                                <span class="moq-tag">Min ${moq} Pcs</span>
+                            <div class="retail-pricing-row">
+                                <span class="product-price-tag">${price}</span>
                             </div>
                             <div class="card-sub-actions">
                                 <div class="love-action" onclick="toggleLove(event, this)">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 45}</span>
+                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 124}</span>
                                 </div>
                                 <button class="share-action-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')">
                                     <i class="fa-solid fa-share-nodes"></i> Share
@@ -612,13 +625,6 @@
             thumbElement.classList.add('active');
         }
 
-        function setQuantityPreset(qty, btn) {
-            currentItemQuantity = qty;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-        }
-
         function modifyQuantity(val) {
             currentItemQuantity += val;
             if (currentItemQuantity < 1) currentItemQuantity = 1;
@@ -632,7 +638,7 @@
 
         function saveCustomSizeNote() {
             let inputVal = document.getElementById('customSizeInputField').value.trim();
-            savedCustomNote = inputVal !== "" ? inputVal : "STANDARD BULK";
+            savedCustomNote = inputVal !== "" ? inputVal : "STANDARD";
             let saveBtn = document.getElementById('customSaveBtnElement');
             saveBtn.innerText = "SAVED ✓";
             saveBtn.classList.add('saved-success');
@@ -671,14 +677,14 @@
             if (!cartBtn) return;
 
             const cartRect = cartBtn.getBoundingClientRect();
-            const targetX = cartRect.left + (cartRect.width / 2) - 14;
-            const targetY = cartRect.top + (cartRect.height / 2) - 14;
+            const targetX = cartRect.left + (cartRect.width / 2) - 16;
+            const targetY = cartRect.top + (cartRect.height / 2) - 16;
 
-            let startX = window.innerWidth / 2 - 14;
-            let startY = window.innerHeight - 120;
+            let startX = window.innerWidth / 2 - 16;
+            let startY = window.innerHeight - 100;
             if (event && event.clientX && event.clientY) {
-                startX = event.clientX - 14;
-                startY = event.clientY - 14;
+                startX = event.clientX - 16;
+                startY = event.clientY - 16;
             }
 
             const coin = document.createElement('div');
@@ -706,14 +712,26 @@
         }
 
         function executeOrderNow(event) {
-            if (!currentActiveProduct) return;
-            let chosenSize = savedCustomNote !== "" ? savedCustomNote : (document.getElementById('customSizeInputField').value.trim() || "STANDARD BULK");
-            let cartKey = 'rorraxy_wholesale_cart';
+            if (!currentActiveProduct) {
+                currentActiveProduct = {
+                    id: new URLSearchParams(window.location.search).get('id') || '101',
+                    title: document.getElementById('activeProductTitleHeading').innerText || 'RORRAXY RETAIL LUXURY FASHION ITEM',
+                    price: parseFloat(document.getElementById('activeProductPriceTag').innerText.replace('$', '')) || 35.00,
+                    seller_id: 'SELLER-RORRAXY-01'
+                };
+            }
+
+            let chosenSize = savedCustomNote !== "" ? savedCustomNote : (document.getElementById('customSizeInputField').value.trim() || "STANDARD");
+            let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code;
-            let existingItem = cart.find(item => item.productId === prodId && item.size === chosenSize);
-            let priceNum = parseFloat(currentActiveProduct.price_bulk || currentActiveProduct.price || currentActiveProduct.wholesale_price) || 25.00;
-            let primaryImgUrl = currentActiveProduct.image_url || currentActiveProduct.imageUrl || currentActiveProduct.img || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
+            
+            // ইউজারের সিলেক্টকৃত নির্দিষ্ট কালার বা থাম্বনেইলের ছবিটি কার্টে যুক্ত করার জন্য ভিউপোর্ট থেকে নেওয়া হয়েছে
+            let selectedImageView = document.getElementById('mainDisplayMediaElement').src;
+            let primaryImgUrl = (selectedImageView && !selectedImageView.includes('svg')) ? selectedImageView : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+
+            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === primaryImgUrl);
+            let priceNum = parseFloat(currentActiveProduct.price) || 35.00;
 
             if(existingItem) {
                 existingItem.qty += currentItemQuantity;
@@ -725,7 +743,7 @@
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
                     size: chosenSize,
-                    mode: 'wholesale',
+                    mode: 'retail',
                     img: primaryImgUrl
                 });
             }
@@ -735,7 +753,7 @@
         }
 
         function updateCartBadgeCount() {
-            let cart = JSON.parse(localStorage.getItem('rorraxy_wholesale_cart')) || [];
+            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
             let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
             let badge = document.getElementById('footerCartItemCountBadge');
             if(badge) badge.innerText = totalQty;
@@ -771,7 +789,7 @@
 
         async function triggerAutoShare(event, productId, productTitle) {
             event.stopPropagation();
-            const shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
+            const shareUrl = `${window.location.origin}/pd.html?id=${productId}`;
             if (navigator.share) {
                 try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
             } else if (navigator.clipboard) {
