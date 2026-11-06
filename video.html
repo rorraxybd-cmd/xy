@@ -39,6 +39,7 @@
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
         let globalMasterProductsList = [];
+        let isPinterestHomeView = true; // ডিফল্ট হোম ভিউ Pinterest স্টাইল
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLiveProducts();
@@ -95,9 +96,10 @@
                 });
             }
 
-            // 5. HOME Click: Pinterest Style Feed View
+            // 5. HOME Click: Switch back to Pinterest Home Feed View
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
+                    isPinterestHomeView = true;
                     renderProductCards(getSmartMixedProducts(globalMasterProductsList));
                 });
             }
@@ -284,7 +286,7 @@
                 if (discountPercent && discountPercent > 0) {
                     discountBadgeHtml = `
                         <span class="int-discount-badge">
-                            <img class="country-flag-icon" src="${flagUrl}" alt="Country Flag" onerror="this.style.display='none'">
+                            <img class="country-flag-icon" src="${flagUrl}" alt="Flag" onerror="this.style.display='none'">
                             <span>${discountPercent}% OFF</span>
                         </span>
                     `;
@@ -315,7 +317,8 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card';
-                cardDiv.onclick = () => openProductDetails(productId);
+                // প্রডাক্টে ক্লিক করলে সরাসরি রিলস ফিড ভিউতে চলে যাবে (প্রোডাক্ট ডিটেইলসে নয়)
+                cardDiv.onclick = () => switchToReelsView(productId);
 
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
@@ -328,7 +331,7 @@
                             <div class="love-action card-love-btn" onclick="toggleLove(event, this, '${productId}')">
                                 <i class="fa-solid fa-heart"></i> <span class="love-count">${initialLikes}</span>
                             </div>
-                            <button class="share-icon-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
+                            <button class="share-icon-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')" title="Share">
                                 <i class="fa-solid fa-share-nodes"></i>
                             </button>
                         </div>
@@ -339,6 +342,87 @@
 
             feedContainer.innerHTML = '';
             feedContainer.appendChild(fragment);
+        }
+
+        // প্রডাক্টে ক্লিক করলে রিলস সিস্টেমে নিয়ে যাওয়ার লজিক
+        function switchToReelsView(productId) {
+            let foundIdx = globalMasterProductsList.findIndex(p => String(p.id || p.product_id || p.product_code) === String(productId));
+            if(foundIdx !== -1) {
+                isPinterestHomeView = false;
+                renderSingleReelView(foundIdx);
+            }
+        }
+
+        // রিলস স্টাইল সিঙ্গেল ভিউ রেন্ডার ফাংশন
+        let currentReelIndex = 0;
+        function renderSingleReelView(index) {
+            currentReelIndex = index;
+            const feedContainer = document.getElementById('productFeed');
+            const product = globalMasterProductsList[currentReelIndex];
+            if(!product) return;
+
+            let pId = String(product.id || product.product_id || product.product_code || '101');
+            let pVideo = product.video_url || product.youtube_video || '';
+            if (pVideo.includes('.r2.dev')) {
+                pVideo = pVideo.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
+            }
+            let pPrice = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$85.00';
+            let countryCode = (product.target_country || product.targetCountry || 'bd').toLowerCase();
+            let flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
+            let discountPercent = product.discount_rate || product.discountRate || 0;
+
+            let discountBadgeHtml = '';
+            if (discountPercent > 0) {
+                discountBadgeHtml = `
+                    <div class="reel-discount-badge">
+                        <img src="${flagUrl}" class="country-flag-icon" alt="Flag">
+                        <span>${discountPercent}% OFF</span>
+                    </div>`;
+            }
+
+            let mediaElem = '';
+            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline preload="metadata" style="width:100%; height:100%; object-fit:cover;"></video>`;
+            } else {
+                let imgUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                try {
+                    if(product.images_json) {
+                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                        if(Array.isArray(parsed) && parsed.length > 0) imgUrl = parsed[0];
+                    } else if(product.image_url) {
+                        imgUrl = product.image_url;
+                    }
+                } catch(e){}
+                mediaElem = `<img src="${imgUrl}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
+            }
+
+            feedContainer.innerHTML = `
+                <div class="reel-single-wrapper">
+                    <div class="reel-media-screen" onclick="openProductDetails('${pId}')">
+                        ${mediaElem}
+                    </div>
+                    ${discountBadgeHtml}
+                    <div class="reel-right-actions">
+                        <div class="reel-action-item" onclick="openNativeShare(event, '${pId}')">
+                            <i class="fa-solid fa-reply share-flip"></i>
+                            <span class="reel-action-text">180</span>
+                        </div>
+                        <div class="reel-action-item" onclick="toggleReelLove(event, this, '${pId}')">
+                            <i class="fa-solid fa-heart"></i>
+                            <span class="reel-action-text">5.2K</span>
+                        </div>
+                        <div class="reel-action-item" onclick="toggleSearchOverlay(event)">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <div class="reel-action-item" onclick="handleSaveAction(event, '${pId}')">
+                            <i class="fa-solid fa-bookmark"></i>
+                        </div>
+                    </div>
+                    <div class="reel-bottom-price-bar">
+                        <span class="reel-price-txt">${pPrice}</span>
+                    </div>
+                </div>
+            `;
         }
 
         function openProductDetails(productId) {
@@ -524,6 +608,38 @@
             font-size: 1.15rem; background: var(--gold-gradient); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             padding: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* Single Reel View Styles */
+        .reel-single-wrapper { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; }
+        .reel-media-screen { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .reel-discount-badge {
+            position: absolute; top: 15px; left: 15px; background: var(--pink-accent); color: #fff;
+            padding: 5px 12px; border-radius: 18px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 6px; z-index: 50;
+        }
+        .reel-right-actions {
+            position: absolute; right: 18px; bottom: 85px; z-index: 50;
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+        }
+        .reel-action-item {
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 3px;
+            background: none; border: none; padding: 0;
+        }
+        .reel-action-item i {
+            font-size: 1.7rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.7));
+        }
+        .reel-action-text {
+            font-size: 0.72rem; font-weight: 700; color: #ffffff; text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+        }
+        .share-flip { transform: scaleX(-1); }
+        .reel-bottom-price-bar {
+            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+            z-index: 40; background: rgba(10, 10, 14, 0.88); backdrop-filter: blur(12px);
+            padding: 6px 18px; border-radius: 30px;
+        }
+        .reel-price-txt {
+            font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         .category-transparent-overlay, .saved-gallery-overlay {
@@ -745,7 +861,7 @@
         </div>
     </div>
 
-    <!-- Main Pinterest Style Feed Container -->
+    <!-- Main Feed Container -->
     <main class="feed-container" id="productFeed">
         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
