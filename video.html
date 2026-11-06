@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail & Vendor Reels Feed</title>
+    <title>rorraxy - Single Page Ecosystem</title>
     
     <!-- Central Script Tag -->
     <script src="/ecosystem-core.js"></script>
@@ -26,132 +26,148 @@
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- External CSS Link -->
-    <link rel="stylesheet" href="style.css">
-    <!-- External Categories Data -->
-    <script src="categories.js"></script>
+    <!-- External Files Linking -->
+    <link rel="stylesheet" href="./style.css">
+    <script src="./categories.js"></script>
+</head>
+<body id="mainBody">
+
+    <!-- Top Search Bar -->
+    <div id="floatingSearchContainer" class="top-floating-search-bar">
+        <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
+        <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav-bar">
+        <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
+        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
+        <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>BUY</span></div>
+        <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
+        <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
+    </nav>
+
+    <!-- Product Details Sheet (No Images) -->
+    <div id="detailsOverlaySheet" class="overlay-sheet" onclick="if(event.target===this) closeDetailsSheet()">
+        <div class="details-bottom-sheet" id="detailsSheetContent"></div>
+    </div>
+
+    <!-- Buy Variant Preview Modal with Horizontal Scroll -->
+    <div id="buyPreviewOverlay" class="overlay-sheet" style="justify-content:center;" onclick="if(event.target===this) closeBuyPreview()">
+        <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
+    </div>
+
+    <!-- Category Transparent Overlay Menu -->
+    <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
+        <div class="seller-fullscreen-container">
+            <div class="category-fullscreen-view" id="categoryMainListView"></div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="appContainer" class="pinterest-feed-container">
+        <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
+            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+            <p style="margin-top: 10px; font-size: 0.75rem;">LOADING RORRAXY PRODUCTS...</p>
+        </div>
+    </main>
 
     <script>
-        let globalVideoList = [];
-        let activeReelsList = []; 
-        let currentIndex = 0;
+        const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
+        let globalMasterProductsList = [];
+        let activeProductList = [];
+        let isPinterestHomeMode = true; 
+        let currentReelIndex = 0;
         let slideInterval = null;
+        let selectedVariantImg = '';
 
         window.addEventListener('DOMContentLoaded', () => {
             buildCategoriesUI();
-            loadLiveVideosFromBackend();
+            loadLiveProducts();
+            updateCartBadgeCount();
 
-            const bottomHomeBtn = document.getElementById('bottomHomeBtn');
+            const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
-            const bottomBuyInfoBtn = document.getElementById('bottomBuyInfoBtn');
-            const bottomSearchBtn = document.getElementById('bottomSearchBtn');
-            const bottomSavedBtn = document.getElementById('bottomSavedBtn');
-            
+            const bottomBuyBtn = document.getElementById('bottomBuyBtn');
+            const bottomDetailsBtn = document.getElementById('bottomDetailsBtn');
+            const bottomHomeBtn = document.getElementById('bottomHomeBtn');
+            const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
             const floatingSearchContainer = document.getElementById('floatingSearchContainer');
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
-            const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
-            const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
-            if(bottomHomeBtn) {
-                bottomHomeBtn.addEventListener('click', () => { 
-                    window.location.href = 'https://rorraxy.com';
-                });
+            if(bottomWorldBtn) {
+                bottomWorldBtn.addEventListener('click', () => { alert("World ecosystem view loaded in-app."); });
             }
 
             if(bottomCategoryBtn && categoryTransparentOverlay) {
                 bottomCategoryBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const isVisible = categoryTransparentOverlay.style.display === 'flex';
-                    if (isVisible) {
-                        categoryTransparentOverlay.style.display = 'none';
-                    } else {
-                        if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
-                        if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
-                        categoryTransparentOverlay.style.display = 'flex';
+                    categoryTransparentOverlay.style.display = isVisible ? 'none' : 'flex';
+                });
+            }
+
+            if(bottomBuyBtn) {
+                bottomBuyBtn.addEventListener('click', (e) => {
+                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                    if(list.length > 0) {
+                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
+                        openBuyPreviewModal(targetProd, e);
                     }
                 });
             }
 
-            if(bottomBuyInfoBtn) {
-                bottomBuyInfoBtn.addEventListener('click', () => {
-                    let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
-                    if(activeList.length > 0 && activeList[currentIndex]) {
-                        window.location.href = `pd.html?id=${encodeURIComponent(activeList[currentIndex].id || activeList[currentIndex].product_id)}`;
+            if(bottomDetailsBtn) {
+                bottomDetailsBtn.addEventListener('click', () => {
+                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                    if(list.length > 0) {
+                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
+                        toggleDetailsSheet(targetProd);
                     }
                 });
             }
 
-            if(bottomSearchBtn && floatingSearchContainer) {
-                bottomSearchBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
+            if(bottomHomeBtn) {
+                bottomHomeBtn.addEventListener('click', () => { 
+                    isPinterestHomeMode = true;
+                    if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
+                    closeDetailsSheet();
+                    closeBuyPreview();
+                    activeProductList = globalMasterProductsList;
+                    renderPinterestHomeGrid(globalMasterProductsList);
+                });
+            }
+
+            window.toggleSearchOverlay = function(e) {
+                if(e) e.stopPropagation();
+                if(floatingSearchContainer) {
                     const isVisible = floatingSearchContainer.style.display === 'flex';
-                    if (isVisible) {
-                        floatingSearchContainer.style.display = 'none';
-                    } else {
-                        if(savedGalleryOverlay) savedGalleryOverlay.style.display = 'none';
-                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
-                        floatingSearchContainer.style.display = 'flex';
-                        if(searchInput) searchInput.focus();
-                    }
-                });
-            }
-
-            if(bottomSavedBtn && savedGalleryOverlay) {
-                bottomSavedBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const isVisible = savedGalleryOverlay.style.display === 'flex';
-                    if (isVisible) {
-                        savedGalleryOverlay.style.display = 'none';
-                    } else {
-                        if(categoryTransparentOverlay) categoryTransparentOverlay.style.display = 'none';
-                        if(floatingSearchContainer) floatingSearchContainer.style.display = 'none';
-                        renderSavedGalleryContent();
-                        savedGalleryOverlay.style.display = 'flex';
-                    }
-                });
-            }
-
-            window.addEventListener('click', (e) => {
-                if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
-                    if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
-                        categoryTransparentOverlay.style.display = 'none';
-                    }
+                    floatingSearchContainer.style.display = isVisible ? 'none' : 'flex';
+                    if(!isVisible && searchInput) searchInput.focus();
                 }
-                if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
-                    if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
-                        savedGalleryOverlay.style.display = 'none';
-                    }
-                }
-                if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
-                    if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
-                        floatingSearchContainer.style.display = 'none';
-                    }
-                }
-            });
+            };
 
             if(searchBtn && searchInput) {
-                searchBtn.addEventListener('click', () => { executeSearch(searchInput.value); });
-                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeSearch(searchInput.value); });
+                searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
+                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
+                searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
-
-            window.addEventListener('keydown', (e) => {
-                if(e.key === 'ArrowDown') { e.preventDefault(); scrollVideo(1); }
-                else if(e.key === 'ArrowUp') { e.preventDefault(); scrollVideo(-1); }
-            });
 
             let touchStartY = 0;
             window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive: true});
             window.addEventListener('touchend', (e) => {
-                let diff = touchStartY - e.changedTouches[0].clientY;
-                if (Math.abs(diff) > 50) diff > 0 ? scrollVideo(1) : scrollVideo(-1);
+                if(!isPinterestHomeMode) {
+                    let diff = touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(diff) > 40) diff > 0 ? scrollReels(1) : scrollReels(-1);
+                }
             }, {passive: true});
         });
 
-        // categories.js থেকে ডাইনামিক ক্যাটাগরি রেন্ডার করার ফাংশন
+        // categories.js থেকে ডাইনামিক ক্যাটাগরি রেন্ডার
         function buildCategoriesUI() {
             const listContainer = document.getElementById('categoryMainListView');
             if(!listContainer || typeof rorraxyCategoriesData === 'undefined') return;
@@ -161,7 +177,7 @@
                 let subHtml = '';
                 cat.subCategories.forEach(sub => {
                     subHtml += `
-                        <div class="sub-cat-item" onclick="filterReelsByCategory('${sub.key}')">
+                        <div class="sub-cat-item" onclick="filterProductsByCategory('${sub.key}')">
                             <i class="${sub.icon}"></i>
                             <span class="sub-cat-name">${sub.name}</span>
                         </div>
@@ -186,215 +202,64 @@
             listContainer.innerHTML = html;
         }
 
-        async function loadLiveVideosFromBackend() {
+        async function loadLiveProducts() {
+            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        globalMasterProductsList = parsed;
+                        activeProductList = parsed;
+                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
+                    }
+                } catch (e) {}
+            }
+
             try {
                 const response = await fetch(`/api/products`);
                 const result = await response.json();
-                
                 let productsList = [];
-                if (result && result.success && Array.isArray(result.data)) {
-                    productsList = result.data;
-                } else if (Array.isArray(result)) {
-                    productsList = result;
-                }
+                if (result && result.success && Array.isArray(result.data)) productsList = result.data;
+                else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    const randomLikeBases = [250, 500, 1000, 1500, 2000, 2500, 5000];
-                    globalVideoList = productsList.map(item => {
-                        let rawVid = item.video_url || item.youtube_video || '';
-                        if (rawVid.includes('.r2.dev')) {
-                            rawVid = rawVid.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
-                        }
-
-                        let extractedImages = [];
-                        try {
-                            if (item.images_json) {
-                                if (typeof item.images_json === 'string') {
-                                    let parsed = JSON.parse(item.images_json);
-                                    if (Array.isArray(parsed)) extractedImages = parsed;
-                                } else if (Array.isArray(item.images_json)) {
-                                    extractedImages = item.images_json;
-                                }
-                            }
-                        } catch(e) {}
-
-                        if (extractedImages.length === 0 && item.image_url) {
-                            if (typeof item.image_url === 'string' && item.image_url.startsWith('[')) {
-                                try {
-                                    let parsed = JSON.parse(item.image_url);
-                                    if (Array.isArray(parsed)) extractedImages = parsed;
-                                } catch(e) { extractedImages = [item.image_url]; }
-                            } else {
-                                extractedImages = [item.image_url];
-                            }
-                        }
-
-                        extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
-                        let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
-                        
-                        let targetCountry = item.target_country ? String(item.target_country).trim().toLowerCase() : '';
-                        let discountVal = parseFloat(item.discount_rate || 0);
-                        let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
-
-                        return {
-                            id: String(item.id || item.product_code || '101'),
-                            videoUrl: rawVid,
-                            imagesList: extractedImages,
-                            price: item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$85.00',
-                            baseLikes: calculatedBaseLikes,
-                            baseShares: 180,
-                            targetCountry: targetCountry,
-                            discountNum: discountVal,
-                            discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
-                            category: item.category || 'video',
-                            description: item.description || '',
-                            title: item.title || '',
-                            sellerName: sellerTitle,
-                            sellerAvatar: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
-                            sellerDesc: 'Verified seller on rorraxy ecosystem.'
-                        };
-                    });
-                    sessionStorage.setItem('rorraxy_cached_videos', JSON.stringify(globalVideoList));
-                    activeReelsList = globalVideoList; 
-                    renderBatchVideos();
-                } else {
-                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
+                    globalMasterProductsList = productsList;
+                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
+                    activeProductList = productsList;
+                    if(isPinterestHomeMode) renderPinterestHomeGrid(productsList);
                 }
-            } catch (error) {
-                console.error('Failed to load products from backend:', error);
-                let cachedData = sessionStorage.getItem('rorraxy_cached_videos');
-                if (cachedData) {
-                    globalVideoList = JSON.parse(cachedData);
-                    activeReelsList = globalVideoList;
-                    renderBatchVideos();
-                } else {
-                    document.getElementById('videoFeed').innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
-                }
-            }
+            } catch (error) {}
         }
 
-        function getDynamicEngagement(productId, baseVal, type) {
-            let storageKey = `rorraxy_retail_${type}_${productId}`;
-            let storedData = localStorage.getItem(storageKey);
-            let currentTime = new Date().getTime();
-            let currentVal = baseVal;
-
-            if (storedData) {
-                let parsed = JSON.parse(storedData);
-                currentVal = parsed.value;
-            } else {
-                currentVal = baseVal + Math.floor(Math.random() * 150);
-                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: currentTime }));
-            }
-
-            if (currentVal >= 1000) {
-                return (currentVal / 1000).toFixed(1) + 'K';
-            }
-            return currentVal.toString();
-        }
-
-        window.executeSearch = function(keyword) {
+        function executeHeaderSearch(keyword) {
             let query = keyword.toLowerCase().trim();
-            if(!query) return;
-            let foundIndex = globalVideoList.findIndex(p => 
-                (p.id && String(p.id).toLowerCase().includes(query)) ||
-                (p.sellerName && p.sellerName.toLowerCase().includes(query)) ||
-                (p.title && p.title.toLowerCase().includes(query))
-            );
-            if (foundIndex !== -1) {
-                activeReelsList = globalVideoList;
-                currentIndex = foundIndex;
-                renderBatchVideos();
+            if (!query) {
+                activeProductList = globalMasterProductsList;
+                if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
+                return;
             }
-            document.getElementById('floatingSearchContainer').style.display = 'none';
-        };
-
-        window.filterReelsByCategory = function(queryKey) {
-            document.getElementById('categoryTransparentOverlay').style.display = 'none';
-            let query = queryKey.toLowerCase().replace(/-/g, ' ');
-            
-            let filtered = globalVideoList.filter(item => {
+            let filtered = globalMasterProductsList.filter(item => {
                 const title = (item.title || '').toLowerCase();
                 const cat = (item.category || item.description || '').toLowerCase();
                 return title.includes(query) || cat.includes(query);
             });
-
-            activeReelsList = filtered.length > 0 ? filtered : globalVideoList;
-            currentIndex = 0;
-            renderBatchVideos();
-        };
-
-        window.toggleSaveItem = function(e, btn, pId) {
-            e.stopPropagation();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
-            
-            if(existingIndex > -1) {
-                savedObjects.splice(existingIndex, 1);
-                btn.classList.remove('active');
-            } else {
-                let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
-                if(targetProduct) {
-                    savedObjects.push(targetProduct);
-                    btn.classList.add('active');
-                }
-            }
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
-        };
-
-        function renderSavedGalleryContent() {
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let containerBody = document.getElementById('savedGalleryBody');
-            if(!containerBody) return;
-
-            if (savedObjects.length === 0) {
-                containerBody.innerHTML = `
-                    <div class="fs-profile-header-box"><h2 class="fs-profile-name">SAVED VIDEOS</h2></div>
-                    <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
-            } else {
-                let thumbsHtml = '';
-                savedObjects.forEach(v => {
-                    let thumbImg = (v.imagesList && v.imagesList.length > 0) ? v.imagesList[0] : 'https://via.placeholder.com/150';
-                    thumbsHtml += `
-                        <div class="saved-thumb-card" onclick="selectSavedVideo('${v.id}')">
-                            <div class="saved-thumb-preview">
-                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;">
-                                <i class="fa-solid fa-play play-overlay-icon"></i>
-                            </div>
-                            <div class="saved-thumb-footer">
-                                <span class="saved-thumb-title">ID: ${v.id}</span>
-                                <span class="saved-thumb-price">${v.price || ''}</span>
-                                <button class="saved-clean-delete-btn" onclick="removeSavedVideo(event, '${v.id}')"><i class="fa-solid fa-trash"></i> DELETE</button>
-                            </div>
-                        </div>`;
-                });
-                containerBody.innerHTML = `
-                    <div class="fs-profile-header-box">
-                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
-                        <div class="fs-stats-pill"><i class="fa-solid fa-video"></i> TOTAL SAVED: <strong>${savedObjects.length}</strong></div>
-                    </div>
-                    <div class="fs-videos-grid">${thumbsHtml}</div>`;
-            }
+            activeProductList = filtered;
+            if(isPinterestHomeMode) renderPinterestHomeGrid(filtered);
+            document.getElementById('floatingSearchContainer').style.display = 'none';
         }
 
-        window.selectSavedVideo = function(videoId) {
-            let foundIdx = globalVideoList.findIndex(p => String(p.id) === String(videoId));
-            if(foundIdx !== -1) {
-                activeReelsList = globalVideoList;
-                currentIndex = foundIdx;
-            }
-            document.getElementById('savedGalleryOverlay').style.display = 'none';
-            renderBatchVideos();
-        };
-
-        window.removeSavedVideo = function(e, videoId) {
-            e.stopPropagation();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            savedObjects = savedObjects.filter(item => String(item.id) !== String(videoId));
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
-            renderSavedGalleryContent();
-            renderBatchVideos();
-        };
+        function filterProductsByCategory(queryKey) {
+            document.getElementById('categoryTransparentOverlay').style.display = 'none';
+            let query = queryKey.toLowerCase().replace(/-/g, ' ');
+            let filtered = globalMasterProductsList.filter(item => {
+                const title = (item.title || '').toLowerCase();
+                const cat = (item.category || item.description || '').toLowerCase();
+                return title.includes(query) || cat.includes(query);
+            });
+            activeProductList = filtered.length > 0 ? filtered : globalMasterProductsList;
+            isPinterestHomeMode = true;
+            renderPinterestHomeGrid(activeProductList);
+        }
 
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
@@ -415,112 +280,313 @@
             }
         }
 
-        window.scrollVideo = function(direction) {
-            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
-            if (direction === 1 && currentIndex < activeList.length - 1) { currentIndex++; renderBatchVideos(); }
-            else if (direction === -1 && currentIndex > 0) { currentIndex--; renderBatchVideos(); }
-        };
+        function renderPinterestHomeGrid(products) {
+            const container = document.getElementById('appContainer');
+            container.className = 'pinterest-feed-container';
+            const fragment = document.createDocumentFragment();
 
-        function renderBatchVideos() {
-            const feedContainer = document.getElementById('videoFeed');
-            if(!feedContainer) return;
+            products.forEach((item, index) => {
+                const title = item.title || 'rorraxy Luxury Item';
+                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                try {
+                    if (item.images_json) {
+                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
+                        if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
+                    } else if (item.image_url) resolvedImageUrl = item.image_url;
+                } catch(e) {}
 
-            let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
-            if (activeList.length === 0) {
-                feedContainer.innerHTML = `<div style="height:calc(100vh - 65px); display:flex; align-items:center; justify-content:center; color:#a0a0ab; font-size:0.85rem;">NO PRODUCTS FOUND</div>`;
-                return;
-            }
+                let price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
+                let discountPercent = parseFloat(item.discount_rate || item.discountRate || 0);
+                let discountBadge = discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : '';
 
-            if (currentIndex >= activeList.length) currentIndex = Math.max(0, activeList.length - 1);
-            let product = activeList[currentIndex];
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'product-card';
+                cardDiv.onclick = () => switchToReelsView(index);
 
-            let pId = String(product.id || '101');
-            let pVideo = product.videoUrl ? product.videoUrl.trim() : '';
-            let pPrice = product.price ? product.price : '$85.00';
+                cardDiv.innerHTML = `
+                    <div class="product-media-box">
+                        ${discountBadge}
+                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy">
+                    </div>
+                    <div class="bottom-price-overlay">
+                        <span class="bottom-price-text">${price}</span>
+                    </div>
+                `;
+                fragment.appendChild(cardDiv);
+            });
 
-            let pLikes = getDynamicEngagement(pId, product.baseLikes || 5200, 'likes');
-            let pShares = getDynamicEngagement(pId, product.baseShares || 180, 'shares');
+            container.innerHTML = '';
+            container.appendChild(fragment);
+            renderFixedGlobalActions(container, null);
+        }
 
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let isSaved = savedObjects.some(item => String(item.id) === String(pId));
-            let savedActiveClass = isSaved ? 'active' : '';
+        function renderFixedGlobalActions(container, pId) {
+            let existingBar = document.getElementById('fixedGlobalActionsBar');
+            if(existingBar) existingBar.remove();
 
+            let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
+            let pShares = getDynamicEngagement(targetId, 180, 'shares');
+
+            let actionsHtml = `
+                <div id="fixedGlobalActionsBar" class="right-vertical-actions">
+                    <div class="side-action-item" onclick="openCartViewInline()" title="Cart">
+                        <i class="fa-solid fa-basket-shopping action-pure-icon"></i>
+                        <span class="cart-top-badge" id="sideCartBadgeCount">0</span>
+                        <span class="side-count-text">CART</span>
+                    </div>
+
+                    <div class="side-action-item" onclick="openNativeShare(event, '${targetId}')" title="Share">
+                        <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
+                        <span class="side-count-text">${pShares}</span>
+                    </div>
+                    <div class="side-action-item love-action-btn" onclick="toggleReelLove(event, this, '${targetId}')" title="Like">
+                        <i class="fa-solid fa-heart action-pure-icon"></i>
+                    </div>
+                    <div class="side-action-item" onclick="toggleSearchOverlay(event)" title="Search">
+                        <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
+                    </div>
+                    <div class="side-action-item save-action-btn" onclick="handleHomeOrReelSave(event, this, '${targetId}')" title="Save">
+                        <i class="fa-solid fa-bookmark action-pure-icon"></i>
+                    </div>
+                    <div class="side-action-item" onclick="openAccountViewInline()" title="You">
+                        <i class="fa-solid fa-user-gear action-pure-icon"></i>
+                        <span class="side-count-text">YOU</span>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', actionsHtml);
+            updateCartBadgeCount();
+        }
+
+        function switchToReelsView(index) {
+            isPinterestHomeMode = false;
+            currentReelIndex = index;
+            renderSingleReelView();
+        }
+
+        function scrollReels(direction) {
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if (direction === 1 && currentReelIndex < list.length - 1) { currentReelIndex++; renderSingleReelView(); }
+            else if (direction === -1 && currentReelIndex > 0) { currentReelIndex--; renderSingleReelView(); }
+        }
+
+        function renderSingleReelView() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
+            const container = document.getElementById('appContainer');
+            container.className = 'reel-view-wrapper-outer';
 
-            let mediaElement = '';
-            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http://') || pVideo.includes('https://'))) {
-                mediaElement = `<video src="${pVideo}" autoplay loop muted playsinline preload="metadata"></video>`;
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if(currentReelIndex >= list.length) currentReelIndex = 0;
+            let product = list[currentReelIndex];
+            if(!product) return;
+
+            let pId = String(product.id || product.product_id || '101');
+            let pVideo = product.video_url || product.youtube_video || '';
+            let mediaElem = '';
+            let extractedImages = [];
+
+            try {
+                if(product.images_json) {
+                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                    if(Array.isArray(parsed)) extractedImages = parsed;
+                } else if(product.image_url) extractedImages = [product.image_url];
+            } catch(e){}
+
+            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
             } else {
-                let images = product.imagesList || [];
-                if (images.length === 0) images = ['https://via.placeholder.com/400x700?text=No+Preview+Available'];
-
-                mediaElement = `<img id="reelSlideImg" src="${images[0]}" class="reel-fit-img" alt="Product Media">`;
+                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+                mediaElem = `<img id="reelSlideImg" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
                 
-                if (images.length > 1) {
+                if (extractedImages.length > 1) {
                     let imgIdx = 0;
                     slideInterval = setInterval(() => {
-                        imgIdx = (imgIdx + 1) % images.length;
+                        imgIdx = (imgIdx + 1) % extractedImages.length;
                         const imgElem = document.getElementById('reelSlideImg');
-                        if (imgElem) imgElem.src = images[imgIdx];
+                        if (imgElem) imgElem.src = extractedImages[imgIdx];
                     }, 1500);
                 }
             }
 
-            let countryCode = product.targetCountry || 'bd';
-            let flagIconHtml = `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`;
+            let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
+            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
 
-            let discountBadgeHtml = '';
-            if (product.discountNum && product.discountNum > 0) {
-                discountBadgeHtml = `
-                    <div class="image-style-discount-badge">
-                        <span class="dynamic-flag-box">${flagIconHtml}</span>
-                        <span class="offer-text">${product.discountStr}</span>
-                    </div>`;
-            }
-
-            feedContainer.innerHTML = `
+            container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="openProductDetail('${pId}')">${mediaElement}</div>
-
-                    <div class="right-vertical-actions">
-                        <div class="side-action-item share-action-btn" onclick="openNativeShare(event, '${pId}')" title="Share">
-                            <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
-                            <span class="side-count-text">${pShares}</span>
-                        </div>
-                        <div class="side-action-item love-action-btn" onclick="toggleLove(event, this, '${pId}')" title="Like">
-                            <i class="fa-solid fa-heart action-pure-icon love-icon-elem"></i>
-                            <span class="side-count-text love-count">${pLikes}</span>
-                        </div>
-                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="toggleSaveItem(event, this, '${pId}')" title="Save">
-                            <i class="fa-solid fa-bookmark action-pure-icon"></i>
-                        </div>
+                    <div class="reel-media-box" onclick="toggleDetailsSheet(globalMasterProductsList[${currentReelIndex}])">
+                        ${discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : ''}
+                        ${mediaElem}
                     </div>
-
-                    <div class="center-price-offer-box">
-                        <span class="product-price-tag">${pPrice}</span>
-                        ${discountBadgeHtml}
+                    <div class="bottom-price-overlay">
+                        <span class="bottom-price-text">${price}</span>
                     </div>
                 </div>
             `;
+            renderFixedGlobalActions(container, pId);
         }
 
-        window.toggleLove = function(e, btn, productId) {
-            e.stopPropagation();
-            let countElem = btn.querySelector('.love-count');
-            let storageKey = `rorraxy_retail_likes_${productId}`;
-            let storedData = localStorage.getItem(storageKey);
-            let currentVal = storedData ? JSON.parse(storedData).value : 5200;
-
-            if(btn.classList.contains('liked-active')) {
-                btn.classList.remove('liked-active');
-                currentVal = Math.max(0, currentVal - 1);
-            } else {
-                btn.classList.add('liked-active');
-                currentVal += 1;
+        function toggleDetailsSheet(product) {
+            const sheet = document.getElementById('detailsOverlaySheet');
+            const content = document.getElementById('detailsSheetContent');
+            if(sheet.style.display === 'flex') {
+                sheet.style.display = 'none';
+                return;
             }
 
-            localStorage.setItem(storageKey, JSON.stringify({ value: currentVal, lastUpdated: new Date().getTime() }));
-            if(countElem) countElem.innerText = currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
+            let priceVal = parseFloat(product.price) || 35.00;
+            let title = product.title || "RORRAXY RETAIL ITEM";
+            let rawDesc = product.description || "High-grade luxury materials for retail excellence.";
+            let stockNum = product.stock || 100;
+
+            content.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+                    <span style="color:var(--gold-solid); font-weight:700; font-size:0.75rem;"><i class="fa-solid fa-circle-info"></i> SPECIFICATIONS & DETAILS</span>
+                    <button onclick="closeDetailsSheet()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
+                </div>
+                <h2 style="font-size:1.1rem; color:var(--gold-solid); font-weight:700;">${title}</h2>
+                <div style="font-size:1.3rem; font-weight:800; color:#fff;">$${priceVal.toFixed(2)}</div>
+                <div style="font-size:0.7rem; color:#00e676; font-weight:700;">IN STOCK: ${stockNum} UNITS READY</div>
+                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none;">${rawDesc}</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <span style="font-size:0.65rem; color:var(--gold-solid); font-weight:700;">CUSTOM SIZE / NOTE</span>
+                    <input type="text" id="sheetCustomNote" placeholder="ENTER NOTE (OPTIONAL)..." style="width:100%; background:#040407; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:8px; color:#fff; font-size:0.7rem;">
+                </div>
+                <button onclick="alert('Seller Chat Opened')" style="background:rgba(212,175,55,0.15); border:1px solid var(--gold-solid); color:var(--gold-solid); padding:10px; border-radius:8px; font-weight:700; font-size:0.75rem; cursor:pointer; width:100%;">
+                    <i class="fa-solid fa-headset"></i> CHAT WITH SELLER
+                </button>
+            `;
+            sheet.style.display = 'flex';
+        }
+
+        function closeDetailsSheet() {
+            document.getElementById('detailsOverlaySheet').style.display = 'none';
+        }
+
+        /* --- বাই প্রিভিউ ভ্যারিয়েন্ট পপআপ (ডানে-বামে হরিজন্টাল স্ক্রল সহ) --- */
+        function openBuyPreviewModal(product, event) {
+            const overlay = document.getElementById('buyPreviewOverlay');
+            const content = document.getElementById('buyPreviewModalContent');
+
+            let images = [];
+            try {
+                if(product.images_json) {
+                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                    if(Array.isArray(parsed)) images = parsed;
+                } else if(product.image_url) images = [product.image_url];
+            } catch(e){}
+
+            if(images.length === 0) images = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+            selectedVariantImg = images[0];
+
+            let imgsHtml = images.map((img, i) => `
+                <div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')">
+                    <img src="${img}">
+                </div>
+            `).join('');
+
+            content.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--gold-solid);">SELECT VARIANT / COLOR</span>
+                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">&times;</button>
+                </div>
+                <div class="preview-horizontal-scroll">${imgsHtml}</div>
+                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${product.title||'Item'}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%;">
+                    CONFIRM & ADD TO CART
+                </button>
+            `;
+            overlay.style.display = 'flex';
+        }
+
+        function selectPreviewImg(el, imgUrl) {
+            document.querySelectorAll('.preview-img-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedVariantImg = imgUrl;
+        }
+
+        function closeBuyPreview() {
+            document.getElementById('buyPreviewOverlay').style.display = 'none';
+        }
+
+        function triggerFlyingCoinAnimation(e) {
+            let startX = e ? e.clientX : window.innerWidth / 2;
+            let startY = e ? e.clientY : window.innerHeight / 2;
+
+            const targetBadge = document.getElementById('sideCartBadgeCount');
+            if(!targetBadge) return;
+            const targetRect = targetBadge.getBoundingClientRect();
+
+            const coin = document.createElement('div');
+            coin.className = 'flying-coin';
+            coin.innerHTML = '<i class="fa-solid fa-basket-shopping"></i>';
+            coin.style.left = `${startX - 14}px`;
+            coin.style.top = `${startY - 14}px`;
+            document.body.appendChild(coin);
+
+            requestAnimationFrame(() => {
+                coin.style.left = `${targetRect.left}px`;
+                coin.style.top = `${targetRect.top}px`;
+                coin.style.transform = 'scale(0.2)';
+                coin.style.opacity = '0.2';
+            });
+
+            setTimeout(() => {
+                if(coin.parentNode) coin.parentNode.removeChild(coin);
+            }, 750);
+        }
+
+        function confirmAddToCart(e, pId, title, price) {
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg);
+
+            if(existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    productId: pId,
+                    title: title,
+                    price: `$${parseFloat(price).toFixed(2)}`,
+                    qty: 1,
+                    img: selectedVariantImg
+                });
+            }
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+            updateCartBadgeCount();
+            triggerFlyingCoinAnimation(e);
+            closeBuyPreview();
+        }
+
+        function updateCartBadgeCount() {
+            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+            let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
+            let sideBadge = document.getElementById('sideCartBadgeCount');
+            if(sideBadge) sideBadge.innerText = totalQty;
+        }
+
+        function openCartViewInline() { alert("Cart Checkout overlay loaded in-app."); }
+        function openAccountViewInline() { alert("User Account overlay loaded in-app."); }
+
+        function getDynamicEngagement(productId, baseVal, type) {
+            let storageKey = `rorraxy_retail_${type}_${productId}`;
+            let storedData = localStorage.getItem(storageKey);
+            let currentVal = baseVal;
+            if (storedData) {
+                currentVal = JSON.parse(storedData).value;
+            } else {
+                currentVal = baseVal + Math.floor(Math.random() * 50);
+                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
+            }
+            return currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
+        }
+
+        window.toggleReelLove = function(e, btn) {
+            e.stopPropagation();
+            btn.classList.toggle('liked-active');
+        };
+
+        window.handleHomeOrReelSave = function(e, btn) {
+            e.stopPropagation();
+            btn.classList.toggle('active');
         };
 
         window.openNativeShare = async function(e, pId) {
@@ -529,47 +595,10 @@
             if (navigator.share) {
                 try { await navigator.share({ title: pId, url: shareUrl }); } catch (err) {}
             } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard!'));
+                await navigator.clipboard.writeText(shareUrl);
+                alert('Link copied to clipboard!');
             }
         };
-
-        window.openProductDetail = function(productId) {
-            window.location.href = `pd.html?id=${encodeURIComponent(productId)}`;
-        };
     </script>
-</head>
-<body id="mainBody">
-
-    <!-- Top Floating Search Bar -->
-    <div id="floatingSearchContainer" class="top-floating-search-bar">
-        <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
-        <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-
-    <div class="yt-nav-arrows">
-        <button class="yt-arrow-btn" onclick="scrollVideo(-1)"><i class="fa-solid fa-arrow-up"></i></button>
-        <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="bottom-nav-bar">
-        <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
-        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
-        <div id="bottomBuyInfoBtn" class="bottom-nav-item center-buy-btn"><i class="fa-solid fa-cart-shopping"></i><span>BUY & INFO</span></div>
-        <div id="bottomSearchBtn" class="bottom-nav-item"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span></div>
-        <div id="bottomSavedBtn" class="bottom-nav-item"><i class="fa-solid fa-video"></i><span>SAVED</span></div>
-    </nav>
-
-    <!-- Saved Gallery Overlay -->
-    <div id="savedGalleryOverlay" class="saved-gallery-overlay"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
-
-    <!-- Centered Transparent Category Overlay Menu (Dynamic Load via categories.js) -->
-    <div id="categoryTransparentOverlay" class="category-transparent-overlay">
-        <div class="seller-fullscreen-container">
-            <div class="category-fullscreen-view" id="categoryMainListView"></div>
-        </div>
-    </div>
-
-    <main class="feed-container" id="videoFeed"></main>
 </body>
 </html>
