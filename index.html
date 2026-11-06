@@ -37,7 +37,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -268,14 +268,14 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
         
-        /* প্রোডাক্ট ডিটেইলস পেজের আদলে প্রপার ডিসকাউন্ট ও কান্ট্রি ফ্লাগ ব্যাজ ডিজাইন */
-        .product-country-discount-badge {
+        /* ডেইলস পেজ থেকে হুবহু কপি করা ইন্টিগ্রেটেড ডিসকাউন্ট ও কান্ট্রি ফ্লাগ ব্যাজ স্টাইল */
+        .int-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 999;
-            background: rgba(255, 42, 133, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 700; color: #ffffff !important; text-transform: uppercase;
+            background: #ff2a85; color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 4px 10px;
+            border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; width: max-content;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
-        .product-country-discount-badge img.flag-icon { width: 13px; height: 9px; object-fit: cover; border-radius: 2px; }
+        .country-flag-icon { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; }
 
         .card-footer-actions { 
             display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
@@ -816,17 +816,18 @@
                 const presetLikes = defaultRandomLikes[randomSeed % defaultRandomLikes.length];
                 const initialLikes = item.like_count || presetLikes;
 
-                // প্রোডাক্ট ডিটেইলস পেজের আদলে ডিসকাউন্ট এবং কান্ট্রি ফ্লাগ লজিক
-                const discount = parseFloat(item.discount_rate || item.discountRate || 0);
-                const countryCode = String(item.target_country || item.targetCountry || 'bd').toLowerCase().trim();
+                // প্রোডাক্ট ডিটেইলস পেজের আদলে হুবহু ডিসকাউন্ট এবং ফ্লাগ লজিক
+                const discountPercent = item.discount_rate || item.discountRate || 0;
+                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
                 const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
-                
+
                 let discountBadgeHtml = '';
-                if (discount > 0) {
+                if (discountPercent && discountPercent > 0) {
                     discountBadgeHtml = `
-                        <div class="product-country-discount-badge">
-                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy" onerror="this.style.display='none'"> ${discount}% OFF
-                        </div>
+                        <span class="int-discount-badge">
+                            <img class="country-flag-icon" src="${flagUrl}" alt="Country Flag" onerror="this.style.display='none'">
+                            <span>${discountPercent}% OFF</span>
+                        </span>
                     `;
                 }
 
