@@ -263,7 +263,7 @@
             }
         }
 
-        // Pinterest হোম গ্রিড রেন্ডারিং (প্রাইস ও ডিসকাউন্ট ওভারলে সহ, নিচের কালো ফুটার সম্পূর্ণ বাদ)
+        // Pinterest হোম গ্রিড রেন্ডারিং (ফিক্সড ডানপাশের অ্যাকশন বার সহ)
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             container.className = 'pinterest-feed-container';
@@ -283,25 +283,16 @@
                 const title = item.title || 'rorraxy Luxury Item';
                 const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
                 
-                const discountPercent = item.discount_rate || item.discountRate || 0;
+                const discountPercent = parseFloat(item.discount_rate || item.discountRate || 0);
                 const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
                 const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
 
                 let discountBadgeHtml = '';
-                if (discountPercent && discountPercent > 0) {
+                if (discountPercent > 0) {
                     discountBadgeHtml = `
-                        <div class="card-bottom-price-offer-box">
-                            <span class="product-price-tag">${price}</span>
-                            <div class="reel-bottom-discount-badge">
-                                <img src="${flagUrl}" class="country-flag-icon" alt="Flag">
-                                <span>${discountPercent}% OFF</span>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    discountBadgeHtml = `
-                        <div class="card-bottom-price-offer-box">
-                            <span class="product-price-tag">${price}</span>
+                        <div class="reel-bottom-discount-badge">
+                            <img src="${flagUrl}" class="country-flag-icon" alt="Flag">
+                            <span>${discountPercent}% OFF</span>
                         </div>
                     `;
                 }
@@ -323,7 +314,10 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
-                        ${discountBadgeHtml}
+                        <div class="card-bottom-price-offer-box">
+                            <span class="product-price-tag">${price}</span>
+                            ${discountBadgeHtml}
+                        </div>
                     </div>
                 `;
                 fragment.appendChild(cardDiv);
@@ -331,7 +325,54 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
+
+            // হোম পেজে ফিক্সড ডানপাশের অ্যাকশন বার রেন্ডার করা
+            renderFixedGlobalActions(container, null);
         }
+
+        // ফিক্সড ডানপাশের অ্যাকশন বার ইনজেক্ট করার ফাংশন
+        function renderFixedGlobalActions(container, pId) {
+            let existingBar = document.getElementById('fixedGlobalActionsBar');
+            if(existingBar) existingBar.remove();
+
+            let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
+            let pShares = getDynamicEngagement(targetId, 180, 'shares');
+            let pLikes = getDynamicEngagement(targetId, 5200, 'likes');
+
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
+            let savedActiveClass = isSaved ? 'active' : '';
+
+            let actionsHtml = `
+                <div id="fixedGlobalActionsBar" class="right-vertical-actions">
+                    <div class="side-action-item" onclick="openNativeShare(event, '${targetId}')" title="Share">
+                        <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
+                        <span class="side-count-text">${pShares}</span>
+                    </div>
+                    <div class="side-action-item love-action-btn" onclick="toggleReelLove(event, this, '${targetId}')" title="Like">
+                        <i class="fa-solid fa-heart action-pure-icon"></i>
+                        <span class="side-count-text love-count">${isPinterestHomeMode ? '' : pLikes}</span>
+                    </div>
+                    <div class="side-action-item" onclick="toggleSearchOverlay(event)" title="Search">
+                        <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
+                    </div>
+                    <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleHomeOrReelSave(event, this, '${targetId}')" title="Save">
+                        <i class="fa-solid fa-bookmark action-pure-icon"></i>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', actionsHtml);
+        }
+
+        // হোম পেজে সেভ বাটনে ক্লিক করলে নিষ্ক্রিয় থাকবে কিন্তু রিলস মোডে কাজ করবে
+        window.handleHomeOrReelSave = function(e, btn, pId) {
+            e.stopPropagation();
+            if(isPinterestHomeMode) {
+                // হোম পেজে সেভ কাজ করবে না
+                return;
+            }
+            handleDualSaveAction(e, btn, pId);
+        };
 
         // রিলস মোডে রূপান্তর
         function switchToReelsView(index) {
@@ -370,7 +411,7 @@
             let pPrice = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$85.00';
             let countryCode = (product.target_country || product.targetCountry || 'bd').toLowerCase();
             let flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
-            let discountPercent = product.discount_rate || product.discountRate || 0;
+            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
 
             let discountBadgeHtml = '';
             if (discountPercent > 0) {
@@ -408,34 +449,10 @@
                 }
             }
 
-            let pLikes = getDynamicEngagement(pId, product.like_count || 5200, 'likes');
-            let pShares = getDynamicEngagement(pId, 180, 'shares');
-
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let isSaved = savedObjects.some(item => String(item.id) === String(pId));
-            let savedActiveClass = isSaved ? 'active' : '';
-
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
                     <div class="reel-media-box" onclick="openProductDetails('${pId}')">
                         ${mediaElem}
-                    </div>
-
-                    <div class="right-vertical-actions">
-                        <div class="side-action-item" onclick="openNativeShare(event, '${pId}')" title="Share">
-                            <i class="fa-solid fa-reply action-pure-icon share-flip"></i>
-                            <span class="side-count-text">${pShares}</span>
-                        </div>
-                        <div class="side-action-item love-action-btn" onclick="toggleReelLove(event, this, '${pId}')" title="Like">
-                            <i class="fa-solid fa-heart action-pure-icon"></i>
-                            <span class="side-count-text love-count">${pLikes}</span>
-                        </div>
-                        <div class="side-action-item" onclick="toggleSearchOverlay(event)" title="Search">
-                            <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
-                        </div>
-                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleDualSaveAction(event, this, '${pId}')" title="Save">
-                            <i class="fa-solid fa-bookmark action-pure-icon"></i>
-                        </div>
                     </div>
 
                     <div class="center-price-offer-box">
@@ -444,6 +461,9 @@
                     </div>
                 </div>
             `;
+
+            // রিলস মোডের জন্য ফিক্সড অ্যাকশন বার রেন্ডার করা
+            renderFixedGlobalActions(container, pId);
         }
 
         function getDynamicEngagement(productId, baseVal, type) {
@@ -474,7 +494,7 @@
                 currentVal += 1;
             }
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
-            if(countElem) {
+            if(countElem && !isPinterestHomeMode) {
                 countElem.innerText = currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
             }
         };
@@ -483,7 +503,7 @@
             e.stopPropagation();
             let currentTime = new Date().getTime();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
+            let existingIndex = savedObjects.findIndex(item => String(item.id || item.product_id) === String(pId));
             
             if (currentTime - lastSaveClickTime < 400 || btn.classList.contains('active') || existingIndex > -1) {
                 renderSavedGalleryContent();
@@ -634,7 +654,7 @@
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212,175,55,0.15);
+            -webkit-backdrop-filter: blur(20px); border-top: none !important;
             display: flex; justify-content: space-around; align-items: center; z-index: 4000; padding: 0 4px;
         }
         .bottom-nav-item {
@@ -662,6 +682,7 @@
             width: 100%; 
             max-width: 1400px; 
             margin: 0 auto;
+            position: relative;
             contain: layout style paint;
         }
         @media (min-width: 768px) { 
@@ -724,8 +745,9 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
         
+        /* Fixed Right Vertical Actions */
         .right-vertical-actions {
-            position: absolute; right: 18px; bottom: 85px; z-index: 50;
+            position: fixed; right: 18px; bottom: 85px; z-index: 50;
             display: flex; flex-direction: column; align-items: center; gap: 20px;
         }
         .side-action-item { 
