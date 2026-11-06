@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Seller Portal - rorraxy</title>
    
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
@@ -26,59 +26,195 @@
             --required-red: #ff4d4d;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
-        body { display: flex; align-items: center; justify-content: center; padding: 20px; text-transform: uppercase; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
-        .auth-wrapper { width: 100%; max-width: 400px; display: flex; justify-content: center; align-items: center; }
+        html, body { 
+            width: 100%; 
+            min-height: 100vh;
+            overflow-x: hidden; 
+            background: var(--bg-retail) !important; 
+            color: var(--text-white); 
+            font-family: var(--font-main); 
+            font-size: 15px; 
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased; 
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px 16px; 
+            text-transform: uppercase; 
+        }
+
+        .auth-wrapper { 
+            width: 100%; 
+            max-width: 400px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
         .auth-card {
             background: var(--card-retail);
-            border: 1px solid rgba(255, 42, 133, 0.12);
+            border: 1px solid rgba(255, 42, 133, 0.15);
             border-radius: 24px;
             width: 100%;
-            padding: 38px 26px;
+            padding: 36px 24px;
             display: flex;
             flex-direction: column;
             gap: 20px;
             text-align: center;
             backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            will-change: transform;
         }
 
-        .auth-logo { width: 130px; height: auto; max-height: 130px; object-fit: contain; margin: 0 auto; background: transparent !important; filter: drop-shadow(0 6px 20px rgba(255, 42, 133, 0.2)) !important; }
-        .auth-title { font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1.2px; margin-top: -4px; }
-        .auth-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 0.65rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.8px; }
+        .auth-logo { 
+            width: 120px; 
+            height: 120px; 
+            object-fit: contain; 
+            margin: 0 auto; 
+            background: transparent !important; 
+            filter: drop-shadow(0 6px 20px rgba(255, 42, 133, 0.2)) !important; 
+        }
+
+        .auth-title { 
+            font-size: 1.15rem; 
+            font-weight: 800; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            letter-spacing: 1.2px; 
+            margin-top: -4px; 
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .auth-form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            text-align: left; 
+        }
+
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+
+        .form-group label { 
+            font-size: 0.68rem; 
+            font-weight: 700; 
+            color: var(--text-gray); 
+            letter-spacing: 0.8px; 
+            line-height: 1.2;
+        }
 
         .form-control {
-            width: 100%; background: #000000; border: none; border-radius: 14px;
-            padding: 14px 16px; color: var(--text-white); font-weight: 600; font-size: 0.88rem;
-            outline: none; font-family: var(--font-main); text-transform: none;
+            width: 100%; 
+            background: #000000; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 14px;
+            padding: 14px 16px; 
+            color: var(--text-white); 
+            font-weight: 600; 
+            font-size: 0.88rem;
+            outline: none; 
+            font-family: var(--font-main); 
+            text-transform: none;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+            transition: border-color 0.2s ease;
         }
-        .form-control:focus { background: #030305; }
-        .form-control::placeholder { font-size: 0.75rem; color: #555566; text-transform: none; }
 
-        .email-hint { font-size: 0.62rem; color: var(--text-gray); text-transform: none; letter-spacing: 0.2px; margin-top: 2px; display: flex; gap: 5px; align-items: center; }
+        .form-control:focus { 
+            background: #030305; 
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+
+        .form-control::placeholder { 
+            font-size: 0.78rem; 
+            color: #555566; 
+            text-transform: none; 
+        }
+
+        .email-hint { 
+            font-size: 0.65rem; 
+            color: var(--text-gray); 
+            text-transform: none; 
+            letter-spacing: 0.2px; 
+            display: flex; 
+            gap: 6px; 
+            align-items: center; 
+            line-height: 1.3;
+        }
 
         .auth-btn {
-            width: 100%; background: var(--gold-gradient); border: none; border-radius: 14px;
-            padding: 15px; color: #030305; font-weight: 800; font-size: 0.85rem; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; text-decoration: none;
-            display: inline-block; text-align: center; transition: filter 0.2s ease;
+            width: 100%; 
+            background: var(--gold-gradient); 
+            border: none; 
+            border-radius: 14px;
+            padding: 15px; 
+            color: #030305; 
+            font-weight: 800; 
+            font-size: 0.85rem; 
+            cursor: pointer;
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            margin-top: 4px; 
+            text-decoration: none;
+            display: inline-flex; 
+            justify-content: center;
+            align-items: center;
+            transition: filter 0.2s ease, transform 0.1s ease;
         }
-        .auth-btn:hover { filter: brightness(1.08); }
-        .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .status-msg { font-size: 0.72rem; text-transform: none; margin-top: -2px; display: none; text-align: center; }
-        .status-msg.error { color: var(--required-red); }
-        .status-msg.success { color: #2ecc71; }
+        .auth-btn:active {
+            transform: scale(0.98);
+        }
+
+        .auth-btn:hover { 
+            filter: brightness(1.08); 
+        }
+
+        .auth-btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
+
+        .status-msg { 
+            font-size: 0.75rem; 
+            text-transform: none; 
+            display: none; 
+            text-align: center; 
+            line-height: 1.4;
+            word-break: break-word;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+
+        .status-msg.error { 
+            color: var(--required-red); 
+            background: rgba(255, 77, 77, 0.08);
+        }
+
+        .status-msg.success { 
+            color: #2ecc71; 
+            background: rgba(46, 204, 113, 0.08);
+        }
     </style>
 </head>
 <body>
 
     <script>
-        // যদি আগেই ইনফো পূরণ করা থাকে তবে সরাসরি ড্যাশবোর্ডে যাবে, অন্যথায় ইনফো পেজে পাঠাবে
         if (localStorage.getItem('rorraxy_seller_verified') === 'true') {
             if (localStorage.getItem('rorraxy_seller_info_completed') === 'true') {
                 window.location.replace('/seller/dashboard.html');
@@ -90,11 +226,11 @@
 
     <div class="auth-wrapper">
         <div class="auth-card">
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy logo" class="auth-logo">
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy logo" class="auth-logo" width="120" height="120">
             
             <h2 class="auth-title">SELLER VERIFICATION</h2>
 
-            <form id="magicLinkForm" class="auth-form">
+            <form id="magicLinkForm" class="auth-form" novalidate>
                 <div class="form-group">
                     <label>EMAIL ADDRESS <span style="color:var(--required-red)">*</span></label>
                     <input type="email" class="form-control" id="sellerEmail" placeholder="Gmail, Yahoo, Outlook, Apple..." required style="text-transform: none;" autocomplete="email">
@@ -116,12 +252,10 @@
 
         function isAuthenticEmail(email) {
             const blockedDomains = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable', 'trashmail'];
-            const domain = email.split('@')[1];
-            if (!domain) return false;
-            for (let b of blockedDomains) {
-                if (domain.includes(b)) return false;
-            }
-            return true;
+            const parts = email.split('@');
+            if (parts.length !== 2) return false;
+            const domain = parts[1];
+            return !blockedDomains.some(b => domain.includes(b));
         }
 
         function showStatus(element, message, isError = false) {
@@ -134,7 +268,10 @@
             e.preventDefault();
             const email = sellerEmailInput.value.trim().toLowerCase();
 
-            if (!email) return;
+            if (!email) {
+                showStatus(formStatus, 'Please enter a valid email address.', true);
+                return;
+            }
 
             if (!isAuthenticEmail(email)) {
                 showStatus(formStatus, 'Temporary or fake emails are not allowed.', true);
@@ -157,13 +294,13 @@
                 if (response.ok && data.success) {
                     localStorage.setItem('rorraxy_seller_verified', 'true');
                     localStorage.setItem('rorraxy_seller_email', email);
+                    localStorage.setItem('rorraxy_current_seller_email', email);
                     
                     showStatus(formStatus, 'Verified successfully! Redirecting...', false);
                     
-                    // ভেরিফিকেশন সফল হওয়ার সাথে সাথেই ইনফরমেশন পেজে রিডাইরেক্ট হবে
                     setTimeout(() => {
                         window.location.replace('/seller/info.html');
-                    }, 800);
+                    }, 600);
                 } else {
                     showStatus(formStatus, (data && data.error) ? data.error : 'Verification failed. Try again.', true);
                     sendLinkBtn.disabled = false;
@@ -172,11 +309,12 @@
             } catch (err) {
                 localStorage.setItem('rorraxy_seller_verified', 'true');
                 localStorage.setItem('rorraxy_seller_email', email);
+                localStorage.setItem('rorraxy_current_seller_email', email);
                 
                 showStatus(formStatus, 'Verified successfully! Redirecting...', false);
                 setTimeout(() => {
                     window.location.replace('/seller/info.html');
-                }, 800);
+                }, 600);
             }
         });
     </script>
