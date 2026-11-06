@@ -268,18 +268,16 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
         
-        /* Fully Guaranteed High z-index & Display Badge CSS */
+        /* Exact Product Detail Style Matching Badge & Flag CSS */
         .product-country-discount-badge {
-            position: absolute !important; top: 8px !important; left: 8px !important; z-index: 9999 !important;
-            background: rgba(255, 42, 133, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.4) !important;
-            padding: 4px 9px !important; border-radius: 8px !important; display: flex !important; align-items: center !important; gap: 6px !important;
-            font-size: 0.60rem !important; font-weight: 700 !important; color: #ffffff !important; text-transform: uppercase !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.8) !important; pointer-events: none !important;
+            position: absolute !important; top: 8px !important; left: 8px !important; z-index: 999 !important;
+            background: #ff2a85 !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            padding: 3px 8px !important; border-radius: 8px !important; display: flex !important; align-items: center !important; gap: 5px !important;
+            font-size: 0.58rem !important; font-weight: 700 !important; color: #ffffff !important; text-transform: uppercase !important;
         }
         .product-country-discount-badge img.flag-icon { 
-            width: 16px !important; height: 12px !important; object-fit: cover !important; border-radius: 2px !important;
+            width: 16px !important; height: 11px !important; object-fit: cover !important; border-radius: 2px !important;
             display: inline-block !important; vertical-align: middle !important; flex-shrink: 0 !important;
-            border: 0.5px solid rgba(255,255,255,0.7) !important; background: #222 !important;
         }
 
         .card-footer-actions { 
@@ -823,19 +821,19 @@
 
                 const discount = item.discount_rate || item.discountRate || item.discount || '0';
                 
-                // Enhanced Country Code Extraction & Fallback
+                // Synchronized Country Flag Logic matching pd.html
                 let rawCountry = item.target_country || item.targetCountry || item.country || item.country_code || item.targetCountryCode || 'bd';
                 if (typeof rawCountry !== 'string' || !rawCountry.trim()) {
                     rawCountry = 'bd';
                 }
                 const countryCode = rawCountry.toLowerCase().trim();
-                const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
+                const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
                 
                 let discountBadgeHtml = '';
                 if (parseFloat(discount) > 0) {
                     discountBadgeHtml = `
                         <div class="product-country-discount-badge">
-                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy"> ${discount}% OFF
+                            <img src="${flagUrl}" alt="${countryCode}" class="flag-icon" loading="lazy" onerror="this.style.display='none'"> ${discount}% OFF
                         </div>
                     `;
                 }
