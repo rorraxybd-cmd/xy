@@ -43,6 +43,46 @@
         let currentIndex = 0;
         let slideInterval = null;
 
+        // বিশ্বজুড়ে বিভিন্ন দেশের নাম থেকে 2-Letter ISO Country Code রূপান্তর করার ম্যাপ ফাংশন
+        function getCountryCode(inputCountry) {
+            if (!inputCountry) return 'us';
+            let c = String(inputCountry).trim().toLowerCase();
+            
+            // যদি ২ অক্ষরের ISO Code সরাসরি পাঠায় (যেমন: BD, US, CA, IN, GB)
+            if (c.length === 2) return c;
+
+            // সাধারণ দেশের নাম ব্যাকএন্ড থেকে আসলে তার ISO Code ম্যাপিং
+            const countryMap = {
+                'bangladesh': 'bd',
+                'united states': 'us',
+                'usa': 'us',
+                'us': 'us',
+                'canada': 'ca',
+                'united kingdom': 'gb',
+                'uk': 'gb',
+                'india': 'in',
+                'pakistan': 'pk',
+                'australia': 'au',
+                'germany': 'de',
+                'france': 'fr',
+                'japan': 'jp',
+                'china': 'cn',
+                'brazil': 'br',
+                'saudi arabia': 'sa',
+                'uae': 'ae',
+                'united arab emirates': 'ae',
+                'south africa': 'za',
+                'malaysia': 'my',
+                'singapore': 'sg',
+                'italy': 'it',
+                'spain': 'es',
+                'turkey': 'tr',
+                'russia': 'ru'
+            };
+
+            return countryMap[c] || 'us'; // না মিললে ডিফল্ট হিসেবে us ব্যবহার হবে
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             loadLiveVideosFromBackend();
 
@@ -204,10 +244,11 @@
 
                         extractedImages = extractedImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
                         let sellerTitle = item.brand_name || (item.vendor_type === 'vendor' ? 'Official Vendor' : 'rorraxy Merchant');
-                        let discountVal = parseFloat(item.discount_rate || 0);
+                        let discountVal = parseFloat(item.discount_rate || item.discount || 0);
 
-                        // কান্ট্রি কোড হ্যান্ডেল করার জন্য (যেমন: item.country বা item.country_code, ডিফল্ট 'us')
-                        let countryCode = (item.country_code || item.country || 'us').toLowerCase();
+                        // ক্লাউডফ্লেয়ার / সেলার প্যানেল থেকে সম্ভাব্য যেকোনো কান্ট্রি ফিল্ড অটো-ডিটেক্ট করবে
+                        let rawCountry = item.country_code || item.country || item.seller_country || item.vendor_country || item.origin_country || 'us';
+                        let dynamicCountryCode = getCountryCode(rawCountry);
 
                         let calculatedBaseLikes = item.like_count || randomLikeBases[Math.floor(Math.random() * randomLikeBases.length)];
 
@@ -220,7 +261,7 @@
                             baseShares: 180,
                             discountNum: discountVal,
                             discountStr: discountVal > 0 ? `${discountVal}% OFF` : '',
-                            countryCode: countryCode, // কান্ট্রি কোড যুক্ত করা হলো
+                            countryCode: dynamicCountryCode, // ডাইনামিক কান্ট্রি কোড
                             category: item.category || 'video',
                             description: item.description || '',
                             title: item.title || '',
@@ -452,12 +493,12 @@
 
             let discountBadgeHtml = '';
             if (product.discountNum && product.discountNum > 0) {
-                // ডাইনামিক পতাকার জন্য flagcdn ব্যবহার করা হয়েছে (যেমন: us, ca, bd ইত্যাদি)
-                let countryFlagUrl = `https://flagcdn.com/24x18/${product.countryCode || 'us'}.png`;
+                // পৃথিবীজুড়ে যেকোনো দেশের পতাকার জন্য High-Quality SVG/PNG API 
+                let countryFlagUrl = `https://flagcdn.com/w40/${product.countryCode}.png`;
                 
                 discountBadgeHtml = `
                     <div class="image-style-discount-badge">
-                        <img src="${countryFlagUrl}" alt="Flag" style="width: 18px; height: 13px; object-fit: cover; border-radius: 2px;">
+                        <img src="${countryFlagUrl}" alt="${product.countryCode}" class="dynamic-country-flag">
                         <span class="offer-text">${product.discountStr}</span>
                     </div>`;
             }
@@ -701,8 +742,11 @@
         }
         .product-price-tag { font-size: 0.95rem; font-weight: 800; color: #ffffff; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
         .image-style-discount-badge {
-            background: var(--pink-accent); color: #ffffff; padding: 4px 12px; border-radius: 18px;
+            background: var(--pink-accent); color: #ffffff; padding: 4px 10px; border-radius: 18px;
             font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
+        }
+        .dynamic-country-flag {
+            width: 20px; height: 14px; object-fit: cover; border-radius: 2px; display: inline-block; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         .offer-text { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
     </style>
@@ -873,7 +917,7 @@
                     </div>
                     <div class="accordion-content">
                         <div class="sub-categories-grid">
-                            <div class="sub-cat-item" onclick="filterReslByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
+                            <div class="sub-cat-item" onclick="filterReelsByCategory('mother-baby-clothing')"><i class="fa-solid fa-shirt"></i><span class="sub-cat-name">MOTHER & BABY CLOTHING</span></div>
                             <div class="sub-cat-item" onclick="filterReelsByCategory('pregnancy-maternity')"><i class="fa-solid fa-venus"></i><span class="sub-cat-name">PREGNANCY & MATERNITY</span></div>
                             <div class="sub-cat-item" onclick="filterReelsByCategory('baby-care-feeding')"><i class="fa-solid fa-bottle-water"></i><span class="sub-cat-name">BABY CARE & FEEDING</span></div>
                             <div class="sub-cat-item" onclick="filterReelsByCategory('nursery-baby-gear')"><i class="fa-solid fa-bed"></i><span class="sub-cat-name">NURSERY & BABY GEAR</span></div>
