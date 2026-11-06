@@ -80,7 +80,7 @@
                 });
             }
 
-            // 3. BUY Click: Direct Buy/Checkout
+            // 3. BUY Click
             if(bottomBuyBtn) {
                 bottomBuyBtn.addEventListener('click', () => {
                     let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
@@ -90,7 +90,7 @@
                 });
             }
 
-            // 4. DETAILS Click: Open Product Detail Page
+            // 4. DETAILS Click
             if(bottomDetailsBtn) {
                 bottomDetailsBtn.addEventListener('click', () => {
                     let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
@@ -100,7 +100,7 @@
                 });
             }
 
-            // 5. HOME Click: Direct link to rorraxy.com[cite: 1]
+            // 5. HOME Click[cite: 1]
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
                     window.location.href = 'https://rorraxy.com';
@@ -298,19 +298,16 @@
             renderBatchVideos();
         };
 
-        // ডুয়েল সেভ ফাংশন (১ম ক্লিকে সেভ, ২য় ক্লিকে বা অ্যাক্টিভ অবস্থায় গ্যালারি ওপেন)
         window.handleDualSaveAction = function(e, btn, pId) {
             e.stopPropagation();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let existingIndex = savedObjects.findIndex(item => String(item.id) === String(pId));
             
-            // যদি আগে থেকেই সেভ থাকে (পিঙ্ক কালার), তবে সেভ গ্যালারি ওপেন করবে
             if (btn.classList.contains('active') || existingIndex > -1) {
                 renderSavedGalleryContent();
                 const overlay = document.getElementById('savedGalleryOverlay');
                 if(overlay) overlay.style.display = 'flex';
             } else {
-                // ১ম ক্লিক: সেভ করবে এবং পিঙ্ক কালার করবে
                 let targetProduct = globalVideoList.find(item => String(item.id) === String(pId));
                 if(targetProduct) {
                     savedObjects.push(targetProduct);
@@ -453,7 +450,6 @@
                 }
             }
 
-            // Cloudflare D1 ডাটাবেজের target_country অনুযায়ী সরাসরি পতাকা নেওয়া[cite: 3]
             let countryCode = product.targetCountry || 'bd';
             let flagIconHtml = `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`;
 
@@ -472,7 +468,7 @@
                         ${mediaElement}
                     </div>
 
-                    <!-- Right Vertical Actions (1. Share, 2. Like, 3. Search, 4. Dual Save) -->
+                    <!-- Right Vertical Actions (Pure Icons Only) -->
                     <div class="right-vertical-actions">
                         <!-- 1. SHARE -->
                         <div class="side-action-item share-action-btn" onclick="openNativeShare(event, '${pId}')" title="Share">
@@ -486,13 +482,13 @@
                             <span class="side-count-text love-count">${pLikes}</span>
                         </div>
 
-                        <!-- 3. SEARCH (লাইকের নিচে) -->
+                        <!-- 3. SEARCH -->
                         <div class="side-action-item search-action-btn" onclick="toggleSearchOverlay(event)" title="Search">
                             <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
                         </div>
 
-                        <!-- 4. DUAL SAVE (সার্চের নিচে) -->
-                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleDualSaveAction(event, this, '${pId}')" title="Save / View Saved">
+                        <!-- 4. SAVE -->
+                        <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handleDualSaveAction(event, this, '${pId}')" title="Save">
                             <i class="fa-solid fa-bookmark action-pure-icon"></i>
                         </div>
                     </div>
@@ -623,7 +619,7 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
         }
 
-        /* Bottom Navigation Bar (5 Items: WORLD, CATEGORY, BUY, DETAILS, HOME) */
+        /* Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
@@ -695,28 +691,30 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-fit-img { width: 100%; height: 100%; object-fit: contain; background: #000000; display: block; }
 
-        /* Right Vertical Action Buttons */
+        /* Clean Vertical Actions (No Background / Circles) */
         .right-vertical-actions {
             position: absolute; right: 18px; bottom: 85px; z-index: 50;
-            display: flex; flex-direction: column; align-items: center; gap: 18px;
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
         }
         .side-action-item { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; gap: 3px; transition: transform 0.2s ease;
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(10, 10, 14, 0.65); backdrop-filter: blur(8px);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 3px; transition: transform 0.2s ease;
+            background: none !important; border: none !important; box-shadow: none !important; border-radius: 0 !important;
+            padding: 0 !important; width: auto !important; height: auto !important;
         }
         .side-action-item:active { transform: scale(0.85); }
-        .action-pure-icon { font-size: 1.35rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
+        .action-pure-icon { 
+            font-size: 1.7rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.7));
+        }
         .share-flip { transform: scaleX(-1); }
-        .side-count-text { font-size: 0.62rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; margin-top: -2px; }
+        .side-count-text { 
+            font-size: 0.72rem; font-weight: 700; color: #ffffff; letter-spacing: 0.2px; 
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+        }
         
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
         
-        .save-action-btn.active { border-color: var(--pink-accent) !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
         .center-price-offer-box {
