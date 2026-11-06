@@ -263,6 +263,28 @@
             }
         }
 
+        // едиণ ও নিখুঁত প্রাইস ও ডিসকাউন্ট জেনারেটর ফাংশন (হোম এবং রিলস উভয়ের জন্য অভিন্ন)
+        function generatePriceDiscountHTML(product) {
+            let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
+            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
+            let countryCode = (product.target_country || product.targetCountry || 'bd').toLowerCase();
+            let flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
+
+            let discountBadgeHtml = '';
+            if (discountPercent > 0) {
+                discountBadgeHtml = `
+                    <div class="uni-discount-badge">
+                        <img src="${flagUrl}" class="uni-flag-icon" alt="Flag" crossorigin="anonymous">
+                        <span>${discountPercent}% OFF</span>
+                    </div>`;
+            }
+
+            return `
+                <span class="uni-price-txt">${price}</span>
+                ${discountBadgeHtml}
+            `;
+        }
+
         // Pinterest হোম গ্রিড রেন্ডারিং
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
@@ -281,21 +303,6 @@
             products.forEach((item, index) => {
                 const productId = item.id || item.product_id || item.product_code || '101';
                 const title = item.title || 'rorraxy Luxury Item';
-                const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
-                
-                const discountPercent = parseFloat(item.discount_rate || item.discountRate || 0);
-                const countryCode = (item.target_country || item.targetCountry || 'bd').toLowerCase();
-                const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
-
-                let discountBadgeHtml = '';
-                if (discountPercent > 0) {
-                    discountBadgeHtml = `
-                        <div class="reel-bottom-discount-badge">
-                            <img src="${flagUrl}" class="country-flag-icon" alt="Flag" crossorigin="anonymous">
-                            <span>${discountPercent}% OFF</span>
-                        </div>
-                    `;
-                }
 
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 try {
@@ -314,9 +321,8 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" onload="this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'; this.classList.add('loaded-img'); this.parentElement.classList.add('loaded');">
-                        <div class="card-bottom-price-offer-box">
-                            <span class="product-price-tag">${price}</span>
-                            ${discountBadgeHtml}
+                        <div class="unified-price-offer-box">
+                            ${generatePriceDiscountHTML(item)}
                         </div>
                     </div>
                 `;
@@ -326,7 +332,6 @@
             container.innerHTML = '';
             container.appendChild(fragment);
 
-            // ফিক্সড ডানপাশের অ্যাকশন বার রেন্ডার করা
             renderFixedGlobalActions(container, null);
         }
 
@@ -361,11 +366,9 @@
                     </div>
                 </div>
             `;
-            // মূল బాডি বা অ্যাপ কন্টেইনারে অ্যাপেন্ড করা যাতে সবসময় স্ক্রিনের ডানে ফিক্সড থাকে
             document.body.insertAdjacentHTML('beforeend', actionsHtml);
         }
 
-        // হোম পেজে সেভ বাটনে ক্লিক করলে নিষ্ক্রিয় থাকবে কিন্তু রিলস মোডে কাজ করবে
         window.handleHomeOrReelSave = function(e, btn, pId) {
             e.stopPropagation();
             if(isPinterestHomeMode) {
@@ -408,19 +411,6 @@
             if (pVideo.includes('.r2.dev')) {
                 pVideo = pVideo.replace(/https:\/\/[^/]+\.r2\.dev/, 'https://vid.rorraxy.com');
             }
-            let pPrice = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$85.00';
-            let countryCode = (product.target_country || product.targetCountry || 'bd').toLowerCase();
-            let flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
-            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
-
-            let discountBadgeHtml = '';
-            if (discountPercent > 0) {
-                discountBadgeHtml = `
-                    <div class="reel-bottom-discount-badge">
-                        <img src="${flagUrl}" class="country-flag-icon" alt="Flag" crossorigin="anonymous">
-                        <span>${discountPercent}% OFF</span>
-                    </div>`;
-            }
 
             let mediaElem = '';
             let extractedImages = [];
@@ -455,14 +445,12 @@
                         ${mediaElem}
                     </div>
 
-                    <div class="center-price-offer-box">
-                        <span class="reel-price-txt">${pPrice}</span>
-                        ${discountBadgeHtml}
+                    <div class="unified-price-offer-box">
+                        ${generatePriceDiscountHTML(product)}
                     </div>
                 </div>
             `;
 
-            // ফিক্সড অ্যাকশন বার রেন্ডার করা
             renderFixedGlobalActions(container, pId);
         }
 
@@ -722,21 +710,21 @@
         }
         .product-media-box img.loaded-img { opacity: 1; }
 
-        /* কার্ডের নিচের প্রাইস ও ডিসকাউন্ট বাটন (ফ্লেক্স র্যাপ ও সাইজ নিখুঁতভাবে ঠিক করা) */
-        .card-bottom-price-offer-box {
+        /* একীভূত এবং সুবিন্যস্ত প্রাইস ও ডিসকাউন্ট ওভারলে বাটন (হোম এবং রিলস উভয়ের জন্য নিখুঁত) */
+        .unified-price-offer-box {
             position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            z-index: 40; display: flex; align-items: center; justify-content: center; gap: 6px;
-            background: rgba(10, 10, 14, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            padding: 5px 10px; border-radius: 30px; white-space: nowrap; width: max-content; max-width: 92%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6); border: 1px solid rgba(212,175,55,0.25);
+            z-index: 40; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(10, 10, 14, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 5px 12px; border-radius: 30px; white-space: nowrap; width: max-content;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid rgba(212,175,55,0.3);
         }
-        .product-price-tag { font-size: 0.78rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+        .uni-price-txt { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         
-        .reel-bottom-discount-badge {
-            background: var(--pink-accent); color: #fff; padding: 2px 7px; border-radius: 14px;
-            font-size: 0.58rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+        .uni-discount-badge {
+            background: var(--pink-accent); color: #ffffff; padding: 3px 8px; border-radius: 16px;
+            font-size: 0.6rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
         }
-        .country-flag-icon { width: 14px; height: 10px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+        .uni-flag-icon { width: 14px; height: 10px; border-radius: 2px; object-fit: cover; display: inline-block; vertical-align: middle; flex-shrink: 0; }
 
         /* Full Reels View Styles (9:16 Optimized for Mobile & Desktop) */
         .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 65px); height: calc(100dvh - 65px); position: relative; background: #000; overflow: hidden; }
@@ -745,7 +733,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
         
-        /* Fixed Right Vertical Actions (সবসময় ডানে ফিক্সড থাকবে) */
+        /* Fixed Right Vertical Actions */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 50;
             display: flex; flex-direction: column; align-items: center; gap: 18px;
@@ -768,17 +756,6 @@
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .love-action-btn.liked-active .side-count-text { color: var(--pink-accent) !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
-
-        .center-price-offer-box {
-            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
-            z-index: 40; display: flex; align-items: center; gap: 10px;
-            background: rgba(10, 10, 14, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 6px 16px; border-radius: 30px; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            border: 1px solid rgba(212,175,55,0.25);
-        }
-        .reel-price-txt {
-            font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
 
         /* Overlays */
         .category-transparent-overlay, .saved-gallery-overlay {
