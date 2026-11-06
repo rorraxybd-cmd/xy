@@ -42,45 +42,45 @@
         let activeReelsList = []; 
         let currentIndex = 0;
         let slideInterval = null;
-        let userCountryCode = null; // Global storage for detected country code
+        let userCountryCode = null;
 
-        // Cloudflare বা Fallback API থেকে ব্যবহারকারীর দেশ সনাক্তকরণ
-        async function fetchUserCountryCode() {
-            if (userCountryCode) return userCountryCode;
-            try {
-                let response = await fetch('/cdn-cgi/trace');
-                if (response.ok) {
-                    let data = await response.text();
+        // Cloudflare Trace & Fallback API safe fetch
+        function initCountryFlagDetection() {
+            fetch('/cdn-cgi/trace')
+                .then(res => res.text())
+                .then(data => {
                     let locLine = data.split('\n').find(line => line.startsWith('loc='));
                     if (locLine) {
                         let code = locLine.split('=')[1].toLowerCase();
                         if (code && code !== 'xx') {
                             userCountryCode = code;
-                            return userCountryCode;
+                            updateFlagsInDOM();
                         }
                     }
-                }
-            } catch (e) {
-                console.log("Cloudflare trace fetch bypassed/failed, trying fallback.");
-            }
-
-            try {
-                let fallbackResp = await fetch('https://ipapi.co/json/');
-                if (fallbackResp.ok) {
-                    let ipData = await fallbackResp.json();
-                    if (ipData && ipData.country_code) {
-                        userCountryCode = ipData.country_code.toLowerCase();
-                        return userCountryCode;
-                    }
-                }
-            } catch (err) {
-                console.error("Country flag detection failed:", err);
-            }
-            return null;
+                })
+                .catch(() => {
+                    fetch('https://ipapi.co/json/')
+                        .then(res => res.json())
+                        .then(ipData => {
+                            if (ipData && ipData.country_code) {
+                                userCountryCode = ipData.country_code.toLowerCase();
+                                updateFlagsInDOM();
+                            }
+                        })
+                        .catch(err => console.log('Flag detection error:', err));
+                });
         }
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            fetchUserCountryCode(); // Start fetching country early
+        function updateFlagsInDOM() {
+            if (!userCountryCode) return;
+            const flagContainers = document.querySelectorAll('.dynamic-flag-box');
+            flagContainers.forEach(el => {
+                el.innerHTML = `<img src="https://flagcdn.com/w40/${userCountryCode}.png" alt="${userCountryCode}" class="dynamic-country-flag">`;
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initCountryFlagDetection();
             loadLiveVideosFromBackend();
 
             const bottomHomeBtn = document.getElementById('bottomHomeBtn');
@@ -95,7 +95,7 @@
             const savedGalleryOverlay = document.getElementById('savedGalleryOverlay');
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
 
-            // 1. HOME Click: Direct link to rorraxy.com
+            // 1. HOME Click: Direct link to rorraxy.com[cite: 1]
             if(bottomHomeBtn) {
                 bottomHomeBtn.addEventListener('click', () => { 
                     window.location.href = 'https://rorraxy.com';
@@ -117,7 +117,7 @@
                 });
             }
 
-            // 3. BUY & INFO Click: Open Product Detail Page
+            // 3. BUY & INFO Click: Open Product Detail Page[cite: 1]
             if(bottomBuyInfoBtn) {
                 bottomBuyInfoBtn.addEventListener('click', () => {
                     let activeList = activeReelsList.length > 0 ? activeReelsList : globalVideoList;
@@ -127,7 +127,7 @@
                 });
             }
 
-            // 4. SEARCH Toggle
+            // 4. SEARCH Toggle[cite: 1]
             if(bottomSearchBtn && floatingSearchContainer) {
                 bottomSearchBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -143,7 +143,7 @@
                 });
             }
 
-            // 5. SAVED Toggle
+            // 5. SAVED Toggle[cite: 1]
             if(bottomSavedBtn && savedGalleryOverlay) {
                 bottomSavedBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -161,19 +161,16 @@
 
             // Outside Click Listener to close popups automatically
             window.addEventListener('click', (e) => {
-                // If clicked outside category box content
                 if (categoryTransparentOverlay && categoryTransparentOverlay.style.display === 'flex') {
                     if (!e.target.closest('#categoryMainListView') && !e.target.closest('#bottomCategoryBtn')) {
                         categoryTransparentOverlay.style.display = 'none';
                     }
                 }
-                // If clicked outside saved gallery content
                 if (savedGalleryOverlay && savedGalleryOverlay.style.display === 'flex') {
                     if (!e.target.closest('#savedGalleryBody') && !e.target.closest('#bottomSavedBtn')) {
                         savedGalleryOverlay.style.display = 'none';
                     }
                 }
-                // If clicked outside search bar
                 if (floatingSearchContainer && floatingSearchContainer.style.display === 'flex') {
                     if (!e.target.closest('#floatingSearchContainer') && !e.target.closest('#bottomSearchBtn')) {
                         floatingSearchContainer.style.display = 'none';
@@ -415,7 +412,6 @@
             renderBatchVideos();
         };
 
-        // Instant Accordion Toggle
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
             const content = targetBox.querySelector('.accordion-content');
@@ -441,7 +437,7 @@
             else if (direction === -1 && currentIndex > 0) { currentIndex--; renderBatchVideos(); }
         };
 
-        async function renderBatchVideos() {
+        function renderBatchVideos() {
             const feedContainer = document.getElementById('videoFeed');
             if(!feedContainer) return;
 
@@ -493,17 +489,16 @@
                 }
             }
 
-            // Fetch Country code if not present yet
-            let countryCode = userCountryCode || await fetchUserCountryCode();
-            let flagIconHtml = countryCode 
-                ? `<img src="https://flagcdn.com/w40/${countryCode}.png" alt="${countryCode}" class="dynamic-country-flag">`
+            // Flag Container
+            let flagIconHtml = userCountryCode 
+                ? `<img src="https://flagcdn.com/w40/${userCountryCode}.png" alt="${userCountryCode}" class="dynamic-country-flag">`
                 : `<i class="fa-solid fa-flag offer-flag-icon"></i>`;
 
             let discountBadgeHtml = '';
             if (product.discountNum && product.discountNum > 0) {
                 discountBadgeHtml = `
                     <div class="image-style-discount-badge">
-                        ${flagIconHtml}
+                        <span class="dynamic-flag-box">${flagIconHtml}</span>
                         <span class="offer-text">${product.discountStr}</span>
                     </div>`;
             }
@@ -657,7 +652,7 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
         }
 
-        /* Bottom Navigation Bar (Always Visible at z-index 4000) */
+        /* Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
             background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
@@ -681,19 +676,17 @@
         .bottom-nav-item.center-buy-btn i { font-size: 1.35rem; }
         .bottom-nav-item.center-buy-btn span { font-weight: 800; }
 
-        /* Perfect Center Alignment & Transparent Overlay */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
             z-index: 3000; overflow-y: auto; overflow-x: hidden;
-            flex-direction: column; align-items: center; justify-content: center; /* Exactly Centered */
+            flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
         
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
         
-        /* Category Glassmorphism Boxes with Icons */
         .accordion-category-box { background: rgba(5, 5, 8, 0.88) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
         .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
@@ -757,7 +750,8 @@
         }
         .offer-flag-icon { font-size: 0.75rem; color: #ffffff; }
         .offer-text { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
-        .dynamic-country-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; vertical-align: middle; }
+        .dynamic-country-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; }
+        .dynamic-flag-box { display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body id="mainBody">
@@ -773,7 +767,7 @@
         <button class="yt-arrow-btn" onclick="scrollVideo(1)"><i class="fa-solid fa-arrow-down"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (Always Visible at z-index 4000) -->
+    <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomHomeBtn" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
