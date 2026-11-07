@@ -54,7 +54,7 @@
         body { margin: 0; padding: 0 0 75px 0; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* প্রিমিয়াম প্রি-লোডার অ্যানিমেশন */
+        /* প্রিমিয়াম প্রি-লোডার */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
@@ -160,7 +160,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Full Reels Snap-Scroll View (ভার্টিক্যাল স্ন্যাপ স্ক্রোলিং) */
+        /* Full Reels Snap-Scroll View */
         .reel-view-wrapper-outer { 
             width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
             position: fixed; top: 0; left: 0; background: #000; 
@@ -375,7 +375,7 @@
         let activeProductList = [];
         let isPinterestHomeMode = true; 
         let currentReelIndex = 0;
-        let slideIntervalsMap = {}; // প্রতিটি রিলসের নিজস্ব স্লাইডশো টাইমার সংরক্ষণের জন্য
+        let slideIntervalsMap = {};
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
@@ -386,7 +386,6 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
-            // লোডার স্মুথলি হাইড করা
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
@@ -622,8 +621,7 @@
             if(existingBar) existingBar.remove();
 
             let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
-            let pShares = getDynamicEngagement(targetId, 180, 'shares');
-            let pLikes = getDynamicEngagement(targetId, 5200, 'likes');
+            let pLikes = getDynamicEngagement(targetId);
 
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
@@ -642,7 +640,6 @@
 
                     <div class="side-action-item" onclick="handlePinterestInterception(event, 'share', '${targetId}')" title="Share">
                         <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
-                        <span class="side-count-text">${pShares}</span>
                     </div>
                     <div class="side-action-item love-action-btn ${likedActiveClass}" onclick="handlePinterestInterception(event, 'like', '${targetId}')" title="Like">
                         <i class="fa-solid fa-heart action-pure-icon"></i>
@@ -696,7 +693,6 @@
             slideIntervalsMap = {};
         }
 
-        /* --- পারফেক্ট স্ন্যাপ-স্ক্রোল রিলস ফিড রেন্ডার (ভিডিও এবং স্লাইডশো সহ) --- */
         function renderAllReelsFeed() {
             clearAllSlideIntervals();
             const container = document.getElementById('appContainer');
@@ -777,7 +773,6 @@
             renderFixedGlobalActions(container, activeId);
         }
 
-        /* --- ইন-পেজ ডিটেইলস পপআপ (অপ্রয়োজনীয় প্যাকিং লিস্ট ফিল্টার করা) --- */
         function openInpageDetailsModal(product) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -880,7 +875,6 @@
             document.getElementById('inpageDetailsOverlay').style.display = 'none';
         }
 
-        /* --- অর্ডার নাও প্রিভিউ পপআপ --- */
         function openBuyPreviewModal(product, event) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -1013,38 +1007,63 @@
             if(badge) badge.innerText = totalQty;
         }
 
-        function getDynamicEngagement(productId, baseVal, type) {
-            let storageKey = `rorraxy_retail_${type}_${productId}`;
+        /* --- অটো র্যান্ডম এবং দৈনিক একবার লাইক মেকানিজম --- */
+        function getDynamicEngagement(productId) {
+            let storageKey = `rorraxy_retail_likes_${productId}`;
             let storedData = localStorage.getItem(storageKey);
-            let currentVal = baseVal;
+            let currentVal;
             if (storedData) {
                 currentVal = JSON.parse(storedData).value;
             } else {
-                currentVal = baseVal + Math.floor(Math.random() * 50);
+                // বিভিন্ন রেঞ্জের র্যান্ডম আকর্ষণীয় সংখ্যা জেনারেট করা
+                const pools = [1200, 3500, 5200, 10500, 25000, 110000, 250000, 500000];
+                let base = pools[Math.abs(hashCode(productId)) % pools.length];
+                currentVal = base + (Math.abs(hashCode(productId)) % 850);
                 localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
             }
             return currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
         }
 
-        /* --- প্রোডাক্ট-ওয়াইজ রিয়েল-টাইম লাইক টগল ফাংশন --- */
+        function hashCode(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash << 5) - hash + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return hash;
+        }
+
         window.toggleReelLove = function(e, btn, productId) {
             e.stopPropagation();
             let countElem = btn.querySelector('.side-count-text');
             let storageKey = `rorraxy_retail_likes_${productId}`;
-            let storedData = localStorage.getItem(storageKey);
-            let currentVal = storedData ? JSON.parse(storedData).value : 5200;
             let activeStateKey = storageKey + '_active';
+            let lastLikeDateKey = storageKey + '_last_date';
+
+            let todayStr = new Date().toDateString();
+            let lastLikeDate = localStorage.getItem(lastLikeDateKey);
             let isLiked = localStorage.getItem(activeStateKey) === 'true';
 
-            if(isLiked) {
+            let storedData = localStorage.getItem(storageKey);
+            let currentVal = storedData ? JSON.parse(storedData).value : 5200;
+
+            if (isLiked) {
+                // আনলাইক করা
                 btn.classList.remove('liked-active');
                 currentVal = Math.max(0, currentVal - 1);
                 localStorage.setItem(activeStateKey, 'false');
             } else {
+                // চেক করা আজ ইতিমধ্যে লাইক দেওয়া হয়েছে কি না
+                if (lastLikeDate === todayStr) {
+                    alert('আপনি এই প্রোডাক্টটিতে আজ ইতিমধ্যে লাইক দিয়েছেন। আগামীকাল আবার লাইক করতে পারবেন!');
+                    return;
+                }
                 btn.classList.add('liked-active');
                 currentVal += 1;
                 localStorage.setItem(activeStateKey, 'true');
+                localStorage.setItem(lastLikeDateKey, todayStr);
             }
+
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
             if(countElem) {
                 countElem.innerText = currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
