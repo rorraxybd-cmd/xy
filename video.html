@@ -124,19 +124,17 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* প্রাইস ট্যাগ স্টাইল: সুন্দর রাউন্ডেড শেপ ও উজ্জ্বল গোল্ডেন গ্র্যাডিয়েন্ট */
+        /* হোমপেজের প্রাইস ট্যাগ: শেপ বাদ দিয়ে কালোর ওপর গোল্ডেন গ্র্যাডিয়েন্ট টেক্সট */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(10, 10, 16, 0.85) !important;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 4px 10px; border-radius: 8px;
-            font-size: 0.8rem; font-weight: 800;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            font-size: 0.88rem; font-weight: 800;
             background: var(--gold-gradient) !important; 
             -webkit-background-clip: text !important; 
             -webkit-text-fill-color: transparent !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-            border: 1px solid rgba(212, 175, 55, 0.5);
+            filter: drop-shadow(0px 2px 4px #000000) drop-shadow(0px 0px 6px #000000);
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
@@ -147,7 +145,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে নিচে ও মিডিলে চমৎকার গোল্ডেন গ্র্যাডিয়েন্ট প্রাইস ও ডিসকাউন্ট */
+        /* রিলস ভিউতে আগের মতই অক্ষত রাখা হয়েছে */
         .reel-bottom-price-overlay {
             position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
@@ -200,21 +198,22 @@
             padding: 15px;
         }
 
-        /* বাই প্রিভিউ মডাল */
+        /* বাই প্রিভিউ মডাল (প্রস্থ ও ছবি স্পষ্ট করা হয়েছে) */
         .buy-preview-modal {
-            width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.96); border: 1px solid rgba(212,175,55,0.4);
+            width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.9);
         }
         .preview-horizontal-scroll {
-            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory;
+            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;
         }
         .preview-horizontal-scroll::-webkit-scrollbar { height: 4px; }
         .preview-horizontal-scroll::-webkit-scrollbar-thumb { background: var(--gold-solid); border-radius: 4px; }
 
         .preview-img-item {
-            flex: 0 0 75px; width: 75px; height: 75px; border-radius: 10px; overflow: hidden;
-            border: 1.5px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
+            flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
+            border: 2px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
         }
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -228,10 +227,10 @@
             transition: left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.4s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.4s linear, opacity 0.4s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল (উপরের ফাঁকা জায়গা দূর করা হয়েছে) */
+        /* ইন-পেজ ডিটেইলস পপআপ মডাল (PRODUCT DETAILS টেক্সট বাদ ও কোনো ফাঁকা স্পেস নেই) */
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
-            border-radius: 18px; padding: 14px 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
+            border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
@@ -722,7 +721,7 @@
             renderFixedGlobalActions(container, pId);
         }
 
-        /* --- ইন-পেজ ডিটেইলস পপআপ (শূন্য ফাঁকা জায়গা, গোল্ডেন টাইটেল কোয়ান্টিটির নিচে এবং মাল্টি-লাইন নোট ইনপুট ও টিক টগল) --- */
+        /* --- ইন-পেজ ডিটেইলস পপআপ (PRODUCT DETAILS হেডার ছাড়া, একদম ফাঁকা স্পেস ছাড়া টাইটেল গোল্ডেন গ্র্যাডিয়েন্ট) --- */
         function openInpageDetailsModal(product) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -735,49 +734,46 @@
             const content = document.getElementById('inpageDetailsModalContent');
             if(!product) return;
 
-            let rawTitle = product.title || 'luxury designer piece';
+            let rawTitle = product.title || 'women\'s long-sleeved sweater hip skirt';
             let title = rawTitle.toLowerCase();
-            let priceNum = parseFloat(product.price || 35.00);
+            let priceNum = parseFloat(product.price || 21.17);
             let marketPriceNum = (priceNum * 1.35).toFixed(2);
             let price = `$${priceNum.toFixed(2)}`;
             let marketPrice = `$${marketPriceNum}`;
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
-            let rawDesc = product.description || product.desc || 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
+            let rawDesc = product.description || product.desc || 'Product information: Pattern: color matching Skirt type: hip skirt Color: wine red, light blue, white, green Waist Type: Mid waist Size: S,M,L,XL Style type: street fashion Combination form: Single piece Skirt length: mid skirt Popular elements: Button Style: Basic Fabric name: polyester Sleeve type: Lantern sleeve Main fabric composition: polyester Sleeve length: long sleeve Skirt Category: Dress Style: European and American style Process: high temperature stereotypes Note: 1. Asian sizes are 1 to 2 sizes smaller than European and American people. Choose the larger size if your size between two sizes. Please allow 2-3cm differences due to manual measurement. 2. Please check the size chart carefully before you buy the item, if you don\'t know how to choose size, please contact our customer service. 3.As you know, the different computers display colors differently, the color of the actual item may vary slightly from the following images. Packing list: Skirt*1 Product Image:';
             
             let cleanDesc = rawDesc.replace(/https?:\/\/[^\s]+(\.jpg|\.png|\.webp)/gi, '').trim();
-            if(!cleanDesc) cleanDesc = 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
 
             let stock = product.stock || 500;
             currentProductQty = 1;
 
             content.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-                    <span style="font-size:0.7rem; font-weight:700; color:var(--gold-solid); text-transform:uppercase;">PRODUCT DETAILS</span>
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; padding:0; line-height:1;">&times;</button>
-                </div>
-                
-                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:2px;">
-                    <span style="font-size:1.35rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
-                    <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
-                    <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin:0; padding:0;">
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.9));">${price}</span>
+                        <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
+                        <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px; box-shadow:0 2px 6px rgba(255,42,133,0.4);">${discountPercent}% OFF</span>
+                    </div>
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer; padding:0; line-height:1; opacity:0.85;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">&times;</button>
                 </div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; font-weight:700; flex-wrap:wrap; gap:6px;">
-                    <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free worldwide shipping</span>
-                    <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:700; flex-wrap:wrap; gap:6px; margin-top:2px;">
+                    <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-flex; align-items:center; gap:5px;"><i class="fa-solid fa-truck-fast"></i> free worldwide shipping</span>
+                    <span style="color:#00e676; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
                 </div>
 
-                <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
-                    <span style="font-size:0.72rem; font-weight:600; color:#ffffff;">quantity</span>
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px; margin-top:2px;">
+                    <span style="font-size:0.75rem; font-weight:700; color:#ffffff;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;" onmousedown="this.style.background='var(--gold-solid)'; this.style.color='#000';" onmouseup="this.style.background='#151520'; this.style.color='#fff';">-</button>
+                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;">-</button>
                         <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; color:#ffffff;">1</span>
-                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;" onmousedown="this.style.background='var(--gold-solid)'; this.style.color='#000';" onmouseup="this.style.background='#151520'; this.style.color='#fff';">+</button>
+                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;">+</button>
                     </div>
                 </div>
 
-                <!-- কোয়ান্টিটির নিচে গোল্ডেন গ্রেডিয়েন্ট টাইটেল -->
-                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; margin:2px 0 0 0; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
+                <!-- কোয়ান্টিটির নিচে ফ্রি শিপিং লেখার মত গোল্ডেন গ্রেডিয়েন্ট টাইটেল -->
+                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.45; margin:4px 0 0 0; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.9)); display:inline-block;">${title}</h3>
 
                 <!-- টাইটেলের নিচে ডেসক্রিপশন -->
                 <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
@@ -818,7 +814,7 @@
             document.getElementById('inpageDetailsOverlay').style.display = 'none';
         }
 
-        /* --- অর্ডার নাও প্রিভিউ পপআপ --- */
+        /* --- অর্ডার নাও প্রিভিউ পপআপ (প্রশস্ত ভ্যারিয়েন্ট ও স্পষ্ট ছবি) --- */
         function openBuyPreviewModal(product, event) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -849,11 +845,11 @@
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">select color / variant</span>
-                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">&times;</button>
+                    <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT COLOR / VARIANT</span>
+                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4); transition:transform 0.1s ease;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4); transition:transform 0.1s ease;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                     CONFIRM
                 </button>
             `;
