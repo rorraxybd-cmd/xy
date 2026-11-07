@@ -80,7 +80,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (হোম এবং ইউ বাটন লজিক সহ) */
+        /* Bottom Navigation Bar (ফিক্সড মেনু - ইউ বাটন বাদ দিয়ে হোম ফিক্সড) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -126,7 +126,7 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* ছোট সুন্দর কালো শেপের মধ্যে গোল্ডেন টেক্সট প্রাইস ট্যাগ[cite: 32] */
+        /* পিন্টারেস্ট গ্রিডের জন্য সুন্দর কালো শেপ ও গোল্ডেন টেক্সট প্রাইস ট্যাগ */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
             background: rgba(10, 10, 15, 0.92); padding: 4px 10px; border-radius: 8px;
@@ -143,11 +143,11 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে একদম নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট */
+        /* রিলস মোডে একদম নিচে এবং মেডেলে নিখুঁত প্রাইস ও ডিসকাউন্ট ওভারলে */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
             z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
-            background: rgba(8, 8, 12, 0.88); padding: 6px 18px; border-radius: 14px;
+            background: rgba(8, 8, 12, 0.9); padding: 6px 18px; border-radius: 14px;
             border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 18px rgba(0,0,0,0.9);
         }
         .reel-center-price-badge {
@@ -159,7 +159,7 @@
             padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 33] */
+        /* ডানপাশের ভাসমান অ্যাকশন বার (ইউ মেনুসহ) */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -191,7 +191,7 @@
             padding: 15px;
         }
 
-        /* বাই প্রিভিউ মডাল (সফট বর্ডারবিহীন স্টাইল) */
+        /* বাই প্রিভিউ মডাল */
         .buy-preview-modal {
             width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.96); border: 1px solid rgba(212,175,55,0.4);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
@@ -280,13 +280,13 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (হোম ও ইউ বাটন লজিক সহ)[cite: 33] -->
+    <!-- Bottom Navigation Bar (নিচে ফিক্সড হোম বাটন এবং ৪টি মেনু) -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
         <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
         <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <div id="bottomHomeAccountToggleBtn" onclick="handleHomeAccountToggle()" class="bottom-nav-item"><i class="fa-solid fa-house" id="bottomNavHomeIcon"></i><span id="bottomNavHomeText">HOME</span></div>
+        <div id="bottomHomeToggleBtn" onclick="handleHomeToggle()" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
     </nav>
 
     <!-- Fullscreen Portal Overlay for Cart / Account -->
@@ -340,7 +340,6 @@
             buildCategoriesUI();
             loadLiveProducts();
             updateCartBadgeCount();
-            updateBottomNavState();
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -402,17 +401,15 @@
             }, {passive: true});
         });
 
-        /* ফুটার নেভবার লজিক: হোম ও অ্যাকাউন্ট টগল */
-        function handleHomeAccountToggle() {
+        /* হোম বাটনের ডাল লজিক: পিন্টারেস্ট গ্রিড এবং রিলস ভিউ টগল করা */
+        function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             if (overlay.style.display === 'flex') {
-                closeFullscreenPortal();
-            } else if (!isPinterestHomeMode) {
+                overlay.style.display = 'none';
+                document.getElementById('fullscreenIframeBody').src = '';
+            } else {
                 isPinterestHomeMode = true;
                 renderPinterestHomeGrid(activeProductList.length > 0 ? activeProductList : globalMasterProductsList);
-                updateBottomNavState();
-            } else {
-                openFullscreenPortal('/account.html');
             }
         }
 
@@ -422,35 +419,7 @@
             currentPortalUrl = pageUrl;
             iframe.src = pageUrl;
             overlay.style.display = 'flex';
-            updateBottomNavState();
             updateCartBadgeCount();
-        }
-
-        function closeFullscreenPortal() {
-            const overlay = document.getElementById('fullscreenIframeOverlay');
-            const iframe = document.getElementById('fullscreenIframeBody');
-            overlay.style.display = 'none';
-            iframe.src = '';
-            currentPortalUrl = '';
-            updateBottomNavState();
-            updateCartBadgeCount();
-        }
-
-        function updateBottomNavState() {
-            const iconElem = document.getElementById('bottomNavHomeIcon');
-            const textElem = document.getElementById('bottomNavHomeText');
-            const overlay = document.getElementById('fullscreenIframeOverlay');
-
-            if (overlay.style.display === 'flex') {
-                iconElem.className = 'fa-solid fa-house';
-                textElem.innerText = 'HOME';
-            } else if (!isPinterestHomeMode) {
-                iconElem.className = 'fa-solid fa-house';
-                textElem.innerText = 'HOME';
-            } else {
-                iconElem.className = 'fa-solid fa-user';
-                textElem.innerText = 'YOU';
-            }
         }
 
         function buildCategoriesUI() {
@@ -605,7 +574,6 @@
             container.innerHTML = '';
             container.appendChild(fragment);
             renderFixedGlobalActions(container, null);
-            updateBottomNavState();
         }
 
         function renderFixedGlobalActions(container, pId) {
@@ -642,6 +610,7 @@
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
 
+                    <!-- ডানপাশে ইউ (YOU) মেনু বাটন -->
                     <div class="side-action-item" onclick="openFullscreenPortal('/account.html')" title="You">
                         <i class="fa-solid fa-user action-pure-icon"></i>
                         <span class="side-count-text">YOU</span>
@@ -734,7 +703,6 @@
                 </div>
             `;
             renderFixedGlobalActions(container, pId);
-            updateBottomNavState();
         }
 
         /* --- ইন-পেজ ডিটেইলস পপআপ রেন্ডার ফাংশন --- */
