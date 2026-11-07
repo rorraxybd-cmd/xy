@@ -36,7 +36,7 @@
         <div class="cj-form-group">
           <label for="targetCountry">TARGET COUNTRY & FLAG</label>
           <select id="targetCountry" class="cj-custom-select" required>
-            <option value="all">🌍 ALL COUNTRIES (GLOBAL)</option>
+            <option value="all" selected>🌍 ALL COUNTRIES (GLOBAL)</option>
           </select>
         </div>
 
@@ -97,7 +97,7 @@
 
         <div class="cj-form-group">
           <label for="shippingCushion">SHIPPING CUSHION ($)</label>
-          <input type="number" step="0.1" id="shippingCushion" value="6.00" placeholder="6.00" required>
+          <input type="number" step="0.1" id="shippingCushion" value="10.00" placeholder="10.00" required>
         </div>
       </div>
 
@@ -674,13 +674,13 @@
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}`;
         
-        // ফর্ম ক্লিয়ার কিন্তু ক্যাটাগরি ও মার্জিনের সিলেক্ট করা মান অক্ষত থাকবে
+        // ফর্ম ইনপুট রিসেট
         document.getElementById('cjProductUrl').value = '';
         document.getElementById('cjProductId').value = '';
         document.getElementById('manualVideoUrl').value = '';
         document.getElementById('productPreviewBox').style.display = 'none';
 
-        // ক্যাটাগরি পুনরায় মান ধরে রাখবে
+        // ক্যাটাগরি ও ফিল্ড অক্ষত থাকবে
         document.getElementById('selectedCategoryValue').value = category;
         document.getElementById('selectedCategoryLabel').innerText = categoryLabel;
 
