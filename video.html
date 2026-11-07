@@ -146,7 +146,6 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* হোমপেজের প্রাইস ট্যাগ: শেপ বাদ দিয়ে কালোর ওপর গোল্ডেন গ্র্যাডিয়েন্ট টেক্সট */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
             background: transparent !important;
@@ -165,6 +164,7 @@
             width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
             position: fixed; top: 0; left: 0; background: #000; 
             overflow-y: scroll; scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch; z-index: 10;
         }
         .reel-card { 
@@ -176,7 +176,6 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস ভিউতে নিচে ও মিডিলে চমৎকার গোল্ডেন গ্র্যাডিয়েন্ট প্রাইস ও ডিসকাউন্ট */
         .reel-bottom-price-overlay {
             position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
@@ -197,27 +196,27 @@
             padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার */
+        /* ডানপাশের ভাসমান অ্যাকশন বার - ফিক্সড উইথ ও কমপ্যাক্ট কাউন্ট যাতে লাইন না ভাঙে */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 150;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
-            pointer-events: auto;
+            pointer-events: auto; width: 45px;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
         .side-action-item:active { transform: scale(0.9); }
         .action-pure-icon { 
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
         }
         .side-count-text { 
-            font-size: 0.65rem; font-weight: 700; color: #ffffff; letter-spacing: 0.3px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9); 
+            font-size: 0.58rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45px;
         }
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
         .cart-pink-badge {
-            position: absolute; top: -6px; right: -8px; background: var(--pink-accent); color: #fff;
+            position: absolute; top: -6px; right: -2px; background: var(--pink-accent); color: #fff;
             font-size: 0.55rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
         }
@@ -229,7 +228,6 @@
             padding: 15px;
         }
 
-        /* বাই প্রিভিউ মডাল */
         .buy-preview-modal {
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
@@ -249,7 +247,6 @@
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ফ্লায়িং গোল্ডেন কয়েন অ্যানিমেশন */
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
@@ -258,21 +255,18 @@
             transition: left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.4s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.4s linear, opacity 0.4s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল */
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
-        /* ফুল-স্ক্রিন পোর্টাল ওভারলে */
         .fullscreen-iframe-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px);
             background: #000000; z-index: 4500; flex-direction: column;
         }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
 
-        /* ক্যাটাগরি ও সেভ গ্যালারি ওভারলে মেনু */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: rgba(0, 0, 0, 0.3) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
@@ -443,7 +437,38 @@
                 searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
+
+            // পিসিতে কীবোর্ড আপ/ডাউন অ্যারো কী দিয়ে এক ক্লিকে রিলস নেভিগেশন নিশ্চিত করা
+            window.addEventListener('keydown', (e) => {
+                if (!isPinterestHomeMode) {
+                    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                        e.preventDefault();
+                        let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                        if (currentReelIndex < list.length - 1) {
+                            currentReelIndex++;
+                            scrollToReelIndex(currentReelIndex);
+                        }
+                    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                        e.preventDefault();
+                        if (currentReelIndex > 0) {
+                            currentReelIndex--;
+                            scrollToReelIndex(currentReelIndex);
+                        }
+                    }
+                }
+            });
         });
+
+        function scrollToReelIndex(idx) {
+            const container = document.getElementById('appContainer');
+            const targetCard = container.querySelector(`[data-index="${idx}"]`);
+            if (targetCard) {
+                targetCard.scrollIntoView({ behavior: 'smooth' });
+                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
+                renderFixedGlobalActions(container, activeId);
+            }
+        }
 
         function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
@@ -506,9 +531,9 @@
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = parsed;
-                        activeProductList = parsed;
-                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
+                        globalMasterProductsList = shuffleArray([...parsed]);
+                        activeProductList = globalMasterProductsList;
+                        if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
                     }
                 } catch (e) {}
             }
@@ -521,12 +546,20 @@
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    globalMasterProductsList = productsList;
+                    globalMasterProductsList = shuffleArray([...productsList]);
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    activeProductList = productsList;
-                    if(isPinterestHomeMode) renderPinterestHomeGrid(productsList);
+                    activeProductList = globalMasterProductsList;
+                    if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
                 }
             } catch (error) {}
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
 
         function executeHeaderSearch(keyword) {
@@ -613,15 +646,16 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
-            renderFixedGlobalActions(container, null);
+            // হোম পেজে কোনো নির্দিষ্ট প্রোডাক্ট সিলেক্ট করা না থাকায় লাইক কাউন্ট লুকানো বা জিরো রাখা হয়েছে
+            renderFixedGlobalActions(container, null, true);
         }
 
-        function renderFixedGlobalActions(container, pId) {
+        function renderFixedGlobalActions(container, pId, isHome = false) {
             let existingBar = document.getElementById('fixedGlobalActionsBar');
             if(existingBar) existingBar.remove();
 
             let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
-            let pLikes = getDynamicEngagement(targetId);
+            let pLikes = isHome ? '0' : getDynamicEngagement(targetId);
 
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
@@ -764,13 +798,13 @@
                     if (calculatedIdx >= 0 && calculatedIdx < list.length) {
                         currentReelIndex = calculatedIdx;
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
-                        renderFixedGlobalActions(container, activeId);
+                        renderFixedGlobalActions(container, activeId, false);
                     }
-                }, 50);
+                }, 40);
             };
 
             let activeId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
-            renderFixedGlobalActions(container, activeId);
+            renderFixedGlobalActions(container, activeId, false);
         }
 
         function openInpageDetailsModal(product) {
@@ -1007,7 +1041,7 @@
             if(badge) badge.innerText = totalQty;
         }
 
-        /* --- প্রতিটি প্রোডাক্টের জন্য অনন্য ও ইউনিক ডাইনামিক লাইক কাউন্ট --- */
+        /* --- কমপ্যাক্ট ফরম্যাটে ডাইনামিক লাইক কাউন্ট (যেন বড় হয়ে ডিজাইন নষ্ট না করে) --- */
         function getDynamicEngagement(productId) {
             let storageKey = `rorraxy_retail_likes_${productId}`;
             let storedData = localStorage.getItem(storageKey);
@@ -1015,7 +1049,6 @@
             if (storedData) {
                 currentVal = JSON.parse(storedData).value;
             } else {
-                // প্রোডাক্ট আইডির হ্যাশ অনুযায়ী ১০০ থেকে শুরু করে লক্ষাধিক পর্যন্ত অনন্য লাইক কাউন্ট
                 const pool = [185, 245, 445, 890, 1500, 3200, 7800, 15400, 48000, 125000, 250000, 1000000];
                 let index = Math.abs(hashCode(String(productId))) % pool.length;
                 let base = pool[index];
@@ -1023,12 +1056,14 @@
                 currentVal = base + variance;
                 localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
             }
-            return formatNumber(currentVal);
+            return formatCompactNumber(currentVal);
         }
 
-        function formatNumber(num) {
-            if (num >= 100000) {
-                return (num / 100000).toFixed(1) + 'Lakh';
+        function formatCompactNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 100000) {
+                return (num / 1000).toFixed(0) + 'K';
             } else if (num >= 1000) {
                 return (num / 1000).toFixed(1) + 'K';
             }
@@ -1075,7 +1110,7 @@
 
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
             if(countElem) {
-                countElem.innerText = formatNumber(currentVal);
+                countElem.innerText = formatCompactNumber(currentVal);
             }
         };
 
