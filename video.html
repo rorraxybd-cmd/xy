@@ -54,12 +54,12 @@
         body { margin: 0; padding: 0 0 75px 0; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        @keyframes softFadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
         .animate-card-entry {
-            animation: softFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInFast 0.2s ease forwards;
+        }
+        @keyframes fadeInFast {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Top Floating Search Bar */
@@ -90,9 +90,9 @@
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.2s ease;
+            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
         }
-        .bottom-nav-item:hover { transform: translateY(-2px); }
+        .bottom-nav-item:active { transform: scale(0.95); }
         .bottom-nav-item i { 
             font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
@@ -113,9 +113,7 @@
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.2s ease; opacity: 0;
         }
-        .product-card:hover { transform: translateY(-2px); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -126,14 +124,17 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* পিন্টারেস্ট গ্রিড প্রাইস ট্যাগ (ছোট কালো শেপ এবং গোল্ডেন টেক্সট) */
+        /* পিন্টারেস্ট ও রিলস মোডের জন্য কনসিস্টেন্ট প্রাইস ট্যাগ (কালো শেপ + গোল্ডেন টেক্সট) */
+        .card-clean-price-badge, .reel-bottom-price-overlay {
+            background: rgba(10, 10, 15, 0.95); padding: 4px 12px; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 800; color: #d4af37;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.9);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(10, 10, 15, 0.95); padding: 3px 8px; border-radius: 6px;
-            font-size: 0.78rem; font-weight: 800;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.8);
-            border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         /* Full Reels View */
@@ -143,20 +144,18 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে একদম নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট ওভারলে */
+        /* রিলস মোডে একদম নিচে ও মেডেলে পিন্টারেস্ট স্টাইল প্রাইস ও ডিসকাউন্ট */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-            z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
-            background: rgba(8, 8, 12, 0.9); padding: 6px 18px; border-radius: 14px;
-            border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 18px rgba(0,0,0,0.9);
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 50; pointer-events: none; flex-direction: row; gap: 8px; padding: 6px 16px; border-radius: 12px;
         }
         .reel-center-price-badge {
-            font-size: 1.3rem; font-weight: 800; color: #d4af37;
+            font-size: 1.1rem; font-weight: 800; color: #d4af37;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .reel-center-discount-badge {
-            background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
-            padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            background: var(--pink-accent); color: #fff; font-size: 0.6rem; font-weight: 800;
+            padding: 2px 6px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
         /* ডানপাশের ভাসমান অ্যাকশন বার */
@@ -165,14 +164,15 @@
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; }
+        .side-action-item:active { transform: scale(0.9); }
         .action-pure-icon { 
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
         }
         .side-count-text { 
             font-size: 0.65rem; font-weight: 700; color: #ffffff; letter-spacing: 0.3px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9); 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9); 
         }
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
@@ -186,8 +186,7 @@
         /* পপআপ ওভারলে স্টাইল */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.45); backdrop-filter: none; -webkit-backdrop-filter: none;
-            z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.45); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px;
         }
 
@@ -216,13 +215,13 @@
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
             box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
+            transition: left 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.5s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.5s linear, opacity 0.5s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল (ছবি ও কনফার্ম বাটন মুক্ত পরিচ্ছন্ন তথ্য ভিউ) */
+        /* ইন-পেজ ডিটেইলস পপআপ মডাল (ফাঁকা জায়গা শূন্য ও গোছানো লেআউট) */
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
-            border-radius: 18px; padding: 20px; margin: auto; display: flex; flex-direction: column; gap: 14px;
+            border-radius: 18px; padding: 16px 20px 20px 20px; margin: auto; display: flex; flex-direction: column; gap: 10px;
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
@@ -236,8 +235,7 @@
         /* ক্যাটাগরি ও সেভ গ্যালারি ওভারলে মেনু */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.3) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.3) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
         }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
@@ -248,7 +246,7 @@
         .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
         .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
-        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
+        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
         .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
 
@@ -263,13 +261,13 @@
         .sub-cat-item:active { transform: scale(0.96); }
         .sub-cat-item:hover { background: rgba(25, 25, 35, 1); border-color: rgba(212, 175, 55, 0.6); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
         .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; border: 1px solid rgba(212,175,55,0.2); }
         .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 5px; }
-        .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body id="mainBody">
@@ -320,7 +318,7 @@
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 10px; font-size: 0.75rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">LOADING RORRAXY PRODUCTS...</p>
+            <p style="margin-top: 10px; font-size: 0.75rem;">LOADING RORRAXY PRODUCTS...</p>
         </div>
     </main>
 
@@ -396,11 +394,10 @@
             window.addEventListener('touchend', (e) => {
                 if(!isPinterestHomeMode) {
                     let diff = touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) > 40) diff > 0 ? scrollReels(1) : scrollReels(-1);
+                    if (Math.abs(diff) > 30) diff > 0 ? scrollReels(1) : scrollReels(-1);
                 }
             }, {passive: true});
 
-            // কিবোর্ড আপ-ডাউন নেভিগেশন সাপোর্ট রিলস মোডের জন্য
             window.addEventListener('keydown', (e) => {
                 if(!isPinterestHomeMode) {
                     if(e.key === 'ArrowDown' || e.key === 'PageDown') {
@@ -570,7 +567,6 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
-                cardDiv.style.animationDelay = `${(index % 10) * 0.03}s`;
                 cardDiv.onclick = () => switchToReelsView(index);
 
                 cardDiv.innerHTML = `
@@ -716,7 +712,7 @@
             renderFixedGlobalActions(container, pId);
         }
 
-        /* --- ইন-পেজ ডিটেইলস পপআপ (শুধুমাত্র পরিচ্ছন্ন টেক্সট তথ্য ও টিক বক্স নোট সহ) --- */
+        /* --- ইন-পেজ ডিটেইলস পপআপ (ফাঁকা জায়গা শূন্য, গোল্ডেন গ্রেডিয়েন্ট টাইটেল কোয়ান্টিটির নিচে) --- */
         function openInpageDetailsModal(product) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -745,8 +741,8 @@
             currentProductQty = 1;
 
             content.innerHTML = `
-                <div style="display:flex; justify-content:flex-end; align-items:center; padding-bottom:5px;">
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
+                <div style="display:flex; justify-content:flex-end; align-items:center; padding-bottom:0px; margin-bottom:-4px;">
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; padding:0; line-height:1;">&times;</button>
                 </div>
                 
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
@@ -755,22 +751,24 @@
                     <span style="background:var(--pink-accent); color:#fff; font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
                 </div>
 
-                <h3 style="font-size:0.98rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
-                
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; font-weight:700; flex-wrap:wrap; gap:6px;">
                     <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free worldwide shipping</span>
                     <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
                 </div>
 
                 <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
-                    <span style="font-size:0.72rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">quantity</span>
+                    <span style="font-size:0.72rem; font-weight:600; color:#ffffff;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(255,255,255,0.2); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
-                        <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">1</span>
-                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(255,255,255,0.2); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">+</button>
+                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;" onmousedown="this.style.background='var(--gold-solid)'; this.style.color='#000';" onmouseup="this.style.background='#151520'; this.style.color='#fff';">-</button>
+                        <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; color:#ffffff;">1</span>
+                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;" onmousedown="this.style.background='var(--gold-solid)'; this.style.color='#000';" onmouseup="this.style.background='#151520'; this.style.color='#fff';">+</button>
                     </div>
                 </div>
 
+                <!-- কোয়ান্টিটির নিচে গোল্ডেন গ্রেডিয়েন্ট টাইটেল -->
+                <h3 style="font-size:0.98rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; margin:4px 0 0 0; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
+
+                <!-- টাইটেলের নিচে ডেসক্রিপশন -->
                 <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
                     ${cleanDesc}
                 </div>
@@ -829,11 +827,11 @@
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 2px rgba(0,0,0,0.8);">select color / variant</span>
+                    <span style="font-size:0.75rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">select color / variant</span>
                     <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.1rem; cursor:pointer;">&times;</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
+                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4); transition:transform 0.1s ease;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                     CONFIRM
                 </button>
             `;
@@ -861,14 +859,14 @@
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.035));
-                    gain.gain.setValueAtTime(0, now + (idx * 0.035));
-                    gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.035) + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.035) + 1.1);
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.025));
+                    gain.gain.setValueAtTime(0, now + (idx * 0.025));
+                    gain.gain.linearRampToValueAtTime(0.1 / (idx + 1), now + (idx * 0.025) + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.025) + 0.8);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    osc.start(now + (idx * 0.035));
-                    osc.stop(now + (idx * 0.035) + 1.1);
+                    osc.start(now + (idx * 0.025));
+                    osc.stop(now + (idx * 0.025) + 0.8);
                 });
             } catch (e) {}
         }
@@ -899,7 +897,7 @@
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
                 playCoinDropChime();
-            }, 750);
+            }, 500);
         }
 
         function confirmAddToCart(e, pId, title, price) {
