@@ -80,7 +80,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (ফিক্সড মেনু - ইউ বাটন বাদ দিয়ে হোম ফিক্সড) */
+        /* Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -126,14 +126,14 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* পিন্টারেস্ট গ্রিডের জন্য সুন্দর কালো শেপ ও গোল্ডেন টেক্সট প্রাইস ট্যাগ */
+        /* পিন্টারেস্ট গ্রিড প্রাইস ট্যাগ (ছোট কালো শেপ এবং গোল্ডেন টেক্সট) */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(10, 10, 15, 0.92); padding: 4px 10px; border-radius: 8px;
-            font-size: 0.8rem; font-weight: 800; color: #d4af37;
+            background: rgba(10, 10, 15, 0.95); padding: 3px 8px; border-radius: 6px;
+            font-size: 0.78rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.9);
-            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         /* Full Reels View */
@@ -143,7 +143,7 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে একদম নিচে এবং মেডেলে নিখুঁত প্রাইস ও ডিসকাউন্ট ওভারলে */
+        /* রিলস মোডে একদম নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট ওভারলে */
         .reel-bottom-price-overlay {
             position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
             z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
@@ -159,7 +159,7 @@
             padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার (ইউ মেনুসহ) */
+        /* ডানপাশের ভাসমান অ্যাকশন বার */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -219,7 +219,7 @@
             transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল */
+        /* ইন-পেজ ডিটেইলস পপআপ মডাল (ছবি ও কনফার্ম বাটন মুক্ত পরিচ্ছন্ন তথ্য ভিউ) */
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 20px; margin: auto; display: flex; flex-direction: column; gap: 14px;
@@ -280,7 +280,7 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (নিচে ফিক্সড হোম বাটন এবং ৪টি মেনু) -->
+    <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -399,9 +399,21 @@
                     if (Math.abs(diff) > 40) diff > 0 ? scrollReels(1) : scrollReels(-1);
                 }
             }, {passive: true});
+
+            // কিবোর্ড আপ-ডাউন নেভিগেশন সাপোর্ট রিলস মোডের জন্য
+            window.addEventListener('keydown', (e) => {
+                if(!isPinterestHomeMode) {
+                    if(e.key === 'ArrowDown' || e.key === 'PageDown') {
+                        e.preventDefault();
+                        scrollReels(1);
+                    } else if(e.key === 'ArrowUp' || e.key === 'PageUp') {
+                        e.preventDefault();
+                        scrollReels(-1);
+                    }
+                }
+            });
         });
 
-        /* হোম বাটনের ডাল লজিক: পিন্টারেস্ট গ্রিড এবং রিলস ভিউ টগল করা */
         function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             if (overlay.style.display === 'flex') {
@@ -610,7 +622,6 @@
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
 
-                    <!-- ডানপাশে ইউ (YOU) মেনু বাটন -->
                     <div class="side-action-item" onclick="openFullscreenPortal('/account.html')" title="You">
                         <i class="fa-solid fa-user action-pure-icon"></i>
                         <span class="side-count-text">YOU</span>
@@ -705,7 +716,7 @@
             renderFixedGlobalActions(container, pId);
         }
 
-        /* --- ইন-পেজ ডিটেইলস পপআপ রেন্ডার ফাংশন --- */
+        /* --- ইন-পেজ ডিটেইলস পপআপ (শুধুমাত্র পরিচ্ছন্ন টেক্সট তথ্য ও টিক বক্স নোট সহ) --- */
         function openInpageDetailsModal(product) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -733,56 +744,37 @@
             let stock = product.stock || 500;
             currentProductQty = 1;
 
-            let images = [];
-            try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) images = parsed;
-                } else if(product.image_url) images = [product.image_url];
-            } catch(e){}
-            if(images.length === 0) images = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-            selectedVariantImg = images[0];
-
-            let imgsHtml = images.map((img, i) => `
-                <div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')">
-                    <img src="${img}">
-                </div>
-            `).join('');
-
             content.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
-                    <span style="font-size:0.72rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 2px rgba(0,0,0,0.8);">product specification & details</span>
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
+                <div style="display:flex; justify-content:flex-end; align-items:center; padding-bottom:5px;">
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">&times;</button>
                 </div>
-                <div class="preview-horizontal-scroll">${imgsHtml}</div>
                 
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                    <span style="font-size:1.3rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
-                    <span style="font-size:0.85rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
-                    <span style="background:var(--pink-accent); color:#fff; font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:4px;">${discountPercent}% OFF</span>
+                    <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
+                    <span style="font-size:0.9rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
+                    <span style="background:var(--pink-accent); color:#fff; font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
                 </div>
 
-                <h3 style="font-size:0.92rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
+                <h3 style="font-size:0.98rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
                 
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; font-weight:700;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; font-weight:700; flex-wrap:wrap; gap:6px;">
                     <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free worldwide shipping</span>
                     <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
                 </div>
 
                 <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
-                    <span style="font-size:0.7rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">quantity</span>
+                    <span style="font-size:0.72rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
                         <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(255,255,255,0.2); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
-                        <span id="detailQtyDisplay" style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">1</span>
+                        <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">1</span>
                         <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(255,255,255,0.2); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">+</button>
                     </div>
                 </div>
 
-                <div style="font-size:0.72rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
+                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
                     ${cleanDesc}
                 </div>
 
-                <!-- সিম্পল টিক বক্স নোট সিস্টেম -->
                 <div style="display:flex; flex-direction:column; gap:6px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px;">
                         <input type="text" id="inpageCustomNoteInput" placeholder="ENTER SIZE, COLOR OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase;">
@@ -791,10 +783,6 @@
                         </label>
                     </div>
                 </div>
-
-                <button onclick="confirmAddToCartFromDetails(event, '${product.id||product.product_id||'101'}', '${title.replace(/'/g, "\\'")}', ${priceNum})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
-                    CONFIRM
-                </button>
             `;
             overlay.style.display = 'flex';
         }
@@ -934,32 +922,6 @@
             updateCartBadgeCount();
             triggerCoinDropAnimation(e);
             closeBuyPreview();
-        }
-
-        function confirmAddToCartFromDetails(e, pId, title, price) {
-            let noteInput = document.getElementById('inpageCustomNoteInput');
-            let customNote = noteInput && noteInput.value.trim() !== '' ? noteInput.value.trim() : 'STANDARD';
-            
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && i.size === customNote);
-
-            if(existing) {
-                existing.qty += currentProductQty;
-            } else {
-                cart.push({
-                    productId: pId,
-                    title: title,
-                    price: `$${parseFloat(price).toFixed(2)}`,
-                    qty: currentProductQty,
-                    size: customNote,
-                    img: selectedVariantImg
-                });
-            }
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-            updateCartBadgeCount();
-            triggerCoinDropAnimation(e);
-            closeInpageDetails();
         }
 
         function updateCartBadgeCount() {
