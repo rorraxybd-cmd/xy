@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Product Importer</title>
-  <!-- Google Fonts & FontAwesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -77,7 +76,6 @@
       box-shadow: 0 0 8px rgba(212, 175, 55, 0.2), inset 0 1px 3px rgba(0,0,0,0.5);
     }
 
-    /* Category Picker Trigger Box */
     .category-picker-trigger {
       width: 100%; background: #040406; border: none;
       border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between;
@@ -91,7 +89,6 @@
     .picker-title { font-size: 0.74rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
     .picker-arrow { font-size: 0.74rem; color: var(--gold-solid); }
 
-    /* Centered Transparent Category Overlay Menu */
     .category-transparent-overlay {
         display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
         background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(10px);
@@ -153,7 +150,6 @@
 </head>
 <body>
 
-<!-- Global Product Importer - Full Screen Soft Dark Design -->
 <div class="cj-fullscreen-wrapper">
   <div class="cj-content-container">
     <div class="cj-import-header">
@@ -162,7 +158,6 @@
     
     <form id="cjImportForm">
       
-      <!-- সিজে প্রোডাক্ট লিংক ইনপুট -->
       <div class="cj-form-group">
         <label for="cjProductUrl">CJ PRODUCT LINK (URL)</label>
         <div style="display: flex; gap: 8px;">
@@ -171,7 +166,6 @@
         </div>
       </div>
 
-      <!-- প্রোডাক্ট আইডি বক্স -->
       <div class="cj-form-group" style="display: flex; gap: 8px; align-items: flex-end;">
         <div style="flex: 1;">
           <label for="cjProductId">CJ PRODUCT ID (PID)</label>
@@ -180,13 +174,11 @@
         <button type="button" id="previewBtn" onclick="fetchProductPreview()" class="cj-btn-secondary" style="height: 38px; background: rgba(212, 175, 55, 0.25); color: var(--gold-solid);">PREVIEW</button>
       </div>
 
-      <!-- ম্যানুয়াল ভিডিও লিংক ইনপুট বক্স -->
       <div class="cj-form-group">
         <label for="manualVideoUrl">GALLERY VIDEO URL</label>
         <input type="text" id="manualVideoUrl" placeholder="PASTE DIRECT VIDEO MP4 LINK..." style="text-transform: none;">
       </div>
 
-      <!-- সার্বজনীন কান্ট্রি ও ডিসকাউন্ট ড্রপডাউন সেকশন -->
       <div class="cj-form-row">
         <div class="cj-form-group">
           <label for="targetCountry">TARGET COUNTRY & FLAG</label>
@@ -214,7 +206,6 @@
         </div>
       </div>
 
-      <!-- ক্যাটাগরি সিলেকশন ট্রিগার বাটন -->
       <div class="cj-form-group">
         <label>PRODUCT CATEGORY</label>
         <div id="categoryPickerTrigger" class="category-picker-trigger">
@@ -227,20 +218,13 @@
         <input type="hidden" id="selectedCategoryValue" required>
       </div>
 
-      <!-- লাইভ থাম্বনেইল প্রিভিউ বক্স -->
       <div id="productPreviewBox" style="display: none; background: #040406; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 10px; padding: 10px; margin-bottom: 10px;">
         <div style="font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 4px; text-transform: uppercase;">Product Preview</div>
         <div id="previewTitle" style="font-size: 0.7rem; color: var(--text-white); font-weight: 600; margin-bottom: 6px; line-height: 1.2;"></div>
         <div id="previewPrice" style="font-size: 0.62rem; color: var(--text-gray); margin-bottom: 6px;"></div>
-        
-        <!-- সাইজ ও ভ্যারিয়েন্ট ইনফো -->
         <div id="previewSizes" style="font-size: 0.6rem; color: #00ff80; margin-bottom: 6px; font-weight: 600;"></div>
-
-        <!-- থাম্বনেইল গ্যালারি -->
         <div style="font-size: 0.6rem; font-weight: 700; color: var(--text-gray); margin-bottom: 4px;">GALLERY IMAGES:</div>
         <div id="previewImagesGrid" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; max-height: 60px;"></div>
-        
-        <!-- ভিডিও প্রিভিউ সেকশন -->
         <div id="previewVideoContainer" style="margin-top: 6px;"></div>
       </div>
 
@@ -272,12 +256,10 @@
   </div>
 </div>
 
-<!-- Centered Transparent Category Overlay Menu -->
 <div id="categoryTransparentOverlay" class="category-transparent-overlay">
     <div class="seller-fullscreen-container">
         <div class="category-fullscreen-view" id="categoryMainListView">
             
-            <!-- ১. WOMEN'S FASHION -->
             <div class="accordion-category-box" id="cat-women">
                 <div class="accordion-header" onclick="toggleAccordion('cat-women')">
                     <div class="accordion-title-wrap">
@@ -302,7 +284,6 @@
                 </div>
             </div>
 
-            <!-- ২. MEN'S FASHION -->
             <div class="accordion-category-box" id="cat-men">
                 <div class="accordion-header" onclick="toggleAccordion('cat-men')">
                     <div class="accordion-title-wrap">
@@ -322,7 +303,6 @@
                 </div>
             </div>
 
-            <!-- ৩. GIRLS' FASHION -->
             <div class="accordion-category-box" id="cat-girls">
                 <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
                     <div class="accordion-title-wrap">
@@ -347,7 +327,6 @@
                 </div>
             </div>
 
-            <!-- ৪. BOYS' FASHION -->
             <div class="accordion-category-box" id="cat-boys">
                 <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
                     <div class="accordion-title-wrap">
@@ -367,7 +346,6 @@
                 </div>
             </div>
 
-            <!-- ৫. MATCHING SETS -->
             <div class="accordion-category-box" id="cat-matching">
                 <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
                     <div class="accordion-title-wrap">
@@ -392,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- ৬. LUXURY GIFTS -->
             <div class="accordion-category-box" id="cat-gifts">
                 <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
                     <div class="accordion-title-wrap">
@@ -413,7 +390,6 @@
                 </div>
             </div>
 
-            <!-- ৭. MOTHER & BABY -->
             <div class="accordion-category-box" id="cat-mother">
                 <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
                     <div class="accordion-title-wrap">
@@ -682,11 +658,10 @@
           <strong>Category:</strong> ${category.toUpperCase()}<br>
           <strong>Target Country:</strong> ${targetCountry.toUpperCase()}<br>
           <strong>Discount:</strong> ${discountOffer ? discountOffer + '% OFF' : 'NO DISCOUNT'}<br>
-          <strong>Images Count:</strong> ${result.data.imagesCount || 0} Images Synced<br>
+          <strong>Images Count:</i> ${result.data.imagesCount || 0} Images Synced<br>
           <strong>Retail Price:</strong> $${result.data.retailPrice}<br>
           <strong>Sample Price:</strong> $${result.data.priceSample}`;
         
-        // ফর্ম রিসেট কিন্তু ক্যাটাগরি ও মার্জিনের সিলেক্ট করা মান অপরিবর্তিত রাখা
         document.getElementById('cjProductUrl').value = '';
         document.getElementById('cjProductId').value = '';
         document.getElementById('manualVideoUrl').value = '';
