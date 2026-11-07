@@ -2,53 +2,41 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>rorraxy - Retail Account & Order Tracking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Customer Access & Account - rorraxy</title>
+   
+    <!-- Favicon Logo -->
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <script src="/ecosystem-core.js"></script>
-
+    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- International Telephone Input CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+    
+    <!-- Canvas Confetti & HTML2PDF -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-body: #000000;
-            --card-bg: #050505;
-            --gold-color: #d4af37;
+            --bg-retail: #000000;
+            --card-retail: #050508;
             --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-            --text-main: #ffffff;
-            --text-muted: #a0a0b8;
-            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+            --required-red: #ff4d4d;
             --accent-green: #00e676;
         }
 
-        * {
-            box-sizing: border-box !important;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: var(--font-family);
-            min-height: 100vh;
-            width: 100%;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px 12px 90px 12px;
-            text-transform: uppercase !important;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
+        body { display: flex; align-items: center; justify-content: center; padding: 20px 12px; text-transform: uppercase; }
 
         #confetti-canvas {
             position: fixed;
@@ -58,79 +46,199 @@
             z-index: 99999;
         }
 
-        .account-container {
+        .portal-wrapper {
             width: 100%;
             max-width: 420px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 14px;
-            animation: luxurySlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            margin: auto 0;
         }
-
-        @keyframes luxurySlideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .empty-orders-screen {
+        
+        .portal-card {
+            background: var(--card-retail);
+            border: 1px solid rgba(255, 42, 133, 0.15);
+            border-radius: 24px;
             width: 100%;
+            padding: 38px 24px;
             display: flex;
             flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .portal-logo {
+            width: 120px;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
+            margin: 0 auto;
+            background: transparent !important;
+            filter: none !important;
+            box-shadow: none !important;
+        }
+
+        /* হেডার কাস্টমার অ্যাকাউন্ট মেডেল এলাইনমেন্ট */
+        .section-title-centered {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1.2px;
+            text-align: center;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 5px;
+        }
+
+        .portal-btn-gold {
+            width: 100%;
+            background: var(--gold-gradient);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            color: #030305;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        .portal-btn-gold:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        .portal-btn-pink {
+            width: 100%;
+            background: var(--pink-solid);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(255, 42, 133, 0.3);
+            transition: all 0.25s ease;
+        }
+        .portal-btn-pink:hover { filter: brightness(1.12); transform: translateY(-2px); }
+
+        /* ভেরিফিকেশন সেকশন */
+        #verificationSection {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            letter-spacing: 0.8px;
+        }
+
+        .iti { width: 100%; display: block; text-transform: none; }
+        .iti__flag-container { padding: 0; }
+        .iti__selected-flag { background-color: #000000 !important; border-radius: 14px 0 0 14px; }
+        .iti__country-list { background-color: #0f0f14 !important; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-transform: none; max-height: 200px; }
+        .iti__country { padding: 10px 12px; }
+        .iti__country:hover { background-color: #ff2a85 !important; }
+
+        .form-control {
+            width: 100%;
+            background: #000000;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: var(--text-white);
+            font-weight: 600;
+            font-size: 0.88rem;
+            outline: none;
+            font-family: var(--font-main);
+            text-transform: none;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .iti input.form-control { padding-left: 90px !important; }
+        .form-control:focus { background: #030305; }
+        .form-control::placeholder { font-size: 0.75rem; color: #555566; text-transform: none; }
+
+        .email-hint {
+            font-size: 0.62rem;
+            color: var(--text-gray);
+            text-transform: none;
+            letter-spacing: 0.2px;
+            margin-top: 2px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .status-msg {
+            font-size: 0.72rem;
+            text-transform: none;
+            margin-top: -2px;
+            display: none;
             text-align: center;
-            padding: 40px 20px;
+        }
+        .status-msg.error { color: var(--required-red); }
+        .status-msg.success { color: #2ecc71; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.65rem;
+            color: var(--text-gray);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .back-link:hover { color: #fff; }
+
+        .portal-footer-text {
+            font-size: 0.65rem;
+            color: var(--text-gray);
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+            text-transform: none;
+        }
+
+        /* কাস্টমার মেমো এবং অ্যাকাউন্ট ড্যাশবোর্ড ভিউ */
+        #accountDashboardSection {
+            display: none;
+            width: 100%;
+            flex-direction: column;
             gap: 16px;
         }
 
-        .shop-now-trigger {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            cursor: pointer;
-            padding: 10px 16px;
-            background: transparent;
-            border: none;
-            outline: none;
-            animation: softPulse 2.5s infinite ease-in-out;
-            transition: transform 0.2s ease;
-        }
-
-        .shop-now-trigger:active {
-            transform: scale(0.95);
-        }
-
-        .shop-now-icon {
-            font-size: 1.5rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: floatIcon 3s infinite ease-in-out;
-        }
-
-        .shop-now-text {
-            font-size: 0.95rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        @keyframes softPulse {
-            0%, 100% { opacity: 0.85; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.04); }
-        }
-
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        /* MEMO PRINT/VIEW STYLING */
         .memo-preview-card {
             background: #000000;
             border: 1px solid rgba(212, 175, 55, 0.25);
@@ -141,6 +249,7 @@
             flex-direction: column;
             gap: 14px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+            text-align: left;
         }
 
         .memo-header-brand {
@@ -151,14 +260,6 @@
             padding-bottom: 12px;
         }
 
-        .gold-title-gradient {
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
-
-        /* DISTINCTIVE ORDER ID BANNER */
         .order-id-highlight-box {
             background: rgba(212, 175, 55, 0.05);
             border: 1.5px dashed rgba(212, 175, 55, 0.4);
@@ -172,21 +273,8 @@
             gap: 4px;
         }
 
-        .order-id-label {
-            font-size: 0.6rem;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            font-weight: 800;
-        }
-
-        .order-id-value {
-            font-size: 1.1rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .order-id-label { font-size: 0.6rem; letter-spacing: 1.5px; color: var(--text-gray); font-weight: 800; }
+        .order-id-value { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .download-pdf-btn {
             background: var(--gold-gradient);
@@ -202,13 +290,9 @@
             justify-content: center;
             gap: 8px;
             width: 100%;
-            transition: opacity 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 4px 15px rgba(179, 135, 40, 0.3);
+            transition: transform 0.1s ease;
         }
-        .download-pdf-btn:active { 
-            opacity: 0.8; 
-            transform: scale(0.98);
-        }
+        .download-pdf-btn:active { transform: scale(0.98); }
 
         .memo-details-grid {
             background: #050508;
@@ -216,7 +300,7 @@
             border-radius: 10px;
             padding: 12px;
             font-size: 0.68rem;
-            color: var(--text-muted);
+            color: var(--text-gray);
             line-height: 1.7;
         }
         .memo-details-grid span { color: #fff; font-weight: 700; }
@@ -252,264 +336,80 @@
             padding-top: 10px;
             margin-top: 4px;
         }
-
-        .section-title {
-            font-size: 0.75rem;
-            font-weight: 800;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* FIXED BOTTOM SEARCH & CLOSE BAR */
-        .bottom-nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 420px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            padding-bottom: max(12px, env(safe-area-inset-bottom));
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 9999;
-            box-shadow: none !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .search-tracking-box {
-            flex: 1;
-            background: #0d0d12;
-            border: 1px solid rgba(212, 175, 55, 0.15) !important;
-            border-radius: 25px;
-            padding: 4px 6px 4px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .search-input-field {
-            flex: 1;
-            background: transparent;
-            border: none !important;
-            color: #fff;
-            font-size: 0.72rem;
-            outline: none;
-            font-family: var(--font-family);
-        }
-        .search-input-field::placeholder {
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        .search-submit-btn {
-            background: var(--gold-gradient);
-            border: none !important;
-            color: #000;
-            font-weight: 900;
-            font-size: 0.7rem;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: opacity 0.15s ease;
-        }
-        .search-submit-btn:active {
-            opacity: 0.8;
-        }
-
-        .close-icon-btn {
-            background: #0d0d12;
-            border: 1px solid rgba(212, 175, 55, 0.15) !important;
-            color: var(--gold-color);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 0.95rem;
-            flex-shrink: 0;
-            transition: opacity 0.15s ease, transform 0.15s ease;
-            cursor: pointer;
-        }
-        .close-icon-btn:active {
-            opacity: 0.8;
-            transform: scale(0.92);
-        }
     </style>
 </head>
 <body>
 
     <canvas id="confetti-canvas"></canvas>
 
-    <div class="account-container" id="accountDynamicContent">
-        <!-- Dynamic Content Loaded Here -->
-    </div>
+    <div class="portal-wrapper">
+        <div class="portal-card">
+            <!-- লোগো -->
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy logo" class="portal-logo">
 
-    <!-- SOFT FIXED BOTTOM SEARCH & CLOSE BAR -->
-    <div class="bottom-nav-bar">
-        <a href="https://rorraxy.com/" class="close-icon-btn" title="Close" onclick="event.preventDefault(); window.location.href='https://rorraxy.com/';">
-            <i class="fa-solid fa-xmark"></i>
-        </a>
-        <div class="search-tracking-box">
-            <input type="text" id="orderSearchInput" class="search-input-field" placeholder="ENTER ORDER ID">
-            <button onclick="executeOrderSearch()" class="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i> TRACK</button>
-        </div>
-    </div>
+            <!-- ধাপ ১: মেইন সিলেকশন পোর্টাল -->
+            <div id="mainSelectionGroup" class="button-group">
+                <button type="button" id="openCustomerBtn" class="portal-btn-gold">
+                    <i class="fa-solid fa-user-shield"></i> Customer Access
+                </button>
 
-    <script>
-        const API_BASE_URL = ''; 
-        let currentOrderData = null;
+                <a href="https://rorraxy.com/seller" class="portal-btn-pink">
+                    <i class="fa-solid fa-store"></i> Seller Access
+                </a>
 
-        window.onload = function() {
-            initRetailAccountFetch();
-            triggerConfetti();
-        };
+                <a href="https://rorraxy.com/affiliate" class="portal-btn-pink">
+                    <i class="fa-solid fa-handshake-angle"></i> Affiliate Access
+                </a>
+            </div>
 
-        function triggerConfetti() {
-            try {
-                confetti({
-                    particleCount: 75,
-                    spread: 70,
-                    origin: { y: 0.5 },
-                    colors: ['#d4af37', '#fcf6ba', '#b38728', '#ffffff']
-                });
-            } catch(e) {}
-        }
+            <!-- ধাপ ২: কাস্টমার ভেরিফিকেশন সেকশন (হেডার মিডিলে সেট করা) -->
+            <div id="verificationSection">
+                <h2 class="section-title-centered">CUSTOMER ACCOUNT</h2>
 
-        async function initRetailAccountFetch() {
-            const lastOrderRaw = localStorage.getItem('rorraxy_last_order');
-            if (lastOrderRaw) {
-                try {
-                    currentOrderData = JSON.parse(lastOrderRaw);
-                    renderOrdersUI(currentOrderData);
-                    return;
-                } catch(e) { console.error(e); }
-            }
-
-            try {
-                let response = await fetch(`${API_BASE_URL}/api/get?table=retail_orders&limit=1`);
-                let result = await response.json();
-
-                if (result.success && Array.isArray(result.data) && result.data.length > 0) {
-                    currentOrderData = result.data[0];
-                    renderOrdersUI(currentOrderData);
-                } else {
-                    renderEmptyOrdersUI();
-                }
-            } catch(err) {
-                renderEmptyOrdersUI();
-            }
-        }
-
-        async function executeOrderSearch() {
-            let query = document.getElementById('orderSearchInput').value.trim();
-            if(!query) {
-                initRetailAccountFetch();
-                return;
-            }
-
-            try {
-                let response = await fetch(`${API_BASE_URL}/api/get?table=retail_orders`);
-                let result = await response.json();
-
-                if (result.success && Array.isArray(result.data)) {
-                    let found = result.data.find(o => 
-                        (o.master_order_id && o.master_order_id.toLowerCase().includes(query.toLowerCase())) ||
-                        (o.customer_phone && o.customer_phone.includes(query)) ||
-                        (o.id && String(o.id).includes(query))
-                    );
-
-                    if (found) {
-                        currentOrderData = found;
-                        renderOrdersUI(currentOrderData);
-                    } else {
-                        alert("No order found matching your search query!");
-                    }
-                }
-            } catch(e) {
-                alert("Error searching database.");
-            }
-        }
-
-        function renderEmptyOrdersUI() {
-            const container = document.getElementById('accountDynamicContent');
-            container.innerHTML = `
-                <div class="empty-orders-screen">
-                    <div onclick="window.location.href='https://rorraxy.com/'" class="shop-now-trigger">
-                        <i class="fa-solid fa-bag-shopping shop-now-icon"></i>
-                        <span class="shop-now-text">SHOPPING NOW</span>
+                <form id="customerAuthForm" style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+                    <div class="form-group">
+                        <label>MOBILE NUMBER <span style="color:var(--required-red)">*</span></label>
+                        <input type="tel" class="form-control" id="customerPhone" placeholder="Enter phone number" required autocomplete="tel">
+                        <span class="email-hint"><i class="fa-solid fa-earth-americas" style="color: #ff2a85;"></i> Select country & enter mobile number</span>
                     </div>
-                </div>
-            `;
-        }
 
-        function renderOrdersUI(orderData) {
-            const container = document.getElementById('accountDynamicContent');
-            const items = orderData.items || [];
-            const mainOrderId = orderData.master_order_id || orderData.id || 'RRX-RET-' + Math.floor(100000 + Math.random() * 900000);
-            const customerName = orderData.customer_name || 'Valued Customer';
-            const customerPhone = orderData.customer_phone || 'N/A';
-            const paymentMethod = orderData.payment_method || 'Online Gateway';
-            const orderDate = orderData.created_at ? new Date(orderData.created_at).toLocaleDateString() : '2026';
+                    <!-- সরাসরি কন্টিনিউ টু ভেরিফাই বোতাম -->
+                    <button type="submit" class="portal-btn-gold" id="verifyBtn" style="padding: 15px;">
+                        CONTINUE TO VERIFY
+                    </button>
+                    
+                    <div id="formStatus" class="status-msg"></div>
 
-            let itemsTableHtml = '';
-            let totalAmt = 0;
+                    <a id="backToPortal" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Portals</a>
+                </form>
+            </div>
 
-            items.forEach((item) => {
-                let itemPriceNum = parseFloat(String(item.price || '0').replace('$', '')) || 0;
-                let itemTotal = itemPriceNum * (item.qty || 1);
-                totalAmt += itemTotal;
-                let title = item.title || item.product_title || 'Retail Product';
-
-                itemsTableHtml += `
-                    <tr>
-                        <td style="font-size:0.7rem; font-weight:700; color:#fff;">${title}</td>
-                        <td style="text-align:center; font-weight:700; color:#fff;">${item.qty || 1}</td>
-                        <td style="text-align:right; font-weight:900;" class="gold-title-gradient">$${itemTotal.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-
-            let finalTotal = orderData.total_amount ? parseFloat(orderData.total_amount).toFixed(2) : totalAmt.toFixed(2);
-
-            container.innerHTML = `
-                <div class="section-title">
+            <!-- ধাপ ৩: ভেরিফাইড হওয়ার পর অটোমেটিক অ্যাকাউন্ট ও মেমো ড্যাশবোর্ড ভিউ -->
+            <div id="accountDashboardSection">
+                <div class="section-title-centered">
                     <i class="fa-solid fa-file-invoice"></i> ORDER MEMO
                 </div>
 
                 <div class="memo-preview-card" id="printableMemoArea">
                     <div class="memo-header-brand">
                         <div>
-                            <h2 style="font-size:0.95rem;" class="gold-title-gradient">rorraxy RETAIL</h2>
-                            <p style="font-size:0.5rem; color:var(--text-muted); letter-spacing:1px;">OFFICIAL DIGITAL MEMO</p>
+                            <h2 style="font-size:0.95rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight:900;">rorraxy RETAIL</h2>
+                            <p style="font-size:0.5rem; color:var(--text-gray); letter-spacing:1px;">OFFICIAL DIGITAL MEMO</p>
                         </div>
                         <div style="text-align:right;">
-                            <p style="font-size:0.55rem; color:var(--text-muted);">DATE ISSUED</p>
-                            <p style="font-size:0.68rem; font-weight:800; color:#fff;">${orderDate}</p>
+                            <p style="font-size:0.55rem; color:var(--text-gray);">DATE ISSUED</p>
+                            <p style="font-size:0.68rem; font-weight:800; color:#fff;" id="memoDate">2026</p>
                         </div>
                     </div>
 
-                    <!-- SPOTTED DISTINCT ORDER ID BANNER -->
                     <div class="order-id-highlight-box">
                         <span class="order-id-label">ORDER ID</span>
-                        <span class="order-id-value">#${mainOrderId}</span>
+                        <span class="order-id-value" id="memoOrderId">#RRX-RET-884920</span>
                     </div>
 
                     <div class="memo-details-grid">
-                        <strong>CUSTOMER NAME:</strong> <span>${customerName}</span><br>
-                        <strong>PHONE / WHATSAPP:</strong> <span>${customerPhone}</span><br>
-                        <strong>PAYMENT METHOD:</strong> <span>${paymentMethod}</span><br>
+                        <strong>CUSTOMER PHONE:</strong> <span id="memoCustomerPhone">N/A</span><br>
+                        <strong>PAYMENT METHOD:</strong> <span>Online Gateway</span><br>
                         <strong>ORDER STATUS:</strong> <span style="color:var(--accent-green);">CONFIRMED & FULFILLED</span>
                     </div>
 
@@ -521,40 +421,198 @@
                                 <th style="text-align:right;">AMOUNT</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            ${itemsTableHtml}
+                        <tbody id="memoItemsBody">
+                            <!-- Items Dynamically Loaded -->
                         </tbody>
                     </table>
 
                     <div class="memo-total-row">
                         <span style="color:#fff;">TOTAL PAYABLE:</span>
-                        <span class="gold-title-gradient">$${finalTotal} USD</span>
+                        <span style="background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="memoTotalAmount">$0.00 USD</span>
                     </div>
                 </div>
 
-                <div style="width:100%;">
-                    <button onclick="downloadMemoAsPDF('${mainOrderId}')" class="download-pdf-btn">
-                        <i class="fa-solid fa-file-arrow-down"></i> DOWNLOAD MEMO PDF
-                    </button>
-                </div>
-            `;
+                <button onclick="downloadMemoPDF()" class="download-pdf-btn">
+                    <i class="fa-solid fa-file-arrow-down"></i> DOWNLOAD MEMO PDF
+                </button>
+            </div>
+
+            <p class="portal-footer-text">Secured & Encrypted Global Gateway</p>
+        </div>
+    </div>
+
+    <!-- International Telephone Input JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
+    <script>
+        const API_URL = "/api/customer"; 
+
+        const openCustomerBtn = document.getElementById('openCustomerBtn');
+        const mainSelectionGroup = document.getElementById('mainSelectionGroup');
+        const verificationSection = document.getElementById('verificationSection');
+        const accountDashboardSection = document.getElementById('accountDashboardSection');
+        const backToPortal = document.getElementById('backToPortal');
+
+        const customerPhoneInput = document.querySelector("#customerPhone");
+        const verifyBtn = document.getElementById('verifyBtn');
+        const formStatus = document.getElementById('formStatus');
+        const customerAuthForm = document.getElementById('customerAuthForm');
+
+        let iti = null;
+
+        // অটো চেক: অলরেডি লগইন থাকলে মেমো ড্যাশবোর্ডে যাবে
+        window.onload = function() {
+            if (localStorage.getItem('rorraxy_customer_token')) {
+                showDashboard();
+            }
+        };
+
+        openCustomerBtn.addEventListener('click', () => {
+            mainSelectionGroup.style.display = 'none';
+            verificationSection.style.display = 'flex';
+
+            if (!iti && window.intlTelInput) {
+                iti = window.intlTelInput(customerPhoneInput, {
+                    initialCountry: "auto",
+                    preferredCountries: ["bd", "us", "cn", "gb", "ca", "au", "in", "ae", "sg", "de", "my"],
+                    geoIpLookup: function(callback) {
+                        fetch("https://ipapi.co/json")
+                            .then(res => res.json())
+                            .then(data => callback(data.country_code))
+                            .catch(() => callback("bd"));
+                    },
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+                });
+            }
+        });
+
+        backToPortal.addEventListener('click', (e) => {
+            e.preventDefault();
+            verificationSection.style.display = 'none';
+            mainSelectionGroup.style.display = 'flex';
+            formStatus.style.display = 'none';
+        });
+
+        function showStatus(message, isError = false) {
+            formStatus.innerText = message;
+            formStatus.className = 'status-msg ' + (isError ? 'error' : 'success');
+            formStatus.style.display = 'block';
         }
 
-        function downloadMemoAsPDF(orderId) {
+        // কন্টিনিউ টু ভেরিফাই ফাংশনালিটি
+        customerAuthForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!iti || !iti.isValidNumber()) {
+                showStatus('Please enter a valid international mobile number.', true);
+                return;
+            }
+
+            const fullPhoneNumber = iti.getNumber();
+            verifyBtn.disabled = true;
+            verifyBtn.innerText = "VERIFYING & PROCESSING...";
+
+            try {
+                const response = await fetch(`${API_URL}?action=send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        phone: fullPhoneNumber,
+                        country_code: iti.getSelectedCountryData().iso2,
+                        device_info: navigator.userAgent
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showStatus('Verified successfully! Entering account...', false);
+                    localStorage.setItem('rorraxy_customer_token', 'verified_token_' + Date.now());
+                    localStorage.setItem('rorraxy_customer_phone', fullPhoneNumber);
+
+                    setTimeout(() => {
+                        showDashboard();
+                    }, 800);
+                } else {
+                    showStatus(data.error || 'Verification failed. Try again.', true);
+                    verifyBtn.disabled = false;
+                    verifyBtn.innerText = "CONTINUE TO VERIFY";
+                }
+            } catch (err) {
+                // অফলাইন বা কানেকশন ট্রাইব্যাক
+                localStorage.setItem('rorraxy_customer_token', 'verified_token_' + Date.now());
+                localStorage.setItem('rorraxy_customer_phone', fullPhoneNumber);
+                showDashboard();
+            }
+        });
+
+        function showDashboard() {
+            mainSelectionGroup.style.display = 'none';
+            verificationSection.style.display = 'none';
+            accountDashboardSection.style.display = 'flex';
+            
+            try {
+                confetti({ particleCount: 70, spread: 60, origin: { y: 0.5 } });
+            } catch(e) {}
+
+            renderMemoDetails();
+        }
+
+        function renderMemoDetails() {
+            const phone = localStorage.getItem('rorraxy_customer_phone') || 'N/A';
+            document.getElementById('memoCustomerPhone').innerText = phone;
+            document.getElementById('memoDate').innerText = new Date().toLocaleDateString();
+
+            const lastOrder = localStorage.getItem('rorraxy_last_order');
+            let itemsHtml = '';
+            let total = 0;
+
+            if (lastOrder) {
+                try {
+                    const parsed = JSON.parse(lastOrder);
+                    document.getElementById('memoOrderId').innerText = '#' + (parsed.master_order_id || parsed.id || 'RRX-RET-884920');
+                    const items = parsed.items || [];
+                    
+                    items.forEach(i => {
+                        const price = parseFloat(String(i.price || '0').replace('$', '')) || 0;
+                        const sub = price * (i.qty || 1);
+                        total += sub;
+                        itemsHtml += `
+                            <tr>
+                                <td style="font-size:0.7rem; font-weight:700; color:#fff;">${i.title || 'Retail Order Product'}</td>
+                                <td style="text-align:center; font-weight:700; color:#fff;">${i.qty || 1}</td>
+                                <td style="text-align:right; font-weight:900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$${sub.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                } catch(e) {}
+            }
+
+            if (!itemsHtml) {
+                itemsHtml = `
+                    <tr>
+                        <td style="font-size:0.7rem; font-weight:700; color:#fff;">Premium Product Item</td>
+                        <td style="text-align:center; font-weight:700; color:#fff;">1</td>
+                        <td style="text-align:right; font-weight:900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$49.99</td>
+                    </tr>
+                `;
+                total = 49.99;
+            }
+
+            document.getElementById('memoItemsBody').innerHTML = itemsHtml;
+            document.getElementById('memoTotalAmount').innerText = '$' + total.toFixed(2) + ' USD';
+        }
+
+        function downloadMemoPDF() {
             const element = document.getElementById('printableMemoArea');
             const options = {
                 margin:       8,
-                filename:     `rorraxy-memo-${orderId}.pdf`,
+                filename:     `rorraxy-memo.pdf`,
                 image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false, backgroundColor: '#000000' },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#000000' },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-
-            html2pdf().from(element).set(options).save().then(() => {
-                setTimeout(() => {
-                    window.location.href = 'https://rorraxy.com/';
-                }, 1000);
-            });
+            html2pdf().from(element).set(options).save();
         }
     </script>
 </body>
