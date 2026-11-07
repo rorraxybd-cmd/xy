@@ -55,11 +55,11 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         .animate-card-entry {
-            animation: fadeInFast 0.15s ease forwards;
+            animation: fadeInFast 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
         @keyframes fadeInFast {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Top Floating Search Bar */
@@ -138,14 +138,23 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Full Reels View */
-        .reel-view-wrapper-outer { width: 100%; height: calc(100vh - 68px); height: calc(100dvh - 68px); position: relative; background: #000; overflow: hidden; }
-        .reel-card { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background: #000; }
+        /* Full Reels Snap-Scroll View (কোনো কাপাকাপি বা ঝাঁকুনি ছাড়াই নিখুঁত ইনস্ট্যান্ট ফিড) */
+        .reel-view-wrapper-outer { 
+            width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
+            position: fixed; top: 0; left: 0; background: #000; 
+            overflow-y: scroll; scroll-snap-type: y mandatory; 
+            -webkit-overflow-scrolling: touch; z-index: 10;
+        }
+        .reel-card { 
+            width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
+            scroll-snap-align: start; scroll-snap-stop: always;
+            display: flex; flex-direction: column; position: relative; background: #000; flex-shrink: 0;
+        }
         .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস ভিউতে আগের মতই অক্ষত রাখা হয়েছে */
+        /* রিলস ভিউতে নিচে ও মিডিলে চমৎকার গোল্ডেন গ্র্যাডিয়েন্ট প্রাইস ও ডিসকাউন্ট */
         .reel-bottom-price-overlay {
             position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
@@ -168,7 +177,7 @@
 
         /* ডানপাশের ভাসমান অ্যাকশন বার */
         .right-vertical-actions {
-            position: fixed; right: 12px; bottom: 85px; z-index: 100;
+            position: fixed; right: 12px; bottom: 85px; z-index: 150;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto;
         }
@@ -198,7 +207,7 @@
             padding: 15px;
         }
 
-        /* বাই প্রিভিউ মডাল (প্রস্থ ও ছবি স্পষ্ট করা হয়েছে) */
+        /* বাই প্রিভিউ মডাল */
         .buy-preview-modal {
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
@@ -227,7 +236,7 @@
             transition: left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.4s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.4s linear, opacity 0.4s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল (PRODUCT DETAILS টেক্সট বাদ ও কোনো ফাঁকা স্পেস নেই) */
+        /* ইন-পেজ ডিটেইলস পপআপ মডাল */
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
@@ -397,27 +406,6 @@
                 searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
-
-            let touchStartY = 0;
-            window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive: true});
-            window.addEventListener('touchend', (e) => {
-                if(!isPinterestHomeMode) {
-                    let diff = touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) > 25) diff > 0 ? scrollReels(1) : scrollReels(-1);
-                }
-            }, {passive: true});
-
-            window.addEventListener('keydown', (e) => {
-                if(!isPinterestHomeMode) {
-                    if(e.key === 'ArrowDown' || e.key === 'PageDown') {
-                        e.preventDefault();
-                        scrollReels(1);
-                    } else if(e.key === 'ArrowUp' || e.key === 'PageUp') {
-                        e.preventDefault();
-                        scrollReels(-1);
-                    }
-                }
-            });
         });
 
         function handleHomeToggle() {
@@ -475,6 +463,18 @@
         }
 
         async function loadLiveProducts() {
+            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        globalMasterProductsList = parsed;
+                        activeProductList = parsed;
+                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
+                    }
+                } catch (e) {}
+            }
+
             try {
                 const response = await fetch(`/api/products`);
                 const result = await response.json();
@@ -483,27 +483,12 @@
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    productsList.sort(() => Math.random() - 0.5);
                     globalMasterProductsList = productsList;
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     activeProductList = productsList;
                     if(isPinterestHomeMode) renderPinterestHomeGrid(productsList);
-                    return;
                 }
             } catch (error) {}
-
-            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        parsed.sort(() => Math.random() - 0.5);
-                        globalMasterProductsList = parsed;
-                        activeProductList = parsed;
-                        if(isPinterestHomeMode) renderPinterestHomeGrid(parsed);
-                    }
-                } catch (e) {}
-            }
         }
 
         function executeHeaderSearch(keyword) {
@@ -657,71 +642,84 @@
         function switchToReelsView(index) {
             isPinterestHomeMode = false;
             currentReelIndex = index;
-            renderSingleReelView();
+            renderAllReelsFeed();
         }
 
-        function scrollReels(direction) {
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if (direction === 1 && currentReelIndex < list.length - 1) { currentReelIndex++; renderSingleReelView(); }
-            else if (direction === -1 && currentReelIndex > 0) { currentReelIndex--; renderSingleReelView(); }
-        }
-
-        function renderSingleReelView() {
+        /* --- পারফেক্ট স্ন্যাপ-স্ক্রোল রিলস ফিড রেন্ডার (কোনো ঝাঁকুনি বা কাপাকাপি ছাড়াই একটার পর একটা আসবে) --- */
+        function renderAllReelsFeed() {
             if (slideInterval) { clearInterval(slideInterval); slideInterval = null; }
             const container = document.getElementById('appContainer');
             container.className = 'reel-view-wrapper-outer';
 
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(currentReelIndex >= list.length) currentReelIndex = 0;
-            let product = list[currentReelIndex];
-            if(!product) return;
+            let reelsHtml = '';
 
-            let pId = String(product.id || product.product_id || '101');
-            let pVideo = product.video_url || product.youtube_video || '';
-            let mediaElem = '';
-            let extractedImages = [];
+            list.forEach((product, idx) => {
+                let pId = String(product.id || product.product_id || '101');
+                let pVideo = product.video_url || product.youtube_video || '';
+                let mediaElem = '';
+                let extractedImages = [];
 
-            try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) extractedImages = parsed;
-                } else if(product.image_url) extractedImages = [product.image_url];
-            } catch(e){}
+                try {
+                    if(product.images_json) {
+                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                        if(Array.isArray(parsed)) extractedImages = parsed;
+                    } else if(product.image_url) extractedImages = [product.image_url];
+                } catch(e){}
 
-            if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
-            } else {
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-                mediaElem = `<img id="reelSlideImg" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
-                
-                if (extractedImages.length > 1) {
-                    let imgIdx = 0;
-                    slideInterval = setInterval(() => {
-                        imgIdx = (imgIdx + 1) % extractedImages.length;
-                        const imgElem = document.getElementById('reelSlideImg');
-                        if (imgElem) imgElem.src = extractedImages[imgIdx];
-                    }, 1200);
+                if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                    mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
+                } else {
+                    if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+                    mediaElem = `<img src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
                 }
-            }
 
-            let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
-            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
+                let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
+                let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
 
-            container.innerHTML = `
-                <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="openBuyPreviewModal(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
-                        <div class="reel-bottom-price-overlay">
-                            <span class="reel-center-price-badge">${price}</span>
-                            ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
+                reelsHtml += `
+                    <div class="reel-card" data-index="${idx}" data-product-id="${pId}">
+                        <div class="reel-media-box" onclick="openBuyPreviewModal(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
+                            <div class="reel-bottom-price-overlay">
+                                <span class="reel-center-price-badge">${price}</span>
+                                ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
+                            </div>
+                            ${mediaElem}
                         </div>
-                        ${mediaElem}
                     </div>
-                </div>
-            `;
-            renderFixedGlobalActions(container, pId);
+                `;
+            });
+
+            container.innerHTML = reelsHtml;
+
+            // স্ক্রোল করে নির্দিষ্ট ইনডেক্সে যাওয়া
+            setTimeout(() => {
+                const targetCard = container.querySelector(`[data-index="${currentReelIndex}"]`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'auto' });
+                }
+            }, 50);
+
+            // স্ক্রোল শেষ হওয়ার পর বর্তমান ইনডেক্স ট্র্যাক করা
+            let scrollTimer = null;
+            container.onscroll = () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                    let cardHeight = container.clientHeight;
+                    let calculatedIdx = Math.round(container.scrollTop / cardHeight);
+                    if (calculatedIdx >= 0 && calculatedIdx < list.length) {
+                        currentReelIndex = calculatedIdx;
+                        let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
+                        renderFixedGlobalActions(container, activeId);
+                    }
+                }, 50);
+            };
+
+            let activeId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
+            renderFixedGlobalActions(container, activeId);
         }
 
-        /* --- ইন-পেজ ডিটেইলস পপআপ (PRODUCT DETAILS হেডার ছাড়া, একদম ফাঁকা স্পেস ছাড়া টাইটেল গোল্ডেন গ্র্যাডিয়েন্ট) --- */
+        /* --- ইন-পেজ ডিটেইলস পপআপ (Packing List ও অতিরিক্ত ইমেজ স্বয়ংক্রিয়ভাবে ফিল্টার করে বাদ দেওয়া হয়েছে) --- */
         function openInpageDetailsModal(product) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -741,9 +739,24 @@
             let price = `$${priceNum.toFixed(2)}`;
             let marketPrice = `$${marketPriceNum}`;
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
-            let rawDesc = product.description || product.desc || 'Product information: Pattern: color matching Skirt type: hip skirt Color: wine red, light blue, white, green Waist Type: Mid waist Size: S,M,L,XL Style type: street fashion Combination form: Single piece Skirt length: mid skirt Popular elements: Button Style: Basic Fabric name: polyester Sleeve type: Lantern sleeve Main fabric composition: polyester Sleeve length: long sleeve Skirt Category: Dress Style: European and American style Process: high temperature stereotypes Note: 1. Asian sizes are 1 to 2 sizes smaller than European and American people. Choose the larger size if your size between two sizes. Please allow 2-3cm differences due to manual measurement. 2. Please check the size chart carefully before you buy the item, if you don\'t know how to choose size, please contact our customer service. 3.As you know, the different computers display colors differently, the color of the actual item may vary slightly from the following images. Packing list: Skirt*1 Product Image:';
+            let rawDesc = product.description || product.desc || '';
             
-            let cleanDesc = rawDesc.replace(/https?:\/\/[^\s]+(\.jpg|\.png|\.webp)/gi, '').trim();
+            // প্যাকিং লিস্ট, প্রোডাক্ট ইমেজ বা এর পরের অংশ স্বয়ংক্রিয়ভাবে ফিল্টার করে বাদ দেওয়া
+            let cleanDesc = rawDesc;
+            let cutKeywords = ['packing list:', 'packing list', 'product image:', 'product image', 'images:'];
+            cutKeywords.forEach(kw => {
+                let lowerDesc = cleanDesc.toLowerCase();
+                let idx = lowerDesc.indexOf(kw);
+                if (idx !== -1) {
+                    cleanDesc = cleanDesc.substring(0, idx).trim();
+                }
+            });
+
+            // যদি অতিরিক্ত ইউআরএল বা ইমেজ লিংক থাকে তাও রিমুভ করা
+            cleanDesc = cleanDesc.replace(/https?:\/\/[^\s]+(\.jpg|\.png|\.webp)/gi, '').trim();
+            if (!cleanDesc) {
+                cleanDesc = 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
+            }
 
             let stock = product.stock || 500;
             currentProductQty = 1;
@@ -751,7 +764,7 @@
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin:0; padding:0;">
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.9));">${price}</span>
+                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.9);">${price}</span>
                         <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
                         <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px; box-shadow:0 2px 6px rgba(255,42,133,0.4);">${discountPercent}% OFF</span>
                     </div>
@@ -766,21 +779,18 @@
                 <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px; margin-top:2px;">
                     <span style="font-size:0.75rem; font-weight:700; color:#ffffff;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;">-</button>
+                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
                         <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; color:#ffffff;">1</span>
-                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700; transition:all 0.1s ease;">+</button>
+                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">+</button>
                     </div>
                 </div>
 
-                <!-- কোয়ান্টিটির নিচে ফ্রি শিপিং লেখার মত গোল্ডেন গ্রেডিয়েন্ট টাইটেল -->
                 <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.45; margin:4px 0 0 0; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.9)); display:inline-block;">${title}</h3>
 
-                <!-- টাইটেলের নিচে ডেসক্রিপশন -->
                 <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
                     ${cleanDesc}
                 </div>
 
-                <!-- মাল্টি-লাইন লেখার নোট বক্স ও টিক টগল -->
                 <div style="display:flex; flex-direction:column; gap:6px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 12px;">
                         <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase; resize:none; font-family:var(--font-main);"></textarea>
@@ -814,7 +824,7 @@
             document.getElementById('inpageDetailsOverlay').style.display = 'none';
         }
 
-        /* --- অর্ডার নাও প্রিভিউ পপআপ (প্রশস্ত ভ্যারিয়েন্ট ও স্পষ্ট ছবি) --- */
+        /* --- অর্ডার নাও প্রিভিউ পপআপ --- */
         function openBuyPreviewModal(product, event) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -849,7 +859,7 @@
                     <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4); transition:transform 0.1s ease;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM
                 </button>
             `;
@@ -1046,7 +1056,7 @@
                 isPinterestHomeMode = false;
                 activeProductList = globalMasterProductsList;
                 currentReelIndex = foundIdx;
-                renderSingleReelView();
+                renderAllReelsFeed();
             }
             document.getElementById('savedGalleryOverlay').style.display = 'none';
         };
