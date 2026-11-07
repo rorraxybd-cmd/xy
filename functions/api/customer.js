@@ -52,7 +52,7 @@ export async function onRequest(context) {
       return new Response(JSON.stringify({ 
         success: true, 
         message: "OTP sent successfully",
-        debug_otp: otpCode // টেস্টিংয়ের জন্য ওটিপি রিটার্ন করা হচ্ছে
+        debug_otp: otpCode 
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -73,7 +73,6 @@ export async function onRequest(context) {
         });
       }
 
-      // ডাটাবেজ থেকে ওটিপি ম্যাচিং চেক
       const record = await env.retail.prepare(`
         SELECT * FROM customer_auth_logs 
         WHERE phone = ? AND auth_token = ? 
@@ -87,7 +86,6 @@ export async function onRequest(context) {
         });
       }
 
-      // স্ট্যাটাস ভেরিফাইড হিসেবে আপডেট করা
       await env.retail.prepare(`
         UPDATE customer_auth_logs SET status = 'Verified', last_login = CURRENT_TIMESTAMP WHERE id = ?
       `).bind(record.id).run();
@@ -98,6 +96,38 @@ export async function onRequest(context) {
         success: true, 
         token: authToken,
         message: "Verification successful. Access granted." 
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    // ==========================================
+    // ৩. চেকআউট থেকে কাস্টমার ইনফো ও অর্ডার সিংক (Customer Auth Sync)
+    // ==========================================
+    if (action === "sync-customer") {
+      const phone = body.phone;
+      const customerName = body.customer_name || "";
+      const shippingAddress = body.shipping_address || "";
+      const masterOrderId = body.master_order_id || "";
+      const orderId = body.order_id || "";
+
+      if (!phone) {
+        return new Response(JSON.stringify({ success: false, error: "Phone number is required for sync." }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      // ডাটাবেজে কাস্টমার রেকর্ড আপডেট বা ইনসার্ট করা
+      await env.retail.prepare(`
+        INSERT INTO customer_auth_logs (phone, ip_address, device_info, customer_name, shipping_address, master_order_id, auth_token, status, last_login)
+        VALUES (?, ?, ?, ?, ?, ?, 'SYNCED_TOKEN', 'Verified', CURRENT_TIMESTAMP)
+      `).bind(phone, clientIp, userAgent, customerName, shippingAddress, masterOrderId).run();
+
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: "Customer account and order data synced successfully." 
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -115,4 +145,4 @@ export async function onRequest(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
-}
+}[cite: 11]
