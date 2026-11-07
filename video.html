@@ -1007,7 +1007,7 @@
             if(badge) badge.innerText = totalQty;
         }
 
-        /* --- অটো র্যান্ডম এবং দৈনিক একবার লাইক মেকানিজম --- */
+        /* --- প্রতিটি প্রোডাক্টের জন্য অনন্য ও ইউনিক ডাইনামিক লাইক কাউন্ট --- */
         function getDynamicEngagement(productId) {
             let storageKey = `rorraxy_retail_likes_${productId}`;
             let storedData = localStorage.getItem(storageKey);
@@ -1015,13 +1015,24 @@
             if (storedData) {
                 currentVal = JSON.parse(storedData).value;
             } else {
-                // বিভিন্ন রেঞ্জের র্যান্ডম আকর্ষণীয় সংখ্যা জেনারেট করা
-                const pools = [1200, 3500, 5200, 10500, 25000, 110000, 250000, 500000];
-                let base = pools[Math.abs(hashCode(productId)) % pools.length];
-                currentVal = base + (Math.abs(hashCode(productId)) % 850);
+                // প্রোডাক্ট আইডির হ্যাশ অনুযায়ী ১০০ থেকে শুরু করে লক্ষাধিক পর্যন্ত অনন্য লাইক কাউন্ট
+                const pool = [185, 245, 445, 890, 1500, 3200, 7800, 15400, 48000, 125000, 250000, 1000000];
+                let index = Math.abs(hashCode(String(productId))) % pool.length;
+                let base = pool[index];
+                let variance = (Math.abs(hashCode(String(productId))) % 199);
+                currentVal = base + variance;
                 localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
             }
-            return currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
+            return formatNumber(currentVal);
+        }
+
+        function formatNumber(num) {
+            if (num >= 100000) {
+                return (num / 100000).toFixed(1) + 'Lakh';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
         }
 
         function hashCode(str) {
@@ -1045,15 +1056,13 @@
             let isLiked = localStorage.getItem(activeStateKey) === 'true';
 
             let storedData = localStorage.getItem(storageKey);
-            let currentVal = storedData ? JSON.parse(storedData).value : 5200;
+            let currentVal = storedData ? JSON.parse(storedData).value : 1500;
 
             if (isLiked) {
-                // আনলাইক করা
                 btn.classList.remove('liked-active');
                 currentVal = Math.max(0, currentVal - 1);
                 localStorage.setItem(activeStateKey, 'false');
             } else {
-                // চেক করা আজ ইতিমধ্যে লাইক দেওয়া হয়েছে কি না
                 if (lastLikeDate === todayStr) {
                     alert('আপনি এই প্রোডাক্টটিতে আজ ইতিমধ্যে লাইক দিয়েছেন। আগামীকাল আবার লাইক করতে পারবেন!');
                     return;
@@ -1066,7 +1075,7 @@
 
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
             if(countElem) {
-                countElem.innerText = currentVal >= 1000 ? (currentVal / 1000).toFixed(1) + 'K' : currentVal.toString();
+                countElem.innerText = formatNumber(currentVal);
             }
         };
 
