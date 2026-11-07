@@ -80,7 +80,7 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar (ফিক্সড মেনু) */
+        /* Bottom Navigation Bar (হোম এবং ইউ বাটন লজিক সহ) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -126,15 +126,14 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* গোল্ডেন গ্রাডিয়েন্ট + ডাবল স্ট্রোক/শ্যাডো প্রাইস ট্যাগ (উচ্চমাত্রায় স্পষ্ট) */
+        /* ছোট সুন্দর কালো শেপের মধ্যে গোল্ডেন টেক্সট প্রাইস ট্যাগ[cite: 32] */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: rgba(0, 0, 0, 0.92); padding: 4px 10px; border-radius: 8px;
-            font-size: 0.85rem; font-weight: 800; color: #d4af37;
+            background: rgba(10, 10, 15, 0.92); padding: 4px 10px; border-radius: 8px;
+            font-size: 0.8rem; font-weight: 800; color: #d4af37;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 3px #000, 0 1px 5px #000, 0 0 8px rgba(0,0,0,0.9);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.95);
-            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.9);
+            border: 1px solid rgba(212, 175, 55, 0.35);
         }
 
         /* Full Reels View */
@@ -144,24 +143,23 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে ক্লিন গোল্ডেন গ্রাডিয়েন্ট প্রাইস ওভারলে */
+        /* রিলস মোডে একদম নিচে ও মেডেলে প্রাইস এবং ডিসকাউন্ট */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%);
             z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
-            background: rgba(0, 0, 0, 0.82); padding: 6px 16px; border-radius: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.9);
+            background: rgba(8, 8, 12, 0.88); padding: 6px 18px; border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 18px rgba(0,0,0,0.9);
         }
         .reel-center-price-badge {
-            font-size: 1.35rem; font-weight: 800; color: #d4af37;
+            font-size: 1.3rem; font-weight: 800; color: #d4af37;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 4px #000, 0 2px 8px #000;
         }
         .reel-center-discount-badge {
-            background: var(--pink-accent); color: #fff; font-size: 0.65rem; font-weight: 800;
-            padding: 2px 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
+            padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার */
+        /* ডানপাশের ভাসমান অ্যাকশন বার[cite: 33] */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 100;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -193,9 +191,9 @@
             padding: 15px;
         }
 
-        /* বাই প্রিভিউ মডাল */
+        /* বাই প্রিভিউ মডাল (সফট বর্ডারবিহীন স্টাইল) */
         .buy-preview-modal {
-            width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.96); border: 1.5px solid var(--gold-solid);
+            width: 92%; max-width: 360px; background: rgba(10, 10, 16, 0.96); border: 1px solid rgba(212,175,55,0.4);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.9);
         }
@@ -228,7 +226,7 @@
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
-        /* ফুল-স্ক্রিন কার্ট এবং অ্যাকাউন্ট ফ্রেম ওভারলে (ক্লিন ভিউ) */
+        /* ফুল-স্ক্রিন পোর্টাল ওভারলে */
         .fullscreen-iframe-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px);
             background: #000000; z-index: 4500; flex-direction: column;
@@ -282,13 +280,13 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar (অন-অফ টগল সিস্টেম) -->
+    <!-- Bottom Navigation Bar (হোম ও ইউ বাটন লজিক সহ)[cite: 33] -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
         <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
         <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <div onclick="toggleFullscreenPortal('/account.html')" class="bottom-nav-item"><i class="fa-solid fa-user"></i><span>YOU</span></div>
+        <div id="bottomHomeAccountToggleBtn" onclick="handleHomeAccountToggle()" class="bottom-nav-item"><i class="fa-solid fa-house" id="bottomNavHomeIcon"></i><span id="bottomNavHomeText">HOME</span></div>
     </nav>
 
     <!-- Fullscreen Portal Overlay for Cart / Account -->
@@ -342,6 +340,7 @@
             buildCategoriesUI();
             loadLiveProducts();
             updateCartBadgeCount();
+            updateBottomNavState();
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -403,21 +402,55 @@
             }, {passive: true});
         });
 
-        /* টগল সিস্টেম (একবার ক্লিকে অন, আরেক ক্লিকে অফ) */
-        function toggleFullscreenPortal(pageUrl) {
+        /* ফুটার নেভবার লজিক: হোম ও অ্যাকাউন্ট টগল */
+        function handleHomeAccountToggle() {
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+            if (overlay.style.display === 'flex') {
+                closeFullscreenPortal();
+            } else if (!isPinterestHomeMode) {
+                isPinterestHomeMode = true;
+                renderPinterestHomeGrid(activeProductList.length > 0 ? activeProductList : globalMasterProductsList);
+                updateBottomNavState();
+            } else {
+                openFullscreenPortal('/account.html');
+            }
+        }
+
+        function openFullscreenPortal(pageUrl) {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
-
-            if (overlay.style.display === 'flex' && currentPortalUrl === pageUrl) {
-                overlay.style.display = 'none';
-                iframe.src = '';
-                currentPortalUrl = '';
-            } else {
-                currentPortalUrl = pageUrl;
-                iframe.src = pageUrl;
-                overlay.style.display = 'flex';
-            }
+            currentPortalUrl = pageUrl;
+            iframe.src = pageUrl;
+            overlay.style.display = 'flex';
+            updateBottomNavState();
             updateCartBadgeCount();
+        }
+
+        function closeFullscreenPortal() {
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+            const iframe = document.getElementById('fullscreenIframeBody');
+            overlay.style.display = 'none';
+            iframe.src = '';
+            currentPortalUrl = '';
+            updateBottomNavState();
+            updateCartBadgeCount();
+        }
+
+        function updateBottomNavState() {
+            const iconElem = document.getElementById('bottomNavHomeIcon');
+            const textElem = document.getElementById('bottomNavHomeText');
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+
+            if (overlay.style.display === 'flex') {
+                iconElem.className = 'fa-solid fa-house';
+                textElem.innerText = 'HOME';
+            } else if (!isPinterestHomeMode) {
+                iconElem.className = 'fa-solid fa-house';
+                textElem.innerText = 'HOME';
+            } else {
+                iconElem.className = 'fa-solid fa-user';
+                textElem.innerText = 'YOU';
+            }
         }
 
         function buildCategoriesUI() {
@@ -572,6 +605,7 @@
             container.innerHTML = '';
             container.appendChild(fragment);
             renderFixedGlobalActions(container, null);
+            updateBottomNavState();
         }
 
         function renderFixedGlobalActions(container, pId) {
@@ -588,7 +622,7 @@
 
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <div class="side-action-item" onclick="toggleFullscreenPortal('/cart.html')" title="Cart">
+                    <div class="side-action-item" onclick="openFullscreenPortal('/cart.html')" title="Cart">
                         <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
                         <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
@@ -608,7 +642,7 @@
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
 
-                    <div class="side-action-item" onclick="toggleFullscreenPortal('/account.html')" title="You">
+                    <div class="side-action-item" onclick="openFullscreenPortal('/account.html')" title="You">
                         <i class="fa-solid fa-user action-pure-icon"></i>
                         <span class="side-count-text">YOU</span>
                     </div>
@@ -690,7 +724,7 @@
 
             container.innerHTML = `
                 <div class="reel-card" data-product-id="${pId}">
-                    <div class="reel-media-box" onclick="openInpageDetailsModal(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                    <div class="reel-media-box" onclick="openBuyPreviewModal(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
                         <div class="reel-bottom-price-overlay">
                             <span class="reel-center-price-badge">${price}</span>
                             ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
@@ -700,6 +734,7 @@
                 </div>
             `;
             renderFixedGlobalActions(container, pId);
+            updateBottomNavState();
         }
 
         /* --- ইন-পেজ ডিটেইলস পপআপ রেন্ডার ফাংশন --- */
@@ -779,14 +814,14 @@
                     ${cleanDesc}
                 </div>
 
+                <!-- সিম্পল টিক বক্স নোট সিস্টেম -->
                 <div style="display:flex; flex-direction:column; gap:6px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:0.65rem; font-weight:600; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">custom note / size (optional)</span>
-                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-size:0.65rem; color:var(--gold-solid);">
-                            <input type="checkbox" id="noteCheckbox" checked style="accent-color:var(--pink-accent);"> save note
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px;">
+                        <input type="text" id="inpageCustomNoteInput" placeholder="ENTER SIZE, COLOR OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase;">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.68rem; color:var(--gold-solid);">
+                            <input type="checkbox" id="noteCheckbox" checked style="accent-color:var(--pink-accent); width:16px; height:16px;"> save
                         </label>
                     </div>
-                    <input type="text" id="inpageCustomNoteInput" placeholder="ENTER SIZE, COLOR OR CUSTOM INSTRUCTIONS..." style="background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase;">
                 </div>
 
                 <button onclick="confirmAddToCartFromDetails(event, '${product.id||product.product_id||'101'}', '${title.replace(/'/g, "\\'")}', ${priceNum})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
