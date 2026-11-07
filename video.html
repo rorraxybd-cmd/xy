@@ -55,7 +55,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         .animate-card-entry {
-            animation: fadeInFast 0.2s ease forwards;
+            animation: fadeInFast 0.15s ease forwards;
         }
         @keyframes fadeInFast {
             from { opacity: 0; }
@@ -124,17 +124,20 @@
             padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
 
-        /* পিন্টারেস্ট ও রিলস মোডের জন্য কনসিস্টেন্ট প্রাইস ট্যাগ (কালো শেপ + গোল্ডেন টেক্সট) */
-        .card-clean-price-badge, .reel-bottom-price-overlay {
-            background: rgba(10, 10, 15, 0.95); padding: 4px 12px; border-radius: 8px;
-            font-size: 0.85rem; font-weight: 800; color: #d4af37;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.9);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-        }
+        /* প্রাইস ট্যাগ স্টাইল: সুন্দর রাউন্ডেড শেপ ও উজ্জ্বল গোল্ডেন গ্র্যাডিয়েন্ট */
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
+            background: rgba(10, 10, 16, 0.85) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 4px 10px; border-radius: 8px;
+            font-size: 0.8rem; font-weight: 800;
+            background: var(--gold-gradient) !important; 
+            -webkit-background-clip: text !important; 
+            -webkit-text-fill-color: transparent !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
         /* Full Reels View */
@@ -144,18 +147,25 @@
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
         .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-        /* রিলস মোডে একদম নিচে ও মেডেলে পিন্টারেস্ট স্টাইল প্রাইস ও ডিসকাউন্ট */
+        /* রিলস মোডে নিচে ও মিডিলে চমৎকার গোল্ডেন গ্র্যাডিয়েন্ট প্রাইস ও ডিসকাউন্ট */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 50; pointer-events: none; flex-direction: row; gap: 8px; padding: 6px 16px; border-radius: 12px;
+            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
+            gap: 8px; padding: 6px 18px; border-radius: 20px;
+            background: rgba(8, 8, 14, 0.88) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.9);
         }
         .reel-center-price-badge {
-            font-size: 1.1rem; font-weight: 800; color: #d4af37;
+            font-size: 1.05rem; font-weight: 800;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: inline-block;
         }
         .reel-center-discount-badge {
-            background: var(--pink-accent); color: #fff; font-size: 0.6rem; font-weight: 800;
-            padding: 2px 6px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
+            padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
         /* ডানপাশের ভাসমান অ্যাকশন বার */
@@ -186,7 +196,7 @@
         /* পপআপ ওভারলে স্টাইল */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.45); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px;
         }
 
@@ -215,13 +225,13 @@
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
             box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.5s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.5s linear, opacity 0.5s ease-in;
+            transition: left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.4s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.4s linear, opacity 0.4s ease-in;
         }
 
-        /* ইন-পেজ ডিটেইলস পপআপ মডাল (ফাঁকা জায়গা শূন্য ও গোছানো লেআউট) */
+        /* ইন-পেজ ডিটেইলস পপআপ মডাল (উপরের ফাঁকা জায়গা দূর করা হয়েছে) */
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
-            border-radius: 18px; padding: 16px 20px 20px 20px; margin: auto; display: flex; flex-direction: column; gap: 10px;
+            border-radius: 18px; padding: 14px 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
         }
 
@@ -394,7 +404,7 @@
             window.addEventListener('touchend', (e) => {
                 if(!isPinterestHomeMode) {
                     let diff = touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) > 30) diff > 0 ? scrollReels(1) : scrollReels(-1);
+                    if (Math.abs(diff) > 25) diff > 0 ? scrollReels(1) : scrollReels(-1);
                 }
             }, {passive: true});
 
@@ -691,7 +701,7 @@
                         imgIdx = (imgIdx + 1) % extractedImages.length;
                         const imgElem = document.getElementById('reelSlideImg');
                         if (imgElem) imgElem.src = extractedImages[imgIdx];
-                    }, 1500);
+                    }, 1200);
                 }
             }
 
@@ -712,7 +722,7 @@
             renderFixedGlobalActions(container, pId);
         }
 
-        /* --- ইন-পেজ ডিটেইলস পপআপ (ফাঁকা জায়গা শূন্য, গোল্ডেন গ্রেডিয়েন্ট টাইটেল কোয়ান্টিটির নিচে) --- */
+        /* --- ইন-পেজ ডিটেইলস পপআপ (শূন্য ফাঁকা জায়গা, গোল্ডেন টাইটেল কোয়ান্টিটির নিচে এবং মাল্টি-লাইন নোট ইনপুট ও টিক টগল) --- */
         function openInpageDetailsModal(product) {
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
@@ -741,14 +751,15 @@
             currentProductQty = 1;
 
             content.innerHTML = `
-                <div style="display:flex; justify-content:flex-end; align-items:center; padding-bottom:0px; margin-bottom:-4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                    <span style="font-size:0.7rem; font-weight:700; color:var(--gold-solid); text-transform:uppercase;">PRODUCT DETAILS</span>
                     <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; padding:0; line-height:1;">&times;</button>
                 </div>
                 
-                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                    <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
-                    <span style="font-size:0.9rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
-                    <span style="background:var(--pink-accent); color:#fff; font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:2px;">
+                    <span style="font-size:1.35rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 2px 4px rgba(0,0,0,0.9);">${price}</span>
+                    <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
+                    <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; font-weight:700; flex-wrap:wrap; gap:6px;">
@@ -766,23 +777,34 @@
                 </div>
 
                 <!-- কোয়ান্টিটির নিচে গোল্ডেন গ্রেডিয়েন্ট টাইটেল -->
-                <h3 style="font-size:0.98rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; margin:4px 0 0 0; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
+                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.4; margin:2px 0 0 0; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${title}</h3>
 
                 <!-- টাইটেলের নিচে ডেসক্রিপশন -->
                 <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
                     ${cleanDesc}
                 </div>
 
+                <!-- মাল্টি-লাইন লেখার নোট বক্স ও টিক টগল -->
                 <div style="display:flex; flex-direction:column; gap:6px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px;">
-                        <input type="text" id="inpageCustomNoteInput" placeholder="ENTER SIZE, COLOR OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase;">
-                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.68rem; color:var(--gold-solid);">
-                            <input type="checkbox" id="noteCheckbox" checked style="accent-color:var(--pink-accent); width:16px; height:16px;"> save
-                        </label>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 12px;">
+                        <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase; resize:none; font-family:var(--font-main);"></textarea>
+                        <div onclick="toggleNoteCheckState(this)" id="noteCheckBtn" style="cursor:pointer; width:26px; height:26px; border-radius:50%; background:#ff2a85; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.75rem; transition:background 0.2s ease;">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
                     </div>
                 </div>
             `;
             overlay.style.display = 'flex';
+        }
+
+        function toggleNoteCheckState(el) {
+            if(el.style.background === 'rgb(0, 230, 118)' || el.style.background === '#00e676') {
+                el.style.background = '#ff2a85';
+                el.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else {
+                el.style.background = '#00e676';
+                el.innerHTML = '<i class="fa-solid fa-check"></i>';
+            }
         }
 
         function adjustDetailQty(amount) {
@@ -859,14 +881,14 @@
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.025));
-                    gain.gain.setValueAtTime(0, now + (idx * 0.025));
-                    gain.gain.linearRampToValueAtTime(0.1 / (idx + 1), now + (idx * 0.025) + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.025) + 0.8);
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.02));
+                    gain.gain.setValueAtTime(0, now + (idx * 0.02));
+                    gain.gain.linearRampToValueAtTime(0.08 / (idx + 1), now + (idx * 0.02) + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.02) + 0.5);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    osc.start(now + (idx * 0.025));
-                    osc.stop(now + (idx * 0.025) + 0.8);
+                    osc.start(now + (idx * 0.02));
+                    osc.stop(now + (idx * 0.02) + 0.5);
                 });
             } catch (e) {}
         }
@@ -897,7 +919,7 @@
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
                 playCoinDropChime();
-            }, 500);
+            }, 350);
         }
 
         function confirmAddToCart(e, pId, title, price) {
