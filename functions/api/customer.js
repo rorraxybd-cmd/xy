@@ -1,1 +1,118 @@
+export async function onRequest(context) {
+  const { request, env } = context;
+  const url = new URL(request.url);
 
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
+  if (request.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  if (request.method !== "POST") {
+    return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), {
+      status: 405,
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+  }
+
+  try {
+    const action = url.searchParams.get("action");
+    const body = await request.json();
+
+    const clientIp = request.headers.get("cf-connecting-ip") || "Unknown";
+    const userAgent = request.headers.get("user-agent") || "Unknown";
+
+    // ==========================================
+    // ১. ওটিপি পাঠানো এবং লগ সেভ করা
+    // ==========================================
+    if (action === "send-otp") {
+      const phone = body.phone;
+      const countryCode = body.country_code || "";
+
+      if (!phone) {
+        return new Response(JSON.stringify({ success: false, error: "Phone number is required." }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      // ৬ ডিজিটের র্যান্ডম ওটিপি কোড জেনারেট
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      // ডাটাবেজে লগ সংরক্ষণ
+      await env.retail.prepare(`
+        INSERT INTO customer_auth_logs (phone, country_code, ip_address, device_info, auth_token, status, last_login)
+        VALUES (?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP)
+      `).bind(phone, countryCode, clientIp, body.device_info || userAgent, otpCode).run();
+
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: "OTP sent successfully",
+        debug_otp: otpCode // টেস্টিংয়ের জন্য ওটিপি রিটার্ন করা হচ্ছে
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    // ==========================================
+    // ২. ওটিপি ভেরিফাই এবং এক্সেস গ্র্যান্ট
+    // ==========================================
+    if (action === "verify-otp") {
+      const phone = body.phone;
+      const otp = body.otp;
+
+      if (!phone || !otp) {
+        return new Response(JSON.stringify({ success: false, error: "Phone and OTP are required." }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      // ডাটাবেজ থেকে ওটিপি ম্যাচিং চেক
+      const record = await env.retail.prepare(`
+        SELECT * FROM customer_auth_logs 
+        WHERE phone = ? AND auth_token = ? 
+        ORDER BY id DESC LIMIT 1
+      `).bind(phone, otp).first();
+
+      if (!record) {
+        return new Response(JSON.stringify({ success: false, error: "Invalid OTP code." }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      // স্ট্যাটাস ভেরিফাইড হিসেবে আপডেট করা
+      await env.retail.prepare(`
+        UPDATE customer_auth_logs SET status = 'Verified', last_login = CURRENT_TIMESTAMP WHERE id = ?
+      `).bind(record.id).run();
+
+      const authToken = "rorraxy_cust_" + Math.random().toString(36).substring(2) + Date.now();
+
+      return new Response(JSON.stringify({ 
+        success: true, 
+        token: authToken,
+        message: "Verification successful. Access granted." 
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    return new Response(JSON.stringify({ success: false, error: "Invalid action endpoint" }), {
+      status: 404,
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+  }
+}
