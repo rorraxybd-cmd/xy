@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail & Reels Ecosystem</title>
+    <title>rorraxy - Retail & Reels Feed</title>
     
-    <!-- PWA & Ultra-Fast DNS Prefetch -->
-    <link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-
-    <!-- Central Script Tag & PWA Manifest -->
+    <!-- সেন্ট্রাল স্ক্রিপ্ট ও ক্যাটাগরি ডেটা -->
     <script src="/ecosystem-core.js"></script>
+    <script src="/categories.js"></script>
     <link rel="manifest" href="/manifest.json">
 
-    <!-- Service Worker Registration Script -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((reg) => console.log('Service Worker registered successfully:', reg.scope))
-            .catch((err) => console.log('Service Worker registration failed:', err));
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
         });
       }
     </script>
     <script src="/popup.js"></script>
 
-    <!-- Correct Cloudflare R2 Icons & Favicon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+    <link rel="preconnect" href="https://vid.rorraxy.com">
+
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
@@ -55,10 +49,11 @@
             min-height: 100vh; font-size: 14px;
             -webkit-font-smoothing: antialiased;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
 
-        body { margin: 0; padding: 0 0 75px 0; scrollbar-width: none; }
-        body::-webkit-scrollbar { display: none; }
+        body { margin: 0; padding: 0 0 75px 0; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         /* প্রিমিয়াম প্রি-লোডার */
@@ -205,7 +200,7 @@
             padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার - হোমপেজে লাইক কাউন্ট সম্পূর্ণ ফাঁকা থাকবে */
+        /* ডানপাশের ভাসমান অ্যাকশন বার */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 150;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -235,7 +230,9 @@
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px;
+            scrollbar-width: none;
         }
+        .overlay-sheet::-webkit-scrollbar { display: none; }
 
         .buy-preview-modal {
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
@@ -454,9 +451,9 @@
             // পিসিতে কীবোর্ড আপ/ডাউন অ্যারো কী দিয়ে এক ক্লিকে রিলস নেভিগেশন নিশ্চিত করা
             window.addEventListener('keydown', (e) => {
                 if (!isPinterestHomeMode) {
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                     if (e.key === 'ArrowDown' || e.key === 'PageDown') {
                         e.preventDefault();
+                        let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                         if (currentReelIndex < list.length - 1) {
                             currentReelIndex++;
                             scrollToReelIndex(currentReelIndex);
@@ -479,7 +476,7 @@
                 targetCard.scrollIntoView({ behavior: 'smooth' });
                 let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                 let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
-                renderFixedGlobalActions(container, activeId, false);
+                renderFixedGlobalActions(container, activeId);
             }
         }
 
@@ -645,7 +642,14 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
-                cardDiv.onclick = () => switchToReelsView(index);
+                
+                // ডাইরেক্ট ক্লিক করা মাত্র নির্দিষ্ট রিলসে চলে যাওয়ার ফাংশন
+                cardDiv.onclick = () => {
+                    isPinterestHomeMode = false;
+                    currentReelIndex = index;
+                    clearAllSlideIntervals();
+                    renderAllReelsFeed();
+                };
 
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
@@ -659,7 +663,6 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
-            // হোম পেজে কোনো নির্দিষ্ট প্রোডাক্ট সিলেক্ট করা না থাকায় লাইক কাউন্ট সম্পূর্ণ ফাঁকা রাখা হয়েছে
             renderFixedGlobalActions(container, null, true);
         }
 
@@ -714,7 +717,10 @@
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(targetId));
                 if (foundIdx === -1) foundIdx = 0;
-                switchToReelsView(foundIdx);
+                isPinterestHomeMode = false;
+                currentReelIndex = foundIdx;
+                clearAllSlideIntervals();
+                renderAllReelsFeed();
             } else {
                 if (actionType === 'like') {
                     toggleReelLove(event, event.currentTarget, targetId);
@@ -724,13 +730,6 @@
                     openNativeShare(event, targetId);
                 }
             }
-        }
-
-        function switchToReelsView(index) {
-            isPinterestHomeMode = false;
-            currentReelIndex = index;
-            clearAllSlideIntervals();
-            renderAllReelsFeed();
         }
 
         function clearAllSlideIntervals() {
@@ -795,6 +794,7 @@
 
             container.innerHTML = reelsHtml;
 
+            // সরাসরি নির্দিষ্ট ইনডেক্সে জাম্প করবে, কোনো ফেড-ইন বা অটো-স্ক্রল অ্যানিমেশন হ্যাম্পার করবে না
             setTimeout(() => {
                 const targetCard = container.querySelector(`[data-index="${currentReelIndex}"]`);
                 if (targetCard) {
@@ -824,7 +824,10 @@
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
                 if (foundIdx === -1) foundIdx = 0;
-                switchToReelsView(foundIdx);
+                isPinterestHomeMode = false;
+                currentReelIndex = foundIdx;
+                clearAllSlideIntervals();
+                renderAllReelsFeed();
                 return;
             }
 
@@ -926,7 +929,10 @@
             if (isPinterestHomeMode) {
                 let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
                 if (foundIdx === -1) foundIdx = 0;
-                switchToReelsView(foundIdx);
+                isPinterestHomeMode = false;
+                currentReelIndex = foundIdx;
+                clearAllSlideIntervals();
+                renderAllReelsFeed();
                 return;
             }
 
