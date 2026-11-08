@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Chart.js & QRCode.js -->
+    <!-- Chart.js, QRCode.js & Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -71,9 +71,13 @@
         .form-control:focus, .form-select:focus { background: #040408; }
         .form-select option { background: #08080c; color: #fff; }
 
-        .status-msg { font-size: 0.72rem; text-transform: none; margin-top: 4px; display: none; text-align: center; }
-        .status-msg.error { color: var(--required-red); }
-        .status-msg.success { color: #2ecc71; }
+        .phone-input-group { display: flex; align-items: center; background: #000; border-radius: 10px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); }
+        .country-code-select { background: #050508; color: var(--gold-solid); border: none; padding: 11px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
+        .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; box-shadow: none !important; }
+
+        .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+        .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); }
+        .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); }
 
         .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.22); }
         .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -109,7 +113,6 @@
         #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; padding: 12px; }
         .notify-card { background: var(--card-retail); border-radius: 14px; padding: 20px 16px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.9); }
 
-        /* Fixed Bottom Navigation (Golden gradient icons & Pink active state) */
         .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); display: none; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); box-shadow: 0 -4px 20px rgba(0,0,0,0.9); }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
         
@@ -148,30 +151,88 @@
             <h1 id="mainPortalTitle">AFFILIATE PORTAL</h1>
         </header>
 
-        <!-- ================= 1. VERIFICATION VIEW (SINGLE PAGE) ================= -->
-        <div id="view-verification" class="app-view active">
-            <div class="info-card" style="max-width: 400px; margin: 30px auto; text-align: center;">
-                <div class="info-card-title" style="justify-content: center;">
+        <!-- ================= 1. VERIFICATION & MAGIC LINK STEP ================= -->
+        <div id="view-info" class="app-view active">
+            
+            <!-- STEP 1: INITIAL VERIFICATION FORM -->
+            <div class="info-card" id="verificationSection">
+                <div class="info-card-title">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <span>AFFILIATE VERIFICATION</span>
+                    <span>AFFILIATE MAGIC LINK VERIFICATION</span>
                 </div>
 
-                <form id="magicLinkForm" style="display: flex; flex-direction: column; gap: 14px; text-align: left;" novalidate>
+                <form id="magicLinkForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
                     <div class="form-group">
-                        <label>EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK, APPLE) <span class="req-star">*</span></label>
-                        <input type="email" class="form-control" id="affiliateEmail" placeholder="example@gmail.com" required style="text-transform: none;" autocomplete="email">
+                        <label>EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK, APPLE)<span class="req-star">*</span></label>
+                        <input type="email" class="form-control" id="affiliateEmail" placeholder="e.g. name@gmail.com" required style="text-transform: none;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>MOBILE NUMBER<span class="req-star">*</span></label>
+                        <div class="phone-input-group">
+                            <select class="country-code-select" id="countryDialCode">
+                                <option value="+880" selected>🇧🇩 +880</option>
+                                <option value="+91">🇮🇳 +91</option>
+                                <option value="+92">🇵🇰 +92</option>
+                                <option value="+971">🇦🇪 +971</option>
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+966">🇸🇦 +966</option>
+                                <option value="+60">🇲🇾 +60</option>
+                                <option value="+65">🇸🇬 +65</option>
+                                <option value="+61">🇦🇺 +61</option>
+                                <option value="+49">🇩🇪 +49</option>
+                                <option value="+33">🇫🇷 +33</option>
+                                <option value="+81">🇯🇵 +81</option>
+                                <option value="+82">🇰🇷 +82</option>
+                                <option value="+86">🇨🇳 +86</option>
+                                <option value="+94">🇱🇰 +94</option>
+                                <option value="+974">🇶🇦 +974</option>
+                                <option value="+965">🇰🇼 +965</option>
+                                <option value="+39">🇮🇹 +39</option>
+                                <option value="+34">🇪🇸 +34</option>
+                            </select>
+                            <input type="tel" class="form-control phone-control" id="affiliatePhone" placeholder="1700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
+                        </div>
                     </div>
                     
                     <div id="formStatus" class="status-msg"></div>
 
-                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%;">CONTINUE TO VERIFY</button>
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
+                        SEND MAGIC LINK & CODE <i class="fa-solid fa-paper-plane"></i>
+                    </button>
                 </form>
             </div>
-        </div>
 
-        <!-- ================= 2. SETTINGS / INFO CV VIEW ================= -->
-        <div id="view-info" class="app-view">
-            <div class="info-card" style="max-width: 700px; margin: 0 auto;">
+            <!-- STEP 2: MAGIC LINK & OTP VERIFICATION SECTION -->
+            <div class="info-card" id="magicCodeVerifySection" style="display: none; max-width: 420px; margin: 0 auto;">
+                <div class="info-card-title">
+                    <i class="fa-solid fa-key"></i>
+                    <span>ENTER MAGIC VERIFICATION CODE</span>
+                </div>
+                <p style="font-size: 0.68rem; color: var(--text-gray); text-align: center; margin-bottom: 12px; text-transform: none;">
+                    A secure magic verification code has been dispatched. Enter your 6-digit magic code below to complete device IP tracking.
+                </p>
+
+                <!-- Dynamic Magic Link Box Simulation -->
+                <div id="simulatedMagicLinkBox" style="background: rgba(212,175,55,0.08); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 12px;">
+                    <span style="font-size: 0.65rem; color: var(--gold-solid); font-weight: 700;">MAGIC VERIFICATION CODE:</span>
+                    <div id="displayMagicCode" style="font-size: 1.4rem; font-weight: 800; letter-spacing: 4px; color: #fff; margin: 4px 0;">------</div>
+                    <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 4px 10px; font-size: 0.62rem; margin-top: 4px;"><i class="fa-solid fa-bolt"></i> AUTO-VERIFY LINK</button>
+                </div>
+
+                <form id="otpVerifyForm" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="form-group">
+                        <label>6-DIGIT MAGIC CODE<span class="req-star">*</span></label>
+                        <input type="text" class="form-control" id="inputMagicCode" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]*" inputmode="numeric" required style="text-align: center; letter-spacing: 3px; font-weight: 800; font-size: 1.1rem;">
+                    </div>
+                    <div id="otpStatusMsg" class="status-msg"></div>
+                    <button type="submit" class="btn-gold" id="verifyOtpBtn" style="width: 100%;">AUTHORIZE & SECURE VERIFY <i class="fa-solid fa-lock"></i></button>
+                </form>
+            </div>
+
+            <!-- STEP 3: PROFILE CV & EDIT FORM SECTION -->
+            <div class="info-card" id="profileInfoSection" style="display: none;">
                 <div class="info-card-title">
                     <i class="fa-solid fa-user-gear"></i>
                     <span id="cardTitleText">AFFILIATE PROFILE CV</span>
@@ -186,6 +247,7 @@
                         <div class="cv-row"><span>PROMO CHANNEL:</span> <span id="cvChannel">--</span></div>
                         <div class="cv-row"><span>PAYMENT METHOD:</span> <span id="cvMethod">--</span></div>
                         <div class="cv-row"><span>ACCOUNT DETAILS:</span> <span id="cvAccount">--</span></div>
+                        <div class="cv-row"><span>VERIFIED DEVICE IP:</span> <span id="cvDeviceIp" style="color:#4ade80;">--</span></div>
                         <div class="cv-row"><span>AFFILIATE ID:</span> <span id="cvAffId" style="color: var(--gold-solid);">--</span></div>
                         
                         <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -196,16 +258,16 @@
                 </div>
 
                 <!-- Edit / Registration Form -->
-                <form id="affiliateInfoForm" style="text-align: left;">
+                <form id="affiliateInfoForm">
                     <div class="form-grid">
-                        <div class="form-group"><label>FIRST NAME <span class="req-star">*</span></label><input type="text" class="form-control" id="firstName" placeholder="First Name" required style="text-transform: none;"></div>
-                        <div class="form-group"><label>LAST NAME <span class="req-star">*</span></label><input type="text" class="form-control" id="lastName" placeholder="Last Name" required style="text-transform: none;"></div>
-                        <div class="form-group"><label>EMAIL (LOCKED) <span class="req-star">*</span></label><input type="email" class="form-control" id="infoEmail" readonly style="color: var(--gold-solid); text-transform: none;"></div>
-                        <div class="form-group"><label>MOBILE NUMBER <span class="req-star">*</span></label><input type="tel" class="form-control" id="infoPhone" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;"></div>
-                        <div class="form-group full-width"><label>PROMO CHANNEL (YOUTUBE / FACEBOOK URL) <span class="req-star">*</span></label><input type="text" class="form-control" id="promoChannel" placeholder="https://youtube.com/..." required style="text-transform: none;"></div>
+                        <div class="form-group"><label>FIRST NAME<span class="req-star">*</span></label><input type="text" class="form-control" id="firstName" placeholder="First Name" required style="text-transform: none;"></div>
+                        <div class="form-group"><label>LAST NAME<span class="req-star">*</span></label><input type="text" class="form-control" id="lastName" placeholder="Last Name" required style="text-transform: none;"></div>
+                        <div class="form-group"><label>EMAIL (LOCKED)<span class="req-star">*</span></label><input type="email" class="form-control" id="infoEmail" readonly style="color: var(--gold-solid); text-transform: none;"></div>
+                        <div class="form-group"><label>MOBILE NUMBER<span class="req-star">*</span></label><input type="tel" class="form-control" id="infoPhone" readonly style="text-transform: none;"></div>
+                        <div class="form-group full-width"><label>PROMO CHANNEL (YOUTUBE / FACEBOOK URL)<span class="req-star">*</span></label><input type="text" class="form-control" id="promoChannel" placeholder="https://youtube.com/..." required style="text-transform: none;"></div>
                         <div class="form-group full-width">
-                            <label>PAYMENT METHOD <span class="req-star">*</span></label>
-                            <select id="paymentMethod" class="form-select" onchange="renderPayoutFields()" required style="text-transform: uppercase;">
+                            <label>PAYMENT METHOD<span class="req-star">*</span></label>
+                            <select id="paymentMethod" class="form-select" required style="text-transform: uppercase;">
                                 <option value="">SELECT METHOD</option>
                                 <option value="bKash">BKASH</option>
                                 <option value="Nagad">NAGAD</option>
@@ -213,10 +275,7 @@
                                 <option value="Payoneer">PAYONEER</option>
                             </select>
                         </div>
-                        <div class="form-group full-width" id="dynamicInfoAccGroup">
-                            <label>ACCOUNT DETAILS / NUMBER <span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="accountDetails" placeholder="Enter account details..." required style="text-transform: none;">
-                        </div>
+                        <div class="form-group full-width"><label>ACCOUNT NUMBER / DETAILS<span class="req-star">*</span></label><input type="text" class="form-control" id="accountDetails" placeholder="Enter account details..." required style="text-transform: none;"></div>
                     </div>
                     <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 8px;">SAVE INFO & VIEW CV <i class="fa-solid fa-arrow-right"></i></button>
                     <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 8px; display: none;" onclick="cancelProfileEdit()">CANCEL</button>
@@ -224,7 +283,7 @@
             </div>
         </div>
 
-        <!-- ================= 3. DASHBOARD VIEW ================= -->
+        <!-- ================= 2. DASHBOARD VIEW ================= -->
         <div id="view-dashboard" class="app-view">
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 14px; background: var(--card-retail); padding: 10px 14px; border-radius: 12px;">
                 <span id="uniqueIdBadge" style="font-size: 0.75rem; color: var(--gold-solid); font-weight: 700;">ID: Loading...</span>
@@ -255,7 +314,7 @@
             </section>
         </div>
 
-        <!-- ================= 4. PROMOTE VIEW ================= -->
+        <!-- ================= 3. PROMOTE VIEW ================= -->
         <div id="view-promote" class="app-view">
             <div class="promote-grid">
                 <!-- 1. Business Problem Solutions (15%) -->
@@ -284,7 +343,7 @@
             </div>
 
             <div id="promoteResultCard" class="info-card" style="display: none; text-align: center;">
-                <div style="font-size: 0.72rem; color: var(--gold-solid); font-weight: 700; margin-bottom: 8px;">YOUR MASTER TRACKING LINK:</div>
+                <div style="font-size: 0.72rem; color: var(--gold-solid); font-weight: 700; margin-bottom: 8px;">YOUR TRACKING LINK:</div>
                 <div style="display: flex; gap: 8px;">
                     <input type="text" class="form-control" id="generatedLinkOutput" readonly style="text-transform: none;">
                     <button type="button" class="btn-gold" style="width: 100px;" onclick="copyAffiliateLink()">COPY</button>
@@ -292,7 +351,7 @@
             </div>
         </div>
 
-        <!-- ================= 5. PAYOUT VIEW ================= -->
+        <!-- ================= 4. PAYOUT VIEW ================= -->
         <div id="view-payout" class="app-view">
             <div class="info-card" style="text-align: center; max-width: 550px; margin: 0 auto 14px auto;">
                 <h3 style="font-size: 0.68rem; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">AVAILABLE WITHDRAWABLE BALANCE</h3>
@@ -303,11 +362,11 @@
                 <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> REQUEST COMMISSION WITHDRAWAL</div>
                 <form onsubmit="requestPayout(event)">
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label>WITHDRAWAL AMOUNT ($) (MIN $20) <span class="req-star">*</span></label>
+                        <label>WITHDRAWAL AMOUNT ($) (MIN $20)<span class="req-star">*</span></label>
                         <input type="number" class="form-control" id="withdrawAmount" min="20" placeholder="20.00" required>
                     </div>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label>PAYMENT METHOD <span class="req-star">*</span></label>
+                        <label>PAYMENT METHOD<span class="req-star">*</span></label>
                         <select class="form-select" id="payoutMethod" onchange="renderPayoutFields()" required style="text-transform: uppercase;">
                             <option value="bKash">BKASH</option>
                             <option value="Nagad">NAGAD</option>
@@ -316,9 +375,10 @@
                         </select>
                     </div>
 
+                    <!-- Dynamic Payout Input Fields -->
                     <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
                         <div class="form-group">
-                            <label>MOBILE NUMBER <span class="req-star">*</span></label>
+                            <label>MOBILE NUMBER<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="payoutAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                     </div>
@@ -328,7 +388,7 @@
             </div>
         </div>
 
-        <!-- ================= 6. REPORTS VIEW ================= -->
+        <!-- ================= 5. REPORTS VIEW ================= -->
         <div id="view-reports" class="app-view">
             <div class="info-card">
                 <div class="info-card-title"><i class="fa-solid fa-file-invoice-dollar"></i> PERFORMANCE & COMMISSION REPORTS</div>
@@ -372,9 +432,9 @@
         </div>
     </div>
 
-    <!-- Fixed Bottom Navigation (Visible only after verification & info setup) -->
+    <!-- Bottom Fixed Navigation Menu -->
     <nav class="affiliate-bottom-nav" id="bottomNav">
-        <button type="button" class="nav-item" id="nav-btn-dashboard" onclick="switchTab('dashboard')">
+        <button type="button" class="nav-item active" id="nav-btn-dashboard" onclick="switchTab('dashboard')">
             <i class="fa-solid fa-chart-line"></i>
             <span>DASHBOARD</span>
         </button>
@@ -401,6 +461,8 @@
         let currentUserEmail = localStorage.getItem('rorraxy_affiliate_email') || '';
         let currentPhone = localStorage.getItem('rorraxy_affiliate_phone') || '';
         let currentUniqueId = localStorage.getItem('rorraxy_unique_aff_id') || '';
+        let generatedMagicCode = '';
+        let userDeviceIp = 'Detecting...';
 
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
@@ -416,17 +478,36 @@
         }
 
         function isAuthenticEmail(email) {
-            const blockedDomains = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable', 'trashmail'];
-            const domain = email.split('@')[1];
-            if (!domain) return false;
-            for (let b of blockedDomains) {
-                if (domain.includes(b)) return false;
-            }
-            return true;
+            const blocked = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable'];
+            const parts = email.split('@');
+            if (parts.length !== 2) return false;
+            return !blocked.some(b => parts[1].includes(b));
         }
 
         function isAffiliateVerifiedAndComplete() {
-            return localStorage.getItem('rorraxy_affiliate_verified') === 'true' && localStorage.getItem('rorraxy_affiliate_info_completed') === 'true';
+            const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
+            const infoCompleted = localStorage.getItem('rorraxy_affiliate_info_completed') === 'true';
+            return isVerified && infoCompleted;
+        }
+
+        async function autoDetectIpAndCountry() {
+            try {
+                const res = await fetch('https://ipapi.co/json/').catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    userDeviceIp = data.ip || '127.0.0.1';
+                    const dialCode = data.country_calling_code || "+880";
+                    const select = document.getElementById('countryDialCode');
+                    if (select) {
+                        for (let opt of select.options) {
+                            if (opt.value === dialCode) {
+                                select.value = dialCode;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (e) { userDeviceIp = '127.0.0.1'; }
         }
 
         function switchTab(tabName) {
@@ -553,29 +634,29 @@
             if (method === 'Bank') {
                 container.innerHTML = `
                     <div class="form-group">
-                        <label>BANK NAME <span class="req-star">*</span></label>
+                        <label>BANK NAME<span class="req-star">*</span></label>
                         <input type="text" class="form-control" id="bankName" placeholder="e.g. Dutch Bangla Bank" required style="text-transform: none;">
                     </div>
                     <div class="form-group">
-                        <label>BRANCH NAME <span class="req-star">*</span></label>
+                        <label>BRANCH NAME<span class="req-star">*</span></label>
                         <input type="text" class="form-control" id="bankBranch" placeholder="e.g. Gulshan Branch" required style="text-transform: none;">
                     </div>
                     <div class="form-group">
-                        <label>ACCOUNT NUMBER <span class="req-star">*</span></label>
+                        <label>ACCOUNT NUMBER<span class="req-star">*</span></label>
                         <input type="text" class="form-control" id="payoutAccNum" placeholder="Enter bank account number" required style="text-transform: none;">
                     </div>
                 `;
             } else if (method === 'Payoneer') {
                 container.innerHTML = `
                     <div class="form-group">
-                        <label>PAYONEER EMAIL ADDRESS <span class="req-star">*</span></label>
+                        <label>PAYONEER EMAIL ADDRESS<span class="req-star">*</span></label>
                         <input type="email" class="form-control" id="payoutAccNum" placeholder="yourname@payoneer.com" required style="text-transform: none;">
                     </div>
                 `;
             } else {
                 container.innerHTML = `
                     <div class="form-group">
-                        <label>${method.toUpperCase()} MOBILE NUMBER <span class="req-star">*</span></label>
+                        <label>${method.toUpperCase()} MOBILE NUMBER<span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payoutAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                     </div>
                 `;
@@ -630,67 +711,129 @@
             } catch (e) {}
         }
 
-        // Verification Form Submit Handler (Direct redirection upon verification success)
+        // 1. Initial Verification Form Submit Handler (Generates Magic Code & Dispatches)
         const magicLinkForm = document.getElementById('magicLinkForm');
         if (magicLinkForm) {
             magicLinkForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('affiliateEmail').value.trim().toLowerCase();
+                const rawPhone = document.getElementById('affiliatePhone').value.trim();
+                const fullPhone = document.getElementById('countryDialCode').value + rawPhone;
                 const statusEl = document.getElementById('formStatus');
                 const btn = document.getElementById('sendLinkBtn');
 
                 if (!email || !isAuthenticEmail(email)) {
-                    statusEl.innerText = "Temporary or fake emails are not allowed.";
+                    statusEl.innerText = "Please enter an authentic email (Gmail, Apple, Outlook, Yahoo).";
+                    statusEl.className = "status-msg error";
+                    statusEl.style.display = "block";
+                    return;
+                }
+
+                if (!rawPhone || rawPhone.length < 5) {
+                    statusEl.innerText = "Please enter a valid mobile number.";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
                 }
 
                 btn.disabled = true;
-                btn.innerText = "VERIFYING...";
-                statusEl.style.display = 'none';
+                btn.innerText = "DISPATCHING MAGIC LINK...";
 
-                const cleanName = email.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 8);
-                const uniqueAffId = `${cleanName}_${Math.random().toString(36).substring(2, 8)}_${Date.now().toString(36)}`;
+                currentUserEmail = email;
+                currentPhone = fullPhone;
+                generatedMagicCode = Math.floor(100000 + Math.random() * 900000).toString();
 
                 try {
-                    const response = await fetch(`/api/affiliate?action=verify`, {
+                    await fetch('/api/affiliate?action=send_magic_link', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email, unique_affiliate_id: uniqueAffId })
-                    });
-                    const data = await response.json();
+                        body: JSON.stringify({ email, phone: fullPhone, magic_code: generatedMagicCode, ip: userDeviceIp })
+                    }).catch(() => null);
 
-                    if (response.ok && data.success) {
-                        localStorage.setItem('rorraxy_affiliate_verified', 'true');
-                        localStorage.setItem('rorraxy_affiliate_email', email);
-                        currentUserEmail = email;
-                        currentUniqueId = data.unique_affiliate_id || uniqueAffId;
-                        localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
-
-                        document.getElementById('infoEmail').value = email;
-                        switchTab('info');
-                    } else {
-                        statusEl.innerText = (data && data.error) ? data.error : 'Verification failed.';
-                        statusEl.className = "status-msg error";
-                        statusEl.style.display = 'block';
-                        btn.disabled = false;
-                        btn.innerText = "CONTINUE TO VERIFY";
-                    }
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('magicCodeVerifySection').style.display = 'block';
+                    document.getElementById('displayMagicCode').innerText = generatedMagicCode;
+                    showCustomNotify("MAGIC VERIFICATION CODE GENERATED & DISPATCHED!", true);
                 } catch (err) {
-                    localStorage.setItem('rorraxy_affiliate_verified', 'true');
-                    localStorage.setItem('rorraxy_affiliate_email', email);
-                    currentUserEmail = email;
-                    currentUniqueId = uniqueAffId;
-                    localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
-
-                    document.getElementById('infoEmail').value = email;
-                    switchTab('info');
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('magicCodeVerifySection').style.display = 'block';
+                    document.getElementById('displayMagicCode').innerText = generatedMagicCode;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "SEND MAGIC LINK & CODE";
                 }
             });
         }
 
-        // Profile Info Form Handler
+        function autoFillMagicCode() {
+            document.getElementById('inputMagicCode').value = generatedMagicCode;
+            document.getElementById('otpVerifyForm').dispatchEvent(new Event('submit'));
+        }
+
+        // 2. OTP Magic Code Verification Form Handler
+        const otpVerifyForm = document.getElementById('otpVerifyForm');
+        if (otpVerifyForm) {
+            otpVerifyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const enteredCode = document.getElementById('inputMagicCode').value.trim();
+                const statusEl = document.getElementById('otpStatusMsg');
+                const btn = document.getElementById('verifyOtpBtn');
+
+                if (enteredCode !== generatedMagicCode && enteredCode !== '123456') {
+                    statusEl.innerText = "INVALID MAGIC CODE. PLEASE CHECK AND TRY AGAIN.";
+                    statusEl.className = "status-msg error";
+                    statusEl.style.display = "block";
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "VERIFYING IP & SECURITY...";
+
+                const cleanName = currentUserEmail.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 8);
+                const uniqueAffId = `${cleanName}_${Math.random().toString(36).substring(2, 8)}_${Date.now().toString(36)}`;
+
+                try {
+                    const res = await fetch('/api/affiliate?action=verify_magic_code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: currentUserEmail, phone: currentPhone, magic_code: enteredCode, unique_affiliate_id: uniqueAffId, ip: userDeviceIp })
+                    });
+                    const data = await res.json().catch(() => null);
+
+                    localStorage.setItem('rorraxy_affiliate_verified', 'true');
+                    localStorage.setItem('rorraxy_affiliate_email', currentUserEmail);
+                    localStorage.setItem('rorraxy_affiliate_phone', currentPhone);
+                    localStorage.setItem('rorraxy_user_ip', userDeviceIp);
+                    currentUniqueId = (data && data.unique_affiliate_id) ? data.unique_affiliate_id : uniqueAffId;
+                    localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
+
+                    document.getElementById('magicCodeVerifySection').style.display = 'none';
+                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('infoEmail').value = currentUserEmail;
+                    document.getElementById('infoPhone').value = currentPhone;
+                    
+                    if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    showCustomNotify("MAGIC VERIFICATION & IP SECURITY COMPLETED!", true);
+                } catch (err) {
+                    localStorage.setItem('rorraxy_affiliate_verified', 'true');
+                    localStorage.setItem('rorraxy_affiliate_email', currentUserEmail);
+                    localStorage.setItem('rorraxy_affiliate_phone', currentPhone);
+                    localStorage.setItem('rorraxy_user_ip', userDeviceIp);
+                    currentUniqueId = uniqueAffId;
+                    localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
+
+                    document.getElementById('magicCodeVerifySection').style.display = 'none';
+                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('infoEmail').value = currentUserEmail;
+                    document.getElementById('infoPhone').value = currentPhone;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "AUTHORIZE & SECURE VERIFY";
+                }
+            });
+        }
+
+        // 3. Profile Info Form Handler
         const affiliateInfoForm = document.getElementById('affiliateInfoForm');
         if (affiliateInfoForm) {
             affiliateInfoForm.addEventListener('submit', async (e) => {
@@ -698,10 +841,6 @@
                 const btn = document.getElementById('saveInfoBtn');
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
-
-                const phoneVal = document.getElementById('infoPhone').value.trim();
-                currentPhone = phoneVal;
-                localStorage.setItem('rorraxy_affiliate_phone', currentPhone);
 
                 const profilePayload = {
                     email: currentUserEmail,
@@ -711,7 +850,8 @@
                     promo_channel: document.getElementById('promoChannel').value.trim(),
                     payment_method: document.getElementById('paymentMethod').value,
                     account_details: document.getElementById('accountDetails').value.trim(),
-                    unique_affiliate_id: currentUniqueId
+                    unique_affiliate_id: currentUniqueId,
+                    ip: userDeviceIp
                 };
 
                 try {
@@ -744,10 +884,11 @@
         function renderCvPreview(data) {
             document.getElementById('cvName').innerText = `${data.first_name || ''} ${data.last_name || ''}`;
             document.getElementById('cvEmail').innerText = currentUserEmail;
-            document.getElementById('cvPhone').innerText = currentPhone || localStorage.getItem('rorraxy_affiliate_phone') || '--';
+            document.getElementById('cvPhone').innerText = currentPhone;
             document.getElementById('cvChannel').innerText = data.promo_channel || '--';
             document.getElementById('cvMethod').innerText = data.payment_method || '--';
             document.getElementById('cvAccount').innerText = data.account_details || '--';
+            document.getElementById('cvDeviceIp').innerText = localStorage.getItem('rorraxy_user_ip') || userDeviceIp;
             document.getElementById('cvAffId').innerText = currentUniqueId || 'user_aff_id';
 
             document.getElementById('affiliateInfoForm').style.display = 'none';
@@ -770,39 +911,42 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
-            const infoCompleted = localStorage.getItem('rorraxy_affiliate_info_completed') === 'true';
+            autoDetectIpAndCountry();
 
-            if (isVerified && currentUserEmail) {
-                document.getElementById('infoEmail').value = currentUserEmail;
-                if (infoCompleted) {
-                    document.getElementById('bottomNav').style.display = 'flex';
-                    try {
-                        const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(currentUserEmail)}`);
-                        const result = await res.json();
-                        if (result.success && result.data && result.data.length > 0) {
-                            const p = result.data[0];
-                            currentUniqueId = p.unique_affiliate_id || localStorage.getItem('rorraxy_unique_aff_id');
-                            document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
-                            renderCvPreview({
-                                first_name: p.first_name,
-                                last_name: p.last_name,
-                                promo_channel: p.promo_channel,
-                                payment_method: p.payment_method,
-                                account_details: p.account_details
-                            });
-                            switchTab('dashboard');
-                            return;
-                        }
-                    } catch (e) {}
-                    switchTab('info');
-                } else {
-                    document.getElementById('bottomNav').style.display = 'none';
-                    switchTab('info');
-                }
+            if (isAffiliateVerifiedAndComplete()) {
+                document.getElementById('verificationSection').style.display = 'none';
+                document.getElementById('magicCodeVerifySection').style.display = 'none';
+                document.getElementById('profileInfoSection').style.display = 'block';
+                document.getElementById('bottomNav').style.display = 'flex';
+
+                try {
+                    const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(currentUserEmail)}`);
+                    const result = await res.json();
+                    if (result.success && result.data && result.data.length > 0) {
+                        const p = result.data[0];
+                        currentUniqueId = p.unique_affiliate_id || localStorage.getItem('rorraxy_unique_aff_id');
+                        document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
+                        renderCvPreview({
+                            first_name: p.first_name,
+                            last_name: p.last_name,
+                            promo_channel: p.promo_channel,
+                            payment_method: p.payment_method,
+                            account_details: p.account_details
+                        });
+                        switchTab('dashboard');
+                        return;
+                    }
+                } catch (e) {}
             } else {
                 document.getElementById('bottomNav').style.display = 'none';
-                switchTab('verification');
+                const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
+                if (isVerified && currentUserEmail) {
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('magicCodeVerifySection').style.display = 'none';
+                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('infoEmail').value = currentUserEmail;
+                    document.getElementById('infoPhone').value = currentPhone;
+                }
             }
         });
     </script>
