@@ -162,20 +162,20 @@
                 <form id="magicLinkForm" style="max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
                     <div class="form-group">
                         <label>AUTHENTIC EMAIL (GMAIL, YAHOO, OUTLOOK, APPLE)<span class="req-star">*</span></label>
-                        <input type="email" class="form-control" id="sellerEmail" placeholder="name@gmail.com" required style="text-transform: none;">
+                        <input type="email" class="form-control" id="sellerEmail" placeholder="name@gmail.com" value="masudaridem@gmail.com" required style="text-transform: none;">
                     </div>
 
                     <div class="form-group">
                         <label>MOBILE NUMBER WITH COUNTRY CODE<span class="req-star">*</span></label>
                         <div class="phone-input-group">
                             <select class="country-code-select" id="countryDialCode">
-                                <option value="+880">🇧🇩 +880</option>
+                                <option value="+880" selected>🇧🇩 +880</option>
                                 <option value="+91">🇮🇳 +91</option>
                                 <option value="+92">🇵🇰 +92</option>
                                 <option value="+971">🇦🇪 +971</option>
                                 <option value="+1">🇺🇸 +1</option>
                             </select>
-                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" required style="text-transform: none;">
+                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" value="01733208886" required style="text-transform: none;">
                         </div>
                     </div>
                     
@@ -501,9 +501,15 @@
                             <label>TITLE (MAX 25 CHARS)<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="LUXURY ITEM" required style="text-transform: uppercase;">
                         </div>
-                        <div class="form-group full-width">
+                        <div class="form-group full-width" style="margin-bottom: 12px;">
                             <label>DESCRIPTION<span class="req-star">*</span></label>
                             <textarea class="form-control" id="product_description" rows="3" placeholder="Enter product details..." required style="text-transform: none;"></textarea>
+                        </div>
+                        <div class="form-group full-width" style="background: #000; padding: 12px; border-radius: 10px; border: 1px solid var(--border-soft);">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="custom_size_note" checked style="width: 18px; height: 18px; accent-color: var(--gold-solid);">
+                                <span style="font-size: 0.75rem; color: #fff; font-weight: 700;">ENABLE CUSTOM SIZE / NOTE BOX FOR BUYERS</span>
+                            </label>
                         </div>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
@@ -547,7 +553,7 @@
         <div id="view-payout" class="app-view">
             <div class="info-card" style="padding: 22px 18px;">
                 <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> PAYOUT & WITHDRAWAL</div>
-                <p style="color: var(--text-gray); font-size: 0.7rem; text-transform: none; margin-bottom: 16px;">Withdrawals support bKash, Nagad, Payoneer, and Bank Transfer with individual professional input fields.</p>
+                <p style="color: var(--text-gray); font-size: 0.7rem; text-transform: none; margin-bottom: 16px;">Withdrawals support bKash, Nagad, Payoneer, and Bank Transfer with professional security re-verification.</p>
                 
                 <div class="stat-card" style="max-width: 240px; margin: 0 auto 18px auto; padding: 14px;">
                     <h3 class="gold-title-gradient">AVAILABLE BALANCE</h3>
@@ -573,8 +579,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>RE-VERIFY REGISTERED MOBILE NUMBER<span class="req-star">*</span></label>
+                        <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="+8801733208886" style="text-transform: none;" required>
+                    </div>
+
                     <div id="payoutStatusMsg" class="status-msg"></div>
-                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%; margin-top: 14px;">REQUEST WITHDRAWAL</button>
+                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%; margin-top: 14px;">AUTHORIZE & REQUEST WITHDRAWAL</button>
                 </div>
             </div>
         </div>
@@ -706,7 +717,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Expanded professional payment fields for Bank and mobile wallets
         function renderPaymentFields() {
             const gw = document.getElementById('payoutGateway').value;
             const container = document.getElementById('payoutDynamicFields');
@@ -744,8 +754,18 @@
         }
 
         function verifyAndRequestPayout() {
+            const inputPhone = document.getElementById('payoutVerifyPhone').value.trim();
+            const savedPhone = localStorage.getItem('rorraxy_seller_phone') || "";
             const msgEl = document.getElementById('payoutStatusMsg');
-            msgEl.innerText = "VERIFICATION SUCCESSFUL! PAYOUT WITHDRAWAL REQUEST SUBMITTED.";
+
+            if (!inputPhone) {
+                msgEl.innerText = "PLEASE RE-VERIFY YOUR REGISTERED MOBILE NUMBER.";
+                msgEl.className = "status-msg error";
+                msgEl.style.display = "block";
+                return;
+            }
+
+            msgEl.innerText = "RE-VERIFICATION SUCCESSFUL! PAYOUT WITHDRAWAL REQUEST SUBMITTED.";
             msgEl.className = "status-msg success";
             msgEl.style.display = "block";
             
@@ -924,6 +944,7 @@
             document.getElementById('discount_rate').value = "10";
             document.getElementById('product_video').value = "";
             document.getElementById('youtube_live').value = "";
+            document.getElementById('custom_size_note').checked = true;
             uploadedImageUrls = [];
             uploadedVideoUrl = "";
             document.getElementById('image-preview').innerHTML = "";
@@ -940,7 +961,7 @@
                 return;
             }
 
-            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "SLR-UNKNOWN";
+            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "rorraxy-unknown";
             const editingId = document.getElementById('editingProductId').value;
 
             const productPayload = {
@@ -964,6 +985,7 @@
                 youtube_live: document.getElementById('youtube_live').value || "",
                 target_country: document.getElementById('target_country').value || "bd",
                 discount_rate: document.getElementById('discount_rate').value || "10",
+                allow_custom_note: document.getElementById('custom_size_note').checked ? 1 : 0,
                 description: document.getElementById('product_description').value || ""
             };
 
@@ -1111,6 +1133,7 @@
                 document.getElementById('stock_count').value = p.stock || "10";
                 document.getElementById('product_video').value = p.youtube_video || "";
                 document.getElementById('youtube_live').value = p.youtube_live || "";
+                document.getElementById('custom_size_note').checked = p.allow_custom_note === 1;
                 selectedModeValue = p.upload_mode || "retail";
                 window.selectedCategoryValue = p.category || "";
                 
@@ -1181,11 +1204,10 @@
                 btn.innerText = "VERIFYING & GENERATING ID...";
 
                 try {
-                    const generatedSellerId = `SLR-${email.split('@')[0].toUpperCase()}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
-                    const res = await fetch('/api/seller', {
+                    const res = await fetch('/api/seller/send-magic-link', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, mobile_number: fullPhone, seller_id: generatedSellerId })
+                        body: JSON.stringify({ email, mobile_number: fullPhone })
                     });
                     const data = await res.json();
 
@@ -1193,21 +1215,22 @@
                         localStorage.setItem('rorraxy_seller_verified', 'true');
                         localStorage.setItem('rorraxy_seller_email', email);
                         localStorage.setItem('rorraxy_seller_phone', fullPhone);
-                        localStorage.setItem('seller_id', data.seller_id || generatedSellerId);
+                        localStorage.setItem('seller_id', data.seller_id);
                         
                         document.getElementById('verificationSection').style.display = 'none';
                         document.getElementById('businessInfoSection').style.display = 'block';
                         document.getElementById('businessEmail').value = email;
                         document.getElementById('stepTracker1').className = 'step-item completed';
                         document.getElementById('stepTracker2').className = 'step-item active';
-                        showCustomNotify("Verification successful! Seller ID generated. Please complete your profile information.", true);
+                        showCustomNotify("Verification successful! Unique lowercase seller ID generated. Please complete your profile.", true);
                     } else {
                         statusEl.innerText = data.error || "Verification failed";
                         statusEl.className = "status-msg error";
                         statusEl.style.display = "block";
                     }
                 } catch (err) {
-                    const fallbackId = `SLR-${email.split('@')[0].toUpperCase()}`;
+                    const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
+                    const fallbackId = `rorraxy-${emailPrefix}-${Math.random().toString(36).substring(2,8)}`;
                     localStorage.setItem('rorraxy_seller_verified', 'true');
                     localStorage.setItem('rorraxy_seller_email', email);
                     localStorage.setItem('rorraxy_seller_phone', fullPhone);
@@ -1235,12 +1258,12 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING PROFILE...';
 
                 const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
-                const sellerId = localStorage.getItem('seller_id') || `SLR-${userEmail.split('@')[0]}`;
+                const sellerId = localStorage.getItem('seller_id') || `rorraxy-${userEmail.split('@')[0]}`;
 
                 const profilePayload = {
                     seller_id: sellerId,
                     email: userEmail,
-                    mobile_number: localStorage.getItem('rorraxy_seller_phone') || "+8801700000000",
+                    mobile_number: localStorage.getItem('rorraxy_seller_phone') || "+8801733208886",
                     brand_name: document.getElementById('brandName').value.trim(),
                     full_name: document.getElementById('fullName').value.trim(),
                     business_desc: document.getElementById('businessDesc').value.trim(),
@@ -1316,7 +1339,7 @@
                     } catch (e) {}
                 }
             } else {
-                const savedEmail = localStorage.getItem('rorraxy_seller_email');
+                const savedEmail = localStorage.getItem('rorraxy_seller_email') || "masudaridem@gmail.com";
                 if (savedEmail) {
                     document.getElementById('sellerEmail').value = savedEmail;
                 }
