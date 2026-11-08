@@ -22,13 +22,13 @@
         :root {
             --bg-retail: #030305;
             --card-retail: #08080f;
-            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #fcf6ba 30%, #aa771c 70%, #fbf5b7 100%);
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
             --gold-solid: #d4af37;
             --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
             --text-white: #ffffff;
             --text-gray: #a3a3b2;
             --font-main: 'Poppins', sans-serif;
-            --border-soft: rgba(212, 175, 55, 0.15);
+            --border-soft: rgba(212, 175, 55, 0.18);
             --success-green: #2ed573;
         }
 
@@ -49,7 +49,8 @@
         /* Clean Header */
         .dashboard-header { text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
         .header-logo-img { width: 70px; height: 70px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2)); }
-        .dashboard-header h1 { font-size: 1.35rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .dashboard-header h1, .gold-title-gradient { font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .dashboard-header h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
 
         /* Soft Cards */
         .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 20px 16px; margin-bottom: 20px; width: 100%; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
@@ -76,7 +77,7 @@
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group.full-width { grid-column: span 2; }
         
-        .form-group label { font-size: 0.7rem; font-weight: 700; color: var(--text-gray); display: flex; align-items: center; gap: 4px; width: 100%; }
+        .form-group label { font-size: 0.7rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 4px; width: 100%; }
         .req-star { color: #ff4d4d; font-weight: 900; margin-left: 2px; }
 
         .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 14px; color: var(--text-white); font-size: 0.82rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
@@ -128,9 +129,13 @@
         .table-responsive { width: 100%; overflow-x: auto; }
         .seller-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; white-space: nowrap; }
         .seller-table th, .seller-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .seller-table th { color: var(--gold-solid); font-weight: 700; background: #050508; }
+        .seller-table th { background: #050508; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .seller-table td { text-transform: none; color: var(--text-white); }
         .prod-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
+
+        /* Custom Non-blocking Notification Modal */
+        #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; padding: 14px; }
+        .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 24px 20px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
 
         /* Fixed Bottom Navigation (Amazon/Alibaba Style) */
         .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)) 6px; z-index: 1000; backdrop-filter: blur(15px); }
@@ -217,10 +222,10 @@
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="stat-card"><label style="font-size: 0.6rem; color: var(--text-gray);">EMAIL</label><span id="prevEmail" style="font-size: 0.72rem; text-transform: none;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.6rem; color: var(--text-gray);">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.72rem;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.6rem; color: var(--text-gray);">COUNTRY</label><span id="prevCountry" style="font-size: 0.72rem;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.6rem; color: var(--text-gray);">SELLER ID</label><span id="prevSellerId" style="font-size: 0.72rem; color: var(--gold-solid);">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.6rem;" class="gold-title-gradient">EMAIL</label><span id="prevEmail" style="font-size: 0.72rem; text-transform: none;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.6rem;" class="gold-title-gradient">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.72rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.6rem;" class="gold-title-gradient">COUNTRY</label><span id="prevCountry" style="font-size: 0.72rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.6rem;" class="gold-title-gradient">SELLER ID</label><span id="prevSellerId" style="font-size: 0.72rem; color: var(--gold-solid);">--</span></div>
                         </div>
                         <div style="display: flex; gap: 10px;">
                             <button type="button" class="btn-gold" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT INFO</button>
@@ -236,7 +241,7 @@
                         <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                         <div>
                             <label for="profilePhotoInput" class="btn-gold" style="padding: 7px 14px; font-size: 0.65rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
-                            <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*">
+                            <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*" onchange="uploadLogoToR2(event)">
                         </div>
                     </div>
 
@@ -299,7 +304,7 @@
 
                     <!-- Payment Method Configuration -->
                     <div style="margin-top: 16px; border-top: 1px solid var(--border-soft); padding-top: 14px;">
-                        <h3 style="font-size: 0.78rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 10px;"><i class="fa-solid fa-wallet"></i> WITHDRAWAL PAYMENT METHOD</h3>
+                        <h3 style="font-size: 0.78rem; font-weight: 700; margin-bottom: 10px;" class="gold-title-gradient"><i class="fa-solid fa-wallet"></i> WITHDRAWAL PAYMENT METHOD</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>SELECT GATEWAY<span class="req-star">*</span></label>
@@ -336,22 +341,22 @@
 
             <section class="stats-grid">
                 <div class="stat-card">
-                    <h3>TOTAL REVENUE</h3>
+                    <h3 class="gold-title-gradient">TOTAL REVENUE</h3>
                     <div class="value" id="statRevenueVal">$0.00</div>
                     <div class="graph-container"><canvas id="chartRevenue"></canvas></div>
                 </div>
                 <div class="stat-card">
-                    <h3>TOTAL BALANCE</h3>
+                    <h3 class="gold-title-gradient">TOTAL BALANCE</h3>
                     <div class="value" id="statBalanceVal">$0.00</div>
                     <div class="graph-container"><canvas id="chartBalance"></canvas></div>
                 </div>
                 <div class="stat-card">
-                    <h3>TOTAL PRODUCT</h3>
+                    <h3 class="gold-title-gradient">TOTAL PRODUCT</h3>
                     <div class="value" id="statProductsVal">0</div>
                     <div class="graph-container"><canvas id="chartProducts"></canvas></div>
                 </div>
                 <div class="stat-card">
-                    <h3>TOTAL ORDER</h3>
+                    <h3 class="gold-title-gradient">TOTAL ORDER</h3>
                     <div class="value" id="statOrdersVal">0</div>
                     <div class="graph-container"><canvas id="chartOrders"></canvas></div>
                 </div>
@@ -361,11 +366,8 @@
         <!-- ================= 3. PRODUCT LIST VIEW ================= -->
         <div id="view-list" class="app-view">
             <div class="info-card">
-                <div class="info-card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="info-card-title">
                     <span>PRODUCT LIST</span>
-                    <button type="button" onclick="prepareNewProductUpload()" class="btn-gold" style="padding: 7px 14px; font-size: 0.7rem;">
-                        <i class="fa-solid fa-plus"></i> ADD NEW
-                    </button>
                 </div>
                 <div class="table-responsive">
                     <table class="seller-table">
@@ -379,7 +381,7 @@
                             </tr>
                         </thead>
                         <tbody id="desktopTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-gray);">LOADING PRODUCTS...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -397,7 +399,7 @@
             </div>
 
             <form id="masterUniversalForm" onsubmit="submitMasterForm(event)">
-                <input type="hidden" id="editingProductIndex" value="">
+                <input type="hidden" id="editingProductId" value="">
                 
                 <!-- STEP 1: UPLOAD MODE -->
                 <div class="step-section active-step" id="upload-step-1">
@@ -440,11 +442,11 @@
                 <!-- STEP 3: MEDIA -->
                 <div class="step-section" id="upload-step-3" style="display:none;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-images"></i> PRODUCT IMAGES</div>
+                        <div class="info-card-title"><i class="fa-solid fa-images"></i> PRODUCT IMAGES (CLOUD R2)</div>
                         <div class="preview-container" id="image-preview"></div>
                         <div class="upload-box" onclick="document.getElementById('image-file-input').click();">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
-                            <p>UPLOAD IMAGES</p>
+                            <p id="imgUploadText">UPLOAD IMAGES</p>
                             <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;" onchange="handleImageSelection(event)">
                         </div>
                     </div>
@@ -453,7 +455,7 @@
                         <div class="preview-container" id="video-preview"></div>
                         <div class="upload-box" style="margin-bottom: 14px;" onclick="document.getElementById('video-file-input').click();">
                             <i class="fa-solid fa-file-video"></i>
-                            <p>UPLOAD VIDEO FILE</p>
+                            <p id="vidUploadText">UPLOAD VIDEO FILE</p>
                             <input type="file" id="video-file-input" accept="video/*" style="display: none;" onchange="handleVideoSelection(event)">
                         </div>
                         <div class="form-grid">
@@ -558,9 +560,9 @@
             <div class="info-card">
                 <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> INCOMING SHIPMENTS</div>
                 <div class="form-grid" style="margin-bottom: 14px;">
-                    <div class="stat-card"><label>PENDING</label><span id="statPendingShipments" style="font-size: 0.9rem; color: #facc15;">0</span></div>
-                    <div class="stat-card"><label>COMPLETED</label><span id="statCompletedOrders" style="font-size: 0.9rem; color: #4ade80;">0</span></div>
-                    <div class="stat-card" style="grid-column: span 2;"><label>STORE EARNINGS</label><span id="statStoreEarnings" style="font-size: 0.9rem; color: var(--gold-solid);">$0.00</span></div>
+                    <div class="stat-card"><h3 class="gold-title-gradient">PENDING</h3><span id="statPendingShipments" style="font-size: 0.9rem; color: #facc15;">0</span></div>
+                    <div class="stat-card"><h3 class="gold-title-gradient">COMPLETED</h3><span id="statCompletedOrders" style="font-size: 0.9rem; color: #4ade80;">0</span></div>
+                    <div class="stat-card" style="grid-column: span 2;"><h3 class="gold-title-gradient">STORE EARNINGS</h3><span id="statStoreEarnings" style="font-size: 0.9rem; color: var(--gold-solid);">$0.00</span></div>
                 </div>
                 <div class="table-responsive">
                     <table class="seller-table">
@@ -588,14 +590,14 @@
                 <p style="color: var(--text-gray); font-size: 0.72rem; text-transform: none; margin-bottom: 16px;">Withdrawals support bKash, Nagad, Payoneer, and Bank Transfer. For security, please re-verify your registered mobile number below.</p>
                 
                 <div class="stat-card" style="max-width: 260px; margin: 0 auto 20px auto; padding: 16px;">
-                    <h3>AVAILABLE BALANCE</h3>
+                    <h3 class="gold-title-gradient">AVAILABLE BALANCE</h3>
                     <div class="value" id="payoutBalanceVal">$0.00</div>
                 </div>
 
                 <!-- Re-verification Box for Payout Request -->
                 <div id="payoutAuthBox" style="max-width: 380px; margin: 0 auto; background: #000; padding: 16px; border-radius: 12px; border: 1px solid var(--border-soft); text-align: left;">
                     <div class="form-group" style="margin-bottom: 12px;">
-                        <label>ENTER REGISTERED MOBILE NUMBER <span class="req-star">*</span></label>
+                        <label>REGISTERED MOBILE NUMBER <span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="+8801700000000" style="text-transform: none;">
                     </div>
                     <div id="payoutStatusMsg" class="status-msg"></div>
@@ -613,6 +615,15 @@
             <p style="font-size:0.68rem; color:var(--text-gray); margin-bottom:14px; text-transform:none;">Scan this secure QR code with another mobile device to sync your seller session instantly.</p>
             <div id="qrcodeContainer" style="background:#ffffff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:14px;"></div>
             <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE & RETURN</button>
+        </div>
+    </div>
+
+    <!-- Custom Notification Modal (Replaces alert) -->
+    <div id="customNotifyModal">
+        <div class="notify-card">
+            <div id="notifyModalIcon" style="font-size: 2.2rem; color: var(--gold-solid); margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i></div>
+            <div id="notifyModalText" style="font-size: 0.82rem; font-weight: 700; color: #fff; margin-bottom: 16px; text-transform: none;">MESSAGE</div>
+            <button type="button" onclick="closeCustomNotify()" class="btn-gold" style="width: 100%;">OK</button>
         </div>
     </div>
 
@@ -644,8 +655,7 @@
         </button>
     </nav>
 
-    <!-- External Script Integration & Unified Logic -->
-    <script src="info.js"></script>
+    <!-- Unified Script Integration -->
     <script>
         const chartInstances = {};
         let currentUploadStep = 1;
@@ -653,6 +663,20 @@
         let selectedCategoryValue = "";
         let uploadedImageUrls = [];
         let uploadedVideoUrl = "";
+        let compressedLogoData = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+
+        function showCustomNotify(message, isSuccess = true) {
+            const modal = document.getElementById('customNotifyModal');
+            const txt = document.getElementById('notifyModalText');
+            const icon = document.getElementById('notifyModalIcon');
+            txt.innerText = message;
+            icon.innerHTML = isSuccess ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation" style="color:#ff4d4d;"></i>';
+            modal.style.display = 'flex';
+        }
+
+        function closeCustomNotify() {
+            document.getElementById('customNotifyModal').style.display = 'none';
+        }
 
         const subCategoriesData = {
             womens: [
@@ -705,9 +729,8 @@
         }
 
         function switchTab(tabName) {
-            // Guard: If not verified & complete, force stay on 'info' tab
             if (tabName !== 'info' && !isSellerVerifiedAndComplete()) {
-                alert("PLEASE COMPLETE SELLER VERIFICATION AND PROFILE INFO FIRST!");
+                showCustomNotify("PLEASE COMPLETE SELLER VERIFICATION AND PROFILE INFO FIRST!", false);
                 tabName = 'info';
             }
 
@@ -724,7 +747,7 @@
                 'info': 'SELLER PORTAL & INFO',
                 'dashboard': 'SELLER DASHBOARD',
                 'list': 'PRODUCT LIST',
-                'upload': document.getElementById('editingProductIndex').value !== "" ? 'EDIT PRODUCT' : 'MASTER PRODUCT UPLOAD',
+                'upload': document.getElementById('editingProductId').value !== "" ? 'EDIT PRODUCT' : 'MASTER PRODUCT UPLOAD',
                 'shipment': 'SELLER SHIPMENT PORTAL',
                 'payout': 'SELLER PAYOUT PORTAL'
             };
@@ -735,7 +758,7 @@
             } else if (tabName === 'list') {
                 loadProductsIntoTable();
             } else if (tabName === 'upload') {
-                if (document.getElementById('editingProductIndex').value === "") {
+                if (document.getElementById('editingProductId').value === "") {
                     resetUploadForm();
                 }
                 updateUploadStepUI(currentUploadStep || 1);
@@ -828,15 +851,15 @@
 
         function nextUploadStep(targetStep) {
             if (targetStep === 2 && !selectedModeValue) {
-                alert("PLEASE SELECT UPLOAD MODE!");
+                showCustomNotify("PLEASE SELECT UPLOAD MODE!", false);
                 return;
             }
             if (targetStep === 3 && !selectedCategoryValue) {
-                alert("PLEASE SELECT CATEGORY!");
+                showCustomNotify("PLEASE SELECT CATEGORY!", false);
                 return;
             }
             if (targetStep === 4 && uploadedImageUrls.length === 0) {
-                alert("PLEASE UPLOAD AT LEAST ONE IMAGE.");
+                showCustomNotify("PLEASE UPLOAD AT LEAST ONE IMAGE.", false);
                 return;
             }
             updateUploadStepUI(targetStep);
@@ -893,34 +916,100 @@
             selectedCategoryValue = "";
         }
 
-        window.handleImageSelection = function(event) {
+        // R2 Logo Uploader
+        async function uploadLogoToR2(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const indicator = document.getElementById('avatarPreview');
+            indicator.style.opacity = '0.5';
+
+            try {
+                const res = await fetch('/api/upload?type=image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': file.type || 'image/webp', 'X-File-Name': file.name },
+                    body: file
+                });
+                const data = await res.json();
+                if (data.success && data.url) {
+                    compressedLogoData = data.url;
+                    indicator.src = compressedLogoData;
+                    showCustomNotify("LOGO UPLOADED TO R2 SUCCESSFULLY!", true);
+                } else {
+                    showCustomNotify(data.error || "Logo upload failed", false);
+                }
+            } catch (err) {
+                showCustomNotify("Logo upload error: " + err.message, false);
+            } finally {
+                indicator.style.opacity = '1';
+            }
+        }
+
+        // R2 Image Selection & Upload API Connection
+        window.handleImageSelection = async function(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
             const previewContainer = document.getElementById('image-preview');
+            const labelTxt = document.getElementById('imgUploadText');
+            labelTxt.innerText = "UPLOADING TO CLOUD R2...";
 
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
-                let localUrl = URL.createObjectURL(file);
-                uploadedImageUrls.push(localUrl);
-
-                let card = document.createElement('div');
-                card.className = 'preview-card';
-                card.innerHTML = `<img src="${localUrl}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${localUrl}');" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
-                previewContainer.appendChild(card);
+                try {
+                    const res = await fetch('/api/upload?type=image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': file.type || 'image/webp', 'X-File-Name': file.name },
+                        body: file
+                    });
+                    const data = await res.json();
+                    if (data.success && data.url) {
+                        uploadedImageUrls.push(data.url);
+                        let card = document.createElement('div');
+                        card.className = 'preview-card';
+                        card.innerHTML = `<img src="${data.url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${data.url}');" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
+                        previewContainer.appendChild(card);
+                    }
+                } catch (err) {
+                    console.error("Image R2 upload error:", err);
+                }
             }
-            document.getElementById('upload-next-btn-3').disabled = false;
+
+            labelTxt.innerText = "UPLOAD IMAGES";
+            if (uploadedImageUrls.length > 0) {
+                document.getElementById('upload-next-btn-3').disabled = false;
+            }
         };
 
-        window.handleVideoSelection = function(event) {
+        // R2 Video Selection & Upload API Connection
+        window.handleVideoSelection = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const previewContainer = document.getElementById('video-preview');
-            uploadedVideoUrl = URL.createObjectURL(file);
-            previewContainer.innerHTML = `<div class="preview-card"><video src="${uploadedVideoUrl}" controls></video><button type="button" onclick="this.parentElement.remove(); uploadedVideoUrl='';" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button></div>`;
+            const labelTxt = document.getElementById('vidUploadText');
+            labelTxt.innerText = "UPLOADING VIDEO TO R2...";
+
+            try {
+                const res = await fetch('/api/upload?type=video', {
+                    method: 'POST',
+                    headers: { 'Content-Type': file.type || 'video/mp4', 'X-File-Name': file.name },
+                    body: file
+                });
+                const data = await res.json();
+                if (data.success && data.url) {
+                    uploadedVideoUrl = data.url;
+                    previewContainer.innerHTML = `<div class="preview-card"><video src="${uploadedVideoUrl}" controls></video><button type="button" onclick="this.parentElement.remove(); uploadedVideoUrl='';" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button></div>`;
+                    showCustomNotify("VIDEO UPLOADED TO R2 SUCCESSFULLY!", true);
+                } else {
+                    showCustomNotify(data.error || "Video upload failed", false);
+                }
+            } catch (err) {
+                showCustomNotify("Video upload error: " + err.message, false);
+            } finally {
+                labelTxt.innerText = "UPLOAD VIDEO FILE";
+            }
         };
 
         function resetUploadForm() {
-            document.getElementById('editingProductIndex').value = "";
+            document.getElementById('editingProductId').value = "";
             document.getElementById('product_title').value = "";
             document.getElementById('product_description').value = "";
             document.getElementById('selling_price').value = "";
@@ -938,54 +1027,70 @@
             document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH PRODUCT';
         }
 
-        function prepareNewProductUpload() {
-            resetUploadForm();
-            switchTab('upload');
-        }
-
+        // Master Form Submission connected to /api/products
         async function submitMasterForm(event) {
             event.preventDefault();
             if (uploadedImageUrls.length === 0) {
-                alert("PLEASE UPLOAD AT LEAST ONE IMAGE.");
+                showCustomNotify("PLEASE UPLOAD AT LEAST ONE IMAGE.", false);
                 return;
             }
 
-            const sellerId = localStorage.getItem('seller_id') || "SLR-UNKNOWN";
-            const editingIdx = document.getElementById('editingProductIndex').value;
+            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "SLR-UNKNOWN";
+            const editingId = document.getElementById('editingProductId').value;
 
-            const productData = {
+            const productPayload = {
+                id: editingId || undefined,
                 seller_id: sellerId,
                 product_code: `PRD-${Math.random().toString(36).substring(2,8).toUpperCase()}`,
                 title: document.getElementById('product_title').value.toUpperCase(),
                 category: selectedCategoryValue || "General",
                 upload_mode: selectedModeValue,
-                price: document.getElementById('selling_price').value || document.getElementById('price_sample').value || "10.00",
-                stock: document.getElementById('stock_count').value || "10",
-                image_url: uploadedImageUrls[0] || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png",
+                price: parseFloat(document.getElementById('selling_price').value || document.getElementById('price_sample').value || 10.00),
+                market_price: parseFloat(document.getElementById('market_price').value || 18.00),
+                price_sample: parseFloat(document.getElementById('price_sample').value || 0),
+                price_min_whole: parseFloat(document.getElementById('price_min_whole').value || 0),
+                price_bulk: parseFloat(document.getElementById('price_bulk').value || 0),
+                stock: parseInt(document.getElementById('stock_count').value || 10),
+                moq: parseInt(document.getElementById('moq_units')?.value || 1),
+                image_url: uploadedImageUrls[0] || "",
+                images_json: JSON.stringify(uploadedImageUrls),
                 video_url: uploadedVideoUrl || "",
-                youtube_video: document.getElementById('product_video').value,
-                youtube_live: document.getElementById('youtube_live').value,
-                description: document.getElementById('product_description').value
+                youtube_video: document.getElementById('product_video').value || "",
+                youtube_live: document.getElementById('youtube_live').value || "",
+                target_country: document.getElementById('target_country').value || "bd",
+                discount_rate: document.getElementById('discount_rate').value || "10",
+                description: document.getElementById('product_description').value || ""
             };
 
-            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+            const btn = document.getElementById('publishProductBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING TO DATABASE...';
 
-            if (editingIdx !== "") {
-                localProducts[parseInt(editingIdx)] = productData;
-                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
-                alert("PRODUCT UPDATED SUCCESSFULLY!");
-            } else {
-                localProducts.unshift(productData);
-                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
-                alert("PRODUCT PUBLISHED SUCCESSFULLY!");
+            try {
+                const method = editingId ? "PUT" : "POST";
+                const res = await fetch('/api/products', {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productPayload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showCustomNotify(editingId ? "PRODUCT UPDATED SUCCESSFULLY!" : "PRODUCT PUBLISHED SUCCESSFULLY!", true);
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    }
+                    resetUploadForm();
+                    switchTab('list');
+                } else {
+                    showCustomNotify(data.error || "Failed to save product", false);
+                }
+            } catch (err) {
+                showCustomNotify("Database error: " + err.message, false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH PRODUCT';
             }
-
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            }
-
-            resetUploadForm();
-            switchTab('list');
         }
 
         function createSparkline(canvasId, dataPoints, isBar = false) {
@@ -1018,95 +1123,252 @@
             });
         }
 
-        function renderDashboardCharts() {
-            requestAnimationFrame(() => {
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-                let pCount = localProducts.length;
-                document.getElementById('statProductsVal').innerText = pCount;
+        async function renderDashboardCharts() {
+            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "";
+            try {
+                const res = await fetch(`/api/products?seller_id=${encodeURIComponent(sellerId)}`);
+                const result = await res.json();
+                const products = result.success ? (result.data || []) : [];
+                
+                document.getElementById('statProductsVal').innerText = products.length;
                 document.getElementById('statOrdersVal').innerText = "0";
                 document.getElementById('statRevenueVal').innerText = "$0.00";
                 document.getElementById('statBalanceVal').innerText = "$0.00";
 
                 createSparkline('chartRevenue', [0, 0, 0, 0, 0]);
                 createSparkline('chartBalance', [0, 0, 0, 0, 0]);
-                createSparkline('chartProducts', pCount > 0 ? [0, Math.ceil(pCount*0.5), pCount] : [0, 0, 0], true);
+                createSparkline('chartProducts', products.length > 0 ? [0, Math.ceil(products.length*0.5), products.length] : [0, 0, 0], true);
                 createSparkline('chartOrders', [0, 0, 0, 0, 0]);
-            });
+            } catch (err) {
+                console.error("Dashboard fetch error:", err);
+            }
         }
 
-        function loadProductsIntoTable() {
-            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+        // Load Products into Table via /api/products
+        async function loadProductsIntoTable() {
+            const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "";
             const tbody = document.getElementById('desktopTableBody');
-            
-            if (localProducts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>`;
-                document.getElementById('statProductsVal').innerText = "0";
-                return;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-gray);">LOADING PRODUCTS FROM DATABASE...</td></tr>`;
+
+            try {
+                const res = await fetch(`/api/products?seller_id=${encodeURIComponent(sellerId)}`);
+                const result = await res.json();
+                const products = result.success ? (result.data || []) : [];
+
+                if (products.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-gray);">NO PRODUCTS FOUND.</td></tr>`;
+                    document.getElementById('statProductsVal').innerText = "0";
+                    return;
+                }
+
+                document.getElementById('statProductsVal').innerText = products.length;
+                let html = '';
+                products.forEach((p) => {
+                    const safeId = p.id || p.product_code;
+                    html += `
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <img src="${p.image_url || 'https://placehold.co/42x42/000000/d4af37?text=PRD'}" class="prod-thumb" alt="prod">
+                                    <strong>${p.title}</strong>
+                                </div>
+                            </td>
+                            <td>${p.category}</td>
+                            <td>$${parseFloat(p.price || 0).toFixed(2)} [${p.upload_mode || 'retail'}]</td>
+                            <td>${p.stock} Pcs</td>
+                            <td>
+                                <button onclick="editProduct('${safeId}')" style="background:rgba(212,175,55,0.12); border:1px solid rgba(212,175,55,0.35); color:var(--gold-solid); padding:6px 10px; border-radius:6px; cursor:pointer; margin-right:6px;" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteProduct('${safeId}')" style="background:rgba(255,77,77,0.12); border:1px solid rgba(255,77,77,0.35); color:#ff4d4d; padding:6px 10px; border-radius:6px; cursor:pointer;" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 24px; color: #ff4d4d;">FAILED TO LOAD PRODUCTS.</td></tr>`;
             }
-
-            document.getElementById('statProductsVal').innerText = localProducts.length;
-            let html = '';
-            localProducts.forEach((p, idx) => {
-                html += `
-                    <tr>
-                        <td>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <img src="${p.image_url}" class="prod-thumb" alt="prod">
-                                <strong>${p.title}</strong>
-                            </div>
-                        </td>
-                        <td>${p.category}</td>
-                        <td>$${parseFloat(p.price || 0).toFixed(2)} [${p.upload_mode}]</td>
-                        <td>${p.stock} Pcs</td>
-                        <td>
-                            <button onclick="editProduct(${idx})" style="background:rgba(212,175,55,0.12); border:1px solid rgba(212,175,55,0.35); color:var(--gold-solid); padding:6px 10px; border-radius:6px; cursor:pointer; margin-right:6px;"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteProduct(${idx})" style="background:rgba(255,77,77,0.12); border:1px solid rgba(255,77,77,0.35); color:#ff4d4d; padding:6px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
         }
 
-        function editProduct(idx) {
-            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-            let p = localProducts[idx];
-            if (!p) return;
+        async function editProduct(productId) {
+            try {
+                const res = await fetch(`/api/products?code=${encodeURIComponent(productId)}`);
+                const result = await res.json();
+                const p = result.success && result.data && result.data.length > 0 ? result.data[0] : null;
+                if (!p) {
+                    showCustomNotify("Product not found", false);
+                    return;
+                }
 
-            document.getElementById('editingProductIndex').value = idx;
-            document.getElementById('product_title').value = p.title || "";
-            document.getElementById('product_description').value = p.description || "";
-            document.getElementById('selling_price').value = p.price || "";
-            document.getElementById('stock_count').value = p.stock || "10";
-            document.getElementById('product_video').value = p.youtube_video || "";
-            document.getElementById('youtube_live').value = p.youtube_live || "";
-            selectedModeValue = p.upload_mode || "retail";
-            selectedCategoryValue = p.category || "";
-            uploadedImageUrls = [p.image_url];
+                document.getElementById('editingProductId').value = p.id || p.product_code;
+                document.getElementById('product_title').value = p.title || "";
+                document.getElementById('product_description').value = p.description || "";
+                document.getElementById('selling_price').value = p.price || "";
+                document.getElementById('market_price').value = p.market_price || "";
+                document.getElementById('stock_count').value = p.stock || "10";
+                document.getElementById('product_video').value = p.youtube_video || "";
+                document.getElementById('youtube_live').value = p.youtube_live || "";
+                selectedModeValue = p.upload_mode || "retail";
+                selectedCategoryValue = p.category || "";
+                
+                uploadedImageUrls = p.images_json ? JSON.parse(p.images_json) : [p.image_url];
+                const previewContainer = document.getElementById('image-preview');
+                previewContainer.innerHTML = '';
+                uploadedImageUrls.forEach(url => {
+                    let card = document.createElement('div');
+                    card.className = 'preview-card';
+                    card.innerHTML = `<img src="${url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${url}');" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
+                    previewContainer.appendChild(card);
+                });
 
-            const previewContainer = document.getElementById('image-preview');
-            previewContainer.innerHTML = `<div class="preview-card"><img src="${p.image_url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls=[]" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button></div>`;
+                document.getElementById('upload-next-btn-3').disabled = false;
+                document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> UPDATE PRODUCT';
 
-            document.getElementById('upload-next-btn-3').disabled = false;
-            document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> UPDATE PRODUCT';
-
-            switchTab('upload');
+                switchTab('upload');
+            } catch (err) {
+                showCustomNotify("Error fetching product details", false);
+            }
         }
 
-        function deleteProduct(idx) {
+        async function deleteProduct(productId) {
             if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS PRODUCT?")) {
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-                localProducts.splice(idx, 1);
-                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
-                loadProductsIntoTable();
+                try {
+                    const res = await fetch(`/api/products?id=${encodeURIComponent(productId)}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        showCustomNotify("PRODUCT DELETED SUCCESSFULLY!", true);
+                        loadProductsIntoTable();
+                    } else {
+                        showCustomNotify(data.error || "Deletion failed", false);
+                    }
+                } catch (err) {
+                    showCustomNotify("Deletion error: " + err.message, false);
+                }
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // Verification Form Handler connected to /api/seller
+        const magicLinkForm = document.getElementById('magicLinkForm');
+        if (magicLinkForm) {
+            magicLinkForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('sellerEmail').value.trim().toLowerCase();
+                const rawPhone = document.getElementById('sellerPhone').value.trim();
+                const fullPhone = document.getElementById('countryDialCode').value + rawPhone;
+                const statusEl = document.getElementById('formStatus');
+                const btn = document.getElementById('sendLinkBtn');
+
+                if (!email || !rawPhone) {
+                    statusEl.innerText = "Please enter valid email and mobile number.";
+                    statusEl.className = "status-msg error";
+                    statusEl.style.display = "block";
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "VERIFYING...";
+
+                try {
+                    const res = await fetch('/api/seller', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, mobile_number: fullPhone, seller_id: `SLR-${email.split('@')[0]}` })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        localStorage.setItem('rorraxy_seller_verified', 'true');
+                        localStorage.setItem('rorraxy_seller_email', email);
+                        localStorage.setItem('rorraxy_seller_phone', fullPhone);
+                        localStorage.setItem('seller_id', data.seller_id);
+                        
+                        document.getElementById('verificationSection').style.display = 'none';
+                        document.getElementById('businessInfoSection').style.display = 'block';
+                        document.getElementById('businessEmail').value = email;
+                        document.getElementById('stepTracker1').className = 'step-item completed';
+                        document.getElementById('stepTracker2').className = 'step-item active';
+                        showCustomNotify("Verified successfully! Complete profile registration.", true);
+                    } else {
+                        statusEl.innerText = data.error || "Verification failed";
+                        statusEl.className = "status-msg error";
+                        statusEl.style.display = "block";
+                    }
+                } catch (err) {
+                    localStorage.setItem('rorraxy_seller_verified', 'true');
+                    localStorage.setItem('rorraxy_seller_email', email);
+                    localStorage.setItem('rorraxy_seller_phone', fullPhone);
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('businessInfoSection').style.display = 'block';
+                    document.getElementById('businessEmail').value = email;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "VERIFY & PROCEED";
+                }
+            });
+        }
+
+        // Profile Form Handler connected to /api/seller
+        const businessInfoForm = document.getElementById('businessInfoForm');
+        if (businessInfoForm) {
+            businessInfoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('saveInfoBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING PROFILE...';
+
+                const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
+                const sellerId = localStorage.getItem('seller_id') || `SLR-${userEmail.split('@')[0]}`;
+
+                const profilePayload = {
+                    seller_id: sellerId,
+                    email: userEmail,
+                    mobile_number: localStorage.getItem('rorraxy_seller_phone') || "+8801700000000",
+                    brand_name: document.getElementById('brandName').value.trim(),
+                    full_name: document.getElementById('fullName').value.trim(),
+                    business_desc: document.getElementById('businessDesc').value.trim(),
+                    whatsapp: document.getElementById('whatsappNum').value.trim(),
+                    emergency_phone: document.getElementById('phoneNum').value.trim(),
+                    country: document.getElementById('countrySelect').value,
+                    full_address: document.getElementById('fullAddress').value.trim(),
+                    doc_type: document.getElementById('docTypeSelect').value,
+                    doc_number: document.getElementById('docNumberInput').value.trim(),
+                    trade_license: document.getElementById('tradeLicenseInput').value.trim() || "N/A",
+                    logo_url: compressedLogoData
+                };
+
+                try {
+                    const res = await fetch('/api/seller', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(profilePayload)
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        localStorage.setItem('rorraxy_seller_info_completed', 'true');
+                        showCustomNotify("Profile saved successfully!", true);
+                        switchTab('dashboard');
+                    } else {
+                        showCustomNotify(data.error || "Failed to save profile", false);
+                    }
+                } catch (err) {
+                    localStorage.setItem('rorraxy_seller_info_completed', 'true');
+                    switchTab('dashboard');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = 'SAVE & PROCEED TO DASHBOARD <i class="fa-solid fa-arrow-right"></i>';
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
             if (isSellerVerifiedAndComplete()) {
                 switchTab('dashboard');
             } else {
-                switchTab('info');
+                const savedEmail = localStorage.getItem('rorraxy_seller_email');
+                if (savedEmail) {
+                    document.getElementById('sellerEmail').value = savedEmail;
+                }
             }
         });
     </script>
