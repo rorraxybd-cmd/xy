@@ -151,26 +151,36 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        .reel-view-wrapper-outer { 
-            width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
-            position: fixed; top: 0; left: 0; background: #000; 
-            overflow-y: scroll; scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; z-index: 10;
-            scrollbar-width: none;
+        /* Perfect Vertical Reels Modal Container */
+        .reel-modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.95); z-index: 4000;
+            align-items: center; justify-content: center;
         }
-        .reel-view-wrapper-outer::-webkit-scrollbar { display: none; }
+        .reel-modal-wrapper {
+            position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
+            background: #000; overflow-y: scroll; scroll-snap-type: y mandatory;
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; border-left: 1px solid rgba(212,175,55,0.2); border-right: 1px solid rgba(212,175,55,0.2);
+        }
+        .reel-modal-wrapper::-webkit-scrollbar { display: none; }
+
         .reel-card { 
-            width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
+            width: 100%; height: 100vh; height: 100dvh; 
             scroll-snap-align: start; scroll-snap-stop: always;
             display: flex; flex-direction: column; position: relative; background: #000; flex-shrink: 0;
+            align-items: center; justify-content: center;
         }
-        .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
-        .reel-media-box img { width: 100%; height: 100%; object-fit: cover; background: #000; display: block; }
+        .reel-media-box { 
+            position: relative; width: 100%; max-width: 420px; aspect-ratio: 9 / 16; max-height: 85vh; 
+            cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; 
+            border-radius: 16px; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+        .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
             gap: 8px; padding: 6px 18px; border-radius: 20px;
             background: rgba(8, 8, 14, 0.88) !important;
@@ -190,7 +200,7 @@
         }
 
         .right-vertical-actions {
-            position: fixed; right: 12px; bottom: 85px; z-index: 150;
+            position: fixed; right: 12px; bottom: 85px; z-index: 4500;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto; width: 45px;
         }
@@ -345,17 +355,22 @@
         </div>
     </div>
 
+    <!-- Independent Pinterest Grid Home View -->
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
         </div>
     </main>
 
+    <!-- Dedicated Reels Popup Modal (Clean 9:16 vertical aspect ratio without page jumping) -->
+    <div id="reelModalOverlay" class="reel-modal-overlay" onclick="if(event.target===this) closeReelModal()">
+        <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
+    </div>
+
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
         let globalMasterProductsList = [];
         let activeProductList = [];
-        let isPinterestHomeMode = true; 
         let currentReelIndex = 0;
         let slideIntervalsMap = {};
         let selectedVariantImg = '';
@@ -363,7 +378,6 @@
         let currentProductQty = 1;
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Automatic Affiliate & Seller Referral Capture (?ref=SLR-XXXX or ?seller_id=SLR-XXXX)
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref') || urlParams.get('seller_id') || urlParams.get('affiliate');
             if (refParam) {
@@ -409,7 +423,7 @@
                 bottomBuyBtn.addEventListener('click', (e) => {
                     let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                     if(list.length > 0) {
-                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
+                        let targetProd = list[currentReelIndex];
                         openBuyPreviewModal(targetProd, e);
                     }
                 });
@@ -419,7 +433,7 @@
                 bottomDetailsBtn.addEventListener('click', () => {
                     let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                     if(list.length > 0) {
-                        let targetProd = list[isPinterestHomeMode ? 0 : currentReelIndex];
+                        let targetProd = list[currentReelIndex];
                         openInpageDetailsModal(targetProd);
                     }
                 });
@@ -430,37 +444,7 @@
                 searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
-
-            window.addEventListener('keydown', (e) => {
-                if (!isPinterestHomeMode) {
-                    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-                        e.preventDefault();
-                        let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                        if (currentReelIndex < list.length - 1) {
-                            currentReelIndex++;
-                            scrollToReelIndex(currentReelIndex);
-                        }
-                    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-                        e.preventDefault();
-                        if (currentReelIndex > 0) {
-                            currentReelIndex--;
-                            scrollToReelIndex(currentReelIndex);
-                        }
-                    }
-                }
-            });
         });
-
-        function scrollToReelIndex(idx) {
-            const container = document.getElementById('appContainer');
-            const targetCard = container.querySelector(`[data-index="${idx}"]`);
-            if (targetCard) {
-                targetCard.scrollIntoView({ behavior: 'smooth' });
-                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
-                renderFixedGlobalActions(container, activeId);
-            }
-        }
 
         function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
@@ -468,8 +452,7 @@
                 overlay.style.display = 'none';
                 document.getElementById('fullscreenIframeBody').src = '';
             } else {
-                isPinterestHomeMode = true;
-                clearAllSlideIntervals();
+                closeReelModal();
                 renderPinterestHomeGrid(activeProductList.length > 0 ? activeProductList : globalMasterProductsList);
             }
         }
@@ -524,7 +507,7 @@
                     if (Array.isArray(parsed) && parsed.length > 0) {
                         globalMasterProductsList = shuffleArray([...parsed]);
                         activeProductList = globalMasterProductsList;
-                        if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
+                        renderPinterestHomeGrid(globalMasterProductsList);
                     }
                 } catch (e) {}
             }
@@ -540,7 +523,7 @@
                     globalMasterProductsList = shuffleArray([...productsList]);
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     activeProductList = globalMasterProductsList;
-                    if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
+                    renderPinterestHomeGrid(globalMasterProductsList);
                 }
             } catch (error) {}
         }
@@ -557,7 +540,7 @@
             let query = keyword.toLowerCase().trim();
             if (!query) {
                 activeProductList = globalMasterProductsList;
-                if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
+                renderPinterestHomeGrid(globalMasterProductsList);
                 return;
             }
             let filtered = globalMasterProductsList.filter(item => {
@@ -566,7 +549,7 @@
                 return title.includes(query) || cat.includes(query);
             });
             activeProductList = filtered;
-            if(isPinterestHomeMode) renderPinterestHomeGrid(filtered);
+            renderPinterestHomeGrid(filtered);
             document.getElementById('floatingSearchContainer').style.display = 'none';
         }
 
@@ -579,7 +562,6 @@
                 return title.includes(query) || cat.includes(query);
             });
             activeProductList = filtered.length > 0 ? filtered : globalMasterProductsList;
-            isPinterestHomeMode = true;
             renderPinterestHomeGrid(activeProductList);
         }
 
@@ -624,12 +606,10 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
                 
-                // Instant smooth jump to reels view without jumpy scroll lag
+                // Open clean Reels vertical popup modal directly on click
                 cardDiv.onclick = () => {
-                    isPinterestHomeMode = false;
                     currentReelIndex = index;
-                    clearAllSlideIntervals();
-                    renderAllReelsFeed();
+                    openReelsModal(index);
                 };
 
                 cardDiv.innerHTML = `
@@ -644,15 +624,15 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
-            renderFixedGlobalActions(container, null, true);
+            renderFixedGlobalActions(null, true);
         }
 
-        function renderFixedGlobalActions(container, pId, isHome = false) {
+        function renderFixedGlobalActions(pId, isHome = false) {
             let existingBar = document.getElementById('fixedGlobalActionsBar');
             if(existingBar) existingBar.remove();
 
             let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
-            let pLikes = isHome ? '' : getDynamicEngagement(targetId);
+            let pLikes = getDynamicEngagement(targetId);
 
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
@@ -695,21 +675,12 @@
 
         function handlePinterestInterception(event, actionType, targetId) {
             event.stopPropagation();
-            if (isPinterestHomeMode) {
-                let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(targetId));
-                if (foundIdx === -1) foundIdx = 0;
-                isPinterestHomeMode = false;
-                currentReelIndex = foundIdx;
-                clearAllSlideIntervals();
-                renderAllReelsFeed();
-            } else {
-                if (actionType === 'like') {
-                    toggleReelLove(event, event.currentTarget, targetId);
-                } else if (actionType === 'save') {
-                    handleDualSaveAction(event, event.currentTarget, targetId);
-                } else if (actionType === 'share') {
-                    openNativeShare(event, targetId);
-                }
+            if (actionType === 'like') {
+                toggleReelLove(event, event.currentTarget, targetId);
+            } else if (actionType === 'save') {
+                handleDualSaveAction(event, event.currentTarget, targetId);
+            } else if (actionType === 'share') {
+                openNativeShare(event, targetId);
             }
         }
 
@@ -720,10 +691,11 @@
             slideIntervalsMap = {};
         }
 
-        function renderAllReelsFeed() {
+        function openReelsModal(startIndex) {
+            const overlay = document.getElementById('reelModalOverlay');
+            const wrapper = document.getElementById('reelModalWrapperBody');
+            overlay.style.display = 'flex';
             clearAllSlideIntervals();
-            const container = document.getElementById('appContainer');
-            container.className = 'reel-view-wrapper-outer';
 
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
             let reelsHtml = '';
@@ -742,10 +714,10 @@
                 } catch(e){}
 
                 if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
+                    mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
                     if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-                    mediaElem = `<img id="reelSlideImg_${idx}" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:cover; background:#000;">`;
+                    mediaElem = `<img id="reelSlideImg_${idx}" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
                     
                     if (extractedImages.length > 1) {
                         let imgIdx = 0;
@@ -753,7 +725,7 @@
                             imgIdx = (imgIdx + 1) % extractedImages.length;
                             const imgElem = document.getElementById(`reelSlideImg_${idx}`);
                             if (imgElem) imgElem.src = extractedImages[imgIdx];
-                        }, 1400);
+                        }, 1800);
                     }
                 }
 
@@ -773,44 +745,41 @@
                 `;
             });
 
-            container.innerHTML = reelsHtml;
+            wrapper.innerHTML = reelsHtml;
 
             setTimeout(() => {
-                const targetCard = container.querySelector(`[data-index="${currentReelIndex}"]`);
+                const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
                 if (targetCard) {
                     targetCard.scrollIntoView({ behavior: 'auto' });
                 }
-            }, 10);
+            }, 20);
 
             let scrollTimer = null;
-            container.onscroll = () => {
+            wrapper.onscroll = () => {
                 clearTimeout(scrollTimer);
                 scrollTimer = setTimeout(() => {
-                    let cardHeight = container.clientHeight;
-                    let calculatedIdx = Math.round(container.scrollTop / cardHeight);
+                    let cardHeight = wrapper.clientHeight;
+                    let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
                     if (calculatedIdx >= 0 && calculatedIdx < list.length) {
                         currentReelIndex = calculatedIdx;
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
-                        renderFixedGlobalActions(container, activeId, false);
+                        renderFixedGlobalActions(activeId, false);
                     }
                 }, 40);
             };
 
-            let activeId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
-            renderFixedGlobalActions(container, activeId, false);
+            let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
+            renderFixedGlobalActions(activeId, false);
+        }
+
+        function closeReelModal() {
+            clearAllSlideIntervals();
+            const overlay = document.getElementById('reelModalOverlay');
+            if(overlay) overlay.style.display = 'none';
+            renderFixedGlobalActions(null, true);
         }
 
         function openInpageDetailsModal(product) {
-            if (isPinterestHomeMode) {
-                let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
-                if (foundIdx === -1) foundIdx = 0;
-                isPinterestHomeMode = false;
-                currentReelIndex = foundIdx;
-                clearAllSlideIntervals();
-                renderAllReelsFeed();
-                return;
-            }
-
             const overlay = document.getElementById('inpageDetailsOverlay');
             const content = document.getElementById('inpageDetailsModalContent');
             if(!product) return;
@@ -877,16 +846,6 @@
         }
 
         function openBuyPreviewModal(product, event) {
-            if (isPinterestHomeMode) {
-                let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(product.id || product.product_id));
-                if (foundIdx === -1) foundIdx = 0;
-                isPinterestHomeMode = false;
-                currentReelIndex = foundIdx;
-                clearAllSlideIntervals();
-                renderAllReelsFeed();
-                return;
-            }
-
             const overlay = document.getElementById('buyPreviewOverlay');
             const content = document.getElementById('buyPreviewModalContent');
 
@@ -1133,10 +1092,7 @@
         window.selectSavedVideo = function(videoId) {
             let foundIdx = globalMasterProductsList.findIndex(p => String(p.id || p.product_id) === String(videoId));
             if(foundIdx !== -1) {
-                isPinterestHomeMode = false;
-                activeProductList = globalMasterProductsList;
-                currentReelIndex = foundIdx;
-                renderAllReelsFeed();
+                openReelsModal(foundIdx);
             }
             document.getElementById('savedGalleryOverlay').style.display = 'none';
         };
@@ -1155,3 +1111,5 @@
     </script>
 </body>
 </html>
+```
+eof
