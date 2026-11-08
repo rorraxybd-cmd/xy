@@ -158,7 +158,7 @@
             <div class="info-card" id="verificationSection">
                 <div class="info-card-title">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <span>AFFILIATE MAGIC LINK VERIFICATION</span>
+                    <span>AFFILIATE MAGIC LINK & IP VERIFICATION</span>
                 </div>
 
                 <form id="magicLinkForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
@@ -199,35 +199,34 @@
                     <div id="formStatus" class="status-msg"></div>
 
                     <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
-                        SEND MAGIC LINK & CODE <i class="fa-solid fa-paper-plane"></i>
+                        SEND 6-DIGIT MAGIC CODE <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </form>
             </div>
 
-            <!-- STEP 2: MAGIC LINK & OTP VERIFICATION SECTION -->
+            <!-- STEP 2: 6-DIGIT MAGIC CODE VERIFICATION SECTION -->
             <div class="info-card" id="magicCodeVerifySection" style="display: none; max-width: 420px; margin: 0 auto;">
                 <div class="info-card-title">
                     <i class="fa-solid fa-key"></i>
-                    <span>ENTER MAGIC VERIFICATION CODE</span>
+                    <span>ENTER 6-DIGIT MAGIC CODE</span>
                 </div>
                 <p style="font-size: 0.68rem; color: var(--text-gray); text-align: center; margin-bottom: 12px; text-transform: none;">
-                    A secure magic verification code has been dispatched. Enter your 6-digit magic code below to complete device IP tracking.
+                    Secure 6-digit magic code has been generated. Enter the code below to complete device IP security check.
                 </p>
 
-                <!-- Dynamic Magic Link Box Simulation -->
                 <div id="simulatedMagicLinkBox" style="background: rgba(212,175,55,0.08); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 12px;">
-                    <span style="font-size: 0.65rem; color: var(--gold-solid); font-weight: 700;">MAGIC VERIFICATION CODE:</span>
+                    <span style="font-size: 0.65rem; color: var(--gold-solid); font-weight: 700;">SECURE 6-DIGIT CODE:</span>
                     <div id="displayMagicCode" style="font-size: 1.4rem; font-weight: 800; letter-spacing: 4px; color: #fff; margin: 4px 0;">------</div>
-                    <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 4px 10px; font-size: 0.62rem; margin-top: 4px;"><i class="fa-solid fa-bolt"></i> AUTO-VERIFY LINK</button>
+                    <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 4px 10px; font-size: 0.62rem; margin-top: 4px;"><i class="fa-solid fa-bolt"></i> AUTO-VERIFY CODE</button>
                 </div>
 
                 <form id="otpVerifyForm" style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="form-group">
-                        <label>6-DIGIT MAGIC CODE<span class="req-star">*</span></label>
-                        <input type="text" class="form-control" id="inputMagicCode" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]*" inputmode="numeric" required style="text-align: center; letter-spacing: 3px; font-weight: 800; font-size: 1.1rem;">
+                        <label>6-DIGIT CODE<span class="req-star">*</span></label>
+                        <input type="text" class="form-control" id="inputMagicCode" placeholder="000000" maxlength="6" pattern="[0-9]*" inputmode="numeric" required style="text-align: center; letter-spacing: 3px; font-weight: 800; font-size: 1.1rem; text-transform: none;">
                     </div>
                     <div id="otpStatusMsg" class="status-msg"></div>
-                    <button type="submit" class="btn-gold" id="verifyOtpBtn" style="width: 100%;">AUTHORIZE & SECURE VERIFY <i class="fa-solid fa-lock"></i></button>
+                    <button type="submit" class="btn-gold" id="verifyOtpBtn" style="width: 100%;">AUTHORIZE & VERIFY <i class="fa-solid fa-lock"></i></button>
                 </form>
             </div>
 
@@ -235,7 +234,7 @@
             <div class="info-card" id="profileInfoSection" style="display: none;">
                 <div class="info-card-title">
                     <i class="fa-solid fa-user-gear"></i>
-                    <span id="cardTitleText">AFFILIATE PROFILE CV</span>
+                    <span id="cardTitleText">AFFILIATE PROFILE CV SETUP</span>
                 </div>
 
                 <!-- CV Preview Mode -->
@@ -277,7 +276,7 @@
                         </div>
                         <div class="form-group full-width"><label>ACCOUNT NUMBER / DETAILS<span class="req-star">*</span></label><input type="text" class="form-control" id="accountDetails" placeholder="Enter account details..." required style="text-transform: none;"></div>
                     </div>
-                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 8px;">SAVE INFO & VIEW CV <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 8px;">SAVE INFO & GO TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                     <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 8px; display: none;" onclick="cancelProfileEdit()">CANCEL</button>
                 </form>
             </div>
@@ -535,6 +534,11 @@
             document.getElementById('mainPortalTitle').innerText = titles[tabName] || 'AFFILIATE PORTAL';
 
             if (tabName === 'dashboard') {
+                // Immediate ID sync check to prevent "ID: Loading..."
+                currentUniqueId = localStorage.getItem('rorraxy_unique_aff_id') || currentUniqueId;
+                if (currentUniqueId) {
+                    document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
+                }
                 loadDashboardStats();
             } else if (tabName === 'reports') {
                 loadReports();
@@ -614,7 +618,7 @@
         }
 
         function generateAffiliateLink(baseUrl, commissionRate) {
-            const trackingId = currentUniqueId || currentUserEmail;
+            const trackingId = currentUniqueId || localStorage.getItem('rorraxy_unique_aff_id') || currentUserEmail;
             const link = `${baseUrl}?ref=${encodeURIComponent(trackingId)}`;
             document.getElementById('generatedLinkOutput').value = link;
             document.getElementById('promoteResultCard').style.display = 'block';
@@ -711,7 +715,7 @@
             } catch (e) {}
         }
 
-        // 1. Initial Verification Form Submit Handler (Generates Magic Code & Dispatches)
+        // 1. Initial Verification Form Handler (Dispatches 6-Digit Magic Code)
         const magicLinkForm = document.getElementById('magicLinkForm');
         if (magicLinkForm) {
             magicLinkForm.addEventListener('submit', async (e) => {
@@ -737,7 +741,7 @@
                 }
 
                 btn.disabled = true;
-                btn.innerText = "DISPATCHING MAGIC LINK...";
+                btn.innerText = "GENERATING 6-DIGIT CODE...";
 
                 currentUserEmail = email;
                 currentPhone = fullPhone;
@@ -753,14 +757,14 @@
                     document.getElementById('verificationSection').style.display = 'none';
                     document.getElementById('magicCodeVerifySection').style.display = 'block';
                     document.getElementById('displayMagicCode').innerText = generatedMagicCode;
-                    showCustomNotify("MAGIC VERIFICATION CODE GENERATED & DISPATCHED!", true);
+                    showCustomNotify("6-DIGIT MAGIC CODE GENERATED SUCCESSFULLY!", true);
                 } catch (err) {
                     document.getElementById('verificationSection').style.display = 'none';
                     document.getElementById('magicCodeVerifySection').style.display = 'block';
                     document.getElementById('displayMagicCode').innerText = generatedMagicCode;
                 } finally {
                     btn.disabled = false;
-                    btn.innerText = "SEND MAGIC LINK & CODE";
+                    btn.innerText = "SEND 6-DIGIT MAGIC CODE";
                 }
             });
         }
@@ -770,7 +774,7 @@
             document.getElementById('otpVerifyForm').dispatchEvent(new Event('submit'));
         }
 
-        // 2. OTP Magic Code Verification Form Handler
+        // 2. OTP Magic Code Verification Handler
         const otpVerifyForm = document.getElementById('otpVerifyForm');
         if (otpVerifyForm) {
             otpVerifyForm.addEventListener('submit', async (e) => {
@@ -780,7 +784,7 @@
                 const btn = document.getElementById('verifyOtpBtn');
 
                 if (enteredCode !== generatedMagicCode && enteredCode !== '123456') {
-                    statusEl.innerText = "INVALID MAGIC CODE. PLEASE CHECK AND TRY AGAIN.";
+                    statusEl.innerText = "INVALID MAGIC CODE. PLEASE TRY AGAIN.";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
@@ -811,9 +815,10 @@
                     document.getElementById('profileInfoSection').style.display = 'block';
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
+                    document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
                     
                     if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                    showCustomNotify("MAGIC VERIFICATION & IP SECURITY COMPLETED!", true);
+                    showCustomNotify("IP SECURITY & VERIFICATION SUCCESSFUL!", true);
                 } catch (err) {
                     localStorage.setItem('rorraxy_affiliate_verified', 'true');
                     localStorage.setItem('rorraxy_affiliate_email', currentUserEmail);
@@ -826,14 +831,15 @@
                     document.getElementById('profileInfoSection').style.display = 'block';
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
+                    document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
                 } finally {
                     btn.disabled = false;
-                    btn.innerText = "AUTHORIZE & SECURE VERIFY";
+                    btn.innerText = "AUTHORIZE & VERIFY";
                 }
             });
         }
 
-        // 3. Profile Info Form Handler
+        // 3. Profile Info & Registration Handler
         const affiliateInfoForm = document.getElementById('affiliateInfoForm');
         if (affiliateInfoForm) {
             affiliateInfoForm.addEventListener('submit', async (e) => {
@@ -870,13 +876,13 @@
                 } catch (err) {
                     localStorage.setItem('rorraxy_affiliate_info_completed', 'true');
                     renderCvPreview(profilePayload);
-                    showCustomNotify("Saved successfully!", true);
+                    showCustomNotify("Profile saved successfully!", true);
                     setTimeout(() => {
                         switchTab('dashboard');
                     }, 800);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = 'SAVE INFO & VIEW CV <i class="fa-solid fa-arrow-right"></i>';
+                    btn.innerHTML = 'SAVE INFO & GO TO DASHBOARD <i class="fa-solid fa-arrow-right"></i>';
                 }
             });
         }
@@ -889,7 +895,7 @@
             document.getElementById('cvMethod').innerText = data.payment_method || '--';
             document.getElementById('cvAccount').innerText = data.account_details || '--';
             document.getElementById('cvDeviceIp').innerText = localStorage.getItem('rorraxy_user_ip') || userDeviceIp;
-            document.getElementById('cvAffId').innerText = currentUniqueId || 'user_aff_id';
+            document.getElementById('cvAffId').innerText = currentUniqueId || localStorage.getItem('rorraxy_unique_aff_id') || 'user_aff_id';
 
             document.getElementById('affiliateInfoForm').style.display = 'none';
             document.getElementById('profileCvPreview').style.display = 'block';
@@ -911,7 +917,11 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            autoDetectIpAndCountry();
+            await autoDetectIpAndCountry();
+            currentUniqueId = localStorage.getItem('rorraxy_unique_aff_id') || '';
+            if (currentUniqueId) {
+                document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
+            }
 
             if (isAffiliateVerifiedAndComplete()) {
                 document.getElementById('verificationSection').style.display = 'none';
@@ -924,7 +934,8 @@
                     const result = await res.json();
                     if (result.success && result.data && result.data.length > 0) {
                         const p = result.data[0];
-                        currentUniqueId = p.unique_affiliate_id || localStorage.getItem('rorraxy_unique_aff_id');
+                        currentUniqueId = p.unique_affiliate_id || currentUniqueId;
+                        localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
                         document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
                         renderCvPreview({
                             first_name: p.first_name,
