@@ -377,6 +377,7 @@
         </div>
     </main>
 
+    <!-- ৫টি অপশনযুক্ত বটম ন্যাভবার (ভিডিওর বদলে মাঝখানে হোম বাটন) -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="/world.html" class="nav-item">
             <i class="fa-solid fa-earth-americas"></i>
@@ -386,9 +387,9 @@
             <i class="fa-solid fa-user"></i>
             <span>You</span>
         </div>
-        <a href="/wholesale/video.html" class="nav-item">
-            <i class="fa-brands fa-youtube"></i>
-            <span>Video</span>
+        <a href="/wholesale/index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
         </a>
         <a href="/wholesale/category.html" class="nav-item">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -628,7 +629,12 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card';
-                cardDiv.onclick = () => location.href = `pd.html?id=${productId}`;
+                cardDiv.onclick = () => {
+                    let affId = getActiveAffiliateId();
+                    let url = `pd.html?id=${productId}`;
+                    if (affId) url += `&ref=${affId}`;
+                    location.href = url;
+                };
 
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
