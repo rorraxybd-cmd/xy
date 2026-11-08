@@ -20,7 +20,6 @@ async function autoDetectUserCountry() {
             const detectedCode = data.country_calling_code || "+880";
             const detectedCountry = data.country_name || "Bangladesh";
             
-            // Match in dial code dropdown
             for (let option of dialCodeSelect.options) {
                 if (option.value === detectedCode) {
                     dialCodeSelect.value = detectedCode;
@@ -28,7 +27,6 @@ async function autoDetectUserCountry() {
                 }
             }
 
-            // Match in country select
             if (countrySelect) {
                 for (let option of countrySelect.options) {
                     if (option.value.toLowerCase() === detectedCountry.toLowerCase()) {
@@ -218,14 +216,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     const userEmail = (localStorage.getItem('rorraxy_seller_email') || localStorage.getItem('rorraxy_current_seller_email') || "").toLowerCase().trim();
 
     if (!isVerified || !userEmail) {
-        // Step 1: Show Verification Form
         document.getElementById('verificationSection').style.display = 'block';
         document.getElementById('businessInfoSection').style.display = 'none';
         updateStepTracker(1);
         return;
     }
 
-    // Step 2: Show Info Section
     document.getElementById('verificationSection').style.display = 'none';
     document.getElementById('businessInfoSection').style.display = 'block';
     document.getElementById('businessEmail').value = userEmail;
@@ -237,7 +233,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('seller_id', existingSellerId);
     }
 
-    // Connect to Cloudflare API Functions (/api/seller)
     try {
         const response = await fetch(`/api/seller?email=${encodeURIComponent(userEmail)}`);
         const result = await response.json();
