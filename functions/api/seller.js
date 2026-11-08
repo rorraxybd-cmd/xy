@@ -21,6 +21,7 @@ export async function onRequest(context) {
   }
 
   try {
+    // ১. ম্যাজিক লিংক জেনারেট রিকোয়েস্ট (UPSERT সহ সংশোধিত)
     if (url.pathname.includes("/send-magic-link")) {
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -33,12 +34,17 @@ export async function onRequest(context) {
 
       const token = crypto.randomUUID();
       const expiresAt = Date.now() + 180 * 1000;
+      const cleanEmail = email.toLowerCase();
+      const cleanMobile = mobile_number || "";
 
       await db.prepare(`
-        UPDATE sellers 
-        SET verification_token = ?, token_expires_at = ? 
-        WHERE email = ?
-      `).bind(token, expiresAt, email.toLowerCase()).run();
+        INSERT INTO sellers (seller_id, email, mobile_number, verification_token, token_expires_at)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(email) DO UPDATE SET
+          verification_token = excluded.verification_token,
+          token_expires_at = excluded.token_expires_at,
+          mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number)
+      `).bind(cleanEmail, cleanEmail, cleanMobile, token, expiresAt).run();
 
       const magicLink = `https://${url.hostname}/api/seller/verify-magic?token=${token}`;
 
@@ -48,6 +54,7 @@ export async function onRequest(context) {
       });
     }
 
+    // ২. ম্যাজিক লিংক ভেরিফিকেশন ও সিকিউরিটি লগ
     if (url.pathname.includes("/verify-magic")) {
       const token = url.searchParams.get("token");
       if (!token) return new Response("Invalid Token", { status: 400 });
@@ -71,6 +78,7 @@ export async function onRequest(context) {
       return Response.redirect(`https://${url.hostname}/seller/dashboard.html?verified=true`, 302);
     }
 
+    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST)
     if (request.method === "POST") {
       const data = await request.json();
       const email = (data.email || data.seller_id || "").toLowerCase();
@@ -92,7 +100,7 @@ export async function onRequest(context) {
           trade_license, logo_url, is_verified, admin_approval_status, last_ip, ip_country, user_agent, created_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'pending', ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
         ON CONFLICT(email) DO UPDATE SET
-          mobile_number = COALESCE(excluded.mobile_number, sellers.mobile_number),
+          mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number),
           brand_name = excluded.brand_name,
           full_name = excluded.full_name,
           business_desc = excluded.business_desc,
@@ -142,6 +150,7 @@ export async function onRequest(context) {
       });
     }
 
+    // ৪. সেলার প্রোফাইল ডাটা ফেচ (GET)
     if (request.method === "GET") {
       const email = url.searchParams.get("email");
       if (!email) {
@@ -165,4 +174,6 @@ export async function onRequest(context) {
     });
   }
 }
-```[cite: 1, 4]
+```[cite: 1, 4, 19]
+
+এটি আপনার প্রজেক্টের `seller.js` ফাইলে আপডেট করে দিলে ক্লাউডফায়ারের এই এররটি চিরতরে দূর হয়ে যাবে।
