@@ -79,7 +79,7 @@
 
         .top-floating-search-bar {
             position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; z-index: 1800; display: flex;
+            width: 90%; max-width: 400px; z-index: 5500; display: flex;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
             border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
             transition: transform 0.3s ease, opacity 0.3s ease;
@@ -345,8 +345,8 @@
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Always Visible Floating Search Bar (Auto-Hides on Scroll Down in Home) -->
-    <div id="floatingSearchContainer" class="top-floating-search-bar">
+    <!-- Always Visible Floating Search Bar (Connected for both Home & Reels) -->
+    <div id="floatingSearchContainer" class="top-floating-search-bar search-hidden">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
@@ -437,11 +437,11 @@
             let lastScrollTop = 0;
             window.addEventListener('scroll', () => {
                 const reelModal = document.getElementById('reelModalOverlay');
-                if(reelModal && reelModal.style.display === 'flex') return; // Don't trigger on home when reels is open
+                if(reelModal && reelModal.style.display === 'flex') return; 
 
                 let st = window.pageYOffset || document.documentElement.scrollTop;
                 const searchBar = document.getElementById('floatingSearchContainer');
-                if(searchBar) {
+                if(searchBar && !searchBar.classList.contains('manual-open')) {
                     if (st > lastScrollTop && st > 60) {
                         searchBar.classList.add('search-hidden');
                     } else {
@@ -514,7 +514,6 @@
             }
         }
 
-        // Toggle Open/Close for Account (YOU) Portal
         function toggleAccountPortal() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
@@ -527,7 +526,6 @@
             }
         }
 
-        // Toggle Open/Close for Cart (ঝুড়ি) Portal
         function toggleCartPortal() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
@@ -625,6 +623,9 @@
             });
             activeProductList = filtered;
             renderPinterestHomeGrid(filtered);
+
+            // If we are in reels mode and user searched, close reels and show filtered home grid
+            closeReelModal();
         }
 
         function filterProductsByCategory(queryKey) {
@@ -748,11 +749,12 @@
             updateCartBadgeCount();
         }
 
-        // Working Search Action inside Reels mode
+        // Perfectly Connected Search Toggle for Reels & Home
         function toggleReelSearchBox() {
             const searchBar = document.getElementById('floatingSearchContainer');
             if(searchBar) {
                 searchBar.classList.toggle('search-hidden');
+                searchBar.classList.toggle('manual-open');
                 const input = document.getElementById('floatingSearchInput');
                 if(input && !searchBar.classList.contains('search-hidden')) {
                     input.focus();
