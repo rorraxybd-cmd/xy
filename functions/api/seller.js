@@ -26,7 +26,7 @@ export async function onRequest(context) {
   try {
     const pathname = url.pathname;
 
-    // 1. Send Magic Link & Generate Verification Token with IP, User-Agent & Country tracking
+    // 1. Send Magic Link & Check Existing Profile Status
     if (pathname.includes("/send-magic-link")) {
       if (request.method !== "POST") {
         return new Response(
@@ -52,18 +52,19 @@ export async function onRequest(context) {
         );
       }
 
-      // 100% Unique Collision-Free Lowercase Seller ID generation (rorraxy-xxxx-xxxx)
+      // Check if seller already exists and has completed profile info
+      const existingSeller = await db.prepare("SELECT * FROM sellers WHERE email = ?").bind(email).first();
+      
       const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
       const randomSuffix = Math.random().toString(36).substring(2, 8);
-      const uniqueSellerId = `rorraxy-${emailPrefix}-${randomSuffix}`;
+      const uniqueSellerId = existingSeller?.seller_id || `rorraxy-${emailPrefix}-${randomSuffix}`;
 
       const token = crypto.randomUUID();
-      const expiresAt = Date.now() + 300 * 1000; // 5 minutes expiration for security
+      const expiresAt = Date.now() + 300 * 1000; // 5 minutes expiration
       const clientIp = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for") || "Unknown";
       const ipCountry = request.headers.get("cf-ipcountry") || "BD";
       const userAgent = request.headers.get("user-agent") || "Unknown";
 
-      // Upsert seller record with verification token, IP, and tracking
       const sqlMagic = `
         INSERT INTO sellers (
           seller_id, email, mobile_number, verification_token, token_expires_at, last_ip, ip_country, user_agent, is_verified
@@ -81,12 +82,16 @@ export async function onRequest(context) {
 
       const magicLink = `https://${url.hostname}/api/seller/verify-magic?token=${token}`;
 
+      // If profile is already complete (e.g. brand_name exists), we can signal a direct dashboard bypass flag
+      const isProfileComplete = existingSeller && existingSeller.brand_name && existingSeller.full_name ? true : false;
+
       return new Response(
         JSON.stringify({ 
           success: true, 
           message: "Verification token generated successfully", 
           magicLink: magicLink,
-          seller_id: uniqueSellerId 
+          seller_id: uniqueSellerId,
+          isProfileComplete: isProfileComplete
         }),
         {
           status: 200,
@@ -95,7 +100,7 @@ export async function onRequest(context) {
       );
     }
 
-    // 2. Verify Magic Link Token Endpoint
+    // 2. Verify Magic Link Token Endpoint & Smart Redirect
     if (pathname.includes("/verify-magic")) {
       const token = url.searchParams.get("token");
       if (!token) {
@@ -114,7 +119,10 @@ export async function onRequest(context) {
 
       await db.prepare(sqlVerify).bind(now, token).run();
 
-      const redirectUrl = `https://${url.hostname}/seller/index.html?verified=true&email=${encodeURIComponent(record.email)}`;
+      // Check if user profile is already fully filled out. If yes, send directly to dashboard tab/view.
+      const isComplete = record.brand_name && record.full_name ? "true" : "false";
+      const redirectUrl = `https://${url.hostname}/seller/index.html?verified=true&email=${encodeURIComponent(record.email)}&complete=${isComplete}`;
+      
       return Response.redirect(redirectUrl, 302);
     }
 
