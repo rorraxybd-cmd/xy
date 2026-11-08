@@ -153,7 +153,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Dedicated Reels Popup Modal (Instant 9:16 vertical aspect ratio with video first & smooth image slider) */
+        /* Perfectly Optimized Instant Reels Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -174,7 +174,7 @@
             align-items: center; justify-content: center;
         }
         .reel-media-box { 
-            position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh; 
+            position: relative; width: 100%; max-width: 420px; aspect-ratio: 9 / 16; height: 100%; 
             cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
         }
         
@@ -183,39 +183,28 @@
             width: 100%; height: 100%; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
         }
 
-        /* Ultra-smooth image cross-fade slideshow classes */
+        /* Smooth cross-fade slideshow classes with perfect clarity and reduced zoom */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: opacity; transform: scale(1); animation: subtleKenBurns 8s ease-in-out infinite alternate;
+            object-fit: contain; opacity: 0; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity; transform: scale(0.98); animation: subtleKenBurns 8s ease-in-out infinite alternate;
             image-rendering: -webkit-optimize-contrast;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+            padding: 8px;
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
 
         @keyframes subtleKenBurns {
-            from { transform: scale(1); }
-            to { transform: scale(1.02); }
+            from { transform: scale(0.98); }
+            to { transform: scale(1.01); }
         }
 
         .reel-primary-video-container video {
-            width: 100%; height: 100%; object-fit: cover; display: block; background: #000;
+            width: 100%; height: 100%; object-fit: contain; display: block; background: #000;
             position: relative; z-index: 3; opacity: 1; transition: opacity 0.8s ease;
             image-rendering: -webkit-optimize-contrast;
-        }
-        .slide-layer.active { opacity: 1; z-index: 2; }
-        .slide-layer.previous { opacity: 0; z-index: 1; }
-
-        @keyframes subtleKenBurns {
-            from { transform: scale(1); }
-            to { transform: scale(1.04); }
-        }
-
-        .reel-primary-video-container video {
-            width: 100%; height: 100%; object-fit: cover; display: block; background: #000;
-            position: relative; z-index: 3; opacity: 1; transition: opacity 0.8s ease;
         }
 
         .reel-bottom-price-overlay {
@@ -401,7 +390,7 @@
         </div>
     </main>
 
-    <!-- Dedicated Reels Popup Modal (Instant 9:16 vertical aspect ratio with video first & slideshow strip) -->
+    <!-- Dedicated Reels Popup Modal (Instant 9:16 vertical aspect ratio with video first & slideshow) -->
     <div id="reelModalOverlay" class="reel-modal-overlay" onclick="if(event.target===this) closeReelModal()">
         <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
     </div>
@@ -428,23 +417,6 @@
             buildCategoriesUI();
             loadLiveProducts();
             updateCartBadgeCount();
-
-            // Keyboard navigation for Desktop Up / Down Arrow Keys
-            window.addEventListener('keydown', (e) => {
-                const overlay = document.getElementById('reelModalOverlay');
-                if (overlay && overlay.style.display === 'flex') {
-                    const wrapper = document.getElementById('reelModalWrapperBody');
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        wrapper.scrollBy({ top: wrapper.clientHeight, behavior: 'smooth' });
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        wrapper.scrollBy({ top: -wrapper.clientHeight, behavior: 'smooth' });
-                    } else if (e.key === 'Escape') {
-                        closeReelModal();
-                    }
-                }
-            });
 
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
@@ -502,7 +474,38 @@
                 searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
+
+            window.addEventListener('keydown', (e) => {
+                const overlay = document.getElementById('reelModalOverlay');
+                if (overlay && overlay.style.display === 'flex') {
+                    const wrapper = document.getElementById('reelModalWrapperBody');
+                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                        e.preventDefault();
+                        if (currentReelIndex < list.length - 1) {
+                            currentReelIndex++;
+                            scrollToReelIndex(currentReelIndex, wrapper);
+                        }
+                    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                        e.preventDefault();
+                        if (currentReelIndex > 0) {
+                            currentReelIndex--;
+                            scrollToReelIndex(currentReelIndex, wrapper);
+                        }
+                    }
+                }
+            });
         });
+
+        function scrollToReelIndex(idx, wrapper) {
+            const targetCard = wrapper.querySelector(`[data-index="${idx}"]`);
+            if (targetCard) {
+                targetCard.scrollIntoView({ behavior: 'smooth' });
+                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
+                renderFixedGlobalActions(activeId, false);
+            }
+        }
 
         function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
@@ -656,7 +659,6 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
                 
-                // Open Reels vertical popup modal instantly on touch/click with luxurious entry
                 cardDiv.onclick = (e) => {
                     e.preventDefault();
                     currentReelIndex = index;
@@ -742,113 +744,31 @@
             slideIntervalsMap = {};
         }
 
-        function openReelsModal(startIndex) {
-            const overlay = document.getElementById('reelModalOverlay');
-            const wrapper = document.getElementById('reelModalWrapperBody');
-            overlay.style.display = 'flex';
-            clearAllSlideIntervals();
-
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            let reelsHtml = '';
-
-            list.forEach((product, idx) => {
-                let pId = String(product.id || product.product_id || '101');
-                let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
-                let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
-
-                reelsHtml += `
-                    <div class="reel-card" data-index="${idx}" data-product-id="${pId}">
-                        <div class="reel-media-box" onclick="openBuyPreviewModal(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
-                            <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">
-                                <!-- Media rendered dynamically -->
-                            </div>
-                            <div class="reel-bottom-price-overlay">
-                                <span class="reel-center-price-badge">${price}</span>
-                                ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            wrapper.innerHTML = reelsHtml;
-
-            setTimeout(() => {
-                const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
-                if (targetCard) {
-                    wrapper.scrollTop = targetCard.offsetTop;
-                    activateReelMedia(startIndex);
-                }
-            }, 10);
-
-            let scrollTimer = null;
-            wrapper.onscroll = () => {
-                clearTimeout(scrollTimer);
-                scrollTimer = setTimeout(() => {
-                    let cardHeight = wrapper.clientHeight;
-                    let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
-                    if (calculatedIdx >= 0 && calculatedIdx < list.length && calculatedIdx !== currentReelIndex) {
-                        currentReelIndex = calculatedIdx;
-                        let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
-                        renderFixedGlobalActions(activeId, false);
-                        activateReelMedia(currentReelIndex);
-                    }
-                }, 40);
-            };
-
-            let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
-            renderFixedGlobalActions(activeId, false);
-        }
-
-        function activateReelMedia(cardIdx) {
-            clearAllSlideIntervals();
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            let product = list[cardIdx];
-            if (!product) return;
-
-            // Preload next reel assets for zero-lag smooth scrolling
-            let nextProduct = list[cardIdx + 1];
-            if (nextProduct) {
-                try {
-                    let nextImgs = typeof nextProduct.images_json === 'string' ? JSON.parse(nextProduct.images_json) : nextProduct.images_json;
-                    if (Array.isArray(nextImgs) && nextImgs[0]) {
-                        const imgPreload = new Image();
-                        imgPreload.src = nextImgs[0];
-                    }
-                } catch(e){}
-            }
-
-            const container = document.getElementById(`primaryMediaBox_${cardIdx}`);
-            if (!container) return;
-
-            let pVideo = product.video_url || product.youtube_video || '';
-            let extractedImages = [];
-
+        function playLuxuryFashionChime() {
             try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) extractedImages = parsed;
-                } else if(product.image_url) extractedImages = [product.image_url];
-            } catch(e){}
-
-            if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-
-            const hasVideo = pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'));
-
-            if (hasVideo) {
-                container.innerHTML = `<video id="activeReelVideo_${cardIdx}" src="${pVideo}" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>`;
-                const vidElem = document.getElementById(`activeReelVideo_${cardIdx}`);
-                if (vidElem) {
-                    vidElem.onended = () => {
-                        startImageSlideshow(cardIdx, container, extractedImages);
-                    };
-                }
-            } else {
-                startImageSlideshow(cardIdx, container, extractedImages);
-            }
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+                const notes = [440.00, 554.37, 659.25, 880.00]; 
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
+                    
+                    gain.gain.setValueAtTime(0, now + (idx * 0.08));
+                    gain.gain.linearRampToValueAtTime(0.02, now + (idx * 0.08) + 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.08) + 1.2);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + (idx * 0.08));
+                    osc.stop(now + (idx * 0.08) + 1.2);
+                });
+            } catch (e) {}
         }
 
-        /* Ultra-Smooth Cross-Fade Image Slideshow without Blank/Flicker */
         function startImageSlideshow(cardIdx, container, images) {
             if (!container) return;
 
@@ -873,14 +793,110 @@
                         nextSlide.classList.remove('previous');
                         nextSlide.classList.add('active');
 
+                        playLuxuryFashionChime();
+
                         setTimeout(() => {
                             currSlide.classList.remove('previous');
-                        }, 1200);
+                        }, 1000);
                     }
 
                     currentIdx = nextIdx;
-                }, 3200); // 3.2s timing for realistic luxury video-like feel
+                }, 3500);
             }
+        }
+
+        function openReelsModal(startIndex) {
+            const overlay = document.getElementById('reelModalOverlay');
+            const wrapper = document.getElementById('reelModalWrapperBody');
+            overlay.style.display = 'flex';
+            clearAllSlideIntervals();
+
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            let reelsHtml = '';
+
+            list.forEach((product, idx) => {
+                let pId = String(product.id || product.product_id || '101');
+                let pVideo = product.video_url || product.youtube_video || '';
+                let extractedImages = [];
+
+                try {
+                    if(product.images_json) {
+                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                        if(Array.isArray(parsed)) extractedImages = parsed;
+                    } else if(product.image_url) extractedImages = [product.image_url];
+                } catch(e){}
+
+                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+
+                let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
+                let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
+
+                reelsHtml += `
+                    <div class="reel-card" data-index="${idx}" data-product-id="${pId}">
+                        <div class="reel-media-box" onclick="openBuyPreviewModal(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
+                            <div class="reel-bottom-price-overlay">
+                                <span class="reel-center-price-badge">${price}</span>
+                                ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
+                            </div>
+                            <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            wrapper.innerHTML = reelsHtml;
+
+            list.forEach((product, idx) => {
+                let pVideo = product.video_url || product.youtube_video || '';
+                let extractedImages = [];
+                try {
+                    if(product.images_json) {
+                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                        if(Array.isArray(parsed)) extractedImages = parsed;
+                    } else if(product.image_url) extractedImages = [product.image_url];
+                } catch(e){}
+                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+
+                const mediaBox = document.getElementById(`primaryMediaBox_${idx}`);
+                if (mediaBox) {
+                    if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                        mediaBox.innerHTML = `<video id="video_${idx}" src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+                        const vid = document.getElementById(`video_${idx}`);
+                        if (vid) {
+                            vid.onended = () => {
+                                startImageSlideshow(idx, mediaBox, extractedImages);
+                            };
+                        }
+                    } else {
+                        startImageSlideshow(idx, mediaBox, extractedImages);
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
+                if (targetCard) {
+                    wrapper.scrollTop = targetCard.offsetTop;
+                }
+            }, 10);
+
+            let scrollTimer = null;
+            wrapper.onscroll = () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                    let cardHeight = wrapper.clientHeight;
+                    let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
+                    if (calculatedIdx >= 0 && calculatedIdx < list.length) {
+                        currentReelIndex = calculatedIdx;
+                        let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
+                        renderFixedGlobalActions(activeId, false);
+                    }
+                }, 30);
+            };
+
+            let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
+            renderFixedGlobalActions(activeId, false);
         }
 
         function closeReelModal() {
