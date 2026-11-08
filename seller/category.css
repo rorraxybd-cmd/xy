@@ -1,0 +1,80 @@
+/* ========================================================================== /
+/ rorraxy - Modular Category Stylesheet                                      /
+/ ========================================================================== */
+
+.category-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 12px;
+width: 100%;
+}
+
+@media(min-width: 768px) {
+.category-grid {
+grid-template-columns: repeat(4, 1fr);
+}
+}
+
+.cat-box, .mode-box {
+background: #000000;
+border-radius: 12px;
+padding: 18px 10px;
+text-align: center;
+cursor: pointer;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 10px;
+width: 100%;
+min-height: 105px;
+border: 1px solid rgba(212, 175, 55, 0.15);
+transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cat-box:hover, .mode-box:hover, .cat-box.clicked, .mode-box.clicked {
+background: #121008;
+border-color: rgba(212, 175, 55, 0.5);
+box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+transform: translateY(-2px);
+}
+
+.cat-box.clicked span, .mode-box.clicked span {
+color: #d4af37;
+}
+
+.cat-box i, .mode-box i {
+font-size: 1.8rem;
+background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.cat-box span, .mode-box span {
+font-size: 0.7rem;
+font-weight: 700;
+color: #ffffff;
+text-align: center;
+line-height: 1.3;
+letter-spacing: 0.5px;
+}
+
+.back-cat-btn {
+background: #000;
+color: #d4af37;
+padding: 10px 16px;
+border-radius: 10px;
+font-size: 0.8rem;
+font-weight: 700;
+margin-bottom: 16px;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+border: 1px solid rgba(212, 175, 55, 0.35);
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.back-cat-btn:hover {
+background: rgba(212, 175, 55, 0.1);
+}
