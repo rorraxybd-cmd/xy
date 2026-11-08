@@ -38,24 +38,29 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
-        body { padding: 14px 12px 110px 12px; text-transform: uppercase; }
+        
+        body { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 12px 100px 12px; text-transform: uppercase; 
+            min-height: 100vh;
+        }
 
-        .main-container { width: 100%; max-width: 950px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        .main-container { width: 100%; max-width: 900px; margin: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         .app-view { display: none; width: 100%; animation: fadeIn 0.2s ease-in-out; }
-        .app-view.active { display: block; }
+        .app-view.active { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(3px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .dashboard-header { text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
-        .header-logo-img { width: 65px; height: 65px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.15)); }
+        .dashboard-header { text-align: center; margin-bottom: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        .header-logo-img { width: 90px; height: 90px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.2)); }
         .dashboard-header h1, .gold-title-gradient { font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dashboard-header h1 { font-size: 1.3rem; letter-spacing: 0.5px; }
+        .dashboard-header h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
 
-        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 22px 18px; margin-bottom: 18px; width: 100%; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 24px 18px; margin-bottom: 18px; width: 100%; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); text-align: left; }
         .info-card-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
 
         .step-tracker { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; width: 100%; max-width: 400px; }
@@ -84,7 +89,7 @@
         .form-select option { background: #06060a; color: #fff; }
 
         .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
-        .country-code-select { background: #040407; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.06); padding: 11px 10px; font-size: 0.8rem; font-weight: 700; outline: none; cursor: pointer; }
+        .country-code-select { background: #040407; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.06); padding: 11px 10px; font-size: 0.8rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
         .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
 
         .status-msg { font-size: 0.72rem; text-transform: none; display: none; text-align: center; padding: 10px; border-radius: 8px; margin-top: 10px; }
@@ -161,28 +166,43 @@
 
                 <form id="magicLinkForm" style="max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
                     <div class="form-group">
-                        <label>AUTHENTIC EMAIL (GMAIL, YAHOO, OUTLOOK, APPLE)<span class="req-star">*</span></label>
-                        <input type="email" class="form-control" id="sellerEmail" placeholder="name@gmail.com" value="masudaridem@gmail.com" required style="text-transform: none;">
+                        <label>EMAIL (GMAIL / APPLE / OUTLOOK / YAHOO)<span class="req-star">*</span></label>
+                        <input type="email" class="form-control" id="sellerEmail" placeholder="e.g. name@gmail.com / apple.com / outlook.com / yahoo.com" value="" required style="text-transform: none;">
                     </div>
 
                     <div class="form-group">
-                        <label>MOBILE NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <label>MOBILE NUMBER<span class="req-star">*</span></label>
                         <div class="phone-input-group">
                             <select class="country-code-select" id="countryDialCode">
-                                <option value="+880" selected>🇧🇩 +880</option>
-                                <option value="+91">🇮🇳 +91</option>
-                                <option value="+92">🇵🇰 +92</option>
-                                <option value="+971">🇦🇪 +971</option>
-                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+880" selected>🇧🇩 +880 (Bangladesh)</option>
+                                <option value="+91">🇮🇳 +91 (India)</option>
+                                <option value="+92">🇵🇰 +92 (Pakistan)</option>
+                                <option value="+971">🇦🇪 +971 (UAE)</option>
+                                <option value="+1">🇺🇸 +1 (USA/Canada)</option>
+                                <option value="+44">🇬🇧 +44 (UK)</option>
+                                <option value="+966">🇸🇦 +966 (Saudi Arabia)</option>
+                                <option value="+60">🇲🇾 +60 (Malaysia)</option>
+                                <option value="+65">🇸🇬 +65 (Singapore)</option>
+                                <option value="+61">🇦🇺 +61 (Australia)</option>
+                                <option value="+49">🇩🇪 +49 (Germany)</option>
+                                <option value="+33">🇫🇷 +33 (France)</option>
+                                <option value="+81">🇯🇵 +81 (Japan)</option>
+                                <option value="+86">🇨🇳 +86 (China)</option>
+                                <option value="+39">🇮🇹 +39 (Italy)</option>
+                                <option value="+34">🇪🇸 +34 (Spain)</option>
+                                <option value="+55">🇧🇷 +55 (Brazil)</option>
+                                <option value="+27">🇿🇦 +27 (South Africa)</option>
+                                <option value="+82">🇰🇷 +82 (South Korea)</option>
+                                <option value="+62">🇮🇩 +62 (Indonesia)</option>
                             </select>
-                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" value="01733208886" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
+                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" value="" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                     </div>
                     
                     <div id="formStatus" class="status-msg"></div>
 
                     <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 6px;">
-                        VERIFY & GENERATE SELLER ID <i class="fa-solid fa-arrow-right"></i>
+                        VERIFY <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </form>
             </div>
@@ -198,9 +218,9 @@
                 <div id="profilePreviewSection" style="display: none;">
                     <div style="display: flex; flex-direction: column; gap: 14px;">
                         <div style="display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-soft); padding-bottom: 14px;">
-                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                             <div>
-                                <h2 id="prevBrandName" style="font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">--</h2>
+                                <h2 id="prevBrandName" style="font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">--</h2>
                                 <p id="prevBusinessDesc" style="font-size: 0.68rem; color: var(--text-gray); text-transform: none; margin-top: 2px;">--</p>
                             </div>
                         </div>
@@ -242,7 +262,7 @@
                             <input type="text" class="form-control" id="fullName" placeholder="Owner Name" required>
                         </div>
                         <div class="form-group">
-                            <label>WHATSAPP (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <label>WHATSAPP<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="whatsappNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                         <div class="form-group full-width">
@@ -250,7 +270,7 @@
                             <textarea class="form-control" id="businessDesc" rows="2" maxlength="200" placeholder="Briefly describe products..." required style="text-transform: none;"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>EMERGENCY PHONE (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <label>EMERGENCY PHONE<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="phoneNum" placeholder="01800000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                         <div class="form-group">
@@ -276,7 +296,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>DOCUMENT NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <label>DOCUMENT NUMBER<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="docNumberInput" placeholder="Enter ID number..." pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                         <div class="form-group full-width">
@@ -293,7 +313,7 @@
 
         <!-- ================= 2. DASHBOARD VIEW WITH CHARTS ================= -->
         <div id="view-dashboard" class="app-view">
-            <div style="text-align: center; margin-bottom: 18px;">
+            <div style="text-align: center; margin-bottom: 18px; width: 100%;">
                 <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); color: #fff;">
                     <i class="fa-solid fa-qrcode"></i> SYNC DEVICE & QR
                 </button>
@@ -358,11 +378,11 @@
                 <div class="step-prog-item" id="prog-ind-5"><div class="step-prog-circle">5</div><div class="step-prog-title">DETAILS</div></div>
             </div>
 
-            <form id="masterUniversalForm" onsubmit="submitMasterForm(event)">
+            <form id="masterUniversalForm" onsubmit="submitMasterForm(event)" style="width: 100%;">
                 <input type="hidden" id="editingProductId" value="">
                 
                 <!-- STEP 1: UPLOAD MODE -->
-                <div class="step-section active-step" id="upload-step-1">
+                <div class="step-section active-step" id="upload-step-1" style="width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-layer-group"></i> SELECT UPLOAD MODE</div>
                         <div class="mode-grid">
@@ -371,13 +391,10 @@
                             <div class="mode-box" onclick="selectUploadMode('both', this)"><i class="fa-solid fa-circle-nodes"></i><span>BOTH</span></div>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: flex-end;">
-                        <button type="button" id="upload-next-btn-1" class="btn-gold" onclick="nextUploadStep(2)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
-                    </div>
                 </div>
 
                 <!-- STEP 2: CATEGORY (CATEGORY.JS & CATEGORY.CSS) -->
-                <div class="step-section" id="upload-step-2" style="display:none;">
+                <div class="step-section" id="upload-step-2" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-border-all"></i> SELECT CATEGORY</div>
                         <div id="main-categories" class="category-grid">
@@ -394,13 +411,10 @@
                             <div id="sub-cat-content" class="category-grid" style="margin-top: 12px;"></div>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-                    </div>
                 </div>
 
                 <!-- STEP 3: MEDIA -->
-                <div class="step-section" id="upload-step-3" style="display:none;">
+                <div class="step-section" id="upload-step-3" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-images"></i> PRODUCT IMAGES</div>
                         <div class="preview-container" id="image-preview"></div>
@@ -429,14 +443,10 @@
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-                        <button type="button" id="upload-next-btn-3" class="btn-gold" onclick="nextUploadStep(4)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
-                    </div>
                 </div>
 
                 <!-- STEP 4: PRICING -->
-                <div class="step-section" id="upload-step-4" style="display:none;">
+                <div class="step-section" id="upload-step-4" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-tag"></i> PRICING & STOCK</div>
                         <div class="form-grid" id="retail-price-row">
@@ -487,14 +497,10 @@
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-                        <button type="button" class="btn-gold" onclick="nextUploadStep(5)">NEXT <i class="fa-solid fa-arrow-right"></i></button>
-                    </div>
                 </div>
 
                 <!-- STEP 5: DETAILS -->
-                <div class="step-section" id="upload-step-5" style="display:none;">
+                <div class="step-section" id="upload-step-5" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> PRODUCT DETAILS</div>
                         <div class="form-group full-width" style="margin-bottom: 12px;">
@@ -512,10 +518,7 @@
                             </label>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-                        <button type="submit" class="btn-gold" id="publishProductBtn"><i class="fa-solid fa-check"></i> PUBLISH PRODUCT</button>
-                    </div>
+                    <button type="submit" class="btn-gold" id="publishProductBtn" style="width: 100%;"><i class="fa-solid fa-check"></i> PUBLISH PRODUCT</button>
                 </div>
 
             </form>
@@ -574,13 +577,13 @@
                     <!-- Dynamic Payment Input Fields -->
                     <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 12px;">
                         <div class="form-group">
-                            <label id="payoutLabel1">MOBILE NUMBER / ACCOUNT NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <label id="payoutLabel1">MOBILE NUMBER<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="payInput1" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-top: 12px;">
-                        <label>RE-VERIFY REGISTERED MOBILE NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <label>REGISTERED MOBILE NUMBER<span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="01733208886" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                     </div>
 
@@ -678,6 +681,35 @@
             return isVerified && infoCompleted;
         }
 
+        // Auto-detect User Country Dial Code & IP Geo
+        async function autoDetectCountryCode() {
+            try {
+                const res = await fetch('https://ipapi.co/json/').catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    const dialCode = data.country_calling_code || "+880";
+                    const select = document.getElementById('countryDialCode');
+                    if (select) {
+                        for (let opt of select.options) {
+                            if (opt.value === dialCode) {
+                                select.value = dialCode;
+                                break;
+                            }
+                        }
+                    }
+                    const countrySelect = document.getElementById('countrySelect');
+                    if (countrySelect && data.country_name) {
+                        for (let opt of countrySelect.options) {
+                            if (opt.value.toLowerCase() === data.country_name.toLowerCase()) {
+                                countrySelect.value = opt.value;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {}
+        }
+
         function switchTab(tabName) {
             if (tabName !== 'info' && !isSellerVerifiedAndComplete()) {
                 showCustomNotify("PLEASE COMPLETE SELLER VERIFICATION AND PROFILE INFO FIRST!", false);
@@ -732,7 +764,7 @@
                         <input type="text" class="form-control" id="payBranchName" placeholder="e.g. Gulshan Branch" required style="text-transform: none;">
                     </div>
                     <div class="form-group">
-                        <label>ACCOUNT NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <label>ACCOUNT NUMBER<span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payAccNum" placeholder="102030405060" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                     </div>
                 `;
@@ -746,7 +778,7 @@
             } else {
                 container.innerHTML = `
                     <div class="form-group">
-                        <label>${gw.toUpperCase()} MOBILE NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <label>${gw.toUpperCase()} MOBILE NUMBER<span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                     </div>
                 `;
@@ -831,7 +863,6 @@
             document.querySelectorAll('.mode-box').forEach(b => b.classList.remove('clicked'));
             element.classList.add('clicked');
             selectedModeValue = mode;
-            document.getElementById('upload-next-btn-1').disabled = false;
 
             const wholesaleRow = document.getElementById('wholesale-price-row');
             const moqGroup = document.getElementById('moq-input-group');
@@ -842,6 +873,8 @@
                 wholesaleRow.style.display = 'none';
                 moqGroup.style.display = 'none';
             }
+            
+            setTimeout(() => { nextUploadStep(2); }, 200);
         }
 
         async function uploadLogoToR2(event) {
@@ -901,7 +934,7 @@
 
             labelTxt.innerText = "UPLOAD IMAGES";
             if (uploadedImageUrls.length > 0) {
-                document.getElementById('upload-next-btn-3').disabled = false;
+                setTimeout(() => { nextUploadStep(4); }, 300);
             }
         };
 
@@ -949,7 +982,6 @@
             document.getElementById('image-preview').innerHTML = "";
             document.getElementById('video-preview').innerHTML = "";
             window.selectedCategoryValue = "";
-            document.getElementById('upload-next-btn-3').disabled = true;
             document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH PRODUCT';
         }
 
@@ -1146,7 +1178,6 @@
                     previewContainer.appendChild(card);
                 });
 
-                document.getElementById('upload-next-btn-3').disabled = false;
                 document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> UPDATE PRODUCT';
 
                 switchTab('upload');
@@ -1186,14 +1217,14 @@
                 const btn = document.getElementById('sendLinkBtn');
 
                 if (!email || !isAuthenticEmail(email)) {
-                    statusEl.innerText = "Please enter an authentic email (Gmail, Outlook, Yahoo, Apple).";
+                    statusEl.innerText = "Please enter an authentic email (Gmail, Apple, Outlook, Yahoo).";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
                 }
 
                 if (!rawPhone || rawPhone.length < 5) {
-                    statusEl.innerText = "Please enter a valid mobile number (digits only).";
+                    statusEl.innerText = "Please enter a valid mobile number.";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
@@ -1242,7 +1273,7 @@
                     document.getElementById('stepTracker2').className = 'step-item active';
                 } finally {
                     btn.disabled = false;
-                    btn.innerText = "VERIFY & GENERATE SELLER ID";
+                    btn.innerText = "VERIFY";
                 }
             });
         }
@@ -1326,6 +1357,8 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
+            autoDetectCountryCode();
+
             if (isSellerVerifiedAndComplete()) {
                 const savedEmail = localStorage.getItem('rorraxy_seller_email') || "";
                 if (savedEmail) {
@@ -1334,14 +1367,17 @@
                         const result = await res.json();
                         if (result.success && result.data && result.data.length > 0) {
                             renderCvPreview(result.data[0]);
+                            // Automatically route to dashboard if storage session is active
+                            switchTab('dashboard');
+                            return;
                         }
                     } catch (e) {}
                 }
             } else {
-                const savedEmail = localStorage.getItem('rorraxy_seller_email') || "masudaridem@gmail.com";
-                if (savedEmail) {
-                    document.getElementById('sellerEmail').value = savedEmail;
-                }
+                const emailInput = document.getElementById('sellerEmail');
+                const phoneInput = document.getElementById('sellerPhone');
+                if (emailInput) emailInput.value = "";
+                if (phoneInput) phoneInput.value = "";
             }
         });
     </script>
