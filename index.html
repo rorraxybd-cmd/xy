@@ -50,18 +50,20 @@
             -webkit-font-smoothing: antialiased;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            transform: translateZ(0);
         }
 
         body { margin: 0; padding: 0 0 75px 0; }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* প্রিমিয়াম প্রি-লোডার */
+        /* প্রিমিয়াম প্রি-লোডার (সুপার স্মুথ লাক্সারি ভাব) */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity;
         }
         .loader-logo-box {
             width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
@@ -79,10 +81,11 @@
         }
 
         .animate-card-entry {
-            animation: fadeInFast 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: fadeInFast 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            will-change: transform, opacity;
         }
         @keyframes fadeInFast {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -166,7 +169,7 @@
             width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
             position: fixed; top: 0; left: 0; background: #000; 
             overflow-y: scroll; scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth;
+            scroll-behavior: auto; /* ঝাঁকুনি এড়াতে স্মুথ থেকে অটো করা হয়েছে ইনস্ট্যান্ট জাম্পের জন্য */
             -webkit-overflow-scrolling: touch; z-index: 10;
             scrollbar-width: none;
         }
@@ -394,9 +397,9 @@
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 400);
+                    setTimeout(() => loader.style.display = 'none', 300);
                 }
-            }, 300);
+            }, 250);
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -473,7 +476,7 @@
             const container = document.getElementById('appContainer');
             const targetCard = container.querySelector(`[data-index="${idx}"]`);
             if (targetCard) {
-                targetCard.scrollIntoView({ behavior: 'smooth' });
+                targetCard.scrollIntoView({ behavior: 'auto' });
                 let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                 let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
                 renderFixedGlobalActions(container, activeId);
@@ -541,7 +544,7 @@
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = shuffleArray([...parsed]);
+                        globalMasterProductsList = [...parsed]; // অর্ডারের ধারাবাহিকতা রক্ষার জন্য শাফেল তুলে দেওয়া হয়েছে
                         activeProductList = globalMasterProductsList;
                         if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
                     }
@@ -556,20 +559,12 @@
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    globalMasterProductsList = shuffleArray([...productsList]);
+                    globalMasterProductsList = [...productsList];
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     activeProductList = globalMasterProductsList;
                     if(isPinterestHomeMode) renderPinterestHomeGrid(globalMasterProductsList);
                 }
             } catch (error) {}
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
         }
 
         function executeHeaderSearch(keyword) {
@@ -643,7 +638,7 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
                 
-                // ডাইরেক্ট ক্লিক করা মাত্র নির্দিষ্ট রিলসে চলে যাওয়ার ফাংশন
+                // হোম পেজের যেকোনো প্রোডাক্টে ক্লিক করলে কোনো ব্ল্যাংক বা স্লো এনিমেশন ছাড়াই সরাসরি নির্দিষ্ট রিলসে চলে যাবে
                 cardDiv.onclick = () => {
                     isPinterestHomeMode = false;
                     currentReelIndex = index;
@@ -794,13 +789,13 @@
 
             container.innerHTML = reelsHtml;
 
-            // সরাসরি নির্দিষ্ট ইনডেক্সে জাম্প করবে, কোনো ফেড-ইন বা অটো-স্ক্রল অ্যানিমেশন হ্যাম্পার করবে না
+            // কোনো ল্যাগ বা ব্লাঙ্ক স্ক্রিন ছাড়া সরাসরি নির্দিষ্ট প্রোডাক্টের রিলসে ইনস্ট্যান্ট পজিশনিং
             setTimeout(() => {
                 const targetCard = container.querySelector(`[data-index="${currentReelIndex}"]`);
                 if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'auto' });
+                    targetCard.scrollIntoView({ behavior: 'auto', block: 'start' });
                 }
-            }, 10);
+            }, 0);
 
             let scrollTimer = null;
             container.onscroll = () => {
@@ -813,7 +808,7 @@
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
                         renderFixedGlobalActions(container, activeId, false);
                     }
-                }, 40);
+                }, 30);
             };
 
             let activeId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
