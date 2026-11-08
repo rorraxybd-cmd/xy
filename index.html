@@ -41,12 +41,6 @@
             --font-main: 'Poppins', sans-serif;
         }
 
-        /* 100% Global Scrollbar Removal for Clean UI */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
         html, body { 
             width: 100%; max-width: 100vw; overflow-x: hidden; 
             background: var(--bg-retail) !important; 
@@ -54,31 +48,40 @@
             min-height: 100vh; font-size: 14px;
             -webkit-font-smoothing: antialiased;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none !important;
-            -ms-overflow-style: none !important;
+            scrollbar-width: none;
         }
 
         body { margin: 0; padding: 0 0 75px 0; }
-        ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* Fast Responsive Loader Overlay */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.15s ease, visibility 0.15s ease;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
         .loader-logo-box {
-            width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 20px rgba(212,175,55,0.4);
+            width: 85px; height: 85px; border-radius: 50%; overflow: hidden;
+            border: 2px solid var(--gold-solid); box-shadow: 0 0 35px rgba(212,175,55,0.5);
+            animation: pulseGlow 1.2s infinite alternate ease-in-out;
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .loader-brand-name {
-            font-size: 1.1rem; font-weight: 800; letter-spacing: 3px;
+            font-size: 1.2rem; font-weight: 800; letter-spacing: 3px;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        @keyframes pulseGlow {
+            from { transform: scale(0.92); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
+            to { transform: scale(1.08); box-shadow: 0 0 35px rgba(212,175,55,0.8); }
+        }
 
-        /* Top Search Bar */
+        .animate-card-entry { animation: fadeInLuxury 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeInLuxury {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         .top-floating-search-bar {
             position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: none;
@@ -96,17 +99,16 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Fixed Bottom Nav Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center; position: relative;
+            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
         }
         .bottom-nav-item:active { transform: scale(0.95); }
         .bottom-nav-item i { 
@@ -119,25 +121,21 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
-        /* High-Performance Pinterest Grid */
         .pinterest-feed-container {
             padding: 10px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
         }
         @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 15px; } }
 
         .product-card {
-            background: #08080c; border-radius: 12px; overflow: hidden; 
-            display: inline-block; width: 100%; border: 1px solid rgba(255,255,255,0.08); 
+            background: transparent; border-radius: 14px; overflow: hidden; 
+            display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            will-change: transform; transition: transform 0.1s ease;
+            transition: transform 0.2s ease;
         }
         .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
-        .product-media-box img { 
-            width: 100%; height: 100%; display: block; object-fit: cover;
-            backface-visibility: hidden; transform: translateZ(0);
-        }
+        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; }
 
         .corner-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 45;
@@ -151,11 +149,11 @@
             background: var(--gold-gradient) !important; 
             -webkit-background-clip: text !important; 
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0px 2px 4px #000000);
+            filter: drop-shadow(0px 2px 4px #000000) drop-shadow(0px 0px 6px #000000);
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Optimized Reels Fullscreen Modal */
+        /* Instant Clean Reels Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -164,43 +162,53 @@
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
-            scrollbar-width: none !important; -ms-overflow-style: none !important;
+            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; border-left: 1px solid rgba(212,175,55,0.15); border-right: 1px solid rgba(212,175,55,0.15);
         }
-        .reel-modal-wrapper::-webkit-scrollbar { display: none !important; width: 0 !important; }
-        
-        .reel-card {
-            position: relative; width: 100%; height: 100vh; height: 100dvh;
-            scroll-snap-align: start; scroll-snap-stop: always; background: #000;
-            overflow: hidden;
-        }
-        .reel-media-box {
-            width: 100%; height: 100%; position: relative; cursor: pointer;
-        }
+        .reel-modal-wrapper::-webkit-scrollbar { display: none; }
 
-        /* Optimized Slide Container */
+        .reel-card { 
+            width: 100%; height: 100vh; height: 100dvh; 
+            scroll-snap-align: start; scroll-snap-stop: always;
+            display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
+            align-items: center; justify-content: center;
+        }
+        .reel-media-box { 
+            position: relative; width: 100%; max-width: 420px; aspect-ratio: 9 / 16; max-height: 88vh; 
+            cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            border-radius: 16px; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+        
+        /* Smooth Video & Cross-Fade Slideshow Container */
         .reel-primary-video-container {
             width: 100%; height: 100%; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
         }
+        .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
+        /* Cross-fade slideshow layers with Dynamic Zoom-In & Zoom-Out */
         .slide-layer {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: contain; opacity: 0; display: none;
-            background: #000; padding: 4px;
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, transform;
+            animation: dynamicZoomInOut 12s ease-in-out infinite alternate;
+            image-rendering: -webkit-optimize-contrast; backface-visibility: hidden;
         }
-        
-        .slide-layer.active { opacity: 1; display: block; z-index: 2; }
+        .slide-layer.active { opacity: 1; z-index: 2; }
+        .slide-layer.previous { opacity: 0; z-index: 1; }
 
-        .reel-primary-video-container video {
-            width: 100%; height: 100%; object-fit: contain; display: block; background: #000;
-            position: relative; z-index: 3;
+        @keyframes dynamicZoomInOut {
+            0% { transform: scale(1.0); }
+            50% { transform: scale(1.06); }
+            100% { transform: scale(1.0); }
         }
 
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
             gap: 8px; padding: 6px 18px; border-radius: 20px;
-            background: rgba(8, 8, 14, 0.92) !important;
+            background: rgba(8, 8, 14, 0.88) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(212, 175, 55, 0.6);
             box-shadow: 0 6px 20px rgba(0,0,0,0.9);
         }
@@ -219,7 +227,7 @@
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto; width: 45px;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; width: 100%; }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
         .side-action-item:active { transform: scale(0.9); }
         .action-pure-icon { 
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
@@ -240,10 +248,11 @@
 
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.7); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px; scrollbar-width: none !important; -ms-overflow-style: none !important;
+            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px;
+            scrollbar-width: none;
         }
-        .overlay-sheet::-webkit-scrollbar { display: none !important; width: 0 !important; }
+        .overlay-sheet::-webkit-scrollbar { display: none; }
 
         .buy-preview-modal {
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
@@ -252,9 +261,9 @@
         }
         .preview-horizontal-scroll {
             display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;
-            scrollbar-width: none !important; -ms-overflow-style: none !important;
+            scrollbar-width: none;
         }
-        .preview-horizontal-scroll::-webkit-scrollbar { display: none !important; width: 0 !important; }
+        .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
 
         .preview-img-item {
             flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
@@ -264,21 +273,21 @@
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Flying Coin FX */
         .flying-gold-coin {
-            position: fixed; z-index: 9999999; width: 34px; height: 34px; border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
-            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
-            box-shadow: 0 0 20px rgba(212,175,55,0.9);
-            transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), top 0.35s cubic-bezier(0.25, 1, 0.5, 1), transform 0.35s ease-out, opacity 0.35s ease-in;
+            position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
+            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8);
+            transition: left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.4s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.4s linear, opacity 0.4s ease-in;
         }
 
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
-            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); scrollbar-width: none !important; -ms-overflow-style: none !important;
+            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
+            scrollbar-width: none;
         }
-        .inpage-details-modal::-webkit-scrollbar { display: none !important; width: 0 !important; }
+        .inpage-details-modal::-webkit-scrollbar { display: none; }
 
         .fullscreen-iframe-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px);
@@ -288,16 +297,17 @@
 
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px; scrollbar-width: none !important; -ms-overflow-style: none !important;
+            background: rgba(0, 0, 0, 0.3) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 85px 15px;
+            scrollbar-width: none;
         }
-        .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none !important; width: 0 !important; }
-
+        .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none; }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
         .accordion-category-box { background: rgba(10, 10, 15, 0.95) !important; border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
-        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
+        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
         .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
         .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
@@ -310,9 +320,10 @@
         .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .sub-cat-item {
             background: rgba(15, 15, 22, 0.92); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
         }
         .sub-cat-item:active { transform: scale(0.96); }
+        .sub-cat-item:hover { background: rgba(25, 25, 35, 1); border-color: rgba(212, 175, 55, 0.6); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
@@ -402,12 +413,13 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
-            // Fast Hide Loader
-            const loader = document.getElementById('rorraxyLoaderOverlay');
-            if(loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 100);
-            }
+            setTimeout(() => {
+                const loader = document.getElementById('rorraxyLoaderOverlay');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 300);
+                }
+            }, 250);
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -457,39 +469,7 @@
                 searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
-
-            window.addEventListener('keydown', (e) => {
-                const overlay = document.getElementById('reelModalOverlay');
-                if (overlay && overlay.style.display === 'flex') {
-                    const wrapper = document.getElementById('reelModalWrapperBody');
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-                        e.preventDefault();
-                        if (currentReelIndex < list.length - 1) {
-                            currentReelIndex++;
-                            scrollToReelIndex(currentReelIndex, wrapper);
-                        }
-                    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-                        e.preventDefault();
-                        if (currentReelIndex > 0) {
-                            currentReelIndex--;
-                            scrollToReelIndex(currentReelIndex, wrapper);
-                        }
-                    }
-                }
-            });
         });
-
-        function scrollToReelIndex(idx, wrapper) {
-            const targetCard = wrapper.querySelector(`[data-index="${idx}"]`);
-            if (targetCard) {
-                targetCard.scrollIntoView({ behavior: 'smooth' });
-                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
-                renderFixedGlobalActions(activeId, false);
-                activateSingleReelMedia(idx);
-            }
-        }
 
         function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
@@ -641,7 +621,7 @@
                 let discountBadge = discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : '';
 
                 const cardDiv = document.createElement('div');
-                cardDiv.className = 'product-card';
+                cardDiv.className = 'product-card animate-card-entry';
                 
                 cardDiv.onclick = (e) => {
                     e.preventDefault();
@@ -728,74 +708,6 @@
             slideIntervalsMap = {};
         }
 
-        /* High-Performance Instant Image Slideshow */
-        function startImageSlideshow(cardIdx, container, images) {
-            if (!container) return;
-
-            let slidesHtml = images.map((img, i) => `
-                <img src="${img}" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${cardIdx}_${i}" alt="Reel Slide" decoding="async">
-            `).join('');
-
-            container.innerHTML = slidesHtml;
-
-            if (images.length > 1) {
-                let currentIdx = 0;
-                if(slideIntervalsMap[cardIdx]) clearInterval(slideIntervalsMap[cardIdx]);
-
-                slideIntervalsMap[cardIdx] = setInterval(() => {
-                    let nextIdx = (currentIdx + 1) % images.length;
-                    let currSlide = document.getElementById(`slide_${cardIdx}_${currentIdx}`);
-                    let nextSlide = document.getElementById(`slide_${cardIdx}_${nextIdx}`);
-
-                    if (currSlide && nextSlide) {
-                        currSlide.classList.remove('active');
-                        nextSlide.classList.add('active');
-                    }
-                    currentIdx = nextIdx;
-                }, 1800);
-            }
-        }
-
-        function activateSingleReelMedia(activeIdx) {
-            clearAllSlideIntervals();
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-
-            list.forEach((product, idx) => {
-                const mediaBox = document.getElementById(`primaryMediaBox_${idx}`);
-                if (!mediaBox) return;
-
-                if (idx !== activeIdx) {
-                    // Pause/Clean up inactive videos
-                    const vid = mediaBox.querySelector('video');
-                    if (vid) vid.pause();
-                    return;
-                }
-
-                let pVideo = product.video_url || product.youtube_video || '';
-                let extractedImages = [];
-                try {
-                    if(product.images_json) {
-                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                        if(Array.isArray(parsed)) extractedImages = parsed;
-                    } else if(product.image_url) extractedImages = [product.image_url];
-                } catch(e){}
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-
-                if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaBox.innerHTML = `<video id="video_${idx}" src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
-                    const vid = document.getElementById(`video_${idx}`);
-                    if (vid) {
-                        vid.play().catch(() => {});
-                        vid.onended = () => {
-                            startImageSlideshow(idx, mediaBox, extractedImages);
-                        };
-                    }
-                } else {
-                    startImageSlideshow(idx, mediaBox, extractedImages);
-                }
-            });
-        }
-
         function openReelsModal(startIndex) {
             const overlay = document.getElementById('reelModalOverlay');
             const wrapper = document.getElementById('reelModalWrapperBody');
@@ -803,10 +715,34 @@
             clearAllSlideIntervals();
 
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if(!list || list.length === 0) return;
+
             let reelsHtml = '';
 
             list.forEach((product, idx) => {
                 let pId = String(product.id || product.product_id || '101');
+                let pVideo = product.video_url || product.youtube_video || '';
+                let extractedImages = [];
+
+                try {
+                    if(product.images_json) {
+                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                        if(Array.isArray(parsed)) extractedImages = parsed;
+                    } else if(product.image_url) extractedImages = [product.image_url];
+                } catch(e){}
+
+                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+
+                let mediaContent = '';
+                if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                    mediaContent = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+                } else {
+                    let layersHtml = extractedImages.map((imgUrl, imgIdx) => `
+                        <img src="${imgUrl}" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" decoding="async">
+                    `).join('');
+                    mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layersHtml}</div>`;
+                }
+
                 let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
                 let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
 
@@ -818,21 +754,41 @@
                                 ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
                             </div>
                             <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">
+                                ${mediaContent}
                             </div>
                         </div>
                     </div>
                 `;
+
+                if (extractedImages.length > 1 && (!pVideo || pVideo === '')) {
+                    let currentImgIdx = 0;
+                    slideIntervalsMap[idx] = setInterval(() => {
+                        let nextImgIdx = (currentImgIdx + 1) % extractedImages.length;
+                        let currSlide = document.getElementById(`slide_${idx}_${currentImgIdx}`);
+                        let nextSlide = document.getElementById(`slide_${idx}_${nextImgIdx}`);
+                        if(currSlide && nextSlide) {
+                            currSlide.classList.remove('active');
+                            currSlide.classList.add('previous');
+                            nextSlide.classList.remove('previous');
+                            nextSlide.classList.add('active');
+                            setTimeout(() => {
+                                currSlide.classList.remove('previous');
+                            }, 1200);
+                        }
+                        currentImgIdx = nextImgIdx;
+                    }, 2800);
+                }
             });
 
             wrapper.innerHTML = reelsHtml;
 
-            const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
-            if (targetCard) {
-                // Instant zero-delay position snap without any scrolling movement
-                wrapper.scrollTop = targetCard.offsetTop;
-            }
-
-            activateSingleReelMedia(startIndex);
+            // Instantly position scroll directly to the selected target card with 0 delay (no scrolling animation)
+            setTimeout(() => {
+                let targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
+                if (targetCard) {
+                    wrapper.scrollTop = targetCard.offsetTop;
+                }
+            }, 0);
 
             let scrollTimer = null;
             wrapper.onscroll = () => {
@@ -840,13 +796,12 @@
                 scrollTimer = setTimeout(() => {
                     let cardHeight = wrapper.clientHeight;
                     let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
-                    if (calculatedIdx >= 0 && calculatedIdx < list.length && calculatedIdx !== currentReelIndex) {
+                    if (calculatedIdx >= 0 && calculatedIdx < list.length) {
                         currentReelIndex = calculatedIdx;
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
                         renderFixedGlobalActions(activeId, false);
-                        activateSingleReelMedia(currentReelIndex);
                     }
-                }, 40);
+                }, 30);
             };
 
             let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
@@ -970,57 +925,55 @@
             document.getElementById('buyPreviewOverlay').style.display = 'none';
         }
 
-        /* Pure Chime Audio Synthesizer */
         function playCoinDropChime() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
                 const ctx = new AudioCtx();
                 const now = ctx.currentTime;
-                const freqs = [1760.00, 2349.32, 2793.83, 3520.00]; 
-                
+                const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01]; 
                 freqs.forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.025));
-                    gain.gain.setValueAtTime(0, now + (idx * 0.025));
-                    gain.gain.linearRampToValueAtTime(0.1 / (idx + 1), now + (idx * 0.025) + 0.008);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.025) + 0.35);
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.02));
+                    gain.gain.setValueAtTime(0, now + (idx * 0.02));
+                    gain.gain.linearRampToValueAtTime(0.08 / (idx + 1), now + (idx * 0.02) + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.02) + 0.5);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    osc.start(now + (idx * 0.025));
-                    osc.stop(now + (idx * 0.025) + 0.35);
+                    osc.start(now + (idx * 0.02));
+                    osc.stop(now + (idx * 0.02) + 0.5);
                 });
             } catch (e) {}
         }
 
         function triggerCoinDropAnimation(e) {
-            playCoinDropChime();
             const cartIconElem = document.getElementById('cartTargetIcon');
             let targetRect = cartIconElem ? cartIconElem.getBoundingClientRect() : null;
             let targetX = targetRect ? targetRect.left + (targetRect.width / 2) : window.innerWidth - 30;
             let targetY = targetRect ? targetRect.top + (targetRect.height / 2) : window.innerHeight - 50;
 
-            let startX = e && e.clientX ? e.clientX : window.innerWidth / 2;
-            let startY = e && e.clientY ? e.clientY : window.innerHeight / 2;
+            let startX = e ? e.clientX : window.innerWidth / 2;
+            let startY = e ? e.clientY : window.innerHeight / 2;
 
             const coin = document.createElement('div');
             coin.className = 'flying-gold-coin';
             coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
-            coin.style.left = `${startX - 17}px`;
-            coin.style.top = `${startY - 17}px`;
+            coin.style.left = `${startX - 16}px`;
+            coin.style.top = `${startY - 16}px`;
             document.body.appendChild(coin);
 
             requestAnimationFrame(() => {
-                coin.style.left = `${targetX - 17}px`;
-                coin.style.top = `${targetY - 17}px`;
-                coin.style.transform = 'scale(0.25) rotate(720deg)';
+                coin.style.left = `${targetX - 16}px`;
+                coin.style.top = `${targetY - 16}px`;
+                coin.style.transform = 'scale(0.3) rotate(720deg)';
                 coin.style.opacity = '0';
             });
 
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
+                playCoinDropChime();
             }, 350);
         }
 
