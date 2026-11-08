@@ -92,7 +92,7 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ২. ম্যাজিক কোড ভেরিফিকেশন এন্ডপয়েন্ট (লগইন ডিটেকশন সহ)
+    // ২. ম্যাজিক কোড ভেরিফিকেশন এন্ডপয়েন্ট (স্মার্ট লগইন রিডাইরেক্ট সহ)
     // ==========================================
     if (action === "verify_magic_code" && request.method === "POST") {
       const body = await request.json();
@@ -124,8 +124,7 @@ export async function onRequest(context) {
         `SELECT * FROM rorraxy_affiliates_master WHERE email = ?`
       ).bind(email).first();
 
-      // চেক করছি তার তথ্য আগে থেকেই ডাটাবেসে সম্পূর্ণ করা আছে কি না
-      const isComplete = record && record.first_name && record.payment_method;
+      const isComplete = record && record.first_name && record.first_name.trim() !== "";
 
       return new Response(JSON.stringify({ 
         success: true, 
