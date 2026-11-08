@@ -664,7 +664,7 @@
             if(existingBar) existingBar.remove();
 
             let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
-            let pLikes = getDynamicEngagement(targetId);
+            let pLikes = isHome ? '' : getDynamicEngagement(targetId);
 
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
@@ -681,10 +681,10 @@
                         <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
 
-                    <div class="side-action-item" onclick="handlePinterestInterception(event, 'share', '${targetId}')" title="Share">
+                    <div class="side-action-item" onclick="${isHome ? 'openReelsModal(0)' : `handlePinterestInterception(event, 'share', '${targetId}')`}" title="Share">
                         <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
                     </div>
-                    <div class="side-action-item love-action-btn ${likedActiveClass}" onclick="handlePinterestInterception(event, 'like', '${targetId}')" title="Like">
+                    <div class="side-action-item love-action-btn ${isHome ? '' : likedActiveClass}" onclick="${isHome ? 'openReelsModal(0)' : `handlePinterestInterception(event, 'like', '${targetId}')`}" title="Like">
                         <i class="fa-solid fa-heart action-pure-icon"></i>
                         <span class="side-count-text love-count">${pLikes}</span>
                     </div>
