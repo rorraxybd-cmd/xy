@@ -188,6 +188,22 @@
             position: absolute; inset: 0; width: 100%; height: 100%;
             object-fit: cover; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: opacity; transform: scale(1); animation: subtleKenBurns 8s ease-in-out infinite alternate;
+            image-rendering: -webkit-optimize-contrast;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .slide-layer.active { opacity: 1; z-index: 2; }
+        .slide-layer.previous { opacity: 0; z-index: 1; }
+
+        @keyframes subtleKenBurns {
+            from { transform: scale(1); }
+            to { transform: scale(1.02); }
+        }
+
+        .reel-primary-video-container video {
+            width: 100%; height: 100%; object-fit: cover; display: block; background: #000;
+            position: relative; z-index: 3; opacity: 1; transition: opacity 0.8s ease;
+            image-rendering: -webkit-optimize-contrast;
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
@@ -412,6 +428,23 @@
             buildCategoriesUI();
             loadLiveProducts();
             updateCartBadgeCount();
+
+            // Keyboard navigation for Desktop Up / Down Arrow Keys
+            window.addEventListener('keydown', (e) => {
+                const overlay = document.getElementById('reelModalOverlay');
+                if (overlay && overlay.style.display === 'flex') {
+                    const wrapper = document.getElementById('reelModalWrapperBody');
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        wrapper.scrollBy({ top: wrapper.clientHeight, behavior: 'smooth' });
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        wrapper.scrollBy({ top: -wrapper.clientHeight, behavior: 'smooth' });
+                    } else if (e.key === 'Escape') {
+                        closeReelModal();
+                    }
+                }
+            });
 
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
@@ -773,6 +806,18 @@
             let product = list[cardIdx];
             if (!product) return;
 
+            // Preload next reel assets for zero-lag smooth scrolling
+            let nextProduct = list[cardIdx + 1];
+            if (nextProduct) {
+                try {
+                    let nextImgs = typeof nextProduct.images_json === 'string' ? JSON.parse(nextProduct.images_json) : nextProduct.images_json;
+                    if (Array.isArray(nextImgs) && nextImgs[0]) {
+                        const imgPreload = new Image();
+                        imgPreload.src = nextImgs[0];
+                    }
+                } catch(e){}
+            }
+
             const container = document.getElementById(`primaryMediaBox_${cardIdx}`);
             if (!container) return;
 
@@ -791,17 +836,14 @@
             const hasVideo = pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'));
 
             if (hasVideo) {
-                // Video plays first
                 container.innerHTML = `<video id="activeReelVideo_${cardIdx}" src="${pVideo}" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>`;
                 const vidElem = document.getElementById(`activeReelVideo_${cardIdx}`);
                 if (vidElem) {
                     vidElem.onended = () => {
-                        // Smoothly transition from video to slideshow
                         startImageSlideshow(cardIdx, container, extractedImages);
                     };
                 }
             } else {
-                // Directly start smooth slideshow
                 startImageSlideshow(cardIdx, container, extractedImages);
             }
         }
