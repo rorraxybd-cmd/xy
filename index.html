@@ -828,7 +828,8 @@
 
             const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
             if (targetCard) {
-                wrapper.scrollTop = targetCard.offsetTop;
+                // Instant position set without smooth scroll animation jump
+                targetCard.scrollIntoView({ behavior: 'auto', block: 'start' });
             }
 
             activateSingleReelMedia(startIndex);
