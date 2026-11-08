@@ -454,7 +454,7 @@
         let currentPhone = localStorage.getItem('rorraxy_affiliate_phone') || '';
         let currentUniqueId = localStorage.getItem('rorraxy_unique_aff_id') || '';
         let generatedMagicCode = '';
-        let userDeviceIp = 'Detecting...';
+        let userDeviceIp = ''; // ডিফল্ট 'Detecting...' এর বদলে খালি রাখা হলো যাতে ফালতু টেক্সট সেভ না হয়
 
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
@@ -485,7 +485,7 @@
                 const res = await fetch('https://ipapi.co/json/').catch(() => null);
                 if (res && res.ok) {
                     const data = await res.json();
-                    userDeviceIp = data.ip || '127.0.0.1';
+                    userDeviceIp = data.ip || '';
                     const dialCode = data.country_calling_code || "+880";
                     const select = document.getElementById('countryDialCode');
                     if (select) {
@@ -497,7 +497,9 @@
                         }
                     }
                 }
-            } catch (e) { userDeviceIp = '127.0.0.1'; }
+            } catch (e) { 
+                userDeviceIp = ''; 
+            }
         }
 
         function switchTab(tabName) {
