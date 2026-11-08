@@ -26,9 +26,6 @@ export async function onRequest(context) {
     const clientIp = request.headers.get("cf-connecting-ip") || "Unknown";
     const userAgent = request.headers.get("user-agent") || "Unknown";
 
-    // ==========================================
-    // ১. ওটিপি পাঠানো এবং লগ সেভ করা
-    // ==========================================
     if (action === "send-otp") {
       const phone = body.phone;
       const countryCode = body.country_code || "";
@@ -57,9 +54,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ২. ওটিপি ভেরিফাই এবং এক্সেস গ্র্যান্ট
-    // ==========================================
     if (action === "verify-otp") {
       const phone = body.phone;
       const otp = body.otp;
@@ -100,9 +94,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ৩. চেকআউট থেকে কাস্টমার ইনফো ও অর্ডার সিংক
-    // ==========================================
     if (action === "sync-customer") {
       const phone = body.phone;
       const customerName = body.customer_name || "";
@@ -144,4 +135,4 @@ export async function onRequest(context) {
 }
 ```[cite: 9]
 
-কোডটি গিটহাবে আপডেট করে কমিট করার সাথে সাথেই দেখবেন লাল ক্রস (❌) চিহ্নটি সবুজ টিক (✔️)-এ পরিণত হয়ে গেছে এবং ক্লাউডফায়ারের বিল্ড সফলভাবে পাস হয়ে যাবে!
+কোডটি বসিয়ে কমিট করার সাথে সাথেই দেখবেন আপনার এই ঝামেলা চিরতরে দূর হয়ে গেছে!
