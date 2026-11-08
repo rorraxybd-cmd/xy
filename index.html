@@ -76,9 +76,9 @@
             to { transform: scale(1.08); box-shadow: 0 0 35px rgba(212,175,55,0.8); }
         }
 
-        .animate-card-entry { animation: fadeInLuxury 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-card-entry { animation: fadeInLuxury 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            from { opacity: 0; transform: translateY(16px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
@@ -163,48 +163,48 @@
             position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
             scroll-behavior: auto; -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; border-left: 1px solid rgba(212,175,55,0.15); border-right: 1px solid rgba(212,175,55,0.15);
-        }
-        .reel-modal-wrapper::-webkit-scrollbar { display: none; }
-
-        .reel-card { 
-            width: 100%; height: 100vh; height: 100dvh; 
-            scroll-snap-align: start; scroll-snap-stop: always;
-            display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
-            align-items: center; justify-content: center;
-        }
-        .reel-media-box { 
-            position: relative; width: 100%; max-width: 420px; aspect-ratio: 9 / 16; height: 100%; 
-            cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        }
-        
-        /* Smooth Video & Cross-Fade Slideshow Container */
+        /* Smooth video & cross-fade slideshow container */
         .reel-primary-video-container {
             width: 100%; height: 100%; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
         }
 
-        /* Smooth cross-fade slideshow classes with perfect clarity and reduced zoom */
+        /* Dynamic Zoom-In & Zoom-Out Premium Ken Burns Slideshow Effect */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: contain; opacity: 0; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: opacity; transform: scale(0.98); animation: subtleKenBurns 8s ease-in-out infinite alternate;
+            object-fit: contain; opacity: 0; 
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, opacity;
             image-rendering: -webkit-optimize-contrast;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            padding: 8px;
+            padding: 6px;
         }
+        
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
 
-        @keyframes subtleKenBurns {
-            from { transform: scale(0.98); }
-            to { transform: scale(1.01); }
+        /* Dynamic Zooming Animations */
+        .slide-layer.zoom-in-anim {
+            animation: zoomInLuxury 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .slide-layer.zoom-out-anim {
+            animation: zoomOutLuxury 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes zoomInLuxury {
+            0% { transform: scale(0.92); }
+            100% { transform: scale(1.08); }
+        }
+        @keyframes zoomOutLuxury {
+            0% { transform: scale(1.1); }
+            100% { transform: scale(0.96); }
         }
 
         .reel-primary-video-container video {
             width: 100%; height: 100%; object-fit: contain; display: block; background: #000;
-            position: relative; z-index: 3; opacity: 1; transition: opacity 0.8s ease;
+            position: relative; z-index: 3; opacity: 1; transition: opacity 0.5s ease;
             image-rendering: -webkit-optimize-contrast;
+            will-change: transform;
         }
 
         .reel-bottom-price-overlay {
@@ -744,36 +744,11 @@
             slideIntervalsMap = {};
         }
 
-        function playLuxuryFashionChime() {
-            try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (!AudioCtx) return;
-                const ctx = new AudioCtx();
-                const now = ctx.currentTime;
-                const notes = [440.00, 554.37, 659.25, 880.00]; 
-                notes.forEach((freq, idx) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
-                    
-                    gain.gain.setValueAtTime(0, now + (idx * 0.08));
-                    gain.gain.linearRampToValueAtTime(0.02, now + (idx * 0.08) + 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.08) + 1.2);
-                    
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(now + (idx * 0.08));
-                    osc.stop(now + (idx * 0.08) + 1.2);
-                });
-            } catch (e) {}
-        }
-
         function startImageSlideshow(cardIdx, container, images) {
             if (!container) return;
 
             let slidesHtml = images.map((img, i) => `
-                <img src="${img}" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${cardIdx}_${i}" alt="Reel Slide">
+                <img src="${img}" class="slide-layer ${i === 0 ? 'active zoom-in-anim' : ''}" id="slide_${cardIdx}_${i}" alt="Reel Slide">
             `).join('');
 
             container.innerHTML = slidesHtml;
@@ -790,18 +765,17 @@
                         currSlide.classList.remove('active');
                         currSlide.classList.add('previous');
 
-                        nextSlide.classList.remove('previous');
-                        nextSlide.classList.add('active');
-
-                        playLuxuryFashionChime();
+                        // Alternating Zoom-In & Zoom-Out Effects for Variety
+                        const isZoomIn = nextIdx % 2 === 0;
+                        nextSlide.className = `slide-layer active ${isZoomIn ? 'zoom-in-anim' : 'zoom-out-anim'}`;
 
                         setTimeout(() => {
-                            currSlide.classList.remove('previous');
-                        }, 1000);
+                            currSlide.className = 'slide-layer';
+                        }, 600);
                     }
 
                     currentIdx = nextIdx;
-                }, 3500);
+                }, 2200); // Perfectly balanced speed: snappy, smooth & responsive
             }
         }
 
@@ -1064,7 +1038,6 @@
 
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
-                playCoinDropChime();
             }, 350);
         }
 
