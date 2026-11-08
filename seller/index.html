@@ -13,12 +13,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Chart.js & QRCode JS -->
+    <!-- Chart.js, QRCode JS, & Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-    <!-- External Modular CSS -->
-    <link rel="stylesheet" href="info.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
@@ -30,89 +28,121 @@
             --text-white: #ffffff;
             --text-gray: #a3a3b2;
             --font-main: 'Poppins', sans-serif;
-            --border-soft: rgba(212, 175, 55, 0.12);
+            --border-soft: rgba(212, 175, 55, 0.15);
+            --success-green: #2ed573;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
-        body { padding: 20px 14px 110px 14px; text-transform: uppercase; }
+        body { padding: 14px 10px 105px 10px; text-transform: uppercase; }
 
-        .main-container { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        .main-container { width: 100%; max-width: 950px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-        .app-view { display: none; width: 100%; animation: fadeIn 0.25s ease-in-out; }
+        .app-view { display: none; width: 100%; animation: fadeIn 0.2s ease-in-out; }
         .app-view.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(3px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* Clean Header */
-        .dashboard-header { text-align: center; margin-bottom: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
-        .header-logo-img { width: 75px; height: 75px; object-fit: contain; filter: none !important; background: transparent !important; }
-        .dashboard-header h1 { font-size: 1.4rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.6px; }
+        .dashboard-header { text-align: center; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+        .header-logo-img { width: 60px; height: 60px; object-fit: contain; background: transparent !important; }
+        .dashboard-header h1 { font-size: 1.25rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
 
-        /* Soft Cards (No excessive heavy borders or shadows) */
-        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 18px; padding: 22px 18px; margin-bottom: 20px; width: 100%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); }
-        .info-card-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+        /* Soft Cards */
+        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 16px 14px; margin-bottom: 16px; width: 100%; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+        .info-card-title { font-size: 0.78rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 8px; }
 
         /* Step Tracker */
-        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; }
-        .step-item { flex: 1; padding: 8px 12px; border-radius: 20px; background: #06060a; border: 1px solid var(--border-soft); text-align: center; font-size: 0.65rem; font-weight: 700; color: var(--text-gray); }
+        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; width: 100%; max-width: 380px; }
+        .step-item { flex: 1; padding: 6px 10px; border-radius: 14px; background: #06060a; border: 1px solid var(--border-soft); text-align: center; font-size: 0.6rem; font-weight: 700; color: var(--text-gray); }
         .step-item.active { background: rgba(212, 175, 55, 0.1); border-color: var(--gold-solid); color: var(--gold-solid); }
         .step-item.completed { background: rgba(74, 222, 128, 0.1); border-color: #4ade80; color: #4ade80; }
 
+        /* Master Upload Progress Bar */
+        .step-progress-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 14px; padding: 8px; background: var(--card-retail); border-radius: 10px; border: 1px solid var(--border-soft); }
+        .step-prog-item { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; position: relative; }
+        .step-prog-circle { width: 26px; height: 26px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--text-gray); border: 1px solid var(--border-soft); z-index: 2; }
+        .step-prog-item.active .step-prog-circle { background: var(--gold-solid); color: #000; }
+        .step-prog-item.completed .step-prog-circle { background: var(--gold-gradient); color: #000; }
+        .step-prog-title { font-size: 0.55rem; font-weight: 600; color: var(--text-gray); text-align: center; }
+        .step-prog-item.active .step-prog-title { color: var(--gold-solid); }
+
         /* Forms & Inputs */
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group.full-width { grid-column: span 2; }
-        .form-group label { font-size: 0.68rem; font-weight: 700; color: var(--text-gray); display: flex; align-items: center; justify-content: space-width; width: 100%; }
-        .req-star { color: #ff4d4d; margin-left: 3px; font-weight: 900; }
         
-        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 11px 14px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
+        .form-group label { font-size: 0.65rem; font-weight: 700; color: var(--text-gray); display: flex; align-items: center; gap: 3px; width: 100%; }
+        .req-star { color: #ff4d4d; font-weight: 900; margin-left: 2px; }
+
+        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 12px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
         .form-control:focus, .form-select:focus { border-color: rgba(212, 175, 55, 0.4); background: #040407; }
         .form-select option { background: #08080c; color: #fff; }
 
-        .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
-        .country-code-select { background: #06060a; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.06); padding: 11px 10px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; }
+        .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
+        .country-code-select { background: #06060a; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; }
         .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
 
-        .status-msg { font-size: 0.72rem; text-transform: none; display: none; text-align: center; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
+        .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
         .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.2); }
         .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.2); }
 
+        /* Master Upload Grids */
+        .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+        .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
+        @media(min-width: 768px) { .category-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .cat-box, .mode-box { background: #000000; border-radius: 10px; padding: 12px 6px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 85px; border: 1px solid var(--border-soft); transition: all 0.2s; }
+        .cat-box:hover, .mode-box:hover, .cat-box.clicked, .mode-box.clicked { background: #121008; border-color: rgba(212,175,55,0.4); }
+        .cat-box.clicked span, .mode-box.clicked span { color: var(--gold-solid); }
+        .cat-box i, .mode-box i { font-size: 1.4rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cat-box span, .mode-box span { font-size: 0.6rem; font-weight: 600; color: var(--text-white); text-align: center; line-height: 1.2; }
+
+        .preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; width: 100%; }
+        .preview-card { position: relative; width: 105px; height: 105px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--border-soft); flex-shrink: 0; }
+        .preview-card img, .preview-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .upload-box { border: 1px dashed rgba(212,175,55,0.4); border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; background: #000; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+        .upload-box i { font-size: 1.8rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .upload-box p { font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; text-transform: uppercase; }
+
         /* Buttons */
-        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 12px 20px; color: #000; font-weight: 800; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 11px 18px; color: #000; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); }
+        .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-gold:hover { filter: brightness(1.08); }
+        .btn-secondary { background: #000000; color: #fff; border: 1px solid var(--border-soft); padding: 11px 18px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
 
         /* Dashboard Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; width: 100%; }
-        .stat-card { background: var(--card-retail); border-radius: 14px; padding: 14px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--border-soft); }
-        .stat-card h3 { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
-        .stat-card .value { font-size: 1.2rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .graph-container { width: 100%; height: 65px; position: relative; margin-top: 2px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; width: 100%; }
+        .stat-card { background: var(--card-retail); border-radius: 12px; padding: 10px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 5px; border: 1px solid var(--border-soft); }
+        .stat-card h3 { font-size: 0.58rem; color: var(--text-gray); font-weight: 600; }
+        .stat-card .value { font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .graph-container { width: 100%; height: 50px; position: relative; margin-top: 2px; }
         .graph-container canvas { width: 100% !important; height: 100% !important; }
 
         /* Tables & Lists */
         .table-responsive { width: 100%; overflow-x: auto; }
-        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; white-space: nowrap; }
-        .seller-table th, .seller-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: left; white-space: nowrap; }
+        .seller-table th, .seller-table td { padding: 10px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
         .seller-table th { color: var(--gold-solid); font-weight: 700; background: #050508; }
         .seller-table td { text-transform: none; color: var(--text-white); }
-        .prod-thumb { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
+        .prod-thumb { width: 38px; height: 38px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
 
         /* Fixed Bottom Navigation */
-        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(15px); }
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(15px); }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
         .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-gray); transition: color 0.2s; }
-        .nav-item span { font-size: 0.58rem; font-weight: 700; color: var(--text-gray); }
+        .nav-item i { font-size: 1.1rem; margin-bottom: 2px; color: var(--text-gray); transition: color 0.2s; }
+        .nav-item span { font-size: 0.55rem; font-weight: 700; color: var(--text-gray); }
 
         @media (max-width: 900px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         }
         @media (max-width: 600px) {
-            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .form-grid { grid-template-columns: 1fr; gap: 10px; }
             .form-group.full-width { grid-column: span 1; }
         }
     </style>
@@ -137,14 +167,13 @@
             <div class="info-card" id="verificationSection">
                 <div class="info-card-title">
                     <i class="fa-solid fa-user-shield"></i>
-                    <span>SELLER VERIFICATION (EMAIL & PHONE)</span>
+                    <span>VERIFICATION</span>
                 </div>
 
-                <form id="magicLinkForm" style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;" novalidate>
+                <form id="magicLinkForm" style="max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
                     <div class="form-group">
                         <label>EMAIL ADDRESS <span class="req-star">*</span></label>
                         <input type="email" class="form-control" id="sellerEmail" placeholder="Enter valid email..." required style="text-transform: none;">
-                        <span style="font-size: 0.62rem; color: var(--text-gray); text-transform: none;"><i class="fa-solid fa-lock" style="color: var(--gold-solid);"></i> Secure magic link ecosystem verification</span>
                     </div>
 
                     <div class="form-group">
@@ -156,7 +185,6 @@
                                 <option value="+92">🇵🇰 +92</option>
                                 <option value="+971">🇦🇪 +971</option>
                                 <option value="+1">🇺🇸 +1</option>
-                                <option value="+44">🇬🇧 +44</option>
                             </select>
                             <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" required style="text-transform: none;">
                         </div>
@@ -164,7 +192,7 @@
                     
                     <div id="formStatus" class="status-msg"></div>
 
-                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 6px;">
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
                         VERIFY & PROCEED <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </form>
@@ -174,38 +202,39 @@
             <div class="info-card" id="businessInfoSection" style="display: none;">
                 <div class="info-card-title">
                     <i class="fa-solid fa-id-card"></i>
-                    <span id="cardTitleText">SELLER PROFILE REGISTRATION</span>
+                    <span id="cardTitleText">PROFILE REGISTRATION</span>
                 </div>
 
                 <!-- Preview Box -->
                 <div id="profilePreviewSection" style="display: none;">
-                    <div style="display: flex; flex-direction: column; gap: 16px;">
-                        <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border-soft); padding-bottom: 16px;">
-                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px;">
+                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                             <div>
-                                <h2 id="prevBrandName" style="font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">--</h2>
-                                <p id="prevBusinessDesc" style="font-size: 0.72rem; color: var(--text-gray); text-transform: none; margin-top: 3px;">--</p>
+                                <h2 id="prevBrandName" style="font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">--</h2>
+                                <p id="prevBusinessDesc" style="font-size: 0.68rem; color: var(--text-gray); text-transform: none; margin-top: 2px;">--</p>
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">EMAIL</label><span id="prevEmail" style="font-size: 0.75rem; text-transform: none;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.75rem;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">COUNTRY</label><span id="prevCountry" style="font-size: 0.75rem;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">SELLER ID</label><span id="prevSellerId" style="font-size: 0.75rem; color: var(--gold-solid);">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.58rem; color: var(--text-gray);">EMAIL</label><span id="prevEmail" style="font-size: 0.7rem; text-transform: none;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.58rem; color: var(--text-gray);">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.7rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.58rem; color: var(--text-gray);">COUNTRY</label><span id="prevCountry" style="font-size: 0.7rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.58rem; color: var(--text-gray);">SELLER ID</label><span id="prevSellerId" style="font-size: 0.7rem; color: var(--gold-solid);">--</span></div>
                         </div>
-                        <div style="display: flex; gap: 10px;">
+                        <div style="display: flex; gap: 8px;">
                             <button type="button" class="btn-gold" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT INFO</button>
-                            <button type="button" class="btn-gold" style="background: var(--pink-solid); color: #fff;" onclick="switchTab('dashboard')">GOTO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
+                            <button type="button" class="btn-gold" style="background: var(--pink-solid); color: #fff;" onclick="switchTab('dashboard')">DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Registration Form -->
                 <form id="businessInfoForm">
-                    <div style="display: flex; align-items: center; gap: 14px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--border-soft);">
-                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                    <input type="hidden" id="editingProductId" value="">
+                    <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
+                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                         <div>
-                            <label for="profilePhotoInput" class="btn-gold" style="padding: 8px 14px; font-size: 0.68rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
+                            <label for="profilePhotoInput" class="btn-gold" style="padding: 6px 10px; font-size: 0.6rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
                             <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*">
                         </div>
                     </div>
@@ -216,7 +245,7 @@
                             <input type="text" class="form-control" id="brandName" placeholder="Store Name" required>
                         </div>
                         <div class="form-group">
-                            <label>BUSINESS EMAIL (AUTO)<span class="req-star">*</span></label>
+                            <label>BUSINESS EMAIL<span class="req-star">*</span></label>
                             <input type="email" class="form-control" id="businessEmail" readonly style="color: var(--gold-solid); text-transform: none;">
                         </div>
                         <div class="form-group">
@@ -229,7 +258,7 @@
                         </div>
                         <div class="form-group full-width">
                             <label>BUSINESS DESCRIPTION<span class="req-star">*</span></label>
-                            <textarea class="form-control" id="businessDesc" rows="2" maxlength="200" placeholder="Briefly describe your products..." required style="text-transform: none;"></textarea>
+                            <textarea class="form-control" id="businessDesc" rows="2" maxlength="200" placeholder="Briefly describe products..." required style="text-transform: none;"></textarea>
                         </div>
                         <div class="form-group">
                             <label>EMERGENCY PHONE<span class="req-star">*</span></label>
@@ -258,22 +287,47 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>DOC NUMBER<span class="req-star">*</span></label>
+                            <label>DOCUMENT NUMBER<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="docNumberInput" placeholder="Enter ID number..." required style="text-transform: none;">
                         </div>
                         <div class="form-group full-width">
                             <label>TRADE LICENSE / DETAILS<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="tradeLicenseInput" placeholder="License No or N/A" required style="text-transform: none;">
+                            <input type="text" class="form-control" id="tradeLicenseInput" placeholder="License Number or N/A" required style="text-transform: none;">
                         </div>
                     </div>
-                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%;">SAVE & PROCEED TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
+
+                    <!-- Payment Method Configuration (bKash, Nagad, Payoneer, Bank) -->
+                    <div style="margin-top: 14px; border-top: 1px solid var(--border-soft); padding-top: 12px;">
+                        <h3 style="font-size: 0.72rem; font-weight: 700; color: var(--gold-solid); margin-bottom: 8px;"><i class="fa-solid fa-wallet"></i> WITHDRAWAL PAYMENT METHOD</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>SELECT GATEWAY<span class="req-star">*</span></label>
+                                <select class="form-select" id="payoutGateway" onchange="renderPaymentFields()">
+                                    <option value="bkash">bKash</option>
+                                    <option value="nagad">Nagad</option>
+                                    <option value="payoneer">Payoneer</option>
+                                    <option value="bank">Bank Account</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="paymentFieldDynamic1">
+                                <label>ACCOUNT NUMBER / NUMBER<span class="req-star">*</span></label>
+                                <input type="text" class="form-control" id="payAccNum" placeholder="01700000000" required style="text-transform: none;">
+                            </div>
+                            <div class="form-group full-width" id="paymentFieldDynamic2" style="display:none;">
+                                <label>ADDITIONAL DETAILS (BANK NAME / BRANCH / ROUTING)<span class="req-star">*</span></label>
+                                <input type="text" class="form-control" id="payAccExtra" placeholder="Bank Name, Branch Name, Routing No..." style="text-transform: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 12px;">SAVE & PROCEED TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                 </form>
             </div>
         </div>
 
         <!-- ================= 2. DASHBOARD VIEW WITH CHARTS ================= -->
         <div id="view-dashboard" class="app-view">
-            <div style="text-align: center; margin-bottom: 20px;">
+            <div style="text-align: center; margin-bottom: 16px;">
                 <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); color: #fff;">
                     <i class="fa-solid fa-qrcode"></i> SYNC DEVICE & QR
                 </button>
@@ -308,7 +362,7 @@
             <div class="info-card">
                 <div class="info-card-title" style="display: flex; justify-content: space-between; align-items: center;">
                     <span>UPLOADED PRODUCTS LIST</span>
-                    <button type="button" onclick="switchTab('upload')" class="btn-gold" style="padding: 6px 14px; font-size: 0.7rem;">
+                    <button type="button" onclick="prepareNewProductUpload()" class="btn-gold" style="padding: 6px 12px; font-size: 0.65rem;">
                         <i class="fa-solid fa-plus"></i> ADD NEW
                     </button>
                 </div>
@@ -324,69 +378,170 @@
                             </tr>
                         </thead>
                         <tbody id="desktopTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 4. UPLOAD SECTION (`/seller/upload`) ================= -->
+        <!-- ================= 4. MASTER UPLOAD / EDIT VIEW ================= -->
         <div id="view-upload" class="app-view">
-            <div class="info-card">
-                <div class="info-card-title"><i class="fa-solid fa-cloud-arrow-up"></i> UPLOAD NEW PRODUCT (SELLER & PRODUCT ID SYNC)</div>
-                <form id="productUploadForm" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>SELLER ID (AUTO)<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="uploadSellerId" readonly style="color: var(--gold-solid);">
-                        </div>
-                        <div class="form-group">
-                            <label>PRODUCT ID / CODE (AUTO)<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="uploadProductCode" readonly style="color: var(--gold-solid);">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>PRODUCT TITLE<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="prodTitle" placeholder="Luxury Item Title..." required style="text-transform: none;">
-                        </div>
-                        <div class="form-group">
-                            <label>CATEGORY<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="prodCategory" placeholder="Electronics, Fashion..." required style="text-transform: none;">
-                        </div>
-                        <div class="form-group">
-                            <label>UPLOAD MODE<span class="req-star">*</span></label>
-                            <select class="form-select" id="prodUploadMode">
-                                <option value="retail">Retail Mode</option>
-                                <option value="wholesale">Wholesale Mode</option>
-                                <option value="both">Both (Retail & Wholesale)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>PRICE ($)<span class="req-star">*</span></label>
-                            <input type="number" step="0.01" class="form-control" id="prodPrice" placeholder="29.99" required style="text-transform: none;">
-                        </div>
-                        <div class="form-group">
-                            <label>STOCK QUANTITY<span class="req-star">*</span></label>
-                            <input type="number" class="form-control" id="prodStock" placeholder="10" value="1" required style="text-transform: none;">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>PRODUCT IMAGE URL / LINK<span class="req-star">*</span></label>
-                            <input type="url" class="form-control" id="prodImageUrl" placeholder="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/..." required style="text-transform: none;">
+            <div class="step-progress-bar">
+                <div class="step-prog-item active" id="prog-ind-1"><div class="step-prog-circle">1</div><div class="step-prog-title">MODE</div></div>
+                <div class="step-prog-item" id="prog-ind-2"><div class="step-prog-circle">2</div><div class="step-prog-title">CATEGORY</div></div>
+                <div class="step-prog-item" id="prog-ind-3"><div class="step-prog-circle">3</div><div class="step-prog-title">MEDIA</div></div>
+                <div class="step-prog-item" id="prog-ind-4"><div class="step-prog-circle">4</div><div class="step-prog-title">PRICING</div></div>
+                <div class="step-prog-item" id="prog-ind-5"><div class="step-prog-circle">5</div><div class="step-prog-title">DETAILS</div></div>
+            </div>
+
+            <form id="masterUniversalForm" onsubmit="submitMasterForm(event)">
+                <input type="hidden" id="editingProductIndex" value="">
+                
+                <!-- STEP 1: UPLOAD MODE -->
+                <div class="step-section active-step" id="upload-step-1">
+                    <div class="info-card">
+                        <div class="info-card-title"><i class="fa-solid fa-layer-group"></i> SELECT UPLOAD MODE</div>
+                        <div class="mode-grid">
+                            <div class="mode-box" onclick="selectUploadMode('retail', this)"><i class="fa-solid fa-store"></i><span>RETAIL</span></div>
+                            <div class="mode-box" onclick="selectUploadMode('wholesale', this)"><i class="fa-solid fa-boxes-stacked"></i><span>WHOLESALE</span></div>
+                            <div class="mode-box" onclick="selectUploadMode('both', this)"><i class="fa-solid fa-circle-nodes"></i><span>BOTH</span></div>
                         </div>
                     </div>
-                    <button type="submit" class="btn-gold" style="width: 100%;">PUBLISH PRODUCT TO CLOUD</button>
-                </form>
-            </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="button" id="upload-next-btn-1" class="btn-gold" onclick="nextUploadStep(2)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: CATEGORY -->
+                <div class="step-section" id="upload-step-2" style="display:none;">
+                    <div class="info-card">
+                        <div class="info-card-title"><i class="fa-solid fa-border-all"></i> SELECT CATEGORY</div>
+                        <div id="main-categories" class="category-grid">
+                            <div class="cat-box" onclick="showSubCategories(this, 'womens')"><i class="fa-solid fa-person-dress"></i><span>WOMEN'S FASHION</span></div>
+                            <div class="cat-box" onclick="showSubCategories(this, 'mens')"><i class="fa-solid fa-user-tie"></i><span>MEN'S FASHION</span></div>
+                            <div class="cat-box" onclick="showSubCategories(this, 'girls')"><i class="fa-solid fa-child-dress"></i><span>GIRLS' FASHION</span></div>
+                            <div class="cat-box" onclick="showSubCategories(this, 'boys')"><i class="fa-solid fa-child"></i><span>BOYS' FASHION</span></div>
+                            <div class="cat-box" onclick="showSubCategories(this, 'matching')"><i class="fa-solid fa-people-group"></i><span>MATCHING SETS</span></div>
+                            <div class="cat-box" onclick="showSubCategories(this, 'luxury')"><i class="fa-solid fa-gift"></i><span>LUXURY GIFTS</span></div>
+                            <div class="cat-box" onclick="showSubCategories(this, 'baby')"><i class="fa-solid fa-baby-carriage"></i><span>MOTHER & BABY</span></div>
+                        </div>
+                        <div id="sub-categories" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="backToMainCategories()" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORIES</button>
+                            <div id="sub-cat-content" class="category-grid"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: MEDIA -->
+                <div class="step-section" id="upload-step-3" style="display:none;">
+                    <div class="info-card">
+                        <div class="info-card-title"><i class="fa-solid fa-images"></i> PRODUCT IMAGES</div>
+                        <div class="preview-container" id="image-preview"></div>
+                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <p>UPLOAD IMAGES</p>
+                            <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;" onchange="handleImageSelection(event)">
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title"><i class="fa-solid fa-video"></i> PRODUCT VIDEO</div>
+                        <div class="preview-container" id="video-preview"></div>
+                        <div class="upload-box" onclick="document.getElementById('video-file-input').click();">
+                            <i class="fa-solid fa-file-video"></i>
+                            <p>UPLOAD VIDEO</p>
+                            <input type="file" id="video-file-input" accept="video/*" style="display: none;" onchange="handleVideoSelection(event)">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+                        <button type="button" id="upload-next-btn-3" class="btn-gold" onclick="nextUploadStep(4)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: PRICING -->
+                <div class="step-section" id="upload-step-4" style="display:none;">
+                    <div class="info-card">
+                        <div class="info-card-title"><i class="fa-solid fa-tag"></i> PRICING & STOCK</div>
+                        <div class="form-grid" id="retail-price-row">
+                            <div class="form-group">
+                                <label>RETAIL PRICE ($)<span class="req-star">*</span></label>
+                                <input type="number" step="0.01" min="0" id="selling_price" placeholder="100.00">
+                            </div>
+                            <div class="form-group">
+                                <label>MARKET PRICE ($)<span class="req-star">*</span></label>
+                                <input type="number" step="0.01" min="0" id="market_price" placeholder="180.00">
+                            </div>
+                        </div>
+                        <div class="form-grid" id="wholesale-price-row" style="display: none; margin-top: 8px;">
+                            <div class="form-group">
+                                <label>SAMPLE ($)</label>
+                                <input type="number" step="0.01" min="0" id="price_sample" placeholder="100.00">
+                            </div>
+                            <div class="form-group">
+                                <label>WHOLESALE ($)</label>
+                                <input type="number" step="0.01" min="0" id="price_min_whole" placeholder="85.00">
+                            </div>
+                        </div>
+                        <div class="form-grid" style="margin-top: 8px;">
+                            <div class="form-group">
+                                <label>TARGET COUNTRY<span class="req-star">*</span></label>
+                                <select id="target_country" class="form-select">
+                                    <option value="bd" selected>🇧🇩 BANGLADESH</option>
+                                    <option value="us">🇺🇸 UNITED STATES</option>
+                                    <option value="gb">🇬🇧 UNITED KINGDOM</option>
+                                    <option value="ae">🇦🇪 UNITED ARAB EMIRATES</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>DISCOUNT RATE (%)<span class="req-star">*</span></label>
+                                <input type="number" min="0" max="100" id="discount_rate" placeholder="10" required>
+                            </div>
+                            <div class="form-group">
+                                <label>STOCK COUNT<span class="req-star">*</span></label>
+                                <input type="number" min="1" id="stock_count" placeholder="100" value="10" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+                        <button type="button" class="btn-gold" onclick="nextUploadStep(5)">NEXT <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 5: DETAILS -->
+                <div class="step-section" id="upload-step-5" style="display:none;">
+                    <div class="info-card">
+                        <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> PRODUCT DETAILS</div>
+                        <div class="form-group full-width" style="margin-bottom: 10px;">
+                            <label>TITLE (MAX 25 CHARS)<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="LUXURY ITEM" required style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>DESCRIPTION<span class="req-star">*</span></label>
+                            <textarea class="form-control" id="product_description" rows="3" placeholder="Enter product details..." required style="text-transform: none;"></textarea>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+                        <button type="submit" class="btn-gold" id="publishProductBtn"><i class="fa-solid fa-check"></i> PUBLISH PRODUCT</button>
+                    </div>
+                </div>
+
+            </form>
         </div>
 
         <!-- ================= 5. SHIPMENT VIEW ================= -->
         <div id="view-shipment" class="app-view">
             <div class="info-card">
-                <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> REAL-TIME INCOMING SHIPMENTS</div>
-                <div class="form-grid" style="margin-bottom: 16px;">
-                    <div class="stat-card"><label>PENDING</label><span id="statPendingShipments" style="font-size: 1rem; color: #facc15;">0</span></div>
-                    <div class="stat-card"><label>COMPLETED</label><span id="statCompletedOrders" style="font-size: 1rem; color: #4ade80;">0</span></div>
-                    <div class="stat-card" style="grid-column: span 2;"><label>STORE EARNINGS</label><span id="statStoreEarnings" style="font-size: 1rem; color: var(--gold-solid);">$0.00</span></div>
+                <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> INCOMING SHIPMENTS</div>
+                <div class="form-grid" style="margin-bottom: 12px;">
+                    <div class="stat-card"><label>PENDING</label><span id="statPendingShipments" style="font-size: 0.85rem; color: #facc15;">0</span></div>
+                    <div class="stat-card"><label>COMPLETED</label><span id="statCompletedOrders" style="font-size: 0.85rem; color: #4ade80;">0</span></div>
+                    <div class="stat-card" style="grid-column: span 2;"><label>STORE EARNINGS</label><span id="statStoreEarnings" style="font-size: 0.85rem; color: var(--gold-solid);">$0.00</span></div>
                 </div>
                 <div class="table-responsive">
                     <table class="seller-table">
@@ -400,34 +555,44 @@
                             </tr>
                         </thead>
                         <tbody id="sellerOrdersTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">NO INCOMING SHIPMENT REQUESTS.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO INCOMING SHIPMENT REQUESTS.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 6. PAYOUT VIEW ================= -->
+        <!-- ================= 6. PAYOUT VIEW WITH RE-VERIFICATION GUARD ================= -->
         <div id="view-payout" class="app-view">
-            <div class="info-card" style="text-align: center; padding: 30px;">
-                <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> SELLER PAYOUT & WITHDRAWAL</div>
-                <p style="color: var(--text-gray); font-size: 0.75rem; text-transform: none; margin-bottom: 20px;">Withdrawals are synced directly with Cloudflare D1 gateway.</p>
-                <div class="stat-card" style="max-width: 280px; margin: 0 auto 20px auto; padding: 20px;">
+            <div class="info-card" style="text-align: center; padding: 20px;">
+                <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> PAYOUT & WITHDRAWAL</div>
+                <p style="color: var(--text-gray); font-size: 0.68rem; text-transform: none; margin-bottom: 14px;">Withdrawals require re-verifying your registered mobile number for security.</p>
+                
+                <div class="stat-card" style="max-width: 240px; margin: 0 auto 16px auto; padding: 14px;">
                     <h3>AVAILABLE BALANCE</h3>
                     <div class="value" id="payoutBalanceVal">$0.00</div>
                 </div>
-                <button type="button" onclick="alert('Payout withdrawal requested successfully!')" class="btn-gold">REQUEST WITHDRAWAL</button>
+
+                <!-- Re-verification Box for Payout Request -->
+                <div id="payoutAuthBox" style="max-width: 360px; margin: 0 auto; background: #000; padding: 14px; border-radius: 10px; border: 1px solid var(--border-soft);">
+                    <div class="form-group" style="margin-bottom: 10px; text-align: left;">
+                        <label>ENTER REGISTERED MOBILE NUMBER <span class="req-star">*</span></label>
+                        <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="+8801700000000" style="text-transform: none;">
+                    </div>
+                    <div id="payoutStatusMsg" class="status-msg"></div>
+                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%;">AUTHORIZE & REQUEST WITHDRAWAL</button>
+                </div>
             </div>
         </div>
 
     </div>
 
     <!-- Multi-Device Sync QR Modal -->
-    <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:16px;">
-        <div style="background:#08080c; border:1px solid rgba(212, 175, 55, 0.3); border-radius:18px; padding:24px 16px; width:100%; max-width:360px; text-align:center;">
-            <h3 style="font-size:1.0rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px;">MULTI-DEVICE QR SYNC</h3>
-            <p style="font-size:0.7rem; color:var(--text-gray); margin-bottom:16px; text-transform:none;">Scan this secure QR code with another mobile device to sync session.</p>
-            <div id="qrcodeContainer" style="background:#ffffff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:16px;"></div>
+    <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:12px;">
+        <div style="background:#08080c; border:1px solid var(--border-soft); border-radius:14px; padding:20px 14px; width:100%; max-width:320px; text-align:center;">
+            <h3 style="font-size:0.88rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px;">MULTI-DEVICE QR SYNC</h3>
+            <p style="font-size:0.65rem; color:var(--text-gray); margin-bottom:12px; text-transform:none;">Scan this secure QR code with another mobile device to sync session.</p>
+            <div id="qrcodeContainer" style="background:#ffffff; padding:8px; border-radius:8px; display:inline-block; margin-bottom:12px;"></div>
             <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE & RETURN</button>
         </div>
     </div>
@@ -447,7 +612,7 @@
             <span>LIST</span>
         </button>
         <button type="button" class="nav-item" id="nav-btn-upload" onclick="switchTab('upload')">
-            <i class="fa-solid fa-plus-circle" style="font-size: 1.3rem; color: var(--gold-solid);"></i>
+            <i class="fa-solid fa-plus-circle" style="font-size: 1.15rem; color: var(--gold-solid);"></i>
             <span>UPLOAD</span>
         </button>
         <button type="button" class="nav-item" id="nav-btn-shipment" onclick="switchTab('shipment')">
@@ -460,10 +625,49 @@
         </button>
     </nav>
 
-    <!-- External Script Integration -->
+    <!-- External Script Integration & Unified Logic -->
     <script src="info.js"></script>
     <script>
         const chartInstances = {};
+        let currentUploadStep = 1;
+        let selectedModeValue = "retail";
+        let selectedCategoryValue = "";
+        let uploadedImageUrls = [];
+        let uploadedVideoUrl = "";
+
+        const subCategoriesData = {
+            womens: [
+                {name: "CLOTHING", icon: "fa-solid fa-shirt", key: "women-clothing"},
+                {name: "HANDBAGS", icon: "fa-solid fa-bag-shopping", key: "women-handbags"},
+                {name: "SHOES", icon: "fa-solid fa-shoe-prints", key: "women-shoes"},
+                {name: "JEWELRY", icon: "fa-solid fa-gem", key: "women-jewelry"}
+            ],
+            mens: [
+                {name: "MEN CLOTHING", icon: "fa-solid fa-shirt", key: "men-clothing"},
+                {name: "MEN SHOES", icon: "fa-solid fa-shoe-prints", key: "men-shoes"},
+                {name: "MEN WATCHES", icon: "fa-solid fa-clock", key: "men-watches"}
+            ],
+            girls: [
+                {name: "GIRLS CLOTHING", icon: "fa-solid fa-child-dress", key: "girls-clothing"},
+                {name: "GIRLS SHOES", icon: "fa-solid fa-shoe-prints", key: "girls-shoes"}
+            ],
+            boys: [
+                {name: "BOYS CLOTHING", icon: "fa-solid fa-child", key: "boys-clothing"},
+                {name: "BOYS SHOES", icon: "fa-solid fa-shoe-prints", key: "boys-shoes"}
+            ],
+            matching: [
+                {name: "COUPLE SETS", icon: "fa-solid fa-people-arrows", key: "couple-matchingsets"},
+                {name: "FAMILY SETS", icon: "fa-solid fa-people-group", key: "family-matchingsets"}
+            ],
+            luxury: [
+                {name: "CORPORATE GIFTS", icon: "fa-solid fa-briefcase", key: "corporate-gifts"},
+                {name: "LUXURY GIFT ITEMS", icon: "fa-solid fa-gem", key: "luxury-giftitems"}
+            ],
+            baby: [
+                {name: "BABY CLOTHING", icon: "fa-solid fa-shirt", key: "mother-baby-clothing"},
+                {name: "BABY GEAR", icon: "fa-solid fa-bed", key: "nursery-baby-gear"}
+            ]
+        };
 
         function switchTab(tabName) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
@@ -479,7 +683,7 @@
                 'info': 'SELLER PORTAL & INFO',
                 'dashboard': 'SELLER DASHBOARD',
                 'list': 'SELLER PRODUCT LIST',
-                'upload': 'SELLER PRODUCT UPLOAD',
+                'upload': document.getElementById('editingProductIndex').value !== "" ? 'EDIT PRODUCT' : 'MASTER UPLOAD',
                 'shipment': 'SELLER SHIPMENT PORTAL',
                 'payout': 'SELLER PAYOUT PORTAL'
             };
@@ -490,19 +694,61 @@
             } else if (tabName === 'list') {
                 loadProductsIntoTable();
             } else if (tabName === 'upload') {
-                initUploadFormIds();
+                if (document.getElementById('editingProductIndex').value === "") {
+                    resetUploadForm();
+                }
+                updateUploadStepUI(currentUploadStep || 1);
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function initUploadFormIds() {
-            let email = localStorage.getItem('rorraxy_current_seller_email') || localStorage.getItem('rorraxy_seller_email') || "seller@rorraxy.com";
-            let sellerId = localStorage.getItem('seller_id') || `SLR-${email.split('@')[0]}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
-            localStorage.setItem('seller_id', sellerId);
+        function renderPaymentFields() {
+            const gw = document.getElementById('payoutGateway').value;
+            const field1 = document.getElementById('paymentFieldDynamic1');
+            const field2 = document.getElementById('paymentFieldDynamic2');
             
-            document.getElementById('uploadSellerId').value = sellerId;
-            document.getElementById('uploadProductCode').value = `PRD-${Math.random().toString(36).substring(2,8).toUpperCase()}`;
+            if (gw === 'bank') {
+                field1.querySelector('label').innerHTML = 'ACCOUNT NUMBER<span class="req-star">*</span>';
+                field1.querySelector('input').placeholder = '102030405060';
+                field2.style.display = 'flex';
+            } else if (gw === 'payoneer') {
+                field1.querySelector('label').innerHTML = 'PAYONEER EMAIL<span class="req-star">*</span>';
+                field1.querySelector('input').placeholder = 'seller@payoneer.com';
+                field2.style.display = 'none';
+            } else {
+                field1.querySelector('label').innerHTML = 'MOBILE NUMBER<span class="req-star">*</span>';
+                field1.querySelector('input').placeholder = '01700000000';
+                field2.style.display = 'none';
+            }
+        }
+
+        function verifyAndRequestPayout() {
+            const inputPhone = document.getElementById('payoutVerifyPhone').value.trim();
+            const savedPhone = localStorage.getItem('rorraxy_seller_phone') || "";
+            const msgEl = document.getElementById('payoutStatusMsg');
+
+            if (!inputPhone) {
+                msgEl.innerText = "PLEASE ENTER YOUR REGISTERED MOBILE NUMBER.";
+                msgEl.className = "status-msg error";
+                msgEl.style.display = "block";
+                return;
+            }
+
+            if (savedPhone && !savedPhone.includes(inputPhone) && !inputPhone.includes(savedPhone.replace("+880", ""))) {
+                msgEl.innerText = "MOBILE NUMBER DOES NOT MATCH REGISTERED RECORD!";
+                msgEl.className = "status-msg error";
+                msgEl.style.display = "block";
+                return;
+            }
+
+            msgEl.innerText = "VERIFICATION SUCCESSFUL! PAYOUT WITHDRAWAL REQUEST SUBMITTED.";
+            msgEl.className = "status-msg success";
+            msgEl.style.display = "block";
+            
+            setTimeout(() => {
+                alert("PAYOUT REQUEST PROCESSED SUCCESSFULLY!");
+            }, 500);
         }
 
         function openMultiDeviceSyncModal() {
@@ -513,8 +759,8 @@
             const syncToken = "rorraxy_sync_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
             new QRCode(qrcodeDiv, {
                 text: window.location.origin + "/seller/index.html?sync_token=" + syncToken,
-                width: 140,
-                height: 140,
+                width: 120,
+                height: 120,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
@@ -525,16 +771,177 @@
             document.getElementById('deviceSyncModal').style.display = 'none';
         }
 
+        function updateUploadStepUI(step) {
+            currentUploadStep = step;
+            document.querySelectorAll('#view-upload .step-section').forEach(sec => sec.style.display = 'none');
+            document.getElementById(`upload-step-${step}`).style.display = 'block';
+
+            for (let i = 1; i <= 5; i++) {
+                const item = document.getElementById(`prog-ind-${i}`);
+                if (i < step) item.className = 'step-prog-item completed';
+                else if (i === step) item.className = 'step-prog-item active';
+                else item.className = 'step-prog-item';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextUploadStep(targetStep) {
+            if (targetStep === 2 && !selectedModeValue) {
+                alert("PLEASE SELECT UPLOAD MODE!");
+                return;
+            }
+            if (targetStep === 3 && !selectedCategoryValue) {
+                alert("PLEASE SELECT CATEGORY!");
+                return;
+            }
+            if (targetStep === 4 && uploadedImageUrls.length === 0) {
+                alert("PLEASE UPLOAD AT LEAST ONE IMAGE.");
+                return;
+            }
+            updateUploadStepUI(targetStep);
+        }
+
+        function prevUploadStep(targetStep) {
+            updateUploadStepUI(targetStep);
+        }
+
+        function selectUploadMode(mode, element) {
+            document.querySelectorAll('.mode-box').forEach(b => b.classList.remove('clicked'));
+            element.classList.add('clicked');
+            selectedModeValue = mode;
+            document.getElementById('upload-next-btn-1').disabled = false;
+
+            const wholesaleRow = document.getElementById('wholesale-price-row');
+            if (mode === 'wholesale' || mode === 'both') wholesaleRow.style.display = 'grid';
+            else wholesaleRow.style.display = 'none';
+        }
+
+        function showSubCategories(element, catKey) {
+            document.querySelectorAll('#main-categories .cat-box').forEach(b => b.classList.remove('clicked'));
+            element.classList.add('clicked');
+
+            document.getElementById('main-categories').style.display = 'none';
+            document.getElementById('sub-categories').style.display = 'block';
+
+            const contentDiv = document.getElementById('sub-cat-content');
+            contentDiv.innerHTML = '';
+
+            subCategoriesData[catKey].forEach(item => {
+                const box = document.createElement('div');
+                box.className = 'cat-box';
+                box.onclick = () => {
+                    document.querySelectorAll('#sub-cat-content .cat-box').forEach(b => b.classList.remove('clicked'));
+                    box.classList.add('clicked');
+                    selectedCategoryValue = item.key || item.name;
+                    setTimeout(() => { nextUploadStep(3); }, 200);
+                };
+                box.innerHTML = `<i class="${item.icon}"></i><span>${item.name}</span>`;
+                contentDiv.appendChild(box);
+            });
+        }
+
+        function backToMainCategories() {
+            document.getElementById('sub-categories').style.display = 'none';
+            document.getElementById('main-categories').style.display = 'grid';
+            selectedCategoryValue = "";
+        }
+
+        window.handleImageSelection = function(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+            const previewContainer = document.getElementById('image-preview');
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let localUrl = URL.createObjectURL(file);
+                uploadedImageUrls.push(localUrl);
+
+                let card = document.createElement('div');
+                card.className = 'preview-card';
+                card.innerHTML = `<img src="${localUrl}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${localUrl}');" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.8); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button>`;
+                previewContainer.appendChild(card);
+            }
+            document.getElementById('upload-next-btn-3').disabled = false;
+        };
+
+        window.handleVideoSelection = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const previewContainer = document.getElementById('video-preview');
+            uploadedVideoUrl = URL.createObjectURL(file);
+            previewContainer.innerHTML = `<div class="preview-card"><video src="${uploadedVideoUrl}" controls></video></div>`;
+        };
+
+        function resetUploadForm() {
+            document.getElementById('editingProductIndex').value = "";
+            document.getElementById('product_title').value = "";
+            document.getElementById('product_description').value = "";
+            document.getElementById('selling_price').value = "";
+            document.getElementById('market_price').value = "";
+            document.getElementById('stock_count').value = "10";
+            document.getElementById('discount_rate').value = "10";
+            uploadedImageUrls = [];
+            uploadedVideoUrl = "";
+            document.getElementById('image-preview').innerHTML = "";
+            document.getElementById('video-preview').innerHTML = "";
+            selectedCategoryValue = "";
+            document.getElementById('upload-next-btn-3').disabled = true;
+            document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH PRODUCT';
+        }
+
+        function prepareNewProductUpload() {
+            resetUploadForm();
+            switchTab('upload');
+        }
+
+        async function submitMasterForm(event) {
+            event.preventDefault();
+            if (uploadedImageUrls.length === 0) {
+                alert("PLEASE UPLOAD AT LEAST ONE IMAGE.");
+                return;
+            }
+
+            const sellerId = localStorage.getItem('seller_id') || "SLR-UNKNOWN";
+            const editingIdx = document.getElementById('editingProductIndex').value;
+
+            const productData = {
+                seller_id: sellerId,
+                product_code: `PRD-${Math.random().toString(36).substring(2,8).toUpperCase()}`,
+                title: document.getElementById('product_title').value.toUpperCase(),
+                category: selectedCategoryValue || "General",
+                upload_mode: selectedModeValue,
+                price: document.getElementById('selling_price').value || document.getElementById('price_sample').value || "10.00",
+                stock: document.getElementById('stock_count').value || "10",
+                image_url: uploadedImageUrls[0] || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png",
+                description: document.getElementById('product_description').value
+            };
+
+            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+
+            if (editingIdx !== "") {
+                localProducts[parseInt(editingIdx)] = productData;
+                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
+                alert("PRODUCT UPDATED SUCCESSFULLY!");
+            } else {
+                localProducts.unshift(productData);
+                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
+                alert("PRODUCT PUBLISHED SUCCESSFULLY!");
+            }
+
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            resetUploadForm();
+            switchTab('list');
+        }
+
         function createSparkline(canvasId, dataPoints, isBar = false) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
 
             const ctx = canvas.getContext('2d');
-            const gradient = ctx.createLinearGradient(0, 0, 0, 50);
-            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
             chartInstances[canvasId] = new Chart(ctx, {
                 type: isBar ? 'bar' : 'line',
                 data: {
@@ -544,7 +951,7 @@
                         borderColor: '#d4af37',
                         borderWidth: 1.5,
                         fill: true,
-                        backgroundColor: isBar ? '#d4af37' : gradient,
+                        backgroundColor: isBar ? '#d4af37' : 'rgba(212, 175, 55, 0.25)',
                         tension: 0.35,
                         pointRadius: 0,
                         borderRadius: isBar ? 3 : 0
@@ -561,9 +968,16 @@
 
         function renderDashboardCharts() {
             requestAnimationFrame(() => {
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                let pCount = localProducts.length;
+                document.getElementById('statProductsVal').innerText = pCount;
+                document.getElementById('statOrdersVal').innerText = "0";
+                document.getElementById('statRevenueVal').innerText = "$0.00";
+                document.getElementById('statBalanceVal').innerText = "$0.00";
+
                 createSparkline('chartRevenue', [0, 0, 0, 0, 0]);
                 createSparkline('chartBalance', [0, 0, 0, 0, 0]);
-                createSparkline('chartProducts', [0, 2, 5, 8], true);
+                createSparkline('chartProducts', pCount > 0 ? [0, Math.ceil(pCount*0.5), pCount] : [0, 0, 0], true);
                 createSparkline('chartOrders', [0, 0, 0, 0, 0]);
             });
         }
@@ -573,7 +987,7 @@
             const tbody = document.getElementById('desktopTableBody');
             
             if (localProducts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>`;
                 document.getElementById('statProductsVal').innerText = "0";
                 return;
             }
@@ -581,25 +995,48 @@
             document.getElementById('statProductsVal').innerText = localProducts.length;
             let html = '';
             localProducts.forEach((p, idx) => {
-                let img = p.image_url || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 html += `
                     <tr>
                         <td>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <img src="${img}" class="prod-thumb" alt="prod">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <img src="${p.image_url}" class="prod-thumb" alt="prod">
                                 <strong>${p.title}</strong>
                             </div>
                         </td>
-                        <td>${p.category || 'General'}</td>
-                        <td>$${parseFloat(p.price || 0).toFixed(2)} [${p.upload_mode || 'Retail'}]</td>
-                        <td>${p.stock || 1} Pcs</td>
+                        <td>${p.category}</td>
+                        <td>$${parseFloat(p.price || 0).toFixed(2)} [${p.upload_mode}]</td>
+                        <td>${p.stock} Pcs</td>
                         <td>
-                            <button onclick="deleteProduct(${idx})" style="background:rgba(255,77,77,0.1); border:1px solid rgba(255,77,77,0.3); color:#ff4d4d; padding:5px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editProduct(${idx})" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.3); color:var(--gold-solid); padding:4px 8px; border-radius:6px; cursor:pointer; margin-right:4px;"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct(${idx})" style="background:rgba(255,77,77,0.1); border:1px solid rgba(255,77,77,0.3); color:#ff4d4d; padding:4px 8px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
             tbody.innerHTML = html;
+        }
+
+        function editProduct(idx) {
+            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+            let p = localProducts[idx];
+            if (!p) return;
+
+            document.getElementById('editingProductIndex').value = idx;
+            document.getElementById('product_title').value = p.title || "";
+            document.getElementById('product_description').value = p.description || "";
+            document.getElementById('selling_price').value = p.price || "";
+            document.getElementById('stock_count').value = p.stock || "10";
+            selectedModeValue = p.upload_mode || "retail";
+            selectedCategoryValue = p.category || "";
+            uploadedImageUrls = [p.image_url];
+
+            const previewContainer = document.getElementById('image-preview');
+            previewContainer.innerHTML = `<div class="preview-card"><img src="${p.image_url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls=[]" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.8); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button></div>`;
+
+            document.getElementById('upload-next-btn-3').disabled = false;
+            document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> UPDATE PRODUCT';
+
+            switchTab('upload');
         }
 
         function deleteProduct(idx) {
@@ -609,42 +1046,6 @@
                 localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
                 loadProductsIntoTable();
             }
-        }
-
-        // Product Upload Submission Handler
-        const uploadForm = document.getElementById('productUploadForm');
-        if (uploadForm) {
-            uploadForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const newProd = {
-                    seller_id: document.getElementById('uploadSellerId').value,
-                    product_code: document.getElementById('uploadProductCode').value,
-                    title: document.getElementById('prodTitle').value.trim(),
-                    category: document.getElementById('prodCategory').value.trim(),
-                    upload_mode: document.getElementById('prodUploadMode').value,
-                    price: document.getElementById('prodPrice').value,
-                    stock: document.getElementById('prodStock').value,
-                    image_url: document.getElementById('prodImageUrl').value.trim()
-                };
-
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
-                localProducts.unshift(newProd);
-                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
-
-                try {
-                    await fetch('/api/products', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newProd)
-                    });
-                } catch(err) {
-                    console.log("Cloudflare sync notice:", err);
-                }
-
-                alert("PRODUCT PUBLISHED SUCCESSFULLY!");
-                switchTab('list');
-                uploadForm.reset();
-            });
         }
 
         window.addEventListener('DOMContentLoaded', () => {
