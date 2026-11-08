@@ -12,23 +12,21 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // অটো-ডিটেক্ট D1 ডাটাবেজ বাইন্ডিং (retail অথবা DB)
   const db = env.retail || env.DB;
   if (!db) {
-    return new Response(JSON.stringify({ success: false, error: "Database binding not found in environment (env.retail or env.DB)" }), {
+    return new Response(JSON.stringify({ success: false, error: "Database binding not found" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 
   try {
-    // ১. ম্যাজিক লিংক জেনারেট রিকোয়েস্ট
     if (url.pathname.includes("/send-magic-link")) {
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const { email } = await request.json();
+      const { email, mobile_number } = await request.json();
       if (!email) {
         return new Response(JSON.stringify({ error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
@@ -37,9 +35,10 @@ export async function onRequest(context) {
       const expiresAt = Date.now() + 180 * 1000;
 
       await db.prepare(`
-        INSERT INTO verification_tokens (token, email, expires_at)
-        VALUES (?, ?, ?)
-      `).bind(token, email.toLowerCase(), expiresAt).run();
+        UPDATE sellers 
+        SET verification_token = ?, token_expires_at = ? 
+        WHERE email = ?
+      `).bind(token, expiresAt, email.toLowerCase()).run();
 
       const magicLink = `https://${url.hostname}/api/seller/verify-magic?token=${token}`;
 
@@ -49,46 +48,34 @@ export async function onRequest(context) {
       });
     }
 
-    // ২. ম্যাজিক লিংক ভেরিফিকেশন ও সিকিউরিটি লগ
     if (url.pathname.includes("/verify-magic")) {
       const token = url.searchParams.get("token");
       if (!token) return new Response("Invalid Token", { status: 400 });
 
       const record = await db.prepare(`
-        SELECT * FROM verification_tokens WHERE token = ?
+        SELECT * FROM sellers WHERE verification_token = ?
       `).bind(token).first();
 
-      if (!record || Date.now() > record.expires_at) {
+      if (!record || Date.now() > record.token_expires_at) {
         return new Response("Link expired or invalid!", { status: 410 });
       }
 
-      const email = record.email;
-      const clientIp = request.headers.get("cf-connecting-ip") || "Unknown";
-      const country = request.headers.get("cf-ipcountry") || "Unknown";
-      const userAgent = request.headers.get("user-agent") || "Unknown";
       const now = new Date().toISOString();
 
       await db.prepare(`
-        INSERT INTO sellers (email, is_verified, last_ip, ip_country, user_agent, verified_at, created_at)
-        VALUES (?, 1, ?, ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
-        ON CONFLICT(email) DO UPDATE SET
-          is_verified = 1,
-          last_ip = excluded.last_ip,
-          ip_country = excluded.ip_country,
-          user_agent = excluded.user_agent,
-          verified_at = excluded.verified_at
-      `).bind(email, clientIp, country, userAgent, now, email, now).run();
+        UPDATE sellers 
+        SET is_verified = 1, verified_at = ?, verification_token = NULL, token_expires_at = NULL 
+        WHERE verification_token = ?
+      `).bind(now, token).run();
 
-      await db.prepare(`DELETE FROM verification_tokens WHERE token = ?`).bind(token).run();
-
-      // ভেরিফিকেশনের পর সরাসরি ড্যাশবোর্ডে রিডাইরেক্ট
       return Response.redirect(`https://${url.hostname}/seller/dashboard.html?verified=true`, 302);
     }
 
-    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST) - সাথে সেলারের মূল ID রিটার্ন করার ব্যবস্থা
     if (request.method === "POST") {
       const data = await request.json();
       const email = (data.email || data.seller_id || "").toLowerCase();
+      const mobileNumber = data.mobile_number || data.phone || "";
+      const sellerId = data.seller_id || email;
       const clientIp = request.headers.get("cf-connecting-ip") || "Unknown";
       const country = request.headers.get("cf-ipcountry") || data.country || "Unknown";
       const userAgent = request.headers.get("user-agent") || "Unknown";
@@ -100,10 +87,12 @@ export async function onRequest(context) {
 
       await db.prepare(`
         INSERT INTO sellers (
-          email, brand_name, full_name, business_desc, whatsapp, 
-          emergency_phone, country, full_address, doc_type, doc_number, trade_license, logo_url, is_verified, last_ip, ip_country, user_agent, verified_at, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
+          seller_id, email, mobile_number, brand_name, full_name, business_desc, 
+          whatsapp, emergency_phone, country, full_address, doc_type, doc_number, 
+          trade_license, logo_url, is_verified, admin_approval_status, last_ip, ip_country, user_agent, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'pending', ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
         ON CONFLICT(email) DO UPDATE SET
+          mobile_number = COALESCE(excluded.mobile_number, sellers.mobile_number),
           brand_name = excluded.brand_name,
           full_name = excluded.full_name,
           business_desc = excluded.business_desc,
@@ -117,10 +106,11 @@ export async function onRequest(context) {
           logo_url = excluded.logo_url,
           last_ip = excluded.last_ip,
           ip_country = excluded.ip_country,
-          user_agent = excluded.user_agent,
-          verified_at = COALESCE(sellers.verified_at, excluded.verified_at)
+          user_agent = excluded.user_agent
       `).bind(
+        sellerId,
         email,
+        mobileNumber,
         data.brand_name || "",
         data.full_name || "",
         data.business_desc || "",
@@ -130,23 +120,21 @@ export async function onRequest(context) {
         data.full_address || "",
         data.doc_type || "NID",
         data.doc_number || "",
-        data.trade_license || data.default_payout_details || "",
+        data.trade_license || "",
         data.logo_url || "",
         clientIp,
         country,
         userAgent,
-        now,
         email,
         now
       ).run();
 
-      // সেভ হওয়ার পর ওই সেলারের ইউনিক ID সহ রেকর্ড ফেচ করে নেওয়া
-      const sellerRecord = await db.prepare(`SELECT id, email FROM sellers WHERE email = ?`).bind(email).first();
+      const sellerRecord = await db.prepare(`SELECT id, seller_id, email FROM sellers WHERE email = ?`).bind(email).first();
 
       return new Response(JSON.stringify({ 
         success: true, 
-        message: "Seller profile and security logs saved successfully to D1", 
-        seller_id: sellerRecord ? sellerRecord.id : null,
+        message: "Seller data saved successfully", 
+        seller_id: sellerRecord ? sellerRecord.seller_id : null,
         email: email 
       }), {
         status: 200,
@@ -154,7 +142,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ৪. সেলার প্রোফাইল ডাটা ফেচ (GET)
     if (request.method === "GET") {
       const email = url.searchParams.get("email");
       if (!email) {
@@ -169,7 +156,7 @@ export async function onRequest(context) {
       });
     }
 
-    return new Response(JSON.stringify({ message: "Seller Pages Function Active" }), { status: 200, headers: corsHeaders });
+    return new Response(JSON.stringify({ message: "Seller API Active" }), { status: 200, headers: corsHeaders });
 
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
@@ -178,3 +165,4 @@ export async function onRequest(context) {
     });
   }
 }
+```[cite: 1, 4]
