@@ -18,7 +18,6 @@
     </script>
     <script src="/popup.js"></script>
 
-    <!-- Super-fast Resource Preloading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
@@ -42,35 +41,25 @@
             --font-main: 'Poppins', sans-serif;
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
         html, body { 
             width: 100%; max-width: 100vw; overflow-x: hidden; 
             background: var(--bg-retail) !important; 
             color: var(--text-white); font-family: var(--font-main); 
             min-height: 100vh; font-size: 14px;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            margin: 0; padding: 0;
-            contain: layout style;
         }
 
-        body { padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)); }
+        body { margin: 0; padding: 0 0 75px 0; }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* Fast Loader Overlay */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
             transition: opacity 0.15s ease, visibility 0.15s ease;
-            will-change: opacity, visibility;
-            pointer-events: none;
         }
         .loader-logo-box {
             width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
@@ -84,19 +73,15 @@
 
         .animate-card-entry { animation: fadeInLuxury 0.15s ease forwards; }
         @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translate3d(0, 4px, 0); }
-            to { opacity: 1; transform: translate3d(0, 0, 0); }
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Fixed Top Search Bar */
         .top-floating-search-bar {
-            position: fixed; top: calc(15px + env(safe-area-inset-top, 0px)); left: 50%; 
-            transform: translate3d(-50%, 0, 0);
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: flex;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
             border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-            backface-visibility: hidden;
-            will-change: transform;
         }
         .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
@@ -109,21 +94,18 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Fixed Bottom Navigation Bar - Zero Jitter Guaranteed */
+        /* Stable Bottom Navigation Bar (No Jitter) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.99); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
-            display: flex; justify-content: space-around; align-items: center; z-index: 5000; 
-            padding: 0 4px calc(env(safe-area-inset-bottom, 0px)) 4px;
-            transform: translateZ(0); -webkit-transform: translateZ(0);
-            will-change: transform; backface-visibility: hidden;
+            display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
+            transform: translateZ(0); will-change: transform;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
             width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
-            user-select: none;
         }
         .bottom-nav-item:active { transform: scale(0.95); }
         .bottom-nav-item i { 
@@ -136,10 +118,8 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
-        /* Pinterest Grid Feed */
         .pinterest-feed-container {
             padding: 10px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
-            contain: content;
         }
         @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 15px; } }
 
@@ -147,7 +127,7 @@
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.15s ease; contain: layout style paint;
+            transition: transform 0.15s ease;
         }
         .product-card:active { transform: scale(0.97); }
 
@@ -179,7 +159,7 @@
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: calc(100vh - 68px); height: calc(100dvh - 68px); top: 0;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
             scrollbar-width: none; border: none;
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
@@ -202,7 +182,7 @@
         }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        /* Smooth Cross-Fade Slideshow Layers */
+        /* Smooth Cross-Fade Slideshow Layers with Zoom In/Out */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
             transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -224,7 +204,8 @@
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
             gap: 8px; padding: 5px 16px; border-radius: 20px;
             background: rgba(8, 8, 14, 0.9) !important;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(212, 175, 55, 0.4);
             box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
@@ -238,15 +219,13 @@
             padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* Fixed Right Vertical Bar - Zero Jitter */
         .right-vertical-actions {
-            position: fixed; right: 12px; bottom: calc(85px + env(safe-area-inset-bottom, 0px)); z-index: 4500;
+            position: fixed; right: 12px; bottom: 85px; z-index: 4500;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto; width: 45px;
-            transform: translateZ(0); -webkit-transform: translateZ(0);
-            will-change: transform; backface-visibility: hidden;
+            transform: translateZ(0); will-change: transform;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; user-select: none; }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
         .side-action-item:active { transform: scale(0.9); }
         .action-pure-icon { 
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
@@ -256,7 +235,8 @@
             font-size: 0.58rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
             text-shadow: 0 2px 4px rgba(0,0,0,0.9); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45px;
         }
-        .love-action-btn.liked-active .action-pure-icon, .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
+        .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
+        .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
         .cart-pink-badge {
             position: absolute; top: -6px; right: -2px; background: var(--pink-accent); color: #fff;
@@ -265,9 +245,10 @@
         }
 
         .overlay-sheet {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.7); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px; scrollbar-width: none; backdrop-filter: blur(5px);
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px;
+            scrollbar-width: none;
         }
         .overlay-sheet::-webkit-scrollbar { display: none; }
 
@@ -313,9 +294,10 @@
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
 
         .category-transparent-overlay, .saved-gallery-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.6) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px; scrollbar-width: none; backdrop-filter: blur(4px);
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 85px 15px;
+            scrollbar-width: none;
         }
         .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none; }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
@@ -362,10 +344,9 @@
     <!-- Always Visible Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
-        <button id="floatingSearchBtn" class="floating-search-btn-circle" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Complete & Unchanged Bottom Nav Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -431,14 +412,13 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
-            // Fast Loader Removal
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 150);
+                    setTimeout(() => loader.style.display = 'none', 100);
                 }
-            });
+            }, 80);
 
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
@@ -463,7 +443,7 @@
                         wrapper.scrollBy({ top: -cardHeight, behavior: 'smooth' });
                     }
                 }
-            }, { passive: false });
+            });
         });
 
         function toggleWorldPortal() {
@@ -635,7 +615,6 @@
             }
         }
 
-        /* Fast Home Render using Document Fragment */
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             if(!container) return;
@@ -668,7 +647,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadge}
-                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async">
+                        <img src="${resolvedImageUrl}" alt="${title}" decoding="async">
                         <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
@@ -744,7 +723,6 @@
             slideIntervalsMap = {};
         }
 
-        /* Full Audio Video Support in Reels */
         function openReelsModal(startIndex) {
             const overlay = document.getElementById('reelModalOverlay');
             const wrapper = document.getElementById('reelModalWrapperBody');
@@ -772,7 +750,7 @@
 
                 let mediaContent = '';
                 if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaContent = `<video src="${pVideo}" autoplay loop controls playsinline style="width:100%; height:100%; object-fit:contain;" onclick="this.muted=!this.muted"></video>`;
+                    mediaContent = `<video src="${pVideo}" autoplay loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
                     let layersHtml = extractedImages.map((imgUrl, imgIdx) => `
                         <img src="${imgUrl}" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" decoding="async">
@@ -819,12 +797,12 @@
 
             wrapper.innerHTML = reelsHtml;
 
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 let targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
                 if (targetCard) {
                     wrapper.scrollTop = targetCard.offsetTop;
                 }
-            });
+            }, 0);
 
             let scrollTimer = null;
             wrapper.onscroll = () => {
@@ -1125,7 +1103,7 @@
                     thumbsHtml += `
                         <div class="saved-thumb-card">
                             <div class="saved-thumb-preview" onclick="selectSavedVideo('${vId}')">
-                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;" decoding="async">
                                 <i class="fa-solid fa-play" style="position:absolute; color:#fcf6ba; font-size:1.2rem;"></i>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 2px;">
