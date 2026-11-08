@@ -62,24 +62,24 @@
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
         .loader-logo-box {
-            width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 25px rgba(212,175,55,0.4);
-            animation: pulseGlow 1.5s infinite alternate ease-in-out;
+            width: 85px; height: 85px; border-radius: 50%; overflow: hidden;
+            border: 2px solid var(--gold-solid); box-shadow: 0 0 35px rgba(212,175,55,0.5);
+            animation: pulseGlow 1.2s infinite alternate ease-in-out;
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .loader-brand-name {
-            font-size: 1.1rem; font-weight: 800; letter-spacing: 2px;
+            font-size: 1.2rem; font-weight: 800; letter-spacing: 3px;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @keyframes pulseGlow {
-            from { transform: scale(0.95); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
-            to { transform: scale(1.05); box-shadow: 0 0 30px rgba(212,175,55,0.7); }
+            from { transform: scale(0.92); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
+            to { transform: scale(1.08); box-shadow: 0 0 35px rgba(212,175,55,0.8); }
         }
 
-        .animate-card-entry { animation: fadeInFast 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        @keyframes fadeInFast {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        .animate-card-entry { animation: fadeInLuxury 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeInLuxury {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .top-floating-search-bar {
@@ -122,15 +122,17 @@
         }
 
         .pinterest-feed-container {
-            padding: 8px 6px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
+            padding: 10px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
         }
-        @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 12px; } }
+        @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 15px; } }
 
         .product-card {
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
+            transition: transform 0.2s ease;
         }
+        .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -151,36 +153,53 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Perfect Vertical Reels Modal Container */
+        /* Perfectly Optimized Instant Reels Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.95); z-index: 4000;
+            background: #000000; z-index: 4000;
             align-items: center; justify-content: center;
         }
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
-            background: #000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; border-left: 1px solid rgba(212,175,55,0.2); border-right: 1px solid rgba(212,175,55,0.2);
+            background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
+            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; border-left: 1px solid rgba(212,175,55,0.15); border-right: 1px solid rgba(212,175,55,0.15);
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
 
         .reel-card { 
             width: 100%; height: 100vh; height: 100dvh; 
             scroll-snap-align: start; scroll-snap-stop: always;
-            display: flex; flex-direction: column; position: relative; background: #000; flex-shrink: 0;
+            display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
             align-items: center; justify-content: center;
         }
         .reel-media-box { 
             position: relative; width: 100%; max-width: 420px; aspect-ratio: 9 / 16; max-height: 85vh; 
-            cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
             border-radius: 16px; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.9);
         }
-        .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
-        .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+        
+        /* Video First Presentation & Slideshow Layout */
+        .reel-primary-video-container {
+            width: 100%; flex: 1; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+        }
+        .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
+
+        .reel-slideshow-strip {
+            width: 100%; height: 110px; background: rgba(5,5,8,0.95); border-top: 1px solid rgba(212,175,55,0.25);
+            display: flex; align-items: center; gap: 8px; padding: 8px 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+            scrollbar-width: none; flex-shrink: 0;
+        }
+        .reel-slideshow-strip::-webkit-scrollbar { display: none; }
+        .reel-slide-thumb {
+            flex: 0 0 85px; width: 85px; height: 95px; border-radius: 8px; overflow: hidden; border: 2px solid transparent;
+            background: #000; scroll-snap-align: start; transition: transform 0.2s ease;
+        }
+        .reel-slide-thumb.active { border-color: var(--gold-solid); transform: scale(1.03); }
+        .reel-slide-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 125px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
             gap: 8px; padding: 6px 18px; border-radius: 20px;
             background: rgba(8, 8, 14, 0.88) !important;
@@ -362,7 +381,7 @@
         </div>
     </main>
 
-    <!-- Dedicated Reels Popup Modal (Clean 9:16 vertical aspect ratio without page jumping) -->
+    <!-- Dedicated Reels Popup Modal (Instant 9:16 vertical aspect ratio with video first & slideshow strip) -->
     <div id="reelModalOverlay" class="reel-modal-overlay" onclick="if(event.target===this) closeReelModal()">
         <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
     </div>
@@ -379,9 +398,11 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const refParam = urlParams.get('ref') || urlParams.get('seller_id') || urlParams.get('affiliate');
+            let refParam = urlParams.get('ref') || urlParams.get('seller_id') || urlParams.get('affiliate');
             if (refParam) {
                 localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
+            } else if (!localStorage.getItem('rorraxy_active_affiliate_ref')) {
+                localStorage.setItem('rorraxy_active_affiliate_ref', 'rorraxy-store');
             }
 
             buildCategoriesUI();
@@ -392,9 +413,9 @@
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 400);
+                    setTimeout(() => loader.style.display = 'none', 300);
                 }
-            }, 300);
+            }, 250);
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -505,7 +526,7 @@
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = shuffleArray([...parsed]);
+                        globalMasterProductsList = [...parsed];
                         activeProductList = globalMasterProductsList;
                         renderPinterestHomeGrid(globalMasterProductsList);
                     }
@@ -520,20 +541,12 @@
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    globalMasterProductsList = shuffleArray([...productsList]);
+                    globalMasterProductsList = [...productsList];
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     activeProductList = globalMasterProductsList;
                     renderPinterestHomeGrid(globalMasterProductsList);
                 }
             } catch (error) {}
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
         }
 
         function executeHeaderSearch(keyword) {
@@ -606,8 +619,9 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
                 
-                // Open clean Reels vertical popup modal directly on click
-                cardDiv.onclick = () => {
+                // Open Reels vertical popup modal instantly on touch/click with luxurious entry
+                cardDiv.onclick = (e) => {
+                    e.preventDefault();
                     currentReelIndex = index;
                     openReelsModal(index);
                 };
@@ -703,7 +717,6 @@
             list.forEach((product, idx) => {
                 let pId = String(product.id || product.product_id || '101');
                 let pVideo = product.video_url || product.youtube_video || '';
-                let mediaElem = '';
                 let extractedImages = [];
 
                 try {
@@ -713,21 +726,23 @@
                     } else if(product.image_url) extractedImages = [product.image_url];
                 } catch(e){}
 
+                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+
+                let videoElem = '';
                 if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+                    videoElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
-                    if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-                    mediaElem = `<img id="reelSlideImg_${idx}" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
-                    
-                    if (extractedImages.length > 1) {
-                        let imgIdx = 0;
-                        slideIntervalsMap[idx] = setInterval(() => {
-                            imgIdx = (imgIdx + 1) % extractedImages.length;
-                            const imgElem = document.getElementById(`reelSlideImg_${idx}`);
-                            if (imgElem) imgElem.src = extractedImages[imgIdx];
-                        }, 1800);
-                    }
+                    videoElem = `<img src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;" alt="preview">`;
                 }
+
+                let slideshowThumbsHtml = '';
+                extractedImages.forEach((imgUrl, imgIdx) => {
+                    slideshowThumbsHtml += `
+                        <div class="reel-slide-thumb ${imgIdx===0?'active':''}" id="thumb_${idx}_${imgIdx}" onclick="switchReelMainImage(${idx}, '${imgUrl}', ${imgIdx}, ${extractedImages.length})">
+                            <img src="${imgUrl}" alt="thumb">
+                        </div>
+                    `;
+                });
 
                 let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
                 let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
@@ -739,10 +754,24 @@
                                 <span class="reel-center-price-badge">${price}</span>
                                 ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
                             </div>
-                            ${mediaElem}
+                            <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">
+                                ${videoElem}
+                            </div>
+                            <div class="reel-slideshow-strip">
+                                ${slideshowThumbsHtml}
+                            </div>
                         </div>
                     </div>
                 `;
+
+                // Auto slideshow rotator for images if multiple exist
+                if (extractedImages.length > 1) {
+                    let currentImgIdx = 0;
+                    slideIntervalsMap[idx] = setInterval(() => {
+                        currentImgIdx = (currentImgIdx + 1) % extractedImages.length;
+                        switchReelMainImage(idx, extractedImages[currentImgIdx], currentImgIdx, extractedImages.length);
+                    }, 2500);
+                }
             });
 
             wrapper.innerHTML = reelsHtml;
@@ -750,9 +779,9 @@
             setTimeout(() => {
                 const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
                 if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'auto' });
+                    wrapper.scrollTop = targetCard.offsetTop;
                 }
-            }, 20);
+            }, 10);
 
             let scrollTimer = null;
             wrapper.onscroll = () => {
@@ -765,12 +794,26 @@
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
                         renderFixedGlobalActions(activeId, false);
                     }
-                }, 40);
+                }, 30);
             };
 
             let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
             renderFixedGlobalActions(activeId, false);
         }
+
+        window.switchReelMainImage = function(cardIdx, imgUrl, thumbIdx, totalCount) {
+            const container = document.getElementById(`primaryMediaBox_${cardIdx}`);
+            if (container) {
+                container.innerHTML = `<img src="${imgUrl}" style="width:100%; height:100%; object-fit:contain; background:#000;" alt="slide">`;
+            }
+            for (let i = 0; i < totalCount; i++) {
+                const thumb = document.getElementById(`thumb_${cardIdx}_${i}`);
+                if (thumb) {
+                    if (i === thumbIdx) thumb.classList.add('active');
+                    else thumb.classList.remove('active');
+                }
+            }
+        };
 
         function closeReelModal() {
             clearAllSlideIntervals();
@@ -944,7 +987,7 @@
         function confirmAddToCart(e, pId, title, price, sellerId) {
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'none';
+            let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
 
             let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg);
 
