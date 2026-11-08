@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -110,7 +110,7 @@
         .feed-container {
             padding: 4px 0; 
             column-count: 2; 
-            column-gap: 10px; 
+            column-gap: 8px; 
             width: 100%; 
             max-width: 1400px; 
             margin: 0 auto;
@@ -118,43 +118,41 @@
         @media (min-width: 768px) { 
             .feed-container { 
                 column-count: 4; 
-                column-gap: 14px; 
+                column-gap: 12px; 
             } 
         }
 
         .product-card {
-            background: var(--card-wholesale); border-radius: 14px; overflow: hidden; 
+            background: var(--card-wholesale); border-radius: 12px; overflow: hidden; 
             display: inline-block; width: 100%; 
-            border: 1px solid rgba(212,175,55,0.15); position: relative;
-            cursor: pointer; margin-bottom: 10px; break-inside: avoid; page-break-inside: avoid;
-            transition: transform 0.2s, border-color 0.2s;
+            border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
+            margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
+            transition: transform 0.2s ease;
         }
-        .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
+        .product-card:active { transform: scale(0.98); }
 
-        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
+        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; background: transparent; }
         
-        .wholesale-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 10;
-            background: rgba(212, 175, 55, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3px 8px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
-            font-size: 0.58rem; font-weight: 700; color: #000000 !important; text-transform: uppercase;
-        }
-
+        /* হোম পেজের হুবহু ফুটার ডিজাইন */
         .card-footer-actions { 
-            display: flex; flex-direction: column; padding: 10px; 
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: auto;
+            display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; 
+            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
+            white-space: nowrap; overflow: hidden;
         }
-        .wholesale-pricing-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .product-price-tag { font-size: 0.82rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .moq-tag { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
         
-        .card-sub-actions { display: flex; align-items: center; justify-content: space-between; width: 100%; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 6px; }
-        .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.70rem; font-weight: 500; color: var(--text-gray) !important; }
-        .love-action i { color: var(--pink-love); }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
+        .wholesale-info-inline { display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
+        .product-price-tag { font-size: 0.80rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .moq-tag { font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
         
-        .share-action-btn { background: none; border: none; font-size: 0.70rem; font-weight: 500; cursor: pointer; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        .share-icon-btn { 
+            background: none; border: none; cursor: pointer; 
+            font-size: 1.15rem; background: var(--gold-gradient); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            padding: 4px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: transform 0.15s ease;
+        }
+        .share-icon-btn:active { transform: scale(1.2); }
 
         /* ট্রান্সপারেন্ট ওভারলে সার্চ মডাল */
         .floating-search-modal {
@@ -457,6 +455,31 @@
     <script>
         const API_BASE_URL = '';
 
+        // ডাইনামিক অ্যাফিলিয়েট আইডি ট্র্যাকিং
+        function getActiveAffiliateId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+            
+            if (refFromUrl) {
+                try {
+                    localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
+                    sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
+                } catch(e) {}
+                return refFromUrl;
+            }
+
+            let userProfile = {};
+            try {
+                userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account')) || JSON.parse(localStorage.getItem('user_profile')) || {};
+            } catch(e) {}
+
+            return userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            getActiveAffiliateId(); // পেজ লোডে অ্যাফিলিয়েট ডিটেক্ট
+        });
+
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
             const isOpen = targetBox.classList.contains('active');
@@ -514,13 +537,14 @@
             }
         }
 
+        // হোম পেজের মতো হুবহু কার্ড লেআউট এবং অটো-অ্যাফিলিয়েট শেয়ারিং
         function renderWholesaleFeed(products) {
             const feedContainer = document.getElementById('categoryProductFeed');
             feedContainer.innerHTML = products.map(item => {
                 const productId = item.id || item.product_id || item.product_code || '101';
-                const title = item.title || 'rorraxy Bulk Item';
+                const title = item.title || 'WHOLESALE ITEM';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
-                const moq = item.moq || item.min_order_qty || 10;
+                const moqCount = item.moq || item.min_order_qty || 1;
                 
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
                 try {
@@ -537,24 +561,16 @@
                 return `
                     <div class="product-card" onclick="openProductDetails('${productId}')">
                         <div class="product-media-box">
-                            <div class="wholesale-badge">
-                                <i class="fa-solid fa-boxes-stacked"></i> MOQ: ${moq} PCS
-                            </div>
-                            <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
+                            <img src="${imageUrl}" alt="${title}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
-                        <div class="card-footer-actions" onclick="event.stopPropagation()">
-                            <div class="wholesale-pricing-row">
-                                <span class="product-price-tag">${bulkPrice} / pc</span>
-                                <span class="moq-tag">Min ${moq} Pcs</span>
+                        <div class="card-footer-actions">
+                            <div class="wholesale-info-inline">
+                                <span class="product-price-tag">${bulkPrice}</span>
+                                <span class="moq-tag">Min ${moqCount} Pcs</span>
                             </div>
-                            <div class="card-sub-actions">
-                                <div class="love-action card-love-btn" onclick="toggleLove(event, this)">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${item.like_count || 45}</span>
-                                </div>
-                                <button class="share-action-btn" onclick="triggerAutoShare(event, '${productId}', '${title.replace(/'/g, "\\'")}')">
-                                    <i class="fa-solid fa-share-nodes"></i> Share
-                                </button>
-                            </div>
+                            <button class="share-icon-btn" onclick="shareProduct(event, '${title.replace(/'/g, "\\'")}', '${productId}')" title="Share & Earn">
+                                <i class="fa-solid fa-share-nodes"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -562,7 +578,10 @@
         }
 
         function openProductDetails(productId) {
-            window.location.href = `/wholesale/pd.html?id=${productId}`;
+            let affId = getActiveAffiliateId();
+            let url = `/wholesale/pd.html?id=${productId}`;
+            if (affId) url += `&ref=${affId}`;
+            window.location.href = url;
         }
 
         function goBackToCategories() {
@@ -622,30 +641,29 @@
             fetchAndDisplayProducts("search");
         }
 
-        function toggleLove(event, btn) {
-            event.stopPropagation();
-            let countSpan = btn.querySelector('.love-count');
-            let currentLikes = parseInt(countSpan.innerText);
-            if(btn.classList.contains('gold-active')) {
-                btn.classList.remove('gold-active');
-                countSpan.innerText = currentLikes - 1;
-            } else {
-                btn.classList.add('gold-active');
-                countSpan.innerText = currentLikes + 1;
-            }
-        }
+        // ডায়নামিক অটো-অ্যাফিলিয়েট শেয়ার ফাংশন
+        async function shareProduct(event, title, productId) {
+            if(event) event.stopPropagation();
 
-        async function triggerAutoShare(event, productId, productTitle) {
-            event.stopPropagation();
-            const shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
+            let affId = getActiveAffiliateId();
+            let shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
+            
+            if (affId) {
+                shareUrl += `&ref=${affId}`;
+            }
+
             if (navigator.share) {
-                try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
+                try {
+                    await navigator.share({ title: title, url: shareUrl });
+                } catch(e) {}
             } else if (navigator.clipboard) {
                 await navigator.clipboard.writeText(shareUrl);
                 const btn = event.currentTarget;
-                const orig = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> COPIED!`;
-                setTimeout(() => { btn.innerHTML = orig; }, 1500);
+                if(btn) {
+                    const origHtml = btn.innerHTML;
+                    btn.innerHTML = `<i class="fa-solid fa-check" style="color:#00e676;"></i>`;
+                    setTimeout(() => { btn.innerHTML = origHtml; }, 1600);
+                }
             }
         }
     </script>
