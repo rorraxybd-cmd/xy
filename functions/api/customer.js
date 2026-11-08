@@ -39,10 +39,9 @@ export async function onRequest(context) {
 
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-      await env.retail.prepare(`
-        INSERT INTO customer_auth_logs (phone, country_code, ip_address, device_info, auth_token, status, last_login)
-        VALUES (?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP)
-      `).bind(phone, countryCode, clientIp, body.device_info || userAgent, otpCode).run();
+      await env.retail.prepare(
+        "INSERT INTO customer_auth_logs (phone, country_code, ip_address, device_info, auth_token, status, last_login) VALUES (?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP)"
+      ).bind(phone, countryCode, clientIp, body.device_info || userAgent, otpCode).run();
 
       return new Response(JSON.stringify({ 
         success: true, 
@@ -65,11 +64,9 @@ export async function onRequest(context) {
         });
       }
 
-      const record = await env.retail.prepare(`
-        SELECT * FROM customer_auth_logs 
-        WHERE phone = ? AND auth_token = ? 
-        ORDER BY id DESC LIMIT 1
-      `).bind(phone, otp).first();
+      const record = await env.retail.prepare(
+        "SELECT * FROM customer_auth_logs WHERE phone = ? AND auth_token = ? ORDER BY id DESC LIMIT 1"
+      ).bind(phone, otp).first();
 
       if (!record) {
         return new Response(JSON.stringify({ success: false, error: "Invalid OTP code." }), {
@@ -78,9 +75,9 @@ export async function onRequest(context) {
         });
       }
 
-      await env.retail.prepare(`
-        UPDATE customer_auth_logs SET status = 'Verified', last_login = CURRENT_TIMESTAMP WHERE id = ?
-      `).bind(record.id).run();
+      await env.retail.prepare(
+        "UPDATE customer_auth_logs SET status = 'Verified', last_login = CURRENT_TIMESTAMP WHERE id = ?"
+      ).bind(record.id).run();
 
       const authToken = "rorraxy_cust_" + Math.random().toString(36).substring(2) + Date.now();
 
@@ -107,10 +104,9 @@ export async function onRequest(context) {
         });
       }
 
-      await env.retail.prepare(`
-        INSERT INTO customer_auth_logs (phone, ip_address, device_info, customer_name, shipping_address, master_order_id, auth_token, status, last_login)
-        VALUES (?, ?, ?, ?, ?, ?, 'SYNCED_TOKEN', 'Verified', CURRENT_TIMESTAMP)
-      `).bind(phone, clientIp, userAgent, customerName, shippingAddress, masterOrderId).run();
+      await env.retail.prepare(
+        "INSERT INTO customer_auth_logs (phone, ip_address, device_info, customer_name, shipping_address, master_order_id, auth_token, status, last_login) VALUES (?, ?, ?, ?, ?, ?, 'SYNCED_TOKEN', 'Verified', CURRENT_TIMESTAMP)"
+      ).bind(phone, clientIp, userAgent, customerName, shippingAddress, masterOrderId).run();
 
       return new Response(JSON.stringify({ 
         success: true, 
@@ -133,6 +129,3 @@ export async function onRequest(context) {
     });
   }
 }
-```[cite: 9]
-
-কোডটি বসিয়ে কমিট করার সাথে সাথেই দেখবেন আপনার এই ঝামেলা চিরতরে দূর হয়ে গেছে!
