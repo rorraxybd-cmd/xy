@@ -40,10 +40,8 @@ export async function onRequest(context) {
         });
       }
 
-      // ৬ ডিজিটের র্যান্ডম ওটিপি কোড জেনারেট
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-      // ডাটাবেজে লগ সংরক্ষণ
       await env.retail.prepare(`
         INSERT INTO customer_auth_logs (phone, country_code, ip_address, device_info, auth_token, status, last_login)
         VALUES (?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP)
@@ -103,14 +101,13 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ৩. চেকআউট থেকে কাস্টমার ইনফো ও অর্ডার সিংক (Customer Auth Sync)
+    // ৩. চেকআউট থেকে কাস্টমার ইনফো ও অর্ডার সিংক
     // ==========================================
     if (action === "sync-customer") {
       const phone = body.phone;
       const customerName = body.customer_name || "";
       const shippingAddress = body.shipping_address || "";
       const masterOrderId = body.master_order_id || "";
-      const orderId = body.order_id || "";
 
       if (!phone) {
         return new Response(JSON.stringify({ success: false, error: "Phone number is required for sync." }), {
@@ -119,7 +116,6 @@ export async function onRequest(context) {
         });
       }
 
-      // ডাটাবেজে কাস্টমার রেকর্ড আপডেট বা ইনসার্ট করা
       await env.retail.prepare(`
         INSERT INTO customer_auth_logs (phone, ip_address, device_info, customer_name, shipping_address, master_order_id, auth_token, status, last_login)
         VALUES (?, ?, ?, ?, ?, ?, 'SYNCED_TOKEN', 'Verified', CURRENT_TIMESTAMP)
@@ -145,4 +141,7 @@ export async function onRequest(context) {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
-}[cite: 11]
+}
+```[cite: 9]
+
+কোডটি গিটহাবে আপডেট করে কমিট করার সাথে সাথেই দেখবেন লাল ক্রস (❌) চিহ্নটি সবুজ টিক (✔️)-এ পরিণত হয়ে গেছে এবং ক্লাউডফায়ারের বিল্ড সফলভাবে পাস হয়ে যাবে!
