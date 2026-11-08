@@ -21,7 +21,6 @@ export async function onRequest(context) {
   }
 
   try {
-    // ১. ম্যাজিক লিংক জেনারেট রিকোয়েস্ট (UPSERT সহ সংশোধিত)
     if (url.pathname.includes("/send-magic-link")) {
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -54,7 +53,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ২. ম্যাজিক লিংক ভেরিফিকেশন ও সিকিউরিটি লগ
     if (url.pathname.includes("/verify-magic")) {
       const token = url.searchParams.get("token");
       if (!token) return new Response("Invalid Token", { status: 400 });
@@ -78,7 +76,6 @@ export async function onRequest(context) {
       return Response.redirect(`https://${url.hostname}/seller/dashboard.html?verified=true`, 302);
     }
 
-    // ৩. সেলার প্রোফাইল ডাটা সেভ (POST)
     if (request.method === "POST") {
       const data = await request.json();
       const email = (data.email || data.seller_id || "").toLowerCase();
@@ -150,7 +147,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ৪. সেলার প্রোফাইল ডাটা ফেচ (GET)
     if (request.method === "GET") {
       const email = url.searchParams.get("email");
       if (!email) {
@@ -174,6 +170,4 @@ export async function onRequest(context) {
     });
   }
 }
-```[cite: 1, 4, 19]
-
-এটি আপনার প্রজেক্টের `seller.js` ফাইলে আপডেট করে দিলে ক্লাউডফায়ারের এই এররটি চিরতরে দূর হয়ে যাবে।
+```[cite: 1, 4, 19, 20]
