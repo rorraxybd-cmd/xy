@@ -40,13 +40,22 @@ export async function onRequest(context) {
         });
       }
 
-      // প্রফেশনাল ও ইউনিক অ্যাফিলিয়েট আইডি জেনারেশন (ব্র্যান্ডের নাম ছাড়া, শর্ট নাম + র‍্যান্ডম সংখ্যা ও বর্ণ)
-      const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/gi, '').substring(0, 7);
-      const randomHash = Math.random().toString(36).substring(2, 8);
-      const generatedUniqueId = `${emailPrefix}_${randomHash}_${Date.now().toString(36).slice(-3)}`;
+      // চেক করব এই ইমেইলের কোনো রেকর্ড আগে থেকেই আছে কি না
+      let existingRecord = await env.retail.prepare(
+        `SELECT unique_affiliate_id FROM rorraxy_affiliates_master WHERE email = ?`
+      ).bind(email).first();
+
+      let generatedUniqueId = existingRecord?.unique_affiliate_id;
+
+      if (!generatedUniqueId) {
+        const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/gi, '').substring(0, 7);
+        const randomHash = Math.random().toString(36).substring(2, 8);
+        generatedUniqueId = `${emailPrefix}_${randomHash}_${Date.now().toString(36).slice(-3)}`;
+      }
+
       const now = new Date().toISOString();
 
-      // ডাটাবেস টেবিলে IP ও Security ইনফোসহ এন্ট্রি সংরক্ষণ
+      // ডাটাবেসে ইনসার্ট অথবা আপডেট
       await env.retail.prepare(`
         INSERT INTO rorraxy_affiliates_master (
           unique_affiliate_id, email, country_code, phone, user_ip, user_agent, auth_provider, status, admin_approval, created_at, updated_at
@@ -59,14 +68,10 @@ export async function onRequest(context) {
           updated_at = excluded.updated_at
       `).bind(generatedUniqueId, email, countryCode, phone, userIp, userAgent, now, now).run();
 
-      const currentRecord = await env.retail.prepare(
-        `SELECT unique_affiliate_id FROM rorraxy_affiliates_master WHERE email = ?`
-      ).bind(email).first();
-
       return new Response(JSON.stringify({ 
         success: true, 
         message: "Magic verification code and IP recorded successfully", 
-        unique_affiliate_id: currentRecord?.unique_affiliate_id || generatedUniqueId 
+        unique_affiliate_id: generatedUniqueId 
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -198,7 +203,7 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ৬. পেআউট রিকোয়েস্ট (মিনিমাম লিমিটেড রিমুভড)
+    // ৬. পেআউট রিকোয়েস্ট
     // ==========================================
     if (action === "payout" || action === "payout_request") {
       if (request.method === "POST") {
