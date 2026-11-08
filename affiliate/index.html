@@ -17,23 +17,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- এক্সটার্নাল ইনফো সিএসএস -->
+    <link rel="stylesheet" href="info.css">
+
     <style>
-        :root {
-            --bg-retail: #000000;
-            --card-retail: #050508;
-            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
-            --gold-solid: #d4af37;
-            --text-white: #ffffff;
-            --text-gray: #8e8e99;
-            --font-main: 'Poppins', sans-serif;
-            --required-red: #ff4d4d;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
-        body { display: flex; align-items: center; justify-content: center; padding: 20px; text-transform: uppercase; }
-
+        body { display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-wrapper { width: 100%; max-width: 400px; display: flex; justify-content: center; align-items: center; }
         .auth-card {
             background: var(--card-retail);
@@ -47,24 +35,10 @@
             text-align: center;
             backdrop-filter: blur(10px);
         }
-
         .auth-logo { width: 130px; height: auto; max-height: 130px; object-fit: contain; margin: 0 auto; background: transparent !important; filter: drop-shadow(0 6px 20px rgba(255, 42, 133, 0.2)) !important; }
         .auth-title { font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1.2px; margin-top: -4px; }
         .auth-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 0.65rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.8px; }
-
-        .form-control {
-            width: 100%; background: #000000; border: none; border-radius: 14px;
-            padding: 14px 16px; color: var(--text-white); font-weight: 600; font-size: 0.88rem;
-            outline: none; font-family: var(--font-main); text-transform: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
-        }
-        .form-control:focus { background: #030305; }
-        .form-control::placeholder { font-size: 0.75rem; color: #555566; text-transform: none; }
-
         .email-hint { font-size: 0.62rem; color: var(--text-gray); text-transform: none; letter-spacing: 0.2px; margin-top: 2px; display: flex; gap: 5px; align-items: center; }
-
         .auth-btn {
             width: 100%; background: var(--gold-gradient); border: none; border-radius: 14px;
             padding: 15px; color: #030305; font-weight: 800; font-size: 0.85rem; cursor: pointer;
@@ -73,7 +47,6 @@
         }
         .auth-btn:hover { filter: brightness(1.08); }
         .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
         .status-msg { font-size: 0.72rem; text-transform: none; margin-top: -2px; display: none; text-align: center; }
         .status-msg.error { color: var(--required-red); }
         .status-msg.success { color: #2ecc71; }
@@ -107,6 +80,8 @@
         </div>
     </div>
 
+    <!-- এক্সটার্নাল ইনফো জাভাস্ক্রিপ্ট ফাইল -->
+    <script src="info.js"></script>
     <script>
         const magicLinkForm = document.getElementById('magicLinkForm');
         const affiliateEmailInput = document.getElementById('affiliateEmail');
@@ -145,7 +120,6 @@
             formStatus.style.display = 'none';
 
             try {
-                // সরাসরি মাস্টার টেবিলে ভেরিফিকেশন এন্ট্রি করার জন্য রিকোয়েস্ট পাঠানো
                 const response = await fetch(`/api/affiliate?action=verify`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
