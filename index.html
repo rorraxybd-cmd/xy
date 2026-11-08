@@ -163,6 +163,15 @@
             position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
             scroll-behavior: auto; -webkit-overflow-scrolling: touch;
+        }
+        .reel-card {
+            position: relative; width: 100%; height: 100vh; height: 100dvh;
+            scroll-snap-align: start; scroll-snap-stop: always; background: #000;
+        }
+        .reel-media-box {
+            width: 100%; height: 100%; position: relative; cursor: pointer;
+        }
+
         /* Smooth video & cross-fade slideshow container */
         .reel-primary-video-container {
             width: 100%; height: 100%; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
@@ -278,12 +287,13 @@
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* Professional Luxury Coin Flying Animation */
         .flying-gold-coin {
-            position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
-            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
-            box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.4s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.4s linear, opacity 0.4s ease-in;
+            position: fixed; z-index: 9999999; width: 34px; height: 34px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
+            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
+            box-shadow: 0 0 20px rgba(212,175,55,0.9), 0 0 8px rgba(255,255,255,0.8);
+            transition: left 0.45s cubic-bezier(0.25, 1, 0.5, 1), top 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.45s ease-out, opacity 0.45s ease-in;
         }
 
         .inpage-details-modal {
@@ -765,7 +775,6 @@
                         currSlide.classList.remove('active');
                         currSlide.classList.add('previous');
 
-                        // Alternating Zoom-In & Zoom-Out Effects for Variety
                         const isZoomIn = nextIdx % 2 === 0;
                         nextSlide.className = `slide-layer active ${isZoomIn ? 'zoom-in-anim' : 'zoom-out-anim'}`;
 
@@ -775,7 +784,7 @@
                     }
 
                     currentIdx = nextIdx;
-                }, 2200); // Perfectly balanced speed: snappy, smooth & responsive
+                }, 2200);
             }
         }
 
@@ -990,55 +999,64 @@
             document.getElementById('buyPreviewOverlay').style.display = 'none';
         }
 
+        /* Highly Optimized & Crystal Pure Professional Luxury Coin Drop Audio Synth */
         function playCoinDropChime() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
                 const ctx = new AudioCtx();
                 const now = ctx.currentTime;
-                const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01]; 
+                
+                // Professional High-Pitch Arpeggio Chime Frequencies
+                const freqs = [1760.00, 2349.32, 2793.83, 3520.00, 4698.64]; 
+                
                 freqs.forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
+                    
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.02));
-                    gain.gain.setValueAtTime(0, now + (idx * 0.02));
-                    gain.gain.linearRampToValueAtTime(0.08 / (idx + 1), now + (idx * 0.02) + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.02) + 0.5);
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.025));
+                    
+                    gain.gain.setValueAtTime(0, now + (idx * 0.025));
+                    gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.025) + 0.008);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.025) + 0.45);
+                    
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    osc.start(now + (idx * 0.02));
-                    osc.stop(now + (idx * 0.02) + 0.5);
+                    
+                    osc.start(now + (idx * 0.025));
+                    osc.stop(now + (idx * 0.025) + 0.45);
                 });
             } catch (e) {}
         }
 
         function triggerCoinDropAnimation(e) {
+            playCoinDropChime();
             const cartIconElem = document.getElementById('cartTargetIcon');
             let targetRect = cartIconElem ? cartIconElem.getBoundingClientRect() : null;
             let targetX = targetRect ? targetRect.left + (targetRect.width / 2) : window.innerWidth - 30;
             let targetY = targetRect ? targetRect.top + (targetRect.height / 2) : window.innerHeight - 50;
 
-            let startX = e ? e.clientX : window.innerWidth / 2;
-            let startY = e ? e.clientY : window.innerHeight / 2;
+            let startX = e && e.clientX ? e.clientX : window.innerWidth / 2;
+            let startY = e && e.clientY ? e.clientY : window.innerHeight / 2;
 
             const coin = document.createElement('div');
             coin.className = 'flying-gold-coin';
             coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
-            coin.style.left = `${startX - 16}px`;
-            coin.style.top = `${startY - 16}px`;
+            coin.style.left = `${startX - 17}px`;
+            coin.style.top = `${startY - 17}px`;
             document.body.appendChild(coin);
 
             requestAnimationFrame(() => {
-                coin.style.left = `${targetX - 16}px`;
-                coin.style.top = `${targetY - 16}px`;
-                coin.style.transform = 'scale(0.3) rotate(720deg)';
+                coin.style.left = `${targetX - 17}px`;
+                coin.style.top = `${targetY - 17}px`;
+                coin.style.transform = 'scale(0.25) rotate(720deg)';
                 coin.style.opacity = '0';
             });
 
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
-            }, 350);
+            }, 450);
         }
 
         function confirmAddToCart(e, pId, title, price, sellerId) {
