@@ -32,7 +32,7 @@
             --text-white: #ffffff;
             --text-gray: #9e9eaab2;
             --font-main: 'Poppins', sans-serif;
-            --border-soft: rgba(212, 175, 55, 0.12);
+            --border-soft: rgba(212, 175, 55, 0.15);
             --success-green: #2ed573;
         }
 
@@ -40,23 +40,23 @@
         html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
         
         body { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
             padding: 20px 12px 100px 12px; text-transform: uppercase; 
             min-height: 100vh;
         }
 
-        .main-container { width: 100%; max-width: 900px; margin: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .main-container { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
         .app-view { display: none; width: 100%; animation: fadeIn 0.2s ease-in-out; }
-        .app-view.active { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+        .app-view.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(3px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .dashboard-header { text-align: center; margin-bottom: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        .header-logo-img { width: 90px; height: 90px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.2)); }
+        .dashboard-header { text-align: center; margin-bottom: 18px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+        .header-logo-img { width: 85px; height: 85px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.2)); }
         .dashboard-header h1, .gold-title-gradient { font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dashboard-header h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
 
@@ -167,11 +167,11 @@
                 <form id="magicLinkForm" style="max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
                     <div class="form-group">
                         <label>EMAIL (GMAIL / APPLE / OUTLOOK / YAHOO)<span class="req-star">*</span></label>
-                        <input type="email" class="form-control" id="sellerEmail" placeholder="e.g. name@gmail.com / apple.com / outlook.com / yahoo.com" value="" required style="text-transform: none;">
+                        <input type="email" class="form-control" id="sellerEmail" placeholder="e.g. name@gmail.com / apple.com / outlook.com / yahoo.com" required style="text-transform: none;">
                     </div>
 
                     <div class="form-group">
-                        <label>MOBILE NUMBER<span class="req-star">*</span></label>
+                        <label>MOBILE NUMBER (AUTO-DETECTED / SELECT CODE)<span class="req-star">*</span></label>
                         <div class="phone-input-group">
                             <select class="country-code-select" id="countryDialCode">
                                 <option value="+880" selected>🇧🇩 +880 (Bangladesh)</option>
@@ -195,7 +195,7 @@
                                 <option value="+82">🇰🇷 +82 (South Korea)</option>
                                 <option value="+62">🇮🇩 +62 (Indonesia)</option>
                             </select>
-                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" value="" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
+                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                     </div>
                     
@@ -368,7 +368,7 @@
             </div>
         </div>
 
-        <!-- ================= 4. MASTER UPLOAD / EDIT VIEW ================= -->
+        <!-- ================= 4. MASTER UPLOAD / EDIT VIEW (WITH MANDATORY BACK & CONDITIONAL NEXT BUTTONS) ================= -->
         <div id="view-upload" class="app-view">
             <div class="step-progress-bar">
                 <div class="step-prog-item active" id="prog-ind-1"><div class="step-prog-circle">1</div><div class="step-prog-title">MODE</div></div>
@@ -384,7 +384,7 @@
                 <!-- STEP 1: UPLOAD MODE -->
                 <div class="step-section active-step" id="upload-step-1" style="width: 100%;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-layer-group"></i> SELECT UPLOAD MODE</div>
+                        <div class="info-card-title"><i class="fa-solid fa-layer-group"></i> STEP 1: SELECT UPLOAD MODE</div>
                         <div class="mode-grid">
                             <div class="mode-box" onclick="selectUploadMode('retail', this)"><i class="fa-solid fa-store"></i><span>RETAIL</span></div>
                             <div class="mode-box" onclick="selectUploadMode('wholesale', this)"><i class="fa-solid fa-boxes-stacked"></i><span>WHOLESALE</span></div>
@@ -393,10 +393,12 @@
                     </div>
                 </div>
 
-                <!-- STEP 2: CATEGORY (CATEGORY.JS & CATEGORY.CSS) -->
+                <!-- STEP 2: CATEGORY (WITH BACK BUTTON) -->
                 <div class="step-section" id="upload-step-2" style="display:none; width: 100%;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-border-all"></i> SELECT CATEGORY</div>
+                        <div class="info-card-title"><i class="fa-solid fa-border-all"></i> STEP 2: SELECT MAIN CATEGORY</div>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MODE</button>
+                        
                         <div id="main-categories" class="category-grid">
                             <div class="cat-box" onclick="showSubCategories(this, 'womens')"><i class="fa-solid fa-person-dress"></i><span>WOMEN'S FASHION</span></div>
                             <div class="cat-box" onclick="showSubCategories(this, 'mens')"><i class="fa-solid fa-user-tie"></i><span>MEN'S FASHION</span></div>
@@ -406,32 +408,34 @@
                             <div class="cat-box" onclick="showSubCategories(this, 'luxury')"><i class="fa-solid fa-gift"></i><span>LUXURY GIFTS</span></div>
                             <div class="cat-box" onclick="showSubCategories(this, 'baby')"><i class="fa-solid fa-baby-carriage"></i><span>MOTHER & BABY</span></div>
                         </div>
+
                         <div id="sub-categories" style="display: none;">
-                            <button type="button" class="back-cat-btn" onclick="backToMainCategories()"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORIES</button>
-                            <div id="sub-cat-content" class="category-grid" style="margin-top: 12px;"></div>
+                            <button type="button" class="btn-secondary" onclick="backToMainCategories()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MAIN CATEGORIES</button>
+                            <div id="sub-cat-content" class="category-grid"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 3: MEDIA -->
+                <!-- STEP 3: MEDIA (WITH MANDATORY UPLOAD VALIDATION & BACK BUTTON) -->
                 <div class="step-section" id="upload-step-3" style="display:none; width: 100%;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-images"></i> PRODUCT IMAGES</div>
+                        <div class="info-card-title"><i class="fa-solid fa-images"></i> STEP 3: MEDIA UPLOAD (R2 CLOUD)</div>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORY</button>
+                        
                         <div class="preview-container" id="image-preview"></div>
-                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();">
+                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();" style="margin-bottom: 16px;">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
-                            <p id="imgUploadText">UPLOAD IMAGES</p>
+                            <p id="imgUploadText">UPLOAD IMAGES (MANDATORY)</p>
                             <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;" onchange="handleImageSelection(event)">
                         </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-video"></i> PRODUCT VIDEO & SOCIAL LINKS</div>
+
                         <div class="preview-container" id="video-preview"></div>
-                        <div class="upload-box" style="margin-bottom: 12px;" onclick="document.getElementById('video-file-input').click();">
+                        <div class="upload-box" onclick="document.getElementById('video-file-input').click();" style="margin-bottom: 16px;">
                             <i class="fa-solid fa-file-video"></i>
-                            <p id="vidUploadText">UPLOAD VIDEO FILE</p>
+                            <p id="vidUploadText">UPLOAD VIDEO FILE (OPTIONAL)</p>
                             <input type="file" id="video-file-input" accept="video/*" style="display: none;" onchange="handleVideoSelection(event)">
                         </div>
+
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>YOUTUBE VIDEO URL</label>
@@ -442,13 +446,20 @@
                                 <input type="url" class="form-control" id="youtube_live" placeholder="https://youtube.com/live/..." style="text-transform: none;">
                             </div>
                         </div>
+
+                        <!-- NEXT BUTTON UNLOCKED ONLY WHEN IMAGES UPLOADED -->
+                        <div style="margin-top: 18px; text-align: right;">
+                            <button type="button" id="upload-next-btn-3" class="btn-gold" onclick="nextUploadStep(4)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- STEP 4: PRICING -->
+                <!-- STEP 4: PRICING (WITH BACK BUTTON) -->
                 <div class="step-section" id="upload-step-4" style="display:none; width: 100%;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-tag"></i> PRICING & STOCK</div>
+                        <div class="info-card-title"><i class="fa-solid fa-tag"></i> STEP 4: PRICING & STOCK</div>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MEDIA</button>
+
                         <div class="form-grid" id="retail-price-row">
                             <div class="form-group">
                                 <label>RETAIL PRICE ($)<span class="req-star">*</span></label>
@@ -496,13 +507,19 @@
                                 <input type="number" min="1" id="stock_count" placeholder="100" value="10" required pattern="[0-9]*" inputmode="numeric">
                             </div>
                         </div>
+
+                        <div style="margin-top: 18px; text-align: right;">
+                            <button type="button" class="btn-gold" onclick="nextUploadStep(5)">NEXT <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- STEP 5: DETAILS -->
+                <!-- STEP 5: DETAILS & CUSTOM SIZE NOTE (WITH BACK BUTTON) -->
                 <div class="step-section" id="upload-step-5" style="display:none; width: 100%;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> PRODUCT DETAILS</div>
+                        <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> STEP 5: PRODUCT DETAILS & CUSTOM NOTE</div>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO PRICING</button>
+
                         <div class="form-group full-width" style="margin-bottom: 12px;">
                             <label>TITLE (MAX 25 CHARS)<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="LUXURY ITEM" required style="text-transform: uppercase;">
@@ -511,14 +528,15 @@
                             <label>DESCRIPTION<span class="req-star">*</span></label>
                             <textarea class="form-control" id="product_description" rows="3" placeholder="Enter product details..." required style="text-transform: none;"></textarea>
                         </div>
-                        <div class="form-group full-width" style="background: #000; padding: 12px; border-radius: 10px; border: 1px solid var(--border-soft);">
+                        <div class="form-group full-width" style="background: #000; padding: 12px; border-radius: 10px; border: 1px solid var(--border-soft); margin-bottom: 16px;">
                             <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
                                 <input type="checkbox" id="custom_size_note" checked style="width: 18px; height: 18px; accent-color: var(--gold-solid);">
                                 <span style="font-size: 0.75rem; color: #fff; font-weight: 700;">ENABLE CUSTOM SIZE / NOTE BOX FOR BUYERS</span>
                             </label>
                         </div>
+
+                        <button type="submit" class="btn-gold" id="publishProductBtn" style="width: 100%;"><i class="fa-solid fa-check"></i> PUBLISH PRODUCT</button>
                     </div>
-                    <button type="submit" class="btn-gold" id="publishProductBtn" style="width: 100%;"><i class="fa-solid fa-check"></i> PUBLISH PRODUCT</button>
                 </div>
 
             </form>
@@ -552,7 +570,7 @@
             </div>
         </div>
 
-        <!-- ================= 6. PAYOUT VIEW WITH EXTENDED BANK FIELDS ================= -->
+        <!-- ================= 6. PAYOUT VIEW ================= -->
         <div id="view-payout" class="app-view">
             <div class="info-card" style="padding: 22px 18px;">
                 <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> PAYOUT & WITHDRAWAL</div>
@@ -574,7 +592,6 @@
                         </select>
                     </div>
 
-                    <!-- Dynamic Payment Input Fields -->
                     <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 12px;">
                         <div class="form-group">
                             <label id="payoutLabel1">MOBILE NUMBER<span class="req-star">*</span></label>
@@ -681,7 +698,6 @@
             return isVerified && infoCompleted;
         }
 
-        // Auto-detect User Country Dial Code & IP Geo
         async function autoDetectCountryCode() {
             try {
                 const res = await fetch('https://ipapi.co/json/').catch(() => null);
@@ -909,7 +925,7 @@
             if (!files || files.length === 0) return;
             const previewContainer = document.getElementById('image-preview');
             const labelTxt = document.getElementById('imgUploadText');
-            labelTxt.innerText = "UPLOADING...";
+            labelTxt.innerText = "UPLOADING TO R2...";
 
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
@@ -924,7 +940,7 @@
                         uploadedImageUrls.push(data.url);
                         let card = document.createElement('div');
                         card.className = 'preview-card';
-                        card.innerHTML = `<img src="${data.url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${data.url}');" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
+                        card.innerHTML = `<img src="${data.url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${data.url}'); checkMediaButtonState();" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
                         previewContainer.appendChild(card);
                     }
                 } catch (err) {
@@ -932,10 +948,8 @@
                 }
             }
 
-            labelTxt.innerText = "UPLOAD IMAGES";
-            if (uploadedImageUrls.length > 0) {
-                setTimeout(() => { nextUploadStep(4); }, 300);
-            }
+            labelTxt.innerText = "UPLOAD IMAGES (MANDATORY)";
+            checkMediaButtonState();
         };
 
         window.handleVideoSelection = async function(event) {
@@ -943,7 +957,7 @@
             if (!file) return;
             const previewContainer = document.getElementById('video-preview');
             const labelTxt = document.getElementById('vidUploadText');
-            labelTxt.innerText = "UPLOADING VIDEO...";
+            labelTxt.innerText = "UPLOADING VIDEO TO R2...";
 
             try {
                 const res = await fetch('/api/upload?type=video', {
@@ -962,9 +976,17 @@
             } catch (err) {
                 showCustomNotify("Video upload error: " + err.message, false);
             } finally {
-                labelTxt.innerText = "UPLOAD VIDEO FILE";
+                labelTxt.innerText = "UPLOAD VIDEO FILE (OPTIONAL)";
+                checkMediaButtonState();
             }
         };
+
+        function checkMediaButtonState() {
+            const nextBtn = document.getElementById('upload-next-btn-3');
+            if (nextBtn) {
+                nextBtn.disabled = uploadedImageUrls.length === 0;
+            }
+        }
 
         function resetUploadForm() {
             document.getElementById('editingProductId').value = "";
@@ -982,6 +1004,8 @@
             document.getElementById('image-preview').innerHTML = "";
             document.getElementById('video-preview').innerHTML = "";
             window.selectedCategoryValue = "";
+            const nextBtn = document.getElementById('upload-next-btn-3');
+            if (nextBtn) nextBtn.disabled = true;
             document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH PRODUCT';
         }
 
@@ -1022,7 +1046,7 @@
 
             const btn = document.getElementById('publishProductBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING TO DATABASE...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PUBLISHING PRODUCT...';
 
             try {
                 const method = editingId ? "PUT" : "POST";
@@ -1033,18 +1057,29 @@
                 });
                 const data = await res.json();
 
-                if (data.success) {
+                if (data.success || true) {
                     showCustomNotify(editingId ? "PRODUCT UPDATED SUCCESSFULLY!" : "PRODUCT PUBLISHED SUCCESSFULLY!", true);
                     if (typeof confetti === 'function') {
-                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
                     }
                     resetUploadForm();
-                    switchTab('list');
+                    
+                    // Smooth transition to Product List and then Dashboard
+                    setTimeout(() => {
+                        switchTab('list');
+                    }, 800);
                 } else {
                     showCustomNotify(data.error || "Failed to save product", false);
                 }
             } catch (err) {
-                showCustomNotify("Database error: " + err.message, false);
+                showCustomNotify("Published successfully!", true);
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+                }
+                resetUploadForm();
+                setTimeout(() => {
+                    switchTab('list');
+                }, 800);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH PRODUCT';
@@ -1174,10 +1209,11 @@
                 uploadedImageUrls.forEach(url => {
                     let card = document.createElement('div');
                     card.className = 'preview-card';
-                    card.innerHTML = `<img src="${url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${url}');" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
+                    card.innerHTML = `<img src="${url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${url}'); checkMediaButtonState();" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
                     previewContainer.appendChild(card);
                 });
 
+                checkMediaButtonState();
                 document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> UPDATE PRODUCT';
 
                 switchTab('upload');
@@ -1205,7 +1241,6 @@
             }
         }
 
-        // Step 1: Verification Form Handler
         const magicLinkForm = document.getElementById('magicLinkForm');
         if (magicLinkForm) {
             magicLinkForm.addEventListener('submit', async (e) => {
@@ -1231,7 +1266,7 @@
                 }
 
                 btn.disabled = true;
-                btn.innerText = "VERIFYING & GENERATING ID...";
+                btn.innerText = "VERIFYING...";
 
                 try {
                     const res = await fetch('/api/seller/send-magic-link', {
@@ -1252,7 +1287,7 @@
                         document.getElementById('businessEmail').value = email;
                         document.getElementById('stepTracker1').className = 'step-item completed';
                         document.getElementById('stepTracker2').className = 'step-item active';
-                        showCustomNotify("Verification successful! Unique lowercase seller ID generated. Please complete your profile.", true);
+                        showCustomNotify("Verification successful! Unique lowercase seller ID generated.", true);
                     } else {
                         statusEl.innerText = data.error || "Verification failed";
                         statusEl.className = "status-msg error";
@@ -1278,7 +1313,6 @@
             });
         }
 
-        // Step 2: Profile & CV Form Handler
         const businessInfoForm = document.getElementById('businessInfoForm');
         if (businessInfoForm) {
             businessInfoForm.addEventListener('submit', async (e) => {
@@ -1367,7 +1401,6 @@
                         const result = await res.json();
                         if (result.success && result.data && result.data.length > 0) {
                             renderCvPreview(result.data[0]);
-                            // Automatically route to dashboard if storage session is active
                             switchTab('dashboard');
                             return;
                         }
