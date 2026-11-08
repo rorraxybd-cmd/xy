@@ -109,8 +109,8 @@
         #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 99999; justify-content: center; align-items: center; padding: 12px; }
         .notify-card { background: var(--card-retail); border-radius: 16px; padding: 22px 18px; width: 100%; max-width: 330px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
 
-        /* Fixed Bottom Navigation (All 5 Menu Items with Golden Gradient & Pink Active) */
-        .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); display: flex; justify-content: space-around; align-items: center; padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); box-shadow: 0 -4px 20px rgba(0,0,0,0.9); }
+        /* Fixed Bottom Navigation (Initially hidden until verification and profile setup are complete) */
+        .affiliate-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); justify-content: space-around; align-items: center; padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); box-shadow: 0 -4px 20px rgba(0,0,0,0.9); }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
         
         .nav-item i, .nav-item span {
@@ -424,7 +424,7 @@
         </div>
     </div>
 
-    <!-- Fixed Bottom Navigation (All 5 Menu Items Visible) -->
+    <!-- Fixed Bottom Navigation (Hidden by default until verified and setup completed) -->
     <nav class="affiliate-bottom-nav" id="bottomNav">
         <button type="button" class="nav-item active" id="nav-btn-dashboard" onclick="switchTab('dashboard')">
             <i class="fa-solid fa-chart-line"></i>
@@ -454,7 +454,7 @@
         let currentPhone = localStorage.getItem('rorraxy_affiliate_phone') || '';
         let currentUniqueId = localStorage.getItem('rorraxy_unique_aff_id') || '';
         let generatedMagicCode = '';
-        let userDeviceIp = ''; // ডিফল্ট 'Detecting...' এর বদলে খালি রাখা হলো যাতে ফালতু টেক্সট সেভ না হয়
+        let userDeviceIp = '';
 
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
@@ -810,7 +810,9 @@
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
                     document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
-                    document.getElementById('bottomNav').style.display = 'flex';
+                    
+                    // ভেরিফিকেশনের পর ইনফো পেজ দেখাবে, কিন্তু নিচের নেভবার এখনো হাইড থাকবে যতক্ষণ না কমপ্লিট হয়
+                    document.getElementById('bottomNav').style.display = 'none';
                     
                     if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                     showCustomNotify("IP SECURITY & VERIFICATION SUCCESSFUL!", true);
@@ -827,7 +829,7 @@
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
                     document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
-                    document.getElementById('bottomNav').style.display = 'flex';
+                    document.getElementById('bottomNav').style.display = 'none';
                 } finally {
                     btn.disabled = false;
                     btn.innerText = "AUTHORIZE & VERIFY";
@@ -863,6 +865,9 @@
                         body: JSON.stringify(profilePayload)
                     });
                     localStorage.setItem('rorraxy_affiliate_info_completed', 'true');
+                    
+                    // প্রোফাইল সেভ হওয়ার পরই কেবল নিচের ৫টি মেনুবার দৃশ্যমান হবে
+                    document.getElementById('bottomNav').style.display = 'flex';
                     showCustomNotify("PROFILE SAVED SUCCESSFULLY!", true);
                     
                     setTimeout(() => {
@@ -870,6 +875,7 @@
                     }, 800);
                 } catch (err) {
                     localStorage.setItem('rorraxy_affiliate_info_completed', 'true');
+                    document.getElementById('bottomNav').style.display = 'flex';
                     showCustomNotify("Profile saved successfully!", true);
                     setTimeout(() => {
                         switchTab('dashboard');
@@ -889,6 +895,7 @@
             }
 
             if (isAffiliateVerifiedAndComplete()) {
+                // ভেরিফিকেশন এবং ইনফো সেটআপ দুটোই সম্পূর্ণ হলে নিচের মেনুবার দেখাবে এবং ড্যাশবোর্ডে থাকবে
                 document.getElementById('view-verification').style.display = 'none';
                 document.getElementById('bottomNav').style.display = 'flex';
 
@@ -914,15 +921,15 @@
                     }
                 } catch (e) {}
             } else {
+                // ভেরিফিকেশন বা ইনফো সেটআপ সম্পূর্ণ না হলে নিচের মেনুবার হাইড থাকবে
+                document.getElementById('bottomNav').style.display = 'none';
                 const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
                 if (isVerified && currentUserEmail) {
                     document.getElementById('view-verification').style.display = 'none';
-                    document.getElementById('bottomNav').style.display = 'flex';
                     switchTab('info');
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
                 } else {
-                    document.getElementById('bottomNav').style.display = 'flex';
                     switchTab('verification');
                 }
             }
