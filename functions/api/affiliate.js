@@ -31,7 +31,6 @@ export async function onRequest(context) {
       const countryCode = body.country_code || "+880";
       const phone = (body.phone || "").trim();
       
-      // সুনির্দিষ্ট ও শক্তিশালী আইপি ডিটেকশন লজিক
       const cfIp = request.headers.get("cf-connecting-ip");
       const forwardedIp = request.headers.get("x-forwarded-for");
       const clientIp = body.ip;
@@ -56,7 +55,7 @@ export async function onRequest(context) {
 
       // চেক করব এই ইমেইলের কোনো রেকর্ড আগে থেকেই আছে কি না
       let existingRecord = await env.retail.prepare(
-        `SELECT unique_affiliate_id FROM rorraxy_affiliates_master WHERE email = ?`
+        `SELECT * FROM rorraxy_affiliates_master WHERE email = ?`
       ).bind(email).first();
 
       let generatedUniqueId = existingRecord?.unique_affiliate_id;
@@ -69,7 +68,6 @@ export async function onRequest(context) {
 
       const now = new Date().toISOString();
 
-      // ডাটাবেসে ইনসার্ট অথবা আপডেট (আইপি এবং ইউজার এজেন্ট সহ)
       await env.retail.prepare(`
         INSERT INTO rorraxy_affiliates_master (
           unique_affiliate_id, email, country_code, phone, user_ip, user_agent, auth_provider, status, admin_approval, created_at, updated_at
@@ -85,7 +83,8 @@ export async function onRequest(context) {
       return new Response(JSON.stringify({ 
         success: true, 
         message: "Magic verification code and IP recorded successfully", 
-        unique_affiliate_id: generatedUniqueId 
+        unique_affiliate_id: generatedUniqueId,
+        is_existing: !!existingRecord && !!existingRecord.first_name
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -93,7 +92,7 @@ export async function onRequest(context) {
     }
 
     // ==========================================
-    // ২. ম্যাজিক কোড ভেরিফিকেশন এন্ডপয়েন্ট
+    // ২. ম্যাজিক কোড ভেরিফিকেশন এন্ডপয়েন্ট (লগইন ডিটেকশন সহ)
     // ==========================================
     if (action === "verify_magic_code" && request.method === "POST") {
       const body = await request.json();
@@ -122,13 +121,18 @@ export async function onRequest(context) {
       `).bind(userIp, now, email).run();
 
       const record = await env.retail.prepare(
-        `SELECT unique_affiliate_id FROM rorraxy_affiliates_master WHERE email = ?`
+        `SELECT * FROM rorraxy_affiliates_master WHERE email = ?`
       ).bind(email).first();
+
+      // চেক করছি তার তথ্য আগে থেকেই ডাটাবেসে সম্পূর্ণ করা আছে কি না
+      const isComplete = record && record.first_name && record.payment_method;
 
       return new Response(JSON.stringify({ 
         success: true, 
         message: "Magic code and IP verified", 
-        unique_affiliate_id: record?.unique_affiliate_id 
+        unique_affiliate_id: record?.unique_affiliate_id,
+        is_complete: !!isComplete,
+        user_data: record || null
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
