@@ -31,14 +31,21 @@ export async function onRequest(context) {
       const countryCode = body.country_code || "+880";
       const phone = (body.phone || "").trim();
       
-      // নিখুঁত আইপি ডিটেকশন ও হ্যান্ডলিং (Detecting... বা খালি থাকলে ক্লাউডফ্লেয়ার বা রিমোট অ্যাড্র্রেস ধরবে)
+      // সুনির্দিষ্ট ও শক্তিশালী আইপি ডিটেকশন লজিক
       const cfIp = request.headers.get("cf-connecting-ip");
-      const remoteIp = request.headers.get("x-forwarded-for") || request.socket?.remoteAddress;
-      const userIp = (body.ip && body.ip !== "Detecting..." && body.ip.trim() !== "") 
-        ? body.ip 
-        : (cfIp || remoteIp || "127.0.0.1");
-        
-      const userAgent = request.headers.get("user-agent"] || "";
+      const forwardedIp = request.headers.get("x-forwarded-for");
+      const clientIp = body.ip;
+      
+      let userIp = "127.0.0.1";
+      if (clientIp && clientIp !== "Detecting..." && clientIp.trim() !== "") {
+          userIp = clientIp;
+      } else if (cfIp) {
+          userIp = cfIp;
+      } else if (forwardedIp) {
+          userIp = forwardedIp.split(',')[0].trim();
+      }
+
+      const userAgent = request.headers.get("user-agent") || "";
 
       if (!email) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), { 
@@ -93,10 +100,18 @@ export async function onRequest(context) {
       const email = (body.email || "").toLowerCase().trim();
       
       const cfIp = request.headers.get("cf-connecting-ip");
-      const userIp = (body.ip && body.ip !== "Detecting..." && body.ip.trim() !== "") 
-        ? body.ip 
-        : (cfIp || "127.0.0.1");
-        
+      const forwardedIp = request.headers.get("x-forwarded-for");
+      const clientIp = body.ip;
+      
+      let userIp = "127.0.0.1";
+      if (clientIp && clientIp !== "Detecting..." && clientIp.trim() !== "") {
+          userIp = clientIp;
+      } else if (cfIp) {
+          userIp = cfIp;
+      } else if (forwardedIp) {
+          userIp = forwardedIp.split(',')[0].trim();
+      }
+
       const now = new Date().toISOString();
 
       await env.retail.prepare(`
