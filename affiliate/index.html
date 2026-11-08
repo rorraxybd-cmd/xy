@@ -92,7 +92,6 @@
         .graph-container { width: 100%; height: 55px; position: relative; margin-top: 4px; }
         .graph-container canvas { width: 100% !important; height: 100% !important; }
 
-        /* Promotes Grid: Expanded & Better for Mobile & Desktop */
         .promote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; margin-bottom: 16px; }
         .promote-card { background: var(--card-retail); border-radius: 16px; padding: 22px 18px; text-align: center; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
         .promote-card h3 { font-size: 0.88rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -110,7 +109,8 @@
         #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 99999; justify-content: center; align-items: center; padding: 12px; }
         .notify-card { background: var(--card-retail); border-radius: 16px; padding: 22px 18px; width: 100%; max-width: 330px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
 
-        .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); display: none; justify-content: space-around; align-items: center; padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); box-shadow: 0 -4px 20px rgba(0,0,0,0.9); }
+        /* Fixed Bottom Navigation (All 5 Menu Items with Golden Gradient & Pink Active) */
+        .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); display: flex; justify-content: space-around; align-items: center; padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); box-shadow: 0 -4px 20px rgba(0,0,0,0.9); }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
         
         .nav-item i, .nav-item span {
@@ -149,16 +149,14 @@
         </header>
 
         <!-- ================= 1. VERIFICATION & MAGIC CODE STEP ================= -->
-        <div id="view-info" class="app-view active">
-            
-            <!-- STEP 1: INITIAL VERIFICATION FORM -->
-            <div class="info-card" id="verificationSection">
-                <div class="info-card-title">
+        <div id="view-verification" class="app-view active">
+            <div class="info-card" id="verificationSection" style="max-width: 420px; margin: 20px auto;">
+                <div class="info-card-title" style="justify-content: center;">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <span>AFFILIATE MAGIC LINK & IP VERIFICATION</span>
+                    <span>AFFILIATE MAGIC CODE VERIFICATION</span>
                 </div>
 
-                <form id="magicLinkForm" style="max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;" novalidate>
+                <form id="magicLinkForm" style="display: flex; flex-direction: column; gap: 14px;" novalidate>
                     <div class="form-group">
                         <label>EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK, APPLE)<span class="req-star">*</span></label>
                         <input type="email" class="form-control" id="affiliateEmail" placeholder="e.g. name@gmail.com" required style="text-transform: none;">
@@ -195,15 +193,15 @@
                     
                     <div id="formStatus" class="status-msg"></div>
 
-                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%;">
                         SEND 6-DIGIT MAGIC CODE <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </form>
             </div>
 
-            <!-- STEP 2: 6-DIGIT MAGIC CODE VERIFICATION SECTION -->
-            <div class="info-card" id="magicCodeVerifySection" style="display: none; max-width: 420px; margin: 0 auto;">
-                <div class="info-card-title">
+            <!-- 6-Digit Code Input Step -->
+            <div class="info-card" id="magicCodeVerifySection" style="display: none; max-width: 420px; margin: 20px auto;">
+                <div class="info-card-title" style="justify-content: center;">
                     <i class="fa-solid fa-key"></i>
                     <span>ENTER 6-DIGIT MAGIC CODE</span>
                 </div>
@@ -211,7 +209,7 @@
                     Secure 6-digit magic code has been generated. Enter the code below to complete device IP security check.
                 </p>
 
-                <div id="simulatedMagicLinkBox" style="background: rgba(212,175,55,0.08); padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 14px;">
+                <div style="background: rgba(212,175,55,0.08); padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 14px;">
                     <span style="font-size: 0.68rem; color: var(--gold-solid); font-weight: 700;">SECURE 6-DIGIT CODE:</span>
                     <div id="displayMagicCode" style="font-size: 1.5rem; font-weight: 800; letter-spacing: 5px; color: #fff; margin: 6px 0;">------</div>
                     <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 6px 12px; font-size: 0.65rem; margin-top: 4px;"><i class="fa-solid fa-bolt"></i> AUTO-VERIFY CODE</button>
@@ -226,12 +224,14 @@
                     <button type="submit" class="btn-gold" id="verifyOtpBtn" style="width: 100%;">AUTHORIZE & VERIFY <i class="fa-solid fa-lock"></i></button>
                 </form>
             </div>
+        </div>
 
-            <!-- STEP 3: PROFILE REGISTRATION / SETTINGS FORM (Locked Email & Phone, Strict Validation) -->
-            <div class="info-card" id="profileInfoSection" style="display: none; max-width: 750px; margin: 0 auto;">
+        <!-- ================= 2. SETTINGS VIEW (EDIT PROFILE INFORMATION) ================= -->
+        <div id="view-info" class="app-view">
+            <div class="info-card" style="max-width: 750px; margin: 0 auto;">
                 <div class="info-card-title">
                     <i class="fa-solid fa-user-gear"></i>
-                    <span id="cardTitleText">EDIT PROFILE INFORMATION</span>
+                    <span>EDIT PROFILE INFORMATION</span>
                 </div>
 
                 <form id="affiliateInfoForm">
@@ -276,7 +276,7 @@
             </div>
         </div>
 
-        <!-- ================= 2. DASHBOARD VIEW ================= -->
+        <!-- ================= 3. DASHBOARD VIEW ================= -->
         <div id="view-dashboard" class="app-view">
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 14px; background: var(--card-retail); padding: 12px 16px; border-radius: 12px;">
                 <span id="uniqueIdBadge" style="font-size: 0.8rem; color: var(--gold-solid); font-weight: 700;">ID: Loading...</span>
@@ -307,7 +307,7 @@
             </section>
         </div>
 
-        <!-- ================= 3. PROMOTE VIEW ================= -->
+        <!-- ================= 4. PROMOTE VIEW ================= -->
         <div id="view-promote" class="app-view">
             <div class="promote-grid">
                 <!-- 1. Business Problem Solutions (15%) -->
@@ -344,7 +344,7 @@
             </div>
         </div>
 
-        <!-- ================= 4. PAYOUT VIEW (Min $20 limit removed) ================= -->
+        <!-- ================= 5. PAYOUT VIEW (Min $20 limit removed) ================= -->
         <div id="view-payout" class="app-view">
             <div class="info-card" style="text-align: center; max-width: 550px; margin: 0 auto 14px auto;">
                 <h3 style="font-size: 0.7rem; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">AVAILABLE WITHDRAWABLE BALANCE</h3>
@@ -380,7 +380,7 @@
             </div>
         </div>
 
-        <!-- ================= 5. REPORTS VIEW ================= -->
+        <!-- ================= 6. REPORTS VIEW ================= -->
         <div id="view-reports" class="app-view">
             <div class="info-card">
                 <div class="info-card-title"><i class="fa-solid fa-file-invoice-dollar"></i> PERFORMANCE & COMMISSION REPORTS</div>
@@ -424,7 +424,7 @@
         </div>
     </div>
 
-    <!-- Bottom Fixed Navigation Menu -->
+    <!-- Fixed Bottom Navigation (All 5 Menu Items Visible) -->
     <nav class="affiliate-bottom-nav" id="bottomNav">
         <button type="button" class="nav-item active" id="nav-btn-dashboard" onclick="switchTab('dashboard')">
             <i class="fa-solid fa-chart-line"></i>
@@ -501,7 +501,7 @@
         }
 
         function switchTab(tabName) {
-            if (tabName !== 'info' && !isAffiliateVerifiedAndComplete()) {
+            if (tabName !== 'verification' && tabName !== 'info' && !isAffiliateVerifiedAndComplete()) {
                 showCustomNotify("PLEASE COMPLETE VERIFICATION AND PROFILE SETUP FIRST!", false);
                 tabName = 'info';
             }
@@ -516,6 +516,7 @@
             if (targetNav) targetNav.classList.add('active');
 
             const titles = {
+                'verification': 'AFFILIATE PORTAL',
                 'info': 'AFFILIATE PROFILE & SETUP',
                 'dashboard': 'AFFILIATE DASHBOARD',
                 'promote': 'PROMOTE & GENERATE LINKS',
@@ -802,11 +803,12 @@
                     currentUniqueId = (data && data.unique_affiliate_id) ? data.unique_affiliate_id : uniqueAffId;
                     localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
 
-                    document.getElementById('magicCodeVerifySection').style.display = 'none';
-                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('view-verification').style.display = 'none';
+                    switchTab('info');
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
                     document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
+                    document.getElementById('bottomNav').style.display = 'flex';
                     
                     if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                     showCustomNotify("IP SECURITY & VERIFICATION SUCCESSFUL!", true);
@@ -818,11 +820,12 @@
                     currentUniqueId = uniqueAffId;
                     localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
 
-                    document.getElementById('magicCodeVerifySection').style.display = 'none';
-                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('view-verification').style.display = 'none';
+                    switchTab('info');
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
                     document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
+                    document.getElementById('bottomNav').style.display = 'flex';
                 } finally {
                     btn.disabled = false;
                     btn.innerText = "AUTHORIZE & VERIFY";
@@ -884,9 +887,7 @@
             }
 
             if (isAffiliateVerifiedAndComplete()) {
-                document.getElementById('verificationSection').style.display = 'none';
-                document.getElementById('magicCodeVerifySection').style.display = 'none';
-                document.getElementById('profileInfoSection').style.display = 'block';
+                document.getElementById('view-verification').style.display = 'none';
                 document.getElementById('bottomNav').style.display = 'flex';
 
                 try {
@@ -911,14 +912,16 @@
                     }
                 } catch (e) {}
             } else {
-                document.getElementById('bottomNav').style.display = 'none';
-                const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
+                const isVerified = localStorage.getItem('rorraxy_affiliate_verified'] === 'true';
                 if (isVerified && currentUserEmail) {
-                    document.getElementById('verificationSection').style.display = 'none';
-                    document.getElementById('magicCodeVerifySection').style.display = 'none';
-                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('view-verification').style.display = 'none';
+                    document.getElementById('bottomNav').style.display = 'flex';
+                    switchTab('info');
                     document.getElementById('infoEmail').value = currentUserEmail;
                     document.getElementById('infoPhone').value = currentPhone;
+                } else {
+                    document.getElementById('bottomNav').style.display = 'flex';
+                    switchTab('verification');
                 }
             }
         });
