@@ -59,26 +59,26 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .loader-logo-box {
-            width: 85px; height: 85px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 35px rgba(212,175,55,0.5);
-            animation: pulseGlow 1.2s infinite alternate ease-in-out;
+            width: 80px; height: 80px; border-radius: 50%; overflow: hidden;
+            border: 2px solid var(--gold-solid); box-shadow: 0 0 25px rgba(212,175,55,0.4);
+            animation: pulseGlow 1s infinite alternate ease-in-out;
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .loader-brand-name {
-            font-size: 1.2rem; font-weight: 800; letter-spacing: 3px;
+            font-size: 1.1rem; font-weight: 800; letter-spacing: 3px;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @keyframes pulseGlow {
-            from { transform: scale(0.92); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
-            to { transform: scale(1.08); box-shadow: 0 0 35px rgba(212,175,55,0.8); }
+            from { transform: scale(0.95); box-shadow: 0 0 10px rgba(212,175,55,0.3); }
+            to { transform: scale(1.05); box-shadow: 0 0 30px rgba(212,175,55,0.7); }
         }
 
-        .animate-card-entry { animation: fadeInLuxury 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-card-entry { animation: fadeInLuxury 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            from { opacity: 0; transform: translateY(8px) scale(0.99); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
@@ -99,11 +99,13 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
+        /* Stable Bottom Navigation Bar (No Jitter) */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
+            background: rgba(3, 3, 5, 0.99); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
+            transform: translateZ(0); will-change: transform;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -130,7 +132,7 @@
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.2s ease;
+            transition: transform 0.15s ease;
         }
         .product-card:active { transform: scale(0.97); }
 
@@ -153,7 +155,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Perfect Proportional Reels Modal (No cutting, perfectly fitted above bottom nav) */
+        /* Perfect Proportional Reels Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -296,7 +298,7 @@
 
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.3) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
             scrollbar-width: none;
         }
@@ -326,10 +328,10 @@
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
-        .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; border: 1px solid rgba(212,175,55,0.2); }
-        .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; border: 1px solid rgba(212,175,55,0.2); }
+        .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 5px; }
+        .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 8px; width: 100%; }
         .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
@@ -348,11 +350,11 @@
     </div>
 
     <nav class="bottom-nav-bar">
-        <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
-        <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
-        <div id="bottomBuyBtn" class="bottom-nav-item"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
-        <div id="bottomDetailsBtn" class="bottom-nav-item"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <div id="bottomHomeToggleBtn" onclick="handleHomeToggle()" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
+        <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
+        <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
+        <div id="bottomBuyBtn" class="bottom-nav-item" onclick="handleBottomBuy()"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
+        <div id="bottomDetailsBtn" class="bottom-nav-item" onclick="handleBottomDetails()"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
+        <div id="bottomHomeToggleBtn" class="bottom-nav-item" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>HOME</span></div>
     </nav>
 
     <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
@@ -416,59 +418,71 @@
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 300);
+                    setTimeout(() => loader.style.display = 'none', 200);
                 }
-            }, 250);
+            }, 150);
 
-            const bottomWorldBtn = document.getElementById('bottomWorldBtn');
-            const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
-            const bottomBuyBtn = document.getElementById('bottomBuyBtn');
-            const bottomDetailsBtn = document.getElementById('bottomDetailsBtn');
-            
-            const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
-
-            if(bottomWorldBtn) {
-                bottomWorldBtn.addEventListener('click', () => {
-                    window.location.href = 'https://rorraxy.com/world.html';
-                });
-            }
-
-            if(bottomCategoryBtn && categoryTransparentOverlay) {
-                bottomCategoryBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const isVisible = categoryTransparentOverlay.style.display === 'flex';
-                    categoryTransparentOverlay.style.display = isVisible ? 'none' : 'flex';
-                });
-            }
-
-            if(bottomBuyBtn) {
-                bottomBuyBtn.addEventListener('click', (e) => {
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                    if(list.length > 0) {
-                        let targetProd = list[currentReelIndex];
-                        openBuyPreviewModal(targetProd, e);
-                    }
-                });
-            }
-
-            if(bottomDetailsBtn) {
-                bottomDetailsBtn.addEventListener('click', () => {
-                    let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                    if(list.length > 0) {
-                        let targetProd = list[currentReelIndex];
-                        openInpageDetailsModal(targetProd);
-                    }
-                });
-            }
 
             if(searchBtn && searchInput) {
                 searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
+
+            // Keyboard navigation for reels modal (Up and Down Arrow keys)
+            window.addEventListener('keydown', (e) => {
+                const modal = document.getElementById('reelModalOverlay');
+                if(modal && modal.style.display === 'flex') {
+                    const wrapper = document.getElementById('reelModalWrapperBody');
+                    if(!wrapper) return;
+                    let cardHeight = wrapper.clientHeight || window.innerHeight;
+                    if(e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        wrapper.scrollBy({ top: cardHeight, behavior: 'smooth' });
+                    } else if(e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        wrapper.scrollBy({ top: -cardHeight, behavior: 'smooth' });
+                    }
+                }
+            });
         });
+
+        function toggleWorldPortal() {
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+            const iframe = document.getElementById('fullscreenIframeBody');
+            if(overlay.style.display === 'flex' && iframe.src.includes('world.html')) {
+                overlay.style.display = 'none';
+                iframe.src = '';
+            } else {
+                openFullscreenPortal('https://rorraxy.com/world.html');
+            }
+        }
+
+        function toggleCategoryModal(e) {
+            e.stopPropagation();
+            const overlay = document.getElementById('categoryTransparentOverlay');
+            if(overlay) {
+                overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+            }
+        }
+
+        function handleBottomBuy() {
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if(list.length > 0) {
+                let targetProd = list[currentReelIndex] || list[0];
+                openBuyPreviewModal(targetProd, event);
+            }
+        }
+
+        function handleBottomDetails() {
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if(list.length > 0) {
+                let targetProd = list[currentReelIndex] || list[0];
+                openInpageDetailsModal(targetProd);
+            }
+        }
 
         function handleHomeToggle() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
@@ -484,8 +498,13 @@
         function openFullscreenPortal(pageUrl) {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
-            iframe.src = pageUrl;
-            overlay.style.display = 'flex';
+            if(overlay.style.display === 'flex' && iframe.src === pageUrl) {
+                overlay.style.display = 'none';
+                iframe.src = '';
+            } else {
+                iframe.src = pageUrl;
+                overlay.style.display = 'flex';
+            }
             updateCartBadgeCount();
         }
 
@@ -566,7 +585,6 @@
             });
             activeProductList = filtered;
             renderPinterestHomeGrid(filtered);
-            document.getElementById('floatingSearchContainer').style.display = 'none';
         }
 
         function filterProductsByCategory(queryKey) {
@@ -602,6 +620,7 @@
 
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
+            if(!container) return;
             container.className = 'pinterest-feed-container';
             const fragment = document.createDocumentFragment();
 
@@ -1098,7 +1117,7 @@
                     <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
             } else {
                 let thumbsHtml = '';
-                savedObjects.forEach(v => {
+                savedObjects.forEach((v, idx) => {
                     let thumbImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                     try {
                         if(v.images_json) {
@@ -1109,19 +1128,38 @@
 
                     let vId = v.id || v.product_id;
                     thumbsHtml += `
-                        <div class="saved-thumb-card" onclick="selectSavedVideo('${vId}')">
-                            <div class="saved-thumb-preview">
-                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;">
+                        <div class="saved-thumb-card">
+                            <div class="saved-thumb-preview" onclick="selectSavedVideo('${vId}')">
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;" decoding="async">
                                 <i class="fa-solid fa-play" style="position:absolute; color:#fcf6ba; font-size:1.2rem;"></i>
                             </div>
-                            <span style="font-size:0.68rem; font-weight:700; color:#fff;">ID: ${vId}</span>
+                            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 2px;">
+                                <span style="font-size:0.65rem; font-weight:700; color:#fff;">ID: ${vId}</span>
+                                <button onclick="removeSavedItem(event, '${vId}')" style="background:rgba(255,42,133,0.2); border:1px solid var(--pink-accent); color:#fff; font-size:0.6rem; padding:3px 8px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                            </div>
                         </div>`;
                 });
                 containerBody.innerHTML = `
-                    <div class="fs-profile-header-box"><h2 class="fs-profile-name">SAVED VIDEOS</h2></div>
+                    <div class="fs-profile-header-box">
+                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
+                        <button onclick="clearAllSavedVideos()" style="background:var(--pink-accent); border:none; color:#fff; font-size:0.7rem; font-weight:700; padding:6px 14px; border-radius:20px; cursor:pointer; box-shadow:0 4px 12px rgba(255,42,133,0.4);">DELETE ALL</button>
+                    </div>
                     <div class="fs-videos-grid">${thumbsHtml}</div>`;
             }
         }
+
+        window.removeSavedItem = function(e, videoId) {
+            e.stopPropagation();
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let filtered = savedObjects.filter(item => String(item.id || item.product_id) !== String(videoId));
+            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(filtered));
+            renderSavedGalleryContent();
+        };
+
+        window.clearAllSavedVideos = function() {
+            localStorage.removeItem('rorraxy_saved_video_objects');
+            renderSavedGalleryContent();
+        };
 
         window.selectSavedVideo = function(videoId) {
             let foundIdx = globalMasterProductsList.findIndex(p => String(p.id || p.product_id) === String(videoId));
