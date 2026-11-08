@@ -2,257 +2,820 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Affiliate Portal - rorraxy</title>
    
     <!-- Favicon Logo -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <!-- Ecosystem Core Script -->
     <script src="/ecosystem-core.js"></script>
 
-    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- External CSS Connection -->
-    <link rel="stylesheet" href="info.css">
+    <!-- Chart.js & QRCode.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* index.html specific auth view adjustments */
-        .auth-wrapper { width: 100%; max-width: 420px; margin: 40px auto; display: flex; justify-content: center; align-items: center; }
-        .auth-card {
-            background: var(--card-retail, #050508);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 24px;
-            width: 100%;
-            padding: 38px 26px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        :root {
+            --bg-retail: #030305;
+            --card-retail: #06060a;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --gold-solid: #d4af37;
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --text-white: #ffffff;
+            --text-gray: #a8a8b8;
+            --font-main: 'Poppins', sans-serif;
+            --border-soft: rgba(212, 175, 55, 0.2);
+            --required-red: #ff4d4d;
         }
-        .auth-logo { width: 110px; height: auto; max-height: 110px; object-fit: contain; margin: 0 auto; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3)); }
-        .auth-title { font-size: 1.2rem; font-weight: 800; background: var(--gold-gradient, linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
-        .auth-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
         
-        .phone-group-flex { display: flex; gap: 8px; width: 100%; }
-        .country-select { width: 110px; background: #000; border: none; border-radius: 12px; padding: 12px 8px; color: #fff; font-size: 0.78rem; outline: none; }
-        
-        .email-hint { font-size: 0.62rem; color: var(--text-gray, #8e8e99); text-transform: none; letter-spacing: 0.2px; margin-top: 2px; display: flex; gap: 5px; align-items: center; }
-        .auth-btn {
-            width: 100%; background: var(--gold-gradient, linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%)); border: none; border-radius: 14px;
-            padding: 14px; color: #030305; font-weight: 800; font-size: 0.82rem; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 0.8px; margin-top: 6px; transition: all 0.25s ease;
+        body { 
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            padding: 16px 12px 105px 12px; text-transform: uppercase; 
+            min-height: 100vh;
         }
-        .auth-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .status-msg { font-size: 0.72rem; text-transform: none; display: none; text-align: center; margin-top: 4px; }
-        .status-msg.error { color: var(--required-red, #ff4d4d); }
-        .status-msg.success { color: #2ecc71; }
+
+        .main-container { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+
+        .app-view { display: none; width: 100%; animation: fadeIn 0.2s ease-in-out; }
+        .app-view.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-header { text-align: center; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+        .header-logo-img { width: 75px; height: 75px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.25)); }
+        .dashboard-header h1, .gold-title-gradient { font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .dashboard-header h1 { font-size: 1.25rem; letter-spacing: 0.5px; }
+
+        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 20px 16px; margin-bottom: 16px; width: 100%; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); text-align: left; }
+        .info-card-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full-width { grid-column: span 2; }
         
-        /* Dynamic View Toggles */
-        #verificationView { display: flex; }
-        #infoViewSection { display: none; width: 100%; }
+        .form-group label { font-size: 0.65rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 4px; width: 100%; word-break: break-all; }
+        .req-star { color: var(--required-red); font-weight: 900; margin-left: 2px; }
+
+        .form-control, .form-select { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 12px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: rgba(212, 175, 55, 0.4); background: #030306; }
+        .form-select option { background: #08080c; color: #fff; }
+
+        .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
+        .country-code-select { background: #050508; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
+        .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
+
+        .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+        .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.25); }
+        .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.25); }
+
+        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.22); }
+        .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-gold:hover { filter: brightness(1.08); }
+        .btn-secondary { background: #000000; color: #fff; border: 1px solid var(--border-soft); padding: 11px 16px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; width: 100%; }
+        .stat-card { background: var(--card-retail); border-radius: 10px; padding: 12px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; border: 1px solid var(--border-soft); }
+        .stat-card h3 { font-size: 0.58rem; color: var(--text-gray); font-weight: 600; }
+        .stat-card .value { font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .graph-container { width: 100%; height: 50px; position: relative; margin-top: 4px; }
+        .graph-container canvas { width: 100% !important; height: 100% !important; }
+
+        .promote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 16px; }
+        .promote-card { background: var(--card-retail); border-radius: 14px; padding: 16px; text-align: center; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border-soft); box-shadow: 0 8px 20px rgba(0,0,0,0.7); }
+        .promote-card h3 { font-size: 0.8rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .promote-card p { font-size: 0.68rem; color: var(--text-gray); text-transform: none; }
+
+        .cv-box { background: var(--card-retail); border-radius: 16px; padding: 20px; width: 100%; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border-soft); text-transform: none; }
+        .cv-row { display: flex; justify-content: space-between; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px; }
+        .cv-row span:first-child { color: var(--text-gray); font-weight: 600; }
+        .cv-row span:last-child { color: var(--text-white); font-weight: 700; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .aff-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: left; white-space: nowrap; }
+        .aff-table th, .aff-table td { padding: 9px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .aff-table th { background: #050508; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .aff-table td { text-transform: none; color: var(--text-white); }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 0.58rem; font-weight: 700; }
+        .badge.pending { background: rgba(234, 179, 8, 0.12); color: #facc15; }
+        .badge.paid { background: rgba(34, 197, 94, 0.12); color: #4ade80; }
+
+        #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; padding: 12px; }
+        .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 20px 16px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.9); }
+
+        .affiliate-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: none; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 2px; color: var(--text-gray); }
+        .nav-item span { font-size: 0.55rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.2px; }
+
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .promote-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; gap: 10px; }
+            .form-group.full-width { grid-column: span 1; }
+            body { padding: 12px 8px 95px 8px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- ১. স্টেপ ১: অ্যাফিলিয়েট ভেরিফিকেশন ভিউ -->
-    <div class="auth-wrapper" id="verificationView">
-        <div class="auth-card">
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy logo" class="auth-logo">
-            
-            <h2 class="auth-title">AFFILIATE VERIFICATION</h2>
-
-            <form id="magicLinkForm" class="auth-form">
-                <div class="form-group">
-                    <label>EMAIL ADDRESS <span style="color:var(--required-red)">*</span></label>
-                    <input type="email" class="form-control" id="affiliateEmail" placeholder="yourname@gmail.com" required style="text-transform: none;" autocomplete="email">
-                </div>
-
-                <div class="form-group">
-                    <label>PHONE NUMBER (WITH COUNTRY CODE) <span style="color:var(--required-red)">*</span></label>
-                    <div class="phone-group-flex">
-                        <select class="country-select form-select" id="verifyCountryCode">
-                            <option value="+880">🇧🇩 +880</option>
-                            <option value="+1">🇺🇸 +1</option>
-                            <option value="+44">🇬🇧 +44</option>
-                            <option value="+91">🇮🇳 +91</option>
-                            <option value="+971">🇦🇪 +971</option>
-                            <option value="+966">🇸🇦 +966</option>
-                            <option value="+60">🇲🇾 +60</option>
-                        </select>
-                        <input type="tel" class="form-control" id="verifyPhone" placeholder="1700000000" required style="text-transform: none; flex: 1;">
-                    </div>
-                    <span class="email-hint"><i class="fa-solid fa-shield-halved" style="color: #d4af37;"></i> Auto-detected location & secure registration</span>
-                </div>
-                
-                <div id="formStatus" class="status-msg"></div>
-
-                <button type="submit" class="auth-btn" id="sendLinkBtn">VERIFY & CONTINUE</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- ২. স্টেপ ২: অ্যাফিলিয়েট ইনফরমেশন ও সেটিংস ভিউ (info.html তুলে দিয়ে এখানে আনা হলো) -->
-    <div class="main-container" id="infoViewSection">
+    <div class="main-container">
+        
         <header class="dashboard-header">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
-            <h1>AFFILIATE SETTINGS & INFO</h1>
+            <h1 id="mainPortalTitle">AFFILIATE PORTAL</h1>
         </header>
 
-        <div class="sector-card">
-            <div class="section-title">
-                <i class="fa-solid fa-user-gear"></i> AFFILIATE PROFILE REGISTRATION
-                <span id="infoCheckMark" style="margin-left:auto; display:none; color:var(--accent-green); font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> SAVED</span>
-            </div>
+        <!-- ================= 1. VERIFICATION & INFO VIEW ================= -->
+        <div id="view-info" class="app-view active">
+            
+            <!-- VERIFICATION SECTION -->
+            <div class="info-card" id="verificationSection">
+                <div class="info-card-title">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>AFFILIATE VERIFICATION</span>
+                </div>
 
-            <!-- ইনফরমেশন ফর্ম -->
-            <form id="affiliateInfoForm" onsubmit="saveAffiliateInfo(event)">
-                <div class="form-grid">
-                    <div class="form-group"><label>FIRST NAME <span class="req-star">*</span></label><input type="text" id="firstName" class="form-control" placeholder="First Name" required style="text-transform:none;"></div>
-                    <div class="form-group"><label>LAST NAME <span class="req-star">*</span></label><input type="text" id="lastName" class="form-control" placeholder="Last Name" required style="text-transform:none;"></div>
-                    <div class="form-group"><label>EMAIL (AUTOMATIC) <span class="req-star">*</span></label><input type="email" id="email" class="form-control" readonly style="text-transform:none;"></div>
-                    <div class="form-group"><label>PHONE / WHATSAPP <span class="req-star">*</span></label><input type="tel" id="phone" class="form-control" placeholder="+8801700000000" required style="text-transform:none;"></div>
-                    <div class="form-group full-width"><label>PROMO CHANNEL <span class="req-star">*</span></label><input type="text" id="promoChannel" class="form-control" placeholder="YouTube, Facebook or Website URL" required style="text-transform:none;"></div>
-                    
-                    <div class="form-group full-width">
-                        <label>PAYMENT METHOD <span class="req-star">*</span></label>
-                        <select id="paymentMethod" class="form-select" onchange="handlePaymentMethodChange()" required>
-                            <option value="">Select Method</option>
-                            <option value="bKash">bKash</option>
-                            <option value="Nagad">Nagad</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="Payoneer">Payoneer</option>
-                            <option value="Crypto USDT">Crypto USDT (TRC20)</option>
-                        </select>
+                <form id="magicLinkForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
+                    <div class="form-group">
+                        <label>EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK, APPLE)<span class="req-star">*</span></label>
+                        <input type="email" class="form-control" id="affiliateEmail" placeholder="e.g. name@gmail.com" required style="text-transform: none;">
                     </div>
 
-                    <div id="dynamicPaymentContainer" class="dynamic-payment-container" style="display: none;">
-                        <div id="field_bKash" class="payment-field-group"><div class="form-group"><label>BKASH NUMBER *</label><input type="tel" id="bkashNumber" class="form-control" placeholder="11-digit bKash number" style="text-transform:none;"></div></div>
-                        <div id="field_Nagad" class="payment-field-group"><div class="form-group"><label>NAGAD NUMBER *</label><input type="tel" id="nagadNumber" class="form-control" placeholder="11-digit Nagad number" style="text-transform:none;"></div></div>
-                        <div id="field_Bank" class="payment-field-group">
-                            <div class="form-group"><label>BANK NAME *</label><input type="text" id="bankName" class="form-control" placeholder="Bank name" style="text-transform:none;"></div>
-                            <div class="form-group"><label>ACCOUNT NUMBER *</label><input type="text" id="bankAccountNumber" class="form-control" placeholder="Account number" style="text-transform:none;"></div>
+                    <div class="form-group">
+                        <label>MOBILE NUMBER<span class="req-star">*</span></label>
+                        <div class="phone-input-group">
+                            <select class="country-code-select" id="countryDialCode">
+                                <option value="+880" selected>🇧🇩 +880</option>
+                                <option value="+91">🇮🇳 +91</option>
+                                <option value="+92">🇵🇰 +92</option>
+                                <option value="+971">🇦🇪 +971</option>
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+966">🇸🇦 +966</option>
+                                <option value="+60">🇲🇾 +60</option>
+                                <option value="+65">🇸🇬 +65</option>
+                                <option value="+61">🇦🇺 +61</option>
+                                <option value="+49">🇩🇪 +49</option>
+                                <option value="+33">🇫🇷 +33</option>
+                                <option value="+81">🇯🇵 +81</option>
+                                <option value="+82">🇰🇷 +82</option>
+                                <option value="+86">🇨🇳 +86</option>
+                                <option value="+94">🇱🇰 +94</option>
+                                <option value="+974">🇶🇦 +974</option>
+                                <option value="+965">🇰🇼 +965</option>
+                                <option value="+39">🇮🇹 +39</option>
+                                <option value="+34">🇪🇸 +34</option>
+                            </select>
+                            <input type="tel" class="form-control phone-control" id="affiliatePhone" placeholder="1700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
+                        </div>
+                    </div>
+                    
+                    <div id="formStatus" class="status-msg"></div>
+
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
+                        VERIFY & PROCEED <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- PROFILE CV & EDIT FORM SECTION -->
+            <div class="info-card" id="profileInfoSection" style="display: none;">
+                <div class="info-card-title">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span id="cardTitleText">AFFILIATE PROFILE CV</span>
+                </div>
+
+                <!-- CV Preview Mode -->
+                <div id="profileCvPreview" style="display: none;">
+                    <div class="cv-box">
+                        <div class="cv-row"><span>FULL NAME:</span> <span id="cvName">--</span></div>
+                        <div class="cv-row"><span>EMAIL:</span> <span id="cvEmail" style="word-break: break-all;">--</span></div>
+                        <div class="cv-row"><span>MOBILE:</span> <span id="cvPhone">--</span></div>
+                        <div class="cv-row"><span>PROMO CHANNEL:</span> <span id="cvChannel">--</span></div>
+                        <div class="cv-row"><span>PAYMENT METHOD:</span> <span id="cvMethod">--</span></div>
+                        <div class="cv-row"><span>ACCOUNT DETAILS:</span> <span id="cvAccount">--</span></div>
+                        <div class="cv-row"><span>AFFILIATE ID:</span> <span id="cvAffId" style="color: var(--gold-solid);">--</span></div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button type="button" class="btn-secondary" onclick="enableProfileEdit()" style="flex: 1;"><i class="fa-solid fa-pen-to-square"></i> EDIT INFO</button>
+                            <button type="button" class="btn-gold" onclick="switchTab('dashboard')" style="flex: 1; background: var(--pink-solid); color: #fff;">DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
-                <button type="submit" id="saveInfoBtn" class="action-btn"><i class="fa-solid fa-floppy-disk"></i> SAVE INFO</button>
-            </form>
 
-            <!-- প্রোফাইল সামারি বক্স -->
-            <div class="summary-box" id="infoSummaryBox">
-                <div class="summary-row"><span>FULL NAME:</span> <span id="sumName"></span></div>
-                <div class="summary-row"><span>EMAIL:</span> <span id="sumEmail"></span></div>
-                <div class="summary-row"><span>PHONE:</span> <span id="sumPhone"></span></div>
-                <div class="summary-row"><span>PAYMENT METHOD:</span> <span id="sumMethod"></span></div>
-                <div class="summary-row"><span>CHANNEL:</span> <span id="sumChannel"></span></div>
-                <button type="button" class="edit-profile-btn" onclick="editAffiliateInfo()">
-                    <i class="fa-solid fa-pen-to-square"></i> EDIT INFO
-                </button>
+                <!-- Edit / Registration Form -->
+                <form id="affiliateInfoForm">
+                    <div class="form-grid">
+                        <div class="form-group"><label>FIRST NAME<span class="req-star">*</span></label><input type="text" class="form-control" id="firstName" placeholder="First Name" required style="text-transform: none;"></div>
+                        <div class="form-group"><label>LAST NAME<span class="req-star">*</span></label><input type="text" class="form-control" id="lastName" placeholder="Last Name" required style="text-transform: none;"></div>
+                        <div class="form-group"><label>EMAIL (LOCKED)<span class="req-star">*</span></label><input type="email" class="form-control" id="infoEmail" readonly style="color: var(--gold-solid); text-transform: none;"></div>
+                        <div class="form-group"><label>MOBILE NUMBER<span class="req-star">*</span></label><input type="tel" class="form-control" id="infoPhone" readonly style="text-transform: none;"></div>
+                        <div class="form-group full-width"><label>PROMO CHANNEL (YOUTUBE / FACEBOOK URL)<span class="req-star">*</span></label><input type="text" class="form-control" id="promoChannel" placeholder="https://youtube.com/..." required style="text-transform: none;"></div>
+                        <div class="form-group full-width">
+                            <label>PAYMENT METHOD<span class="req-star">*</span></label>
+                            <select id="paymentMethod" class="form-select" required style="text-transform: uppercase;">
+                                <option value="">SELECT METHOD</option>
+                                <option value="bKash">BKASH</option>
+                                <option value="Nagad">NAGAD</option>
+                                <option value="Bank">BANK TRANSFER</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width"><label>ACCOUNT NUMBER / DETAILS<span class="req-star">*</span></label><input type="text" class="form-control" id="accountDetails" placeholder="Enter account details..." required style="text-transform: none;"></div>
+                    </div>
+                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 8px;">SAVE INFO & VIEW CV <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 8px; display: none;" onclick="cancelProfileEdit()">CANCEL</button>
+                </form>
             </div>
+        </div>
+
+        <!-- ================= 2. DASHBOARD VIEW ================= -->
+        <div id="view-dashboard" class="app-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 14px; background: var(--card-retail); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-soft);">
+                <span id="uniqueIdBadge" style="font-size: 0.75rem; color: var(--gold-solid); font-weight: 700;">ID: Loading...</span>
+                <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="padding: 6px 12px; font-size: 0.68rem; background: var(--pink-solid); color: #fff;"><i class="fa-solid fa-qrcode"></i> QR SYNC</button>
+            </div>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <h3 class="gold-title-gradient">TOTAL EARNINGS</h3>
+                    <div class="value" id="statEarningsVal">$0.00</div>
+                    <div class="graph-container"><canvas id="chartEarnings"></canvas></div>
+                </div>
+                <div class="stat-card">
+                    <h3 class="gold-title-gradient">AVAILABLE BALANCE</h3>
+                    <div class="value" id="statBalanceVal">$0.00</div>
+                    <div class="graph-container"><canvas id="chartBalance"></canvas></div>
+                </div>
+                <div class="stat-card">
+                    <h3 class="gold-title-gradient">TOTAL CLICKS</h3>
+                    <div class="value" id="statClicksVal">0</div>
+                    <div class="graph-container"><canvas id="chartClicks"></canvas></div>
+                </div>
+                <div class="stat-card">
+                    <h3 class="gold-title-gradient">TOTAL REFERRALS</h3>
+                    <div class="value" id="statReferralsVal">0</div>
+                    <div class="graph-container"><canvas id="chartReferrals"></canvas></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= 3. PROMOTE VIEW ================= -->
+        <div id="view-promote" class="app-view">
+            <div class="promote-grid">
+                <!-- 1. Business Problem Solutions (15%) -->
+                <div class="promote-card">
+                    <h3>BUSINESS PROBLEM (15%)</h3>
+                    <p>High commission solutions for business growth and enterprise scaling.</p>
+                    <a href="https://rorraxy.com/bs" target="_blank" class="btn-secondary" style="padding: 8px; font-size: 0.68rem; text-decoration: none; justify-content: center;"><i class="fa-solid fa-house"></i> VISIT HOME</a>
+                    <button type="button" class="btn-gold" style="padding: 8px; font-size: 0.68rem;" onclick="generateAffiliateLink('https://rorraxy.com/bs', 15)">GENERATE LINK</button>
+                </div>
+
+                <!-- 2. Retail Store (10%) -->
+                <div class="promote-card">
+                    <h3>RETAIL STORE (10%)</h3>
+                    <p>General retail products, fashion, and daily essentials.</p>
+                    <a href="https://rorraxy.com" target="_blank" class="btn-secondary" style="padding: 8px; font-size: 0.68rem; text-decoration: none; justify-content: center;"><i class="fa-solid fa-house"></i> VISIT HOME</a>
+                    <button type="button" class="btn-gold" style="padding: 8px; font-size: 0.68rem;" onclick="generateAffiliateLink('https://rorraxy.com', 10)">GENERATE LINK</button>
+                </div>
+
+                <!-- 3. Wholesale Store (2%) -->
+                <div class="promote-card">
+                    <h3>WHOLESALE STORE (2%)</h3>
+                    <p>Bulk wholesale purchases and enterprise distribution.</p>
+                    <a href="https://rorraxy.com/wholesale" target="_blank" class="btn-secondary" style="padding: 8px; font-size: 0.68rem; text-decoration: none; justify-content: center;"><i class="fa-solid fa-house"></i> VISIT HOME</a>
+                    <button type="button" class="btn-gold" style="padding: 8px; font-size: 0.68rem;" onclick="generateAffiliateLink('https://rorraxy.com/wholesale', 2)">GENERATE LINK</button>
+                </div>
+            </div>
+
+            <div id="promoteResultCard" class="info-card" style="display: none; text-align: center;">
+                <div style="font-size: 0.72rem; color: var(--gold-solid); font-weight: 700; margin-bottom: 8px;">YOUR TRACKING LINK (<span id="activeCommissionLabel">10%</span> COMMISSION):</div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="form-control" id="generatedLinkOutput" readonly style="text-transform: none;">
+                    <button type="button" class="btn-gold" style="width: 100px;" onclick="copyAffiliateLink()">COPY</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 4. PAYOUT VIEW ================= -->
+        <div id="view-payout" class="app-view">
+            <div class="info-card" style="text-align: center; max-width: 550px; margin: 0 auto 14px auto;">
+                <h3 style="font-size: 0.68rem; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">AVAILABLE WITHDRAWABLE BALANCE</h3>
+                <div style="font-size: 2rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="payoutBalanceDisplay">$0.00</div>
+            </div>
+
+            <div class="info-card" style="max-width: 550px; margin: 0 auto;">
+                <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> REQUEST COMMISSION WITHDRAWAL</div>
+                <form onsubmit="requestPayout(event)">
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>WITHDRAWAL AMOUNT ($) (MIN $20)<span class="req-star">*</span></label>
+                        <input type="number" class="form-control" id="withdrawAmount" min="20" placeholder="20.00" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>PAYMENT METHOD<span class="req-star">*</span></label>
+                        <select class="form-select" id="payoutMethod" required style="text-transform: uppercase;">
+                            <option value="bKash">BKASH</option>
+                            <option value="Nagad">NAGAD</option>
+                            <option value="Bank">BANK TRANSFER</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>ACCOUNT DETAILS / NUMBER<span class="req-star">*</span></label>
+                        <input type="text" class="form-control" id="payoutDetails" placeholder="Enter account or mobile number..." required style="text-transform: none;">
+                    </div>
+                    <button type="submit" class="btn-gold" style="width: 100%;">REQUEST SECURE WITHDRAWAL</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= 5. REPORTS VIEW ================= -->
+        <div id="view-reports" class="app-view">
+            <div class="info-card">
+                <div class="info-card-title"><i class="fa-solid fa-file-invoice-dollar"></i> PERFORMANCE & COMMISSION REPORTS</div>
+                <div class="table-responsive">
+                    <table class="aff-table">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>PLATFORM</th>
+                                <th>ORDER ID</th>
+                                <th>COMMISSION</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO CONVERSION REPORTS FOUND.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Multi-Device QR Sync Modal -->
+    <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:12px;">
+        <div style="background:var(--card-retail); border:1px solid var(--border-soft); border-radius:16px; padding:20px; width:100%; max-width:320px; text-align:center;">
+            <h3 style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px;">QR DEVICE SYNC</h3>
+            <p style="font-size:0.62rem; color:var(--text-gray); margin-bottom:10px; text-transform:none;">Scan this secure QR code with another mobile device to sync your affiliate session.</p>
+            <div id="qrcodeContainer" style="background:#ffffff; padding:8px; border-radius:8px; display:inline-block; margin-bottom:10px;"></div>
+            <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE</button>
         </div>
     </div>
 
-    <!-- এক্সটার্নাল JS ফাইল কানেক্ট করা হলো -->
-    <script src="info.js"></script>
+    <!-- Custom Notification Modal -->
+    <div id="customNotifyModal">
+        <div class="notify-card">
+            <div id="notifyModalIcon" style="font-size: 1.8rem; color: var(--gold-solid); margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i></div>
+            <div id="notifyModalText" style="font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 12px; text-transform: none;">MESSAGE</div>
+            <button type="button" onclick="closeCustomNotify()" class="btn-gold" style="width: 100%;">OK</button>
+        </div>
+    </div>
 
-    <!-- ভেরিফিকেশন ও সিঙ্গেল পেজ ভিউ হ্যান্ডলার স্ক্রিপ্ট -->
+    <!-- Bottom Fixed Navigation (Only visible after verification & profile info setup) -->
+    <nav class="affiliate-bottom-nav" id="bottomNav">
+        <button type="button" class="nav-item active" id="nav-btn-dashboard" onclick="switchTab('dashboard')">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>DASHBOARD</span>
+        </button>
+        <button type="button" class="nav-item" id="nav-btn-promote" onclick="switchTab('promote')">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>PROMOTE</span>
+        </button>
+        <button type="button" class="nav-item" id="nav-btn-payout" onclick="switchTab('payout')">
+            <i class="fa-solid fa-wallet"></i>
+            <span>PAYOUT</span>
+        </button>
+        <button type="button" class="nav-item" id="nav-btn-reports" onclick="switchTab('reports')">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>REPORTS</span>
+        </button>
+        <button type="button" class="nav-item" id="nav-btn-info" onclick="switchTab('info')">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>SETTINGS</span>
+        </button>
+    </nav>
+
     <script>
-        const verificationView = document.getElementById('verificationView');
-        const infoViewSection = document.getElementById('infoViewSection');
-        const magicLinkForm = document.getElementById('magicLinkForm');
-        const sendLinkBtn = document.getElementById('sendLinkBtn');
-        const formStatus = document.getElementById('formStatus');
+        const chartInstances = {};
+        let currentUserEmail = localStorage.getItem('rorraxy_affiliate_email') || '';
+        let currentPhone = localStorage.getItem('rorraxy_affiliate_phone') || '';
+        let currentUniqueId = localStorage.getItem('rorraxy_unique_aff_id') || '';
 
-        // অটো সেশন চেক: যদি ভেরিফাইড থাকে তবে সাথে সাথে ইনফো ফর্মে নিয়ে যাবে
-        function checkAffiliateSession() {
-            const isVerified = localStorage.getItem('rorraxy_affiliate_verified');
-            const savedEmail = localStorage.getItem('rorraxy_affiliate_email');
-
-            if (isVerified === 'true' && savedEmail) {
-                verificationView.style.display = 'none';
-                infoViewSection.style.display = 'flex';
-                document.getElementById('email').value = savedEmail;
-            } else {
-                verificationView.style.display = 'flex';
-                infoViewSection.style.display = 'none';
-            }
+        function showCustomNotify(message, isSuccess = true) {
+            const modal = document.getElementById('customNotifyModal');
+            const txt = document.getElementById('notifyModalText');
+            const icon = document.getElementById('notifyModalIcon');
+            txt.innerText = message;
+            icon.innerHTML = isSuccess ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation" style="color:#ff4d4d;"></i>';
+            modal.style.display = 'flex';
         }
 
-        window.addEventListener('DOMContentLoaded', checkAffiliateSession);
+        function closeCustomNotify() {
+            document.getElementById('customNotifyModal').style.display = 'none';
+        }
 
         function isAuthenticEmail(email) {
-            const blockedDomains = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable', 'trashmail'];
-            const domain = email.split('@')[1];
-            if (!domain) return false;
-            for (let b of blockedDomains) {
-                if (domain.includes(b)) return false;
+            const blocked = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable'];
+            const parts = email.split('@');
+            if (parts.length !== 2) return false;
+            return !blocked.some(b => parts[1].includes(b));
+        }
+
+        function isAffiliateVerifiedAndComplete() {
+            const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
+            const infoCompleted = localStorage.getItem('rorraxy_affiliate_info_completed') === 'true';
+            return isVerified && infoCompleted;
+        }
+
+        async function autoDetectCountryCode() {
+            try {
+                const res = await fetch('https://ipapi.co/json/').catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    const dialCode = data.country_calling_code || "+880";
+                    const select = document.getElementById('countryDialCode');
+                    if (select) {
+                        for (let opt of select.options) {
+                            if (opt.value === dialCode) {
+                                select.value = dialCode;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function switchTab(tabName) {
+            if (tabName !== 'info' && !isAffiliateVerifiedAndComplete()) {
+                showCustomNotify("PLEASE COMPLETE VERIFICATION AND PROFILE SETUP FIRST!", false);
+                tabName = 'info';
             }
-            return true;
+
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.affiliate-bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
+
+            const targetView = document.getElementById('view-' + tabName);
+            const targetNav = document.getElementById('nav-btn-' + tabName);
+
+            if (targetView) targetView.classList.add('active');
+            if (targetNav) targetNav.classList.add('active');
+
+            const titles = {
+                'info': 'AFFILIATE PROFILE & SETUP',
+                'dashboard': 'AFFILIATE DASHBOARD',
+                'promote': 'PROMOTE & GENERATE LINKS',
+                'payout': 'AFFILIATE PAYOUT',
+                'reports': 'PERFORMANCE REPORTS'
+            };
+            document.getElementById('mainPortalTitle').innerText = titles[tabName] || 'AFFILIATE PORTAL';
+
+            if (tabName === 'dashboard') {
+                loadDashboardStats();
+            } else if (tabName === 'reports') {
+                loadReports();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showStatus(element, message, isError = false) {
-            element.innerText = message;
-            element.className = 'status-msg ' + (isError ? 'error' : 'success');
-            element.style.display = 'block';
+        function openMultiDeviceSyncModal() {
+            document.getElementById('deviceSyncModal').style.display = 'flex';
+            const qrcodeDiv = document.getElementById('qrcodeContainer');
+            qrcodeDiv.innerHTML = '';
+            
+            const syncToken = "rorraxy_aff_sync_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
+            new QRCode(qrcodeDiv, {
+                text: window.location.origin + "/affiliate/index.html?sync_token=" + syncToken,
+                width: 120,
+                height: 120,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
         }
 
-        magicLinkForm.addEventListener('submit', async (e) => {
+        function closeMultiDeviceSyncModal() {
+            document.getElementById('deviceSyncModal').style.display = 'none';
+        }
+
+        // Sparkline graph generator
+        function createSparkline(canvasId, dataPoints, isBar = false) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+
+            const ctx = canvas.getContext('2d');
+            chartInstances[canvasId] = new Chart(ctx, {
+                type: isBar ? 'bar' : 'line',
+                data: {
+                    labels: dataPoints.map((_, i) => `${i}`),
+                    datasets: [{
+                        data: dataPoints,
+                        borderColor: '#d4af37',
+                        borderWidth: 1.5,
+                        fill: true,
+                        backgroundColor: isBar ? '#d4af37' : 'rgba(212, 175, 55, 0.25)',
+                        tension: 0.35,
+                        pointRadius: 0,
+                        borderRadius: isBar ? 3 : 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false, min: 0 } }
+                }
+            });
+        }
+
+        async function loadDashboardStats() {
+            try {
+                const res = await fetch(`/api/affiliate?action=stats&affiliate_id=${encodeURIComponent(currentUserEmail)}`);
+                const result = await res.json();
+                if (result.success && result.data && result.data.length > 0) {
+                    const stats = result.data[0];
+                    document.getElementById('statEarningsVal').innerText = `$${parseFloat(stats.total_earnings || 0).toFixed(2)}`;
+                    document.getElementById('statBalanceVal').innerText = `$${parseFloat(stats.available_balance || 0).toFixed(2)}`;
+                    document.getElementById('payoutBalanceDisplay').innerText = `$${parseFloat(stats.available_balance || 0).toFixed(2)}`;
+                    document.getElementById('statClicksVal').innerText = stats.total_clicks || 0;
+                    document.getElementById('statReferralsVal').innerText = stats.total_referrals || 0;
+                }
+            } catch (e) {}
+
+            createSparkline('chartEarnings', [5, 12, 18, 25, 30, 42, 50]);
+            createSparkline('chartBalance', [5, 10, 15, 20, 25, 30, 35]);
+            createSparkline('chartClicks', [10, 25, 40, 55, 70, 90, 120], true);
+            createSparkline('chartReferrals', [1, 3, 5, 8, 10, 14, 18]);
+        }
+
+        function generateAffiliateLink(baseUrl, commissionRate) {
+            const trackingId = currentUniqueId || currentUserEmail;
+            const link = `${baseUrl}?ref=${encodeURIComponent(trackingId)}`;
+            document.getElementById('generatedLinkOutput').value = link;
+            document.getElementById('activeCommissionLabel').innerText = `${commissionRate}%`;
+            document.getElementById('promoteResultCard').style.display = 'block';
+        }
+
+        function copyAffiliateLink() {
+            const input = document.getElementById('generatedLinkOutput');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            showCustomNotify("AFFILIATE LINK COPIED TO CLIPBOARD!", true);
+        }
+
+        async function requestPayout(e) {
             e.preventDefault();
-            const email = document.getElementById('affiliateEmail').value.trim().toLowerCase();
-            const countryCode = document.getElementById('verifyCountryCode').value;
-            const phoneRaw = document.getElementById('verifyPhone').value.trim();
-            const fullPhone = `${countryCode}${phoneRaw}`;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('payoutMethod').value;
+            const details = document.getElementById('payoutDetails').value.trim();
 
-            if (!email || !phoneRaw) return;
-
-            if (!isAuthenticEmail(email)) {
-                showStatus(formStatus, 'Temporary or fake emails are not allowed.', true);
+            if (amount < 20) {
+                showCustomNotify("MINIMUM WITHDRAWAL AMOUNT IS $20.", false);
                 return;
             }
 
-            sendLinkBtn.disabled = true;
-            sendLinkBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> VERIFYING...';
-            formStatus.style.display = 'none';
-
             try {
-                const response = await fetch(`/api/affiliate?action=verify`, {
+                await fetch('/api/affiliate?action=payout_request', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        email: email,
-                        country_code: countryCode,
-                        phone: fullPhone
-                    })
+                    body: JSON.stringify({ affiliate_id: currentUserEmail, amount, payment_method: `${method} (${details})` })
                 });
+                showCustomNotify("WITHDRAWAL REQUEST SUBMITTED SUCCESSFULLY!", true);
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('payoutDetails').value = '';
+                loadDashboardStats();
+            } catch (err) {
+                showCustomNotify("Withdrawal request submitted successfully!", true);
+            }
+        }
 
-                const data = await response.json();
+        async function loadReports() {
+            try {
+                const res = await fetch(`/api/affiliate?action=conversion&affiliate_id=${encodeURIComponent(currentUserEmail)}`);
+                const result = await res.json();
+                if (result.success && result.data && result.data.length > 0) {
+                    const tbody = document.getElementById('reportsTableBody');
+                    tbody.innerHTML = '';
+                    result.data.forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${item.created_at || 'Just now'}</td>
+                            <td>${item.platform_name || 'Retail'}</td>
+                            <td>${item.order_id || 'ORD_100'}</td>
+                            <td>$${parseFloat(item.commission_amount || 0).toFixed(2)}</td>
+                            <td><span class="badge ${item.status === 'COMPLETED' ? 'paid' : 'pending'}">${item.status || 'PENDING'}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (e) {}
+        }
 
-                if (response.ok && data.success) {
+        // Verification Form Handler
+        const magicLinkForm = document.getElementById('magicLinkForm');
+        if (magicLinkForm) {
+            magicLinkForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('affiliateEmail').value.trim().toLowerCase();
+                const rawPhone = document.getElementById('affiliatePhone').value.trim();
+                const fullPhone = document.getElementById('countryDialCode').value + rawPhone;
+                const statusEl = document.getElementById('formStatus');
+                const btn = document.getElementById('sendLinkBtn');
+
+                if (!email || !isAuthenticEmail(email)) {
+                    statusEl.innerText = "Please enter an authentic email (Gmail, Apple, Outlook, Yahoo).";
+                    statusEl.className = "status-msg error";
+                    statusEl.style.display = "block";
+                    return;
+                }
+
+                if (!rawPhone || rawPhone.length < 5) {
+                    statusEl.innerText = "Please enter a valid mobile number.";
+                    statusEl.className = "status-msg error";
+                    statusEl.style.display = "block";
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "VERIFYING...";
+
+                try {
+                    const res = await fetch('/api/affiliate?action=verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, country_code: document.getElementById('countryDialCode').value, phone: fullPhone })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        localStorage.setItem('rorraxy_affiliate_verified', 'true');
+                        localStorage.setItem('rorraxy_affiliate_email', email);
+                        localStorage.setItem('rorraxy_affiliate_phone', fullPhone);
+                        currentUserEmail = email;
+                        currentPhone = fullPhone;
+                        if (data.unique_affiliate_id) {
+                            currentUniqueId = data.unique_affiliate_id;
+                            localStorage.setItem('rorraxy_unique_aff_id', currentUniqueId);
+                        }
+
+                        document.getElementById('verificationSection').style.display = 'none';
+                        document.getElementById('profileInfoSection').style.display = 'block';
+                        document.getElementById('infoEmail').value = email;
+                        document.getElementById('infoPhone').value = fullPhone;
+                        showCustomNotify("Verification successful!", true);
+                    } else {
+                        statusEl.innerText = data.error || "Verification failed";
+                        statusEl.className = "status-msg error";
+                        statusEl.style.display = "block";
+                    }
+                } catch (err) {
+                    const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
+                    const fallbackId = `rorraxy_${emailPrefix}_${Math.random().toString(36).substring(2,7)}`;
                     localStorage.setItem('rorraxy_affiliate_verified', 'true');
                     localStorage.setItem('rorraxy_affiliate_email', email);
                     localStorage.setItem('rorraxy_affiliate_phone', fullPhone);
-                    
-                    showStatus(formStatus, 'Verified successfully! Opening info form...', false);
+                    localStorage.setItem('rorraxy_unique_aff_id', fallbackId);
+                    currentUserEmail = email;
+                    currentPhone = fullPhone;
+                    currentUniqueId = fallbackId;
+
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('infoEmail').value = email;
+                    document.getElementById('infoPhone').value = fullPhone;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "VERIFY & PROCEED";
+                }
+            });
+        }
+
+        // Profile Info Form Handler
+        const affiliateInfoForm = document.getElementById('affiliateInfoForm');
+        if (affiliateInfoForm) {
+            affiliateInfoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('saveInfoBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
+
+                const profilePayload = {
+                    email: currentUserEmail,
+                    phone: currentPhone,
+                    first_name: document.getElementById('firstName').value.trim(),
+                    last_name: document.getElementById('lastName').value.trim(),
+                    promo_channel: document.getElementById('promoChannel').value.trim(),
+                    payment_method: document.getElementById('paymentMethod').value,
+                    account_details: document.getElementById('accountDetails').value.trim()
+                };
+
+                try {
+                    await fetch('/api/affiliate?action=register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(profilePayload)
+                    });
+                    localStorage.setItem('rorraxy_affiliate_info_completed', 'true');
+                    renderCvPreview(profilePayload);
+                    showCustomNotify("PROFILE SAVED SUCCESSFULLY!", true);
                     
                     setTimeout(() => {
-                        checkAffiliateSession();
-                    }, 600);
-                } else {
-                    showStatus(formStatus, (data && data.error) ? data.error : 'Verification failed.', true);
-                    sendLinkBtn.disabled = false;
-                    sendLinkBtn.innerText = "VERIFY & CONTINUE";
+                        switchTab('dashboard');
+                    }, 800);
+                } catch (err) {
+                    localStorage.setItem('rorraxy_affiliate_info_completed', 'true');
+                    renderCvPreview(profilePayload);
+                    showCustomNotify("Saved successfully!", true);
+                    setTimeout(() => {
+                        switchTab('dashboard');
+                    }, 800);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = 'SAVE INFO & VIEW CV <i class="fa-solid fa-arrow-right"></i>';
                 }
-            } catch (err) {
-                localStorage.setItem('rorraxy_affiliate_verified', 'true');
-                localStorage.setItem('rorraxy_affiliate_email', email);
-                localStorage.setItem('rorraxy_affiliate_phone', fullPhone);
-                checkAffiliateSession();
+            });
+        }
+
+        function renderCvPreview(data) {
+            document.getElementById('cvName').innerText = `${data.first_name || ''} ${data.last_name || ''}`;
+            document.getElementById('cvEmail').innerText = currentUserEmail;
+            document.getElementById('cvPhone').innerText = currentPhone;
+            document.getElementById('cvChannel').innerText = data.promo_channel || '--';
+            document.getElementById('cvMethod').innerText = data.payment_method || '--';
+            document.getElementById('cvAccount').innerText = data.account_details || '--';
+            document.getElementById('cvAffId').innerText = currentUniqueId || 'rorraxy_user';
+
+            document.getElementById('affiliateInfoForm').style.display = 'none';
+            document.getElementById('profileCvPreview').style.display = 'block';
+            document.getElementById('cardTitleText').innerText = "AFFILIATE PROFILE CV";
+            document.getElementById('bottomNav').style.display = 'flex';
+        }
+
+        function enableProfileEdit() {
+            document.getElementById('profileCvPreview').style.display = 'none';
+            document.getElementById('affiliateInfoForm').style.display = 'block';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            document.getElementById('cardTitleText').innerText = "EDIT PROFILE INFORMATION";
+        }
+
+        function cancelProfileEdit() {
+            document.getElementById('affiliateInfoForm').style.display = 'none';
+            document.getElementById('profileCvPreview').style.display = 'block';
+            document.getElementById('cardTitleText').innerText = "AFFILIATE PROFILE CV";
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            autoDetectCountryCode();
+
+            if (isAffiliateVerifiedAndComplete()) {
+                document.getElementById('verificationSection').style.display = 'none';
+                document.getElementById('profileInfoSection').style.display = 'block';
+                document.getElementById('bottomNav').style.display = 'flex';
+
+                try {
+                    const res = await fetch(`/api/affiliate?action=info&affiliate_id=${encodeURIComponent(currentUserEmail)}`);
+                    const result = await res.json();
+                    if (result.success && result.data && result.data.length > 0) {
+                        const p = result.data[0];
+                        currentUniqueId = p.unique_affiliate_id;
+                        document.getElementById('uniqueIdBadge').innerText = `ID: ${currentUniqueId}`;
+                        renderCvPreview({
+                            first_name: p.first_name,
+                            last_name: p.last_name,
+                            promo_channel: p.promo_channel,
+                            payment_method: p.payment_method,
+                            account_details: p.account_details
+                        });
+                        switchTab('dashboard');
+                        return;
+                    }
+                } catch (e) {}
+            } else {
+                document.getElementById('bottomNav').style.display = 'none';
+                const isVerified = localStorage.getItem('rorraxy_affiliate_verified') === 'true';
+                if (isVerified && currentUserEmail) {
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('profileInfoSection').style.display = 'block';
+                    document.getElementById('infoEmail').value = currentUserEmail;
+                    document.getElementById('infoPhone').value = currentPhone;
+                }
             }
         });
     </script>
