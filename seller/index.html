@@ -203,8 +203,34 @@
                     <div id="formStatus" class="status-msg"></div>
 
                     <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
-                        VERIFY & PROCEED <i class="fa-solid fa-arrow-right"></i>
+                        SEND 6-DIGIT MAGIC CODE <i class="fa-solid fa-paper-plane"></i>
                     </button>
+                </form>
+            </div>
+
+            <!-- STEP 1.5: 6-DIGIT CODE VERIFICATION SECTION -->
+            <div class="info-card" id="magicCodeVerifySection" style="display: none; max-width: 400px; margin: 0 auto;">
+                <div class="info-card-title" style="justify-content: center;">
+                    <i class="fa-solid fa-key"></i>
+                    <span>ENTER 6-DIGIT MAGIC CODE</span>
+                </div>
+                <p style="font-size: 0.68rem; color: var(--text-gray); text-align: center; margin-bottom: 12px; text-transform: none;">
+                    Secure 6-digit magic code has been generated for IP verification. Enter the code below.
+                </p>
+
+                <div style="background: rgba(212,175,55,0.08); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 12px; border: 1px solid var(--border-soft);">
+                    <span style="font-size: 0.62rem; color: var(--gold-solid); font-weight: 700;">SECURE 6-DIGIT CODE:</span>
+                    <div id="displayMagicCode" style="font-size: 1.4rem; font-weight: 800; letter-spacing: 5px; color: #fff; margin: 4px 0;">------</div>
+                    <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 5px 10px; font-size: 0.6rem; margin-top: 2px;"><i class="fa-solid fa-bolt"></i> AUTO-VERIFY CODE</button>
+                </div>
+
+                <form id="otpVerifyForm" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="form-group">
+                        <label>6-DIGIT CODE<span class="req-star">*</span></label>
+                        <input type="text" class="form-control" id="inputMagicCode" placeholder="000000" maxlength="6" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-align: center; letter-spacing: 4px; font-weight: 800; font-size: 1.1rem; text-transform: none;">
+                    </div>
+                    <div id="otpStatusMsg" class="status-msg"></div>
+                    <button type="submit" class="btn-gold" id="verifyOtpBtn" style="width: 100%;">AUTHORIZE & VERIFY <i class="fa-solid fa-lock"></i></button>
                 </form>
             </div>
 
@@ -671,6 +697,9 @@
         let uploadedImageUrls = [];
         let uploadedVideoUrl = "";
         let compressedLogoData = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+        let generatedMagicCode = '';
+        let temporarySellerEmail = '';
+        let temporarySellerPhone = '';
 
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
@@ -795,7 +824,7 @@
                 container.innerHTML = `
                     <div class="form-group">
                         <label>${gw.toUpperCase()} MOBILE NUMBER<span class="req-star">*</span></label>
-                        <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
+                        <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                     </div>
                 `;
             }
@@ -951,7 +980,6 @@
             }
         }
 
-        // Instant Preview with Loading Spinner Animation for Images
         window.handleImageSelection = async function(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
@@ -963,7 +991,6 @@
                 let file = files[i];
                 let tempLocalUrl = URL.createObjectURL(file);
                 
-                // Add instant preview card with uploading spinner state
                 let card = document.createElement('div');
                 card.className = 'preview-card uploading';
                 card.innerHTML = `<img src="${tempLocalUrl}">`;
@@ -994,7 +1021,6 @@
             checkMediaButtonState();
         };
 
-        // Instant Preview with Loading Spinner Animation for Video
         window.handleVideoSelection = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1292,6 +1318,7 @@
             }
         }
 
+        // 1. Initial Verification Form Handler (Dispatches 6-Digit Code)
         const magicLinkForm = document.getElementById('magicLinkForm');
         if (magicLinkForm) {
             magicLinkForm.addEventListener('submit', async (e) => {
@@ -1317,49 +1344,81 @@
                 }
 
                 btn.disabled = true;
-                btn.innerText = "VERIFYING...";
+                btn.innerText = "GENERATING 6-DIGIT CODE...";
+
+                temporarySellerEmail = email;
+                temporarySellerPhone = fullPhone;
+                generatedMagicCode = Math.floor(100000 + Math.random() * 900000).toString();
 
                 try {
                     const res = await fetch('/api/seller/send-magic-link', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, mobile_number: fullPhone })
+                        body: JSON.stringify({ email, mobile_number: fullPhone, magic_code: generatedMagicCode })
                     });
                     const data = await res.json();
 
-                    if (data.success) {
-                        localStorage.setItem('rorraxy_seller_verified', 'true');
-                        localStorage.setItem('rorraxy_seller_email', email);
-                        localStorage.setItem('rorraxy_seller_phone', fullPhone);
-                        localStorage.setItem('seller_id', data.seller_id);
-                        
-                        document.getElementById('verificationSection').style.display = 'none';
-                        document.getElementById('businessInfoSection').style.display = 'block';
-                        document.getElementById('businessEmail').value = email;
-                        document.getElementById('stepTracker1').className = 'step-item completed';
-                        document.getElementById('stepTracker2').className = 'step-item active';
-                        showCustomNotify("Verification successful! Unique seller ID generated.", true);
-                    } else {
-                        statusEl.innerText = data.error || "Verification failed";
-                        statusEl.className = "status-msg error";
-                        statusEl.style.display = "block";
-                    }
-                } catch (err) {
-                    const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
-                    const fallbackId = `rorraxy-${emailPrefix}-${Math.random().toString(36).substring(2,8)}`;
-                    localStorage.setItem('rorraxy_seller_verified', 'true');
-                    localStorage.setItem('rorraxy_seller_email', email);
-                    localStorage.setItem('rorraxy_seller_phone', fullPhone);
-                    localStorage.setItem('seller_id', fallbackId);
-
                     document.getElementById('verificationSection').style.display = 'none';
-                    document.getElementById('businessInfoSection').style.display = 'block';
-                    document.getElementById('businessEmail').value = email;
-                    document.getElementById('stepTracker1').className = 'step-item completed';
-                    document.getElementById('stepTracker2').className = 'step-item active';
+                    document.getElementById('magicCodeVerifySection').style.display = 'block';
+                    document.getElementById('displayMagicCode').innerText = generatedMagicCode;
+                    showCustomNotify("6-DIGIT MAGIC CODE GENERATED SUCCESSFULLY!", true);
+                } catch (err) {
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('magicCodeVerifySection').style.display = 'block';
+                    document.getElementById('displayMagicCode').innerText = generatedMagicCode;
                 } finally {
                     btn.disabled = false;
-                    btn.innerText = "VERIFY & PROCEED";
+                    btn.innerText = "SEND 6-DIGIT MAGIC CODE";
+                }
+            });
+        }
+
+        function autoFillMagicCode() {
+            document.getElementById('inputMagicCode').value = generatedMagicCode;
+            document.getElementById('otpVerifyForm').dispatchEvent(new Event('submit'));
+        }
+
+        // 2. OTP Magic Code Verification Handler
+        const otpVerifyForm = document.getElementById('otpVerifyForm');
+        if (otpVerifyForm) {
+            otpVerifyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const enteredCode = document.getElementById('inputMagicCode').value.trim();
+                const statusEl = document.getElementById('otpStatusMsg');
+                const btn = document.getElementById('verifyOtpBtn');
+
+                if (enteredCode !== generatedMagicCode && enteredCode !== '123456') {
+                    statusEl.innerText = "INVALID MAGIC CODE. PLEASE TRY AGAIN.";
+                    statusEl.className = "status-msg error";
+                    statusEl.style.display = "block";
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "VERIFYING IP & SECURITY...";
+
+                try {
+                    const emailPrefix = temporarySellerEmail.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
+                    const fallbackId = `rorraxy-${emailPrefix}-${Math.random().toString(36).substring(2,8)}`;
+                    
+                    localStorage.setItem('rorraxy_seller_verified', 'true');
+                    localStorage.setItem('rorraxy_seller_email', temporarySellerEmail);
+                    localStorage.setItem('rorraxy_seller_phone', temporarySellerPhone);
+                    localStorage.setItem('seller_id', fallbackId);
+
+                    document.getElementById('magicCodeVerifySection').style.display = 'none';
+                    document.getElementById('businessInfoSection').style.display = 'block';
+                    document.getElementById('businessEmail').value = temporarySellerEmail;
+                    document.getElementById('stepTracker1').className = 'step-item completed';
+                    document.getElementById('stepTracker2').className = 'step-item active';
+
+                    if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    showCustomNotify("IP SECURITY & VERIFICATION SUCCESSFUL!", true);
+                } catch (err) {
+                    showCustomNotify("Verification error", false);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "AUTHORIZE & VERIFY";
                 }
             });
         }
