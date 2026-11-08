@@ -39,16 +39,7 @@ export async function onRequest(context) {
       const cleanEmail = email.toLowerCase();
       const cleanMobile = mobile_number || "";
 
-      const queryInsertToken = `
-        INSERT INTO sellers (seller_id, email, mobile_number, verification_token, token_expires_at) 
-        VALUES (?, ?, ?, ?, ?) 
-        ON CONFLICT(email) DO UPDATE SET 
-        verification_token = excluded.verification_token, 
-        token_expires_at = excluded.token_expires_at, 
-        mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number)
-      `;
-
-      await db.prepare(queryInsertToken).bind(cleanEmail, cleanEmail, cleanMobile, token, expiresAt).run();
+      await db.prepare("INSERT INTO sellers (seller_id, email, mobile_number, verification_token, token_expires_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET verification_token = excluded.verification_token, token_expires_at = excluded.token_expires_at, mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number)").bind(cleanEmail, cleanEmail, cleanMobile, token, expiresAt).run();
 
       const magicLink = "https://" + url.hostname + "/api/seller/verify-magic?token=" + token;
 
@@ -69,9 +60,7 @@ export async function onRequest(context) {
       }
 
       const now = new Date().toISOString();
-      const queryVerify = "UPDATE sellers SET is_verified = 1, verified_at = ?, verification_token = NULL, token_expires_at = NULL WHERE verification_token = ?";
-
-      await db.prepare(queryVerify).bind(now, token).run();
+      await db.prepare("UPDATE sellers SET is_verified = 1, verified_at = ?, verification_token = NULL, token_expires_at = NULL WHERE verification_token = ?").bind(now, token).run();
 
       return Response.redirect("https://" + url.hostname + "/seller/dashboard.html?verified=true", 302);
     }
@@ -90,31 +79,7 @@ export async function onRequest(context) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const queryUpsertSeller = `
-        INSERT INTO sellers (
-          seller_id, email, mobile_number, brand_name, full_name, business_desc, 
-          whatsapp, emergency_phone, country, full_address, doc_type, doc_number, 
-          trade_license, logo_url, is_verified, admin_approval_status, last_ip, ip_country, user_agent, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'pending', ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?)) 
-        ON CONFLICT(email) DO UPDATE SET 
-          mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number), 
-          brand_name = excluded.brand_name, 
-          full_name = excluded.full_name, 
-          business_desc = excluded.business_desc, 
-          whatsapp = excluded.whatsapp, 
-          emergency_phone = excluded.emergency_phone, 
-          country = excluded.country, 
-          full_address = excluded.full_address, 
-          doc_type = excluded.doc_type, 
-          doc_number = excluded.doc_number, 
-          trade_license = excluded.trade_license, 
-          logo_url = excluded.logo_url, 
-          last_ip = excluded.last_ip, 
-          ip_country = excluded.ip_country, 
-          user_agent = excluded.user_agent
-      `;
-
-      await db.prepare(queryUpsertSeller).bind(
+      await db.prepare("INSERT INTO sellers (seller_id, email, mobile_number, brand_name, full_name, business_desc, whatsapp, emergency_phone, country, full_address, doc_type, doc_number, trade_license, logo_url, is_verified, admin_approval_status, last_ip, ip_country, user_agent, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'pending', ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?)) ON CONFLICT(email) DO UPDATE SET mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number), brand_name = excluded.brand_name, full_name = excluded.full_name, business_desc = excluded.business_desc, whatsapp = excluded.whatsapp, emergency_phone = excluded.emergency_phone, country = excluded.country, full_address = excluded.full_address, doc_type = excluded.doc_type, doc_number = excluded.doc_number, trade_license = excluded.trade_license, logo_url = excluded.logo_url, last_ip = excluded.last_ip, ip_country = excluded.ip_country, user_agent = excluded.user_agent").bind(
         sellerId,
         email,
         mobileNumber,
@@ -172,4 +137,4 @@ export async function onRequest(context) {
     });
   }
 }
-```[cite: 1, 2, 4, 5, 6, 7]
+```[cite: 1, 2, 4, 5, 6, 7, 8]
