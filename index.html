@@ -18,7 +18,7 @@
     </script>
     <script src="/popup.js"></script>
 
-    <!-- Ultra-fast Resource Preloads -->
+    <!-- Super-fast Resource Preloading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
@@ -60,15 +60,15 @@
             contain: layout style;
         }
 
-        body { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+        body { padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)); }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
-        /* Loader Overlay Optimization */
+        /* Fast Loader Overlay */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
             will-change: opacity, visibility;
             pointer-events: none;
         }
@@ -82,15 +82,15 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .animate-card-entry { animation: fadeInLuxury 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-card-entry { animation: fadeInLuxury 0.15s ease forwards; }
         @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translate3d(0, 6px, 0); }
+            from { opacity: 0; transform: translate3d(0, 4px, 0); }
             to { opacity: 1; transform: translate3d(0, 0, 0); }
         }
 
-        /* Fixed Top Search Bar - Zero Jitter */
+        /* Fixed Top Search Bar */
         .top-floating-search-bar {
-            position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 50%; 
+            position: fixed; top: calc(15px + env(safe-area-inset-top, 0px)); left: 50%; 
             transform: translate3d(-50%, 0, 0);
             width: 90%; max-width: 400px; z-index: 1800; display: flex;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
@@ -109,10 +109,10 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* 100% Ultra-Stable Fixed Bottom Navigation Bar (No Shake/Flicker) */
+        /* Fixed Bottom Navigation Bar - Zero Jitter Guaranteed */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
+            background: rgba(3, 3, 5, 0.99); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; 
             padding: 0 4px calc(env(safe-area-inset-bottom, 0px)) 4px;
@@ -136,7 +136,7 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
-        /* Pinterest Feed Layout Optimization */
+        /* Pinterest Grid Feed */
         .pinterest-feed-container {
             padding: 10px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
             contain: content;
@@ -147,8 +147,7 @@
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.15s ease;
-            contain: layout style paint;
+            transition: transform 0.15s ease; contain: layout style paint;
         }
         .product-card:active { transform: scale(0.97); }
 
@@ -171,7 +170,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Borderless Proportional Reels Modal with Ultra Smooth Scrolling */
+        /* Borderless Proportional Reels Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -203,12 +202,12 @@
         }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        /* Smooth Dynamic Zoom & High-Definition Image Slide Layers */
+        /* Smooth Cross-Fade Slideshow Layers */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: opacity, transform;
-            animation: dynamicZoomInOut 10s ease-in-out infinite alternate;
+            animation: dynamicZoomInOut 12s ease-in-out infinite alternate;
             image-rendering: -webkit-optimize-contrast; backface-visibility: hidden;
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
@@ -216,7 +215,7 @@
 
         @keyframes dynamicZoomInOut {
             0% { transform: scale(1.0); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.04); }
             100% { transform: scale(1.0); }
         }
 
@@ -239,9 +238,9 @@
             padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* 100% Stable Right Floating Sidebar (No Flicker) */
+        /* Fixed Right Vertical Bar - Zero Jitter */
         .right-vertical-actions {
-            position: fixed; right: 12px; bottom: calc(85px + env(safe-area-inset-bottom)); z-index: 4500;
+            position: fixed; right: 12px; bottom: calc(85px + env(safe-area-inset-bottom, 0px)); z-index: 4500;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto; width: 45px;
             transform: translateZ(0); -webkit-transform: translateZ(0);
@@ -366,6 +365,7 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
+    <!-- Complete & Unchanged Bottom Nav Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -431,7 +431,7 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
-            // Instant Loader Removal for Maximum Speed
+            // Fast Loader Removal
             requestAnimationFrame(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
@@ -635,7 +635,7 @@
             }
         }
 
-        /* High Performance Fast Home Grid Render */
+        /* Fast Home Render using Document Fragment */
         function renderPinterestHomeGrid(products) {
             const container = document.getElementById('appContainer');
             if(!container) return;
@@ -744,7 +744,7 @@
             slideIntervalsMap = {};
         }
 
-        /* Ultra-Smooth Fullscreen Reels & Full Video Sound Support */
+        /* Full Audio Video Support in Reels */
         function openReelsModal(startIndex) {
             const overlay = document.getElementById('reelModalOverlay');
             const wrapper = document.getElementById('reelModalWrapperBody');
@@ -810,7 +810,7 @@
                             nextSlide.classList.add('active');
                             setTimeout(() => {
                                 currSlide.classList.remove('previous');
-                            }, 1000);
+                            }, 1200);
                         }
                         currentImgIdx = nextImgIdx;
                     }, 2800);
