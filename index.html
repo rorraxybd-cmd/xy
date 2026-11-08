@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy - Retail & Reels Feed</title>
+    <title>rorraxy - Retail, Reels & Affiliate Portal</title>
     
-    <!-- সেন্ট্রাল স্ক্রিপ্ট ও ক্যাটাগরি ডেটা -->
     <script src="/ecosystem-core.js"></script>
     <script src="/categories.js"></script>
     <link rel="manifest" href="/manifest.json">
@@ -56,7 +55,6 @@
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* প্রিমিয়াম প্রি-লোডার */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
@@ -78,15 +76,12 @@
             to { transform: scale(1.05); box-shadow: 0 0 30px rgba(212,175,55,0.7); }
         }
 
-        .animate-card-entry {
-            animation: fadeInFast 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
+        .animate-card-entry { animation: fadeInFast 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeInFast {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Top Floating Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: none;
@@ -104,7 +99,6 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
             background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
@@ -127,7 +121,6 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
-        /* Pinterest Style Home Grid */
         .pinterest-feed-container {
             padding: 8px 6px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
         }
@@ -150,9 +143,6 @@
 
         .card-clean-price-badge {
             position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
             font-size: 0.88rem; font-weight: 800;
             background: var(--gold-gradient) !important; 
             -webkit-background-clip: text !important; 
@@ -161,7 +151,6 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Full Reels Snap-Scroll View */
         .reel-view-wrapper-outer { 
             width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
             position: fixed; top: 0; left: 0; background: #000; 
@@ -178,7 +167,7 @@
         }
         .reel-media-box { position: relative; width: 100%; height: 100%; cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .reel-media-box video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
-        .reel-media-box img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+        .reel-media-box img { width: 100%; height: 100%; object-fit: cover; background: #000; display: block; }
 
         .reel-bottom-price-overlay {
             position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
@@ -200,7 +189,6 @@
             padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ডানপাশের ভাসমান অ্যাকশন বার */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 150;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -225,7 +213,6 @@
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
         }
 
-        /* পপআপ ওভারলে স্টাইল */
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
@@ -316,7 +303,6 @@
 </head>
 <body id="mainBody">
 
-    <!-- প্রিমিয়াম প্রি-লোডার -->
     <div id="rorraxyLoaderOverlay">
         <div class="loader-logo-box">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy">
@@ -324,13 +310,11 @@
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Top Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -339,34 +323,28 @@
         <div id="bottomHomeToggleBtn" onclick="handleHomeToggle()" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>HOME</span></div>
     </nav>
 
-    <!-- Fullscreen Portal Overlay for Cart / Account -->
     <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
         <iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe>
     </div>
 
-    <!-- Saved Gallery Overlay -->
     <div id="savedGalleryOverlay" class="saved-gallery-overlay" onclick="if(event.target===this) this.style.display='none'">
         <div class="seller-fullscreen-container" id="savedGalleryBody"></div>
     </div>
 
-    <!-- Buy Variant Preview Modal -->
     <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()">
         <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
     </div>
 
-    <!-- In-Page Details Modal -->
     <div id="inpageDetailsOverlay" class="overlay-sheet" onclick="if(event.target===this) closeInpageDetails()">
         <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
     </div>
 
-    <!-- Category Overlay Menu -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView"></div>
         </div>
     </div>
 
-    <!-- Main Content Container -->
     <main id="appContainer" class="pinterest-feed-container">
         <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
             <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
@@ -383,9 +361,15 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
-        let currentPortalUrl = '';
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Automatic Affiliate & Seller Referral Capture (?ref=SLR-XXXX or ?seller_id=SLR-XXXX)
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref') || urlParams.get('seller_id') || urlParams.get('affiliate');
+            if (refParam) {
+                localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
+            }
+
             buildCategoriesUI();
             loadLiveProducts();
             updateCartBadgeCount();
@@ -404,7 +388,6 @@
             const bottomDetailsBtn = document.getElementById('bottomDetailsBtn');
             
             const categoryTransparentOverlay = document.getElementById('categoryTransparentOverlay');
-            const floatingSearchContainer = document.getElementById('floatingSearchContainer');
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
 
@@ -448,7 +431,6 @@
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
 
-            // পিসিতে কীবোর্ড আপ/ডাউন অ্যারো কী দিয়ে এক ক্লিকে রিলস নেভিগেশন নিশ্চিত করা
             window.addEventListener('keydown', (e) => {
                 if (!isPinterestHomeMode) {
                     if (e.key === 'ArrowDown' || e.key === 'PageDown') {
@@ -495,7 +477,6 @@
         function openFullscreenPortal(pageUrl) {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
-            currentPortalUrl = pageUrl;
             iframe.src = pageUrl;
             overlay.style.display = 'flex';
             updateCartBadgeCount();
@@ -643,7 +624,7 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
                 
-                // ডাইরেক্ট ক্লিক করা মাত্র নির্দিষ্ট রিলসে চলে যাওয়ার ফাংশন
+                // Instant smooth jump to reels view without jumpy scroll lag
                 cardDiv.onclick = () => {
                     isPinterestHomeMode = false;
                     currentReelIndex = index;
@@ -764,7 +745,7 @@
                     mediaElem = `<video src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
                 } else {
                     if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-                    mediaElem = `<img id="reelSlideImg_${idx}" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:contain; background:#000;">`;
+                    mediaElem = `<img id="reelSlideImg_${idx}" src="${extractedImages[0]}" style="width:100%; height:100%; object-fit:cover; background:#000;">`;
                     
                     if (extractedImages.length > 1) {
                         let imgIdx = 0;
@@ -794,7 +775,6 @@
 
             container.innerHTML = reelsHtml;
 
-            // সরাসরি নির্দিষ্ট ইনডেক্সে জাম্প করবে, কোনো ফেড-ইন বা অটো-স্ক্রল অ্যানিমেশন হ্যাম্পার করবে না
             setTimeout(() => {
                 const targetCard = container.querySelector(`[data-index="${currentReelIndex}"]`);
                 if (targetCard) {
@@ -835,7 +815,7 @@
             const content = document.getElementById('inpageDetailsModalContent');
             if(!product) return;
 
-            let rawTitle = product.title || 'women\'s long-sleeved sweater hip skirt';
+            let rawTitle = product.title || 'rorraxy luxury product';
             let title = rawTitle.toLowerCase();
             let priceNum = parseFloat(product.price || 21.17);
             let marketPriceNum = (priceNum * 1.35).toFixed(2);
@@ -843,41 +823,25 @@
             let marketPrice = `$${marketPriceNum}`;
             let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
             let rawDesc = product.description || product.desc || '';
-            
-            let cleanDesc = rawDesc;
-            let cutKeywords = ['packing list:', 'packing list', 'product image:', 'product image', 'images:'];
-            cutKeywords.forEach(kw => {
-                let lowerDesc = cleanDesc.toLowerCase();
-                let idx = lowerDesc.indexOf(kw);
-                if (idx !== -1) {
-                    cleanDesc = cleanDesc.substring(0, idx).trim();
-                }
-            });
-
-            cleanDesc = cleanDesc.replace(/https?:\/\/[^\s]+(\.jpg|\.png|\.webp)/gi, '').trim();
-            if (!cleanDesc) {
-                cleanDesc = 'crafted with precision engineering and high-grade sustainable luxury materials. tailored for ultimate comfort and class.';
-            }
-
             let stock = product.stock || 500;
             currentProductQty = 1;
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin:0; padding:0;">
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.9);">${price}</span>
+                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">${price}</span>
                         <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
-                        <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px; box-shadow:0 2px 6px rgba(255,42,133,0.4);">${discountPercent}% OFF</span>
+                        <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
                     </div>
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer; padding:0; line-height:1; opacity:0.85;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">&times;</button>
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer;">&times;</button>
                 </div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:700; flex-wrap:wrap; gap:6px; margin-top:2px;">
-                    <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-flex; align-items:center; gap:5px;"><i class="fa-solid fa-truck-fast"></i> free worldwide shipping</span>
-                    <span style="color:#00e676; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:700;">
+                    <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free shipping</span>
+                    <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
                 </div>
 
-                <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px; margin-top:2px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
                     <span style="font-size:0.75rem; font-weight:700; color:#ffffff;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
                         <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
@@ -886,32 +850,19 @@
                     </div>
                 </div>
 
-                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.45; margin:4px 0 0 0; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.9)); display:inline-block;">${title}</h3>
+                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.45; margin:4px 0 0 0;">${title}</h3>
 
                 <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
-                    ${cleanDesc}
+                    ${rawDesc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:6px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 12px;">
                         <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase; resize:none; font-family:var(--font-main);"></textarea>
-                        <div onclick="toggleNoteCheckState(this)" id="noteCheckBtn" style="cursor:pointer; width:26px; height:26px; border-radius:50%; background:#ff2a85; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.75rem; transition:background 0.2s ease;">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
                     </div>
                 </div>
             `;
             overlay.style.display = 'flex';
-        }
-
-        function toggleNoteCheckState(el) {
-            if(el.style.background === 'rgb(0, 230, 118)' || el.style.background === '#00e676') {
-                el.style.background = '#ff2a85';
-                el.innerHTML = '<i class="fa-solid fa-check"></i>';
-            } else {
-                el.style.background = '#00e676';
-                el.innerHTML = '<i class="fa-solid fa-check"></i>';
-            }
         }
 
         function adjustDetailQty(amount) {
@@ -958,12 +909,12 @@
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT COLOR / VARIANT</span>
+                    <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT</span>
                     <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35})" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
-                    CONFIRM
+                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
+                    CONFIRM & ADD TO CART
                 </button>
             `;
             overlay.style.display = 'flex';
@@ -1031,19 +982,23 @@
             }, 350);
         }
 
-        function confirmAddToCart(e, pId, title, price) {
+        function confirmAddToCart(e, pId, title, price, sellerId) {
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'none';
+
             let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg);
 
             if(existing) {
-                existing.qty += 1;
+                existing.qty += currentProductQty;
             } else {
                 cart.push({
                     productId: pId,
+                    sellerId: sellerId || 'rorraxy-store',
+                    affiliateRef: activeAffiliateRef,
                     title: title,
                     price: `$${parseFloat(price).toFixed(2)}`,
-                    qty: 1,
+                    qty: currentProductQty,
                     img: selectedVariantImg
                 });
             }
@@ -1067,7 +1022,7 @@
             if (storedData) {
                 currentVal = JSON.parse(storedData).value;
             } else {
-                const pool = [185, 245, 445, 890, 1500, 3200, 7800, 15400, 48000, 125000, 250000, 1000000];
+                const pool = [185, 245, 445, 890, 1500, 3200, 7800, 15400, 48000, 125000];
                 let index = Math.abs(hashCode(String(productId))) % pool.length;
                 let base = pool[index];
                 let variance = (Math.abs(hashCode(String(productId))) % 199);
@@ -1078,13 +1033,8 @@
         }
 
         function formatCompactNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            } else if (num >= 100000) {
-                return (num / 1000).toFixed(0) + 'K';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
         }
 
@@ -1102,12 +1052,7 @@
             let countElem = btn.querySelector('.side-count-text');
             let storageKey = `rorraxy_retail_likes_${productId}`;
             let activeStateKey = storageKey + '_active';
-            let lastLikeDateKey = storageKey + '_last_date';
-
-            let todayStr = new Date().toDateString();
-            let lastLikeDate = localStorage.getItem(lastLikeDateKey);
             let isLiked = localStorage.getItem(activeStateKey) === 'true';
-
             let storedData = localStorage.getItem(storageKey);
             let currentVal = storedData ? JSON.parse(storedData).value : 1500;
 
@@ -1116,20 +1061,13 @@
                 currentVal = Math.max(0, currentVal - 1);
                 localStorage.setItem(activeStateKey, 'false');
             } else {
-                if (lastLikeDate === todayStr) {
-                    alert('আপনি এই প্রোডাক্টটিতে আজ ইতিমধ্যে লাইক দিয়েছেন। আগামীকাল আবার লাইক করতে পারবেন!');
-                    return;
-                }
                 btn.classList.add('liked-active');
                 currentVal += 1;
                 localStorage.setItem(activeStateKey, 'true');
-                localStorage.setItem(lastLikeDateKey, todayStr);
             }
 
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
-            if(countElem) {
-                countElem.innerText = formatCompactNumber(currentVal);
-            }
+            if(countElem) countElem.innerText = formatCompactNumber(currentVal);
         };
 
         window.handleDualSaveAction = function(e, btn, pId) {
@@ -1205,12 +1143,13 @@
 
         window.openNativeShare = async function(e, pId) {
             e.stopPropagation();
-            const shareUrl = `${window.location.origin}/pd.html?id=${encodeURIComponent(pId)}`;
+            let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
+            const shareUrl = `${window.location.origin}/index.html?ref=${encodeURIComponent(activeAffiliateRef)}&product=${encodeURIComponent(pId)}`;
             if (navigator.share) {
-                try { await navigator.share({ title: pId, url: shareUrl }); } catch (err) {}
+                try { await navigator.share({ title: 'rorraxy product', url: shareUrl }); } catch (err) {}
             } else if (navigator.clipboard) {
                 await navigator.clipboard.writeText(shareUrl);
-                alert('Link copied to clipboard!');
+                alert('Affiliate product link copied to clipboard!');
             }
         };
     </script>
