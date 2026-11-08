@@ -237,7 +237,6 @@
             opacity: 1;
         }
 
-        /* প্রাইস, মিনিমাম পিস এবং শেয়ার বাটন একদম নিখুঁত এক লাইনে সেট করা হয়েছে */
         .card-footer-actions { 
             display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; 
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
@@ -255,13 +254,15 @@
             font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; 
         }
         
-        /* শেয়ার আইকনটি আরেকটু বড় ও সুন্দর করা হয়েছে */
         .share-icon-btn { 
             background: none; border: none; cursor: pointer; 
             font-size: 1.15rem; background: var(--gold-gradient); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             padding: 4px; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
+            flex-shrink: 0; transition: transform 0.15s ease;
+        }
+        .share-icon-btn:active {
+            transform: scale(1.2);
         }
 
         nav.bottom-nav {
@@ -405,8 +406,30 @@
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_wholesale_feed_cache';
 
+        // অটোমেটিক অ্যাফিলিয়েট আইডি ট্র্যাকিং ও রিট্রিভাল
+        function getActiveAffiliateId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+            
+            if (refFromUrl) {
+                try {
+                    localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
+                    sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
+                } catch(e) {}
+                return refFromUrl;
+            }
+
+            let userProfile = {};
+            try {
+                userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account')) || JSON.parse(localStorage.getItem('user_profile')) || {};
+            } catch(e) {}
+
+            return userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
+            getActiveAffiliateId(); // ইনকামিং রেফারেল আইডি ডিটেক্ট করা
             updateCartBadgeCount();
             loadWholesaleProducts();
             
@@ -558,7 +581,7 @@
             wholesaleProducts.forEach(p => {
                 const pTitle = p.title || 'WHOLESALE ITEM';
                 const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
-                const moqCount = p.moq || 1; // সেলারের কনফিগার করা মিনিমাম পিস (যেমন ১ পিস, ২ পিস ইত্যাদি)[cite: 2]
+                const moqCount = p.moq || 1; // সেলারের কনফিগার করা মিনিমাম পিস[cite: 2]
                 
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 
@@ -616,7 +639,7 @@
                             <span class="product-price-tag">$${parseFloat(bulkPrice).toFixed(2)}</span>
                             <span class="moq-tag">Min ${moqCount} Pcs</span>
                         </div>
-                        <button class="share-icon-btn" onclick="event.stopPropagation(); shareProduct('${pTitle.replace(/'/g, "\\'")}', window.location.origin + '/wholesale/pd.html?id=${productId}')" title="Share Product">
+                        <button class="share-icon-btn" onclick="shareProduct(event, '${pTitle.replace(/'/g, "\\'")}', '${productId}')" title="Share & Earn">
                             <i class="fa-solid fa-share-nodes"></i>
                         </button>
                     </div>
@@ -637,12 +660,29 @@
             document.getElementById('youMenuModalOverlay').style.display = 'none';
         }
 
-        function shareProduct(title, url) {
+        // হোমপেজের আল্ট্রা-ফাস্ট অ্যাফিলিয়েট শেয়ারিং ফাংশন
+        async function shareProduct(event, title, productId) {
+            if(event) event.stopPropagation();
+
+            let affId = getActiveAffiliateId();
+            let shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
+            
+            if (affId) {
+                shareUrl += `&ref=${affId}`;
+            }
+
             if (navigator.share) {
-                navigator.share({ title: title, url: url }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(url);
-                alert("WHOLESALE ITEM LINK COPIED TO CLIPBOARD!");
+                try {
+                    await navigator.share({ title: title, url: shareUrl });
+                } catch(e) {}
+            } else if (navigator.clipboard) {
+                await navigator.clipboard.writeText(shareUrl);
+                const btn = event.currentTarget;
+                if(btn) {
+                    const origHtml = btn.innerHTML;
+                    btn.innerHTML = `<i class="fa-solid fa-check" style="color:#00e676;"></i>`;
+                    setTimeout(() => { btn.innerHTML = origHtml; }, 1600);
+                }
             }
         }
 
