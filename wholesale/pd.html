@@ -165,13 +165,24 @@
             color: #ffffff; font-size: 0.72rem; outline: none; font-family: var(--font-main); text-transform: uppercase; 
         }
 
+        .action-buttons-flex-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; width: 100%;
+        }
+
         .seller-chat-compact-btn {
             color: var(--gold-solid); font-size: 0.68rem; font-weight: 700; padding: 8px 14px; cursor: pointer;
             display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s ease; 
             width: max-content; background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
-            margin-top: 2px;
         }
         .seller-chat-compact-btn:hover { background: rgba(212, 175, 55, 0.18); transform: translateY(-1px); }
+
+        .main-product-share-btn {
+            background: none; border: none; cursor: pointer; font-size: 1.25rem;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex; align-items: center; justify-content: center; padding: 6px;
+            transition: transform 0.15s ease;
+        }
+        .main-product-share-btn:active { transform: scale(1.2); }
 
         /* Related Wholesale Products Section */
         .related-products-wrapper {
@@ -342,10 +353,15 @@
                         <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off">
                     </div>
 
-                    <div>
-                        <!-- চ্যাট উইথ সেলার বাটন পরিবর্তন করে ছোট সেলার বাটন করা হয়েছে -->
+                    <div class="action-buttons-flex-row">
+                        <!-- সেলার বাটন -->
                         <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
                             <i class="fa-solid fa-headset"></i> <span>SELLER</span>
+                        </button>
+
+                        <!-- শুধু প্রিমিয়াম শেয়ার আইকন (অটোমেটিক অ্যাফিলিয়েট ট্র্যাকিং সহ) -->
+                        <button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product">
+                            <i class="fa-solid fa-share-nodes"></i>
                         </button>
                     </div>
                 </div>
@@ -412,6 +428,40 @@
         let currentItemQuantity = 300;
         let selectedProductColorImage = "";
 
+        // অটোমেটিক অ্যাফিলিয়েট আইডি ট্র্যাকিং ও রিট্রিভাল
+        function getActiveAffiliateId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+            
+            if (refFromUrl) {
+                try {
+                    localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
+                    sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
+                } catch(e) {}
+                return refFromUrl;
+            }
+
+            let userProfile = {};
+            try {
+                userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account')) || JSON.parse(localStorage.getItem('user_profile')) || {};
+            } catch(e) {}
+
+            return userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
+        }
+
+        function generateAffiliateUrl(productId) {
+            let baseUrl = `${window.location.origin}${window.location.pathname}`;
+            let currentParams = new URLSearchParams(window.location.search);
+            currentParams.set('id', productId);
+            
+            let affId = getActiveAffiliateId();
+            if (affId) {
+                currentParams.set('ref', affId);
+            }
+            
+            return `${baseUrl}?${currentParams.toString()}`;
+        }
+
         // ডাইনামিক লাইকের দ্রুত অ্যাক্সেস এবং সেশন/লোকাল স্টোরেজ ক্যাশিং
         const dynamicLikeOptions = [50, 100, 150, 200, 400, 500, 600, 1000, 2000, 3000, 5000];
 
@@ -435,6 +485,8 @@
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const reqId = urlParams.get('id');
+
+            getActiveAffiliateId();
 
             if (reqId) {
                 fetchWholesaleProductDetails(reqId);
@@ -614,7 +666,6 @@
                 const title = item.title || 'rorraxy Bulk Item';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
                 
-                // ডাইনামিক ক্যাশড লাইক
                 const dynamicLikes = item.like_count ? item.like_count : getStoredOrDynamicLikes(prodId);
 
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
@@ -630,7 +681,7 @@
                 }
 
                 return `
-                    <div class="product-card" onclick="window.location.href='pd.html?id=${prodId}'">
+                    <div class="product-card" onclick="window.location.href='${generateAffiliateUrl(prodId)}'">
                         <div class="product-media-box">
                             <img src="${imageUrl}" alt="${title}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">
                         </div>
@@ -769,16 +820,20 @@
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
             let finalImgUrl = selectedProductColorImage || (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+            
+            let activeAffId = getActiveAffiliateId();
 
             let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
             let priceNum = parseFloat(currentActiveProduct.price_bulk || currentActiveProduct.price || currentActiveProduct.wholesale_price) || 25.00;
 
             if(existingItem) {
                 existingItem.qty += currentItemQuantity;
+                if (activeAffId) existingItem.affiliateId = activeAffId;
             } else {
                 cart.push({
                     productId: prodId,
                     sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
+                    affiliateId: activeAffId || null,
                     title: currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText,
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
@@ -842,17 +897,26 @@
             }
         }
 
+        async function triggerMainAffiliateShare(event) {
+            if (event) event.stopPropagation();
+            const prodId = currentActiveProduct ? (currentActiveProduct.id || currentActiveProduct.product_id || '101') : '101';
+            const title = currentActiveProduct ? (currentActiveProduct.title || 'Product Details') : 'Product Details';
+            await triggerAutoShare(event, prodId, title);
+        }
+
         async function triggerAutoShare(event, productId, productTitle) {
             event.stopPropagation();
-            const shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
+            const shareUrl = generateAffiliateUrl(productId);
             if (navigator.share) {
                 try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
             } else if (navigator.clipboard) {
                 await navigator.clipboard.writeText(shareUrl);
                 const btn = event.currentTarget;
-                const orig = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
-                setTimeout(() => { btn.innerHTML = orig; }, 1500);
+                if(btn) {
+                    const orig = btn.innerHTML;
+                    btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                    setTimeout(() => { btn.innerHTML = orig; }, 1500);
+                }
             }
         }
     </script>
