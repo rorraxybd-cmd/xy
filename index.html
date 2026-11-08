@@ -59,7 +59,7 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.15s ease, visibility 0.15s ease;
+            transition: opacity 0.1s ease, visibility 0.1s ease;
         }
         .loader-logo-box {
             width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
@@ -71,7 +71,7 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .animate-card-entry { animation: fadeInLuxury 0.15s ease forwards; }
+        .animate-card-entry { animation: fadeInLuxury 0.1s ease forwards; }
         @keyframes fadeInLuxury {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
@@ -132,7 +132,7 @@
         .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
-        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; }
+        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; loading: lazy; }
 
         .corner-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 45;
@@ -182,12 +182,12 @@
         }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        /* Smooth Cross-Fade Slideshow Layers with Zoom In/Out */
+        /* Super Fast & Smooth Cross-Fade Slideshow Layers with Zoom In/Out */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: opacity, transform;
-            animation: dynamicZoomInOut 12s ease-in-out infinite alternate;
+            animation: dynamicZoomInOut 10s ease-in-out infinite alternate;
             image-rendering: -webkit-optimize-contrast; backface-visibility: hidden;
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
@@ -195,7 +195,7 @@
 
         @keyframes dynamicZoomInOut {
             0% { transform: scale(1.0); }
-            50% { transform: scale(1.04); }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1.0); }
         }
 
@@ -416,9 +416,9 @@
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 100);
+                    setTimeout(() => loader.style.display = 'none', 50);
                 }
-            }, 80);
+            }, 40);
 
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
@@ -647,7 +647,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadge}
-                        <img src="${resolvedImageUrl}" alt="${title}" decoding="async">
+                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async">
                         <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
@@ -753,7 +753,7 @@
                     mediaContent = `<video src="${pVideo}" autoplay loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
                     let layersHtml = extractedImages.map((imgUrl, imgIdx) => `
-                        <img src="${imgUrl}" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" decoding="async">
+                        <img src="${imgUrl}" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" loading="${idx === startIndex ? 'eager' : 'lazy'}" decoding="async">
                     `).join('');
                     mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layersHtml}</div>`;
                 }
@@ -788,10 +788,10 @@
                             nextSlide.classList.add('active');
                             setTimeout(() => {
                                 currSlide.classList.remove('previous');
-                            }, 1200);
+                            }, 800);
                         }
                         currentImgIdx = nextImgIdx;
-                    }, 2800);
+                    }, 3000);
                 }
             });
 
@@ -815,7 +815,7 @@
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
                         renderFixedGlobalActions(activeId, false);
                     }
-                }, 30);
+                }, 20);
             };
 
             let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
@@ -912,7 +912,7 @@
 
             let imgsHtml = images.map((img, i) => `
                 <div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')">
-                    <img src="${img}">
+                    <img src="${img}" loading="lazy">
                 </div>
             `).join('');
 
@@ -1103,7 +1103,7 @@
                     thumbsHtml += `
                         <div class="saved-thumb-card">
                             <div class="saved-thumb-preview" onclick="selectSavedVideo('${vId}')">
-                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;" decoding="async">
+                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">
                                 <i class="fa-solid fa-play" style="position:absolute; color:#fcf6ba; font-size:1.2rem;"></i>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 2px;">
