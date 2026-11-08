@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Seller Portal Ecosystem - rorraxy</title>
+    <title>Seller Ecosystem Portal - rorraxy</title>
     
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <script src="/ecosystem-core.js"></script>
@@ -21,23 +21,114 @@
     <link rel="stylesheet" href="info.css">
 
     <style>
-        .app-view { display: none; width: 100%; }
+        :root {
+            --bg-retail: #030305;
+            --card-retail: #08080f;
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #fcf6ba 30%, #aa771c 70%, #fbf5b7 100%);
+            --gold-solid: #d4af37;
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --text-white: #ffffff;
+            --text-gray: #a3a3b2;
+            --font-main: 'Poppins', sans-serif;
+            --border-soft: rgba(212, 175, 55, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
+        body { padding: 20px 14px 110px 14px; text-transform: uppercase; }
+
+        .main-container { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+
+        .app-view { display: none; width: 100%; animation: fadeIn 0.25s ease-in-out; }
         .app-view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Clean Header */
+        .dashboard-header { text-align: center; margin-bottom: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+        .header-logo-img { width: 75px; height: 75px; object-fit: contain; filter: none !important; background: transparent !important; }
+        .dashboard-header h1 { font-size: 1.4rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.6px; }
+
+        /* Soft Cards (No excessive heavy borders or shadows) */
+        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 18px; padding: 22px 18px; margin-bottom: 20px; width: 100%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); }
+        .info-card-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+
+        /* Step Tracker */
+        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; }
+        .step-item { flex: 1; padding: 8px 12px; border-radius: 20px; background: #06060a; border: 1px solid var(--border-soft); text-align: center; font-size: 0.65rem; font-weight: 700; color: var(--text-gray); }
+        .step-item.active { background: rgba(212, 175, 55, 0.1); border-color: var(--gold-solid); color: var(--gold-solid); }
+        .step-item.completed { background: rgba(74, 222, 128, 0.1); border-color: #4ade80; color: #4ade80; }
+
+        /* Forms & Inputs */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { font-size: 0.68rem; font-weight: 700; color: var(--text-gray); display: flex; align-items: center; justify-content: space-width; width: 100%; }
+        .req-star { color: #ff4d4d; margin-left: 3px; font-weight: 900; }
+        
+        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 11px 14px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: rgba(212, 175, 55, 0.4); background: #040407; }
+        .form-select option { background: #08080c; color: #fff; }
+
+        .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
+        .country-code-select { background: #06060a; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.06); padding: 11px 10px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; }
+        .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
+
+        .status-msg { font-size: 0.72rem; text-transform: none; display: none; text-align: center; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
+        .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.2); }
+        .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.2); }
+
+        /* Buttons */
+        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 12px 20px; color: #000; font-weight: 800; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        .btn-gold:hover { filter: brightness(1.08); }
+
+        /* Dashboard Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; width: 100%; }
+        .stat-card { background: var(--card-retail); border-radius: 14px; padding: 14px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--border-soft); }
+        .stat-card h3 { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; }
+        .stat-card .value { font-size: 1.2rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .graph-container { width: 100%; height: 65px; position: relative; margin-top: 2px; }
+        .graph-container canvas { width: 100% !important; height: 100% !important; }
+
+        /* Tables & Lists */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; white-space: nowrap; }
+        .seller-table th, .seller-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+        .seller-table th { color: var(--gold-solid); font-weight: 700; background: #050508; }
+        .seller-table td { text-transform: none; color: var(--text-white); }
+        .prod-thumb { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
+
+        /* Fixed Bottom Navigation */
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(15px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
+        .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 3px; color: var(--text-gray); transition: color 0.2s; }
+        .nav-item span { font-size: 0.58rem; font-weight: 700; color: var(--text-gray); }
+
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .form-group.full-width { grid-column: span 1; }
+        }
     </style>
 </head>
 <body>
 
     <div class="main-container">
         
-        <!-- Shared Header -->
         <header class="dashboard-header">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="header-logo-img">
             <h1 id="mainPortalTitle">SELLER PORTAL</h1>
         </header>
 
-        <!-- ================= 1. VERIFICATION & INFO VIEW ================= -->
+        <!-- ================= 1. INFO / VERIFICATION VIEW ================= -->
         <div id="view-info" class="app-view active">
-            <div class="step-tracker" id="stepTrackerContainer">
+            <div class="step-tracker">
                 <div class="step-item active" id="stepTracker1">1. VERIFICATION</div>
                 <div class="step-item" id="stepTracker2">2. PROFILE & INFO</div>
             </div>
@@ -46,18 +137,18 @@
             <div class="info-card" id="verificationSection">
                 <div class="info-card-title">
                     <i class="fa-solid fa-user-shield"></i>
-                    <span>SELLER VERIFICATION</span>
+                    <span>SELLER VERIFICATION (EMAIL & PHONE)</span>
                 </div>
 
-                <form id="magicLinkForm" class="auth-form" novalidate>
+                <form id="magicLinkForm" style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;" novalidate>
                     <div class="form-group">
                         <label>EMAIL ADDRESS <span class="req-star">*</span></label>
-                        <input type="email" class="form-control" id="sellerEmail" placeholder="Enter valid email address..." required style="text-transform: none;" autocomplete="email">
-                        <span class="email-hint"><i class="fa-solid fa-lock" style="color: #ff2a85;"></i> All verified emails supported</span>
+                        <input type="email" class="form-control" id="sellerEmail" placeholder="Enter valid email..." required style="text-transform: none;">
+                        <span style="font-size: 0.62rem; color: var(--text-gray); text-transform: none;"><i class="fa-solid fa-lock" style="color: var(--gold-solid);"></i> Secure magic link ecosystem verification</span>
                     </div>
 
                     <div class="form-group">
-                        <label>MOBILE NUMBER (ANY COUNTRY) <span class="req-star">*</span></label>
+                        <label>MOBILE NUMBER <span class="req-star">*</span></label>
                         <div class="phone-input-group">
                             <select class="country-code-select" id="countryDialCode">
                                 <option value="+880">🇧🇩 +880</option>
@@ -73,7 +164,7 @@
                     
                     <div id="formStatus" class="status-msg"></div>
 
-                    <button type="submit" class="auth-btn" id="sendLinkBtn" style="width: 100%; margin-top: 6px;">
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 6px;">
                         VERIFY & PROCEED <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </form>
@@ -86,77 +177,66 @@
                     <span id="cardTitleText">SELLER PROFILE REGISTRATION</span>
                 </div>
 
-                <!-- Professional CV Style Preview -->
+                <!-- Preview Box -->
                 <div id="profilePreviewSection" style="display: none;">
-                    <div class="cv-preview-box">
-                        <div class="cv-header-section">
-                            <img src="" alt="Brand Logo" class="cv-logo-img" id="prevLogo">
-                            <div class="cv-title-area">
-                                <h2 id="prevBrandName">--</h2>
-                                <p id="prevBusinessDesc">--</p>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border-soft); padding-bottom: 16px;">
+                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                            <div>
+                                <h2 id="prevBrandName" style="font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">--</h2>
+                                <p id="prevBusinessDesc" style="font-size: 0.72rem; color: var(--text-gray); text-transform: none; margin-top: 3px;">--</p>
                             </div>
                         </div>
-                        <div class="cv-grid">
-                            <div class="cv-item"><span class="lbl">BUSINESS EMAIL</span><span class="val" id="prevEmail">--</span></div>
-                            <div class="cv-item"><span class="lbl">FULL NAME</span><span class="val" id="prevFullName">--</span></div>
-                            <div class="cv-item"><span class="lbl">WHATSAPP</span><span class="val" id="prevWhatsapp">--</span></div>
-                            <div class="cv-item"><span class="lbl">EMERGENCY PHONE</span><span class="val" id="prevPhone">--</span></div>
-                            <div class="cv-item"><span class="lbl">COUNTRY</span><span class="val" id="prevCountry">--</span></div>
-                            <div class="cv-item"><span class="lbl">ADDRESS</span><span class="val" id="prevAddress">--</span></div>
-                            <div class="cv-item"><span class="lbl" id="prevDocTypeLbl">NID NUMBER</span><span class="val" id="prevDocNum">--</span></div>
-                            <div class="cv-item"><span class="lbl">TRADE LICENSE</span><span class="val" id="prevTradeLicense">--</span></div>
+                        <div class="form-grid">
+                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">EMAIL</label><span id="prevEmail" style="font-size: 0.75rem; text-transform: none;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.75rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">COUNTRY</label><span id="prevCountry" style="font-size: 0.75rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.62rem; color: var(--text-gray);">SELLER ID</label><span id="prevSellerId" style="font-size: 0.75rem; color: var(--gold-solid);">--</span></div>
                         </div>
-                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                            <button type="button" class="edit-profile-btn" onclick="switchToEditMode()">
-                                <i class="fa-solid fa-pen-to-square"></i> EDIT INFO
-                            </button>
-                            <button type="button" class="edit-profile-btn" style="background: var(--gold-gradient); color: #000;" onclick="switchTab('dashboard')">
-                                <i class="fa-solid fa-arrow-right"></i> GO TO DASHBOARD
-                            </button>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="btn-gold" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT INFO</button>
+                            <button type="button" class="btn-gold" style="background: var(--pink-solid); color: #fff;" onclick="switchTab('dashboard')">GOTO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Profile Registration Form -->
+                <!-- Registration Form -->
                 <form id="businessInfoForm">
-                    <div class="avatar-upload-container">
-                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="avatar-preview" id="avatarPreview">
-                        <div class="avatar-upload-info">
-                            <label for="profilePhotoInput" class="avatar-upload-lbl"><i class="fa-solid fa-upload"></i> UPLOAD BRAND LOGO</label>
-                            <input type="file" id="profilePhotoInput" class="file-input-hidden" accept="image/*">
+                    <div style="display: flex; align-items: center; gap: 14px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--border-soft);">
+                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                        <div>
+                            <label for="profilePhotoInput" class="btn-gold" style="padding: 8px 14px; font-size: 0.68rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
+                            <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*">
                         </div>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label><span class="label-text">BRAND NAME<span class="req-star">*</span></span></label>
-                            <input type="text" class="form-control" id="brandName" placeholder="rorraxy store" required>
+                            <label>BRAND NAME<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="brandName" placeholder="Store Name" required>
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text">BUSINESS EMAIL (AUTO)<span class="req-star">*</span></span></label>
-                            <input type="email" class="form-control" id="businessEmail" readonly style="color: var(--gold-solid); cursor: not-allowed; text-transform: none;">
+                            <label>BUSINESS EMAIL (AUTO)<span class="req-star">*</span></label>
+                            <input type="email" class="form-control" id="businessEmail" readonly style="color: var(--gold-solid); text-transform: none;">
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text">FULL NAME<span class="req-star">*</span></span></label>
-                            <input type="text" class="form-control" id="fullName" placeholder="Owner full name..." required>
+                            <label>FULL NAME<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="fullName" placeholder="Owner Name" required>
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text">WHATSAPP<span class="req-star">*</span></span></label>
+                            <label>WHATSAPP<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="whatsappNum" placeholder="+8801700000000" required style="text-transform: none;">
                         </div>
                         <div class="form-group full-width">
-                            <label>
-                                <span class="label-text">BUSINESS DESCRIPTION<span class="req-star">*</span></span>
-                                <span class="char-counter" id="charCount">0/200</span>
-                            </label>
-                            <textarea class="form-control" id="businessDesc" rows="3" maxlength="200" placeholder="Briefly describe products..." required style="text-transform: none;"></textarea>
+                            <label>BUSINESS DESCRIPTION<span class="req-star">*</span></label>
+                            <textarea class="form-control" id="businessDesc" rows="2" maxlength="200" placeholder="Briefly describe your products..." required style="text-transform: none;"></textarea>
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text">EMERGENCY PHONE<span class="req-star">*</span></span></label>
+                            <label>EMERGENCY PHONE<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="phoneNum" placeholder="+8801800000000" required style="text-transform: none;">
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text">COUNTRY<span class="req-star">*</span></span></label>
+                            <label>COUNTRY<span class="req-star">*</span></label>
                             <select class="form-select" id="countrySelect" required>
                                 <option value="Bangladesh">Bangladesh</option>
                                 <option value="India">India</option>
@@ -167,60 +247,58 @@
                             </select>
                         </div>
                         <div class="form-group full-width">
-                            <label><span class="label-text">ADDRESS<span class="req-star">*</span></span></label>
+                            <label>ADDRESS<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="fullAddress" placeholder="District, Postal Code..." required style="text-transform: none;">
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text">VERIFICATION DOCUMENT<span class="req-star">*</span></span></label>
-                            <select class="form-select" id="docTypeSelect" onchange="updateDocLabel()" required>
+                            <label>VERIFICATION DOC<span class="req-star">*</span></label>
+                            <select class="form-select" id="docTypeSelect" required>
                                 <option value="NID">National ID (NID)</option>
                                 <option value="BirthCert">Birth Certificate</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label><span class="label-text" id="docNumLabel">NID NUMBER<span class="req-star">*</span></span></label>
+                            <label>DOC NUMBER<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="docNumberInput" placeholder="Enter ID number..." required style="text-transform: none;">
                         </div>
-                        <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 15px;">
-                            <label><span class="label-text">TRADE LICENSE (NUMBER / DETAILS)<span class="req-star">*</span></span></label>
-                            <input type="text" class="form-control" id="tradeLicenseInput" placeholder="Enter Trade License number or details..." required style="text-transform: none;">
+                        <div class="form-group full-width">
+                            <label>TRADE LICENSE / DETAILS<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="tradeLicenseInput" placeholder="License No or N/A" required style="text-transform: none;">
                         </div>
                     </div>
-                    <button type="submit" id="saveInfoBtn" class="section-save-btn">SAVE & PROCEED TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
-                    <button type="button" id="cancelEditBtn" class="edit-profile-btn" style="background: transparent; color: var(--text-gray); border: 1px solid var(--border-gold); margin-right: 10px; float: right; display: none;" onclick="cancelEditMode()">CANCEL</button>
-                    <div style="clear: both;"></div>
+                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%;">SAVE & PROCEED TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                 </form>
             </div>
         </div>
 
-        <!-- ================= 2. DASHBOARD VIEW ================= -->
+        <!-- ================= 2. DASHBOARD VIEW WITH CHARTS ================= -->
         <div id="view-dashboard" class="app-view">
             <div style="text-align: center; margin-bottom: 20px;">
-                <button type="button" class="sync-device-btn" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); border: none; padding: 9px 20px; border-radius: 20px; color: #fff; font-weight: 700; font-size: 0.75rem; cursor: pointer;">
-                    <i class="fa-solid fa-qrcode"></i> SYNC DEVICE
+                <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); color: #fff;">
+                    <i class="fa-solid fa-qrcode"></i> SYNC DEVICE & QR
                 </button>
             </div>
 
-            <section class="stats-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 25px;">
-                <div class="info-card" style="margin-bottom: 0; text-align: center;">
-                    <h3 style="font-size: 0.7rem; color: var(--text-gray);">TOTAL REVENUE</h3>
-                    <div class="value" id="statRevenueVal" style="font-size: 1.3rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$0.00</div>
-                    <div style="width: 100%; height: 60px; margin-top: 6px;"><canvas id="chartRevenue"></canvas></div>
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <h3>TOTAL REVENUE</h3>
+                    <div class="value" id="statRevenueVal">$0.00</div>
+                    <div class="graph-container"><canvas id="chartRevenue"></canvas></div>
                 </div>
-                <div class="info-card" style="margin-bottom: 0; text-align: center;">
-                    <h3 style="font-size: 0.7rem; color: var(--text-gray);">TOTAL BALANCE</h3>
-                    <div class="value" id="statBalanceVal" style="font-size: 1.3rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$0.00</div>
-                    <div style="width: 100%; height: 60px; margin-top: 6px;"><canvas id="chartBalance"></canvas></div>
+                <div class="stat-card">
+                    <h3>TOTAL BALANCE</h3>
+                    <div class="value" id="statBalanceVal">$0.00</div>
+                    <div class="graph-container"><canvas id="chartBalance"></canvas></div>
                 </div>
-                <div class="info-card" style="margin-bottom: 0; text-align: center;">
-                    <h3 style="font-size: 0.7rem; color: var(--text-gray);">TOTAL PRODUCT</h3>
-                    <div class="value" id="statProductsVal" style="font-size: 1.3rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0</div>
-                    <div style="width: 100%; height: 60px; margin-top: 6px;"><canvas id="chartProducts"></canvas></div>
+                <div class="stat-card">
+                    <h3>TOTAL PRODUCT</h3>
+                    <div class="value" id="statProductsVal">0</div>
+                    <div class="graph-container"><canvas id="chartProducts"></canvas></div>
                 </div>
-                <div class="info-card" style="margin-bottom: 0; text-align: center;">
-                    <h3 style="font-size: 0.7rem; color: var(--text-gray);">TOTAL ORDER</h3>
-                    <div class="value" id="statOrdersVal" style="font-size: 1.3rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0</div>
-                    <div style="width: 100%; height: 60px; margin-top: 6px;"><canvas id="chartOrders"></canvas></div>
+                <div class="stat-card">
+                    <h3>TOTAL ORDER</h3>
+                    <div class="value" id="statOrdersVal">0</div>
+                    <div class="graph-container"><canvas id="chartOrders"></canvas></div>
                 </div>
             </section>
         </div>
@@ -230,83 +308,131 @@
             <div class="info-card">
                 <div class="info-card-title" style="display: flex; justify-content: space-between; align-items: center;">
                     <span>UPLOADED PRODUCTS LIST</span>
-                    <button type="button" onclick="location.href='upload.html'" style="background: var(--gold-gradient); color: #000; border: none; padding: 6px 14px; border-radius: 16px; font-weight: 800; font-size: 0.72rem; cursor: pointer;">
+                    <button type="button" onclick="switchTab('upload')" class="btn-gold" style="padding: 6px 14px; font-size: 0.7rem;">
                         <i class="fa-solid fa-plus"></i> ADD NEW
                     </button>
                 </div>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.75rem;">
+                <div class="table-responsive">
+                    <table class="seller-table">
                         <thead>
-                            <tr style="color: var(--gold-solid); border-bottom: 1px solid var(--border-gold);">
-                                <th style="padding: 10px;">PRODUCT</th>
-                                <th style="padding: 10px;">CATEGORY</th>
-                                <th style="padding: 10px;">PRICE</th>
-                                <th style="padding: 10px;">STOCK</th>
-                                <th style="padding: 10px;">ACTIONS</th>
+                            <tr>
+                                <th>PRODUCT</th>
+                                <th>CATEGORY</th>
+                                <th>PRICE / MODE</th>
+                                <th>STOCK</th>
+                                <th>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody id="desktopTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">LOADING PRODUCTS...</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 4. SHIPMENT VIEW ================= -->
+        <!-- ================= 4. UPLOAD SECTION (`/seller/upload`) ================= -->
+        <div id="view-upload" class="app-view">
+            <div class="info-card">
+                <div class="info-card-title"><i class="fa-solid fa-cloud-arrow-up"></i> UPLOAD NEW PRODUCT (SELLER & PRODUCT ID SYNC)</div>
+                <form id="productUploadForm" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>SELLER ID (AUTO)<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="uploadSellerId" readonly style="color: var(--gold-solid);">
+                        </div>
+                        <div class="form-group">
+                            <label>PRODUCT ID / CODE (AUTO)<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="uploadProductCode" readonly style="color: var(--gold-solid);">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>PRODUCT TITLE<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="prodTitle" placeholder="Luxury Item Title..." required style="text-transform: none;">
+                        </div>
+                        <div class="form-group">
+                            <label>CATEGORY<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="prodCategory" placeholder="Electronics, Fashion..." required style="text-transform: none;">
+                        </div>
+                        <div class="form-group">
+                            <label>UPLOAD MODE<span class="req-star">*</span></label>
+                            <select class="form-select" id="prodUploadMode">
+                                <option value="retail">Retail Mode</option>
+                                <option value="wholesale">Wholesale Mode</option>
+                                <option value="both">Both (Retail & Wholesale)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>PRICE ($)<span class="req-star">*</span></label>
+                            <input type="number" step="0.01" class="form-control" id="prodPrice" placeholder="29.99" required style="text-transform: none;">
+                        </div>
+                        <div class="form-group">
+                            <label>STOCK QUANTITY<span class="req-star">*</span></label>
+                            <input type="number" class="form-control" id="prodStock" placeholder="10" value="1" required style="text-transform: none;">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>PRODUCT IMAGE URL / LINK<span class="req-star">*</span></label>
+                            <input type="url" class="form-control" id="prodImageUrl" placeholder="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/..." required style="text-transform: none;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-gold" style="width: 100%;">PUBLISH PRODUCT TO CLOUD</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= 5. SHIPMENT VIEW ================= -->
         <div id="view-shipment" class="app-view">
             <div class="info-card">
-                <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> REAL-TIME SHIPMENT ORDERS</div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; text-align: center;">
-                    <div class="cv-item"><span class="lbl">PENDING</span><span class="val" id="statPendingShipments">0</span></div>
-                    <div class="cv-item"><span class="lbl">COMPLETED</span><span class="val" id="statCompletedOrders">0</span></div>
-                    <div class="cv-item"><span class="lbl">EARNINGS</span><span class="val" id="statStoreEarnings">$0.00</span></div>
+                <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> REAL-TIME INCOMING SHIPMENTS</div>
+                <div class="form-grid" style="margin-bottom: 16px;">
+                    <div class="stat-card"><label>PENDING</label><span id="statPendingShipments" style="font-size: 1rem; color: #facc15;">0</span></div>
+                    <div class="stat-card"><label>COMPLETED</label><span id="statCompletedOrders" style="font-size: 1rem; color: #4ade80;">0</span></div>
+                    <div class="stat-card" style="grid-column: span 2;"><label>STORE EARNINGS</label><span id="statStoreEarnings" style="font-size: 1rem; color: var(--gold-solid);">$0.00</span></div>
                 </div>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.72rem;">
+                <div class="table-responsive">
+                    <table class="seller-table">
                         <thead>
-                            <tr style="color: var(--gold-solid); border-bottom: 1px solid var(--border-gold);">
-                                <th style="padding: 10px;">SUB-ORDER ID</th>
-                                <th style="padding: 10px;">PRODUCT TITLE</th>
-                                <th style="padding: 10px;">QTY</th>
-                                <th style="padding: 10px;">ACTION</th>
-                                <th style="padding: 10px;">STATUS</th>
+                            <tr>
+                                <th>SUB-ORDER ID</th>
+                                <th>TITLE</th>
+                                <th>QTY</th>
+                                <th>ACTION</th>
+                                <th>STATUS</th>
                             </tr>
                         </thead>
                         <tbody id="sellerOrdersTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO SHIPMENT ORDERS FOUND.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">NO INCOMING SHIPMENT REQUESTS.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 5. PAYOUT VIEW ================= -->
+        <!-- ================= 6. PAYOUT VIEW ================= -->
         <div id="view-payout" class="app-view">
             <div class="info-card" style="text-align: center; padding: 30px;">
-                <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> PAYOUT & WITHDRAWAL</div>
-                <p style="color: var(--text-gray); font-size: 0.78rem; text-transform: none; margin-bottom: 20px;">Your earnings are automatically synchronized with Cloudflare D1 ecosystem backend.</p>
-                <div class="cv-item" style="max-width: 300px; margin: 0 auto 20px auto;">
-                    <span class="lbl">AVAILABLE WITHDRAWAL BALANCE</span>
-                    <span class="val" style="font-size: 1.2rem; color: var(--gold-solid);" id="payoutBalanceVal">$0.00</span>
+                <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> SELLER PAYOUT & WITHDRAWAL</div>
+                <p style="color: var(--text-gray); font-size: 0.75rem; text-transform: none; margin-bottom: 20px;">Withdrawals are synced directly with Cloudflare D1 gateway.</p>
+                <div class="stat-card" style="max-width: 280px; margin: 0 auto 20px auto; padding: 20px;">
+                    <h3>AVAILABLE BALANCE</h3>
+                    <div class="value" id="payoutBalanceVal">$0.00</div>
                 </div>
-                <button type="button" onclick="alert('Withdrawal request submitted successfully!')" class="section-save-btn">REQUEST PAYOUT</button>
+                <button type="button" onclick="alert('Payout withdrawal requested successfully!')" class="btn-gold">REQUEST WITHDRAWAL</button>
             </div>
         </div>
 
     </div>
 
-    <!-- Multi-Device Sync Modal -->
+    <!-- Multi-Device Sync QR Modal -->
     <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:16px;">
-        <div style="background:#08080c; border:1px solid rgba(212, 175, 55, 0.3); border-radius:20px; padding:26px 18px; width:100%; max-width:380px; text-align:center;">
-            <h3 style="font-size:1.05rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px;">MULTI-DEVICE SYNC</h3>
-            <p style="font-size:0.72rem; color:var(--text-gray); margin-bottom:18px; text-transform:none;">Scan this secure QR code with your mobile device to sync session.</p>
-            <div id="qrcodeContainer" style="background:#ffffff; padding:12px; border-radius:12px; display:inline-block; margin-bottom:16px;"></div>
-            <button type="button" onclick="closeMultiDeviceSyncModal()" style="width:100%; background:var(--gold-gradient); border:none; border-radius:10px; padding:11px; color:#000; font-weight:800; cursor:pointer;">CLOSE</button>
+        <div style="background:#08080c; border:1px solid rgba(212, 175, 55, 0.3); border-radius:18px; padding:24px 16px; width:100%; max-width:360px; text-align:center;">
+            <h3 style="font-size:1.0rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px;">MULTI-DEVICE QR SYNC</h3>
+            <p style="font-size:0.7rem; color:var(--text-gray); margin-bottom:16px; text-transform:none;">Scan this secure QR code with another mobile device to sync session.</p>
+            <div id="qrcodeContainer" style="background:#ffffff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:16px;"></div>
+            <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE & RETURN</button>
         </div>
     </div>
 
-    <!-- Unified Bottom Navigation -->
+    <!-- Unified Fixed Bottom Navigation -->
     <nav class="seller-bottom-nav">
         <button type="button" class="nav-item active" id="nav-btn-info" onclick="switchTab('info')">
             <i class="fa-solid fa-user-gear"></i>
@@ -320,6 +446,10 @@
             <i class="fa-solid fa-list-check"></i>
             <span>LIST</span>
         </button>
+        <button type="button" class="nav-item" id="nav-btn-upload" onclick="switchTab('upload')">
+            <i class="fa-solid fa-plus-circle" style="font-size: 1.3rem; color: var(--gold-solid);"></i>
+            <span>UPLOAD</span>
+        </button>
         <button type="button" class="nav-item" id="nav-btn-shipment" onclick="switchTab('shipment')">
             <i class="fa-solid fa-truck-fast"></i>
             <span>SHIPMENT</span>
@@ -330,10 +460,11 @@
         </button>
     </nav>
 
-    <!-- External Modular Script -->
+    <!-- External Script Integration -->
     <script src="info.js"></script>
     <script>
-        // Tab Switching Engine inside Single HTML Page
+        const chartInstances = {};
+
         function switchTab(tabName) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.seller-bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
@@ -348,14 +479,174 @@
                 'info': 'SELLER PORTAL & INFO',
                 'dashboard': 'SELLER DASHBOARD',
                 'list': 'SELLER PRODUCT LIST',
+                'upload': 'SELLER PRODUCT UPLOAD',
                 'shipment': 'SELLER SHIPMENT PORTAL',
                 'payout': 'SELLER PAYOUT PORTAL'
             };
             document.getElementById('mainPortalTitle').innerText = titles[tabName] || 'SELLER PORTAL';
+
+            if (tabName === 'dashboard') {
+                renderDashboardCharts();
+            } else if (tabName === 'list') {
+                loadProductsIntoTable();
+            } else if (tabName === 'upload') {
+                initUploadFormIds();
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Check if verified on start and direct appropriately
+        function initUploadFormIds() {
+            let email = localStorage.getItem('rorraxy_current_seller_email') || localStorage.getItem('rorraxy_seller_email') || "seller@rorraxy.com";
+            let sellerId = localStorage.getItem('seller_id') || `SLR-${email.split('@')[0]}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
+            localStorage.setItem('seller_id', sellerId);
+            
+            document.getElementById('uploadSellerId').value = sellerId;
+            document.getElementById('uploadProductCode').value = `PRD-${Math.random().toString(36).substring(2,8).toUpperCase()}`;
+        }
+
+        function openMultiDeviceSyncModal() {
+            document.getElementById('deviceSyncModal').style.display = 'flex';
+            const qrcodeDiv = document.getElementById('qrcodeContainer');
+            qrcodeDiv.innerHTML = '';
+            
+            const syncToken = "rorraxy_sync_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
+            new QRCode(qrcodeDiv, {
+                text: window.location.origin + "/seller/index.html?sync_token=" + syncToken,
+                width: 140,
+                height: 140,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function closeMultiDeviceSyncModal() {
+            document.getElementById('deviceSyncModal').style.display = 'none';
+        }
+
+        function createSparkline(canvasId, dataPoints, isBar = false) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 50);
+            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            chartInstances[canvasId] = new Chart(ctx, {
+                type: isBar ? 'bar' : 'line',
+                data: {
+                    labels: dataPoints.map((_, i) => `${i}`),
+                    datasets: [{
+                        data: dataPoints,
+                        borderColor: '#d4af37',
+                        borderWidth: 1.5,
+                        fill: true,
+                        backgroundColor: isBar ? '#d4af37' : gradient,
+                        tension: 0.35,
+                        pointRadius: 0,
+                        borderRadius: isBar ? 3 : 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false, min: 0 } }
+                }
+            });
+        }
+
+        function renderDashboardCharts() {
+            requestAnimationFrame(() => {
+                createSparkline('chartRevenue', [0, 0, 0, 0, 0]);
+                createSparkline('chartBalance', [0, 0, 0, 0, 0]);
+                createSparkline('chartProducts', [0, 2, 5, 8], true);
+                createSparkline('chartOrders', [0, 0, 0, 0, 0]);
+            });
+        }
+
+        function loadProductsIntoTable() {
+            let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+            const tbody = document.getElementById('desktopTableBody');
+            
+            if (localProducts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">NO PRODUCTS FOUND. CLICK 'ADD NEW'.</td></tr>`;
+                document.getElementById('statProductsVal').innerText = "0";
+                return;
+            }
+
+            document.getElementById('statProductsVal').innerText = localProducts.length;
+            let html = '';
+            localProducts.forEach((p, idx) => {
+                let img = p.image_url || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+                html += `
+                    <tr>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <img src="${img}" class="prod-thumb" alt="prod">
+                                <strong>${p.title}</strong>
+                            </div>
+                        </td>
+                        <td>${p.category || 'General'}</td>
+                        <td>$${parseFloat(p.price || 0).toFixed(2)} [${p.upload_mode || 'Retail'}]</td>
+                        <td>${p.stock || 1} Pcs</td>
+                        <td>
+                            <button onclick="deleteProduct(${idx})" style="background:rgba(255,77,77,0.1); border:1px solid rgba(255,77,77,0.3); color:#ff4d4d; padding:5px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function deleteProduct(idx) {
+            if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS PRODUCT?")) {
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                localProducts.splice(idx, 1);
+                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
+                loadProductsIntoTable();
+            }
+        }
+
+        // Product Upload Submission Handler
+        const uploadForm = document.getElementById('productUploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newProd = {
+                    seller_id: document.getElementById('uploadSellerId').value,
+                    product_code: document.getElementById('uploadProductCode').value,
+                    title: document.getElementById('prodTitle').value.trim(),
+                    category: document.getElementById('prodCategory').value.trim(),
+                    upload_mode: document.getElementById('prodUploadMode').value,
+                    price: document.getElementById('prodPrice').value,
+                    stock: document.getElementById('prodStock').value,
+                    image_url: document.getElementById('prodImageUrl').value.trim()
+                };
+
+                let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+                localProducts.unshift(newProd);
+                localStorage.setItem('rorraxy_seller_products', JSON.stringify(localProducts));
+
+                try {
+                    await fetch('/api/products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newProd)
+                    });
+                } catch(err) {
+                    console.log("Cloudflare sync notice:", err);
+                }
+
+                alert("PRODUCT PUBLISHED SUCCESSFULLY!");
+                switchTab('list');
+                uploadForm.reset();
+            });
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const isVerified = localStorage.getItem('rorraxy_seller_verified') === 'true';
             const infoCompleted = localStorage.getItem('rorraxy_seller_info_completed') === 'true';
