@@ -166,7 +166,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>MOBILE NUMBER WITH COUNTRY CODE<span class="req-star">*</span></label>
+                        <label>MOBILE NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
                         <div class="phone-input-group">
                             <select class="country-code-select" id="countryDialCode">
                                 <option value="+880" selected>🇧🇩 +880</option>
@@ -175,7 +175,7 @@
                                 <option value="+971">🇦🇪 +971</option>
                                 <option value="+1">🇺🇸 +1</option>
                             </select>
-                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" value="01733208886" required style="text-transform: none;">
+                            <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" value="01733208886" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                     </div>
                     
@@ -242,16 +242,16 @@
                             <input type="text" class="form-control" id="fullName" placeholder="Owner Name" required>
                         </div>
                         <div class="form-group">
-                            <label>WHATSAPP<span class="req-star">*</span></label>
-                            <input type="tel" class="form-control" id="whatsappNum" placeholder="+8801700000000" required style="text-transform: none;">
+                            <label>WHATSAPP (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <input type="tel" class="form-control" id="whatsappNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                         <div class="form-group full-width">
                             <label>BUSINESS DESCRIPTION<span class="req-star">*</span></label>
                             <textarea class="form-control" id="businessDesc" rows="2" maxlength="200" placeholder="Briefly describe products..." required style="text-transform: none;"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>EMERGENCY PHONE<span class="req-star">*</span></label>
-                            <input type="tel" class="form-control" id="phoneNum" placeholder="+8801800000000" required style="text-transform: none;">
+                            <label>EMERGENCY PHONE (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <input type="tel" class="form-control" id="phoneNum" placeholder="01800000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                         <div class="form-group">
                             <label>COUNTRY<span class="req-star">*</span></label>
@@ -276,8 +276,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>DOCUMENT NUMBER<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="docNumberInput" placeholder="Enter ID number..." required style="text-transform: none;">
+                            <label>DOCUMENT NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="docNumberInput" placeholder="Enter ID number..." pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                         <div class="form-group full-width">
                             <label>TRADE LICENSE / DETAILS<span class="req-star">*</span></label>
@@ -442,11 +442,11 @@
                         <div class="form-grid" id="retail-price-row">
                             <div class="form-group">
                                 <label>RETAIL PRICE ($)<span class="req-star">*</span></label>
-                                <input type="number" step="0.01" min="0" id="selling_price" placeholder="100.00">
+                                <input type="number" step="0.01" min="0" id="selling_price" placeholder="100.00" pattern="[0-9]*" inputmode="decimal">
                             </div>
                             <div class="form-group">
                                 <label>MARKET PRICE ($)<span class="req-star">*</span></label>
-                                <input type="number" step="0.01" min="0" id="market_price" placeholder="180.00">
+                                <input type="number" step="0.01" min="0" id="market_price" placeholder="180.00" pattern="[0-9]*" inputmode="decimal">
                             </div>
                         </div>
                         <div class="triple-grid" id="wholesale-price-row" style="display: none; margin-top: 10px;">
@@ -475,15 +475,15 @@
                             </div>
                             <div class="form-group">
                                 <label>DISCOUNT RATE (%)<span class="req-star">*</span></label>
-                                <input type="number" min="0" max="100" id="discount_rate" placeholder="10" required>
+                                <input type="number" min="0" max="100" id="discount_rate" placeholder="10" required pattern="[0-9]*" inputmode="numeric">
                             </div>
                             <div class="form-group" id="moq-input-group" style="display: none;">
                                 <label>MOQ UNITS</label>
-                                <input type="number" min="1" id="moq_units" placeholder="10" value="1">
+                                <input type="number" min="1" id="moq_units" placeholder="10" value="1" pattern="[0-9]*" inputmode="numeric">
                             </div>
                             <div class="form-group">
                                 <label>STOCK COUNT<span class="req-star">*</span></label>
-                                <input type="number" min="1" id="stock_count" placeholder="100" value="10" required>
+                                <input type="number" min="1" id="stock_count" placeholder="100" value="10" required pattern="[0-9]*" inputmode="numeric">
                             </div>
                         </div>
                     </div>
@@ -574,14 +574,14 @@
                     <!-- Dynamic Payment Input Fields -->
                     <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 12px;">
                         <div class="form-group">
-                            <label id="payoutLabel1">MOBILE NUMBER / ACCOUNT NUMBER<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="payInput1" placeholder="01700000000" style="text-transform: none;" required>
+                            <label id="payoutLabel1">MOBILE NUMBER / ACCOUNT NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                            <input type="tel" class="form-control" id="payInput1" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-top: 12px;">
-                        <label>RE-VERIFY REGISTERED MOBILE NUMBER<span class="req-star">*</span></label>
-                        <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="+8801733208886" style="text-transform: none;" required>
+                        <label>RE-VERIFY REGISTERED MOBILE NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="01733208886" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                     </div>
 
                     <div id="payoutStatusMsg" class="status-msg"></div>
@@ -602,7 +602,7 @@
         </div>
     </div>
 
-    <!-- Custom Notification Modal (Replaces alert) -->
+    <!-- Custom Notification Modal -->
     <div id="customNotifyModal">
         <div class="notify-card">
             <div id="notifyModalIcon" style="font-size: 2rem; color: var(--gold-solid); margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i></div>
@@ -732,8 +732,8 @@
                         <input type="text" class="form-control" id="payBranchName" placeholder="e.g. Gulshan Branch" required style="text-transform: none;">
                     </div>
                     <div class="form-group">
-                        <label>ACCOUNT NUMBER<span class="req-star">*</span></label>
-                        <input type="text" class="form-control" id="payAccNum" placeholder="102030405060" required style="text-transform: none;">
+                        <label>ACCOUNT NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <input type="tel" class="form-control" id="payAccNum" placeholder="102030405060" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                     </div>
                 `;
             } else if (gw === 'payoneer') {
@@ -746,8 +746,8 @@
             } else {
                 container.innerHTML = `
                     <div class="form-group">
-                        <label>${gw.toUpperCase()} MOBILE NUMBER<span class="req-star">*</span></label>
-                        <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" required style="text-transform: none;">
+                        <label>${gw.toUpperCase()} MOBILE NUMBER (NUMBERS ONLY)<span class="req-star">*</span></label>
+                        <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                     </div>
                 `;
             }
@@ -755,11 +755,10 @@
 
         function verifyAndRequestPayout() {
             const inputPhone = document.getElementById('payoutVerifyPhone').value.trim();
-            const savedPhone = localStorage.getItem('rorraxy_seller_phone') || "";
             const msgEl = document.getElementById('payoutStatusMsg');
 
-            if (!inputPhone) {
-                msgEl.innerText = "PLEASE RE-VERIFY YOUR REGISTERED MOBILE NUMBER.";
+            if (!inputPhone || inputPhone.length < 5) {
+                msgEl.innerText = "PLEASE ENTER YOUR REGISTERED MOBILE NUMBER.";
                 msgEl.className = "status-msg error";
                 msgEl.style.display = "block";
                 return;
@@ -1194,7 +1193,7 @@
                 }
 
                 if (!rawPhone || rawPhone.length < 5) {
-                    statusEl.innerText = "Please enter a valid mobile number.";
+                    statusEl.innerText = "Please enter a valid mobile number (digits only).";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
