@@ -41,6 +41,12 @@
             --font-main: 'Poppins', sans-serif;
         }
 
+        /* 100% Global Scrollbar Removal for Clean UI */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         html, body { 
             width: 100%; max-width: 100vw; overflow-x: hidden; 
             background: var(--bg-retail) !important; 
@@ -48,40 +54,31 @@
             min-height: 100vh; font-size: 14px;
             -webkit-font-smoothing: antialiased;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
         }
 
         body { margin: 0; padding: 0 0 75px 0; }
-        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
 
+        /* Fast Responsive Loader Overlay */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
         }
         .loader-logo-box {
-            width: 85px; height: 85px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 35px rgba(212,175,55,0.5);
-            animation: pulseGlow 1.2s infinite alternate ease-in-out;
+            width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
+            border: 2px solid var(--gold-solid); box-shadow: 0 0 20px rgba(212,175,55,0.4);
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .loader-brand-name {
-            font-size: 1.2rem; font-weight: 800; letter-spacing: 3px;
+            font-size: 1.1rem; font-weight: 800; letter-spacing: 3px;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        @keyframes pulseGlow {
-            from { transform: scale(0.92); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
-            to { transform: scale(1.08); box-shadow: 0 0 35px rgba(212,175,55,0.8); }
-        }
 
-        .animate-card-entry { animation: fadeInLuxury 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translateY(16px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
+        /* Top Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 1800; display: none;
@@ -99,16 +96,17 @@
             cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
+        /* Fixed Bottom Nav Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(3, 3, 5, 0.98); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(212, 175, 55, 0.25);
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
+            width: 100%; height: 100%; text-align: center; position: relative;
         }
         .bottom-nav-item:active { transform: scale(0.95); }
         .bottom-nav-item i { 
@@ -121,21 +119,25 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
+        /* High-Performance Pinterest Grid */
         .pinterest-feed-container {
             padding: 10px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
         }
         @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 15px; } }
 
         .product-card {
-            background: transparent; border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; border: none; 
+            background: #08080c; border-radius: 12px; overflow: hidden; 
+            display: inline-block; width: 100%; border: 1px solid rgba(255,255,255,0.08); 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.2s ease;
+            will-change: transform; transition: transform 0.1s ease;
         }
         .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
-        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
+        .product-media-box img { 
+            width: 100%; height: 100%; display: block; object-fit: cover;
+            backface-visibility: hidden; transform: translateZ(0);
+        }
 
         .corner-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 45;
@@ -149,11 +151,11 @@
             background: var(--gold-gradient) !important; 
             -webkit-background-clip: text !important; 
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0px 2px 4px #000000) drop-shadow(0px 0px 6px #000000);
+            filter: drop-shadow(0px 2px 4px #000000);
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Perfectly Optimized Instant Reels Modal */
+        /* Optimized Reels Fullscreen Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -162,67 +164,43 @@
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none !important; -ms-overflow-style: none !important;
         }
+        .reel-modal-wrapper::-webkit-scrollbar { display: none !important; width: 0 !important; }
+        
         .reel-card {
             position: relative; width: 100%; height: 100vh; height: 100dvh;
             scroll-snap-align: start; scroll-snap-stop: always; background: #000;
+            overflow: hidden;
         }
         .reel-media-box {
             width: 100%; height: 100%; position: relative; cursor: pointer;
         }
 
-        /* Smooth video & cross-fade slideshow container */
+        /* Optimized Slide Container */
         .reel-primary-video-container {
             width: 100%; height: 100%; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
         }
 
-        /* Dynamic Zoom-In & Zoom-Out Premium Ken Burns Slideshow Effect */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: contain; opacity: 0; 
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform, opacity;
-            image-rendering: -webkit-optimize-contrast;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            padding: 6px;
+            object-fit: contain; opacity: 0; display: none;
+            background: #000; padding: 4px;
         }
         
-        .slide-layer.active { opacity: 1; z-index: 2; }
-        .slide-layer.previous { opacity: 0; z-index: 1; }
-
-        /* Dynamic Zooming Animations */
-        .slide-layer.zoom-in-anim {
-            animation: zoomInLuxury 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        .slide-layer.zoom-out-anim {
-            animation: zoomOutLuxury 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-
-        @keyframes zoomInLuxury {
-            0% { transform: scale(0.92); }
-            100% { transform: scale(1.08); }
-        }
-        @keyframes zoomOutLuxury {
-            0% { transform: scale(1.1); }
-            100% { transform: scale(0.96); }
-        }
+        .slide-layer.active { opacity: 1; display: block; z-index: 2; }
 
         .reel-primary-video-container video {
             width: 100%; height: 100%; object-fit: contain; display: block; background: #000;
-            position: relative; z-index: 3; opacity: 1; transition: opacity 0.5s ease;
-            image-rendering: -webkit-optimize-contrast;
-            will-change: transform;
+            position: relative; z-index: 3;
         }
 
         .reel-bottom-price-overlay {
             position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
             gap: 8px; padding: 6px 18px; border-radius: 20px;
-            background: rgba(8, 8, 14, 0.88) !important;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(8, 8, 14, 0.92) !important;
             border: 1px solid rgba(212, 175, 55, 0.6);
             box-shadow: 0 6px 20px rgba(0,0,0,0.9);
         }
@@ -241,7 +219,7 @@
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto; width: 45px;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; width: 100%; }
         .side-action-item:active { transform: scale(0.9); }
         .action-pure-icon { 
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
@@ -262,11 +240,10 @@
 
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px;
-            scrollbar-width: none;
+            background: rgba(0, 0, 0, 0.7); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px; scrollbar-width: none !important; -ms-overflow-style: none !important;
         }
-        .overlay-sheet::-webkit-scrollbar { display: none; }
+        .overlay-sheet::-webkit-scrollbar { display: none !important; width: 0 !important; }
 
         .buy-preview-modal {
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
@@ -275,9 +252,9 @@
         }
         .preview-horizontal-scroll {
             display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;
-            scrollbar-width: none;
+            scrollbar-width: none !important; -ms-overflow-style: none !important;
         }
-        .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
+        .preview-horizontal-scroll::-webkit-scrollbar { display: none !important; width: 0 !important; }
 
         .preview-img-item {
             flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
@@ -287,22 +264,21 @@
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Professional Luxury Coin Flying Animation */
+        /* Flying Coin FX */
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 34px; height: 34px; border-radius: 50%;
             background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
-            box-shadow: 0 0 20px rgba(212,175,55,0.9), 0 0 8px rgba(255,255,255,0.8);
-            transition: left 0.45s cubic-bezier(0.25, 1, 0.5, 1), top 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.45s ease-out, opacity 0.45s ease-in;
+            box-shadow: 0 0 20px rgba(212,175,55,0.9);
+            transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), top 0.35s cubic-bezier(0.25, 1, 0.5, 1), transform 0.35s ease-out, opacity 0.35s ease-in;
         }
 
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
-            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
-            scrollbar-width: none;
+            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); scrollbar-width: none !important; -ms-overflow-style: none !important;
         }
-        .inpage-details-modal::-webkit-scrollbar { display: none; }
+        .inpage-details-modal::-webkit-scrollbar { display: none !important; width: 0 !important; }
 
         .fullscreen-iframe-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px);
@@ -312,17 +288,16 @@
 
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.3) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px;
-            scrollbar-width: none;
+            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 85px 15px; scrollbar-width: none !important; -ms-overflow-style: none !important;
         }
-        .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none; }
+        .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none !important; width: 0 !important; }
+
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
         .accordion-category-box { background: rgba(10, 10, 15, 0.95) !important; border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
-        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
+        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
         .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
         .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
         .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
@@ -335,10 +310,9 @@
         .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .sub-cat-item {
             background: rgba(15, 15, 22, 0.92); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.12);
         }
         .sub-cat-item:active { transform: scale(0.96); }
-        .sub-cat-item:hover { background: rgba(25, 25, 35, 1); border-color: rgba(212, 175, 55, 0.6); }
         .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
@@ -400,7 +374,7 @@
         </div>
     </main>
 
-    <!-- Dedicated Reels Popup Modal (Instant 9:16 vertical aspect ratio with video first & slideshow) -->
+    <!-- Dedicated Reels Popup Modal -->
     <div id="reelModalOverlay" class="reel-modal-overlay" onclick="if(event.target===this) closeReelModal()">
         <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
     </div>
@@ -428,13 +402,12 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
-            setTimeout(() => {
-                const loader = document.getElementById('rorraxyLoaderOverlay');
-                if(loader) {
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 300);
-                }
-            }, 250);
+            // Fast Hide Loader
+            const loader = document.getElementById('rorraxyLoaderOverlay');
+            if(loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 100);
+            }
 
             const bottomWorldBtn = document.getElementById('bottomWorldBtn');
             const bottomCategoryBtn = document.getElementById('bottomCategoryBtn');
@@ -514,6 +487,7 @@
                 let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
                 let activeId = list[idx] ? (list[idx].id || list[idx].product_id || '101') : '101';
                 renderFixedGlobalActions(activeId, false);
+                activateSingleReelMedia(idx);
             }
         }
 
@@ -667,7 +641,7 @@
                 let discountBadge = discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : '';
 
                 const cardDiv = document.createElement('div');
-                cardDiv.className = 'product-card animate-card-entry';
+                cardDiv.className = 'product-card';
                 
                 cardDiv.onclick = (e) => {
                     e.preventDefault();
@@ -678,7 +652,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadge}
-                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy">
+                        <img src="${resolvedImageUrl}" alt="${title}" decoding="async">
                         <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
@@ -754,38 +728,72 @@
             slideIntervalsMap = {};
         }
 
+        /* High-Performance Instant Image Slideshow */
         function startImageSlideshow(cardIdx, container, images) {
             if (!container) return;
 
             let slidesHtml = images.map((img, i) => `
-                <img src="${img}" class="slide-layer ${i === 0 ? 'active zoom-in-anim' : ''}" id="slide_${cardIdx}_${i}" alt="Reel Slide">
+                <img src="${img}" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${cardIdx}_${i}" alt="Reel Slide" decoding="async">
             `).join('');
 
             container.innerHTML = slidesHtml;
 
             if (images.length > 1) {
                 let currentIdx = 0;
+                if(slideIntervalsMap[cardIdx]) clearInterval(slideIntervalsMap[cardIdx]);
+
                 slideIntervalsMap[cardIdx] = setInterval(() => {
                     let nextIdx = (currentIdx + 1) % images.length;
-                    
                     let currSlide = document.getElementById(`slide_${cardIdx}_${currentIdx}`);
                     let nextSlide = document.getElementById(`slide_${cardIdx}_${nextIdx}`);
 
                     if (currSlide && nextSlide) {
                         currSlide.classList.remove('active');
-                        currSlide.classList.add('previous');
-
-                        const isZoomIn = nextIdx % 2 === 0;
-                        nextSlide.className = `slide-layer active ${isZoomIn ? 'zoom-in-anim' : 'zoom-out-anim'}`;
-
-                        setTimeout(() => {
-                            currSlide.className = 'slide-layer';
-                        }, 600);
+                        nextSlide.classList.add('active');
                     }
-
                     currentIdx = nextIdx;
-                }, 2200);
+                }, 1800);
             }
+        }
+
+        function activateSingleReelMedia(activeIdx) {
+            clearAllSlideIntervals();
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+
+            list.forEach((product, idx) => {
+                const mediaBox = document.getElementById(`primaryMediaBox_${idx}`);
+                if (!mediaBox) return;
+
+                if (idx !== activeIdx) {
+                    // Pause/Clean up inactive videos
+                    const vid = mediaBox.querySelector('video');
+                    if (vid) vid.pause();
+                    return;
+                }
+
+                let pVideo = product.video_url || product.youtube_video || '';
+                let extractedImages = [];
+                try {
+                    if(product.images_json) {
+                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                        if(Array.isArray(parsed)) extractedImages = parsed;
+                    } else if(product.image_url) extractedImages = [product.image_url];
+                } catch(e){}
+                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+
+                if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                    mediaBox.innerHTML = `<video id="video_${idx}" src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+                    const vid = document.getElementById(`video_${idx}`);
+                    if (vid) {
+                        vid.play().catch(() => {});
+                        vid.onended = () => {
+                            startImageSlideshow(idx, mediaBox, extractedImages);
+                        };
+                    }
+                } else {
+                    startImageSlideshow(idx, mediaBox, extractedImages);
+                }
+            });
         }
 
         function openReelsModal(startIndex) {
@@ -799,18 +807,6 @@
 
             list.forEach((product, idx) => {
                 let pId = String(product.id || product.product_id || '101');
-                let pVideo = product.video_url || product.youtube_video || '';
-                let extractedImages = [];
-
-                try {
-                    if(product.images_json) {
-                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                        if(Array.isArray(parsed)) extractedImages = parsed;
-                    } else if(product.image_url) extractedImages = [product.image_url];
-                } catch(e){}
-
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-
                 let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
                 let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
 
@@ -830,39 +826,12 @@
 
             wrapper.innerHTML = reelsHtml;
 
-            list.forEach((product, idx) => {
-                let pVideo = product.video_url || product.youtube_video || '';
-                let extractedImages = [];
-                try {
-                    if(product.images_json) {
-                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                        if(Array.isArray(parsed)) extractedImages = parsed;
-                    } else if(product.image_url) extractedImages = [product.image_url];
-                } catch(e){}
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
+            const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
+            if (targetCard) {
+                wrapper.scrollTop = targetCard.offsetTop;
+            }
 
-                const mediaBox = document.getElementById(`primaryMediaBox_${idx}`);
-                if (mediaBox) {
-                    if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                        mediaBox.innerHTML = `<video id="video_${idx}" src="${pVideo}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
-                        const vid = document.getElementById(`video_${idx}`);
-                        if (vid) {
-                            vid.onended = () => {
-                                startImageSlideshow(idx, mediaBox, extractedImages);
-                            };
-                        }
-                    } else {
-                        startImageSlideshow(idx, mediaBox, extractedImages);
-                    }
-                }
-            });
-
-            setTimeout(() => {
-                const targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
-                if (targetCard) {
-                    wrapper.scrollTop = targetCard.offsetTop;
-                }
-            }, 10);
+            activateSingleReelMedia(startIndex);
 
             let scrollTimer = null;
             wrapper.onscroll = () => {
@@ -870,12 +839,13 @@
                 scrollTimer = setTimeout(() => {
                     let cardHeight = wrapper.clientHeight;
                     let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
-                    if (calculatedIdx >= 0 && calculatedIdx < list.length) {
+                    if (calculatedIdx >= 0 && calculatedIdx < list.length && calculatedIdx !== currentReelIndex) {
                         currentReelIndex = calculatedIdx;
                         let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
                         renderFixedGlobalActions(activeId, false);
+                        activateSingleReelMedia(currentReelIndex);
                     }
-                }, 30);
+                }, 40);
             };
 
             let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
@@ -999,33 +969,27 @@
             document.getElementById('buyPreviewOverlay').style.display = 'none';
         }
 
-        /* Highly Optimized & Crystal Pure Professional Luxury Coin Drop Audio Synth */
+        /* Pure Chime Audio Synthesizer */
         function playCoinDropChime() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
                 const ctx = new AudioCtx();
                 const now = ctx.currentTime;
-                
-                // Professional High-Pitch Arpeggio Chime Frequencies
-                const freqs = [1760.00, 2349.32, 2793.83, 3520.00, 4698.64]; 
+                const freqs = [1760.00, 2349.32, 2793.83, 3520.00]; 
                 
                 freqs.forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
-                    
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + (idx * 0.025));
-                    
                     gain.gain.setValueAtTime(0, now + (idx * 0.025));
-                    gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.025) + 0.008);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.025) + 0.45);
-                    
+                    gain.gain.linearRampToValueAtTime(0.1 / (idx + 1), now + (idx * 0.025) + 0.008);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.025) + 0.35);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    
                     osc.start(now + (idx * 0.025));
-                    osc.stop(now + (idx * 0.025) + 0.45);
+                    osc.stop(now + (idx * 0.025) + 0.35);
                 });
             } catch (e) {}
         }
@@ -1056,7 +1020,7 @@
 
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
-            }, 450);
+            }, 350);
         }
 
         function confirmAddToCart(e, pId, title, price, sellerId) {
