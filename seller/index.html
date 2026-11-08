@@ -30,9 +30,9 @@
             --gold-solid: #d4af37;
             --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
             --text-white: #ffffff;
-            --text-gray: #9e9eaab2;
+            --text-gray: #a8a8b8;
             --font-main: 'Poppins', sans-serif;
-            --border-soft: rgba(212, 175, 55, 0.15);
+            --border-soft: rgba(212, 175, 55, 0.2);
             --success-green: #2ed573;
         }
 
@@ -41,7 +41,7 @@
         
         body { 
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            padding: 20px 12px 100px 12px; text-transform: uppercase; 
+            padding: 16px 12px 105px 12px; text-transform: uppercase; 
             min-height: 100vh;
         }
 
@@ -51,93 +51,94 @@
         .app-view.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(3px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .dashboard-header { text-align: center; margin-bottom: 18px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
-        .header-logo-img { width: 85px; height: 85px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.2)); }
+        .dashboard-header { text-align: center; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+        .header-logo-img { width: 75px; height: 75px; object-fit: contain; background: transparent !important; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.25)); }
         .dashboard-header h1, .gold-title-gradient { font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dashboard-header h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
+        .dashboard-header h1 { font-size: 1.25rem; letter-spacing: 0.5px; }
 
-        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 24px 18px; margin-bottom: 18px; width: 100%; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); text-align: left; }
-        .info-card-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 20px 16px; margin-bottom: 16px; width: 100%; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); text-align: left; }
+        .info-card-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
 
-        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; width: 100%; max-width: 400px; }
-        .step-item { flex: 1; padding: 7px 10px; border-radius: 14px; background: #040407; border: 1px solid var(--border-soft); text-align: center; font-size: 0.62rem; font-weight: 700; color: var(--text-gray); }
-        .step-item.active { background: rgba(212, 175, 55, 0.1); border-color: var(--gold-solid); color: var(--gold-solid); }
-        .step-item.completed { background: rgba(74, 222, 128, 0.1); border-color: #4ade80; color: #4ade80; }
+        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; width: 100%; max-width: 380px; }
+        .step-item { flex: 1; padding: 6px 10px; border-radius: 12px; background: #050508; border: 1px solid var(--border-soft); text-align: center; font-size: 0.6rem; font-weight: 700; color: var(--text-gray); }
+        .step-item.active { background: rgba(212, 175, 55, 0.12); border-color: var(--gold-solid); color: var(--gold-solid); }
+        .step-item.completed { background: rgba(74, 222, 128, 0.12); border-color: #4ade80; color: #4ade80; }
 
-        .step-progress-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px; padding: 10px; background: var(--card-retail); border-radius: 12px; border: 1px solid var(--border-soft); }
+        .step-progress-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 14px; padding: 10px; background: var(--card-retail); border-radius: 12px; border: 1px solid var(--border-soft); }
         .step-prog-item { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; position: relative; }
-        .step-prog-circle { width: 28px; height: 28px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--text-gray); border: 1px solid var(--border-soft); z-index: 2; }
+        .step-prog-circle { width: 26px; height: 26px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--text-gray); border: 1px solid var(--border-soft); z-index: 2; }
         .step-prog-item.active .step-prog-circle { background: var(--gold-solid); color: #000; }
         .step-prog-item.completed .step-prog-circle { background: var(--gold-gradient); color: #000; }
-        .step-prog-title { font-size: 0.58rem; font-weight: 600; color: var(--text-gray); text-align: center; }
+        .step-prog-title { font-size: 0.55rem; font-weight: 600; color: var(--text-gray); text-align: center; }
         .step-prog-item.active .step-prog-title { color: var(--gold-solid); }
 
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
-        .triple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+        .triple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group.full-width { grid-column: span 2; }
         
-        .form-group label { font-size: 0.68rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 4px; width: 100%; }
+        .form-group label { font-size: 0.65rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 4px; width: 100%; word-break: break-all; }
         .req-star { color: #ff4d4d; font-weight: 900; margin-left: 2px; }
 
-        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 11px 14px; color: var(--text-white); font-size: 0.8rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
-        .form-control:focus, .form-select:focus { border-color: rgba(212, 175, 55, 0.35); background: #020204; }
-        .form-select option { background: #06060a; color: #fff; }
+        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 12px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: rgba(212, 175, 55, 0.4); background: #030306; }
+        .form-select option { background: #08080c; color: #fff; }
 
-        .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
-        .country-code-select { background: #040407; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.06); padding: 11px 10px; font-size: 0.8rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
+        .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
+        .country-code-select { background: #050508; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
         .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
 
-        .status-msg { font-size: 0.72rem; text-transform: none; display: none; text-align: center; padding: 10px; border-radius: 8px; margin-top: 10px; }
-        .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.06); border: 1px solid rgba(255, 77, 77, 0.2); }
-        .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.06); border: 1px solid rgba(74, 222, 128, 0.2); }
+        .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 8px 10px; border-radius: 8px; margin-top: 8px; word-break: break-word; }
+        .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.25); }
+        .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.25); }
 
-        .preview-container { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; width: 100%; }
-        .preview-card { position: relative; width: 110px; height: 110px; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid var(--border-soft); flex-shrink: 0; }
+        .preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; width: 100%; }
+        .preview-card { position: relative; width: 95px; height: 95px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--border-soft); flex-shrink: 0; }
         .preview-card img, .preview-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .upload-box { border: 1px dashed rgba(212,175,55,0.3); border-radius: 10px; padding: 18px 12px; text-align: center; cursor: pointer; background: #000; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
-        .upload-box i { font-size: 1.8rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .upload-box p { font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; text-transform: uppercase; }
+        .upload-box { border: 1px dashed rgba(212,175,55,0.35); border-radius: 10px; padding: 16px 10px; text-align: center; cursor: pointer; background: #000; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+        .upload-box i { font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .upload-box p { font-size: 0.65rem; color: var(--gold-solid); font-weight: 600; text-transform: uppercase; }
 
-        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 12px 18px; color: #000; font-weight: 800; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); }
+        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.22); }
         .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-gold:hover { filter: brightness(1.08); }
-        .btn-secondary { background: #000000; color: #fff; border: 1px solid var(--border-soft); padding: 12px 18px; border-radius: 10px; font-weight: 700; font-size: 0.78rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-secondary { background: #000000; color: #fff; border: 1px solid var(--border-soft); padding: 11px 16px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; width: 100%; }
-        .stat-card { background: var(--card-retail); border-radius: 12px; padding: 12px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 6px; border: 1px solid var(--border-soft); }
-        .stat-card h3 { font-size: 0.6rem; color: var(--text-gray); font-weight: 600; }
-        .stat-card .value { font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .graph-container { width: 100%; height: 50px; position: relative; margin-top: 4px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; width: 100%; }
+        .stat-card { background: var(--card-retail); border-radius: 10px; padding: 10px 6px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; border: 1px solid var(--border-soft); }
+        .stat-card h3 { font-size: 0.58rem; color: var(--text-gray); font-weight: 600; }
+        .stat-card .value { font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all; }
+        .graph-container { width: 100%; height: 45px; position: relative; margin-top: 3px; }
         .graph-container canvas { width: 100% !important; height: 100% !important; }
 
         .table-responsive { width: 100%; overflow-x: auto; }
-        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; text-align: left; white-space: nowrap; }
-        .seller-table th, .seller-table td { padding: 10px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
-        .seller-table th { background: #040407; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .seller-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: left; white-space: nowrap; }
+        .seller-table th, .seller-table td { padding: 9px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .seller-table th { background: #050508; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .seller-table td { text-transform: none; color: var(--text-white); }
-        .prod-thumb { width: 38px; height: 38px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
+        .prod-thumb { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
 
-        #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; padding: 14px; }
-        .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 22px 18px; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.9); }
+        #customNotifyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; padding: 12px; }
+        .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 20px 16px; width: 100%; max-width: 330px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.9); }
 
-        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)) 6px; z-index: 1000; backdrop-filter: blur(12px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 5px 0; }
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
         .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-item i { font-size: 1.2rem; margin-bottom: 3px; color: var(--text-gray); transition: color 0.2s; }
-        .nav-item span { font-size: 0.58rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.3px; }
+        .nav-item i { font-size: 1.15rem; margin-bottom: 2px; color: var(--text-gray); transition: color 0.2s; }
+        .nav-item span { font-size: 0.55rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.2px; }
 
         @media (max-width: 900px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         }
         @media (max-width: 600px) {
             .form-grid, .triple-grid { grid-template-columns: 1fr; gap: 10px; }
             .form-group.full-width { grid-column: span 1; }
+            body { padding: 12px 8px 95px 8px; }
         }
     </style>
 </head>
@@ -164,36 +165,26 @@
                     <span>SELLER VERIFICATION</span>
                 </div>
 
-                <form id="magicLinkForm" style="max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" novalidate>
+                <form id="magicLinkForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;" novalidate>
                     <div class="form-group">
                         <label>EMAIL (GMAIL / APPLE / OUTLOOK / YAHOO)<span class="req-star">*</span></label>
-                        <input type="email" class="form-control" id="sellerEmail" placeholder="e.g. name@gmail.com / apple.com / outlook.com / yahoo.com" required style="text-transform: none;">
+                        <input type="email" class="form-control" id="sellerEmail" placeholder="e.g. name@gmail.com" required style="text-transform: none;">
                     </div>
 
                     <div class="form-group">
-                        <label>MOBILE NUMBER (AUTO-DETECTED / SELECT CODE)<span class="req-star">*</span></label>
+                        <label>MOBILE NUMBER<span class="req-star">*</span></label>
                         <div class="phone-input-group">
                             <select class="country-code-select" id="countryDialCode">
-                                <option value="+880" selected>🇧🇩 +880 (Bangladesh)</option>
-                                <option value="+91">🇮🇳 +91 (India)</option>
-                                <option value="+92">🇵🇰 +92 (Pakistan)</option>
-                                <option value="+971">🇦🇪 +971 (UAE)</option>
-                                <option value="+1">🇺🇸 +1 (USA/Canada)</option>
-                                <option value="+44">🇬🇧 +44 (UK)</option>
-                                <option value="+966">🇸🇦 +966 (Saudi Arabia)</option>
-                                <option value="+60">🇲🇾 +60 (Malaysia)</option>
-                                <option value="+65">🇸🇬 +65 (Singapore)</option>
-                                <option value="+61">🇦🇺 +61 (Australia)</option>
-                                <option value="+49">🇩🇪 +49 (Germany)</option>
-                                <option value="+33">🇫🇷 +33 (France)</option>
-                                <option value="+81">🇯🇵 +81 (Japan)</option>
-                                <option value="+86">🇨🇳 +86 (China)</option>
-                                <option value="+39">🇮🇹 +39 (Italy)</option>
-                                <option value="+34">🇪🇸 +34 (Spain)</option>
-                                <option value="+55">🇧🇷 +55 (Brazil)</option>
-                                <option value="+27">🇿🇦 +27 (South Africa)</option>
-                                <option value="+82">🇰🇷 +82 (South Korea)</option>
-                                <option value="+62">🇮🇩 +62 (Indonesia)</option>
+                                <option value="+880" selected>🇧🇩 +880</option>
+                                <option value="+91">🇮🇳 +91</option>
+                                <option value="+92">🇵🇰 +92</option>
+                                <option value="+971">🇦🇪 +971</option>
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+966">🇸🇦 +966</option>
+                                <option value="+60">🇲🇾 +60</option>
+                                <option value="+65">🇸🇬 +65</option>
+                                <option value="+61">🇦🇺 +61</option>
                             </select>
                             <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
@@ -201,8 +192,8 @@
                     
                     <div id="formStatus" class="status-msg"></div>
 
-                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 6px;">
-                        VERIFY <i class="fa-solid fa-arrow-right"></i>
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
+                        VERIFY & PROCEED <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </form>
             </div>
@@ -216,23 +207,23 @@
 
                 <!-- CV Profile Preview View -->
                 <div id="profilePreviewSection" style="display: none;">
-                    <div style="display: flex; flex-direction: column; gap: 14px;">
-                        <div style="display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-soft); padding-bottom: 14px;">
-                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px;">
+                            <img src="" alt="Brand Logo" id="prevLogo" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                             <div>
-                                <h2 id="prevBrandName" style="font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">--</h2>
-                                <p id="prevBusinessDesc" style="font-size: 0.68rem; color: var(--text-gray); text-transform: none; margin-top: 2px;">--</p>
+                                <h2 id="prevBrandName" style="font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all;">--</h2>
+                                <p id="prevBusinessDesc" style="font-size: 0.65rem; color: var(--text-gray); text-transform: none; margin-top: 2px; word-break: break-word;">--</p>
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="stat-card"><label style="font-size: 0.58rem;" class="gold-title-gradient">EMAIL</label><span id="prevEmail" style="font-size: 0.7rem; text-transform: none;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.58rem;" class="gold-title-gradient">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.7rem;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.58rem;" class="gold-title-gradient">COUNTRY</label><span id="prevCountry" style="font-size: 0.7rem;">--</span></div>
-                            <div class="stat-card"><label style="font-size: 0.58rem;" class="gold-title-gradient">SELLER ID</label><span id="prevSellerId" style="font-size: 0.7rem; color: var(--gold-solid);">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">EMAIL</label><span id="prevEmail" style="font-size: 0.65rem; text-transform: none; word-break: break-all;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.65rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">COUNTRY</label><span id="prevCountry" style="font-size: 0.65rem;">--</span></div>
+                            <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">SELLER ID</label><span id="prevSellerId" style="font-size: 0.65rem; color: var(--gold-solid); word-break: break-all;">--</span></div>
                         </div>
-                        <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-top: 6px;">
-                            <button type="button" class="btn-secondary" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT PROFILE</button>
-                            <button type="button" class="btn-gold" onclick="switchTab('dashboard')" style="background: var(--pink-solid); color: #fff;">GO TO DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
+                        <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 4px;">
+                            <button type="button" class="btn-secondary" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT</button>
+                            <button type="button" class="btn-gold" onclick="switchTab('dashboard')" style="background: var(--pink-solid); color: #fff;">DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -240,18 +231,18 @@
                 <!-- Profile Registration & Edit Form -->
                 <form id="businessInfoForm">
                     <input type="hidden" id="editingProductId" value="">
-                    <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--border-soft);">
-                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                    <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
+                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                         <div>
-                            <label for="profilePhotoInput" class="btn-gold" style="padding: 6px 12px; font-size: 0.62rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
+                            <label for="profilePhotoInput" class="btn-gold" style="padding: 5px 10px; font-size: 0.6rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
                             <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*" onchange="uploadLogoToR2(event)">
                         </div>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>BRAND NAME<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="brandName" placeholder="Store Name" required>
+                            <label>BRAND NAME (PREFIX rorraxy-)<span class="req-star">*</span></label>
+                            <input type="text" class="form-control" id="brandName" placeholder="storename" required style="text-transform: none;">
                         </div>
                         <div class="form-group">
                             <label>BUSINESS EMAIL<span class="req-star">*</span></label>
@@ -259,7 +250,7 @@
                         </div>
                         <div class="form-group">
                             <label>FULL NAME<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="fullName" placeholder="Owner Name" required>
+                            <input type="text" class="form-control" id="fullName" placeholder="Owner Name" required style="text-transform: none;">
                         </div>
                         <div class="form-group">
                             <label>WHATSAPP<span class="req-star">*</span></label>
@@ -305,15 +296,15 @@
                         </div>
                     </div>
 
-                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 14px;">SAVE PROFILE & VIEW CV <i class="fa-solid fa-arrow-right"></i></button>
-                    <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 10px; display: none;" onclick="cancelEditMode()">CANCEL</button>
+                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 12px;">SAVE PROFILE & VIEW CV <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 8px; display: none;" onclick="cancelEditMode()">CANCEL</button>
                 </form>
             </div>
         </div>
 
         <!-- ================= 2. DASHBOARD VIEW WITH CHARTS ================= -->
         <div id="view-dashboard" class="app-view">
-            <div style="text-align: center; margin-bottom: 18px; width: 100%;">
+            <div style="text-align: center; margin-bottom: 16px; width: 100%;">
                 <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); color: #fff;">
                     <i class="fa-solid fa-qrcode"></i> SYNC DEVICE & QR
                 </button>
@@ -361,14 +352,14 @@
                             </tr>
                         </thead>
                         <tbody id="desktopTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 22px; color: var(--text-gray);">LOADING PRODUCTS...</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">LOADING PRODUCTS...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 4. MASTER UPLOAD / EDIT VIEW (WITH MANDATORY BACK & CONDITIONAL NEXT BUTTONS) ================= -->
+        <!-- ================= 4. MASTER UPLOAD / EDIT VIEW (5-STEP WORKFLOW) ================= -->
         <div id="view-upload" class="app-view">
             <div class="step-progress-bar">
                 <div class="step-prog-item active" id="prog-ind-1"><div class="step-prog-circle">1</div><div class="step-prog-title">MODE</div></div>
@@ -393,11 +384,11 @@
                     </div>
                 </div>
 
-                <!-- STEP 2: CATEGORY (WITH BACK BUTTON) -->
+                <!-- STEP 2: CATEGORY -->
                 <div class="step-section" id="upload-step-2" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-border-all"></i> STEP 2: SELECT MAIN CATEGORY</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MODE</button>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MODE</button>
                         
                         <div id="main-categories" class="category-grid">
                             <div class="cat-box" onclick="showSubCategories(this, 'womens')"><i class="fa-solid fa-person-dress"></i><span>WOMEN'S FASHION</span></div>
@@ -410,27 +401,27 @@
                         </div>
 
                         <div id="sub-categories" style="display: none;">
-                            <button type="button" class="btn-secondary" onclick="backToMainCategories()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MAIN CATEGORIES</button>
+                            <button type="button" class="btn-secondary" onclick="backToMainCategories()" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MAIN CATEGORIES</button>
                             <div id="sub-cat-content" class="category-grid"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 3: MEDIA (WITH MANDATORY UPLOAD VALIDATION & BACK BUTTON) -->
+                <!-- STEP 3: MEDIA (R2 CLOUD UPLOAD WITH OPTIMIZATION) -->
                 <div class="step-section" id="upload-step-3" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-images"></i> STEP 3: MEDIA UPLOAD (R2 CLOUD)</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORY</button>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORY</button>
                         
                         <div class="preview-container" id="image-preview"></div>
-                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();" style="margin-bottom: 16px;">
+                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();" style="margin-bottom: 12px;">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                             <p id="imgUploadText">UPLOAD IMAGES (MANDATORY)</p>
                             <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;" onchange="handleImageSelection(event)">
                         </div>
 
                         <div class="preview-container" id="video-preview"></div>
-                        <div class="upload-box" onclick="document.getElementById('video-file-input').click();" style="margin-bottom: 16px;">
+                        <div class="upload-box" onclick="document.getElementById('video-file-input').click();" style="margin-bottom: 12px;">
                             <i class="fa-solid fa-file-video"></i>
                             <p id="vidUploadText">UPLOAD VIDEO FILE (OPTIONAL)</p>
                             <input type="file" id="video-file-input" accept="video/*" style="display: none;" onchange="handleVideoSelection(event)">
@@ -447,18 +438,17 @@
                             </div>
                         </div>
 
-                        <!-- NEXT BUTTON UNLOCKED ONLY WHEN IMAGES UPLOADED -->
-                        <div style="margin-top: 18px; text-align: right;">
+                        <div style="margin-top: 14px; text-align: right;">
                             <button type="button" id="upload-next-btn-3" class="btn-gold" onclick="nextUploadStep(4)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 4: PRICING (WITH BACK BUTTON) -->
+                <!-- STEP 4: PRICING -->
                 <div class="step-section" id="upload-step-4" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-tag"></i> STEP 4: PRICING & STOCK</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MEDIA</button>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK TO MEDIA</button>
 
                         <div class="form-grid" id="retail-price-row">
                             <div class="form-group">
@@ -470,7 +460,7 @@
                                 <input type="number" step="0.01" min="0" id="market_price" placeholder="180.00" pattern="[0-9]*" inputmode="decimal">
                             </div>
                         </div>
-                        <div class="triple-grid" id="wholesale-price-row" style="display: none; margin-top: 10px;">
+                        <div class="triple-grid" id="wholesale-price-row" style="display: none; margin-top: 8px;">
                             <div class="form-group">
                                 <label>SAMPLE ($)</label>
                                 <input type="number" step="0.01" min="0" id="price_sample" placeholder="100.00">
@@ -484,7 +474,7 @@
                                 <input type="number" step="0.01" min="0" id="price_bulk" placeholder="70.00">
                             </div>
                         </div>
-                        <div class="form-grid" style="margin-top: 10px;">
+                        <div class="form-grid" style="margin-top: 8px;">
                             <div class="form-group">
                                 <label>TARGET COUNTRY<span class="req-star">*</span></label>
                                 <select id="target_country" class="form-select">
@@ -508,30 +498,30 @@
                             </div>
                         </div>
 
-                        <div style="margin-top: 18px; text-align: right;">
+                        <div style="margin-top: 14px; text-align: right;">
                             <button type="button" class="btn-gold" onclick="nextUploadStep(5)">NEXT <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 5: DETAILS & CUSTOM SIZE NOTE (WITH BACK BUTTON) -->
+                <!-- STEP 5: DETAILS -->
                 <div class="step-section" id="upload-step-5" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> STEP 5: PRODUCT DETAILS & CUSTOM NOTE</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)" style="margin-bottom: 14px;"><i class="fa-solid fa-arrow-left"></i> BACK TO PRICING</button>
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK TO PRICING</button>
 
-                        <div class="form-group full-width" style="margin-bottom: 12px;">
+                        <div class="form-group full-width" style="margin-bottom: 10px;">
                             <label>TITLE (MAX 25 CHARS)<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="LUXURY ITEM" required style="text-transform: uppercase;">
                         </div>
-                        <div class="form-group full-width" style="margin-bottom: 12px;">
+                        <div class="form-group full-width" style="margin-bottom: 10px;">
                             <label>DESCRIPTION<span class="req-star">*</span></label>
                             <textarea class="form-control" id="product_description" rows="3" placeholder="Enter product details..." required style="text-transform: none;"></textarea>
                         </div>
-                        <div class="form-group full-width" style="background: #000; padding: 12px; border-radius: 10px; border: 1px solid var(--border-soft); margin-bottom: 16px;">
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                <input type="checkbox" id="custom_size_note" checked style="width: 18px; height: 18px; accent-color: var(--gold-solid);">
-                                <span style="font-size: 0.75rem; color: #fff; font-weight: 700;">ENABLE CUSTOM SIZE / NOTE BOX FOR BUYERS</span>
+                        <div class="form-group full-width" style="background: #000; padding: 10px; border-radius: 10px; border: 1px solid var(--border-soft); margin-bottom: 14px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="custom_size_note" checked style="width: 16px; height: 16px; accent-color: var(--gold-solid);">
+                                <span style="font-size: 0.72rem; color: #fff; font-weight: 700;">ENABLE BUYER CUSTOM SIZE / NOTE INPUT</span>
                             </label>
                         </div>
 
@@ -546,10 +536,10 @@
         <div id="view-shipment" class="app-view">
             <div class="info-card">
                 <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> INCOMING SHIPMENTS</div>
-                <div class="form-grid" style="margin-bottom: 14px;">
-                    <div class="stat-card"><h3 class="gold-title-gradient">PENDING</h3><span id="statPendingShipments" style="font-size: 0.9rem; color: #facc15;">0</span></div>
-                    <div class="stat-card"><h3 class="gold-title-gradient">COMPLETED</h3><span id="statCompletedOrders" style="font-size: 0.9rem; color: #4ade80;">0</span></div>
-                    <div class="stat-card" style="grid-column: span 2;"><h3 class="gold-title-gradient">STORE EARNINGS</h3><span id="statStoreEarnings" style="font-size: 0.9rem; color: var(--gold-solid);">$0.00</span></div>
+                <div class="form-grid" style="margin-bottom: 12px;">
+                    <div class="stat-card"><h3 class="gold-title-gradient">PENDING</h3><span id="statPendingShipments" style="font-size: 0.85rem; color: #facc15;">0</span></div>
+                    <div class="stat-card"><h3 class="gold-title-gradient">COMPLETED</h3><span id="statCompletedOrders" style="font-size: 0.85rem; color: #4ade80;">0</span></div>
+                    <div class="stat-card" style="grid-column: span 2;"><h3 class="gold-title-gradient">STORE EARNINGS</h3><span id="statStoreEarnings" style="font-size: 0.85rem; color: var(--gold-solid);">$0.00</span></div>
                 </div>
                 <div class="table-responsive">
                     <table class="seller-table">
@@ -563,7 +553,7 @@
                             </tr>
                         </thead>
                         <tbody id="sellerOrdersTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 22px; color: var(--text-gray);">NO INCOMING SHIPMENT REQUESTS.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO INCOMING SHIPMENT REQUESTS.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -572,17 +562,17 @@
 
         <!-- ================= 6. PAYOUT VIEW ================= -->
         <div id="view-payout" class="app-view">
-            <div class="info-card" style="padding: 22px 18px;">
+            <div class="info-card" style="padding: 20px 16px;">
                 <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> PAYOUT & WITHDRAWAL</div>
-                <p style="color: var(--text-gray); font-size: 0.7rem; text-transform: none; margin-bottom: 16px;">Withdrawals support bKash, Nagad, Payoneer, and Bank Transfer with professional security re-verification.</p>
+                <p style="color: var(--text-gray); font-size: 0.68rem; text-transform: none; margin-bottom: 14px;">Withdrawals support bKash, Nagad, Payoneer, and Bank Transfer with secure re-verification.</p>
                 
-                <div class="stat-card" style="max-width: 240px; margin: 0 auto 18px auto; padding: 14px;">
+                <div class="stat-card" style="max-width: 220px; margin: 0 auto 16px auto; padding: 12px;">
                     <h3 class="gold-title-gradient">AVAILABLE BALANCE</h3>
                     <div class="value" id="payoutBalanceVal">$0.00</div>
                 </div>
 
-                <div style="max-width: 480px; margin: 0 auto; background: #000; padding: 16px; border-radius: 12px; border: 1px solid var(--border-soft);">
-                    <div class="form-group" style="margin-bottom: 12px;">
+                <div style="max-width: 450px; margin: 0 auto; background: #000; padding: 14px; border-radius: 12px; border: 1px solid var(--border-soft);">
+                    <div class="form-group" style="margin-bottom: 10px;">
                         <label>SELECT GATEWAY<span class="req-star">*</span></label>
                         <select class="form-select" id="payoutGateway" onchange="renderPaymentFields()">
                             <option value="bkash">bKash</option>
@@ -592,20 +582,20 @@
                         </select>
                     </div>
 
-                    <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 10px;">
                         <div class="form-group">
-                            <label id="payoutLabel1">MOBILE NUMBER<span class="req-star">*</span></label>
-                            <input type="tel" class="form-control" id="payInput1" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
+                            <label>MOBILE NUMBER<span class="req-star">*</span></label>
+                            <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-top: 12px;">
+                    <div class="form-group" style="margin-top: 10px;">
                         <label>REGISTERED MOBILE NUMBER<span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="01733208886" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                     </div>
 
                     <div id="payoutStatusMsg" class="status-msg"></div>
-                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%; margin-top: 14px;">AUTHORIZE & REQUEST WITHDRAWAL</button>
+                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%; margin-top: 12px;">AUTHORIZE & REQUEST WITHDRAWAL</button>
                 </div>
             </div>
         </div>
@@ -614,19 +604,19 @@
 
     <!-- Multi-Device Sync QR Modal -->
     <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:12px;">
-        <div style="background:#06060a; border:1px solid var(--border-soft); border-radius:14px; padding:22px 16px; width:100%; max-width:330px; text-align:center;">
-            <h3 style="font-size:0.9rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px;">MULTI-DEVICE QR SYNC</h3>
-            <p style="font-size:0.65rem; color:var(--text-gray); margin-bottom:12px; text-transform:none;">Scan this secure QR code with another mobile device to sync your seller session instantly.</p>
-            <div id="qrcodeContainer" style="background:#ffffff; padding:10px; border-radius:8px; display:inline-block; margin-bottom:12px;"></div>
-            <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE & RETURN</button>
+        <div style="background:#06060a; border:1px solid var(--border-soft); border-radius:14px; padding:20px 16px; width:100%; max-width:320px; text-align:center;">
+            <h3 style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px;">MULTI-DEVICE QR SYNC</h3>
+            <p style="font-size:0.62rem; color:var(--text-gray); margin-bottom:10px; text-transform:none;">Scan this secure QR code with another mobile device to sync your seller session instantly.</p>
+            <div id="qrcodeContainer" style="background:#ffffff; padding:8px; border-radius:8px; display:inline-block; margin-bottom:10px;"></div>
+            <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE</button>
         </div>
     </div>
 
     <!-- Custom Notification Modal -->
     <div id="customNotifyModal">
         <div class="notify-card">
-            <div id="notifyModalIcon" style="font-size: 2rem; color: var(--gold-solid); margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i></div>
-            <div id="notifyModalText" style="font-size: 0.8rem; font-weight: 700; color: #fff; margin-bottom: 14px; text-transform: none;">MESSAGE</div>
+            <div id="notifyModalIcon" style="font-size: 1.8rem; color: var(--gold-solid); margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i></div>
+            <div id="notifyModalText" style="font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 12px; text-transform: none;">MESSAGE</div>
             <button type="button" onclick="closeCustomNotify()" class="btn-gold" style="width: 100%;">OK</button>
         </div>
     </div>
@@ -646,7 +636,7 @@
             <span>LIST</span>
         </button>
         <button type="button" class="nav-item" id="nav-btn-upload" onclick="switchTab('upload')">
-            <i class="fa-solid fa-plus-circle" style="font-size: 1.15rem; color: var(--gold-solid);"></i>
+            <i class="fa-solid fa-plus-circle" style="font-size: 1.1rem; color: var(--gold-solid);"></i>
             <span>UPLOAD</span>
         </button>
         <button type="button" class="nav-item" id="nav-btn-shipment" onclick="switchTab('shipment')">
@@ -829,8 +819,8 @@
             const syncToken = "rorraxy_sync_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
             new QRCode(qrcodeDiv, {
                 text: window.location.origin + "/seller/index.html?sync_token=" + syncToken,
-                width: 120,
-                height: 120,
+                width: 110,
+                height: 110,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
@@ -893,6 +883,37 @@
             setTimeout(() => { nextUploadStep(2); }, 200);
         }
 
+        // Fast Client-Side WebP Compression Helper
+        function compressImageToWebP(file, maxWidth = 1000, maxHeight = 1000, quality = 0.8) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > h) {
+                            if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
+                        } else {
+                            if (h > maxHeight) { w = Math.round((w * maxHeight) / h); h = maxHeight; }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        canvas.toBlob((blob) => {
+                            resolve(blob || file);
+                        }, 'image/webp', quality);
+                    };
+                    img.onerror = () => resolve(file);
+                };
+                reader.onerror = () => resolve(file);
+            });
+        }
+
         async function uploadLogoToR2(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -900,16 +921,17 @@
             indicator.style.opacity = '0.5';
 
             try {
+                const optimizedBlob = await compressImageToWebP(file, 300, 300, 0.75);
                 const res = await fetch('/api/upload?type=image', {
                     method: 'POST',
-                    headers: { 'Content-Type': file.type || 'image/webp', 'X-File-Name': file.name },
-                    body: file
+                    headers: { 'Content-Type': 'image/webp', 'X-File-Name': (file.name || 'logo').replace(/\.[^/.]+$/, '') + '.webp' },
+                    body: optimizedBlob
                 });
                 const data = await res.json();
                 if (data.success && data.url) {
                     compressedLogoData = data.url;
                     indicator.src = compressedLogoData;
-                    showCustomNotify("LOGO UPLOADED SUCCESSFULLY!", true);
+                    showCustomNotify("LOGO UPLOADED & OPTIMIZED SUCCESSFULLY!", true);
                 } else {
                     showCustomNotify(data.error || "Logo upload failed", false);
                 }
@@ -925,22 +947,23 @@
             if (!files || files.length === 0) return;
             const previewContainer = document.getElementById('image-preview');
             const labelTxt = document.getElementById('imgUploadText');
-            labelTxt.innerText = "UPLOADING TO R2...";
+            labelTxt.innerText = "OPTIMIZING & UPLOADING...";
 
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
                 try {
+                    const optimizedBlob = await compressImageToWebP(file, 1200, 1200, 0.82);
                     const res = await fetch('/api/upload?type=image', {
                         method: 'POST',
-                        headers: { 'Content-Type': file.type || 'image/webp', 'X-File-Name': file.name },
-                        body: file
+                        headers: { 'Content-Type': 'image/webp', 'X-File-Name': (file.name || 'image').replace(/\.[^/.]+$/, '') + '.webp' },
+                        body: optimizedBlob
                     });
                     const data = await res.json();
                     if (data.success && data.url) {
                         uploadedImageUrls.push(data.url);
                         let card = document.createElement('div');
                         card.className = 'preview-card';
-                        card.innerHTML = `<img src="${data.url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${data.url}'); checkMediaButtonState();" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
+                        card.innerHTML = `<img src="${data.url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${data.url}'); checkMediaButtonState();" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button>`;
                         previewContainer.appendChild(card);
                     }
                 } catch (err) {
@@ -957,7 +980,7 @@
             if (!file) return;
             const previewContainer = document.getElementById('video-preview');
             const labelTxt = document.getElementById('vidUploadText');
-            labelTxt.innerText = "UPLOADING VIDEO TO R2...";
+            labelTxt.innerText = "UPLOADING VIDEO...";
 
             try {
                 const res = await fetch('/api/upload?type=video', {
@@ -968,7 +991,7 @@
                 const data = await res.json();
                 if (data.success && data.url) {
                     uploadedVideoUrl = data.url;
-                    previewContainer.innerHTML = `<div class="preview-card"><video src="${uploadedVideoUrl}" controls></video><button type="button" onclick="this.parentElement.remove(); uploadedVideoUrl='';" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button></div>`;
+                    previewContainer.innerHTML = `<div class="preview-card"><video src="${uploadedVideoUrl}" controls></video><button type="button" onclick="this.parentElement.remove(); uploadedVideoUrl='';" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button></div>`;
                     showCustomNotify("VIDEO UPLOADED SUCCESSFULLY!", true);
                 } else {
                     showCustomNotify(data.error || "Video upload failed", false);
@@ -1046,7 +1069,7 @@
 
             const btn = document.getElementById('publishProductBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PUBLISHING PRODUCT...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PUBLISHING...';
 
             try {
                 const method = editingId ? "PUT" : "POST";
@@ -1064,7 +1087,6 @@
                     }
                     resetUploadForm();
                     
-                    // Smooth transition to Product List and then Dashboard
                     setTimeout(() => {
                         switchTab('list');
                     }, 800);
@@ -1140,7 +1162,7 @@
         async function loadProductsIntoTable() {
             const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "";
             const tbody = document.getElementById('desktopTableBody');
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 22px; color: var(--text-gray);">LOADING PRODUCTS...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">LOADING PRODUCTS...</td></tr>`;
 
             try {
                 const res = await fetch(`/api/products?seller_id=${encodeURIComponent(sellerId)}`);
@@ -1148,7 +1170,7 @@
                 const products = result.success ? (result.data || []) : [];
 
                 if (products.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 22px; color: var(--text-gray);">NO PRODUCTS FOUND.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO PRODUCTS FOUND.</td></tr>`;
                     document.getElementById('statProductsVal').innerText = "0";
                     return;
                 }
@@ -1160,8 +1182,8 @@
                     html += `
                         <tr>
                             <td>
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <img src="${p.image_url || 'https://placehold.co/42x42/000000/d4af37?text=PRD'}" class="prod-thumb" alt="prod">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <img src="${p.image_url || 'https://placehold.co/36x36/000000/d4af37?text=PRD'}" class="prod-thumb" alt="prod">
                                     <strong>${p.title}</strong>
                                 </div>
                             </td>
@@ -1169,15 +1191,15 @@
                             <td>$${parseFloat(p.price || 0).toFixed(2)} [${p.upload_mode || 'retail'}]</td>
                             <td>${p.stock} Pcs</td>
                             <td>
-                                <button onclick="editProduct('${safeId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.3); color:var(--gold-solid); padding:5px 9px; border-radius:6px; cursor:pointer; margin-right:6px;" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteProduct('${safeId}')" style="background:rgba(255,77,77,0.1); border:1px solid rgba(255,77,77,0.3); color:#ff4d4d; padding:5px 9px; border-radius:6px; cursor:pointer;" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="editProduct('${safeId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.3); color:var(--gold-solid); padding:4px 8px; border-radius:6px; cursor:pointer; margin-right:4px;" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteProduct('${safeId}')" style="background:rgba(255,77,77,0.1); border:1px solid rgba(255,77,77,0.3); color:#ff4d4d; padding:4px 8px; border-radius:6px; cursor:pointer;" title="Delete"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
                 });
                 tbody.innerHTML = html;
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 22px; color: #ff4d4d;">FAILED TO LOAD PRODUCTS.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #ff4d4d;">FAILED TO LOAD PRODUCTS.</td></tr>`;
             }
         }
 
@@ -1209,7 +1231,7 @@
                 uploadedImageUrls.forEach(url => {
                     let card = document.createElement('div');
                     card.className = 'preview-card';
-                    card.innerHTML = `<img src="${url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${url}'); checkMediaButtonState();" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;"><i class="fa-solid fa-xmark"></i></button>`;
+                    card.innerHTML = `<img src="${url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${url}'); checkMediaButtonState();" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button>`;
                     previewContainer.appendChild(card);
                 });
 
@@ -1287,7 +1309,7 @@
                         document.getElementById('businessEmail').value = email;
                         document.getElementById('stepTracker1').className = 'step-item completed';
                         document.getElementById('stepTracker2').className = 'step-item active';
-                        showCustomNotify("Verification successful! Unique lowercase seller ID generated.", true);
+                        showCustomNotify("Verification successful! Unique seller ID generated.", true);
                     } else {
                         statusEl.innerText = data.error || "Verification failed";
                         statusEl.className = "status-msg error";
@@ -1308,7 +1330,7 @@
                     document.getElementById('stepTracker2').className = 'step-item active';
                 } finally {
                     btn.disabled = false;
-                    btn.innerText = "VERIFY";
+                    btn.innerText = "VERIFY & PROCEED";
                 }
             });
         }
@@ -1319,13 +1341,16 @@
                 e.preventDefault();
                 const btn = document.getElementById('saveInfoBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING PROFILE...';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
 
                 const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
-                const sellerId = localStorage.getItem('seller_id') || `rorraxy-${userEmail.split('@')[0]}`;
+                const rawBrand = document.getElementById('brandName').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+                const formattedBrand = rawBrand.startsWith('rorraxy-') ? rawBrand : `rorraxy-${rawBrand}`;
+                const finalSellerId = `${formattedBrand}-${Math.random().toString(36).substring(2,6)}`;
+                localStorage.setItem('seller_id', finalSellerId);
 
                 const profilePayload = {
-                    seller_id: sellerId,
+                    seller_id: finalSellerId,
                     email: userEmail,
                     mobile_number: localStorage.getItem('rorraxy_seller_phone') || "+8801733208886",
                     brand_name: document.getElementById('brandName').value.trim(),
