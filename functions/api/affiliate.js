@@ -30,8 +30,15 @@ export async function onRequest(context) {
       const email = (body.email || "").toLowerCase().trim();
       const countryCode = body.country_code || "+880";
       const phone = (body.phone || "").trim();
-      const userIp = body.ip || request.headers.get("cf-connecting-ip") || "127.0.0.1";
-      const userAgent = request.headers.get("user-agent") || "";
+      
+      // নিখুঁত আইপি ডিটেকশন ও হ্যান্ডলিং (Detecting... বা খালি থাকলে ক্লাউডফ্লেয়ার বা রিমোট অ্যাড্র্রেস ধরবে)
+      const cfIp = request.headers.get("cf-connecting-ip");
+      const remoteIp = request.headers.get("x-forwarded-for") || request.socket?.remoteAddress;
+      const userIp = (body.ip && body.ip !== "Detecting..." && body.ip.trim() !== "") 
+        ? body.ip 
+        : (cfIp || remoteIp || "127.0.0.1");
+        
+      const userAgent = request.headers.get("user-agent"] || "";
 
       if (!email) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), { 
@@ -55,7 +62,7 @@ export async function onRequest(context) {
 
       const now = new Date().toISOString();
 
-      // ডাটাবেসে ইনসার্ট অথবা আপডেট
+      // ডাটাবেসে ইনসার্ট অথবা আপডেট (আইপি এবং ইউজার এজেন্ট সহ)
       await env.retail.prepare(`
         INSERT INTO rorraxy_affiliates_master (
           unique_affiliate_id, email, country_code, phone, user_ip, user_agent, auth_provider, status, admin_approval, created_at, updated_at
@@ -63,7 +70,7 @@ export async function onRequest(context) {
         ON CONFLICT(email) DO UPDATE SET
           country_code = excluded.country_code,
           phone = CASE WHEN excluded.phone != '' THEN excluded.phone ELSE rorraxy_affiliates_master.phone END,
-          user_ip = excluded.user_ip,
+          user_ip = CASE WHEN excluded.user_ip != 'Detecting...' AND excluded.user_ip != '' THEN excluded.user_ip ELSE rorraxy_affiliates_master.user_ip END,
           user_agent = excluded.user_agent,
           updated_at = excluded.updated_at
       `).bind(generatedUniqueId, email, countryCode, phone, userIp, userAgent, now, now).run();
@@ -84,7 +91,12 @@ export async function onRequest(context) {
     if (action === "verify_magic_code" && request.method === "POST") {
       const body = await request.json();
       const email = (body.email || "").toLowerCase().trim();
-      const userIp = body.ip || request.headers.get("cf-connecting-ip") || "127.0.0.1";
+      
+      const cfIp = request.headers.get("cf-connecting-ip");
+      const userIp = (body.ip && body.ip !== "Detecting..." && body.ip.trim() !== "") 
+        ? body.ip 
+        : (cfIp || "127.0.0.1");
+        
       const now = new Date().toISOString();
 
       await env.retail.prepare(`
