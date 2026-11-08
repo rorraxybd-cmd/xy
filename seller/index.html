@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Seller Portal & Verification - rorraxy</title>
+    <title>Seller Portal & Registration - rorraxy</title>
     
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <script src="/ecosystem-core.js"></script>
@@ -30,39 +30,36 @@
             <div class="step-item" id="stepTracker2">2. PROFILE & INFO</div>
         </div>
 
-        <!-- STEP 1: VERIFICATION SECTION (Email + Mobile Number) -->
+        <!-- STEP 1: VERIFICATION SECTION -->
         <div class="info-card" id="verificationSection">
             <div class="info-card-title">
                 <i class="fa-solid fa-user-shield"></i>
-                <span>SELLER VERIFICATION</span>
+                <span>SELLER VERIFICATION (EMAIL & MOBILE)</span>
             </div>
 
             <form id="magicLinkForm" class="auth-form" novalidate>
                 <div class="form-group">
                     <label>EMAIL ADDRESS <span class="req-star">*</span></label>
-                    <input type="email" class="form-control" id="sellerEmail" placeholder="Gmail, Yahoo, Outlook, Apple..." required style="text-transform: none;" autocomplete="email">
-                    <span class="email-hint"><i class="fa-solid fa-lock" style="color: #ff2a85;"></i> All verified emails supported</span>
+                    <input type="email" class="form-control" id="sellerEmail" placeholder="Enter valid email address..." required style="text-transform: none;" autocomplete="email">
+                    <span class="email-hint"><i class="fa-solid fa-lock" style="color: #ff2a85;"></i> All major verified emails supported</span>
                 </div>
 
                 <div class="form-group">
-                    <label>MOBILE NUMBER <span class="req-star">*</span></label>
+                    <label>MOBILE NUMBER (ANY COUNTRY) <span class="req-star">*</span></label>
                     <div class="phone-input-group">
                         <select class="country-code-select" id="countryDialCode">
                             <option value="+880">🇧🇩 +880 (BD)</option>
                             <option value="+91">🇮🇳 +91 (IN)</option>
-                            <option value="+971">🇦🇪 +971 (UAE)</option>
-                            <option value="+1">🇺🇸 +1 (US)</option>
-                            <option value="+44">🇬🇧 +44 (UK)</option>
-                            <option value="+966">🇸🇦 +966 (KSA)</option>
                             <option value="+92">🇵🇰 +92 (PK)</option>
+                            <option value="+971">🇦🇪 +971 (UAE)</option>
+                            <option value="+966">🇸🇦 +966 (KSA)</option>
+                            <option value="+1">🇺🇸 +1 (USA)</option>
+                            <option value="+44">🇬🇧 +44 (UK)</option>
                             <option value="+60">🇲🇾 +60 (MY)</option>
                             <option value="+65">🇸🇬 +65 (SG)</option>
-                            <option value="+61">🇦🇺 +61 (AU)</option>
-                            <option value="+1">🇨🇦 +1 (CA)</option>
                         </select>
                         <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" required style="text-transform: none;">
                     </div>
-                    <span class="email-hint"><i class="fa-solid fa-globe" style="color: #d4af37;"></i> Auto-detects your country code</span>
                 </div>
                 
                 <div id="formStatus" class="status-msg"></div>
@@ -104,7 +101,7 @@
                         <button type="button" class="edit-profile-btn" onclick="switchToEditMode()">
                             <i class="fa-solid fa-pen-to-square"></i> EDIT INFO
                         </button>
-                        <button type="button" class="edit-profile-btn" style="background: var(--gold-gradient); color: #000;" onclick="location.href='/seller/dashboard.html'">
+                        <button type="button" class="edit-profile-btn" style="background: var(--gold-gradient); color: #000;" onclick="window.location.href='/seller/dashboard.html'">
                             <i class="fa-solid fa-arrow-right"></i> GO TO DASHBOARD
                         </button>
                     </div>
@@ -158,11 +155,6 @@
                             <option value="United Arab Emirates">United Arab Emirates</option>
                             <option value="United States">United States</option>
                             <option value="United Kingdom">United Kingdom</option>
-                            <option value="Saudi Arabia">Saudi Arabia</option>
-                            <option value="Malaysia">Malaysia</option>
-                            <option value="Singapore">Singapore</option>
-                            <option value="Australia">Australia</option>
-                            <option value="Canada">Canada</option>
                         </select>
                     </div>
                     <div class="form-group full-width">
