@@ -65,7 +65,7 @@ const subCategoriesData = {
         {name: "MOTHER & BABY CLOTHING", icon: "fa-solid fa-shirt", key: "mother-baby-clothing"},
         {name: "PREGNANCY & MATERNITY", icon: "fa-solid fa-venus", key: "pregnancy-maternity"},
         {name: "BABY CARE & FEEDING", icon: "fa-solid fa-bottle-water", key: "baby-care-feeding"},
-        {name: "NURSERY & BABY GEAR", icon: "fa-solid fa-bed", key: "nursery-baby-gear"},
+        {name: "Nursery & Baby Gear", icon: "fa-solid fa-bed", key: "nursery-baby-gear"},
         {name: "ECO BABY TOYS", icon: "fa-solid fa-puzzle-piece", key: "eco-baby-toys"},
         {name: "ACCESSORIES", icon: "fa-solid fa-glasses", key: "mother-baby-accessories"}
     ]
@@ -94,11 +94,17 @@ function showSubCategories(element, categoryKey) {
             document.querySelectorAll('#sub-cat-content .cat-box').forEach(b => b.classList.remove('clicked'));
             box.classList.add('clicked');
             window.selectedCategoryValue = item.key || item.name;
+            
+            // Automatically advance to step 3 (Media) on subcategory click
             setTimeout(() => { 
-                if (typeof nextStep === 'function') nextStep(3); 
-            }, 200);
+                if (typeof nextUploadStep === 'function') {
+                    nextUploadStep(3);
+                } else if (typeof nextStep === 'function') {
+                    nextStep(3);
+                }
+            }, 180);
         };
-        box.innerHTML = `<i class="${item.icon}"></i><span>${item.name}</span>`;
+        box.innerHTML = `<i class="${item.icon}"><span>${item.name}</span></i>`;
         contentDiv.appendChild(box);
     });
 }
