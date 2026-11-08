@@ -82,6 +82,10 @@
             width: 90%; max-width: 400px; z-index: 1800; display: flex;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
             border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .top-floating-search-bar.search-hidden {
+            transform: translate(-50%, -100px); opacity: 0; pointer-events: none;
         }
         .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
@@ -341,7 +345,7 @@
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Always Visible Floating Search Bar -->
+    <!-- Always Visible Floating Search Bar (Auto-Hides on Scroll Down in Home) -->
     <div id="floatingSearchContainer" class="top-floating-search-bar">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -429,6 +433,24 @@
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
 
+            // Scroll listener on home to auto-hide/show search bar
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', () => {
+                const reelModal = document.getElementById('reelModalOverlay');
+                if(reelModal && reelModal.style.display === 'flex') return; // Don't trigger on home when reels is open
+
+                let st = window.pageYOffset || document.documentElement.scrollTop;
+                const searchBar = document.getElementById('floatingSearchContainer');
+                if(searchBar) {
+                    if (st > lastScrollTop && st > 60) {
+                        searchBar.classList.add('search-hidden');
+                    } else {
+                        searchBar.classList.remove('search-hidden');
+                    }
+                }
+                lastScrollTop = st <= 0 ? 0 : st;
+            }, { passive: true });
+
             window.addEventListener('keydown', (e) => {
                 const modal = document.getElementById('reelModalOverlay');
                 if(modal && modal.style.display === 'flex') {
@@ -492,16 +514,37 @@
             }
         }
 
-        function openFullscreenPortal(pageUrl) {
+        // Toggle Open/Close for Account (YOU) Portal
+        function toggleAccountPortal() {
             const overlay = document.getElementById('fullscreenIframeOverlay');
             const iframe = document.getElementById('fullscreenIframeBody');
-            if(overlay.style.display === 'flex' && iframe.src === pageUrl) {
+            const targetUrl = '/account.html';
+            if (overlay.style.display === 'flex' && iframe.src.includes('account.html')) {
                 overlay.style.display = 'none';
                 iframe.src = '';
             } else {
-                iframe.src = pageUrl;
-                overlay.style.display = 'flex';
+                openFullscreenPortal(targetUrl);
             }
+        }
+
+        // Toggle Open/Close for Cart (ঝুড়ি) Portal
+        function toggleCartPortal() {
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+            const iframe = document.getElementById('fullscreenIframeBody');
+            const targetUrl = '/cart.html';
+            if (overlay.style.display === 'flex' && iframe.src.includes('cart.html')) {
+                overlay.style.display = 'none';
+                iframe.src = '';
+            } else {
+                openFullscreenPortal(targetUrl);
+            }
+        }
+
+        function openFullscreenPortal(pageUrl) {
+            const overlay = document.getElementById('fullscreenIframeOverlay');
+            const iframe = document.getElementById('fullscreenIframeBody');
+            iframe.src = pageUrl;
+            overlay.style.display = 'flex';
             updateCartBadgeCount();
         }
 
@@ -676,7 +719,7 @@
 
             let actionsHtml = `
                 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <div class="side-action-item" onclick="openFullscreenPortal('/cart.html')" title="Cart">
+                    <div class="side-action-item" onclick="toggleCartPortal()" title="Cart">
                         <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
                         <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
                     </div>
@@ -688,14 +731,14 @@
                         <i class="fa-solid fa-heart action-pure-icon"></i>
                         <span class="side-count-text love-count">${pLikes}</span>
                     </div>
-                    <div class="side-action-item" onclick="const s = document.getElementById('floatingSearchContainer'); s.style.display = s.style.display==='flex'?'none':'flex';" title="Search">
+                    <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search">
                         <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
                     </div>
                     <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handlePinterestInterception(event, 'save', '${targetId}')" title="Save">
                         <i class="fa-solid fa-bookmark action-pure-icon"></i>
                     </div>
 
-                    <div class="side-action-item" onclick="openFullscreenPortal('/account.html')" title="You">
+                    <div class="side-action-item" onclick="toggleAccountPortal()" title="You">
                         <i class="fa-solid fa-user action-pure-icon"></i>
                         <span class="side-count-text">YOU</span>
                     </div>
@@ -703,6 +746,18 @@
             `;
             document.body.insertAdjacentHTML('beforeend', actionsHtml);
             updateCartBadgeCount();
+        }
+
+        // Working Search Action inside Reels mode
+        function toggleReelSearchBox() {
+            const searchBar = document.getElementById('floatingSearchContainer');
+            if(searchBar) {
+                searchBar.classList.toggle('search-hidden');
+                const input = document.getElementById('floatingSearchInput');
+                if(input && !searchBar.classList.contains('search-hidden')) {
+                    input.focus();
+                }
+            }
         }
 
         function handlePinterestInterception(event, actionType, targetId) {
