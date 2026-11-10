@@ -286,6 +286,40 @@
         }
         .cart-badge-circle.empty-badge { display: none !important; }
         .cart-custom-svg { width: 22px; height: 22px; fill: url(#goldGradientSvg); }
+
+        /* ট্রান্সপারেন্ট ওভারলে সার্চ মডাল স্টাইল */
+        .floating-search-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 20000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; padding: 16px;
+        }
+        .floating-search-modal.active { opacity: 1; visibility: visible; }
+
+        .floating-search-box {
+            background: rgba(8, 8, 12, 0.95); border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 480px;
+            display: flex; flex-direction: column; gap: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); position: relative;
+        }
+        .close-modal-btn {
+            position: absolute; top: 16px; right: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-gray); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer;
+        }
+        .modal-title { font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+        .modal-input-container { display: flex; flex-direction: column; gap: 14px; }
+        .modal-input {
+            width: 100%; background: rgba(3, 3, 5, 0.8); border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 14px; padding: 15px 18px; color: var(--text-white); font-size: 0.95rem; outline: none; text-transform: uppercase;
+        }
+        .search-bottom-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .search-action-item-btn {
+            background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px; padding: 12px 8px; cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 6px; width: 100%;
+        }
+        .search-action-item-btn i { font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-action-item-btn span { font-size: 0.62rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body id="mainBody">
@@ -377,7 +411,34 @@
         </div>
     </main>
 
-    <!-- ৫টি অপশনযুক্ত বটম ন্যাভবার (ভিডিওর বদলে মাঝখানে হোম বাটন) -->
+    <!-- ট্রান্সপারেন্ট ওভারলে সার্চ মডাল -->
+    <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event)">
+        <div class="floating-search-box" id="searchBoxContainer">
+            <button class="close-modal-btn" onclick="closeSearchModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
+            <div class="modal-input-container">
+                <input type="text" id="modalSearchInput" class="modal-input" placeholder="Type bulk product name..." autocomplete="off">
+                
+                <div class="search-bottom-actions">
+                    <label class="search-action-item-btn" style="cursor: pointer;">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>CAMERA</span>
+                        <input type="file" accept="image/*" style="display: none;" onchange="handleCameraSearch(event)">
+                    </label>
+                    <button type="button" class="search-action-item-btn" onclick="startAudioSearch()">
+                        <i class="fa-solid fa-microphone"></i>
+                        <span>AUDIO</span>
+                    </button>
+                    <button type="button" class="search-action-item-btn" onclick="submitModalSearch()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>SEARCH</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ৫টি অপশনযুক্ত বটম ন্যাভবার (হোমের বদলে ক্যাটাগরি এবং সার্চবার আলাদা করা হয়েছে) -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="https://rorraxy.com/world" class="nav-item">
             <i class="fa-solid fa-earth-americas"></i>
@@ -387,14 +448,14 @@
             <i class="fa-solid fa-user"></i>
             <span>You</span>
         </div>
-        <a href="/wholesale/index.html" class="nav-item">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </a>
         <a href="/wholesale/category.html" class="nav-item">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-list-check"></i>
             <span>Category</span>
         </a>
+        <div class="nav-item" onclick="openSearchModal()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Search</span>
+        </div>
         <a href="/wholesale/cart.html" class="nav-item">
             <div class="cart-icon-box">
                 <svg class="cart-custom-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
@@ -430,9 +491,14 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
-            getActiveAffiliateId(); // ইনকামিং রেফারেল আইডি ডিটেক্ট করা
+            getActiveAffiliateId();
             updateCartBadgeCount();
-            loadWholesaleProducts();
+            
+            // ইউআরএল কোয়েরি চেক করা (যদি সার্চ কোয়েরি বা ক্যাটাগরি ফিল্টার পাস করা হয়)
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
+            
+            loadWholesaleProducts(searchQuery);
             
             const overlay = document.getElementById('youMenuModalOverlay');
             if (overlay) {
@@ -458,6 +524,10 @@
             document.getElementById('btnAffiliatePortal').addEventListener('click', () => {
                 window.location.href = '/affiliate/index.html';
             });
+
+            document.getElementById('modalSearchInput')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') submitModalSearch();
+            });
         });
 
         function initSelectedMode() {
@@ -471,6 +541,55 @@
             } else {
                 window.location.href = '/wholesale/';
             }
+        }
+
+        // সার্চ মডাল কন্ট্রোল ফাংশনসমূহ
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.add('active');
+            setTimeout(() => { document.getElementById('modalSearchInput').focus(); }, 100);
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModal').classList.remove('active');
+        }
+
+        function handleOutsideClick(event) {
+            if (event.target === document.getElementById('searchModal')) closeSearchModal();
+        }
+
+        function submitModalSearch() {
+            let input = document.getElementById('modalSearchInput');
+            if(!input) return;
+            let query = input.value.trim();
+            if (!query) return;
+            closeSearchModal();
+            loadWholesaleProducts(query);
+        }
+
+        function startAudioSearch() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("আপনার ব্রাউজারে ভয়েস রিকগনিশন সমর্থিত নয়।");
+                return;
+            }
+            const searchInput = document.getElementById('modalSearchInput');
+            searchInput.value = "";
+            searchInput.placeholder = "LISTENING...";
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.onresult = function(event) {
+                let transcript = event.results[0][0].transcript;
+                searchInput.value = transcript;
+                closeSearchModal();
+                loadWholesaleProducts(transcript);
+            };
+            try { recognition.start(); } catch (err) {}
+        }
+
+        function handleCameraSearch(event) {
+            if (!event.target.files[0]) return;
+            closeSearchModal();
+            loadWholesaleProducts("search");
         }
 
         // Deterministic Pseudo-Random Shuffle Generator
@@ -491,7 +610,6 @@
             return x - Math.floor(x);
         }
 
-        // Reverse & Inverted Mix Logic (Retail-এর বিপরীত প্রেজেন্টেশন)[cite: 2]
         function getReverseOppositeWholesaleProducts(rawList) {
             if (!Array.isArray(rawList) || rawList.length === 0) return [];
 
@@ -516,20 +634,10 @@
             return wholesaleFeed;
         }
 
-        async function loadWholesaleProducts() {
+        async function loadWholesaleProducts(searchFilter = null) {
             const feedContainer = document.getElementById('productFeed');
             
-            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        renderWholesaleCards(getReverseOppositeWholesaleProducts(parsed));
-                    }
-                } catch (e) {
-                    console.warn("Cache parse error", e);
-                }
-            }
+            feedContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--gold-solid);"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">LOADING WHOLESALE PRODUCTS...</p></div>`;
 
             let products = [];
             try {
@@ -548,9 +656,10 @@
             }
 
             let localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products')) || [];
+            let cachedFeed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CACHE_KEY)) || [];
             
             let mergedMap = new Map();
-            [...localProducts, ...products].forEach(p => {
+            [...localProducts, ...cachedFeed, ...products].forEach(p => {
                 let pId = p.id || p.product_id || p.product_code || p.title;
                 if(pId) mergedMap.set(String(pId), p);
             });
@@ -562,14 +671,24 @@
                 return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined' || p.is_cj || p.product_code || p.cj_product_id;
             });
 
+            // যদি সার্চ ফিল্টার বা কোয়েরি দেওয়া থাকে, তবে সেটি দিয়ে প্রোডাক্ট ফিল্টার করা হবে
+            if (searchFilter) {
+                const query = searchFilter.toLowerCase();
+                wholesaleProducts = wholesaleProducts.filter(item => {
+                    const title = (item.title || '').toLowerCase();
+                    const cat = (item.category || item.tag || item.description || '').toLowerCase();
+                    return title.includes(query) || cat.includes(query);
+                });
+            }
+
             if (wholesaleProducts.length > 0) {
                 localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(wholesaleProducts));
                 renderWholesaleCards(getReverseOppositeWholesaleProducts(wholesaleProducts));
-            } else if (!cachedData) {
+            } else {
                 feedContainer.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-gray);">
                         <i class="fa-solid fa-boxes-stacked fa-2x" style="color: var(--gold-solid); margin-bottom: 12px;"></i>
-                        <p style="font-size: 0.8rem; font-weight: 600;">NO WHOLESALE PRODUCTS AVAILABLE RIGHT NOW.</p>
+                        <p style="font-size: 0.8rem; font-weight: 600;">NO WHOLESALE PRODUCTS FOUND.</p>
                     </div>
                 `;
             }
@@ -582,7 +701,7 @@
             wholesaleProducts.forEach(p => {
                 const pTitle = p.title || 'WHOLESALE ITEM';
                 const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
-                const moqCount = p.moq || 1; // সেলারের কনফিগার করা মিনিমাম পিস[cite: 2]
+                const moqCount = p.moq || 1;
                 
                 let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                 
@@ -666,7 +785,6 @@
             document.getElementById('youMenuModalOverlay').style.display = 'none';
         }
 
-        // হোমপেজের আল্ট্রা-ফাস্ট অ্যাফিলিয়েট শেয়ারিং ফাংশন
         async function shareProduct(event, title, productId) {
             if(event) event.stopPropagation();
 
