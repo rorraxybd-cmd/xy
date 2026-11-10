@@ -201,23 +201,39 @@
 
         .footer-menu-item.order-now-highlight {
             background: var(--gold-gradient) !important; border-radius: 10px !important; padding: 6px 28px !important;
-            box-shadow: 0 2px 10px rgba(212,175,55,0.3);
+            box-shadow: 0 2px 10px rgba(212,175,55,0.3); transition: transform 0.15s ease;
         }
+        .footer-menu-item.order-now-highlight:active { transform: scale(0.95); }
         .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.72rem; font-weight: 800; background: none !important; }
 
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
             position: absolute; top: -5px; right: -8px; background: #ff2a85; color: #ffffff;
             font-size: 0.52rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
+        }
+
+        .pulse-badge {
+            animation: badgePulse 0.4s ease-out;
+        }
+        @keyframes badgePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
         }
 
         /* Clean Full Screen card.html Toggle Overlay (No Top Bars) */
         .cart-page-iframe-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #000000; z-index: 1000000; flex-direction: column;
+            animation: fadeIn 0.3s ease-in-out;
         }
         .cart-page-iframe-overlay.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .cart-iframe-element {
             width: 100%; height: 100vh; border: none; background: #000;
@@ -227,7 +243,7 @@
             position: fixed; z-index: 9999999; width: 30px; height: 30px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
-            box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.75s ease, top 0.75s ease, transform 0.75s linear, opacity 0.75s ease;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28), transform 0.7s linear, opacity 0.7s ease;
         }
 
         .animated-welcome-msg { background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; border: 1px solid rgba(212, 175, 55, 0.2); }
@@ -338,9 +354,9 @@
         </button>
     </div>
 
-    <!-- সরাসরি card.html পেজ লোড করার টগল ওভারলে (উপরে কোনো বার নেই) -->
+    <!-- সরাসরি /wholesale/product wholesale/card.html (বা /wholesale/card.html) পেজ লোড করার ওভারলে -->
     <div class="cart-page-iframe-overlay" id="cartPageIframeOverlay">
-        <iframe src="https://rorraxy.com/wholesale/card" class="cart-iframe-element" id="cartPageIframe"></iframe>
+        <iframe src="/wholesale/card.html" class="cart-iframe-element" id="cartPageIframe"></iframe>
     </div>
 
     <!-- সেলার চ্যাট মডাল -->
@@ -668,14 +684,18 @@
             } catch (e) {}
         }
 
-        function triggerCoinDropAnimation(event) {
+        function triggerCoinDropAnimation(event, callback) {
             const cartBtn = document.getElementById('footerCartMenuBtn');
             const cartBadge = document.getElementById('footerCartItemCountBadge');
-            if (!cartBtn) return;
+            
+            let targetX = window.innerWidth - 50;
+            let targetY = window.innerHeight - 30;
 
-            const cartRect = cartBtn.getBoundingClientRect();
-            const targetX = cartRect.left + (cartRect.width / 2) - 15;
-            const targetY = cartRect.top + (cartRect.height / 2) - 15;
+            if (cartBtn) {
+                const cartRect = cartBtn.getBoundingClientRect();
+                targetX = cartRect.left + (cartRect.width / 2) - 15;
+                targetY = cartRect.top + (cartRect.height / 2) - 15;
+            }
 
             let startX = window.innerWidth / 2 - 15;
             let startY = window.innerHeight - 80;
@@ -694,18 +714,21 @@
             requestAnimationFrame(() => {
                 coin.style.left = `${targetX}px`;
                 coin.style.top = `${targetY}px`;
-                coin.style.transform = 'scale(0.35) rotate(720deg)';
-                coin.style.opacity = '0';
+                coin.style.transform = 'scale(0.3) rotate(720deg)';
+                coin.style.opacity = '0.2';
             });
 
             setTimeout(() => {
-                if (coin.parentNode) coin.parentNode.removeChild(coin);
+                if (coin && coin.parentNode) coin.parentNode.removeChild(coin);
                 playCoinDropChime();
                 if(cartBadge) {
                     cartBadge.classList.add('pulse-badge');
-                    setTimeout(() => cartBadge.classList.remove('pulse-badge'), 350);
+                    setTimeout(() => cartBadge.classList.remove('pulse-badge'), 400);
                 }
-            }, 750);
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }, 700);
         }
 
         function executeOrderNow(event) {
@@ -727,7 +750,7 @@
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
             
-            // ব্যবহারকারী বর্তমানে যে ভেরিয়েন্ট কালার/থাম্বনেইল সিলেক্ট করেছেন বা স্ক্রিনে দেখতে পাচ্ছেন, ঠিক সেটিই কার্টে যুক্ত হবে
+            // ব্যবহারকারী বর্তমানে যে ভেরিয়েন্ট বা থাম্বনেইল সিলেক্ট করেছেন তা কার্টে প্রপারলি সেভ করা হবে
             let finalImgUrl = selectedProductColorImage || document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
             
             let activeAffId = getActiveAffiliateId();
@@ -754,19 +777,30 @@
             
             localStorage.setItem(cartKey, JSON.stringify(cart));
             updateCartBadgeCount();
-            triggerCoinDropAnimation(event);
-            
-            setTimeout(() => {
-                toggleCartPage();
-            }, 800);
+
+            // গোল্ডেন ফ্লাইং অ্যানিমেশন শেষে রিডাইরেক্ট না হয়ে সরাসরি সুন্দরভাবে কার্ড পেজ ওভারলে চালু হবে
+            triggerCoinDropAnimation(event, () => {
+                openCartPage();
+            });
+        }
+
+        function openCartPage() {
+            const overlay = document.getElementById('cartPageIframeOverlay');
+            const iframe = document.getElementById('cartPageIframe');
+            if (iframe && iframe.contentWindow) {
+                iframe.src = iframe.src; // Reload iframe to show latest cart items
+            }
+            if (overlay) overlay.classList.add('active');
         }
 
         function toggleCartPage() {
             const overlay = document.getElementById('cartPageIframeOverlay');
-            if(overlay.classList.contains('active')) {
-                overlay.classList.remove('active');
-            } else {
-                overlay.classList.add('active');
+            if (overlay) {
+                if (overlay.classList.contains('active')) {
+                    overlay.classList.remove('active');
+                } else {
+                    openCartPage();
+                }
             }
         }
 
