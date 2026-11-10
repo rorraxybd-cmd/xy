@@ -358,7 +358,7 @@
     <script>
         const API_BASE_URL = '';
         let currentActiveProduct = null;
-        let currentItemQuantity = 300;
+        let currentItemQuantity = 1;
         let selectedProductColorImage = "";
 
         function getActiveAffiliateId() {
@@ -480,7 +480,7 @@
             document.getElementById('btnPrice100').innerText = `$${p100}`;
             document.getElementById('btnPrice300').innerText = `$${p300}`;
 
-            // ডিফল্টভাবে স্যাম্পল প্রাইস (১ টি প্রোডাক্ট) ফিক্সড থাকবে, কোনো বাটন একটিভ থাকবে না
+            // ডিফল্টভাবে স্যাম্পল প্রাইস (১ টি ইউনিট) ফিক্সড থাকবে
             currentItemQuantity = 1;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
@@ -505,145 +505,6 @@
                     if (Array.isArray(parsedArr) && parsedArr.length > 0) primaryImg = parsedArr[0];
                 } catch(e) {}
             }
-            if (primaryImg && !primaryImg.includes('mr masudar logo')) {
-                mediaList.push({ type: 'image', url: primaryImg });
-            }
-
-            if (prod.images_json) {
-                try {
-                    let parsedImages = typeof prod.images_json === 'string' ? JSON.parse(prod.images_json) : prod.images_json;
-                    if (Array.isArray(parsedImages)) {
-                        parsedImages.forEach(imgUrl => {
-                            if (imgUrl && !mediaList.some(m => m.url === imgUrl)) mediaList.push({ type: 'image', url: imgUrl });
-                        });
-                    } else if (typeof parsedImages === 'string') {
-                        if (!mediaList.some(m => m.url === parsedImages)) mediaList.push({ type: 'image', url: parsedImages });
-                    }
-                } catch (e) {
-                    if (typeof prod.images_json === 'string') {
-                        prod.images_json.split(',').forEach(imgUrl => {
-                            let cleanUrl = imgUrl.trim();
-                            if (cleanUrl && !mediaList.some(m => m.url === cleanUrl)) mediaList.push({ type: 'image', url: cleanUrl });
-                        });
-                    }
-                }
-            }
-
-            if (mediaList.length === 0 && prod.image_url) {
-                if (typeof prod.image_url === 'string' && prod.image_url.startsWith('[')) {
-                    try {
-                        let parsed = JSON.parse(prod.image_url);
-                        if (Array.isArray(parsed)) parsed.forEach(u => mediaList.push({ type: 'image', url: u }));
-                    } catch(e) { mediaList.push({ type: 'image', url: prod.image_url }); }
-                } else {
-                    mediaList.push({ type: 'image', url: prod.image_url });
-                }
-            }
-
-            let videoFileUrl = prod.video_url || prod.videoUrl || "";
-            if (videoFileUrl) mediaList.push({ type: 'video', url: videoFileUrl });
-
-            if(mediaList.length === 0) {
-                mediaList.push({ type: 'image', url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" });
-            }
-
-            selectedProductColorImage = mediaList[0].url;
-            updateMainViewport(mediaList[0]);
-
-            let thumbHtml = '';
-            mediaList.forEach((m, idx) => {
-                let activeCls = idx === 0 ? 'active' : '';
-                if(m.type === 'video') {
-                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><video src="${m.url}" muted></video></div>`;
-                } else {
-                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><img src="${m.url}" alt="Thumb" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'"></div>`;
-                }
-            });
-            strip.innerHTML = thumbHtml;
-        }
-
-        function switchMediaView(mediaObj, thumbElement) {
-            updateMainViewport(mediaObj);
-            // কাস্টমার যে ছবিটি থাম্বনেইল থেকে সিলেক্ট করবে, সেটাই সেভ হবে
-            selectedProductColorImage = mediaObj.url;
-            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            thumbElement.classList.add('active');
-        }
-
-        function setQuantityPreset(qty, btn) {
-            currentItemQuantity = qty;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-        }
-
-        function modifyQuantity(val) {
-            currentItemQuantity += val;
-            if (currentItemQuantity < 1) currentItemQuantity = 1;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-        }
-
-        function manualQuantityInput(input) {
-            let val = parseInt(input.value);
-            currentItemQuantity = (isNaN(val) || val < 1) ? 1 : val;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-        }
-
-        function executeOrderNow(event) {
-            if (event) event.preventDefault();
-
-            if (!currentActiveProduct) {
-                currentActiveProduct = {
-                    id: new URLSearchParams(window.location.search).get('id') || '101',
-                    title: document.getElementById('activeProductTitleHeading').innerText || 'RORRAXY WHOLESALE BULK ITEM',
-                    price: 25.00,
-                    seller_id: 'SELLER-RORRAXY-01'
-                };
-            }
-
-            let customNoteVal = document.getElementById('customSizeInputField').value.trim();
-            let chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
-            let cartKey = 'rorraxy_wholesale_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            
-            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            
-            // কাস্টমার বর্তমানে স্ক্রিনে সিলেক্ট করা যে ছবিটি দেখতে পাচ্ছে, ঠিক সেই ইমেজ ইউআরএল-ই কার্টে সেভ হবে
-            let finalImgUrl = selectedProductColorImage || document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
-            let activeAffId = getActiveAffiliateId();
-
-            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
-            let priceNum = parseFloat(currentActiveProduct.price_bulk || currentActiveProduct.price || currentActiveProduct.wholesale_price) || 25.00;
-
-            if(existingItem) {
-                existingItem.qty += currentItemQuantity;
-                if (activeAffId) existingItem.affiliateId = activeAffId;
-            } else {
-                cart.push({
-                    productId: prodId,
-                    sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
-                    affiliateId: activeAffId || null,
-                    title: currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText,
-                    price: `$${priceNum.toFixed(2)}`,
-                    qty: currentItemQuantity,
-                    size: chosenSize,
-                    mode: 'wholesale',
-                    img: finalImgUrl
-                });
-            }
-            
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-            updateCartBadgeCount();
-
-            // সুন্দর গোল্ডেন কয়েন অ্যানিমেশন হবে
-            triggerCoinDropAnimation(event);
-        }
-
-        function redirectToCartPage() {
-            // ডাবল wholesale/wholesale হওয়ার যে সমস্যা ছিল তা পুরোপুরি প্রতিরোধ করা হয়েছে
-            window.location.href = './cart.html';
-        }
             if (primaryImg && !primaryImg.includes('mr masudar logo')) {
                 mediaList.push({ type: 'image', url: primaryImg });
             }
@@ -757,7 +618,7 @@
             updateMainViewport(mediaObj);
             selectedProductColorImage = mediaObj.url;
             document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            thumbElement.classList.add('active');
+            if(thumbElement) thumbElement.classList.add('active');
         }
 
         function setQuantityPreset(qty, btn) {
@@ -868,7 +729,8 @@
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            let finalImgUrl = selectedProductColorImage || document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+            let mainMediaEl = document.getElementById('mainDisplayMediaElement');
+            let finalImgUrl = selectedProductColorImage || (mainMediaEl ? mainMediaEl.src : "") || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
             let activeAffId = getActiveAffiliateId();
 
             let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
@@ -894,14 +756,11 @@
             localStorage.setItem(cartKey, JSON.stringify(cart));
             updateCartBadgeCount();
 
-            // ১. সুন্দর গোল্ডেন কয়েন অ্যানিমেশন ঝুড়িতে গিয়ে পড়বে
-            // ২. কার্ট ব্যাজ আপডেট হবে
-            // ৩. কাস্টমার এই প্রোডাক্ট পেজেই অবস্থান করবে
+            // গোল্ডেন কয়েন অ্যানিমেশন শুরু
             triggerCoinDropAnimation(event);
         }
 
         function redirectToCartPage() {
-            // আসল ফাইলের নাম cart.html (c-a-r-t), তাই সরাসরি wholesale/cart.html এ রিডাইরেক্ট করবে
             let currentUrl = window.location.href;
             if (currentUrl.includes('/wholesale/')) {
                 let wholesaleBase = currentUrl.substring(0, currentUrl.indexOf('/wholesale/') + 11);
