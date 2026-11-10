@@ -112,21 +112,25 @@
 
         .payment-accordion-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         .payment-method-item {
-            background: rgba(18, 18, 26, 0.8); border-radius: 14px; overflow: hidden; cursor: pointer; width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid transparent;
+            background: rgba(18, 18, 26, 0.85); border-radius: 14px; overflow: hidden; cursor: pointer; width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease;
         }
-        .payment-method-item.active { border-color: var(--gold-solid); background: rgba(24, 24, 36, 0.98); box-shadow: 0 0 16px rgba(212,175,55,0.2); }
+        .payment-method-item.active { border-color: var(--gold-solid); background: rgba(24, 24, 36, 0.98); box-shadow: 0 0 18px rgba(212,175,55,0.25); }
         .payment-method-header { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .payment-method-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; font-weight: 800; color: #fff; gap: 8px; }
 
-        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
-        .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; }
+        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
+        .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; }
 
         .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; width: 100%; }
-        .payout-badge {
-            display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.07); padding: 5px 9px; border-radius: 7px;
-            font-size: 0.65rem; font-weight: 700; color: #ffffff; text-transform: none !important;
+        
+        /* Premium Vector/SVG Brand Badges */
+        .svg-payout-card {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: #ffffff; padding: 4px 10px; border-radius: 6px; height: 32px; min-width: 52px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
         }
+        .svg-payout-card svg, .svg-payout-card img { height: 18px; width: auto; max-width: 48px; object-fit: contain; }
 
         #currenciesModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
@@ -139,7 +143,6 @@
         .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
         .currency-tag { background: #181824; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
 
-        /* ব্যাক বাটন রিমুভ করে কনফার্ম বাটনটি সম্পূর্ণ মেডেলে বড় ও আকর্ষণীয় করা হয়েছে */
         .single-fixed-checkout-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
             background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px);
@@ -270,6 +273,7 @@
 
                 <div class="payment-accordion-group">
 
+                    <!-- INTERNATIONAL CARDS WITH ACCURATE SVG LOGOS -->
                     <div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
@@ -277,23 +281,53 @@
                                 <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="payout-icons-row">
-                                <span class="payout-badge"><i class="fa-brands fa-cc-visa" style="color:#60a5fa;"></i> VISA</span>
-                                <span class="payout-badge"><i class="fa-brands fa-cc-mastercard" style="color:#f97316;"></i> MASTERCARD</span>
-                                <span class="payout-badge"><i class="fa-brands fa-apple-pay" style="color:#fff;"></i> APPLE PAY</span>
+                                <!-- VISA SVG -->
+                                <div class="svg-payout-card" title="VISA">
+                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#1A1F71" d="M47.2 32.5h-7.6l4.8-23.7h7.6l-4.8 23.7zm28.3-23.1c-1.5-.6-3.8-1.2-6.7-1.2-7.4 0-12.6 3.7-12.6 9 0 3.9 3.7 6.1 6.5 7.4 2.9 1.4 3.9 2.3 3.9 3.5 0 1.9-2.4 2.8-4.6 2.8-3.1 0-4.8-.4-7.4-1.5l-1 .5 1.1 5.3c2.2.9 5.8 1.6 9.4 1.6 7.9 0 13-3.7 13-9.5 0-3.2-2-5.6-6.4-7.6-2.7-1.3-4.3-2.2-4.3-3.5 0-1.2 1.4-2.4 4.4-2.4 2.5 0 4.3.5 5.7 1.1l.7.3 1.1-5.3zm20.8-0.6h-5.9c-1.8 0-3.2.5-4 2.3l-11.3 21.4h8l1.6-4.2h9.8l0.9 4.2h7l-6.1-23.7zm-8.8 14.2l3.2-8.3 1.8 8.3h-5zm-55.9-14.2l-7.4 16.2-0.8-3.9c-1.4-4.5-5.7-9.4-10.5-11.8l6.8 23.2h8l11.9-23.7h-8z"/>
+                                        <path fill="#F7B600" d="M18.8 8.8h-12c-1.3 0-2.4.8-2.8 2l-7 21.7h8l1.6-4.2h9.8"/>
+                                    </svg>
+                                </div>
+                                <!-- MASTERCARD SVG -->
+                                <div class="svg-payout-card" title="MasterCard">
+                                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="35" cy="30" r="22" fill="#EB001B"/>
+                                        <circle cx="65" cy="30" r="22" fill="#F79E1B"/>
+                                        <path fill="#FF5F00" d="M50 13.8a21.9 21.9 0 0 0-8.2 16.2A21.9 21.9 0 0 0 50 46.2a21.9 21.9 0 0 0 8.2-16.2A21.9 21.9 0 0 0 50 13.8z"/>
+                                    </svg>
+                                </div>
+                                <!-- AMEX SVG -->
+                                <div class="svg-payout-card" style="background:#006FCF;" title="American Express">
+                                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M12 20h8l3 6 3-6h8v20h-7v-12l-4 8h-2l-4-8v12h-5V20zm30 0h14v4.5H47v3h8v4.5h-8v3.5h10V40H42V20zm16 0h6l4 7 4-7h6v20h-5v-12l-5 12h-1l-5-12v12h-4V20z"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- BANGLADESH LOCAL CARDS & MOBILE WALLETS (BKASH, NAGAD) -->
                     <div class="payment-method-item" id="method-bd" onclick="selectPaymentMethod('Bangladesh Cards', 'method-bd')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
-                                <span><i class="fa-solid fa-building-columns" style="color:#3b82f6; margin-right:6px;"></i> BANGLADESH CARDS</span>
+                                <span><i class="fa-solid fa-building-columns" style="color:#3b82f6; margin-right:6px;"></i> BANGLADESH CARDS & MOBILE BANKING</span>
                                 <span class="badge-local-bd">BDT PAYMENT</span>
                             </div>
                             <div class="payout-icons-row">
-                                <span class="payout-badge" style="color:#f43f5e; font-weight:800;"><i class="fa-solid fa-mobile-screen"></i> bKash</span>
-                                <span class="payout-badge" style="color:#fb923c; font-weight:800;"><i class="fa-solid fa-wallet"></i> Nagad</span>
-                                <span class="payout-badge" style="color:#c084fc; font-weight:800;"><i class="fa-solid fa-rocket"></i> Rocket</span>
+                                <!-- BKASH SVG -->
+                                <div class="svg-payout-card" style="background:#e2136e;" title="bKash">
+                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M22 6l16 14-16 14V6zm-4 0L2 20l16 14V6zm20 14l16-14v28l-16-14z"/>
+                                        <text x="58" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">bKash</text>
+                                    </svg>
+                                </div>
+                                <!-- NAGAD SVG -->
+                                <div class="svg-payout-card" style="background:#f7931e;" title="Nagad">
+                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M12 8c6 0 10 4 10 10s-4 10-10 10S2 24 2 18 6 8 12 8zm0 4a6 6 0 100 12 6 6 0 000-12z"/>
+                                        <text x="32" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">NAGAD</text>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -321,7 +355,7 @@
 
     </div>
 
-    <!-- ব্যাক বাটন রিমুভ করে মেডেলে ফিক্সড কনফার্ম বাটন রাখা হয়েছে -->
+    <!-- MAIN ACTION BUTTON -->
     <div class="single-fixed-checkout-wrapper">
         <button type="button" id="mainCheckoutBtn" class="btn-action-main">
             PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>
