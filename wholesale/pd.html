@@ -36,14 +36,14 @@
             scroll-behavior: smooth;
         }
 
-        body { padding-bottom: 65px; }
+        body { padding-bottom: 75px; }
 
         .ecommerce-main-wrapper {
-            width: 100%; max-width: 1200px; margin: 0 auto; padding: 12px 10px 40px 10px;
+            width: 100%; max-width: 1200px; margin: 0 auto; padding: 12px 10px 50px 10px;
             display: flex; flex-direction: column; gap: 16px; overflow-x: hidden;
         }
         @media(min-width: 768px) {
-            .ecommerce-main-wrapper { padding: 20px 24px 50px 24px; gap: 24px; }
+            .ecommerce-main-wrapper { padding: 20px 24px 60px 24px; gap: 24px; }
         }
 
         .product-details-clean-section { 
@@ -186,9 +186,9 @@
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px; 
             display: flex; justify-content: space-around; align-items: center; z-index: 999999; 
-            border-top: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 -5px 15px rgba(0,0,0,0.8); height: 52px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 -5px 15px rgba(0,0,0,0.8); height: 56px;
         }
-        @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 80px; padding: 6px 30px; height: 56px; } }
+        @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 80px; padding: 6px 30px; height: 60px; } }
         
         .footer-menu-item { 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -256,7 +256,7 @@
                             <span class="btn-price" id="btnPrice100">$20.00</span>
                             <span>/ 100 PCS</span>
                         </button>
-                        <button type="button" class="preset-btn active" onclick="setQuantityPreset(300, this)">
+                        <button type="button" class="preset-btn" onclick="setQuantityPreset(300, this)">
                             <span class="btn-price" id="btnPrice300">$18.00</span>
                             <span>/ 300 PCS</span>
                         </button>
@@ -265,7 +265,7 @@
                     <span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
                     <div class="qty-controls-flex">
                         <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
-                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="300" min="1" oninput="manualQuantityInput(this)">
+                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" oninput="manualQuantityInput(this)">
                         <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
                     </div>
                 </div>
@@ -348,8 +348,9 @@
     <script>
         const API_BASE_URL = '';
         let currentActiveProduct = null;
-        let currentItemQuantity = 300;
+        let currentItemQuantity = 1; // ডিফল্টভাবে স্যাম্পল ১ পিস
         let selectedProductColorImage = "";
+        let currentBaseUnitPrice = 25.00;
 
         function getActiveAffiliateId() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -461,20 +462,21 @@
 
         function renderProductDetails(prod) {
             currentActiveProduct = prod;
-            let priceVal = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
-            let oldP = priceVal * 1.35;
+            currentBaseUnitPrice = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
+            let oldP = currentBaseUnitPrice * 1.35;
 
-            let p100 = parseFloat(prod.price_100 || (priceVal * 0.8)).toFixed(2);
-            let p300 = parseFloat(prod.price_300 || (priceVal * 0.72)).toFixed(2);
+            let p100 = parseFloat(prod.price_100 || (currentBaseUnitPrice * 0.8)).toFixed(2);
+            let p300 = parseFloat(prod.price_300 || (currentBaseUnitPrice * 0.72)).toFixed(2);
 
             document.getElementById('btnPrice100').innerText = `$${p100}`;
             document.getElementById('btnPrice300').innerText = `$${p300}`;
 
-            currentItemQuantity = 300;
+            // ডিফল্টভাবে স্যাম্পল কোয়ান্টিটি ১ এবং কোনো বাটন সিলেক্টেড থাকবে না
+            currentItemQuantity = 1;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
 
             document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY WHOLESALE PRODUCT";
-            document.getElementById('activeProductPriceTag').innerText = `$${priceVal.toFixed(2)}`;
+            document.getElementById('activeProductPriceTag').innerText = `$${currentBaseUnitPrice.toFixed(2)}`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
             
             let rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
@@ -707,7 +709,6 @@
             let customNoteVal = document.getElementById('customSizeInputField').value.trim();
             let chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
             
-            // সঠিক কী (Key) ব্যবহার করা হলো যা cart.html পেজের সাথে মিলে যায়
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             
@@ -716,7 +717,19 @@
             let activeAffId = getActiveAffiliateId();
 
             let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
-            let priceNum = parseFloat(currentActiveProduct.price_bulk || currentActiveProduct.price || currentActiveProduct.wholesale_price) || 25.00;
+            
+            // কোয়ান্টিটি অনুযায়ী সঠিক প্রাইস নির্ধারণ (যদি ১০০ বা ৩০০ পিস বাটন সিলেক্ট করা থাকে)
+            let activePreset = document.querySelector('.preset-btn.active');
+            let priceNum = currentBaseUnitPrice;
+            if (activePreset) {
+                if (currentItemQuantity >= 300) {
+                    priceNum = parseFloat(currentActiveProduct.price_300 || (currentBaseUnitPrice * 0.72));
+                } else if (currentItemQuantity >= 100) {
+                    priceNum = parseFloat(currentActiveProduct.price_100 || (currentBaseUnitPrice * 0.8));
+                }
+            } else {
+                priceNum = currentBaseUnitPrice;
+            }
 
             if(existingItem) {
                 existingItem.qty += currentItemQuantity;
@@ -740,7 +753,6 @@
             triggerCoinDropAnimation(event);
         }
 
-        // সঠিক ফাইল পাথ দিয়ে সরাসরি cart.html পেজে নিয়ে যাওয়ার ফাংশন
         function redirectToCartPage() {
             window.location.href = './cart.html';
         }
