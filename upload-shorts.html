@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Upload Shorts & Videos - rorraxy Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+--bg-retail: #030305;
+--card-retail: #08080c;
+--gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+--gold-solid: #d4af37;
+--text-white: #ffffff;
+--text-gray: #a0a0ab;
+--font-main: 'Poppins', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(--bg-retail);
+color: var(--text-white);
+font-family: var(--font-main);
+min-height: 100vh;
+padding: 20px 15px 80px 15px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+
+.upload-card {
+width: 100%;
+max-width: 500px;
+background: var(--card-retail);
+border: 1px solid rgba(212, 175, 55, 0.2);
+border-radius: 20px;
+padding: 25px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+text-align: center;
+}
+
+.upload-header {
+margin-bottom: 25px;
+}
+
+.upload-header h2 {
+font-size: 1.2rem;
+font-weight: 800;
+background: var(--gold-gradient);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.upload-header p {
+font-size: 0.72rem;
+color: var(--text-gray);
+margin-top: 5px;
+}
+
+.form-group {
+margin-bottom: 18px;
+text-align: left;
+}
+
+.form-group label {
+display: block;
+font-size: 0.75rem;
+font-weight: 700;
+color: var(--gold-solid);
+margin-bottom: 6px;
+text-transform: uppercase;
+}
+
+.form-group input[type="text"],
+.form-group select {
+width: 100%;
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(212, 175, 55, 0.2);
+border-radius: 12px;
+padding: 12px 14px;
+color: #fff;
+font-size: 0.85rem;
+font-family: var(--font-main);
+outline: none;
+transition: border-color 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+border-color: var(--gold-solid);
+}
+
+/* Custom Drop File Area */
+.file-drop-area {
+position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 30px 15px;
+border: 2px dashed rgba(212, 175, 55, 0.4);
+border-radius: 16px;
+background: rgba(212, 175, 55, 0.02);
+cursor: pointer;
+transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.file-drop-area:hover {
+background: rgba(212, 175, 55, 0.05);
+border-color: var(--gold-solid);
+}
+
+.file-drop-icon {
+font-size: 2.2rem;
+margin-bottom: 10px;
+background: var(--gold-gradient);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.file-msg {
+font-size: 0.78rem;
+color: var(--text-gray);
+font-weight: 600;
+}
+
+.file-input {
+position: absolute;
+left: 0;
+top: 0;
+height: 100%;
+width: 100%;
+opacity: 0;
+cursor: pointer;
+}
+
+.video-preview-box {
+width: 100%;
+max-height: 220px;
+border-radius: 12px;
+margin-top: 15px;
+display: none;
+background: #000;
+overflow: hidden;
+border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.video-preview-box video {
+width: 100%;
+height: 100%;
+max-height: 220px;
+object-fit: contain;
+}
+
+.submit-btn {
+width: 100%;
+background: var(--gold-gradient);
+color: #030305;
+border: none;
+border-radius: 12px;
+padding: 14px;
+font-weight: 800;
+font-size: 0.85rem;
+letter-spacing: 1px;
+cursor: pointer;
+margin-top: 10px;
+box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+transition: transform 0.2s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+text-transform: uppercase;
+}
+
+.submit-btn:hover {
+transform: scale(1.02);
+}
+
+.submit-btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+transform: none;
+}
+
+/* Status & Progress */
+.progress-container {
+width: 100%;
+background: rgba(255,255,255,0.05);
+border-radius: 10px;
+overflow: hidden;
+margin-top: 15px;
+display: none;
+border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.progress-bar {
+width: 0%;
+height: 8px;
+background: var(--gold-gradient);
+transition: width 0.3s ease;
+}
+
+.status-msg {
+font-size: 0.78rem;
+margin-top: 12px;
+font-weight: 600;
+min-height: 20px;
+}
+
+.status-msg.success { color: #2ecc71; }
+.status-msg.error { color: #e74c3c; }
+
+.back-link {
+display: inline-block;
+margin-top: 20px;
+color: var(--gold-solid);
+text-decoration: none;
+font-size: 0.75rem;
+font-weight: 700;
+text-transform: uppercase;
+}
+
+.back-link:hover {
+text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="upload-card">
+<div class="upload-header">
+<h2>Upload Business Video / Shorts</h2>
+<p>Files will automatically upload to vid.rorraxy.com & sync to retail ecosystem</p>
+</div>
+
+<form id="shortsUploadForm">
+<div class="form-group">
+<label for="videoTitle">Video Title</label>
+<input type="text" id="videoTitle" placeholder="ENTER VIDEO TITLE OR BUSINESS NAME..." required>
+</div>
+
+<div class="form-group">
+<label for="videoType">Format Type</label>
+<select id="videoType">
+<option value="0">Shorts / Reel (Vertical)</option>
+<option value="1">Long Video (Landscape)</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Select Video File</label>
+<div class="file-drop-area">
+<i class="fa-solid fa-cloud-arrow-up file-drop-icon"></i>
+<span class="file-msg" id="fileMsg">Tap to select or drag video file</span>
+<input type="file" id="videoFile" class="file-input" accept="video/mp4,video/webm,video/quicktime" required>
+</div>
+</div>
+
+<!-- Video Preview -->
+<div class="video-preview-box" id="previewContainer">
+<video id="videoPreview" controls></video>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-container" id="progressContainer">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="status-msg" id="statusMsg"></div>
+
+<button type="submit" class="submit-btn" id="uploadBtn">
+<i class="fa-solid fa-upload"></i> Upload to Ecosystem
+</button>
+</form>
+
+<a href="/index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Ecosystem Feed</a>
+</div>
+
+<script>
+const fileInput = document.getElementById('videoFile');
+const fileMsg = document.getElementById('fileMsg');
+const previewContainer = document.getElementById('previewContainer');
+const videoPreview = document.getElementById('videoPreview');
+const uploadForm = document.getElementById('shortsUploadForm');
+const uploadBtn = document.getElementById('uploadBtn');
+const progressContainer = document.getElementById('progressContainer');
+const progressBar = document.getElementById('progressBar');
+const statusMsg = document.getElementById('statusMsg');
+
+// 1. File Selection Preview
+fileInput.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    fileMsg.textContent = file.name + ' (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)';
+    const fileURL = URL.createObjectURL(file);
+    videoPreview.src = fileURL;
+    previewContainer.style.display = 'block';
+  } else {
+    fileMsg.textContent = 'Tap to select or drag video file';
+    previewContainer.style.display = 'none';
+  }
+});
+
+// 2. Upload Process
+uploadForm.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const file = fileInput.files[0];
+  const title = document.getElementById('videoTitle').value.trim();
+  const isLong = document.getElementById('videoType').value;
+
+  if (!file || !title) {
+    showStatus('Please select a video file and enter a title.', 'error');
+    return;
+  }
+
+  // UI Setup
+  uploadBtn.disabled = true;
+  uploadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+  progressContainer.style.display = 'block';
+  progressBar.style.width = '20%';
+  showStatus('Uploading video to Cloudflare R2 Storage (vid.rorraxy.com)...', '');
+
+  try {
+    // Step A: Upload Video File to R2 Storage (/api/upload?type=video)
+    const arrayBuffer = await file.arrayBuffer();
+    
+    progressBar.style.width = '50%';
+
+    const r2Response = await fetch('/api/upload?type=video', {
+      method: 'POST',
+      headers: {
+        'Content-Type': file.type || 'video/mp4',
+        'X-File-Name': file.name
+      },
+      body: arrayBuffer
+    });
+
+    const r2Data = await r2Response.json();
+
+    if (!r2Data.success) {
+      throw new Error(r2Data.error || 'Failed to upload video to R2');
+    }
+
+    const videoUrl = r2Data.url; // Generated vid.rorraxy.com link
+    progressBar.style.width = '80%';
+    showStatus('Saving video metadata to retail D1 database...', '');
+
+    // Step B: Save Video metadata to Cloudflare D1 Database 'retail' (/api/shorts)
+    const dbResponse = await fetch('/api/shorts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: title,
+        video_url: videoUrl,
+        thumbnail_url: '',
+        is_long: parseInt(isLong)
+      })
+    });
+
+    const dbData = await dbResponse.json();
+
+    if (!dbData.success) {
+      throw new Error(dbData.error || 'Failed to save to database');
+    }
+
+    // Step C: Success Output
+    progressBar.style.width = '100%';
+    showStatus('Video uploaded & connected to ecosystem successfully!', 'success');
+    
+    setTimeout(() => {
+      window.location.href = '/index.html#shorts';
+    }, 1500);
+
+  } catch (err) {
+    showStatus('Upload Error: ' + err.message, 'error');
+    progressBar.style.width = '0%';
+  } finally {
+    uploadBtn.disabled = false;
+    uploadBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Upload to Ecosystem';
+  }
+});
+
+function showStatus(msg, type) {
+  statusMsg.textContent = msg;
+  statusMsg.className = 'status-msg ' + type;
+}
+</script>
+</body>
+</html>
