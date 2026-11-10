@@ -181,7 +181,7 @@
             display: flex; align-items: center; justify-content: center; padding: 2px;
         }
 
-        /* Fixed Bottom Checkout Bar (3 Visible Menus) */
+        /* Fixed Bottom Checkout Bar */
         .fixed-bottom-checkout-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px; 
@@ -220,23 +220,6 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.4); }
             100% { transform: scale(1); }
-        }
-
-        /* Clean Full Screen card.html Toggle Overlay (No Top Bars) */
-        .cart-page-iframe-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000000; z-index: 1000000; flex-direction: column;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        .cart-page-iframe-overlay.active { display: flex; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .cart-iframe-element {
-            width: 100%; height: 100vh; border: none; background: #000;
         }
 
         .flying-gold-coin {
@@ -333,9 +316,9 @@
 
     </div>
 
-    <!-- স্থায়ী ফিক্সড বটম ফুটার বার (তিনটি মেনুই একসাথে দৃশ্যমান) -->
+    <!-- স্থায়ী ফিক্সড বটম ফুটার বার -->
     <div class="fixed-bottom-checkout-bar">
-        <a href="/wholesale/" class="footer-menu-item">
+        <a href="./index.html" class="footer-menu-item">
             <i class="fa-solid fa-house footer-menu-icon"></i>
             <span class="footer-menu-label">HOME</span>
         </a>
@@ -344,19 +327,14 @@
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
 
-        <!-- কার্ট মেনু: ক্লিক করলে card.html পেজ অন হবে, পুনরায় ক্লিক করলে অফ হয়ে যাবে -->
-        <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="toggleCartPage()">
+        <!-- কার্ট মেনু: ক্লিক করলে সরাসরি wholesale/card.html পেজে যাবে -->
+        <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
             <div class="footer-cart-icon-wrapper">
                 <i class="fa-solid fa-cart-shopping footer-menu-icon"></i>
                 <span class="footer-cart-badge" id="footerCartItemCountBadge">0</span>
             </div>
             <span class="footer-menu-label">CART</span>
         </button>
-    </div>
-
-    <!-- সরাসরি card.html পেজ লোড করার ওভারলে -->
-    <div class="cart-page-iframe-overlay" id="cartPageIframeOverlay">
-        <iframe src="./card.html" class="cart-iframe-element" id="cartPageIframe"></iframe>
     </div>
 
     <!-- সেলার চ্যাট মডাল -->
@@ -749,10 +727,7 @@
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            
-            // ব্যবহারকারী বর্তমানে যে ভেরিয়েন্ট বা থাম্বনেইল সিলেক্ট করেছেন তা কার্টে প্রপারলি সেভ করা হবে
             let finalImgUrl = selectedProductColorImage || document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
-            
             let activeAffId = getActiveAffiliateId();
 
             let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
@@ -778,35 +753,20 @@
             localStorage.setItem(cartKey, JSON.stringify(cart));
             updateCartBadgeCount();
 
-            // গোল্ডেন ফ্লাইং অ্যানিমেশন শেষে রিডাইরেক্ট না হয়ে সরাসরি সুন্দরভাবে কার্ড পেজ ওভারলে চালু হবে
-            triggerCoinDropAnimation(event, () => {
-                openCartPage();
-            });
+            // ১. সুন্দর গোল্ডেন কয়েন অ্যানিমেশন ঝুড়িতে গিয়ে পড়বে
+            // ২. কার্ট ব্যাজ আপডেট হবে
+            // ৩. কাস্টমার প্রোডাক্ট ডিটেইলস পেজেই অবস্থান করবে (কার্ট পেজে অটো-রিডাইরেক্ট হবে না)
+            triggerCoinDropAnimation(event);
         }
 
-        function openCartPage() {
-            const overlay = document.getElementById('cartPageIframeOverlay');
-            const iframe = document.getElementById('cartPageIframe');
-            if (iframe) {
-                // সঠিক কার্ট পেজ পাথ (wholesale ফোল্ডারের সাপেক্ষে) সেট করা
-                const targetSrc = window.location.pathname.includes('/wholesale/') ? 'card.html' : '/wholesale/card.html';
-                if (!iframe.src.endsWith('card.html')) {
-                    iframe.src = targetSrc;
-                } else {
-                    try { iframe.contentWindow.location.reload(); } catch(e) { iframe.src = targetSrc; }
-                }
-            }
-            if (overlay) overlay.classList.add('active');
-        }
-
-        function toggleCartPage() {
-            const overlay = document.getElementById('cartPageIframeOverlay');
-            if (overlay) {
-                if (overlay.classList.contains('active')) {
-                    overlay.classList.remove('active');
-                } else {
-                    openCartPage();
-                }
+        function redirectToCartPage() {
+            // কাস্টমার নিচ থেকে "CART" বাটনে ক্লিক করলে সরাসরি হোলসেল ফোল্ডারের card.html পেজে নিয়ে যাবে
+            let currentUrl = window.location.href;
+            if (currentUrl.includes('/wholesale/')) {
+                let wholesaleBase = currentUrl.substring(0, currentUrl.indexOf('/wholesale/') + 11);
+                window.location.href = wholesaleBase + 'card.html';
+            } else {
+                window.location.href = 'card.html';
             }
         }
 
