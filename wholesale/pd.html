@@ -354,9 +354,9 @@
         </button>
     </div>
 
-    <!-- সরাসরি /wholesale/product wholesale/card.html (বা /wholesale/card.html) পেজ লোড করার ওভারলে -->
+    <!-- সরাসরি card.html পেজ লোড করার ওভারলে -->
     <div class="cart-page-iframe-overlay" id="cartPageIframeOverlay">
-        <iframe src="/wholesale/card.html" class="cart-iframe-element" id="cartPageIframe"></iframe>
+        <iframe src="./card.html" class="cart-iframe-element" id="cartPageIframe"></iframe>
     </div>
 
     <!-- সেলার চ্যাট মডাল -->
@@ -787,8 +787,14 @@
         function openCartPage() {
             const overlay = document.getElementById('cartPageIframeOverlay');
             const iframe = document.getElementById('cartPageIframe');
-            if (iframe && iframe.contentWindow) {
-                iframe.src = iframe.src; // Reload iframe to show latest cart items
+            if (iframe) {
+                // সঠিক কার্ট পেজ পাথ (wholesale ফোল্ডারের সাপেক্ষে) সেট করা
+                const targetSrc = window.location.pathname.includes('/wholesale/') ? 'card.html' : '/wholesale/card.html';
+                if (!iframe.src.endsWith('card.html')) {
+                    iframe.src = targetSrc;
+                } else {
+                    try { iframe.contentWindow.location.reload(); } catch(e) { iframe.src = targetSrc; }
+                }
             }
             if (overlay) overlay.classList.add('active');
         }
