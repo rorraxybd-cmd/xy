@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>rorraxy - Wholesale B2B Checkout</title>
+    <title>rorraxy - Wholesale Checkout</title>
     
-    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
     <script src="/ecosystem-core.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- intl-tel-input CSS & JS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
@@ -32,7 +30,7 @@
             --input-bg: #14141d;
         }
 
-        * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; word-break: break-word; }
         
         html, body {
             width: 100%; max-width: 100%; background: var(--bg-retail) !important; color: var(--text-white);
@@ -45,94 +43,67 @@
         }
 
         .cart-brand-logo {
-            width: 105px; height: auto; object-fit: contain; margin: 0 auto; display: block;
-            filter: none !important;
+            width: 105px; height: auto; object-fit: contain; margin: 0 auto; display: block; filter: none !important;
         }
 
-        .cart-items-box {
-            background: var(--card-bg); border-radius: 14px; padding: 12px; width: 100%;
-            display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto;
-            border: none !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-        .cart-row-item { 
-            display: flex; align-items: center; justify-content: space-between; background: #12121a; padding: 8px 10px; border-radius: 10px; gap: 8px;
-            border: none !important;
-        }
-        .cart-img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; background: #000; flex-shrink: 0; }
-
-        .summary-card-box {
-            width: 100%; background: var(--card-bg); padding: 14px; border-radius: 12px;
-            display: flex; flex-direction: column; gap: 8px; border: none !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-        .summary-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 0.74rem; font-weight: 600; color: var(--text-gray); }
-
-        .address-form-section {
+        .address-form-section, .summary-card-box {
             display: flex; background: var(--card-bg); border-radius: 16px; padding: 16px 14px; flex-direction: column; gap: 12px; 
-            border: none !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); width: 100%;
         }
-        .section-center-header { text-align: center; border-bottom: none !important; padding-bottom: 8px; }
-        .section-center-header h2 { font-size: 0.84rem; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 6px; color: #fff; }
+        .section-center-header { text-align: center; padding-bottom: 2px; width: 100%; }
+        .section-center-header h2 { font-size: 0.82rem; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 6px; color: #fff; max-width: 100%; text-overflow: ellipsis; }
 
-        .luxury-form-label { font-size: 0.64rem; color: #ffffff !important; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+        .luxury-form-label { font-size: 0.62rem; color: #ffffff !important; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
         .luxury-form-input {
             background: var(--input-bg) !important; border: none !important; 
             padding: 11px 12px !important; border-radius: 9px !important; color: #ffffff !important; 
             font-size: 0.82rem !important; font-family: var(--font-main) !important; width: 100% !important; outline: none !important;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
-        .luxury-form-input:focus { border: none !important; box-shadow: 0 0 10px rgba(212,175,55,0.2), inset 0 1px 3px rgba(0,0,0,0.3) !important; background: #181824 !important; }
-        .luxury-form-input.input-error { border: none !important; box-shadow: 0 0 8px rgba(255, 59, 48, 0.6) !important; }
+        .luxury-form-input:focus { box-shadow: 0 0 10px rgba(212,175,55,0.2), inset 0 1px 3px rgba(0,0,0,0.3) !important; background: #181824 !important; }
+        .luxury-form-input.input-error { box-shadow: 0 0 8px rgba(255, 59, 48, 0.6) !important; }
 
-        .phone-check-container { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-        .phone-input-row { display: flex; gap: 8px; align-items: center; width: 100%; }
-        .phone-field-wrapper { flex: 1; position: relative; width: 100%; min-width: 0; }
-
-        .btn-saved-address {
-            background: var(--gold-gradient); color: #000000; border: none !important; padding: 0 12px; height: 42px;
-            border-radius: 9px; font-weight: 800; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; gap: 5px; font-size: 0.58rem; flex-shrink: 0;
-            white-space: nowrap; font-family: var(--font-main); letter-spacing: 0.3px;
-        }
-        .btn-saved-address.active-found { background: var(--green-gradient) !important; color: #ffffff !important; }
-
-        .iti { width: 100% !important; }
+        .iti { width: 100% !important; display: block; }
         .iti__selected-flag { background-color: rgba(255, 255, 255, 0.05) !important; border-radius: 9px 0 0 9px !important; border-right: none !important; }
         .iti input[type="tel"] { padding-left: 88px !important; width: 100% !important; color: #ffffff !important; }
         .iti__country-list { 
             background-color: #0b0b10 !important; border: none !important; box-shadow: 0 8px 25px rgba(0,0,0,0.8) !important;
-            color: #ffffff !important; text-transform: none !important; max-height: 200px !important; width: 260px !important; z-index: 99999 !important;
+            color: #ffffff !important; text-transform: none !important; max-height: 220px !important; width: 280px !important; z-index: 99999 !important;
             border-radius: 9px;
         }
-        .iti__country { padding: 8px 10px; }
+        .iti__country { padding: 9px 10px; }
         .iti__country:hover { background-color: rgba(212, 175, 55, 0.15) !important; }
         .iti__selected-dial-code { color: #ffffff !important; font-weight: 700; }
 
-        .saved-history-container {
-            display: none; flex-direction: column; gap: 6px; background: #12121a; padding: 8px; border-radius: 9px;
-            border: none !important; margin-top: 4px; box-shadow: 0 2px 10px rgba(0,230,118,0.15);
+        .save-address-checkbox-row {
+            display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text-white); font-weight: 600; cursor: pointer; margin-top: 4px;
         }
-        .history-title { font-size: 0.6rem; color: #00e676; font-weight: 700; text-transform: uppercase !important; }
-
-        .address-card-item {
-            background: #181824; border: none !important; padding: 6px 8px; border-radius: 7px;
-            cursor: pointer; display: flex; flex-direction: column; gap: 2px;
-            transition: background 0.2s ease;
+        .save-address-checkbox-row input[type="checkbox"] {
+            width: 16px; height: 16px; accent-color: var(--gold-solid); cursor: pointer; flex-shrink: 0;
         }
-        .address-card-item:hover, .address-card-item.selected-card { border: none !important; background: #18241c; box-shadow: 0 2px 8px rgba(0,230,118,0.2); }
-        .address-card-name { font-size: 0.72rem; font-weight: 700; color: #fff; }
-        .address-card-text { font-size: 0.64rem; color: var(--text-gray); text-transform: none !important; line-height: 1.3; }
 
-        .or-divider {
-            display: flex; align-items: center; text-align: center; margin: 2px 0; color: var(--text-gray); font-size: 0.58rem; font-weight: 700;
+        .cart-items-box {
+            background: var(--card-bg); border-radius: 16px; padding: 14px; width: 100%;
+            display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
-        .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent); border: none !important; }
-        .or-divider span { padding: 0 8px; color: var(--gold-solid); }
+        .cart-row-item { 
+            display: flex; align-items: center; justify-content: space-between; background: #12121a; padding: 10px; border-radius: 10px; gap: 8px; width: 100%;
+        }
+        .cart-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; background: #000; flex-shrink: 0; }
 
-        #step2PaymentSection { display: none; flex-direction: column; gap: 14px; animation: fadeIn 0.3s ease-in-out; }
+        .details-toggle-btn {
+            background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); color: var(--gold-solid);
+            padding: 3px 6px; border-radius: 6px; font-size: 0.52rem; font-weight: 700; cursor: pointer; margin-top: 3px; display: inline-block;
+        }
+        .product-extended-details {
+            display: none; font-size: 0.6rem; color: var(--text-gray); text-transform: none !important; margin-top: 4px; line-height: 1.4;
+            background: #0b0b10; padding: 6px; border-radius: 6px; border-left: 2px solid var(--gold-solid);
+        }
+
+        .summary-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 0.74rem; font-weight: 600; color: var(--text-gray); gap: 10px; }
+
+        #step2PaymentSection { display: none; flex-direction: column; gap: 14px; animation: fadeIn 0.3s ease-in-out; width: 100%; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
@@ -140,66 +111,58 @@
         }
 
         .payment-accordion-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-
         .payment-method-item {
-            background: rgba(18, 18, 26, 0.8); border: none !important;
-            border-radius: 14px; overflow: hidden; transition: all 0.2s ease; cursor: pointer; width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: rgba(18, 18, 26, 0.85); border-radius: 14px; overflow: hidden; cursor: pointer; width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease;
         }
-        .payment-method-item.active { border: none !important; background: rgba(24, 24, 36, 0.98); box-shadow: 0 0 16px rgba(212,175,55,0.2); }
-        .payment-method-header { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-        .payment-method-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; font-weight: 800; color: #fff; }
+        .payment-method-item.active { border-color: var(--gold-solid); background: rgba(24, 24, 36, 0.98); box-shadow: 0 0 18px rgba(212,175,55,0.25); }
+        .payment-method-header { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .payment-method-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; font-weight: 800; color: #fff; gap: 8px; }
 
-        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.1s; }
-        .badge-global-gold:active { transform: scale(0.95); }
-        .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; }
+        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
+        .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; }
 
-        .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
-        .payout-badge {
-            display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.07); padding: 5px 9px; border-radius: 7px;
-            font-size: 0.65rem; font-weight: 700; color: #ffffff; border: none !important; text-transform: none !important;
+        .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; width: 100%; }
+        
+        /* Premium Vector/SVG Brand Badges */
+        .svg-payout-card {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: #ffffff; padding: 4px 10px; border-radius: 6px; height: 32px; min-width: 52px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
         }
-        .payout-badge i { font-size: 0.9rem; }
+        .svg-payout-card svg, .svg-payout-card img { height: 18px; width: auto; max-width: 48px; object-fit: contain; }
 
-        /* CURRENCIES MODAL OVERLAY */
         #currenciesModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
             z-index: 99999999; display: none; align-items: center; justify-content: center; padding: 15px;
         }
         .modal-content-box {
-            background: #0f0f18; border: none !important; border-radius: 16px; width: 100%; max-width: 440px;
+            background: #0f0f18; border-radius: 16px; width: 100%; max-width: 440px;
             padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 35px rgba(0,0,0,0.9);
         }
         .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
-        .currency-tag { background: #181824; border: none !important; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
+        .currency-tag { background: #181824; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
 
         .single-fixed-checkout-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
-            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            padding: 10px 12px; display: flex; justify-content: center; align-items: center; gap: 8px;
-            border-top: none !important; box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px);
+            padding: 12px 16px; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.6); width: 100%;
         }
         .btn-action-main {
             background: var(--gold-gradient); color: #000000; font-weight: 800; font-size: 0.84rem;
-            padding: 12px 16px; border-radius: 22px; border: none !important; display: flex; align-items: center;
-            justify-content: center; gap: 8px; cursor: pointer; letter-spacing: 0.6px; width: 100%; max-width: 400px;
-            font-family: var(--font-main); box-shadow: 0 4px 15px rgba(212,175,55,0.25);
+            padding: 13px 20px; border-radius: 24px; border: none !important; display: flex; align-items: center;
+            justify-content: center; gap: 8px; cursor: pointer; letter-spacing: 0.8px; width: 100%; max-width: 420px;
+            font-family: var(--font-main); box-shadow: 0 4px 18px rgba(212,175,55,0.3); text-align: center;
         }
-        .btn-action-main:active { transform: scale(0.97); }
-
-        .btn-back-step {
-            background: rgba(255, 255, 255, 0.1); color: #ffffff; font-weight: 700; font-size: 0.72rem;
-            padding: 12px 16px; border-radius: 22px; border: none !important;
-            display: none; align-items: center; justify-content: center; gap: 5px; cursor: pointer; flex-shrink: 0;
-            font-family: var(--font-main);
-        }
+        .btn-action-main:active { transform: scale(0.98); }
 
         .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
         .gold-gradient-price { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
 
         #toastBox {
             position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%); background: #181824; color: #ffffff; padding: 9px 16px;
-            border-radius: 8px; border: none !important; z-index: 9999999; display: none; font-size: 0.72rem; font-weight: 700; text-transform: none !important; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            border-radius: 8px; z-index: 9999999; display: none; font-size: 0.72rem; font-weight: 700; text-transform: none !important; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
     </style>
 </head>
@@ -207,17 +170,17 @@
 
     <div id="toastBox"></div>
 
-    <!-- 150+ CURRENCIES POPUP MODAL -->
+    <!-- 150+ CURRENCIES MODAL -->
     <div id="currenciesModal">
         <div class="modal-content-box">
             <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px;">
                 <h3 class="gold-gradient-text" style="font-size:0.85rem;"><i class="fa-solid fa-globe"></i> SUPPORTED CURRENCIES (150+)</h3>
                 <button type="button" onclick="closeCurrenciesModal()" style="background:none; border:none; color:#ff3b30; font-size:1rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div style="font-size:0.680rem; color:var(--text-gray); text-transform:none !important; line-height:1.4;">
+            <div style="font-size:0.68rem; color:var(--text-gray); text-transform:none !important; line-height:1.4;">
                 Our global gateway automatically accepts over 150+ international currencies with real-time conversion rates:
             </div>
-            <div class="currency-grid" id="currencyGridList">
+            <div class="currency-grid">
                 <div class="currency-tag">USD ($)</div>
                 <div class="currency-tag">EUR (€)</div>
                 <div class="currency-tag">GBP (£)</div>
@@ -228,15 +191,7 @@
                 <div class="currency-tag">SAR (ر.س)</div>
                 <div class="currency-tag">INR (₹)</div>
                 <div class="currency-tag">MYR (RM)</div>
-                <div class="currency-tag">JPY (¥)</div>
-                <div class="currency-tag">CNY (¥)</div>
-                <div class="currency-tag">CHF (Fr)</div>
-                <div class="currency-tag">SEK (kr)</div>
-                <div class="currency-tag">NZD ($)</div>
-                <div class="currency-tag">QAR (ر.ق)</div>
-                <div class="currency-tag">KWD (د.ك)</div>
-                <div class="currency-tag">BHD (د.ب)</div>
-                <div class="currency-tag">+ 130 MORE</div>
+                <div class="currency-tag">+ 140 MORE</div>
             </div>
             <button type="button" onclick="closeCurrenciesModal()" style="background:var(--gold-gradient); color:#000; border:none; padding:10px; border-radius:8px; font-weight:800; font-size:0.75rem; cursor:pointer; margin-top:4px;">CLOSE WINDOW</button>
         </div>
@@ -244,26 +199,25 @@
 
     <div class="checkout-container">
         
-        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center;">
+        <!-- ব্র্যান্ড লোগো এবং রিভিউ কার্ট প্রোডাক্ট হেডার -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; width:100%;">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy Logo" class="cart-brand-logo">
-            <h1 style="font-size:0.9rem; font-weight:800; color:#ffffff; letter-spacing: 1.5px;">RORRAXY WHOLESALE</h1>
+            <h2 class="gold-gradient-text" style="font-size: 0.85rem; letter-spacing: 1.2px;"><i class="fa-solid fa-cart-shopping"></i> REVIEW CART PRODUCTS</h2>
         </div>
 
-        <!-- STEP 1: CART & B2B ADDRESS -->
-        <div id="step1CartSection" style="display:flex; flex-direction:column; gap:14px;">
-            
-            <div style="text-align: center;">
-                <h2 class="gold-gradient-text" style="font-size: 0.82rem; letter-spacing: 1px;"><i class="fa-solid fa-boxes-stacked"></i> B2B WHOLESALE CART & CHECKOUT</h2>
-            </div>
+        <!-- STEP 1: CART REVIEW & SHIPPING ADDRESS -->
+        <div id="step1CartSection" style="display:flex; flex-direction:column; gap:14px; width:100%;">
 
+            <!-- কার্ট আইটেম বক্স -->
             <div id="cartItemsListContainer" class="cart-items-box"></div>
 
+            <!-- রিয়েল-টাইম কারেন্সি ক্যালকুলেশন ও টোটাল অ্যামাউন্ট বক্স -->
             <div class="summary-card-box">
                 <div class="summary-row">
                     <span style="font-weight:700; color:var(--text-gray);">TOTAL QUANTITY:</span>
                     <span id="cartTotalQty" style="font-weight:800; color:var(--gold-solid);">0 UNITS</span>
                 </div>
-                <div style="height: 1px; background: rgba(255,255,255,0.06); margin: 2px 0;"></div>
+                <div style="height: 1px; background: rgba(255,255,255,0.06); margin: 2px 0; width:100%;"></div>
                 <div class="summary-row">
                     <span style="font-weight:700; color:var(--text-gray);">TOTAL AMOUNT:</span>
                     <div style="text-align:right;">
@@ -273,67 +227,53 @@
                 </div>
             </div>
 
+            <!-- শিপিং অ্যাড্রেস ফরম -->
             <div id="addressFormSection" class="address-form-section">
                 <div class="section-center-header">
                     <h2 class="gold-gradient-text">
-                        <i class="fa-solid fa-building" style="color: var(--gold-solid);"></i> B2B SHIPPING & COMPANY DETAILS
+                        <i class="fa-solid fa-location-dot" style="color: var(--gold-solid);"></i> SHIPPING ADDRESS
                     </h2>
                 </div>
                 
-                <form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex; flex-direction:column; gap:10px;">
+                <form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex; flex-direction:column; gap:10px; width:100%;">
                     
-                    <div style="display:flex; flex-direction:column;">
-                        <label class="luxury-form-label">COMPANY / BUSINESS NAME <span style="color:var(--danger-red);">*</span></label>
-                        <input type="text" id="chkCompanyName" class="luxury-form-input" placeholder="e.g. RORRAXY GLOBAL LTD">
-                    </div>
-
-                    <div class="phone-check-container">
+                    <div class="form-group" style="display:flex; flex-direction:column; gap:6px; width:100%;">
                         <label class="luxury-form-label">WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
-                        <div class="phone-input-row">
-                            <div class="phone-field-wrapper">
-                                <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="1332008886">
-                            </div>
-                            <button type="button" id="savedAddrBtn" class="btn-saved-address">
-                                <i class="fa-solid fa-magnifying-glass"></i> PAST ADDRESS
-                            </button>
-                        </div>
+                        <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="Enter mobile number">
                     </div>
 
-                    <div id="savedHistoryContainer" class="saved-history-container">
-                        <div class="history-title"><i class="fa-solid fa-check-circle"></i> PAST ADDRESS FOUND (TAP TO SELECT):</div>
-                        <div id="savedCardsList" style="display:flex; flex-direction:column; gap:5px;"></div>
-                    </div>
-
-                    <div class="or-divider"><span>OR FILL ADDRESS BELOW</span></div>
-
-                    <div style="display:flex; flex-direction:column;">
+                    <div style="display:flex; flex-direction:column; width:100%;">
                         <label class="luxury-form-label">FULL NAME <span style="color:var(--danger-red);">*</span></label>
                         <input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN">
                     </div>
 
-                    <div style="display:flex; flex-direction:column;">
-                        <label class="luxury-form-label">WAREHOUSE / SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label>
-                        <textarea id="chkAddress" class="luxury-form-input" placeholder="Warehouse, Street, City, Postal Code" rows="3" style="resize:none;"></textarea>
+                    <div style="display:flex; flex-direction:column; width:100%;">
+                        <label class="luxury-form-label">SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label>
+                        <textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="2" style="resize:none;"></textarea>
                     </div>
+
+                    <label class="save-address-checkbox-row">
+                        <input type="checkbox" id="saveAddressCheckbox" checked> Save my info for easy future purchases
+                    </label>
 
                 </form>
             </div>
 
         </div>
 
-        <!-- STEP 2: PAYMENT METHOD & FINAL CONFIRMATION -->
+        <!-- STEP 2: PAYMENT METHOD & CONFIRMATION -->
         <div id="step2PaymentSection">
             
             <div class="address-form-section">
                 <div class="section-center-header">
                     <h2 class="gold-gradient-text">
-                        <i class="fa-solid fa-shield-halved" style="color: var(--gold-solid);"></i> SELECT B2B PAYMENT METHOD
+                        <i class="fa-solid fa-shield-halved" style="color: var(--gold-solid);"></i> SELECT PAYMENT METHOD
                     </h2>
                 </div>
 
                 <div class="payment-accordion-group">
 
-                    <!-- INTERNATIONAL CARDS -->
+                    <!-- INTERNATIONAL CARDS WITH ACCURATE SVG LOGOS -->
                     <div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
@@ -341,30 +281,53 @@
                                 <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="payout-icons-row">
-                                <span class="payout-badge"><i class="fa-brands fa-cc-visa" style="color:#60a5fa;"></i> VISA</span>
-                                <span class="payout-badge"><i class="fa-brands fa-cc-mastercard" style="color:#f97316;"></i> MASTERCARD</span>
-                                <span class="payout-badge"><i class="fa-brands fa-cc-amex" style="color:#38bdf8;"></i> AMEX</span>
-                                <span class="payout-badge"><i class="fa-brands fa-cc-discover" style="color:#fbbf24;"></i> DISCOVER</span>
-                                <span class="payout-badge"><i class="fa-brands fa-apple-pay" style="color:#fff;"></i> APPLE PAY</span>
-                                <span class="payout-badge"><i class="fa-brands fa-google-pay" style="color:#ef4444;"></i> G PAY</span>
+                                <!-- VISA SVG -->
+                                <div class="svg-payout-card" title="VISA">
+                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#1A1F71" d="M47.2 32.5h-7.6l4.8-23.7h7.6l-4.8 23.7zm28.3-23.1c-1.5-.6-3.8-1.2-6.7-1.2-7.4 0-12.6 3.7-12.6 9 0 3.9 3.7 6.1 6.5 7.4 2.9 1.4 3.9 2.3 3.9 3.5 0 1.9-2.4 2.8-4.6 2.8-3.1 0-4.8-.4-7.4-1.5l-1 .5 1.1 5.3c2.2.9 5.8 1.6 9.4 1.6 7.9 0 13-3.7 13-9.5 0-3.2-2-5.6-6.4-7.6-2.7-1.3-4.3-2.2-4.3-3.5 0-1.2 1.4-2.4 4.4-2.4 2.5 0 4.3.5 5.7 1.1l.7.3 1.1-5.3zm20.8-0.6h-5.9c-1.8 0-3.2.5-4 2.3l-11.3 21.4h8l1.6-4.2h9.8l0.9 4.2h7l-6.1-23.7zm-8.8 14.2l3.2-8.3 1.8 8.3h-5zm-55.9-14.2l-7.4 16.2-0.8-3.9c-1.4-4.5-5.7-9.4-10.5-11.8l6.8 23.2h8l11.9-23.7h-8z"/>
+                                        <path fill="#F7B600" d="M18.8 8.8h-12c-1.3 0-2.4.8-2.8 2l-7 21.7h8l1.6-4.2h9.8"/>
+                                    </svg>
+                                </div>
+                                <!-- MASTERCARD SVG -->
+                                <div class="svg-payout-card" title="MasterCard">
+                                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="35" cy="30" r="22" fill="#EB001B"/>
+                                        <circle cx="65" cy="30" r="22" fill="#F79E1B"/>
+                                        <path fill="#FF5F00" d="M50 13.8a21.9 21.9 0 0 0-8.2 16.2A21.9 21.9 0 0 0 50 46.2a21.9 21.9 0 0 0 8.2-16.2A21.9 21.9 0 0 0 50 13.8z"/>
+                                    </svg>
+                                </div>
+                                <!-- AMEX SVG -->
+                                <div class="svg-payout-card" style="background:#006FCF;" title="American Express">
+                                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M12 20h8l3 6 3-6h8v20h-7v-12l-4 8h-2l-4-8v12h-5V20zm30 0h14v4.5H47v3h8v4.5h-8v3.5h10V40H42V20zm16 0h6l4 7 4-7h6v20h-5v-12l-5 12h-1l-5-12v12h-4V20z"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- BANGLADESH CARDS -->
+                    <!-- BANGLADESH LOCAL CARDS & MOBILE WALLETS (BKASH, NAGAD) -->
                     <div class="payment-method-item" id="method-bd" onclick="selectPaymentMethod('Bangladesh Cards', 'method-bd')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
-                                <span><i class="fa-solid fa-building-columns" style="color:#3b82f6; margin-right:6px;"></i> BANGLADESH CARDS</span>
+                                <span><i class="fa-solid fa-building-columns" style="color:#3b82f6; margin-right:6px;"></i> BANGLADESH CARDS & MOBILE BANKING</span>
                                 <span class="badge-local-bd">BDT PAYMENT</span>
                             </div>
                             <div class="payout-icons-row">
-                                <span class="payout-badge" style="color:#f43f5e; font-weight:800;"><i class="fa-solid fa-mobile-screen"></i> bKash</span>
-                                <span class="payout-badge" style="color:#fb923c; font-weight:800;"><i class="fa-solid fa-wallet"></i> Nagad</span>
-                                <span class="payout-badge" style="color:#c084fc; font-weight:800;"><i class="fa-solid fa-rocket"></i> Rocket</span>
-                                <span class="payout-badge"><i class="fa-brands fa-cc-visa" style="color:#60a5fa;"></i> Local Visa</span>
-                                <span class="payout-badge"><i class="fa-brands fa-cc-mastercard" style="color:#f97316;"></i> Mastercard</span>
-                                <span class="payout-badge"><i class="fa-solid fa-money-check-dollar"></i> Net Banking</span>
+                                <!-- BKASH SVG -->
+                                <div class="svg-payout-card" style="background:#e2136e;" title="bKash">
+                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M22 6l16 14-16 14V6zm-4 0L2 20l16 14V6zm20 14l16-14v28l-16-14z"/>
+                                        <text x="58" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">bKash</text>
+                                    </svg>
+                                </div>
+                                <!-- NAGAD SVG -->
+                                <div class="svg-payout-card" style="background:#f7931e;" title="Nagad">
+                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M12 8c6 0 10 4 10 10s-4 10-10 10S2 24 2 18 6 8 12 8zm0 4a6 6 0 100 12 6 6 0 000-12z"/>
+                                        <text x="32" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">NAGAD</text>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -381,7 +344,7 @@
                     <span>SHIPPING:</span>
                     <span style="color:#00e676; font-weight:800;">FREE</span>
                 </div>
-                <div style="height:1px; background:rgba(255,255,255,0.06); margin: 3px 0;"></div>
+                <div style="height:1px; background:rgba(255,255,255,0.06); margin: 3px 0; width:100%;"></div>
                 <div class="summary-row" style="align-items: center;">
                     <span style="font-size:0.78rem; font-weight:800; color:var(--gold-solid);">TOTAL PAYABLE:</span>
                     <span id="summaryTotalDisplay" class="gold-gradient-price" style="font-size:0.92rem; text-align:right;">$0.00 USD</span>
@@ -392,12 +355,10 @@
 
     </div>
 
+    <!-- MAIN ACTION BUTTON -->
     <div class="single-fixed-checkout-wrapper">
-        <button type="button" id="backStepBtn" class="btn-back-step" onclick="goToStep(1)">
-            <i class="fa-solid fa-arrow-left"></i> BACK
-        </button>
         <button type="button" id="mainCheckoutBtn" class="btn-action-main">
-            PROCEED TO PAYMENT <i class="fa-solid fa-arrow-right" style="color:#000;"></i>
+            PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>
         </button>
     </div>
 
@@ -405,7 +366,6 @@
         const API_BASE_URL = '';
         let iti;
         let currentStep = 1;
-        let matchedSavedAddresses = [];
         let currentExchangeRate = 120;
         let currentCurrencyCode = "BDT";
         let currentCountryFlag = "🇧🇩";
@@ -414,41 +374,25 @@
         window.addEventListener('DOMContentLoaded', () => {
             renderCartList();
             initIntlPhoneInput();
-            detectUserLocationAndCurrency();
+            detectUserLocationAndRealtimeCurrency();
+            loadSavedAddressToForm();
 
-            document.getElementById('savedAddrBtn').addEventListener('click', searchSavedAddressFromLocalStorage);
             document.getElementById('mainCheckoutBtn').addEventListener('click', handleMainActionButton);
 
             const phoneInput = document.getElementById('chkPhone');
             phoneInput.addEventListener('input', (e) => {
                 e.target.value = e.target.value.replace(/\D/g, ''); 
                 clearError('chkPhone');
-                resetSearchBtnState();
             });
 
-            ['chkCompanyName', 'chkFullName', 'chkAddress'].forEach(id => {
+            ['chkFullName', 'chkAddress'].forEach(id => {
                 document.getElementById(id).addEventListener('input', () => clearError(id));
             });
         });
 
-        function openCurrenciesModal() {
-            document.getElementById('currenciesModal').style.display = 'flex';
-        }
-
-        function closeCurrenciesModal() {
-            document.getElementById('currenciesModal').style.display = 'none';
-        }
-
-        function clearError(fieldId) {
-            document.getElementById(fieldId).classList.remove('input-error');
-        }
-
-        function resetSearchBtnState() {
-            const btn = document.getElementById('savedAddrBtn');
-            btn.classList.remove('active-found');
-            btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> PAST ADDRESS';
-            document.getElementById('savedHistoryContainer').style.display = 'none';
-        }
+        function openCurrenciesModal() { document.getElementById('currenciesModal').style.display = 'flex'; }
+        function closeCurrenciesModal() { document.getElementById('currenciesModal').style.display = 'none'; }
+        function clearError(fieldId) { document.getElementById(fieldId).classList.remove('input-error'); }
 
         function initIntlPhoneInput() {
             const phoneInput = document.querySelector("#chkPhone");
@@ -465,7 +409,17 @@
             });
         }
 
-        function detectUserLocationAndCurrency() {
+        function loadSavedAddressToForm() {
+            let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
+            if (saved.length > 0) {
+                let latest = saved[0];
+                if (latest.phone) document.getElementById('chkPhone').value = latest.phone;
+                if (latest.fullName) document.getElementById('chkFullName').value = latest.fullName;
+                if (latest.address) document.getElementById('chkAddress').value = latest.address;
+            }
+        }
+
+        function detectUserLocationAndRealtimeCurrency() {
             fetch('https://ipapi.co/json/')
                 .then(res => res.json())
                 .then(data => {
@@ -487,27 +441,22 @@
         }
 
         function getFlagEmoji(countryCode) {
-            const codePoints = countryCode
-                .toUpperCase()
-                .split('')
-                .map(char => 127397 + char.charCodeAt());
+            const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt());
             return String.fromCodePoint(...codePoints);
         }
 
-        function generateUniqueId(prefix) {
-            return prefix + '-' + Math.floor(100000 + Math.random() * 900000);
-        }
+        function generateUniqueId(prefix) { return prefix + '-' + Math.floor(100000 + Math.random() * 900000); }
 
         function renderCartList() {
-            let cartKey = 'rorraxy_wholesale_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             let container = document.getElementById('cartItemsListContainer');
             let totalValEl = document.getElementById('cartTotalVal');
             let localValEl = document.getElementById('cartLocalVal');
             let totalQtyEl = document.getElementById('cartTotalQty');
 
             if(cart.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-gray); text-align:center; font-size:0.72rem; padding:15px;">YOUR WHOLESALE CART IS EMPTY.</div>';
+                container.innerHTML = '<div style="color:var(--text-gray); text-align:center; font-size:0.72rem; padding:15px;">YOUR CART IS EMPTY.</div>';
                 totalValEl.innerText = "$0.00";
                 localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} 0.00`;
                 totalQtyEl.innerText = "0 UNITS";
@@ -523,26 +472,29 @@
                 totalAmt += itemTotal;
                 totalQty += item.qty;
 
-                if (!item.orderId) item.orderId = generateUniqueId('WS-ORD');
-                if (!item.sellerId) item.sellerId = item.seller || 'RRX-WHOLESALE-SELLER';
+                if (!item.orderId) item.orderId = generateUniqueId('ORD');
+                if (!item.trackingId) item.trackingId = generateUniqueId('TRK');
 
                 let itemImgUrl = item.img || item.image_url || item.imageUrl || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp';
-                let itemTitleText = item.title || item.product_title || 'Wholesale Item';
+                let itemTitleText = item.title || item.product_title || 'Product Item';
+                let itemDescText = item.description || item.desc || 'High quality global product item with secure warranty.';
 
                 html += `
                 <div class="cart-row-item">
                     <img src="${itemImgUrl}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
-                    <div style="flex:1; text-align:left; min-width:0;">
+                    <div style="flex:1; text-align:left; min-width:0; overflow:hidden;">
                         <div style="font-size:0.7rem; font-weight:700; color:#ffffff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${itemTitleText}</div>
-                        <div style="font-size:0.56rem; color:var(--gold-solid); font-weight:600; margin-top:1px;">BULK PACK</div>
+                        <div style="font-size:0.56rem; color:var(--gold-solid); font-weight:600; margin-top:1px;">SIZE: ${item.size || 'STANDARD'}</div>
+                        <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
+                        <div id="prodDetails-${index}" class="product-extended-details">${itemDescText}</div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
+                    <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
                         <button class="btn-qty-minus" data-index="${index}" style="background:var(--gold-gradient); border:none; color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; cursor:pointer;">-</button>
-                        <span style="font-size:0.7rem; font-weight:700; color:#ffffff;">${item.qty}</span>
+                        <span style="font-size:0.7rem; font-weight:700; color:#ffffff; width:16px; text-align:center;">${item.qty}</span>
                         <button class="btn-qty-plus" data-index="${index}" style="background:var(--gold-gradient); border:none; color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; cursor:pointer;">+</button>
                     </div>
-                    <div class="gold-gradient-price" style="font-size:0.78rem; flex-shrink:0;">$${itemTotal.toFixed(2)}</div>
-                    <button class="btn-qty-remove" data-index="${index}" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-size:0.8rem; padding:3px; flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button>
+                    <div class="gold-gradient-price" style="font-size:0.75rem; flex-shrink:0;">$${itemTotal.toFixed(2)}</div>
+                    <button class="btn-qty-remove" data-index="${index}" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-size:0.78rem; padding:2px; flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button>
                 </div>`;
 
                 return item;
@@ -563,17 +515,21 @@
             document.querySelectorAll('.btn-qty-remove').forEach(btn => btn.addEventListener('click', (e) => removeCartItem(e.currentTarget.dataset.index)));
         }
 
+        function toggleProductDetails(index) {
+            let box = document.getElementById(`prodDetails-${index}`);
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+
         function updateSummaryTotals(totalAmt) {
             let bdtVal = totalAmt * currentExchangeRate;
             let formattedText = `$${totalAmt.toFixed(2)} USD (${currentCurrencyCode} ${bdtVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
-            
             document.getElementById('summarySubtotal').innerText = `$${totalAmt.toFixed(2)} USD`;
             document.getElementById('summaryTotalDisplay').innerText = formattedText;
         }
 
         function changeQty(index, val) {
-            let cartKey = 'rorraxy_wholesale_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             cart[index].qty += val;
             if(cart[index].qty < 1) cart[index].qty = 1;
             localStorage.setItem(cartKey, JSON.stringify(cart));
@@ -581,132 +537,87 @@
         }
 
         function removeCartItem(index) {
-            let cartKey = 'rorraxy_wholesale_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             cart.splice(index, 1);
             localStorage.setItem(cartKey, JSON.stringify(cart));
             renderCartList();
         }
 
-        function searchSavedAddressFromLocalStorage() {
-            let phoneEl = document.getElementById('chkPhone');
-            let searchBtn = document.getElementById('savedAddrBtn');
-            let rawPhone = phoneEl.value.trim();
-            let fullPhoneNumber = iti ? iti.getNumber() : rawPhone;
-
-            if (!rawPhone || (iti && !iti.isValidNumber())) {
-                phoneEl.classList.add('input-error');
-                showToast("Please enter a valid complete mobile number!", true);
-                phoneEl.focus();
-                return;
-            }
-
-            phoneEl.classList.remove('input-error');
-
-            let savedData = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
-            let cleanEntered = fullPhoneNumber.replace(/\D/g, '');
-
-            matchedSavedAddresses = savedData.filter(item => {
-                let cleanSaved = (item.phone || '').replace(/\D/g, '');
-                return cleanSaved && (cleanSaved.includes(cleanEntered) || cleanEntered.includes(cleanSaved));
-            });
-
-            const historyContainer = document.getElementById('savedHistoryContainer');
-            const cardsList = document.getElementById('savedCardsList');
-
-            if (matchedSavedAddresses.length > 0) {
-                let cardsHtml = '';
-                matchedSavedAddresses.forEach((addr, idx) => {
-                    cardsHtml += `
-                    <div class="address-card-item ${idx === 0 ? 'selected-card' : ''}" data-card-idx="${idx}">
-                        <div class="address-card-name"><i class="fa-solid fa-user" style="color:#00e676;"></i> ${addr.fullName}</div>
-                        <div class="address-card-text"><i class="fa-solid fa-location-dot" style="color:#00e676;"></i> ${addr.address}</div>
-                        <div class="address-card-text" style="font-size:0.56rem; color:var(--gold-solid); margin-top:2px;"><i class="fa-solid fa-phone"></i> ${addr.phone}</div>
-                    </div>`;
-                });
-
-                cardsList.innerHTML = cardsHtml;
-                historyContainer.style.display = 'flex';
-
-                searchBtn.classList.add('active-found');
-                searchBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> PAST ADDRESS';
-
-                document.querySelectorAll('.address-card-item').forEach(card => {
-                    card.addEventListener('click', (e) => selectSavedCard(e.currentTarget.dataset.cardIdx, e.currentTarget));
-                });
-
-                selectSavedCard(0);
-                showToast(`Past address found for this number!`);
-
-            } else {
-                resetSearchBtnState();
-                showToast("No past address found for this number. Please fill details below.");
-            }
-        }
-
-        function selectSavedCard(index, elem) {
-            if (elem) {
-                document.querySelectorAll('.address-card-item').forEach(c => c.classList.remove('selected-card'));
-                elem.classList.add('selected-card');
-            }
-            if (matchedSavedAddresses[index]) {
-                let selected = matchedSavedAddresses[index];
-                document.getElementById('chkFullName').value = selected.fullName || '';
-                document.getElementById('chkAddress').value = selected.address || '';
-                clearError('chkFullName');
-                clearError('chkAddress');
-            }
-        }
-
         function handleMainActionButton() {
             if(currentStep === 1) {
-                validateAndProceedToPayment();
+                validateAndProceedToNextStep();
             } else if(currentStep === 2) {
                 finalizeAndConfirmOrderToCloudflare();
             }
         }
 
-        function validateAndProceedToPayment() {
-            let cartKey = 'rorraxy_wholesale_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+        function validateAndProceedToNextStep() {
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             if(cart.length === 0) {
-                showToast("Your wholesale cart is empty!", true);
+                showToast("Your cart is empty!", true);
                 return;
             }
 
-            const companyEl = document.getElementById('chkCompanyName');
             const phoneEl = document.getElementById('chkPhone');
             const nameEl = document.getElementById('chkFullName');
             const addressEl = document.getElementById('chkAddress');
 
-            const company = companyEl.value.trim();
             const phone = phoneEl.value.trim();
             const name = nameEl.value.trim();
             const address = addressEl.value.trim();
 
             let hasError = false;
 
-            if (!company) { companyEl.classList.add('input-error'); hasError = true; }
-            if (!phone || (iti && !iti.isValidNumber())) { phoneEl.classList.add('input-error'); hasError = true; }
+            if (!phone || (iti && !iti.isValidNumber())) { 
+                phoneEl.classList.add('input-error'); 
+                hasError = true; 
+                showToast("Please enter a VALID COMPLETE phone number!", true);
+            }
             if (!name) { nameEl.classList.add('input-error'); hasError = true; }
             if (!address) { addressEl.classList.add('input-error'); hasError = true; }
 
             if (hasError) {
-                showToast("Please fill all required B2B shipping fields correctly!", true);
+                if(!phone || (iti && !iti.isValidNumber())) phoneEl.focus();
+                else if(!name) nameEl.focus();
+                else if(!address) addressEl.focus();
             } else {
-                let checkoutPayload = {
-                    company: company,
-                    customer: {
-                        fullName: name,
-                        phone: iti ? iti.getNumber() : phone,
-                        address: address
-                    },
-                    items: cart,
-                    mode: 'wholesale'
-                };
-                localStorage.setItem('rorraxy_current_wholesale_checkout', JSON.stringify(checkoutPayload));
+                saveAddressToLocalStorage();
                 goToStep(2);
             }
+        }
+
+        function saveAddressToLocalStorage() {
+            let fullPhoneNumber = iti ? iti.getNumber() : document.getElementById('chkPhone').value;
+            let cartKey = 'rorraxy_cart';
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+            let checkoutPayload = {
+                customer: {
+                    fullName: document.getElementById('chkFullName').value,
+                    phone: fullPhoneNumber,
+                    address: document.getElementById('chkAddress').value
+                },
+                items: cart,
+                mode: 'retail',
+                timestamp: new Date().toISOString()
+            };
+
+            if(document.getElementById('saveAddressCheckbox').checked) {
+                let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
+                let existIndex = saved.findIndex(a => a.phone === fullPhoneNumber);
+                if(existIndex >= 0) {
+                    saved[existIndex] = checkoutPayload.customer;
+                } else {
+                    saved.unshift(checkoutPayload.customer);
+                }
+                localStorage.setItem('rorraxy_saved_addresses', JSON.stringify(saved));
+            }
+
+            localStorage.setItem('rorraxy_current_checkout', JSON.stringify(checkoutPayload));
+            localStorage.setItem('rorraxy_customer_phone', fullPhoneNumber);
+            localStorage.setItem('rorraxy_customer_token', 'verified_token_' + Date.now());
         }
 
         function goToStep(stepNumber) {
@@ -714,33 +625,27 @@
             const step1 = document.getElementById('step1CartSection');
             const step2 = document.getElementById('step2PaymentSection');
             const mainBtn = document.getElementById('mainCheckoutBtn');
-            const backBtn = document.getElementById('backStepBtn');
 
             if(stepNumber === 1) {
                 step1.style.display = 'flex';
                 step2.style.display = 'none';
-                mainBtn.innerHTML = 'PROCEED TO PAYMENT <i class="fa-solid fa-arrow-right" style="color:#000;"></i>';
-                backBtn.style.display = 'none';
+                mainBtn.innerHTML = 'PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>';
             } else if(stepNumber === 2) {
                 step1.style.display = 'none';
                 step2.style.display = 'flex';
-                mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM B2B ORDER';
-                backBtn.style.display = 'inline-flex';
+                mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM ORDER';
             }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectPaymentMethod(method, elementId) {
             window.selectedPaymentType = method;
-            document.querySelectorAll('.payment-method-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            document.querySelectorAll('.payment-method-item').forEach(item => { item.classList.remove('active'); });
             document.getElementById(elementId).classList.add('active');
         }
 
         async function finalizeAndConfirmOrderToCloudflare() {
-            let checkoutData = localStorage.getItem('rorraxy_current_wholesale_checkout');
+            let checkoutData = localStorage.getItem('rorraxy_current_checkout');
             if(!checkoutData) {
                 showToast("Checkout session expired!", true);
                 goToStep(1);
@@ -753,58 +658,68 @@
                 return sum + (pNum * item.qty);
             }, 0);
 
-            let masterOrderId = 'RRX-WS-' + Math.floor(100000 + Math.random() * 900000);
+            let masterOrderId = 'RRX-RET-' + Math.floor(100000 + Math.random() * 900000);
+            let singleOrderId = (orderPayload.items.length === 1 && orderPayload.items[0].orderId) ? orderPayload.items[0].orderId : generateUniqueId('ORD');
 
             let cloudflareDbPayload = {
                 master_order_id: masterOrderId,
-                buyer_company_name: orderPayload.company,
+                order_id: singleOrderId,
                 customer_name: orderPayload.customer.fullName,
                 customer_phone: orderPayload.customer.phone,
                 shipping_address: orderPayload.customer.address,
                 customer_country: "Bangladesh",
                 payment_method: window.selectedPaymentType || "International Cards",
                 payment_status: "Paid",
-                transaction_id: "WS-TRX-" + Math.floor(10000000 + Math.random() * 90000000),
+                transaction_id: "TRX-" + Math.floor(10000000 + Math.random() * 90000000),
                 total_amount: totalAmountVal,
                 currency: "USD",
-                affiliate_id: localStorage.getItem('affiliate_id') || "AFF-DIRECT",
-                affiliate_commission: 0,
-                admin_commission: 0,
                 order_status: "Pending",
                 created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
                 items: orderPayload.items
             };
 
-            showToast("Submitting wholesale order to Cloudflare D1...");
+            let customerAuthSyncPayload = {
+                phone: orderPayload.customer.phone,
+                customer_name: orderPayload.customer.fullName,
+                shipping_address: orderPayload.customer.address,
+                master_order_id: masterOrderId,
+                order_id: singleOrderId,
+                updated_at: new Date().toISOString()
+            };
+
+            showToast("Submitting order and syncing account data...");
 
             try {
-                let response = await fetch(`${API_BASE_URL}/api/wholesale-orders`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(cloudflareDbPayload)
-                });
-                let result = await response.json();
-                console.log("Wholesale D1 Response:", result);
+                await Promise.all([
+                    fetch(`${API_BASE_URL}/api/orders`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(cloudflareDbPayload)
+                    }),
+                    fetch(`${API_BASE_URL}/api/customer-auth-sync`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(customerAuthSyncPayload)
+                    }).catch(() => {})
+                ]);
             } catch(err) {
-                console.warn("API sync warning, proceeding locally:", err);
+                console.warn("Cloudflare API sync notice:", err);
             }
 
-            localStorage.setItem('rorraxy_last_wholesale_order', JSON.stringify(cloudflareDbPayload));
-            localStorage.removeItem('rorraxy_current_wholesale_checkout');
-            localStorage.removeItem('rorraxy_wholesale_cart');
+            localStorage.setItem('rorraxy_last_order', JSON.stringify(cloudflareDbPayload));
+            localStorage.removeItem('rorraxy_current_checkout');
+            localStorage.removeItem('rorraxy_cart');
 
-            showToast("Wholesale Order Confirmed Successfully!");
+            showToast("Order Confirmed Successfully!");
 
             setTimeout(() => {
-                window.location.href = `/account.html`;
+                window.location.href = `/wholesate/account.html`;
             }, 800);
         }
 
         function showToast(msg, isErr = false) {
             let toast = document.getElementById('toastBox');
             toast.innerText = msg;
-            toast.style.borderColor = isErr ? 'var(--danger-red)' : 'rgba(212, 175, 55, 0.4)';
             toast.style.color = isErr ? '#ff4d4d' : '#ffffff';
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 3200);
