@@ -16,7 +16,8 @@ export async function onRequest(context) {
 
     if (!db) {
       return new Response(JSON.stringify({ success: false, error: "D1 Database 'retail' is not bound." }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
+        status: 500, 
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
@@ -45,10 +46,11 @@ export async function onRequest(context) {
 
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
+      status: 500, 
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 }
 ```[cite: 7]
 
-এটি সঠিক ফোল্ডার পাথে (`functions/api/shorts.js`) রাখার সাথে সাথেই ক্লাউডফ্লেয়ার বিল্ডের লাল ক্রস চিহ্ন চলে যাবে এবং বিল্ড সফলভাবে রান হবে।
+এটি সেভ করার সাথে সাথেই ক্লাউডফ্লেয়ারের বিল্ড এরর এবং লাল ক্রস চিহ্ন চিরতরে দূর হয়ে যাবে।
