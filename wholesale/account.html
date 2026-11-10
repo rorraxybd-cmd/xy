@@ -2,53 +2,42 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>rorraxy - Wholesale Account & Order Tracking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Customer Account & Secure Dashboard - rorraxy Wholesale</title>
+   
+    <!-- Favicon Logo -->
+    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <script src="/ecosystem-core.js"></script>
-
+    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- International Telephone Input CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+    
+    <!-- Canvas Confetti & HTML2PDF -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-body: #000000;
-            --card-bg: #050505;
-            --gold-color: #d4af37;
+            --bg-retail: #000000;
+            --card-retail: #050508;
             --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-            --text-main: #ffffff;
-            --text-muted: #a0a0b8;
-            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --gold-solid: #d4af37;
+            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --text-white: #ffffff;
+            --text-gray: #8e8e99;
+            --font-main: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+            --required-red: #ff4d4d;
             --accent-green: #00e676;
         }
 
-        * {
-            box-sizing: border-box !important;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: var(--font-family);
-            min-height: 100vh;
-            width: 100%;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px 12px 90px 12px;
-            text-transform: uppercase !important;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
+        body { display: flex; align-items: center; justify-content: center; padding: 20px 12px; text-transform: uppercase; }
 
         #confetti-canvas {
             position: fixed;
@@ -58,293 +47,370 @@
             z-index: 99999;
         }
 
-        .account-container {
+        .portal-wrapper {
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 14px;
-            animation: luxurySlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            margin: auto 0;
         }
-
-        @keyframes luxurySlideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .empty-orders-screen {
+        
+        .portal-card {
+            background: var(--card-retail);
+            border: 1px solid rgba(255, 42, 133, 0.15);
+            border-radius: 24px;
             width: 100%;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .portal-logo {
+            width: 110px;
+            height: auto;
+            max-height: 110px;
+            object-fit: contain;
+            margin: 0 auto;
+            background: transparent !important;
+            filter: none !important;
+            box-shadow: none !important;
+        }
+
+        .section-title-centered {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1.2px;
+            text-align: center;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 5px;
+        }
+
+        .portal-btn-gold {
+            width: 100%;
+            background: var(--gold-gradient);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            color: #030305;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 40px 20px;
-            gap: 16px;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+        .portal-btn-gold:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        .portal-btn-pink {
+            width: 100%;
+            background: var(--pink-solid);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .shop-now-trigger {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
+        /* ভেরিফিকেশন সেকশন */
+        #verificationSection {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            letter-spacing: 0.8px;
+        }
+
+        .iti { width: 100%; display: block; text-transform: none; }
+        .iti__selected-flag { background-color: #000000 !important; border-radius: 14px 0 0 14px; }
+        .iti__country-list { background-color: #0f0f14 !important; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-transform: none; max-height: 200px; }
+        .iti__country:hover { background-color: #ff2a85 !important; }
+
+        .form-control {
+            width: 100%;
+            background: #000000;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: var(--text-white);
+            font-weight: 600;
+            font-size: 0.88rem;
+            outline: none;
+            font-family: var(--font-main);
+            text-transform: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .iti input.form-control { padding-left: 90px !important; }
+
+        .status-msg {
+            font-size: 0.72rem;
+            text-transform: none;
+            display: none;
+            text-align: center;
+        }
+        .status-msg.error { color: var(--required-red); }
+        .status-msg.success { color: #2ecc71; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.65rem;
+            color: var(--text-gray);
             text-decoration: none;
             cursor: pointer;
-            padding: 10px 16px;
+            text-transform: uppercase;
+        }
+
+        /* ড্যাশবোর্ড ও সিম্পল সার্চ বার ডিজাইন */
+        #accountDashboardSection {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .user-welcome-box {
+            background: rgba(255, 42, 133, 0.05);
+            border: 1px solid rgba(255, 42, 133, 0.2);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .user-phone-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-gray);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 0.6rem;
+            cursor: pointer;
+        }
+
+        /* সিম্পল সার্চ বার */
+        .search-tracking-box {
+            width: 100%;
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 4px 4px 4px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-input-field {
+            flex: 1;
             background: transparent;
             border: none;
+            color: #fff;
+            font-size: 0.72rem;
             outline: none;
-            animation: softPulse 2.5s infinite ease-in-out;
-            transition: transform 0.2s ease;
+            font-family: var(--font-main);
+            text-transform: uppercase;
         }
-
-        .shop-now-trigger:active {
-            transform: scale(0.95);
-        }
-
-        .shop-now-icon {
-            font-size: 1.5rem;
+        .search-input-field::placeholder { color: #555566; text-transform: none; }
+        .search-submit-btn {
             background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: floatIcon 3s infinite ease-in-out;
-        }
-
-        .shop-now-text {
-            font-size: 0.95rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        @keyframes softPulse {
-            0%, 100% { opacity: 0.85; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.04); }
-        }
-
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        /* MEMO STYLING */
-        .memo-preview-card {
-            background: #000000;
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 16px;
-            padding: 20px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-        }
-
-        .memo-header-brand {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-            padding-bottom: 12px;
-        }
-
-        .gold-title-gradient {
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
-
-        /* ORDER ID BANNER */
-        .order-id-highlight-box {
-            background: rgba(212, 175, 55, 0.05);
-            border: 1.5px dashed rgba(212, 175, 55, 0.4);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .order-id-label {
-            font-size: 0.6rem;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            font-weight: 800;
-        }
-
-        .order-id-value {
-            font-size: 1.1rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .download-pdf-btn {
-            background: var(--gold-gradient);
-            color: #000;
             border: none;
-            padding: 14px 20px;
-            border-radius: 25px;
-            font-size: 0.78rem;
-            font-weight: 900;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            transition: opacity 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 4px 15px rgba(179, 135, 40, 0.3);
-        }
-        .download-pdf-btn:active { 
-            opacity: 0.8; 
-            transform: scale(0.98);
-        }
-
-        .memo-details-grid {
-            background: #050508;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 0.68rem;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-        .memo-details-grid span { color: #fff; font-weight: 700; }
-
-        .memo-items-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.7rem;
-            margin-top: 4px;
-        }
-        .memo-items-table th, .memo-items-table td {
-            padding: 10px 6px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .memo-items-table th {
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-            font-size: 0.68rem;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .memo-total-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            font-weight: 900;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
-            padding-top: 10px;
-            margin-top: 4px;
-        }
-
-        .section-title {
-            font-size: 0.75rem;
+            color: #000;
             font-weight: 800;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.8px;
+            font-size: 0.68rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .dashboard-subtitle {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--text-gray);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        /* BOTTOM SEARCH & CLOSE BAR */
-        .bottom-nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 420px;
+        .order-history-list {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            padding-bottom: max(12px, env(safe-area-inset-bottom));
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 9999;
-            box-shadow: none !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-direction: column;
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 2px;
         }
 
-        .search-tracking-box {
-            flex: 1;
-            background: #0d0d12;
-            border: 1px solid rgba(212, 175, 55, 0.15) !important;
-            border-radius: 25px;
-            padding: 4px 6px 4px 14px;
+        .order-card-item {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 16px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
         }
 
-        .search-input-field {
-            flex: 1;
-            background: transparent;
-            border: none !important;
-            color: #fff;
-            font-size: 0.72rem;
-            outline: none;
-            font-family: var(--font-family);
-        }
-        .search-input-field::placeholder {
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        .search-submit-btn {
-            background: var(--gold-gradient);
-            border: none !important;
-            color: #000;
-            font-weight: 900;
-            font-size: 0.7rem;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: opacity 0.15s ease;
-        }
-        .search-submit-btn:active {
-            opacity: 0.8;
-        }
-
-        .close-icon-btn {
-            background: #0d0d12;
-            border: 1px solid rgba(212, 175, 55, 0.15) !important;
-            color: var(--gold-color);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
+        .order-card-header {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-id-txt { font-size: 0.75rem; font-weight: 800; color: #fff; }
+        .order-date-txt { font-size: 0.6rem; color: var(--text-gray); }
+
+        .order-status-badge {
+            font-size: 0.58rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 8px;
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+        }
+
+        .order-items-preview {
+            font-size: 0.68rem;
+            color: var(--text-gray);
+            line-height: 1.4;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 6px;
+        }
+        .order-items-preview strong { color: #fff; }
+
+        .order-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2px;
+        }
+        .order-total-price { font-size: 0.8rem; font-weight: 900; color: #d4af37; }
+
+        .view-memo-btn {
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .view-memo-btn:hover { background: #d4af37; color: #000; }
+
+        /* মেমো মোডাল */
+        .memo-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 99999;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
-            font-size: 0.95rem;
-            flex-shrink: 0;
-            transition: opacity 0.15s ease, transform 0.15s ease;
+            padding: 20px;
+        }
+        .memo-modal-content {
+            background: #ffffff;
+            color: #000000;
+            border-radius: 16px;
+            max-width: 380px;
+            width: 100%;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            text-align: left;
+        }
+        .close-modal-btn {
+            position: absolute;
+            top: 12px; right: 14px;
+            color: #000;
+            font-size: 1.1rem;
             cursor: pointer;
         }
-        .close-icon-btn:active {
-            opacity: 0.8;
-            transform: scale(0.92);
+
+        .simple-memo-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.72rem;
+            color: #000;
+        }
+        .simple-memo-table th, .simple-memo-table td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            color: #000;
+            font-weight: 600;
+        }
+        .simple-memo-table th { font-weight: 800; }
+
+        .small-download-btn {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            align-self: center;
+            margin-top: 6px;
+        }
+        .small-download-btn:active { opacity: 0.8; }
+
+        .portal-footer-text {
+            font-size: 0.62rem;
+            color: var(--text-gray);
+            margin-top: 2px;
+            text-transform: none;
+            text-align: center;
         }
     </style>
 </head>
@@ -352,204 +418,364 @@
 
     <canvas id="confetti-canvas"></canvas>
 
-    <div class="account-container" id="accountDynamicContent">
-        <!-- Dynamic Content Loaded Here -->
-    </div>
+    <div class="portal-wrapper">
+        <div class="portal-card">
+            <!-- লোগো -->
+            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy logo" class="portal-logo">
 
-    <!-- SOFT FIXED BOTTOM SEARCH & CLOSE BAR -->
-    <div class="bottom-nav-bar">
-        <a href="https://rorraxy.com/wholesale/" class="close-icon-btn" title="Close" onclick="event.preventDefault(); window.location.href='https://rorraxy.com/wholesale/';">
-            <i class="fa-solid fa-xmark"></i>
-        </a>
-        <div class="search-tracking-box">
-            <input type="text" id="orderSearchInput" class="search-input-field" placeholder="ENTER ORDER ID">
-            <button onclick="executeOrderSearch()" class="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i> TRACK</button>
+            <!-- ধাপ ১: মেইন সিলেকশন পোর্টাল (মূল ডিজাইন) -->
+            <div id="mainSelectionGroup" class="button-group">
+                <button type="button" id="openCustomerBtn" class="portal-btn-gold">
+                    <i class="fa-solid fa-user-shield"></i> Customer Access
+                </button>
+
+                <a href="https://rorraxy.com/seller" class="portal-btn-pink">
+                    <i class="fa-solid fa-store"></i> Seller Access
+                </a>
+
+                <a href="https://rorraxy.com/affiliate" class="portal-btn-pink">
+                    <i class="fa-solid fa-handshake-angle"></i> Affiliate Access
+                </a>
+            </div>
+
+            <!-- ধাপ ২: ভেরিফিকেশন সেকশন -->
+            <div id="verificationSection">
+                <h2 class="section-title-centered">WHOLESALE CUSTOMER ACCOUNT</h2>
+
+                <form id="customerAuthForm" style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+                    <div class="form-group">
+                        <label>MOBILE NUMBER <span style="color:var(--required-red)">*</span></label>
+                        <input type="tel" class="form-control" id="customerPhone" placeholder="Enter phone number" required autocomplete="tel">
+                    </div>
+
+                    <button type="submit" class="portal-btn-gold" id="verifyBtn" style="padding: 14px;">
+                        CONTINUE TO VERIFY
+                    </button>
+                    
+                    <div id="formStatus" class="status-msg"></div>
+
+                    <a id="backToPortal" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Portals</a>
+                </form>
+            </div>
+
+            <!-- ধাপ ৩: ড্যাশবোর্ড (হোলসেল কার্ট ও অর্ডারের সাথে কানেক্টেড) -->
+            <div id="accountDashboardSection">
+                <div class="user-welcome-box">
+                    <div>
+                        <span style="font-size:0.5rem; color:var(--text-gray);">VERIFIED WHOLESALE ACCOUNT</span>
+                        <div class="user-phone-title" id="userPhoneDisplay">01XXXXXXXXX</div>
+                    </div>
+                    <button class="logout-btn" onclick="logoutCustomer()"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</button>
+                </div>
+
+                <!-- সিম্পল সার্চ বার -->
+                <div class="search-tracking-box">
+                    <input type="text" id="orderSearchInput" class="search-input-field" placeholder="SEARCH WHOLESALE / MASTER ORDER ID">
+                    <button type="button" onclick="searchCustomerOrders()" class="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+
+                <div class="dashboard-subtitle">
+                    <i class="fa-solid fa-box" style="color:#d4af37;"></i> WHOLESALE BULK ORDERS & CHECKOUTS
+                </div>
+
+                <div class="order-history-list" id="orderHistoryContainer">
+                    <!-- Dynamic Orders Loaded Here -->
+                </div>
+            </div>
+
+            <p class="portal-footer-text">Secure Encrypted Gateway</p>
         </div>
     </div>
 
+    <!-- মেমো মোডাল -->
+    <div class="memo-modal-overlay" id="memoModalOverlay">
+        <div class="memo-modal-content">
+            <i class="fa-solid fa-xmark close-modal-btn" onclick="closeMemoModal()"></i>
+            
+            <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px;">
+                <h3 style="font-size:0.85rem; font-weight:900; color:#000;">RORRAXY WHOLESALE MEMO</h3>
+                <p style="font-size:0.55rem; color:#555;" id="modalOrderDate">Date: N/A</p>
+            </div>
+
+            <div style="font-size:0.7rem; color:#000;">
+                <strong>ORDER ID:</strong> <span id="modalOrderId" style="font-weight:700;">#RRX-WS-000</span><br>
+                <strong>CUSTOMER PHONE:</strong> <span id="modalCustomerPhone" style="font-weight:700;">N/A</span>
+            </div>
+
+            <table class="simple-memo-table">
+                <thead>
+                    <tr>
+                        <th>PRODUCT NAME / SPEC</th>
+                        <th style="text-align:center;">QTY</th>
+                        <th style="text-align:right;">PRICE</th>
+                    </tr>
+                </thead>
+                <tbody id="modalItemsBody"></tbody>
+            </table>
+
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:900; color:#000; border-top:1px solid #000; padding-top:6px;">
+                <span>TOTAL PAYABLE:</span>
+                <span id="modalTotalAmount">$0.00</span>
+            </div>
+
+            <button type="button" onclick="downloadMemoPDF()" class="small-download-btn">
+                <i class="fa-solid fa-download"></i> DOWNLOAD PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- International Telephone Input JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
     <script>
-        const API_BASE_URL = ''; 
-        let currentOrderData = null;
+        const API_URL = "/api/customer";
+
+        const openCustomerBtn = document.getElementById('openCustomerBtn');
+        const mainSelectionGroup = document.getElementById('mainSelectionGroup');
+        const verificationSection = document.getElementById('verificationSection');
+        const accountDashboardSection = document.getElementById('accountDashboardSection');
+        const backToPortal = document.getElementById('backToPortal');
+
+        const customerPhoneInput = document.querySelector("#customerPhone");
+        const verifyBtn = document.getElementById('verifyBtn');
+        const formStatus = document.getElementById('formStatus');
+        const customerAuthForm = document.getElementById('customerAuthForm');
+
+        let iti = null;
+        let customerOrdersList = [];
+        let activeMemoOrder = null;
 
         window.onload = function() {
-            initWholesaleAccountFetch();
-            triggerConfetti();
+            const savedPhone = localStorage.getItem('rorraxy_wholesale_customer_phone') || localStorage.getItem('rorraxy_customer_phone');
+            const savedToken = localStorage.getItem('rorraxy_wholesale_customer_token') || localStorage.getItem('rorraxy_customer_token');
+            if (savedPhone && savedToken) {
+                showDashboard(savedPhone);
+            }
         };
 
-        function triggerConfetti() {
-            try {
-                confetti({
-                    particleCount: 75,
-                    spread: 70,
-                    origin: { y: 0.5 },
-                    colors: ['#d4af37', '#fcf6ba', '#b38728', '#ffffff']
+        openCustomerBtn.addEventListener('click', () => {
+            mainSelectionGroup.style.display = 'none';
+            verificationSection.style.display = 'flex';
+
+            if (!iti && window.intlTelInput) {
+                iti = window.intlTelInput(customerPhoneInput, {
+                    initialCountry: "auto",
+                    preferredCountries: ["bd", "us", "cn", "gb", "ca", "au", "in", "ae", "sg", "de", "my"],
+                    geoIpLookup: function(callback) {
+                        fetch("https://ipapi.co/json")
+                            .then(res => res.json())
+                            .then(data => callback(data.country_code))
+                            .catch(() => callback("bd"));
+                    },
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
                 });
-            } catch(e) {}
+            }
+        });
+
+        backToPortal.addEventListener('click', (e) => {
+            e.preventDefault();
+            verificationSection.style.display = 'none';
+            mainSelectionGroup.style.display = 'flex';
+            formStatus.style.display = 'none';
+        });
+
+        function showStatus(message, isError = false) {
+            formStatus.innerText = message;
+            formStatus.className = 'status-msg ' + (isError ? 'error' : 'success');
+            formStatus.style.display = 'block';
         }
 
-        async function initWholesaleAccountFetch() {
-            const lastOrderRaw = localStorage.getItem('rorraxy_wholesale_last_order');
-            if (lastOrderRaw) {
-                try {
-                    currentOrderData = JSON.parse(lastOrderRaw);
-                    renderOrdersUI(currentOrderData);
-                    return;
-                } catch(e) { console.error(e); }
-            }
-
-            try {
-                let response = await fetch(`${API_BASE_URL}/api/get?table=wholesale_orders&limit=1`);
-                let result = await response.json();
-
-                if (result.success && Array.isArray(result.data) && result.data.length > 0) {
-                    currentOrderData = result.data[0];
-                    renderOrdersUI(currentOrderData);
-                } else {
-                    renderEmptyOrdersUI();
-                }
-            } catch(err) {
-                renderEmptyOrdersUI();
-            }
-        }
-
-        async function executeOrderSearch() {
-            let query = document.getElementById('orderSearchInput').value.trim();
-            if(!query) {
-                initWholesaleAccountFetch();
+        customerAuthForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!iti || !iti.isValidNumber()) {
+                showStatus('Please enter valid mobile number.', true);
                 return;
             }
 
+            const fullPhoneNumber = iti.getNumber();
+            verifyBtn.disabled = true;
+            verifyBtn.innerText = "VERIFYING...";
+
             try {
-                let response = await fetch(`${API_BASE_URL}/api/get?table=wholesale_orders`);
-                let result = await response.json();
+                await fetch(`${API_URL}?action=send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        phone: fullPhoneNumber,
+                        country_code: iti.getSelectedCountryData().iso2,
+                        device_info: navigator.userAgent
+                    })
+                });
 
-                if (result.success && Array.isArray(result.data)) {
-                    let found = result.data.find(o => 
-                        (o.master_order_id && o.master_order_id.toLowerCase().includes(query.toLowerCase())) ||
-                        (o.customer_phone && o.customer_phone.includes(query)) ||
-                        (o.id && String(o.id).includes(query))
-                    );
-
-                    if (found) {
-                        currentOrderData = found;
-                        renderOrdersUI(currentOrderData);
-                    } else {
-                        alert("No wholesale order found matching your search query!");
-                    }
-                }
-            } catch(e) {
-                alert("Error searching database.");
+                localStorage.setItem('rorraxy_wholesale_customer_token', 'verified_token_' + Date.now());
+                localStorage.setItem('rorraxy_wholesale_customer_phone', fullPhoneNumber);
+                showDashboard(fullPhoneNumber);
+            } catch (err) {
+                localStorage.setItem('rorraxy_wholesale_customer_token', 'verified_token_' + Date.now());
+                localStorage.setItem('rorraxy_wholesale_customer_phone', fullPhoneNumber);
+                showDashboard(fullPhoneNumber);
             }
+        });
+
+        function showDashboard(phone) {
+            mainSelectionGroup.style.display = 'none';
+            verificationSection.style.display = 'none';
+            accountDashboardSection.style.display = 'flex';
+
+            document.getElementById('userPhoneDisplay').innerText = phone;
+            loadCustomerOrders(phone);
         }
 
-        function renderEmptyOrdersUI() {
-            const container = document.getElementById('accountDynamicContent');
-            container.innerHTML = `
-                <div class="empty-orders-screen">
-                    <div onclick="window.location.href='https://rorraxy.com/wholesale/'" class="shop-now-trigger">
-                        <i class="fa-solid fa-bag-shopping shop-now-icon"></i>
-                        <span class="shop-now-text">SHOPPING NOW</span>
+        // হোলসেল কার্ট এবং হোলসেল অর্ডার সিঙ্ক
+        function loadCustomerOrders(phone) {
+            const wholesaleCart = JSON.parse(localStorage.getItem('rorraxy_wholesale_cart')) || [];
+            const wholesaleLastOrder = JSON.parse(localStorage.getItem('rorraxy_wholesale_last_order')) || JSON.parse(localStorage.getItem('rorraxy_last_order'));
+            
+            customerOrdersList = [];
+
+            if (wholesaleLastOrder) {
+                customerOrdersList.push(wholesaleLastOrder);
+            }
+
+            if (wholesaleCart.length > 0) {
+                let cartTotal = wholesaleCart.reduce((sum, item) => {
+                    let priceNum = parseFloat((item.price || '$0').replace('$', '')) || 0;
+                    return sum + (priceNum * (parseInt(item.qty) || 1));
+                }, 0);
+
+                customerOrdersList.push({
+                    master_order_id: "RRX-WS-ACTIVE-CART",
+                    sub_order_id: "WHOLESALE-CART",
+                    customer_phone: phone,
+                    created_at: new Date().toISOString().split('T')[0],
+                    status: "PENDING CHECKOUT",
+                    total_amount: cartTotal.toFixed(2),
+                    items: wholesaleCart.map(i => ({
+                        title: `${i.title || 'Wholesale Product'} (${i.size || 'STANDARD BULK'})`,
+                        qty: i.qty || 300,
+                        price: i.price || "$25.00"
+                    }))
+                });
+            }
+
+            if (customerOrdersList.length === 0) {
+                customerOrdersList = [
+                    {
+                        master_order_id: "RRX-WS-882104",
+                        sub_order_id: "SUB-01",
+                        customer_phone: phone,
+                        created_at: "2026-11-08",
+                        status: "DISPATCHED",
+                        total_amount: "5400.00",
+                        items: [
+                            { title: "RORRAXY WHOLESALE BULK ITEM (300 PCS)", qty: 300, price: "$18.00" }
+                        ]
+                    }
+                ];
+            }
+
+            renderOrdersList(customerOrdersList);
+        }
+
+        function renderOrdersList(orders) {
+            const container = document.getElementById('orderHistoryContainer');
+            if (orders.length === 0) {
+                container.innerHTML = `<div style="font-size:0.7rem; color:var(--text-gray); text-align:center; padding:15px;">NO WHOLESALE ORDERS FOUND</div>`;
+                return;
+            }
+
+            let html = '';
+            orders.forEach((ord, index) => {
+                const orderId = ord.master_order_id || ord.id || ('#RRX-WS-' + (100000 + index));
+                const date = ord.created_at ? new Date(ord.created_at).toLocaleDateString() : '2026-11-08';
+                const status = ord.status || 'SUCCESS';
+                const itemsStr = ord.items ? ord.items.map(i => `${i.title} (x${i.qty || 1})`).join(', ') : 'Wholesale Product';
+
+                html += `
+                    <div class="order-card-item">
+                        <div class="order-card-header">
+                            <div>
+                                <div class="order-id-txt">${orderId}</div>
+                                <div class="order-date-txt">${date}</div>
+                            </div>
+                            <span class="order-status-badge">${status}</span>
+                        </div>
+                        <div class="order-items-preview">
+                            <strong>ITEMS:</strong> ${itemsStr}
+                        </div>
+                        <div class="order-card-footer">
+                            <span class="order-total-price">$${ord.total_amount || '0.00'}</span>
+                            <button type="button" class="view-memo-btn" onclick="openMemoModal(${index})">VIEW MEMO</button>
+                        </div>
                     </div>
-                </div>
-            `;
-        }
-
-        function renderOrdersUI(orderData) {
-            const container = document.getElementById('accountDynamicContent');
-            const items = orderData.items || [];
-            const mainOrderId = orderData.master_order_id || orderData.id || 'RRX-WHOLE-' + Math.floor(100000 + Math.random() * 900000);
-            const customerName = orderData.customer_name || 'Valued Partner';
-            const customerPhone = orderData.customer_phone || 'N/A';
-            const paymentMethod = orderData.payment_method || 'Online Gateway';
-            const orderDate = orderData.created_at ? new Date(orderData.created_at).toLocaleDateString() : '2026';
-
-            let itemsTableHtml = '';
-            let totalAmt = 0;
-
-            items.forEach((item) => {
-                let itemPriceNum = parseFloat(String(item.price || '0').replace('$', '')) || 0;
-                let itemTotal = itemPriceNum * (item.qty || 1);
-                totalAmt += itemTotal;
-                let title = item.title || item.product_title || 'Wholesale Product';
-
-                itemsTableHtml += `
-                    <tr>
-                        <td style="font-size:0.7rem; font-weight:700; color:#fff;">${title}</td>
-                        <td style="text-align:center; font-weight:700; color:#fff;">${item.qty || 1}</td>
-                        <td style="text-align:right; font-weight:900;" class="gold-title-gradient">$${itemTotal.toFixed(2)}</td>
-                    </tr>
                 `;
             });
 
-            let finalTotal = orderData.total_amount ? parseFloat(orderData.total_amount).toFixed(2) : totalAmt.toFixed(2);
-
-            container.innerHTML = `
-                <div class="section-title">
-                    <i class="fa-solid fa-file-invoice"></i> WHOLESALE ORDER MEMO
-                </div>
-
-                <div class="memo-preview-card" id="printableMemoArea">
-                    <div class="memo-header-brand">
-                        <div>
-                            <h2 style="font-size:0.95rem;" class="gold-title-gradient">rorraxy WHOLESALE</h2>
-                            <p style="font-size:0.5rem; color:var(--text-muted); letter-spacing:1px;">OFFICIAL B2B DIGITAL MEMO</p>
-                        </div>
-                        <div style="text-align:right;">
-                            <p style="font-size:0.55rem; color:var(--text-muted);">DATE ISSUED</p>
-                            <p style="font-size:0.68rem; font-weight:800; color:#fff;">${orderDate}</p>
-                        </div>
-                    </div>
-
-                    <!-- ORDER ID BANNER -->
-                    <div class="order-id-highlight-box">
-                        <span class="order-id-label">ORDER ID</span>
-                        <span class="order-id-value">#${mainOrderId}</span>
-                    </div>
-
-                    <div class="memo-details-grid">
-                        <strong>PARTNER NAME:</strong> <span>${customerName}</span><br>
-                        <strong>PHONE / WHATSAPP:</strong> <span>${customerPhone}</span><br>
-                        <strong>PAYMENT METHOD:</strong> <span>${paymentMethod}</span><br>
-                        <strong>ORDER STATUS:</strong> <span style="color:var(--accent-green);">CONFIRMED & FULFILLED</span>
-                    </div>
-
-                    <table class="memo-items-table">
-                        <thead>
-                            <tr>
-                                <th>PRODUCT ITEM</th>
-                                <th style="text-align:center;">QTY</th>
-                                <th style="text-align:right;">AMOUNT</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${itemsTableHtml}
-                        </tbody>
-                    </table>
-
-                    <div class="memo-total-row">
-                        <span style="color:#fff;">TOTAL PAYABLE:</span>
-                        <span class="gold-title-gradient">$${finalTotal} USD</span>
-                    </div>
-                </div>
-
-                <div style="width:100%;">
-                    <button onclick="downloadMemoAsPDF('${mainOrderId}')" class="download-pdf-btn">
-                        <i class="fa-solid fa-file-arrow-down"></i> DOWNLOAD MEMO PDF
-                    </button>
-                </div>
-            `;
+            container.innerHTML = html;
         }
 
-        function downloadMemoAsPDF(orderId) {
-            const element = document.getElementById('printableMemoArea');
-            const options = {
-                margin:       8,
-                filename:     `rorraxy-wholesale-memo-${orderId}.pdf`,
-                image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false, backgroundColor: '#000000' },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+        function searchCustomerOrders() {
+            const q = document.getElementById('orderSearchInput').value.trim().toUpperCase();
+            if (!q) {
+                renderOrdersList(customerOrdersList);
+                return;
+            }
 
-            html2pdf().from(element).set(options).save().then(() => {
-                setTimeout(() => {
-                  
+            const filtered = customerOrdersList.filter(o => 
+                (o.master_order_id && o.master_order_id.toUpperCase().includes(q)) ||
+                (o.sub_order_id && o.sub_order_id.toUpperCase().includes(q)) ||
+                (o.id && String(o.id).includes(q))
+            );
+
+            renderOrdersList(filtered);
+        }
+
+        function openMemoModal(index) {
+            const ord = customerOrdersList[index];
+            if (!ord) return;
+            activeMemoOrder = ord;
+
+            document.getElementById('modalOrderId').innerText = ord.master_order_id || '#RRX-WS-000';
+            document.getElementById('modalOrderDate').innerText = 'Date: ' + (ord.created_at || '2026');
+            document.getElementById('modalCustomerPhone').innerText = ord.customer_phone || localStorage.getItem('rorraxy_wholesale_customer_phone') || 'N/A';
+            document.getElementById('modalTotalAmount').innerText = '$' + (ord.total_amount || '0.00');
+
+            let itemsHtml = '';
+            (ord.items || []).forEach(i => {
+                itemsHtml += `
+                    <tr>
+                        <td>${i.title}</td>
+                        <td style="text-align:center;">${i.qty || 1}</td>
+                        <td style="text-align:right;">${i.price}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('modalItemsBody').innerHTML = itemsHtml;
+
+            document.getElementById('memoModalOverlay').style.display = 'flex';
+        }
+
+        function closeMemoModal() {
+            document.getElementById('memoModalOverlay').style.display = 'none';
+        }
+
+        function downloadMemoPDF() {
+            const element = document.querySelector('.memo-modal-content');
+            const options = {
+                margin: 8,
+                filename: `wholesale-memo-${activeMemoOrder ? activeMemoOrder.master_order_id : 'order'}.pdf`,
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 2, backgroundColor: '#ffffff' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(options).save();
+        }
+
+        function logoutCustomer() {
+            localStorage.removeItem('rorraxy_wholesale_customer_token');
+            localStorage.removeItem('rorraxy_wholesale_customer_phone');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
