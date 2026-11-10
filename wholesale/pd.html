@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>rorraxy - Wholesale Product Details & Related Grid</title>
+    <title>rorraxy - Wholesale Product Details</title>
     
-    <!-- সেন্ট্রাল স্ক্রিপ্ট ট্যাগ -->
     <script src="/ecosystem-core.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
 
-    <!-- Icons -->
+    <!-- Icons & Fonts -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,7 +22,6 @@
             --card-wholesale: #08080c;
             --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             --gold-solid: #d4af37;
-            --pink-love: #ff2a85;
             --text-white: #ffffff;
             --text-gray: #a0a0b8;
             --font-main: 'Poppins', sans-serif;
@@ -38,12 +36,11 @@
             scroll-behavior: smooth;
         }
 
-        body { padding-bottom: 70px; }
+        body { padding-bottom: 65px; }
 
         .ecommerce-main-wrapper {
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 12px 10px 40px 10px;
             display: flex; flex-direction: column; gap: 16px; overflow-x: hidden;
-            contain: layout style paint;
         }
         @media(min-width: 768px) {
             .ecommerce-main-wrapper { padding: 20px 24px 50px 24px; gap: 24px; }
@@ -51,19 +48,17 @@
 
         .product-details-clean-section { 
             width: 100%; display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start;
-            max-width: 100%; overflow: hidden;
         }
         @media(min-width: 950px) {
             .product-details-clean-section { grid-template-columns: 1.1fr 0.9fr; gap: 28px; }
         }
 
-        .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 10px; min-width: 0; overflow: hidden; }
+        .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 
         .media-viewport { 
             width: 100%; position: relative; border-radius: 14px; overflow: hidden; background: #050508; 
             display: flex; align-items: center; justify-content: center; min-height: 280px; 
             border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.3s ease;
-            will-change: transform;
         }
         @media(min-width: 768px) { .media-viewport { min-height: 440px; } }
         
@@ -81,17 +76,13 @@
         .thumb-item:hover { border-color: rgba(212, 175, 55, 0.5); }
         .thumb-item.active { border-color: var(--gold-solid); transform: scale(1.05); }
 
-        .product-right-col { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 0; overflow: hidden; }
+        .product-right-col { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 0; }
 
         .price-discount-card, .qty-section-card, .seller-chat-compact-btn, .product-info-section-box {
             background: var(--card-wholesale); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: border-color 0.25s ease;
         }
 
-        /* Compact Integrated Pricing & Stock Card */
-        .price-discount-card { 
-            padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; width: 100%; 
-        }
+        .price-discount-card { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
         
         .sample-price-block { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
         .sample-price-label { font-size: 0.65rem; color: var(--gold-solid); font-weight: 700; letter-spacing: 0.5px; }
@@ -100,18 +91,14 @@
         .current-main-price {
             font-size: 1.35rem; font-weight: 800; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1;
-            word-break: break-all;
         }
         .old-crossed-price { font-size: 0.78rem; font-weight: 600; color: var(--text-gray); text-decoration: line-through; }
 
         .in-stock-clean-badge {
             font-size: 0.65rem; font-weight: 700; color: #00e676; display: flex; align-items: center; gap: 5px; text-transform: uppercase;
         }
-        .in-stock-clean-badge::before {
-            content: ""; width: 6px; height: 6px; background: #00e676; border-radius: 50%; display: inline-block;
-        }
+        .in-stock-clean-badge::before { content: ""; width: 6px; height: 6px; background: #00e676; border-radius: 50%; display: inline-block; }
 
-        /* Wholesale Presets Single Line & Quantity UI */
         .qty-section-card { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
         .wholesale-preset-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
         .preset-btn {
@@ -128,92 +115,65 @@
         .qty-controls-flex { display: flex; align-items: center; justify-content: center; gap: 14px; }
         .qty-btn-ch { 
             background: var(--gold-gradient); border: none; color: #000; font-size: 0.95rem; font-weight: 800; 
-            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; flex-shrink: 0; transition: transform 0.15s ease; 
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; 
         }
-        .qty-btn-ch:active { transform: scale(0.92); }
         .qty-num-input { 
             font-size: 1.05rem; font-weight: 800; color: #ffffff; width: 80px; text-align: center; 
             background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; outline: none; padding: 4px 0; 
         }
 
-        .product-info-section-box { 
-            display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; 
-        }
-        .section-box-title { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
+        .product-info-section-box { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
+        .section-box-title { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
         
         .product-title-restricted { 
             font-size: 1.05rem; font-weight: 700; letter-spacing: 0.4px; line-height: 1.35; 
-            width: 100%; word-break: break-word; overflow: visible; display: block;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            width: 100%; word-break: break-word; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @media(min-width: 768px) { .product-title-restricted { font-size: 1.3rem; } }
 
         .standard-description-box { font-size: 0.72rem; color: var(--text-gray); line-height: 1.5; text-transform: none !important; word-break: break-word; }
 
-        .integrated-custom-note-group {
-            display: flex; flex-direction: column; gap: 4px; width: 100%; margin-top: 2px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 8px;
-        }
+        .integrated-custom-note-group { display: flex; flex-direction: column; gap: 4px; width: 100%; margin-top: 2px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 8px; }
         .integrated-note-label { font-size: 0.62rem; font-weight: 600; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
         .custom-note-input { 
             width: 100%; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 10px; 
             color: #ffffff; font-size: 0.70rem; outline: none; font-family: var(--font-main); text-transform: uppercase; 
         }
 
-        .action-buttons-flex-row {
-            display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; width: 100%;
-        }
+        .action-buttons-flex-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; width: 100%; }
 
         .seller-chat-compact-btn {
             color: var(--gold-solid); font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s ease; 
-            width: max-content; background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
         }
-        .seller-chat-compact-btn:hover { background: rgba(212, 175, 55, 0.18); transform: translateY(-1px); }
 
         .main-product-share-btn {
             background: none; border: none; cursor: pointer; font-size: 1.1rem;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: flex; align-items: center; justify-content: center; padding: 4px;
-            transition: transform 0.15s ease;
         }
-        .main-product-share-btn:active { transform: scale(1.2); }
 
         /* Related Wholesale Products Section */
-        .related-products-wrapper {
-            margin-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 12px;
-            border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 14px;
-        }
-        .related-section-title {
-            font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px;
-        }
+        .related-products-wrapper { margin-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 14px; }
+        .related-section-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; }
         
-        .feed-container {
-            padding: 2px 0; column-count: 2; column-gap: 8px; width: 100%; will-change: transform;
-        }
+        .feed-container { padding: 2px 0; column-count: 2; column-gap: 8px; width: 100%; }
         @media (min-width: 768px) { .feed-container { column-count: 4; column-gap: 12px; } }
         
         .product-card {
             background: var(--card-wholesale); border-radius: 12px; overflow: hidden; 
             display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.2s ease, border-color 0.2s ease; contain: content;
         }
-        .product-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-2px); }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
         
         .card-footer-actions { 
-            display: flex; justify-content: space-between; align-items: center; padding: 8px; 
+            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto;
         }
         .product-price-tag { font-size: 0.80rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-sub-actions { display: flex; align-items: center; gap: 10px; justify-content: center; }
-        .love-action { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 500; color: var(--text-gray) !important; }
-        .love-action i { color: var(--pink-love); }
-        .love-action.gold-active { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
         
         .share-icon-only-btn { 
             background: none; border: none; font-size: 0.95rem; cursor: pointer; 
@@ -221,105 +181,57 @@
             display: flex; align-items: center; justify-content: center; padding: 2px;
         }
 
-        /* Ultra Compact Fixed Bottom Checkout Bar */
+        /* Fixed Bottom Checkout Bar (3 Visible Menus) */
         .fixed-bottom-checkout-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px; 
             display: flex; justify-content: space-around; align-items: center; z-index: 999999; 
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.8);
-            pointer-events: auto !important; height: 52px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 -5px 15px rgba(0,0,0,0.8); height: 52px;
         }
         @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 80px; padding: 6px 30px; height: 56px; } }
         
         .footer-menu-item { 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; gap: 2px; background: transparent !important; 
-            border: none !important; padding: 4px 12px; transition: transform 0.2s ease; white-space: nowrap;
-            pointer-events: auto !important;
+            border: none !important; padding: 4px 12px; white-space: nowrap;
         }
-        .footer-menu-item:hover { transform: translateY(-1px); }
         
-        .footer-menu-icon { 
-            font-size: 1.05rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-        }
-        .footer-menu-label { 
-            font-size: 0.58rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.4px; 
-        }
+        .footer-menu-icon { font-size: 1.05rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer-menu-label { font-size: 0.58rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.4px; }
 
         .footer-menu-item.order-now-highlight {
             background: var(--gold-gradient) !important; border-radius: 10px !important; padding: 6px 28px !important;
-            transition: transform 0.2s ease; cursor: pointer !important; pointer-events: auto !important;
             box-shadow: 0 2px 10px rgba(212,175,55,0.3);
         }
-        .footer-menu-item.order-now-highlight:active { transform: scale(0.95); }
-        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.72rem; font-weight: 800; background: none !important; pointer-events: none; }
+        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.72rem; font-weight: 800; background: none !important; }
 
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
-            position: absolute; top: -5px; right: -8px; background: var(--pink-love); color: #ffffff;
+            position: absolute; top: -5px; right: -8px; background: #ff2a85; color: #ffffff;
             font-size: 0.52rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease-in-out;
+            display: flex; align-items: center; justify-content: center;
         }
-        .footer-cart-badge.pulse-badge { transform: scale(1.4); }
 
-        /* Sliding Cart Overlay Drawer (On-Off System) */
-        .cart-overlay-drawer {
-            position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh;
-            background: #08080d; border-left: 1px solid rgba(212, 175, 55, 0.3); z-index: 1000000;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.9); transition: right 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-            display: flex; flex-direction: column; padding: 16px;
+        /* Clean Full Screen card.html Toggle Overlay (No Top Bars) */
+        .cart-page-iframe-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000000; z-index: 1000000; flex-direction: column;
         }
-        .cart-overlay-drawer.open { right: 0; }
-        
-        .cart-drawer-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .cart-drawer-title { font-size: 0.85rem; font-weight: 800; color: var(--gold-solid); letter-spacing: 0.5px; }
-        .cart-drawer-close { background: none; border: none; color: var(--gold-solid); font-size: 1.2rem; cursor: pointer; }
+        .cart-page-iframe-overlay.active { display: flex; }
 
-        .cart-drawer-body { flex: 1; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 10px; }
-        .cart-drawer-item {
-            display: flex; align-items: center; gap: 10px; background: #040407; padding: 10px;
-            border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .cart-drawer-item img { width: 50px; height: 50px; object-fit: contain; border-radius: 6px; background: #000; }
-        .cart-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-        .cart-item-title { font-size: 0.70rem; font-weight: 700; color: #fff; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-        .cart-item-details { font-size: 0.65rem; color: var(--gold-solid); font-weight: 600; }
-        .cart-item-remove { color: var(--pink-love); background: none; border: none; font-size: 0.85rem; cursor: pointer; padding: 4px; }
-
-        .cart-drawer-footer { border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .cart-total-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.80rem; font-weight: 700; color: #fff; }
-        .cart-total-price { color: var(--gold-solid); font-size: 1.1rem; }
-        .checkout-btn-drawer {
-            background: var(--gold-gradient); color: #000; font-size: 0.80rem; font-weight: 800;
-            padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; border: none; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+        .cart-iframe-element {
+            width: 100%; height: 100vh; border: none; background: #000;
         }
 
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 30px; height: 30px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
-            box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.75s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.75s linear, opacity 0.75s ease-in;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.75s ease, top 0.75s ease, transform 0.75s linear, opacity 0.75s ease;
         }
 
-        @keyframes welcomeFadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animated-welcome-msg {
-            background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid);
-            font-weight: 600; max-width: 85%; animation: welcomeFadeIn 0.3s ease forwards;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-        .chat-warning-msg {
-            background: rgba(255, 42, 133, 0.15); color: var(--pink-love); border: 1px solid var(--pink-love);
-            padding: 6px 10px; border-radius: 8px; font-size: 0.62rem; font-weight: 700; text-align: center; margin-top: 4px;
-        }
+        .animated-welcome-msg { background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .chat-warning-msg { background: rgba(255, 42, 133, 0.15); color: #ff2a85; border: 1px solid #ff2a85; padding: 6px 10px; border-radius: 8px; font-size: 0.62rem; font-weight: 700; text-align: center; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -338,7 +250,6 @@
             </div>
 
             <div class="product-right-col">
-                <!-- স্যাম্পল প্রাইস এবং ইন-স্টক একটি টাইট ফ্ল্যাট কার্ডে -->
                 <div class="price-discount-card">
                     <div class="sample-price-block">
                         <span class="sample-price-label">SAMPLE PRICE</span>
@@ -350,7 +261,6 @@
                     </div>
                 </div>
 
-                <!-- হোলসেলের জন্য ২টি প্রি-সেট বাটন এক লাইনে এবং কোয়ান্টিটি ইনপুট -->
                 <div class="qty-section-card">
                     <div class="wholesale-preset-buttons">
                         <button type="button" class="preset-btn" onclick="setQuantityPreset(100, this)">
@@ -386,12 +296,10 @@
                     </div>
 
                     <div class="action-buttons-flex-row">
-                        <!-- সেলার বাটন -->
                         <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
                             <i class="fa-solid fa-headset"></i> <span>SELLER</span>
                         </button>
 
-                        <!-- শুধু প্রিমিয়াম শেয়ার আইকন -->
                         <button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product">
                             <i class="fa-solid fa-share-nodes"></i>
                         </button>
@@ -400,7 +308,6 @@
             </div>
         </div>
 
-        <!-- Related Wholesale Products Grid -->
         <div class="related-products-wrapper">
             <h3 class="related-section-title"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS</h3>
             <div class="feed-container" id="relatedProductsFeedContainer">
@@ -410,20 +317,19 @@
 
     </div>
 
-    <!-- স্লিম স্থায়ী ফিক্সড বটম ফুটার বার (হোম, অর্ডার নাও, কার্ট - স্লাইড ড্রয়ার টগল) -->
+    <!-- স্থায়ী ফিক্সড বটম ফুটার বার (তিনটি মেনুই একসাথে দৃশ্যমান) -->
     <div class="fixed-bottom-checkout-bar">
         <a href="/wholesale/" class="footer-menu-item">
             <i class="fa-solid fa-house footer-menu-icon"></i>
             <span class="footer-menu-label">HOME</span>
         </a>
 
-        <!-- অর্ডার নাও বাটন -->
         <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
 
-        <!-- কার্ট অন/অফ টগল বাটন -->
-        <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="toggleCartDrawer()">
+        <!-- কার্ট মেনু: ক্লিক করলে card.html পেজ অন হবে, পুনরায় ক্লিক করলে অফ হয়ে যাবে -->
+        <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="toggleCartPage()">
             <div class="footer-cart-icon-wrapper">
                 <i class="fa-solid fa-cart-shopping footer-menu-icon"></i>
                 <span class="footer-cart-badge" id="footerCartItemCountBadge">0</span>
@@ -432,25 +338,12 @@
         </button>
     </div>
 
-    <!-- কার্ট সাইড ড্রয়ার অন/অফ সিস্টেম -->
-    <div class="cart-overlay-drawer" id="cartOverlayDrawer">
-        <div class="cart-drawer-header">
-            <span class="cart-drawer-title"><i class="fa-solid fa-cart-shopping"></i> YOUR WHOLESALE CART</span>
-            <button class="cart-drawer-close" onclick="toggleCartDrawer()">&times;</button>
-        </div>
-        <div class="cart-drawer-body" id="cartDrawerBodyContent">
-            <!-- কার্ট আইটেম ডাইনামিকালি লোড হবে -->
-        </div>
-        <div class="cart-drawer-footer">
-            <div class="cart-total-row">
-                <span>TOTAL AMOUNT:</span>
-                <span class="cart-total-price" id="cartDrawerTotalVal">$0.00</span>
-            </div>
-            <a href="/wholesale/cart.html" class="checkout-btn-drawer">PROCEED TO CHECKOUT</a>
-        </div>
+    <!-- সরাসরি card.html পেজ লোড করার টগল ওভারলে (উপরে কোনো বার নেই) -->
+    <div class="cart-page-iframe-overlay" id="cartPageIframeOverlay">
+        <iframe src="card.html" class="cart-iframe-element" id="cartPageIframe"></iframe>
     </div>
 
-    <!-- চ্যাট মডাল সহ ফোন/ইমেইল/ইউআরএল ফিল্টারিং সিকিউরিটি -->
+    <!-- সেলার চ্যাট মডাল -->
     <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
         <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
@@ -474,7 +367,6 @@
         let currentItemQuantity = 300;
         let selectedProductColorImage = "";
 
-        // অটোমেটিক অ্যাফিলিয়েট আইডি ট্র্যাকিং
         function getActiveAffiliateId() {
             const urlParams = new URLSearchParams(window.location.search);
             const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
@@ -501,30 +393,9 @@
             currentParams.set('id', productId);
             
             let affId = getActiveAffiliateId();
-            if (affId) {
-                currentParams.set('ref', affId);
-            }
+            if (affId) currentParams.set('ref', affId);
             
             return `${baseUrl}?${currentParams.toString()}`;
-        }
-
-        const dynamicLikeOptions = [50, 100, 150, 200, 400, 500, 600, 1000, 2000, 3000, 5000];
-
-        function getStoredOrDynamicLikes(productId) {
-            let storageKey = `rorraxy_ws_like_${productId}`;
-            let cachedLike = localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey);
-            
-            if (cachedLike !== null) {
-                return parseInt(cachedLike, 10);
-            }
-            
-            const randomVal = dynamicLikeOptions[Math.floor(Math.random() * dynamicLikeOptions.length)];
-            try {
-                localStorage.setItem(storageKey, randomVal);
-            } catch(e) {
-                sessionStorage.setItem(storageKey, randomVal);
-            }
-            return randomVal;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -710,8 +581,6 @@
                 const prodId = item.id || item.product_id || item.product_code || '101';
                 const title = item.title || 'rorraxy Bulk Item';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
-                
-                const dynamicLikes = item.like_count ? item.like_count : getStoredOrDynamicLikes(prodId);
 
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
                 try {
@@ -721,9 +590,7 @@
                     } else if (item.image_url) {
                         imageUrl = typeof item.image_url === 'string' && item.image_url.startsWith('[') ? JSON.parse(item.image_url)[0] : item.image_url;
                     }
-                } catch(e) {
-                    imageUrl = item.image_url || imageUrl;
-                }
+                } catch(e) { imageUrl = item.image_url || imageUrl; }
 
                 return `
                     <div class="product-card" onclick="window.location.href='${generateAffiliateUrl(prodId)}'">
@@ -732,14 +599,9 @@
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
                             <span class="product-price-tag">${bulkPrice}</span>
-                            <div class="card-sub-actions">
-                                <div class="love-action" onclick="toggleLove(event, this, '${prodId}')">
-                                    <i class="fa-solid fa-heart"></i> <span class="love-count">${dynamicLikes}</span>
-                                </div>
-                                <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
-                                    <i class="fa-solid fa-share-nodes"></i>
-                                </button>
-                            </div>
+                            <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
+                                <i class="fa-solid fa-share-nodes"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -864,7 +726,9 @@
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             
             let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            let finalImgUrl = selectedProductColorImage || (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+            
+            // ব্যবহারকারী বর্তমানে যে ভেরিয়েন্ট কালার/থাম্বনেইল সিলেক্ট করেছেন বা স্ক্রিনে দেখতে পাচ্ছেন, ঠিক সেটিই কার্টে যুক্ত হবে
+            let finalImgUrl = selectedProductColorImage || document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
             
             let activeAffId = getActiveAffiliateId();
 
@@ -892,66 +756,18 @@
             updateCartBadgeCount();
             triggerCoinDropAnimation(event);
             
-            // অটোমেটিক কার্ট স্লাইড অন করে দেখানো
             setTimeout(() => {
-                openCartDrawer();
+                toggleCartPage();
             }, 800);
         }
 
-        // কার্ট সাইডবার অন/অফ (Drawer System)
-        function toggleCartDrawer() {
-            const drawer = document.getElementById('cartOverlayDrawer');
-            if(drawer.classList.contains('open')) {
-                drawer.classList.remove('open');
+        function toggleCartPage() {
+            const overlay = document.getElementById('cartPageIframeOverlay');
+            if(overlay.classList.contains('active')) {
+                overlay.classList.remove('active');
             } else {
-                openCartDrawer();
+                overlay.classList.add('active');
             }
-        }
-
-        function openCartDrawer() {
-            const drawer = document.getElementById('cartOverlayDrawer');
-            renderCartDrawerItems();
-            drawer.classList.add('open');
-        }
-
-        function renderCartDrawerItems() {
-            let cart = JSON.parse(localStorage.getItem('rorraxy_wholesale_cart')) || [];
-            const container = document.getElementById('cartDrawerBodyContent');
-            const totalValElem = document.getElementById('cartDrawerTotalVal');
-
-            if(cart.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color: var(--text-gray); font-size: 0.72rem; margin-top:30px;">YOUR CART IS CURRENTLY EMPTY.</p>`;
-                totalValElem.innerText = '$0.00';
-                return;
-            }
-
-            let totalSum = 0;
-            container.innerHTML = cart.map((item, idx) => {
-                let unitPrice = parseFloat(item.price.replace('$', '')) || 0;
-                let itemTotal = unitPrice * item.qty;
-                totalSum += itemTotal;
-
-                return `
-                    <div class="cart-drawer-item">
-                        <img src="${item.img}" alt="Product">
-                        <div class="cart-item-info">
-                            <span class="cart-item-title">${item.title}</span>
-                            <span class="cart-item-details">${item.qty} PCS × ${item.price} (${item.size})</span>
-                        </div>
-                        <button type="button" class="cart-item-remove" onclick="removeCartDrawerItem(${idx})"><i class="fa-solid fa-trash-can"></i></button>
-                    </div>
-                `;
-            }).join('');
-
-            totalValElem.innerText = `$${totalSum.toFixed(2)}`;
-        }
-
-        function removeCartDrawerItem(index) {
-            let cart = JSON.parse(localStorage.getItem('rorraxy_wholesale_cart')) || [];
-            cart.splice(index, 1);
-            localStorage.setItem('rorraxy_wholesale_cart', JSON.stringify(cart));
-            updateCartBadgeCount();
-            renderCartDrawerItems();
         }
 
         function updateCartBadgeCount() {
@@ -967,7 +783,6 @@
             modal.style.display = isOpening ? 'flex' : 'none';
         }
 
-        // সিকিউরিটি ফিল্টার: ফোন নম্বর, ইমেইল বা বাহ্যিক লিংক চ্যাটে সাপোর্ট করবে না
         function sendChatMessage() {
             let input = document.getElementById('chatMessageInput');
             let box = document.getElementById('chatMessagesContainer');
@@ -976,7 +791,6 @@
             warningArea.innerHTML = "";
 
             if(text !== "") {
-                // ফোন নম্বর, ইমেইল বা লিংক ফিল্টার করার রেগুলার এক্সপ্রেশন
                 const phoneRegex = /(\+?\d{1,4}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}|\d{10,11}/;
                 const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
                 const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|dev|app|store))/i;
@@ -989,32 +803,6 @@
                 box.innerHTML += `<div style="background:var(--gold-gradient); color:#000; padding:6px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end;">${text}</div>`;
                 input.value = "";
                 box.scrollTop = box.scrollHeight;
-            }
-        }
-
-        function toggleLove(event, btn, productId) {
-            event.stopPropagation();
-            let countSpan = btn.querySelector('.love-count');
-            let currentLikes = parseInt(countSpan.innerText) || 0;
-            let finalLikes = currentLikes;
-
-            if(btn.classList.contains('gold-active')) {
-                btn.classList.remove('gold-active');
-                finalLikes = Math.max(0, currentLikes - 1);
-            } else {
-                btn.classList.add('gold-active');
-                finalLikes = currentLikes + 1;
-            }
-
-            countSpan.innerText = finalLikes;
-
-            if(productId) {
-                let storageKey = `rorraxy_ws_like_${productId}`;
-                try {
-                    localStorage.setItem(storageKey, finalLikes);
-                } catch(e) {
-                    sessionStorage.setItem(storageKey, finalLikes);
-                }
             }
         }
 
