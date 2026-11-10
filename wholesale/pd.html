@@ -327,7 +327,7 @@
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
 
-        <!-- কার্ট মেনু: ক্লিক করলে সরাসরি wholesale/cart.html পেজে যাবে -->
+        <!-- কার্ট মেনু: ক্লিক করলে সরাসরি cart.html পেজে যাবে -->
         <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
             <div class="footer-cart-icon-wrapper">
                 <i class="fa-solid fa-cart-shopping footer-menu-icon"></i>
@@ -480,7 +480,6 @@
             document.getElementById('btnPrice100').innerText = `$${p100}`;
             document.getElementById('btnPrice300').innerText = `$${p300}`;
 
-            // ডিফল্টভাবে স্যাম্পল প্রাইস (১ টি ইউনিট) ফিক্সড থাকবে
             currentItemQuantity = 1;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
@@ -725,10 +724,12 @@
 
             let customNoteVal = document.getElementById('customSizeInputField').value.trim();
             let chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
+            
+            // সঠিক কার্ট কি: rorraxy_wholesale_cart
             let cartKey = 'rorraxy_wholesale_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             
-            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
+            let prodId = currentActiveProduct.id || currentActiveProduct.product_id || currentActiveProduct.product_code || '101';
             let mainMediaEl = document.getElementById('mainDisplayMediaElement');
             let finalImgUrl = selectedProductColorImage || (mainMediaEl ? mainMediaEl.src : "") || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
             let activeAffId = getActiveAffiliateId();
