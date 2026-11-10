@@ -66,7 +66,7 @@
             scroll-behavior: smooth;
         }
         
-        body { padding-top: 42px; padding-bottom: 75px; text-transform: uppercase !important; }
+        body { padding-top: 42px; padding-bottom: 85px; text-transform: uppercase !important; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         header.app-header {
@@ -125,11 +125,14 @@
             background: #0a0a0f; color: #ffffff; -webkit-text-fill-color: #ffffff; font-weight: 600; padding: 10px;
         }
 
+        /* YOU পপআপ টেবিল মডাল */
         .luxury-center-modal-overlay {
             display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important;
             background: rgba(0, 0, 0, 0.85) !important; z-index: 999999 !important; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); align-items: center; justify-content: center; padding: 16px;
         }
+        .luxury-center-modal-overlay.active { display: flex !important; }
+
         .luxury-center-modal-box {
             background: #0d0d12; width: 100%; max-width: 450px; border-radius: 24px; 
             padding: 28px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; 
@@ -167,6 +170,7 @@
         .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
         .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; pointer-events: none; }
 
+        /* হোম প্রোডাক্ট ফিড */
         .feed-container {
             padding: 8px 6px;
             column-count: 2;
@@ -195,21 +199,14 @@
             transition: transform 0.2s ease;
         }
 
-        .product-card:active {
-            transform: scale(0.98);
-        }
+        .product-card:active { transform: scale(0.98); }
         
         .product-media-box { 
-            position: relative; 
-            width: 100%; 
-            aspect-ratio: 1 / 1;
+            position: relative; width: 100%; aspect-ratio: 1 / 1;
             background: #08080d linear-gradient(90deg, #08080d 0%, #12121c 50%, #08080d 100%);
             background-size: 200% 100%;
             animation: skeletonLoading 1.5s infinite;
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            overflow: hidden; display: flex; align-items: center; justify-content: center; 
         }
 
         @keyframes skeletonLoading {
@@ -217,25 +214,12 @@
             100% { background-position: -200% 0; }
         }
 
-        .product-media-box.loaded {
-            animation: none;
-            background: #000000;
-        }
-        
+        .product-media-box.loaded { animation: none; background: #000000; }
         .product-media-box img { 
-            width: 100%; 
-            height: 100%; 
-            display: block; 
-            object-fit: cover; 
-            background: transparent; 
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            content-visibility: auto;
+            width: 100%; height: 100%; display: block; object-fit: cover; background: transparent; 
+            opacity: 0; transition: opacity 0.3s ease-in-out; content-visibility: auto;
         }
-
-        .product-media-box img.loaded-img {
-            opacity: 1;
-        }
+        .product-media-box img.loaded-img { opacity: 1; }
 
         .card-footer-actions { 
             display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; 
@@ -243,37 +227,29 @@
             white-space: nowrap; overflow: hidden;
         }
         
-        .wholesale-info-inline { 
-            display: flex; align-items: baseline; gap: 6px; overflow: hidden; 
-        }
-        .product-price-tag { 
-            font-size: 0.80rem; font-weight: 700; background: var(--gold-gradient); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-        }
-        .moq-tag { 
-            font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; 
-        }
+        .wholesale-info-inline { display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
+        .product-price-tag { font-size: 0.80rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .moq-tag { font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
         
         .share-icon-btn { 
             background: none; border: none; cursor: pointer; 
-            font-size: 1.15rem; background: var(--gold-gradient); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             padding: 4px; display: flex; align-items: center; justify-content: center;
             flex-shrink: 0; transition: transform 0.15s ease;
         }
-        .share-icon-btn:active {
-            transform: scale(1.2);
-        }
+        .share-icon-btn:active { transform: scale(1.2); }
 
+        /* বটম ন্যাভবার (১০০% ফিক্সড থাকবে, নড়বে না) */
         nav.bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--footer-wholesale);
-            display: flex; justify-content: space-around; align-items: center; padding: 8px 4px 10px 4px;
-            z-index: 1000; backdrop-filter: blur(20px); border-top: none !important;
+            position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; background: var(--footer-wholesale) !important;
+            display: flex !important; justify-content: space-around !important; align-items: center !important; padding: 8px 4px 10px 4px !important;
+            z-index: 9999999 !important; backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.15) !important;
             transform: translateZ(0);
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; text-decoration: none;
             font-size: 0.50rem; font-weight: 600; cursor: pointer; text-align: center; gap: 3px; flex: 1; text-transform: uppercase;
+            background: none; border: none; outline: none;
         }
         .nav-item i { font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-item span { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 0.50rem; font-weight: 600; }
@@ -287,11 +263,11 @@
         .cart-badge-circle.empty-badge { display: none !important; }
         .cart-custom-svg { width: 22px; height: 22px; fill: url(#goldGradientSvg); }
 
-        /* ট্রান্সপারেন্ট ওভারলে সার্চ মডাল স্টাইল */
+        /* ট্রান্সপারেন্ট ওভারলে সার্চ মডাল */
         .floating-search-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 20000; display: flex; align-items: center; justify-content: center;
+            z-index: 2000000; display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; padding: 16px;
         }
         .floating-search-modal.active { opacity: 1; visibility: visible; }
@@ -320,6 +296,14 @@
         }
         .search-action-item-btn i { font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .search-action-item-btn span { font-size: 0.62rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* ক্যাটাগরি এবং কার্ট পেজের জন্য ফুল-স্ক্রিন আইফ্রেমিং ওভারলে */
+        .external-page-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 60px);
+            background: #000; z-index: 1500000; display: none; border: none; outline: none;
+        }
+        .external-page-overlay.active { display: block; }
+        .external-page-overlay iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body id="mainBody">
@@ -360,9 +344,10 @@
         </div>
     </header>
 
+    <!-- ১. 'You' টেবিল পপআপ ওভারলে -->
     <div id="youMenuModalOverlay" class="luxury-center-modal-overlay">
         <div class="luxury-center-modal-box" onclick="event.stopPropagation()">
-            <button class="luxury-modal-close-btn" onclick="closeYouMenuModal()"><i class="fa-solid fa-xmark"></i></button>
+            <button class="luxury-modal-close-btn" onclick="toggleYouMenu()"><i class="fa-solid fa-xmark"></i></button>
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" class="luxury-modal-logo-large" id="modalLogoLink">
             
             <div class="modal-material-info-text">B2B PORTAL</div>
@@ -403,6 +388,16 @@
         </div>
     </div>
 
+    <!-- ২. ক্যাটাগরি পেজ (category.html) এর জন্য ডায়নামিক আইফ্রেম ওভারলে -->
+    <div class="external-page-overlay" id="categoryPageOverlay">
+        <iframe src="/wholesale/category.html" title="Category Page"></iframe>
+    </div>
+
+    <!-- ৩. কার্ট পেজ (cart.html) এর জন্য ডায়নামিক আইফ্রেম ওভারলে -->
+    <div class="external-page-overlay" id="cartPageOverlay">
+        <iframe src="/wholesale/cart.html" title="Cart Page"></iframe>
+    </div>
+
     <!-- প্রোডাক্ট ফিড কন্টেইনার -->
     <main class="feed-container" id="productFeed">
         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--gold-solid);">
@@ -411,10 +406,10 @@
         </div>
     </main>
 
-    <!-- ট্রান্সপারেন্ট ওভারলে সার্চ মডাল -->
-    <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event)">
+    <!-- ৪. সার্চবার মডাল -->
+    <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event, 'searchModal')">
         <div class="floating-search-box" id="searchBoxContainer">
-            <button class="close-modal-btn" onclick="closeSearchModal()"><i class="fa-solid fa-xmark"></i></button>
+            <button class="close-modal-btn" onclick="toggleSearchModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
             <div class="modal-input-container">
                 <input type="text" id="modalSearchInput" class="modal-input" placeholder="Type bulk product name..." autocomplete="off">
@@ -438,37 +433,41 @@
         </div>
     </div>
 
-    <!-- ৫টি অপশনযুক্ত বটম ন্যাভবার (হোমের বদলে ক্যাটাগরি এবং সার্চবার আলাদা করা হয়েছে) -->
+    <!-- ৫টি সম্পূর্ণ ফিক্সড মেনু আইটেমস -->
     <nav class="bottom-nav" id="bottomNav">
+        <!-- ১. World: সরাসরি External Page লিঙ্ক -->
         <a href="https://rorraxy.com/world" class="nav-item">
             <i class="fa-solid fa-earth-americas"></i>
             <span>World</span>
         </a>
-        <div class="nav-item" id="youNavBtn" onclick="openYouMenuModal(event)">
+        <!-- ২. You: টেবিল পপআপ অন/অফ -->
+        <button type="button" class="nav-item" onclick="toggleYouMenu()">
             <i class="fa-solid fa-user"></i>
             <span>You</span>
-        </div>
-        <a href="/wholesale/category.html" class="nav-item">
+        </button>
+        <!-- ৩. Category: আসল category.html পেজ অন/অফ -->
+        <button type="button" class="nav-item" onclick="toggleCategoryPage()">
             <i class="fa-solid fa-list-check"></i>
             <span>Category</span>
-        </a>
-        <div class="nav-item" onclick="openSearchModal()">
+        </button>
+        <!-- ৪. Search: সার্চবার অন/অফ -->
+        <button type="button" class="nav-item" onclick="toggleSearchModal()">
             <i class="fa-solid fa-magnifying-glass"></i>
             <span>Search</span>
-        </div>
-        <a href="/wholesale/cart.html" class="nav-item">
+        </button>
+        <!-- ৫. Cart: আসল cart.html পেজ অন/অফ -->
+        <button type="button" class="nav-item" onclick="toggleCartPage()">
             <div class="cart-icon-box">
                 <svg class="cart-custom-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 <span class="cart-badge-circle empty-badge" id="floatingCartItemCountBadge">0</span>
             </div>
             <span>Cart</span>
-        </a>
+        </button>
     </nav>
 
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_wholesale_feed_cache';
 
-        // অটোমেটিক অ্যাফিলিয়েট আইডি ট্র্যাকিং ও রিট্রিভাল
         function getActiveAffiliateId() {
             const urlParams = new URLSearchParams(window.location.search);
             const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
@@ -494,20 +493,9 @@
             getActiveAffiliateId();
             updateCartBadgeCount();
             
-            // ইউআরএল কোয়েরি চেক করা (যদি সার্চ কোয়েরি বা ক্যাটাগরি ফিল্টার পাস করা হয়)
             const urlParams = new URLSearchParams(window.location.search);
             const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
-            
             loadWholesaleProducts(searchQuery);
-            
-            const overlay = document.getElementById('youMenuModalOverlay');
-            if (overlay) {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        closeYouMenuModal();
-                    }
-                });
-            }
 
             document.getElementById('modalLogoLink').addEventListener('click', () => {
                 window.location.href = 'https://rorraxy.com/';
@@ -543,18 +531,53 @@
             }
         }
 
-        // সার্চ মডাল কন্ট্রোল ফাংশনসমূহ
-        function openSearchModal() {
-            document.getElementById('searchModal').classList.add('active');
-            setTimeout(() => { document.getElementById('modalSearchInput').focus(); }, 100);
-        }
-
-        function closeSearchModal() {
+        // --- সম্পূর্ণ পেজ/ওভারলে বন্ধ করার কমন ফাংশন ---
+        function closeAllOverlays() {
+            document.getElementById('youMenuModalOverlay').classList.remove('active');
             document.getElementById('searchModal').classList.remove('active');
+            document.getElementById('categoryPageOverlay').classList.remove('active');
+            document.getElementById('cartPageOverlay').classList.remove('active');
         }
 
-        function handleOutsideClick(event) {
-            if (event.target === document.getElementById('searchModal')) closeSearchModal();
+        // ১. YOU মেনু টগল লজিক (On / Off)
+        function toggleYouMenu() {
+            const overlay = document.getElementById('youMenuModalOverlay');
+            const isOpen = overlay.classList.contains('active');
+            closeAllOverlays();
+            if (!isOpen) overlay.classList.add('active');
+        }
+
+        // ২. CATEGORY (category.html) পেজ টগল লজিক (On / Off)
+        function toggleCategoryPage() {
+            const overlay = document.getElementById('categoryPageOverlay');
+            const isOpen = overlay.classList.contains('active');
+            closeAllOverlays();
+            if (!isOpen) overlay.classList.add('active');
+        }
+
+        // ৩. SEARCH মডাল টগল লজিক (On / Off)
+        function toggleSearchModal() {
+            const overlay = document.getElementById('searchModal');
+            const isOpen = overlay.classList.contains('active');
+            closeAllOverlays();
+            if (!isOpen) {
+                overlay.classList.add('active');
+                setTimeout(() => { document.getElementById('modalSearchInput').focus(); }, 100);
+            }
+        }
+
+        // ৪. CART (cart.html) পেজ টগল লজিক (On / Off)
+        function toggleCartPage() {
+            const overlay = document.getElementById('cartPageOverlay');
+            const isOpen = overlay.classList.contains('active');
+            closeAllOverlays();
+            if (!isOpen) overlay.classList.add('active');
+        }
+
+        function handleOutsideClick(event, overlayId) {
+            if (event.target === document.getElementById(overlayId)) {
+                closeAllOverlays();
+            }
         }
 
         function submitModalSearch() {
@@ -562,7 +585,7 @@
             if(!input) return;
             let query = input.value.trim();
             if (!query) return;
-            closeSearchModal();
+            closeAllOverlays();
             loadWholesaleProducts(query);
         }
 
@@ -580,7 +603,7 @@
             recognition.onresult = function(event) {
                 let transcript = event.results[0][0].transcript;
                 searchInput.value = transcript;
-                closeSearchModal();
+                closeAllOverlays();
                 loadWholesaleProducts(transcript);
             };
             try { recognition.start(); } catch (err) {}
@@ -588,11 +611,11 @@
 
         function handleCameraSearch(event) {
             if (!event.target.files[0]) return;
-            closeSearchModal();
+            closeAllOverlays();
             loadWholesaleProducts("search");
         }
 
-        // Deterministic Pseudo-Random Shuffle Generator
+        // প্রোডাক্ট লোডিং ফাংশন
         function seededShuffle(array, seed) {
             let m = array.length, t, i;
             let arr = [...array];
@@ -614,7 +637,6 @@
             if (!Array.isArray(rawList) || rawList.length === 0) return [];
 
             let list = [...rawList];
-
             let invertedList = list.reverse();
             let splitPoint = Math.floor(invertedList.length * 0.6);
             let partA = invertedList.slice(0, splitPoint);
@@ -671,7 +693,6 @@
                 return mode === 'wholesale' || mode === 'both' || mode === '' || mode === 'null' || mode === 'undefined' || p.is_cj || p.product_code || p.cj_product_id;
             });
 
-            // যদি সার্চ ফিল্টার বা কোয়েরি দেওয়া থাকে, তবে সেটি দিয়ে প্রোডাক্ট ফিল্টার করা হবে
             if (searchFilter) {
                 const query = searchFilter.toLowerCase();
                 wholesaleProducts = wholesaleProducts.filter(item => {
@@ -774,15 +795,6 @@
 
             feedContainer.innerHTML = '';
             feedContainer.appendChild(fragment);
-        }
-
-        function openYouMenuModal(event) {
-            if(event) event.stopPropagation();
-            document.getElementById('youMenuModalOverlay').style.display = 'flex';
-        }
-        
-        function closeYouMenuModal() {
-            document.getElementById('youMenuModalOverlay').style.display = 'none';
         }
 
         async function shareProduct(event, title, productId) {
