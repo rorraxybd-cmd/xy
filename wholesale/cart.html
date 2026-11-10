@@ -39,7 +39,7 @@
         }
 
         .checkout-container {
-            max-width: 760px; width: 100%; margin: 0 auto; padding: 20px 12px 110px 12px; display: flex; flex-direction: column; gap: 16px;
+            max-width: 760px; width: 100%; margin: 0 auto; padding: 20px 12px 130px 12px; display: flex; flex-direction: column; gap: 16px;
         }
 
         .cart-brand-logo {
@@ -50,7 +50,7 @@
             display: flex; background: var(--card-bg); border-radius: 16px; padding: 16px 14px; flex-direction: column; gap: 12px; 
             border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); width: 100%;
         }
-        .section-center-header { text-align: center; padding-bottom: 2px; width: 100%; }
+        .section-center-header { text-align: center; padding-bottom: 2px; width: 100%; position: relative; }
         .section-center-header h2 { font-size: 0.82rem; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 6px; color: #fff; max-width: 100%; text-overflow: ellipsis; }
 
         .luxury-form-label { font-size: 0.62rem; color: #ffffff !important; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
@@ -122,15 +122,19 @@
         .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
         .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; }
 
-        .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; width: 100%; }
+        .payout-icons-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 6px; width: 100%; }
         
-        /* Premium Vector/SVG Brand Badges */
-        .svg-payout-card {
+        /* প্রফেশনাল রিয়েল ভেক্টর পেমেন্ট লোগো কার্ড */
+        .brand-payout-badge {
             display: inline-flex; align-items: center; justify-content: center;
-            background: #ffffff; padding: 4px 10px; border-radius: 6px; height: 32px; min-width: 52px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
+            background: #ffffff; padding: 6px 12px; border-radius: 8px; height: 36px; min-width: 65px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.25);
         }
-        .svg-payout-card svg, .svg-payout-card img { height: 18px; width: auto; max-width: 48px; object-fit: contain; }
+        .brand-payout-badge svg { height: 20px; width: auto; object-fit: contain; }
+
+        /* বিকাশ ও নগদ কাস্টম স্টাইলিশ লোগো কার্ড */
+        .bkash-badge { background: #e2136e !important; }
+        .nagad-badge { background: #f7931e !important; }
 
         #currenciesModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
@@ -143,25 +147,34 @@
         .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
         .currency-tag { background: #181824; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
 
+        /* ফিক্সড বটম কন্ট্রোল বার (ব্যাক ও প্রসেস বাটনসহ) */
         .single-fixed-checkout-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
             background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px);
-            padding: 12px 16px; display: flex; justify-content: center; align-items: center;
+            padding: 12px 16px; display: flex; justify-content: center; align-items: center; gap: 12px;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.6); width: 100%;
         }
         .btn-action-main {
             background: var(--gold-gradient); color: #000000; font-weight: 800; font-size: 0.84rem;
             padding: 13px 20px; border-radius: 24px; border: none !important; display: flex; align-items: center;
-            justify-content: center; gap: 8px; cursor: pointer; letter-spacing: 0.8px; width: 100%; max-width: 420px;
+            justify-content: center; gap: 8px; cursor: pointer; letter-spacing: 0.8px; width: 100%; max-width: 320px;
             font-family: var(--font-main); box-shadow: 0 4px 18px rgba(212,175,55,0.3); text-align: center;
         }
         .btn-action-main:active { transform: scale(0.98); }
+
+        /* নিচে ফিক্সড ব্যাকস্পেস / ব্যাক বাটন */
+        .btn-action-back {
+            background: rgba(255, 255, 255, 0.08); color: var(--gold-solid); font-weight: 700; font-size: 0.78rem;
+            padding: 13px 18px; border-radius: 24px; border: 1px solid rgba(212, 175, 55, 0.3); display: none; align-items: center;
+            justify-content: center; gap: 6px; cursor: pointer; font-family: var(--font-main); text-align: center; white-space: nowrap;
+        }
+        .btn-action-back:hover { background: rgba(212, 175, 55, 0.15); }
 
         .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
         .gold-gradient-price { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
 
         #toastBox {
-            position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%); background: #181824; color: #ffffff; padding: 9px 16px;
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #181824; color: #ffffff; padding: 9px 16px;
             border-radius: 8px; z-index: 9999999; display: none; font-size: 0.72rem; font-weight: 700; text-transform: none !important; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
     </style>
@@ -273,7 +286,7 @@
 
                 <div class="payment-accordion-group">
 
-                    <!-- INTERNATIONAL CARDS WITH ACCURATE SVG LOGOS -->
+                    <!-- INTERNATIONAL CARDS WITH REAL PROFESSIONAL SVG LOGOS -->
                     <div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
@@ -281,23 +294,23 @@
                                 <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="payout-icons-row">
-                                <!-- VISA SVG -->
-                                <div class="svg-payout-card" title="VISA">
+                                <!-- VISA -->
+                                <div class="brand-payout-badge" title="VISA">
                                     <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="#1A1F71" d="M47.2 32.5h-7.6l4.8-23.7h7.6l-4.8 23.7zm28.3-23.1c-1.5-.6-3.8-1.2-6.7-1.2-7.4 0-12.6 3.7-12.6 9 0 3.9 3.7 6.1 6.5 7.4 2.9 1.4 3.9 2.3 3.9 3.5 0 1.9-2.4 2.8-4.6 2.8-3.1 0-4.8-.4-7.4-1.5l-1 .5 1.1 5.3c2.2.9 5.8 1.6 9.4 1.6 7.9 0 13-3.7 13-9.5 0-3.2-2-5.6-6.4-7.6-2.7-1.3-4.3-2.2-4.3-3.5 0-1.2 1.4-2.4 4.4-2.4 2.5 0 4.3.5 5.7 1.1l.7.3 1.1-5.3zm20.8-0.6h-5.9c-1.8 0-3.2.5-4 2.3l-11.3 21.4h8l1.6-4.2h9.8l0.9 4.2h7l-6.1-23.7zm-8.8 14.2l3.2-8.3 1.8 8.3h-5zm-55.9-14.2l-7.4 16.2-0.8-3.9c-1.4-4.5-5.7-9.4-10.5-11.8l6.8 23.2h8l11.9-23.7h-8z"/>
                                         <path fill="#F7B600" d="M18.8 8.8h-12c-1.3 0-2.4.8-2.8 2l-7 21.7h8l1.6-4.2h9.8"/>
                                     </svg>
                                 </div>
-                                <!-- MASTERCARD SVG -->
-                                <div class="svg-payout-card" title="MasterCard">
+                                <!-- MASTERCARD -->
+                                <div class="brand-payout-badge" title="MasterCard">
                                     <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="35" cy="30" r="22" fill="#EB001B"/>
                                         <circle cx="65" cy="30" r="22" fill="#F79E1B"/>
                                         <path fill="#FF5F00" d="M50 13.8a21.9 21.9 0 0 0-8.2 16.2A21.9 21.9 0 0 0 50 46.2a21.9 21.9 0 0 0 8.2-16.2A21.9 21.9 0 0 0 50 13.8z"/>
                                     </svg>
                                 </div>
-                                <!-- AMEX SVG -->
-                                <div class="svg-payout-card" style="background:#006FCF;" title="American Express">
+                                <!-- AMEX -->
+                                <div class="brand-payout-badge" style="background:#006FCF;" title="American Express">
                                     <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="#FFFFFF" d="M12 20h8l3 6 3-6h8v20h-7v-12l-4 8h-2l-4-8v12h-5V20zm30 0h14v4.5H47v3h8v4.5h-8v3.5h10V40H42V20zm16 0h6l4 7 4-7h6v20h-5v-12l-5 12h-1l-5-12v12h-4V20z"/>
                                     </svg>
@@ -314,18 +327,18 @@
                                 <span class="badge-local-bd">BDT PAYMENT</span>
                             </div>
                             <div class="payout-icons-row">
-                                <!-- BKASH SVG -->
-                                <div class="svg-payout-card" style="background:#e2136e;" title="bKash">
-                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill="#FFFFFF" d="M22 6l16 14-16 14V6zm-4 0L2 20l16 14V6zm20 14l16-14v28l-16-14z"/>
-                                        <text x="58" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">bKash</text>
+                                <!-- BKASH ORIGINAL -->
+                                <div class="brand-payout-badge bkash-badge" title="bKash">
+                                    <svg viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="#FFFFFF" d="M20 6l14 14-14 14V6zm-4 0L2 20l14 14V6zm18 14l14-14v28l-14-14z"/>
+                                        <text x="56" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="19" fill="#FFFFFF">bKash</text>
                                     </svg>
                                 </div>
-                                <!-- NAGAD SVG -->
-                                <div class="svg-payout-card" style="background:#f7931e;" title="Nagad">
-                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                <!-- NAGAD ORIGINAL -->
+                                <div class="brand-payout-badge nagad-badge" title="Nagad">
+                                    <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="#FFFFFF" d="M12 8c6 0 10 4 10 10s-4 10-10 10S2 24 2 18 6 8 12 8zm0 4a6 6 0 100 12 6 6 0 000-12z"/>
-                                        <text x="32" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">NAGAD</text>
+                                        <text x="32" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="18" fill="#FFFFFF">NAGAD</text>
                                     </svg>
                                 </div>
                             </div>
@@ -355,8 +368,11 @@
 
     </div>
 
-    <!-- MAIN ACTION BUTTON -->
+    <!-- MAIN ACTION BUTTON & BACK BUTTON WRAPPER -->
     <div class="single-fixed-checkout-wrapper">
+        <button type="button" id="mainBackBtn" class="btn-action-back" onclick="goToStep(1)">
+            <i class="fa-solid fa-arrow-left"></i> BACK
+        </button>
         <button type="button" id="mainCheckoutBtn" class="btn-action-main">
             PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>
         </button>
@@ -625,15 +641,18 @@
             const step1 = document.getElementById('step1CartSection');
             const step2 = document.getElementById('step2PaymentSection');
             const mainBtn = document.getElementById('mainCheckoutBtn');
+            const backBtn = document.getElementById('mainBackBtn');
 
             if(stepNumber === 1) {
                 step1.style.display = 'flex';
                 step2.style.display = 'none';
                 mainBtn.innerHTML = 'PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>';
+                backBtn.style.display = 'none';
             } else if(stepNumber === 2) {
                 step1.style.display = 'none';
                 step2.style.display = 'flex';
                 mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM ORDER';
+                backBtn.style.display = 'flex';
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
