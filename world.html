@@ -419,13 +419,13 @@ background: none !important;
 color: #ff2d55 !important;
 }
 
-/* Policy Modal Overlay Styling (Seamless No-Header Design with Floating Cross Button) */
+/* Policy Modal Overlay Styling (Using Iframe to retain exact external CSS, colors, and styling) */
 .policy-modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
   background: rgba(3, 3, 5, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -433,7 +433,7 @@ color: #ff2d55 !important;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  padding: 15px 10px;
+  padding: 15px;
 }
 .policy-modal-overlay.active {
   opacity: 1;
@@ -441,25 +441,25 @@ color: #ff2d55 !important;
 }
 .policy-modal-box {
   width: 100%;
-  max-width: 850px;
-  height: 90vh;
-  background: var(--card-retail);
+  max-width: 900px;
+  height: 88vh;
+  background: #000000;
   border: 2px solid transparent;
-  background-image: linear-gradient(var(--card-retail), var(--card-retail)), var(--gold-gradient);
+  background-image: linear-gradient(#000000, #000000), var(--gold-gradient);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.95);
   overflow: hidden;
   position: relative;
 }
 .policy-floating-close-btn {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(3, 3, 5, 0.9);
+  top: 15px;
+  right: 15px;
+  background: rgba(11, 11, 16, 0.9);
   border: 1px solid rgba(212, 175, 55, 0.5);
   color: var(--text-white);
   font-size: 1rem;
@@ -472,29 +472,25 @@ color: #ff2d55 !important;
   justify-content: center;
   z-index: 5000;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.9);
 }
 .policy-floating-close-btn:hover {
   background: var(--gold-gradient);
-  color: #030305;
+  color: #000000;
   transform: scale(1.1);
 }
 .policy-modal-body {
   flex: 1;
-  overflow-y: auto;
-  padding: 40px 20px 20px 20px;
-  color: var(--text-white);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000000;
 }
-.policy-modal-body .golden-border-box {
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
-.policy-modal-body .footer-action {
-  display: none !important;
+.policy-modal-body iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000000;
 }
 </style>
 </head>
@@ -526,12 +522,12 @@ color: #ff2d55 !important;
 </div>
 </div>
 
-<!-- Policy Modal Overlay Container (Seamless Display with Floating Cross Button) -->
+<!-- Policy Modal Overlay Container (Using Iframe to preserve 100% exact CSS styling and golden gradients) -->
 <div id="policyModalOverlay" class="policy-modal-overlay" onclick="closePolicyOnOutside(event)">
   <div class="policy-modal-box">
     <button onclick="closePolicyModal()" class="policy-floating-close-btn" title="Close"><i class="fa-solid fa-xmark"></i></button>
     <div id="policyModalBody" class="policy-modal-body">
-      <div style="text-align:center; padding: 40px; color: var(--text-gray);">Loading policy details...</div>
+      <!-- Iframe will load the policy file dynamically -->
     </div>
   </div>
 </div>
@@ -752,34 +748,29 @@ function switchSection(sectionId) {
   }
 }
 
-// In-Page Policy Modal Handling Functions with Seamless Floating Cross
-async function openPolicyModal(filename) {
+// In-Page Policy Modal Handling Functions using Iframe for 100% accurate page styling and colors
+function openPolicyModal(filename) {
   const modal = document.getElementById('policyModalOverlay');
   const modalBody = document.getElementById('policyModalBody');
   
-  modalBody.innerHTML = '<div style="text-align:center; padding: 50px; color: var(--text-gray);"><i class="fa-solid fa-spinner fa-spin gold-gradient-icon" style="font-size: 2rem;"></i><p style="margin-top:10px;">Loading policy details...</p></div>';
+  modalBody.innerHTML = '';
   modal.classList.add('active');
 
   const fullUrl = '/policies/' + filename;
 
-  try {
-    const response = await fetch(fullUrl);
-    if (!response.ok) throw new Error('Network response was not ok');
-    const htmlText = await response.text();
-    
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, 'text/html');
-    const contentBox = doc.querySelector('.golden-border-box') || doc.body;
-    
-    modalBody.innerHTML = '';
-    modalBody.appendChild(contentBox);
-  } catch (err) {
-    modalBody.innerHTML = '<div style="text-align:center; padding: 40px; color: #ff3b30;">Failed to load policy details. Please check if ' + fullUrl + ' exists.</div>';
-  }
+  const iframe = document.createElement('iframe');
+  iframe.src = fullUrl;
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = 'none';
+  iframe.style.background = '#000000';
+  
+  modalBody.appendChild(iframe);
 }
 
 function closePolicyModal() {
   document.getElementById('policyModalOverlay').classList.remove('active');
+  document.getElementById('policyModalBody').innerHTML = '';
 }
 
 function closePolicyOnOutside(event) {
