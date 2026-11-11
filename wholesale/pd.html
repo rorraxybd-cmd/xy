@@ -446,6 +446,7 @@
                 price_100: 20.00,
                 price_300: 18.00,
                 stock: 1500,
+                category: "Shoes",
                 description: "High-grade bulk wholesale manufacturing supply meeting international commercial standards.",
                 image_url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png"
             };
@@ -560,8 +561,32 @@
             }
 
             let currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
-            let relatedList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
-            if (relatedList.length === 0) relatedList = allProducts;
+            let currentCat = currentProd ? (currentProd.category || currentProd.cat || '').toLowerCase().trim() : '';
+            let currentTitle = currentProd ? (currentProd.title || '').toLowerCase() : '';
+
+            // ১. মেইন প্রোডাক্ট বাদে বাকি সব প্রোডাক্ট ফিল্টার
+            let filteredList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
+
+            // ২. ক্যাটাগরি অথবা টাইটেল দিয়ে একই ক্যাটাগরির প্রোডাক্ট সার্চ করা
+            let sameCategoryList = filteredList.filter(item => {
+                let itemCat = (item.category || item.cat || '').toLowerCase().trim();
+                let itemTitle = (item.title || '').toLowerCase();
+
+                if (currentCat && itemCat) {
+                    return itemCat === currentCat;
+                }
+                
+                // যদি স্পষ্ট ক্যাটাগরি না থাকে, তবে টাইটেল থেকে কি-ওয়ার্ড ম্যাচ করে ফিল্টার করবে
+                if (currentTitle) {
+                    let words = currentTitle.split(' ').filter(w => w.length > 3);
+                    return words.some(w => itemTitle.includes(w));
+                }
+
+                return false;
+            });
+
+            // ৩. একই ক্যাটাগরির প্রোডাক্ট না পাওয়া গেলে ব্যাকআপ হিসেবে অন্য যেকোনো প্রোডাক্ট লোড করবে
+            let relatedList = sameCategoryList.length > 0 ? sameCategoryList : filteredList;
 
             container.innerHTML = relatedList.slice(0, 8).map(item => {
                 const prodId = item.id || item.product_id || item.product_code || '101';
