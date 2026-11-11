@@ -55,37 +55,53 @@
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+        /* Smooth Loader Overlay */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.1s ease, visibility 0.1s ease;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.4s ease;
+            will-change: opacity, visibility;
+            backface-visibility: hidden;
         }
         .loader-logo-box {
             width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3);
+            border: 2px solid var(--gold-solid); box-shadow: 0 0 20px rgba(212,175,55,0.4);
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212,175,55,0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(212,175,55,0.7); transform: scale(1.05); }
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .loader-brand-name {
-            font-size: 1rem; font-weight: 800; letter-spacing: 3px;
+            font-size: 1.1rem; font-weight: 800; letter-spacing: 4px;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .animate-card-entry { animation: fadeInLuxury 0.1s ease forwards; }
+        /* Ultra Smooth Card Entry Animation */
+        .animate-card-entry { 
+            animation: fadeInLuxury 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            will-change: transform, opacity;
+        }
         @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* Fixed Non-Jitter Search Bar */
         .top-floating-search-bar {
-            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateZ(0);
             width: 90%; max-width: 400px; z-index: 5500; display: flex;
-            align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
-            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            align-items: center; background: rgba(9, 10, 15, 0.95); border: 1.5px solid rgba(107, 85, 35, 0.8);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
         .top-floating-search-bar.search-hidden {
-            transform: translate(-50%, -100px); opacity: 0; pointer-events: none;
+            transform: translate(-50%, -100px) translateZ(0); opacity: 0; pointer-events: none;
         }
         .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
@@ -95,23 +111,26 @@
         .floating-search-btn-circle {
             width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient);
             border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #000; font-size: 0.9rem;
+            cursor: pointer; color: #000; font-size: 0.9rem; flex-shrink: 0;
         }
 
-        /* Stable Bottom Navigation Bar (No Jitter) */
+        /* Hardware-Accelerated Stable Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.99); backdrop-filter: blur(20px);
+            background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
-            transform: translateZ(0); will-change: transform;
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
+            backface-visibility: hidden;
+            contain: layout style;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
+            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.15s ease;
         }
-        .bottom-nav-item:active { transform: scale(0.95); }
+        .bottom-nav-item:active { transform: scale(0.92); }
         .bottom-nav-item i { 
             font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
@@ -131,9 +150,10 @@
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.15s ease;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateZ(0);
         }
-        .product-card:active { transform: scale(0.97); }
+        .product-card:active { transform: scale(0.96); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; loading: lazy; }
@@ -159,12 +179,17 @@
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
             align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.25s ease;
+        }
+        .reel-modal-overlay.active-modal {
+            display: flex; opacity: 1;
         }
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: calc(100vh - 68px); height: calc(100dvh - 68px); top: 0;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
             scrollbar-width: none; border: none;
+            transform: translateZ(0);
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
 
@@ -173,7 +198,7 @@
             scroll-snap-align: start; scroll-snap-stop: always;
             display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
             align-items: center; justify-content: center; padding-bottom: 10px;
-            transform: translateZ(0); will-change: transform;
+            transform: translate3d(0, 0, 0); will-change: transform;
         }
         .reel-media-box { 
             position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 95px); 
@@ -186,7 +211,7 @@
         }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        /* Super Fast & Smooth Cross-Fade Slideshow Layers with Zoom In/Out */
+        /* Super Fast & Smooth Cross-Fade Slideshow Layers */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -223,36 +248,61 @@
             padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
+        /* PERMANENT FIX: Zero Jitter Side Action Bar */
         .right-vertical-actions {
             position: fixed; right: 12px; bottom: 85px; z-index: 4500;
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             pointer-events: auto; width: 45px;
-            transform: translateZ(0); will-change: transform;
+            transform: translate3d(0, 0, 0); 
+            will-change: transform;
+            backface-visibility: hidden;
+            contain: layout style;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
-        .side-action-item:active { transform: scale(0.9); }
+        .side-action-item { 
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; 
+            position: relative; transition: transform 0.15s ease; width: 100%; 
+            user-select: none;
+        }
+        .side-action-item:active { transform: scale(0.88); }
         .action-pure-icon { 
             font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
+            transition: color 0.2s ease, transform 0.2s ease;
         }
         .side-count-text { 
             font-size: 0.58rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
             text-shadow: 0 2px 4px rgba(0,0,0,0.9); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45px;
         }
-        .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
-        .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
+        
+        .love-action-btn.liked-active .action-pure-icon { 
+            color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; 
+            animation: heartBeat 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .save-action-btn.active .action-pure-icon { 
+            color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; 
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+        }
 
         .cart-pink-badge {
             position: absolute; top: -6px; right: -2px; background: var(--pink-accent); color: #fff;
             font-size: 0.55rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
+            transition: transform 0.2s ease;
         }
 
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px;
-            scrollbar-width: none;
+            background: rgba(0, 0, 0, 0.7); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            scrollbar-width: none; opacity: 0; transition: opacity 0.25s ease;
+        }
+        .overlay-sheet.active-sheet {
+            display: flex; opacity: 1;
         }
         .overlay-sheet::-webkit-scrollbar { display: none; }
 
@@ -260,7 +310,10 @@
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+            transform: scale(0.95); transition: transform 0.25s ease;
         }
+        .overlay-sheet.active-sheet .buy-preview-modal { transform: scale(1); }
+
         .preview-horizontal-scroll {
             display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;
             scrollbar-width: none;
@@ -270,7 +323,7 @@
         .preview-img-item {
             flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
             border: 2px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: border-color 0.2s ease;
         }
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -280,7 +333,8 @@
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
             box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.3s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.3s linear, opacity 0.3s ease-in;
+            transition: left 0.35s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.35s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.35s linear, opacity 0.35s ease-in;
+            will-change: left, top, transform, opacity;
         }
 
         .inpage-details-modal {
@@ -299,7 +353,7 @@
 
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 15px 85px 15px;
             scrollbar-width: none;
         }
@@ -338,6 +392,7 @@
 </head>
 <body id="mainBody">
 
+    <!-- Premium Smooth Loader -->
     <div id="rorraxyLoaderOverlay">
         <div class="loader-logo-box">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy">
@@ -345,12 +400,13 @@
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Always Visible Floating Search Bar (Connected for both Home & Reels) -->
+    <!-- Connected Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar search-hidden">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
+    <!-- Hardware-Accelerated Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -358,6 +414,36 @@
         <div id="bottomDetailsBtn" class="bottom-nav-item" onclick="handleBottomDetails()"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
         <div id="bottomHomeToggleBtn" class="bottom-nav-item" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>HOME</span></div>
     </nav>
+
+    <!-- SINGLE PERMANENT RIGHT VERTICAL ACTION BAR (NO JITTER & NO RE-DOM CREATION) -->
+    <div id="fixedGlobalActionsBar" class="right-vertical-actions">
+        <div class="side-action-item" onclick="toggleCartPortal()" title="Cart">
+            <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
+            <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
+        </div>
+
+        <div class="side-action-item" id="sideShareBtn" onclick="handleSideShareAction(event)" title="Share">
+            <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
+        </div>
+
+        <div class="side-action-item love-action-btn" id="sideLikeBtn" onclick="handleSideLikeAction(event)" title="Like">
+            <i class="fa-solid fa-heart action-pure-icon"></i>
+            <span class="side-count-text love-count" id="sideLikeCountText"></span>
+        </div>
+
+        <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search">
+            <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
+        </div>
+
+        <div class="side-action-item save-action-btn" id="sideSaveBtn" onclick="handleSideSaveAction(event)" title="Save">
+            <i class="fa-solid fa-bookmark action-pure-icon"></i>
+        </div>
+
+        <div class="side-action-item" onclick="toggleAccountPortal()" title="You">
+            <i class="fa-solid fa-user action-pure-icon"></i>
+            <span class="side-count-text">YOU</span>
+        </div>
+    </div>
 
     <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
         <iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe>
@@ -402,6 +488,7 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
+        let isReelsModeActive = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -416,13 +503,14 @@
             loadLiveProducts();
             updateCartBadgeCount();
 
+            // Smooth Loader Dismissal
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 50);
+                    setTimeout(() => loader.style.display = 'none', 400);
                 }
-            }, 40);
+            }, 300);
 
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
@@ -436,8 +524,7 @@
             // Scroll listener on home to auto-hide/show search bar
             let lastScrollTop = 0;
             window.addEventListener('scroll', () => {
-                const reelModal = document.getElementById('reelModalOverlay');
-                if(reelModal && reelModal.style.display === 'flex') return; 
+                if(isReelsModeActive) return; 
 
                 let st = window.pageYOffset || document.documentElement.scrollTop;
                 const searchBar = document.getElementById('floatingSearchContainer');
@@ -452,8 +539,7 @@
             }, { passive: true });
 
             window.addEventListener('keydown', (e) => {
-                const modal = document.getElementById('reelModalOverlay');
-                if(modal && modal.style.display === 'flex') {
+                if(isReelsModeActive) {
                     const wrapper = document.getElementById('reelModalWrapperBody');
                     if(!wrapper) return;
                     let cardHeight = wrapper.clientHeight || window.innerHeight;
@@ -616,8 +702,6 @@
             });
             activeProductList = filtered;
             renderPinterestHomeGrid(filtered);
-
-            // If we are in reels mode and user searched, close reels and show filtered home grid
             closeReelModal();
         }
 
@@ -693,56 +777,79 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
-            renderFixedGlobalActions(null, true);
+            updateSideActionState();
         }
 
-        function renderFixedGlobalActions(pId, isHome = false) {
-            let existingBar = document.getElementById('fixedGlobalActionsBar');
-            if(existingBar) existingBar.remove();
+        /* ZERO-JITTER SIDE ACTION UPDATE METHOD */
+        function updateSideActionState() {
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if(!list || list.length === 0) return;
 
-            let targetId = pId || (activeProductList.length > 0 ? (activeProductList[0].id || activeProductList[0].product_id || '101') : '101');
-            let pLikes = isHome ? '' : getDynamicEngagement(targetId);
+            let currentItem = list[currentReelIndex] || list[0];
+            let targetId = String(currentItem.id || currentItem.product_id || '101');
 
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
-            let savedActiveClass = isSaved ? 'active' : '';
-
+            // 1. Dynamic Like Count & Active State
+            const likeBtn = document.getElementById('sideLikeBtn');
+            const likeCountElem = document.getElementById('sideLikeCountText');
             let storageKeyLike = `rorraxy_retail_likes_${targetId}`;
             let isLiked = localStorage.getItem(storageKeyLike + '_active') === 'true';
-            let likedActiveClass = isLiked ? 'liked-active' : '';
 
-            let actionsHtml = `
-                <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-                    <div class="side-action-item" onclick="toggleCartPortal()" title="Cart">
-                        <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
-                        <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
-                    </div>
+            if(isReelsModeActive) {
+                let likesCount = getDynamicEngagement(targetId);
+                if(likeCountElem) likeCountElem.innerText = likesCount;
+            } else {
+                if(likeCountElem) likeCountElem.innerText = '';
+            }
 
-                    <div class="side-action-item" onclick="${isHome ? 'openReelsModal(0)' : `handlePinterestInterception(event, 'share', '${targetId}')`}" title="Share">
-                        <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
-                    </div>
-                    <div class="side-action-item love-action-btn ${isHome ? '' : likedActiveClass}" onclick="${isHome ? 'openReelsModal(0)' : `handlePinterestInterception(event, 'like', '${targetId}')`}" title="Like">
-                        <i class="fa-solid fa-heart action-pure-icon"></i>
-                        <span class="side-count-text love-count">${pLikes}</span>
-                    </div>
-                    <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search">
-                        <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
-                    </div>
-                    <div class="side-action-item save-action-btn ${savedActiveClass}" onclick="handlePinterestInterception(event, 'save', '${targetId}')" title="Save">
-                        <i class="fa-solid fa-bookmark action-pure-icon"></i>
-                    </div>
+            if(likeBtn) {
+                if(isLiked) likeBtn.classList.add('liked-active');
+                else likeBtn.classList.remove('liked-active');
+            }
 
-                    <div class="side-action-item" onclick="toggleAccountPortal()" title="You">
-                        <i class="fa-solid fa-user action-pure-icon"></i>
-                        <span class="side-count-text">YOU</span>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', actionsHtml);
+            // 2. Saved Active State
+            const saveBtn = document.getElementById('sideSaveBtn');
+            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            let isSaved = savedObjects.some(item => String(item.id || item.product_id) === targetId);
+            if(saveBtn) {
+                if(isSaved) saveBtn.classList.add('active');
+                else saveBtn.classList.remove('active');
+            }
+
             updateCartBadgeCount();
         }
 
-        // Perfectly Connected Search Toggle for Reels & Home
+        // Side Actions Intercept Handlers (Fixed & Non-Jittery)
+        function handleSideShareAction(e) {
+            e.stopPropagation();
+            if(!isReelsModeActive) {
+                openReelsModal(0);
+            } else {
+                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                let targetId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
+                openNativeShare(e, targetId);
+            }
+        }
+
+        function handleSideLikeAction(e) {
+            e.stopPropagation();
+            if(!isReelsModeActive) {
+                openReelsModal(0);
+            } else {
+                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+                let targetId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
+                const likeBtn = document.getElementById('sideLikeBtn');
+                toggleReelLove(e, likeBtn, targetId);
+            }
+        }
+
+        function handleSideSaveAction(e) {
+            e.stopPropagation();
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            let targetId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
+            const saveBtn = document.getElementById('sideSaveBtn');
+            handleDualSaveAction(e, saveBtn, targetId);
+        }
+
         function toggleReelSearchBox() {
             const searchBar = document.getElementById('floatingSearchContainer');
             if(searchBar) {
@@ -755,17 +862,6 @@
             }
         }
 
-        function handlePinterestInterception(event, actionType, targetId) {
-            event.stopPropagation();
-            if (actionType === 'like') {
-                toggleReelLove(event, event.currentTarget, targetId);
-            } else if (actionType === 'save') {
-                handleDualSaveAction(event, event.currentTarget, targetId);
-            } else if (actionType === 'share') {
-                openNativeShare(event, targetId);
-            }
-        }
-
         function clearAllSlideIntervals() {
             for (let key in slideIntervalsMap) {
                 clearInterval(slideIntervalsMap[key]);
@@ -774,9 +870,12 @@
         }
 
         function openReelsModal(startIndex) {
+            isReelsModeActive = true;
             const overlay = document.getElementById('reelModalOverlay');
             const wrapper = document.getElementById('reelModalWrapperBody');
+            
             overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('active-modal'));
             clearAllSlideIntervals();
 
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
@@ -862,21 +961,24 @@
                     let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
                     if (calculatedIdx >= 0 && calculatedIdx < list.length) {
                         currentReelIndex = calculatedIdx;
-                        let activeId = list[currentReelIndex].id || list[currentReelIndex].product_id || '101';
-                        renderFixedGlobalActions(activeId, false);
+                        updateSideActionState();
                     }
                 }, 20);
             };
 
-            let activeId = list[startIndex] ? (list[startIndex].id || list[startIndex].product_id || '101') : '101';
-            renderFixedGlobalActions(activeId, false);
+            currentReelIndex = startIndex;
+            updateSideActionState();
         }
 
         function closeReelModal() {
             clearAllSlideIntervals();
+            isReelsModeActive = false;
             const overlay = document.getElementById('reelModalOverlay');
-            if(overlay) overlay.style.display = 'none';
-            renderFixedGlobalActions(null, true);
+            if(overlay) {
+                overlay.classList.remove('active-modal');
+                setTimeout(() => { overlay.style.display = 'none'; }, 250);
+            }
+            updateSideActionState();
         }
 
         function openInpageDetailsModal(product) {
@@ -932,6 +1034,7 @@
                 </div>
             `;
             overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('active-sheet'));
         }
 
         function adjustDetailQty(amount) {
@@ -942,7 +1045,9 @@
         }
 
         function closeInpageDetails() {
-            document.getElementById('inpageDetailsOverlay').style.display = 'none';
+            const overlay = document.getElementById('inpageDetailsOverlay');
+            overlay.classList.remove('active-sheet');
+            setTimeout(() => { overlay.style.display = 'none'; }, 250);
         }
 
         function openBuyPreviewModal(product, event) {
@@ -977,6 +1082,7 @@
                 </button>
             `;
             overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('active-sheet'));
         }
 
         function selectPreviewImg(el, imgUrl) {
@@ -986,7 +1092,9 @@
         }
 
         function closeBuyPreview() {
-            document.getElementById('buyPreviewOverlay').style.display = 'none';
+            const overlay = document.getElementById('buyPreviewOverlay');
+            overlay.classList.remove('active-sheet');
+            setTimeout(() => { overlay.style.display = 'none'; }, 250);
         }
 
         function triggerCoinDropAnimation(e) {
@@ -1014,7 +1122,7 @@
 
             setTimeout(() => {
                 if(coin.parentNode) coin.parentNode.removeChild(coin);
-            }, 300);
+            }, 350);
         }
 
         function confirmAddToCart(e, pId, title, price, sellerId) {
@@ -1083,8 +1191,8 @@
         }
 
         window.toggleReelLove = function(e, btn, productId) {
-            e.stopPropagation();
-            let countElem = btn.querySelector('.side-count-text');
+            if(e) e.stopPropagation();
+            let countElem = document.getElementById('sideLikeCountText');
             let storageKey = `rorraxy_retail_likes_${productId}`;
             let activeStateKey = storageKey + '_active';
             let isLiked = localStorage.getItem(activeStateKey) === 'true';
@@ -1092,26 +1200,26 @@
             let currentVal = storedData ? JSON.parse(storedData).value : 1500;
 
             if (isLiked) {
-                btn.classList.remove('liked-active');
+                if(btn) btn.classList.remove('liked-active');
                 currentVal = Math.max(0, currentVal - 1);
                 localStorage.setItem(activeStateKey, 'false');
             } else {
-                btn.classList.add('liked-active');
+                if(btn) btn.classList.add('liked-active');
                 currentVal += 1;
                 localStorage.setItem(activeStateKey, 'true');
             }
 
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
-            if(countElem) countElem.innerText = formatCompactNumber(currentVal);
+            if(countElem && isReelsModeActive) countElem.innerText = formatCompactNumber(currentVal);
         };
 
         window.handleDualSaveAction = function(e, btn, pId) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             let currentTime = new Date().getTime();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let existingIndex = savedObjects.findIndex(item => String(item.id || item.product_id) === String(pId));
             
-            if (currentTime - lastSaveClickTime < 400 || btn.classList.contains('active') || existingIndex > -1) {
+            if (currentTime - lastSaveClickTime < 400 || (btn && btn.classList.contains('active')) || existingIndex > -1) {
                 renderSavedGalleryContent();
                 const overlay = document.getElementById('savedGalleryOverlay');
                 if(overlay) overlay.style.display = 'flex';
@@ -1121,10 +1229,10 @@
                 let targetProduct = globalMasterProductsList.find(item => String(item.id || item.product_id) === String(pId));
                 if(targetProduct && existingIndex === -1) {
                     savedObjects.push(targetProduct);
-                    btn.classList.add('active');
+                    if(btn) btn.classList.add('active');
                     localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
                 } else if(existingIndex > -1) {
-                    btn.classList.add('active');
+                    if(btn) btn.classList.add('active');
                 }
             }
         };
@@ -1140,7 +1248,7 @@
                     <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
             } else {
                 let thumbsHtml = '';
-                savedObjects.forEach((v, idx) => {
+                savedObjects.forEach((v) => {
                     let thumbImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
                     try {
                         if(v.images_json) {
@@ -1172,16 +1280,18 @@
         }
 
         window.removeSavedItem = function(e, videoId) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let filtered = savedObjects.filter(item => String(item.id || item.product_id) !== String(videoId));
             localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(filtered));
             renderSavedGalleryContent();
+            updateSideActionState();
         };
 
         window.clearAllSavedVideos = function() {
             localStorage.removeItem('rorraxy_saved_video_objects');
             renderSavedGalleryContent();
+            updateSideActionState();
         };
 
         window.selectSavedVideo = function(videoId) {
@@ -1193,7 +1303,7 @@
         };
 
         window.openNativeShare = async function(e, pId) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
             const shareUrl = `${window.location.origin}/index.html?ref=${encodeURIComponent(activeAffiliateRef)}&product=${encodeURIComponent(pId)}`;
             if (navigator.share) {
