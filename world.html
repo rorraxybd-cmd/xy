@@ -418,6 +418,84 @@ background: none !important;
 -webkit-text-fill-color: #ff2d55 !important;
 color: #ff2d55 !important;
 }
+
+/* Policy Modal Overlay Styling (Header Removed, Floating Cross Button on Top of Content) */
+.policy-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(3, 3, 5, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 20px 10px;
+}
+.policy-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.policy-modal-box {
+  width: 100%;
+  max-width: 850px;
+  height: 85vh;
+  background: var(--card-retail);
+  border: 2px solid transparent;
+  background-image: linear-gradient(var(--card-retail), var(--card-retail)), var(--gold-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+  overflow: hidden;
+  position: relative;
+}
+.policy-floating-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(3, 3, 5, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--text-white);
+  font-size: 0.9rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+}
+.policy-floating-close-btn:hover {
+  background: var(--gold-gradient);
+  color: #030305;
+  transform: scale(1.1);
+}
+.policy-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px 20px 20px 20px;
+  color: var(--text-white);
+}
+.policy-modal-body .golden-border-box {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.policy-modal-body .footer-action {
+  display: none !important;
+}
 </style>
 </head>
 <body>
@@ -446,6 +524,16 @@ color: #ff2d55 !important;
 <button onclick="toggleSearchModal()" style="background: transparent; border: none; color: var(--text-gray); font-size: 0.7rem; cursor: pointer; font-weight: 700;">CLOSE [X]</button>
 </div>
 </div>
+</div>
+
+<!-- Policy Modal Overlay Container (Floating Close Button directly over content) -->
+<div id="policyModalOverlay" class="policy-modal-overlay" onclick="closePolicyOnOutside(event)">
+  <div class="policy-modal-box">
+    <button onclick="closePolicyModal()" class="policy-floating-close-btn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div id="policyModalBody" class="policy-modal-body">
+      <div style="text-align:center; padding: 40px; color: var(--text-gray);">Loading policy details...</div>
+    </div>
+  </div>
 </div>
 
 <!-- SECTION 1: WORLD / HOME VIEW -->
@@ -528,23 +616,23 @@ color: #ff2d55 !important;
 <section class="policy-center-section">
 <div class="policy-center-title"><i class="fa-solid fa-shield-halved gold-gradient-icon"></i> LEGAL & POLICY CENTER</div>
 <div class="policy-links-grid">
-  <a href="/policies/retail.html" target="_self" class="policy-link-item">
+  <a href="#" onclick="openPolicyModal('retail.html'); return false;" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-cart-shopping gold-gradient-icon"></i> Retail Customer Policy</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="/policies/wholesale.html" target="_self" class="policy-link-item">
+  <a href="#" onclick="openPolicyModal('wholesale.html'); return false;" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-box-archive gold-gradient-icon"></i> Wholesale & B2B Terms</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="/policies/seller.html" target="_self" class="policy-link-item">
+  <a href="#" onclick="openPolicyModal('seller.html'); return false;" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-file-pen gold-gradient-icon"></i> Seller Merchant Terms</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="/policies/solutions.html" target="_self" class="policy-link-item">
+  <a href="#" onclick="openPolicyModal('solutions.html'); return false;" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Business Solutions T&C</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="/policies/payment.html" target="_self" class="policy-link-item">
+  <a href="#" onclick="openPolicyModal('payment.html'); return false;" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-credit-card gold-gradient-icon"></i> Payment, Security & Refund Policy</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
@@ -661,6 +749,42 @@ function switchSection(sectionId) {
   if (target) {
     target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// In-Page Policy Modal Handling Functions with Clean Floating Close Button
+async function openPolicyModal(filename) {
+  const modal = document.getElementById('policyModalOverlay');
+  const modalBody = document.getElementById('policyModalBody');
+  
+  modalBody.innerHTML = '<div style="text-align:center; padding: 50px; color: var(--text-gray);"><i class="fa-solid fa-spinner fa-spin gold-gradient-icon" style="font-size: 2rem;"></i><p style="margin-top:10px;">Loading policy details...</p></div>';
+  modal.classList.add('active');
+
+  const fullUrl = '/policies/' + filename;
+
+  try {
+    const response = await fetch(fullUrl);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const htmlText = await response.text();
+    
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, 'text/html');
+    const contentBox = doc.querySelector('.golden-border-box') || doc.body;
+    
+    modalBody.innerHTML = '';
+    modalBody.appendChild(contentBox);
+  } catch (err) {
+    modalBody.innerHTML = '<div style="text-align:center; padding: 40px; color: #ff3b30;">Failed to load policy details. Please check if ' + fullUrl + ' exists.</div>';
+  }
+}
+
+function closePolicyModal() {
+  document.getElementById('policyModalOverlay').classList.remove('active');
+}
+
+function closePolicyOnOutside(event) {
+  if (event.target.id === 'policyModalOverlay') {
+    closePolicyModal();
   }
 }
 
