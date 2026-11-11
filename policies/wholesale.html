@@ -1,1 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wholesale & B2B Terms | rorraxy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-retail: #000000;
+      --gold-gradient: linear-gradient(135deg, #dfb75c 0%, #fef3c7 25%, #c59b27 50%, #fef3c7 75%, #b38728 100%);
+      --text-white: #ffffff;
+      --text-gray: #c0c0d0;
+      --font-main: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+      --card-bg: #0b0b10;
+    }
 
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg-retail);
+      color: var(--text-white);
+      font-family: var(--font-main);
+      margin: 0;
+      padding: 40px 15px;
+      line-height: 1.65;
+    }
+
+    /* Outer Wrapper with Rich Gold Gradient Border */
+    .golden-border-box {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg-retail);
+      border-radius: 20px;
+      padding: 50px 40px;
+      position: relative;
+      border: 3px solid transparent;
+      background-image: linear-gradient(var(--bg-retail), var(--bg-retail)), var(--gold-gradient);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(223, 183, 92, 0.2);
+    }
+
+    /* Header Section */
+    .header-section {
+      text-align: center;
+      margin-bottom: 45px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(223, 183, 92, 0.2);
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #fef3c7;
+      font-weight: 700;
+      background: rgba(223, 183, 92, 0.12);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(223, 183, 92, 0.3);
+      display: inline-block;
+    }
+
+    .header-section h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin: 15px 0 10px 0;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .header-section p {
+      color: var(--text-gray);
+      font-size: 0.95rem;
+      max-width: 620px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* Policy Grid & Cards */
+    .policy-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .policy-card {
+      background-color: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .policy-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gold-gradient);
+    }
+
+    .policy-card:hover {
+      border-color: rgba(223, 183, 92, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .policy-card h2 {
+      font-size: 1.18rem;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 14px;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .policy-card ul {
+      padding-left: 20px;
+      margin: 0;
+      color: var(--text-gray);
+      font-size: 0.92rem;
+    }
+
+    .policy-card li {
+      margin-bottom: 10px;
+      text-align: left; /* ফাঁকা ফাঁকা ভাব দূর করতে লেফট এলাইনমেন্ট */
+      line-height: 1.6;
+    }
+
+    .policy-card li strong {
+      color: var(--text-white);
+      font-weight: 600;
+    }
+
+    /* Center Aligned Footer Back Button */
+    .footer-action {
+      margin-top: 45px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-white);
+      background: var(--card-bg);
+      border: 1px solid rgba(223, 183, 92, 0.4);
+      padding: 12px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--gold-gradient);
+      color: #000000;
+      border-color: transparent;
+      box-shadow: 0 0 20px rgba(223, 183, 92, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+      }
+      .golden-border-box {
+        padding: 30px 18px;
+        border-radius: 14px;
+      }
+      .header-section h1 {
+        font-size: 1.8rem;
+      }
+      .policy-card {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="golden-border-box">
+  
+  <!-- Header -->
+  <div class="header-section">
+    <span class="badge">B2B & Commercial Policy</span>
+    <br>
+    <h1>Wholesale & B2B Terms</h1>
+    <p>International bulk procurement standards, advance settlement framework, and global B2B logistics guidelines across rorraxy.</p>
+  </div>
+
+  <!-- Content Grid -->
+  <div class="policy-grid">
+
+    <!-- 1. Paid Sample Verification -->
+    <div class="policy-card">
+      <h2>🧪 1. Paid Sample Order & Evaluation</h2>
+      <ul>
+        <li><strong>Mandatory Sample Protocol:</strong> Prior to committing to large commercial volumes, B2B buyers must initiate a paid sample order via `b2b.rorraxy.com` to evaluate build quality and product specifications.</li>
+        <li><strong>100% Upfront Sample Payment:</strong> Sample requests, custom prototypes, and initial shipping handling charges must be fully prepaid through active card payments or integrated gateway solutions.</li>
+      </ul>
+    </div>
+
+    <!-- 2. Advance Commercial Settlement & Bank Transfers -->
+    <div class="policy-card">
+      <h2>🏦 2. Bulk Order Settlement & Wire Transfer (T/T)</h2>
+      <ul>
+        <li><strong>Pre-Production Advance Settlement:</strong> All confirmed bulk commercial orders operate on a strict 100% advance payment settlement schedule prior to factory dispatch or custom mass production.</li>
+        <li><strong>Verified Direct Bank Transfer:</strong> Institutional bulk payments must be settled via international Wire Transfer / Telegraphic Transfer (T/T), Letter of Credit (L/C), or approved corporate merchant gateways.</li>
+        <li><strong>Official Proforma Invoicing:</strong> Order manufacturing commences immediately upon formal bank deposit confirmation matching the issued Proforma Invoice (PI).</li>
+      </ul>
+    </div>
+
+    <!-- 3. MOQ & Tiered Commercial Pricing -->
+    <div class="policy-card">
+      <h2>📦 3. Minimum Order Quantity (MOQ) & Scale Pricing</h2>
+      <ul>
+        <li><strong>Strict MOQ Thresholds:</strong> Wholesale pricing tiers are systematically tied to category-specific Minimum Order Quantities (MOQ).</li>
+        <li><strong>Dynamic Volume Discounts:</strong> Larger commercial allocations unlock optimized unit pricing structures, automatically calculated on official price quotes.</li>
+      </ul>
+    </div>
+
+    <!-- 4. Global Freight & Cross-Border Logistics -->
+    <div class="policy-card">
+      <h2>🌍 4. Cross-Border Freight & Custom Crafting</h2>
+      <ul>
+        <li><strong>Pre-Dispatched Clearance:</strong> Shipments are handed over to accredited international freight forwarders (Air/Sea) only after full payment settlement is confirmed.</li>
+        <li><strong>Customization Timelines:</strong> Bespoke manufacturing or branded bulk runs require dedicated production windows, explicitly agreed upon in the commercial quotation.</li>
+        <li><strong>Export Documentation:</strong> Complete commercial invoices, packing lists, and origin declarations are provided digitally via the partner dashboard.</li>
+      </ul>
+    </div>
+
+    <!-- 5. 24/7 Dedicated B2B Success Desk -->
+    <div class="policy-card">
+      <h2>⚡ 5. 24/7 Enterprise Key Account Assistance</h2>
+      <ul>
+        <li><strong>Round-the-Clock Priority Desk:</strong> Institutional B2B clients receive 24/7 direct communication support for freight tracking, invoice clearance, and order status checks.</li>
+        <li><strong>SLA Commitment:</strong> Dedicated account managers handle commercial inquiries with immediate operational priority.</li>
+      </ul>
+    </div>
+
+    <!-- 6. Commercial Inspection & Claims -->
+    <div class="policy-card">
+      <h2>🛡️ 6. Bulk Consignment Audit & Claims</h2>
+      <ul>
+        <li><strong>7-Day Audit Window:</strong> Buyers must inspect delivered commercial pallets and notify `rorraxy` of any verified manufacturing defects within 7 business days.</li>
+        <li><strong>Commercial Resolution:</strong> Valid transit or manufacturing claims are rectified through authorized replacement shipments or commercial credit memos.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Perfectly Centered Footer Back Button -->
+  <div class="footer-action">
+    <a href="../world.html" class="back-btn">← Back to rorraxy Ecosystem</a>
+  </div>
+
+</div>
+
+</body>
+</html>
