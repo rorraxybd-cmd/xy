@@ -212,7 +212,7 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
 .md-title { font-size: 1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 .md-btn-link { width: 100%; max-width: 440px; padding: 11px 18px; background: var(--gold-gradient); border-radius: 12px; color: #030305; text-decoration: none; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 0.82rem; }
 
-/* Compliance & Trust Policy Center Styles */
+/* Legal & Policy Center Styles with View Button Animation */
 .policy-center-section {
   background: var(--card-retail);
   padding: 18px 14px;
@@ -222,14 +222,14 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   border-bottom: 1px solid rgba(212, 175, 55, 0.15);
 }
 .policy-center-title {
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.82rem;
+  font-weight: 900;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-align: center;
   margin-bottom: 12px;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
 }
 .policy-links-grid {
   display: flex;
@@ -244,32 +244,39 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 9px 12px;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 .policy-link-item:hover {
   background: rgba(212, 175, 55, 0.08);
   border-color: rgba(212, 175, 55, 0.4);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 .policy-link-name {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-white);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .policy-view-btn {
-  font-size: 0.62rem;
-  font-weight: 700;
+  font-size: 0.65rem;
+  font-weight: 800;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
+}
+.policy-view-btn i {
+  animation: viewArrowBounce 1.2s infinite ease-in-out;
+}
+@keyframes viewArrowBounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
 }
 
 .about-section { background: var(--card-retail); padding: 18px 14px; margin-bottom: 15px; width: 100%; }
@@ -517,27 +524,27 @@ color: #ff2d55 !important;
 </div>
 </div>
 
-<!-- COMPLIANCE & TRUST / LEGAL & POLICY CENTER -->
+<!-- LEGAL & POLICY CENTER -->
 <section class="policy-center-section">
-<div class="policy-center-title"><i class="fa-solid fa-shield-halved gold-gradient-icon"></i> Compliance & Trust • Legal & Policy Center</div>
+<div class="policy-center-title"><i class="fa-solid fa-shield-halved gold-gradient-icon"></i> LEGAL & POLICY CENTER</div>
 <div class="policy-links-grid">
-  <a href="https://rorraxy.com/xy/policies/retail.html" target="_self" class="policy-link-item">
+  <a href="/policies/retail.html" target="_self" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-cart-shopping gold-gradient-icon"></i> Retail Customer Policy</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="https://rorraxy.com/xy/policies/wholesale.html" target="_self" class="policy-link-item">
+  <a href="/policies/wholesale.html" target="_self" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-box-archive gold-gradient-icon"></i> Wholesale & B2B Terms</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="https://rorraxy.com/xy/policies/seller.html" target="_self" class="policy-link-item">
+  <a href="/policies/seller.html" target="_self" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-file-pen gold-gradient-icon"></i> Seller Merchant Terms</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="https://rorraxy.com/xy/policies/solutions.html" target="_self" class="policy-link-item">
+  <a href="/policies/solutions.html" target="_self" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Business Solutions T&C</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
-  <a href="https://rorraxy.com/xy/policies/payment.html" target="_self" class="policy-link-item">
+  <a href="/policies/payment.html" target="_self" class="policy-link-item">
     <span class="policy-link-name"><i class="fa-solid fa-credit-card gold-gradient-icon"></i> Payment, Security & Refund Policy</span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
@@ -559,7 +566,7 @@ color: #ff2d55 !important;
       <div class="md-luxury-ring"></div>
       <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: url(#goldGradientDef); position: relative; z-index: 2;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
     </div>
-    <h3>Founder & CEO: Mr Masudar</h3>
+    <h3 style="margin-top: 6px;">Founder & CEO: Mr Masudar</h3>
   </a>
 <p style="color: var(--text-gray); font-size: 0.7rem; line-height: 1.4; margin: 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
 </div>
