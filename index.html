@@ -4,24 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>rorraxy - Retail & Reels</title>
-    
-    <script src="/ecosystem-core.js"></script>
-    <script src="/categories.js"></script>
-    <link rel="manifest" href="/manifest.json">
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        });
-      }
-    </script>
-    <script src="/popup.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-    <link rel="preconnect" href="https://vid.rorraxy.com">
 
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
@@ -55,53 +41,50 @@
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* Smooth Loader Overlay */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.4s ease;
-            will-change: opacity, visibility;
-            backface-visibility: hidden;
+            transition: opacity 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.2s ease;
         }
         .loader-logo-box {
             width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 20px rgba(212,175,55,0.4);
-            animation: pulseGlow 2s infinite ease-in-out;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(212,175,55,0.3); transform: scale(1); }
-            50% { box-shadow: 0 0 25px rgba(212,175,55,0.7); transform: scale(1.05); }
+            border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3);
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .loader-brand-name {
-            font-size: 1.1rem; font-weight: 800; letter-spacing: 4px;
+            font-size: 1rem; font-weight: 800; letter-spacing: 3px;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* Ultra Smooth Card Entry Animation */
+        /* Modern Luxury Soft Zoom & Fade Intro Animation */
         .animate-card-entry { 
-            animation: fadeInLuxury 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-            will-change: transform, opacity;
-        }
-        @keyframes fadeInLuxury {
-            from { opacity: 0; transform: translateY(12px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            animation: luxurySoftScaleFade 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            will-change: transform, opacity, filter;
         }
 
-        /* Fixed Non-Jitter Search Bar */
+        @keyframes luxurySoftScaleFade {
+            0% {
+                opacity: 0;
+                transform: scale(0.94);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+        }
+
         .top-floating-search-bar {
-            position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateZ(0);
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; z-index: 5500; display: flex;
-            align-items: center; background: rgba(9, 10, 15, 0.95); border: 1.5px solid rgba(107, 85, 35, 0.8);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
+            align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
+            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
         .top-floating-search-bar.search-hidden {
-            transform: translate(-50%, -100px) translateZ(0); opacity: 0; pointer-events: none;
+            transform: translate(-50%, -100px); opacity: 0; pointer-events: none;
         }
         .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
@@ -111,26 +94,51 @@
         .floating-search-btn-circle {
             width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient);
             border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #000; font-size: 0.9rem; flex-shrink: 0;
+            cursor: pointer; color: #000; font-size: 0.9rem;
         }
 
-        /* Hardware-Accelerated Stable Bottom Navigation Bar */
-        .bottom-nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
-            display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
-            transform: translate3d(0, 0, 0);
-            will-change: transform;
+        /* Permanent Fixed Jitter-Free Side Action Bar */
+        .right-vertical-actions {
+            position: fixed; right: 12px; bottom: 85px; z-index: 4500;
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
+            pointer-events: auto; width: 45px;
+            transform: translate3d(0, 0, 0); 
             backface-visibility: hidden;
             contain: layout style;
+            will-change: transform;
+        }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
+        .side-action-item:active { transform: scale(0.9); }
+        .action-pure-icon { 
+            font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
+        }
+        .side-count-text { 
+            font-size: 0.58rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45px;
+        }
+        .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
+        .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
+
+        .cart-pink-badge {
+            position: absolute; top: -6px; right: -2px; background: var(--pink-accent); color: #fff;
+            font-size: 0.55rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
+        }
+
+        .bottom-nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
+            background: rgba(3, 3, 5, 0.99); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
+            display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
+            transform: translateZ(0); will-change: transform;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.15s ease;
+            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
         }
-        .bottom-nav-item:active { transform: scale(0.92); }
+        .bottom-nav-item:active { transform: scale(0.95); }
         .bottom-nav-item i { 
             font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
@@ -150,10 +158,9 @@
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateZ(0);
+            transition: transform 0.15s ease;
         }
-        .product-card:active { transform: scale(0.96); }
+        .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; loading: lazy; }
@@ -174,22 +181,16 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Borderless Proportional Reels Modal */
         .reel-modal-overlay {
             display: none; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
             align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.25s ease;
-        }
-        .reel-modal-overlay.active-modal {
-            display: flex; opacity: 1;
         }
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: calc(100vh - 68px); height: calc(100dvh - 68px); top: 0;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
             scrollbar-width: none; border: none;
-            transform: translateZ(0);
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
 
@@ -198,7 +199,7 @@
             scroll-snap-align: start; scroll-snap-stop: always;
             display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
             align-items: center; justify-content: center; padding-bottom: 10px;
-            transform: translate3d(0, 0, 0); will-change: transform;
+            transform: translateZ(0); will-change: transform;
         }
         .reel-media-box { 
             position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 95px); 
@@ -211,7 +212,6 @@
         }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        /* Super Fast & Smooth Cross-Fade Slideshow Layers */
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -248,61 +248,10 @@
             padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* PERMANENT FIX: Zero Jitter Side Action Bar */
-        .right-vertical-actions {
-            position: fixed; right: 12px; bottom: 85px; z-index: 4500;
-            display: flex; flex-direction: column; align-items: center; gap: 16px;
-            pointer-events: auto; width: 45px;
-            transform: translate3d(0, 0, 0); 
-            will-change: transform;
-            backface-visibility: hidden;
-            contain: layout style;
-        }
-        .side-action-item { 
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; 
-            position: relative; transition: transform 0.15s ease; width: 100%; 
-            user-select: none;
-        }
-        .side-action-item:active { transform: scale(0.88); }
-        .action-pure-icon { 
-            font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .side-count-text { 
-            font-size: 0.58rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45px;
-        }
-        
-        .love-action-btn.liked-active .action-pure-icon { 
-            color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; 
-            animation: heartBeat 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .save-action-btn.active .action-pure-icon { 
-            color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; 
-        }
-
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.25); }
-            100% { transform: scale(1); }
-        }
-
-        .cart-pink-badge {
-            position: absolute; top: -6px; right: -2px; background: var(--pink-accent); color: #fff;
-            font-size: 0.55rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
-            transition: transform 0.2s ease;
-        }
-
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.7); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            scrollbar-width: none; opacity: 0; transition: opacity 0.25s ease;
-        }
-        .overlay-sheet.active-sheet {
-            display: flex; opacity: 1;
+            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px; scrollbar-width: none;
         }
         .overlay-sheet::-webkit-scrollbar { display: none; }
 
@@ -310,20 +259,16 @@
             width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.9);
-            transform: scale(0.95); transition: transform 0.25s ease;
         }
-        .overlay-sheet.active-sheet .buy-preview-modal { transform: scale(1); }
-
         .preview-horizontal-scroll {
-            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;
-            scrollbar-width: none;
+            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; scrollbar-width: none;
         }
         .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
 
         .preview-img-item {
             flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
             border: 2px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: border-color 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
         }
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -333,15 +278,13 @@
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
             box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.35s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.35s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.35s linear, opacity 0.35s ease-in;
-            will-change: left, top, transform, opacity;
+            transition: left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.3s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.3s linear, opacity 0.3s ease-in;
         }
 
         .inpage-details-modal {
             width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
-            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95);
-            scrollbar-width: none;
+            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); scrollbar-width: none;
         }
         .inpage-details-modal::-webkit-scrollbar { display: none; }
 
@@ -353,35 +296,12 @@
 
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px;
-            scrollbar-width: none;
+            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 85px 15px; scrollbar-width: none;
         }
         .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none; }
         .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
         .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
-
-        .accordion-category-box { background: rgba(10, 10, 15, 0.95) !important; border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.35) !important; margin-bottom: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); width: 100%; }
-        .accordion-header { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: transparent !important; }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.15) !important; }
-        .accordion-title-wrap { display: flex; align-items: center; gap: 10px; }
-        .cat-main-icon { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; width: 22px; text-align: center; }
-        .accordion-main-title { font-size: 0.88rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
-        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.2s ease; flex-shrink: 0; }
-        .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
-
-        .accordion-content { display: none; background: transparent !important; padding: 6px 10px 12px 10px; }
-        .accordion-category-box.active .accordion-content { display: block; }
-
-        .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .sub-cat-item {
-            background: rgba(15, 15, 22, 0.92); border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.1s ease, background 0.1s ease; border: 1px solid rgba(255,255,255,0.12);
-        }
-        .sub-cat-item:active { transform: scale(0.96); }
-        .sub-cat-item:hover { background: rgba(25, 25, 35, 1); border-color: rgba(212, 175, 55, 0.6); }
-        .sub-cat-item i { font-size: 1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.65rem; color: var(--text-white); font-weight: 600; }
 
         .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; border: 1px solid rgba(212,175,55,0.2); }
         .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -392,7 +312,6 @@
 </head>
 <body id="mainBody">
 
-    <!-- Premium Smooth Loader -->
     <div id="rorraxyLoaderOverlay">
         <div class="loader-logo-box">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy">
@@ -400,42 +319,30 @@
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Connected Floating Search Bar -->
+    <!-- Always Visible Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar search-hidden">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Hardware-Accelerated Bottom Navigation Bar -->
-    <nav class="bottom-nav-bar">
-        <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
-        <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
-        <div id="bottomBuyBtn" class="bottom-nav-item" onclick="handleBottomBuy()"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
-        <div id="bottomDetailsBtn" class="bottom-nav-item" onclick="handleBottomDetails()"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
-        <div id="bottomHomeToggleBtn" class="bottom-nav-item" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>HOME</span></div>
-    </nav>
-
-    <!-- SINGLE PERMANENT RIGHT VERTICAL ACTION BAR (NO JITTER & NO RE-DOM CREATION) -->
+    <!-- Permanent Single-DOM Side Action Bar -->
     <div id="fixedGlobalActionsBar" class="right-vertical-actions">
         <div class="side-action-item" onclick="toggleCartPortal()" title="Cart">
             <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
             <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
         </div>
 
-        <div class="side-action-item" id="sideShareBtn" onclick="handleSideShareAction(event)" title="Share">
+        <div class="side-action-item" onclick="handlePinterestInterception(event, 'share')" title="Share">
             <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
         </div>
-
-        <div class="side-action-item love-action-btn" id="sideLikeBtn" onclick="handleSideLikeAction(event)" title="Like">
+        <div class="side-action-item love-action-btn" id="sideLoveActionBtn" onclick="handlePinterestInterception(event, 'like')" title="Like">
             <i class="fa-solid fa-heart action-pure-icon"></i>
-            <span class="side-count-text love-count" id="sideLikeCountText"></span>
+            <span class="side-count-text love-count" id="sideLoveCountText"></span>
         </div>
-
         <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search">
             <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
         </div>
-
-        <div class="side-action-item save-action-btn" id="sideSaveBtn" onclick="handleSideSaveAction(event)" title="Save">
+        <div class="side-action-item save-action-btn" id="sideSaveActionBtn" onclick="handlePinterestInterception(event, 'save')" title="Save">
             <i class="fa-solid fa-bookmark action-pure-icon"></i>
         </div>
 
@@ -444,6 +351,14 @@
             <span class="side-count-text">YOU</span>
         </div>
     </div>
+
+    <nav class="bottom-nav-bar">
+        <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
+        <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
+        <div id="bottomBuyBtn" class="bottom-nav-item" onclick="handleBottomBuy()"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
+        <div id="bottomDetailsBtn" class="bottom-nav-item" onclick="handleBottomDetails()"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
+        <div id="bottomHomeToggleBtn" class="bottom-nav-item" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>HOME</span></div>
+    </nav>
 
     <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
         <iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe>
@@ -481,14 +396,22 @@
 
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
-        let globalMasterProductsList = [];
+        let globalMasterProductsList = [
+            {
+                id: '101',
+                title: 'rorraxy Premium Matte Black Edition',
+                price: '49.99',
+                discount_rate: '20',
+                image_url: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
+                description: 'Luxury matte finish crafted with highest precision.'
+            }
+        ];
         let activeProductList = [];
         let currentReelIndex = 0;
         let slideIntervalsMap = {};
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
-        let isReelsModeActive = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -499,18 +422,17 @@
                 localStorage.setItem('rorraxy_active_affiliate_ref', 'rorraxy-store');
             }
 
-            buildCategoriesUI();
             loadLiveProducts();
             updateCartBadgeCount();
+            updateSideActionState();
 
-            // Smooth Loader Dismissal
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 400);
+                    setTimeout(() => loader.style.display = 'none', 200);
                 }
-            }, 300);
+            }, 50);
 
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
@@ -521,10 +443,10 @@
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
 
-            // Scroll listener on home to auto-hide/show search bar
             let lastScrollTop = 0;
             window.addEventListener('scroll', () => {
-                if(isReelsModeActive) return; 
+                const reelModal = document.getElementById('reelModalOverlay');
+                if(reelModal && reelModal.style.display === 'flex') return; 
 
                 let st = window.pageYOffset || document.documentElement.scrollTop;
                 const searchBar = document.getElementById('floatingSearchContainer');
@@ -537,40 +459,20 @@
                 }
                 lastScrollTop = st <= 0 ? 0 : st;
             }, { passive: true });
-
-            window.addEventListener('keydown', (e) => {
-                if(isReelsModeActive) {
-                    const wrapper = document.getElementById('reelModalWrapperBody');
-                    if(!wrapper) return;
-                    let cardHeight = wrapper.clientHeight || window.innerHeight;
-                    if(e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        wrapper.scrollBy({ top: cardHeight, behavior: 'smooth' });
-                    } else if(e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        wrapper.scrollBy({ top: -cardHeight, behavior: 'smooth' });
-                    }
-                }
-            });
         });
 
-        function toggleWorldPortal() {
-            window.location.href = 'https://rorraxy.com/world.html';
-        }
-
+        function toggleWorldPortal() { window.location.href = 'https://rorraxy.com/world.html'; }
         function toggleCategoryModal(e) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             const overlay = document.getElementById('categoryTransparentOverlay');
-            if(overlay) {
-                overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
-            }
+            if(overlay) overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
         }
 
         function handleBottomBuy() {
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
             if(list.length > 0) {
                 let targetProd = list[currentReelIndex] || list[0];
-                openBuyPreviewModal(targetProd, event);
+                openBuyPreviewModal(targetProd);
             }
         }
 
@@ -593,29 +495,8 @@
             }
         }
 
-        function toggleAccountPortal() {
-            const overlay = document.getElementById('fullscreenIframeOverlay');
-            const iframe = document.getElementById('fullscreenIframeBody');
-            const targetUrl = '/account.html';
-            if (overlay.style.display === 'flex' && iframe.src.includes('account.html')) {
-                overlay.style.display = 'none';
-                iframe.src = '';
-            } else {
-                openFullscreenPortal(targetUrl);
-            }
-        }
-
-        function toggleCartPortal() {
-            const overlay = document.getElementById('fullscreenIframeOverlay');
-            const iframe = document.getElementById('fullscreenIframeBody');
-            const targetUrl = '/cart.html';
-            if (overlay.style.display === 'flex' && iframe.src.includes('cart.html')) {
-                overlay.style.display = 'none';
-                iframe.src = '';
-            } else {
-                openFullscreenPortal(targetUrl);
-            }
-        }
+        function toggleAccountPortal() { openFullscreenPortal('/account.html'); }
+        function toggleCartPortal() { openFullscreenPortal('/cart.html'); }
 
         function openFullscreenPortal(pageUrl) {
             const overlay = document.getElementById('fullscreenIframeOverlay');
@@ -625,47 +506,13 @@
             updateCartBadgeCount();
         }
 
-        function buildCategoriesUI() {
-            const listContainer = document.getElementById('categoryMainListView');
-            if(!listContainer || typeof rorraxyCategoriesData === 'undefined') return;
-
-            let html = '';
-            rorraxyCategoriesData.forEach(cat => {
-                let subHtml = '';
-                cat.subCategories.forEach(sub => {
-                    subHtml += `
-                        <div class="sub-cat-item" onclick="filterProductsByCategory('${sub.key}')">
-                            <i class="${sub.icon}"></i>
-                            <span class="sub-cat-name">${sub.name}</span>
-                        </div>
-                    `;
-                });
-
-                html += `
-                    <div class="accordion-category-box" id="${cat.id}">
-                        <div class="accordion-header" onclick="toggleAccordion('${cat.id}')">
-                            <div class="accordion-title-wrap">
-                                <i class="${cat.icon} cat-main-icon"></i>
-                                <span class="accordion-main-title">${cat.title}</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="sub-categories-grid">${subHtml}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            listContainer.innerHTML = html;
-        }
-
         async function loadLiveProducts() {
             const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
             if (cachedData) {
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = [...parsed];
+                        globalMasterProductsList = parsed;
                         activeProductList = globalMasterProductsList;
                         renderPinterestHomeGrid(globalMasterProductsList);
                     }
@@ -673,19 +520,22 @@
             }
 
             try {
-                const response = await fetch(`/api/products`);
+                const response = await fetch('/api/products');
                 const result = await response.json();
                 let productsList = [];
                 if (result && result.success && Array.isArray(result.data)) productsList = result.data;
                 else if (Array.isArray(result)) productsList = result;
 
                 if (productsList.length > 0) {
-                    globalMasterProductsList = [...productsList];
+                    globalMasterProductsList = productsList;
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
                     activeProductList = globalMasterProductsList;
                     renderPinterestHomeGrid(globalMasterProductsList);
                 }
-            } catch (error) {}
+            } catch (error) {
+                activeProductList = globalMasterProductsList;
+                renderPinterestHomeGrid(globalMasterProductsList);
+            }
         }
 
         function executeHeaderSearch(keyword) {
@@ -703,37 +553,6 @@
             activeProductList = filtered;
             renderPinterestHomeGrid(filtered);
             closeReelModal();
-        }
-
-        function filterProductsByCategory(queryKey) {
-            document.getElementById('categoryTransparentOverlay').style.display = 'none';
-            let query = queryKey.toLowerCase().replace(/-/g, ' ');
-            let filtered = globalMasterProductsList.filter(item => {
-                const title = (item.title || '').toLowerCase();
-                const cat = (item.category || item.description || '').toLowerCase();
-                return title.includes(query) || cat.includes(query);
-            });
-            activeProductList = filtered.length > 0 ? filtered : globalMasterProductsList;
-            renderPinterestHomeGrid(activeProductList);
-        }
-
-        function toggleAccordion(boxId) {
-            const targetBox = document.getElementById(boxId);
-            const content = targetBox.querySelector('.accordion-content');
-            const isOpen = targetBox.classList.contains('active');
-
-            document.querySelectorAll('.accordion-category-box').forEach(box => {
-                box.classList.remove('active');
-                let c = box.querySelector('.accordion-content');
-                if(c) c.style.display = 'none';
-            });
-
-            if (!isOpen) {
-                targetBox.classList.add('active');
-                if(content) content.style.display = 'block';
-            } else {
-                if(content) content.style.display = 'none';
-            }
         }
 
         function renderPinterestHomeGrid(products) {
@@ -780,74 +599,31 @@
             updateSideActionState();
         }
 
-        /* ZERO-JITTER SIDE ACTION UPDATE METHOD */
         function updateSideActionState() {
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(!list || list.length === 0) return;
+            let currentProd = list[currentReelIndex] || list[0] || {};
+            let targetId = currentProd.id || currentProd.product_id || '101';
 
-            let currentItem = list[currentReelIndex] || list[0];
-            let targetId = String(currentItem.id || currentItem.product_id || '101');
+            let pLikes = getDynamicEngagement(targetId);
+            let loveCountElem = document.getElementById('sideLoveCountText');
+            if(loveCountElem) loveCountElem.innerText = pLikes;
 
-            // 1. Dynamic Like Count & Active State
-            const likeBtn = document.getElementById('sideLikeBtn');
-            const likeCountElem = document.getElementById('sideLikeCountText');
-            let storageKeyLike = `rorraxy_retail_likes_${targetId}`;
-            let isLiked = localStorage.getItem(storageKeyLike + '_active') === 'true';
-
-            if(isReelsModeActive) {
-                let likesCount = getDynamicEngagement(targetId);
-                if(likeCountElem) likeCountElem.innerText = likesCount;
-            } else {
-                if(likeCountElem) likeCountElem.innerText = '';
+            let loveBtn = document.getElementById('sideLoveActionBtn');
+            let storageKeyLike = `rorraxy_retail_likes_${targetId}_active`;
+            let isLiked = localStorage.getItem(storageKeyLike) === 'true';
+            if(loveBtn) {
+                if(isLiked) loveBtn.classList.add('liked-active');
+                else loveBtn.classList.remove('liked-active');
             }
 
-            if(likeBtn) {
-                if(isLiked) likeBtn.classList.add('liked-active');
-                else likeBtn.classList.remove('liked-active');
-            }
-
-            // 2. Saved Active State
-            const saveBtn = document.getElementById('sideSaveBtn');
+            let saveBtn = document.getElementById('sideSaveActionBtn');
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let isSaved = savedObjects.some(item => String(item.id || item.product_id) === targetId);
+            let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
             if(saveBtn) {
                 if(isSaved) saveBtn.classList.add('active');
                 else saveBtn.classList.remove('active');
             }
-
             updateCartBadgeCount();
-        }
-
-        // Side Actions Intercept Handlers (Fixed & Non-Jittery)
-        function handleSideShareAction(e) {
-            e.stopPropagation();
-            if(!isReelsModeActive) {
-                openReelsModal(0);
-            } else {
-                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                let targetId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
-                openNativeShare(e, targetId);
-            }
-        }
-
-        function handleSideLikeAction(e) {
-            e.stopPropagation();
-            if(!isReelsModeActive) {
-                openReelsModal(0);
-            } else {
-                let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-                let targetId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
-                const likeBtn = document.getElementById('sideLikeBtn');
-                toggleReelLove(e, likeBtn, targetId);
-            }
-        }
-
-        function handleSideSaveAction(e) {
-            e.stopPropagation();
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            let targetId = list[currentReelIndex] ? (list[currentReelIndex].id || list[currentReelIndex].product_id || '101') : '101';
-            const saveBtn = document.getElementById('sideSaveBtn');
-            handleDualSaveAction(e, saveBtn, targetId);
         }
 
         function toggleReelSearchBox() {
@@ -856,26 +632,42 @@
                 searchBar.classList.toggle('search-hidden');
                 searchBar.classList.toggle('manual-open');
                 const input = document.getElementById('floatingSearchInput');
-                if(input && !searchBar.classList.contains('search-hidden')) {
-                    input.focus();
-                }
+                if(input && !searchBar.classList.contains('search-hidden')) input.focus();
+            }
+        }
+
+        function handlePinterestInterception(event, actionType) {
+            if(event) event.stopPropagation();
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            let currentProd = list[currentReelIndex] || list[0] || {};
+            let targetId = currentProd.id || currentProd.product_id || '101';
+
+            const reelModal = document.getElementById('reelModalOverlay');
+            const isReelOpen = reelModal && reelModal.style.display === 'flex';
+
+            if (!isReelOpen && (actionType === 'like' || actionType === 'share')) {
+                openReelsModal(0);
+                return;
+            }
+
+            if (actionType === 'like') {
+                toggleReelLove(targetId);
+            } else if (actionType === 'save') {
+                handleDualSaveAction(targetId);
+            } else if (actionType === 'share') {
+                openNativeShare(targetId);
             }
         }
 
         function clearAllSlideIntervals() {
-            for (let key in slideIntervalsMap) {
-                clearInterval(slideIntervalsMap[key]);
-            }
+            for (let key in slideIntervalsMap) clearInterval(slideIntervalsMap[key]);
             slideIntervalsMap = {};
         }
 
         function openReelsModal(startIndex) {
-            isReelsModeActive = true;
             const overlay = document.getElementById('reelModalOverlay');
             const wrapper = document.getElementById('reelModalWrapperBody');
-            
             overlay.style.display = 'flex';
-            requestAnimationFrame(() => overlay.classList.add('active-modal'));
             clearAllSlideIntervals();
 
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
@@ -912,7 +704,7 @@
 
                 reelsHtml += `
                     <div class="reel-card" data-index="${idx}" data-product-id="${pId}">
-                        <div class="reel-media-box" onclick="openBuyPreviewModal(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
+                        <div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
                             <div class="reel-bottom-price-overlay">
                                 <span class="reel-center-price-badge">${price}</span>
                                 ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
@@ -935,9 +727,7 @@
                             currSlide.classList.add('previous');
                             nextSlide.classList.remove('previous');
                             nextSlide.classList.add('active');
-                            setTimeout(() => {
-                                currSlide.classList.remove('previous');
-                            }, 800);
+                            setTimeout(() => { currSlide.classList.remove('previous'); }, 800);
                         }
                         currentImgIdx = nextImgIdx;
                     }, 3000);
@@ -945,12 +735,11 @@
             });
 
             wrapper.innerHTML = reelsHtml;
+            currentReelIndex = startIndex;
 
             setTimeout(() => {
                 let targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
-                if (targetCard) {
-                    wrapper.scrollTop = targetCard.offsetTop;
-                }
+                if (targetCard) wrapper.scrollTop = targetCard.offsetTop;
             }, 0);
 
             let scrollTimer = null;
@@ -966,19 +755,19 @@
                 }, 20);
             };
 
-            currentReelIndex = startIndex;
             updateSideActionState();
         }
 
         function closeReelModal() {
             clearAllSlideIntervals();
-            isReelsModeActive = false;
             const overlay = document.getElementById('reelModalOverlay');
-            if(overlay) {
-                overlay.classList.remove('active-modal');
-                setTimeout(() => { overlay.style.display = 'none'; }, 250);
-            }
+            if(overlay) overlay.style.display = 'none';
             updateSideActionState();
+        }
+
+        function openBuyPreviewByIndex(index) {
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            if(list[index]) openBuyPreviewModal(list[index]);
         }
 
         function openInpageDetailsModal(product) {
@@ -1004,7 +793,7 @@
                         <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
                         <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
                     </div>
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer;">&times;</button>
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer;">×</button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:700;">
@@ -1034,7 +823,6 @@
                 </div>
             `;
             overlay.style.display = 'flex';
-            requestAnimationFrame(() => overlay.classList.add('active-sheet'));
         }
 
         function adjustDetailQty(amount) {
@@ -1044,13 +832,9 @@
             if (disp) disp.innerText = currentProductQty;
         }
 
-        function closeInpageDetails() {
-            const overlay = document.getElementById('inpageDetailsOverlay');
-            overlay.classList.remove('active-sheet');
-            setTimeout(() => { overlay.style.display = 'none'; }, 250);
-        }
+        function closeInpageDetails() { document.getElementById('inpageDetailsOverlay').style.display = 'none'; }
 
-        function openBuyPreviewModal(product, event) {
+        function openBuyPreviewModal(product) {
             const overlay = document.getElementById('buyPreviewOverlay');
             const content = document.getElementById('buyPreviewModalContent');
 
@@ -1071,18 +855,22 @@
                 </div>
             `).join('');
 
+            let pId = product.id || product.product_id || '101';
+            let titleEsc = (product.title || 'item').toLowerCase().replace(/'/g, "\\'");
+            let priceVal = product.price || 35;
+            let sellerVal = product.seller_id || 'rorraxy-store';
+
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT</span>
-                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">&times;</button>
+                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">×</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${product.id||product.product_id||'101'}', '${(product.title||'item').toLowerCase().replace(/'/g, "\\'")}', ${product.price||35}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
+                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${priceVal}, '${sellerVal}')" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM & ADD TO CART
                 </button>
             `;
             overlay.style.display = 'flex';
-            requestAnimationFrame(() => overlay.classList.add('active-sheet'));
         }
 
         function selectPreviewImg(el, imgUrl) {
@@ -1091,11 +879,7 @@
             selectedVariantImg = imgUrl;
         }
 
-        function closeBuyPreview() {
-            const overlay = document.getElementById('buyPreviewOverlay');
-            overlay.classList.remove('active-sheet');
-            setTimeout(() => { overlay.style.display = 'none'; }, 250);
-        }
+        function closeBuyPreview() { document.getElementById('buyPreviewOverlay').style.display = 'none'; }
 
         function triggerCoinDropAnimation(e) {
             const cartIconElem = document.getElementById('cartTargetIcon');
@@ -1120,9 +904,7 @@
                 coin.style.opacity = '0';
             });
 
-            setTimeout(() => {
-                if(coin.parentNode) coin.parentNode.removeChild(coin);
-            }, 350);
+            setTimeout(() => { if(coin.parentNode) coin.parentNode.removeChild(coin); }, 300);
         }
 
         function confirmAddToCart(e, pId, title, price, sellerId) {
@@ -1190,9 +972,7 @@
             return hash;
         }
 
-        window.toggleReelLove = function(e, btn, productId) {
-            if(e) e.stopPropagation();
-            let countElem = document.getElementById('sideLikeCountText');
+        function toggleReelLove(productId) {
             let storageKey = `rorraxy_retail_likes_${productId}`;
             let activeStateKey = storageKey + '_active';
             let isLiked = localStorage.getItem(activeStateKey) === 'true';
@@ -1200,26 +980,26 @@
             let currentVal = storedData ? JSON.parse(storedData).value : 1500;
 
             if (isLiked) {
-                if(btn) btn.classList.remove('liked-active');
                 currentVal = Math.max(0, currentVal - 1);
                 localStorage.setItem(activeStateKey, 'false');
             } else {
-                if(btn) btn.classList.add('liked-active');
                 currentVal += 1;
                 localStorage.setItem(activeStateKey, 'true');
             }
 
             localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
-            if(countElem && isReelsModeActive) countElem.innerText = formatCompactNumber(currentVal);
-        };
+            updateSideActionState();
+        }
 
-        window.handleDualSaveAction = function(e, btn, pId) {
-            if(e) e.stopPropagation();
+        function handleDualSaveAction(pId) {
             let currentTime = new Date().getTime();
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
             let existingIndex = savedObjects.findIndex(item => String(item.id || item.product_id) === String(pId));
             
-            if (currentTime - lastSaveClickTime < 400 || (btn && btn.classList.contains('active')) || existingIndex > -1) {
+            let saveBtn = document.getElementById('sideSaveActionBtn');
+            let isBtnActive = saveBtn && saveBtn.classList.contains('active');
+
+            if (currentTime - lastSaveClickTime < 400 || isBtnActive || existingIndex > -1) {
                 renderSavedGalleryContent();
                 const overlay = document.getElementById('savedGalleryOverlay');
                 if(overlay) overlay.style.display = 'flex';
@@ -1229,13 +1009,11 @@
                 let targetProduct = globalMasterProductsList.find(item => String(item.id || item.product_id) === String(pId));
                 if(targetProduct && existingIndex === -1) {
                     savedObjects.push(targetProduct);
-                    if(btn) btn.classList.add('active');
                     localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
-                } else if(existingIndex > -1) {
-                    if(btn) btn.classList.add('active');
                 }
             }
-        };
+            updateSideActionState();
+        }
 
         function renderSavedGalleryContent() {
             let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
@@ -1296,14 +1074,11 @@
 
         window.selectSavedVideo = function(videoId) {
             let foundIdx = globalMasterProductsList.findIndex(p => String(p.id || p.product_id) === String(videoId));
-            if(foundIdx !== -1) {
-                openReelsModal(foundIdx);
-            }
+            if(foundIdx !== -1) openReelsModal(foundIdx);
             document.getElementById('savedGalleryOverlay').style.display = 'none';
         };
 
-        window.openNativeShare = async function(e, pId) {
-            if(e) e.stopPropagation();
+        window.openNativeShare = async function(pId) {
             let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
             const shareUrl = `${window.location.origin}/index.html?ref=${encodeURIComponent(activeAffiliateRef)}&product=${encodeURIComponent(pId)}`;
             if (navigator.share) {
