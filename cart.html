@@ -124,13 +124,14 @@
 
         .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; width: 100%; }
         
-        /* Premium Vector/SVG Brand Badges */
-        .svg-payout-card {
+        /* Premium Image/SVG Brand Badges Container */
+        .brand-payout-card {
             display: inline-flex; align-items: center; justify-content: center;
-            background: #ffffff; padding: 4px 10px; border-radius: 6px; height: 32px; min-width: 52px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
+            background: #ffffff; padding: 4px 10px; border-radius: 8px; height: 34px; min-width: 54px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); transition: transform 0.2s ease;
         }
-        .svg-payout-card svg, .svg-payout-card img { height: 18px; width: auto; max-width: 48px; object-fit: contain; }
+        .brand-payout-card:hover { transform: scale(1.04); }
+        .brand-payout-card img { height: 20px; width: auto; max-width: 48px; object-fit: contain; }
 
         #currenciesModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
@@ -273,7 +274,7 @@
 
                 <div class="payment-accordion-group">
 
-                    <!-- INTERNATIONAL CARDS WITH ACCURATE SVG LOGOS -->
+                    <!-- INTERNATIONAL CARDS WITH ACCURATE R2 LOGOS -->
                     <div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
@@ -281,26 +282,17 @@
                                 <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="payout-icons-row">
-                                <!-- VISA SVG -->
-                                <div class="svg-payout-card" title="VISA">
-                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill="#1A1F71" d="M47.2 32.5h-7.6l4.8-23.7h7.6l-4.8 23.7zm28.3-23.1c-1.5-.6-3.8-1.2-6.7-1.2-7.4 0-12.6 3.7-12.6 9 0 3.9 3.7 6.1 6.5 7.4 2.9 1.4 3.9 2.3 3.9 3.5 0 1.9-2.4 2.8-4.6 2.8-3.1 0-4.8-.4-7.4-1.5l-1 .5 1.1 5.3c2.2.9 5.8 1.6 9.4 1.6 7.9 0 13-3.7 13-9.5 0-3.2-2-5.6-6.4-7.6-2.7-1.3-4.3-2.2-4.3-3.5 0-1.2 1.4-2.4 4.4-2.4 2.5 0 4.3.5 5.7 1.1l.7.3 1.1-5.3zm20.8-0.6h-5.9c-1.8 0-3.2.5-4 2.3l-11.3 21.4h8l1.6-4.2h9.8l0.9 4.2h7l-6.1-23.7zm-8.8 14.2l3.2-8.3 1.8 8.3h-5zm-55.9-14.2l-7.4 16.2-0.8-3.9c-1.4-4.5-5.7-9.4-10.5-11.8l6.8 23.2h8l11.9-23.7h-8z"/>
-                                        <path fill="#F7B600" d="M18.8 8.8h-12c-1.3 0-2.4.8-2.8 2l-7 21.7h8l1.6-4.2h9.8"/>
-                                    </svg>
+                                <!-- VISA LOGO -->
+                                <div class="brand-payout-card" title="VISA">
+                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/1547549.webp" alt="Visa">
                                 </div>
-                                <!-- MASTERCARD SVG -->
-                                <div class="svg-payout-card" title="MasterCard">
-                                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="35" cy="30" r="22" fill="#EB001B"/>
-                                        <circle cx="65" cy="30" r="22" fill="#F79E1B"/>
-                                        <path fill="#FF5F00" d="M50 13.8a21.9 21.9 0 0 0-8.2 16.2A21.9 21.9 0 0 0 50 46.2a21.9 21.9 0 0 0 8.2-16.2A21.9 21.9 0 0 0 50 13.8z"/>
-                                    </svg>
+                                <!-- MASTERCARD LOGO -->
+                                <div class="brand-payout-card" title="MasterCard">
+                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/mastercard-svgrepo-com.svg" alt="MasterCard">
                                 </div>
-                                <!-- AMEX SVG -->
-                                <div class="svg-payout-card" style="background:#006FCF;" title="American Express">
-                                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill="#FFFFFF" d="M12 20h8l3 6 3-6h8v20h-7v-12l-4 8h-2l-4-8v12h-5V20zm30 0h14v4.5H47v3h8v4.5h-8v3.5h10V40H42V20zm16 0h6l4 7 4-7h6v20h-5v-12l-5 12h-1l-5-12v12h-4V20z"/>
-                                    </svg>
+                                <!-- AMERICAN EXPRESS (AMEX) LOGO -->
+                                <div class="brand-payout-card" title="American Express">
+                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/american-express.svg" alt="Amex">
                                 </div>
                             </div>
                         </div>
@@ -314,19 +306,13 @@
                                 <span class="badge-local-bd">BDT PAYMENT</span>
                             </div>
                             <div class="payout-icons-row">
-                                <!-- BKASH SVG -->
-                                <div class="svg-payout-card" style="background:#e2136e;" title="bKash">
-                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill="#FFFFFF" d="M22 6l16 14-16 14V6zm-4 0L2 20l16 14V6zm20 14l16-14v28l-16-14z"/>
-                                        <text x="58" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">bKash</text>
-                                    </svg>
+                                <!-- BKASH LOGO -->
+                                <div class="brand-payout-card" title="bKash">
+                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/bKash%20Icon%20Vector.svg%20.png" alt="bKash">
                                 </div>
-                                <!-- NAGAD SVG -->
-                                <div class="svg-payout-card" style="background:#f7931e;" title="Nagad">
-                                    <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill="#FFFFFF" d="M12 8c6 0 10 4 10 10s-4 10-10 10S2 24 2 18 6 8 12 8zm0 4a6 6 0 100 12 6 6 0 000-12z"/>
-                                        <text x="32" y="27" font-family="Arial, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF">NAGAD</text>
-                                    </svg>
+                                <!-- NAGAD LOGO -->
+                                <div class="brand-payout-card" title="Nagad">
+                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/idNpcxg37S_1794380383524.png" alt="Nagad">
                                 </div>
                             </div>
                         </div>
