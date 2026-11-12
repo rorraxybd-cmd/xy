@@ -629,7 +629,9 @@
             const prod = list[currentReelIndex] || list[0] || {};
             const id = prod.id || prod.product_id || '101';
 
-            if ($('sideLoveCountText')) $('sideLoveCountText').innerText = getDynamicEngagement(id);
+            const dynamicEngagement = getDynamicEngagement(id);
+            if ($('sideLoveCountText')) $('sideLoveCountText').innerText = dynamicEngagement.formatted;
+            
             const liked = localStorage.getItem(`rorraxy_retail_likes_${id}_active`) === 'true';
             $('sideLoveActionBtn')?.classList.toggle('liked-active', liked);
 
@@ -662,7 +664,7 @@
             else if (type === 'share') openNativeShare(id);
         }
 
-        // Single Active Reel Slideshow & Video Playback Manager (Zero Background CPU Waste)
+        // Single Active Reel Slideshow & Video Playback Manager (Super Fast Zero Background Waste)
         function activateReelAtIndex(idx) {
             currentReelIndex = idx;
             updateSideActionState();
@@ -672,20 +674,17 @@
             const wrapper = $('reelModalWrapperBody');
             if (!wrapper) return;
 
-            // Reveal card with AI curtain animation immediately
             const activeCard = wrapper.querySelector(`.reel-card[data-index="${idx}"]`);
             if (activeCard && !activeCard.classList.contains('ai-reel-revealed')) {
                 requestAnimationFrame(() => activeCard.classList.add('ai-reel-revealed'));
             }
 
-            // Pause all other videos & play only active video
             wrapper.querySelectorAll('video').forEach(v => {
                 const cardIdx = Number(v.closest('.reel-card')?.dataset.index);
                 if (cardIdx === idx) { v.play().catch(() => {}); }
                 else if (!v.paused) { v.pause(); }
             });
 
-            // Run slideshow ONLY for the currently visible reel card
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
             const prod = list[idx];
             if (!prod) return;
@@ -710,7 +709,6 @@
             }
         }
 
-        // Progressive 30-Item Batch Renderer (Standard YouTube/Instagram Reels Engine)
         function appendReelsBatch(count) {
             const wrapper = $('reelModalWrapperBody');
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
@@ -736,7 +734,7 @@
                 }
 
                 const card = document.createElement('div');
-                card.className = 'reel-card' + (idx === 0 ? ' ai-reel-revealed' : '');
+                card.className = 'reel-card ai-reel-revealed';
                 card.dataset.index = idx;
                 card.dataset.productId = pId;
                 card.innerHTML = `<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
@@ -772,7 +770,7 @@
 
             wrapper.innerHTML = '';
             renderedReelsCount = 0;
-            appendReelsBatch(REELS_BATCH_SIZE); // Load initial 30 reels smoothly
+            appendReelsBatch(REELS_BATCH_SIZE);
 
             wrapper.style.scrollBehavior = 'auto';
             wrapper.scrollTop = 0;
@@ -791,7 +789,7 @@
                     if (h > 0) {
                         const idx = Math.round(wrapper.scrollTop / h);
                         if (idx >= renderedReelsCount - 5 && renderedReelsCount < list.length) {
-                            appendReelsBatch(REELS_BATCH_SIZE); // Seamlessly append next 30 reels without reload
+                            appendReelsBatch(REELS_BATCH_SIZE);
                         }
                         if (idx >= 0 && idx < list.length && idx !== currentReelIndex) {
                             activateReelAtIndex(idx);
@@ -981,18 +979,20 @@
             let val;
             if (stored) val = JSON.parse(stored).value;
             else {
-                const pool = [185, 245, 445, 890, 1500, 3200, 7800, 15400, 48000, 125000];
+                const pool = [40000, 50000, 100000, 200000, 500000, 1000000, 15000, 10000, 20000, 350000];
                 let h = 0; for (let i = 0; i < String(id).length; i++) h = ((h << 5) - h + String(id).charCodeAt(i)) | 0;
-                val = pool[Math.abs(h) % pool.length] + (Math.abs(h) % 199);
+                val = pool[Math.abs(h) % pool.length] + (Math.abs(h) % 899);
                 localStorage.setItem(key, JSON.stringify({ value: val }));
             }
-            return val >= 1000000 ? (val / 1000000).toFixed(1) + 'M' : (val >= 1000 ? (val / 1000).toFixed(1) + 'K' : String(val));
+            const formatted = val >= 1000000 ? (val / 1000000).toFixed(1) + 'M' : (val >= 1000 ? (val / 1000).toFixed(1) + 'K' : String(val));
+            return { raw: val, formatted };
         }
 
         function toggleReelLove(id) {
             const key = `rorraxy_retail_likes_${id}`, actKey = key + '_active';
             const liked = localStorage.getItem(actKey) === 'true';
-            let val = JSON.parse(localStorage.getItem(key) || '{"value":1500}').value;
+            let data = JSON.parse(localStorage.getItem(key) || '{"value":45000}');
+            let val = data.value;
             val = liked ? Math.max(0, val - 1) : val + 1;
             localStorage.setItem(actKey, liked ? 'false' : 'true');
             localStorage.setItem(key, JSON.stringify({ value: val }));
