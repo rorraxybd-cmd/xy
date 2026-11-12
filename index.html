@@ -13,10 +13,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- External Style CSS Linked -->
     <link rel="stylesheet" href="style.css">
 
     <style>
@@ -33,337 +31,172 @@
 
         html, body { 
             width: 100%; max-width: 100vw; overflow-x: hidden; overflow-y: auto !important;
-            background: var(--bg-retail) !important; 
-            color: var(--text-white); font-family: var(--font-main); 
-            min-height: 100vh; font-size: 14px;
-            -webkit-font-smoothing: antialiased;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+            background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); 
+            min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-overflow-scrolling: touch; scrollbar-width: none;
         }
-
         body { margin: 0; padding: 0 0 58px 0; text-transform: none !important; }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* Instant Loader */
         #rorraxyLoaderOverlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: #000000; z-index: 999999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 12px;
+            position: fixed; inset: 0; background: #000; z-index: 999999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
             transition: opacity 0.08s ease-out;
         }
-        .loader-logo-box {
-            width: 68px; height: 68px; border-radius: 50%; overflow: hidden;
-            border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3);
-        }
+        .loader-logo-box { width: 68px; height: 68px; border-radius: 50%; overflow: hidden; border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
-        .loader-brand-name {
-            font-size: 1rem; font-weight: 800; letter-spacing: 3px;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .loader-brand-name { font-size: 1rem; font-weight: 800; letter-spacing: 3px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Pull to Refresh Toast */
         #pullRefreshIndicator {
-            position: fixed; top: -50px; left: 50%; transform: translateX(-50%);
-            z-index: 7000; background: #0c0c12; border: 1px solid var(--gold-solid);
-            color: var(--gold-solid); padding: 6px 16px; border-radius: 20px;
-            font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
-            transition: top 0.15s ease-out;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-            pointer-events: none;
+            position: fixed; top: -50px; left: 50%; transform: translateX(-50%); z-index: 7000;
+            background: #0c0c12; border: 1px solid var(--gold-solid); color: var(--gold-solid);
+            padding: 6px 16px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+            display: flex; align-items: center; gap: 8px; transition: top 0.15s ease-out; pointer-events: none;
         }
         #pullRefreshIndicator.visible { top: 18px; }
 
-        /* AI-Style Luxury Curtain Reveal & Cascade Animation for Images */
+        /* AI Curtain Reveal & Cascade Animation (Grid + Reels) */
         .product-card {
-            background: transparent; border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; border: none; 
+            background: transparent; border-radius: 14px; overflow: hidden; display: inline-block; width: 100%;
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            opacity: 0;
-            transform: translateY(22px) scale(0.94);
-            transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0; transform: translateY(20px) scale(0.95);
+            transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1), transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform, opacity;
         }
-        .product-card.ai-revealed {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        .product-card.ai-revealed { opacity: 1; transform: translateY(0) scale(1); }
         .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #07070c; border-radius: 12px; overflow: hidden; }
-        .product-media-box::after {
+        .product-media-box::after, .reel-media-box::after {
             content: ''; position: absolute; inset: 0; z-index: 30;
-            background: linear-gradient(180deg, rgba(12,12,18,0.95) 0%, rgba(212,175,55,0.18) 50%, #050508 100%);
-            transform: translateY(0%);
-            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-            pointer-events: none;
+            background: linear-gradient(180deg, rgba(10,10,16,0.96) 0%, rgba(212,175,55,0.16) 50%, #050508 100%);
+            transform: translateY(0%); transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none;
         }
-        .product-card.ai-revealed .product-media-box::after {
-            transform: translateY(105%);
-        }
-        .product-media-box img { 
-            width: 100%; height: 100%; display: block; object-fit: cover; 
-            transform: scale(1.08); filter: brightness(0.8);
-            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
-        }
-        .product-card.ai-revealed .product-media-box img {
-            transform: scale(1); filter: brightness(1);
-        }
+        .product-card.ai-revealed .product-media-box::after,
+        .reel-card.ai-reel-revealed .reel-media-box::after { transform: translateY(105%); }
+
+        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.06); transition: transform 0.48s cubic-bezier(0.16, 1, 0.3, 1); }
+        .product-card.ai-revealed .product-media-box img { transform: scale(1); }
 
         /* Desktop Up/Down Navigation Controls */
-        .desktop-reel-nav {
-            position: fixed; right: 74px; top: 50%; transform: translateY(-50%);
-            z-index: 4600; display: flex; flex-direction: column; gap: 14px;
-        }
+        .desktop-reel-nav { position: fixed; right: 74px; top: 50%; transform: translateY(-50%); z-index: 4600; display: flex; flex-direction: column; gap: 14px; }
         @media (max-width: 768px) { .desktop-reel-nav { display: none !important; } }
         .desktop-nav-circle {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(12, 12, 18, 0.9); border: 1px solid rgba(212, 175, 55, 0.4);
-            color: #fcf6ba; font-size: 1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.85);
-            transition: transform 0.15s ease, background 0.15s ease;
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(12, 12, 18, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.4); color: #fcf6ba; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.12s ease;
         }
         .desktop-nav-circle:hover { transform: scale(1.08); background: rgba(212, 175, 55, 0.18); }
-        .desktop-nav-circle:active { transform: scale(0.92); }
 
         /* Smooth Floating Search Bar */
         .top-floating-search-bar {
-            position: fixed; top: 15px; left: 50%; 
-            transform: translate3d(-50%, 0, 0);
+            position: fixed; top: 15px; left: 50%; transform: translate3d(-50%, 0, 0);
             width: 90%; max-width: 400px; z-index: 5500; display: flex !important;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
             border-radius: 40px; padding: 4px 6px 4px 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.9);
-            transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease;
-            will-change: transform, opacity;
+            transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.14s ease; will-change: transform, opacity;
         }
-        .top-floating-search-bar.search-hidden {
-            transform: translate3d(-50%, -95px, 0); opacity: 0; pointer-events: none;
-        }
-        .floating-search-input {
-            flex: 1; background: transparent; border: none; outline: none;
-            color: #ffffff; font-size: 0.85rem; font-family: var(--font-main);
-        }
+        .top-floating-search-bar.search-hidden { transform: translate3d(-50%, -95px, 0); opacity: 0; pointer-events: none; }
+        .floating-search-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 0.85rem; font-family: var(--font-main); }
         .floating-search-input::placeholder { color: #7a7a85; }
-        .floating-search-btn-circle {
-            width: 34px; height: 34px; border-radius: 50%; background: var(--gold-gradient);
-            border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #000; font-size: 0.88rem;
-        }
+        .floating-search-btn-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--gold-gradient); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; font-size: 0.88rem; }
 
-        /* Crisp & Instant Side Action Bar */
+        /* Crisp Side Action Bar */
         .right-vertical-actions {
             position: fixed !important; right: 10px !important; bottom: 68px !important; z-index: 4500 !important;
-            display: flex; flex-direction: column; align-items: center; gap: 14px !important;
-            pointer-events: auto; width: 46px;
-            transform: translate3d(0, 0, 0); 
-            backface-visibility: hidden;
-            -webkit-font-smoothing: subpixel-antialiased;
-            transition: opacity 0.1s ease;
+            display: flex; flex-direction: column; align-items: center; gap: 14px !important; width: 46px;
+            transform: translate3d(0, 0, 0); backface-visibility: hidden; transition: opacity 0.1s ease;
         }
-        .right-vertical-actions.clean-hidden {
-            opacity: 0; pointer-events: none; visibility: hidden;
-        }
-        .side-action-item { 
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; 
-            position: relative; width: 100%; transform: translateZ(0);
-            transition: transform 0.06s ease;
-        }
+        .right-vertical-actions.clean-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; width: 100%; transition: transform 0.06s ease; }
         .side-action-item:active { transform: scale(0.88); }
-        .action-pure-icon { 
-            font-size: 1.5rem !important; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.95));
-            border: none !important; outline: none !important; box-shadow: none !important;
-        }
-        .side-count-text { 
-            font-size: 0.56rem !important; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
-            text-shadow: 0 1px 3px rgba(0,0,0,1); text-align: center; white-space: nowrap; max-width: 46px;
-        }
-        .love-action-btn.liked-active .action-pure-icon,
-        .save-action-btn.active .action-pure-icon { 
-            color: var(--pink-accent) !important; background: none !important; 
-            -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; 
-        }
-
+        .action-pure-icon { font-size: 1.5rem !important; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.95)); }
+        .side-count-text { font-size: 0.56rem !important; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,1); text-align: center; white-space: nowrap; max-width: 46px; }
+        .love-action-btn.liked-active .action-pure-icon, .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .cart-pink-badge {
-            position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
-            background: var(--pink-accent); color: #fff;
+            position: absolute; top: -6px; left: 50%; transform: translateX(-50%); background: var(--pink-accent); color: #fff;
             font-size: 0.54rem; font-weight: 800; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
-            z-index: 10; pointer-events: none;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent); z-index: 10; pointer-events: none;
         }
 
-        /* Compact, Borderless Bottom Navigation Bar */
+        /* Compact Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 54px !important;
-            background: rgba(0, 0, 0, 0.78) !important;
-            border-top: none !important;
-            display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
+            background: rgba(0, 0, 0, 0.78) !important; border-top: none !important;
+            display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px; transform: translate3d(0, 0, 0);
         }
-        .bottom-nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.5rem; font-weight: 700; gap: 2px;
-            width: 100%; height: 100%; text-align: center; position: relative;
-            transform: translateZ(0);
-        }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 0.5rem; font-weight: 700; gap: 2px; width: 100%; height: 100%; }
         .bottom-nav-item:active { transform: scale(0.92); }
-        .bottom-nav-item i { 
-            font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.95));
-        }
-        .bottom-nav-item span { 
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.95));
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
-        }
+        .bottom-nav-item i { font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .bottom-nav-item span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* Clean Pinterest Grid View */
-        .pinterest-feed-container {
-            padding: 72px 8px 15px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
-            display: none;
-        }
+        .pinterest-feed-container { padding: 72px 8px 15px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto; display: none; }
         .pinterest-feed-container.active-grid { display: block; }
         @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 80px 15px 15px 15px; } }
+        .corner-discount-badge { position: absolute; top: 8px; left: 8px; z-index: 45; background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
+        .card-clean-price-badge { position: absolute; bottom: 8px; right: 8px; z-index: 45; font-size: 0.88rem; font-weight: 800; background: var(--gold-gradient) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; filter: drop-shadow(0px 2px 4px #000); }
 
-        .corner-discount-badge {
-            position: absolute; top: 8px; left: 8px; z-index: 45;
-            background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800;
-            padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
-        }
-
-        .card-clean-price-badge {
-            position: absolute; bottom: 8px; right: 8px; z-index: 45;
-            font-size: 0.88rem; font-weight: 800;
-            background: var(--gold-gradient) !important; 
-            -webkit-background-clip: text !important; 
-            -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0px 2px 4px #000000) drop-shadow(0px 0px 6px #000000);
-            display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-        }
-
-        /* Default Fullscreen Reels View */
-        .reel-modal-overlay {
-            display: flex; position: fixed; inset: 0;
-            background: #000000; z-index: 4000;
-            align-items: center; justify-content: center;
-        }
+        /* Standard YouTube/Instagram Style Reels View */
+        .reel-modal-overlay { display: flex; position: fixed; inset: 0; background: #000; z-index: 4000; align-items: center; justify-content: center; }
         .reel-modal-overlay.hidden-reels { display: none !important; }
-
         .reel-modal-wrapper {
-            position: relative; width: 100%; max-width: 420px; height: calc(100vh - 54px); height: calc(100dvh - 54px); top: 0;
-            background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; border: none;
+            position: relative; width: 100%; max-width: 420px; height: calc(100vh - 54px); height: calc(100dvh - 54px);
+            background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
-
-        .reel-card { 
-            width: 100%; height: calc(100vh - 54px) !important; height: calc(100dvh - 54px) !important; 
-            scroll-snap-align: start; scroll-snap-stop: always;
-            display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
-            align-items: center; justify-content: center; padding-bottom: 18px;
-            transform: translate3d(0, 0, 0);
+        .reel-card {
+            width: 100%; height: calc(100vh - 54px) !important; height: calc(100dvh - 54px) !important;
+            scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column;
+            position: relative; background: #000; flex-shrink: 0; align-items: center; justify-content: center; padding-bottom: 18px;
+            contain: content; transform: translate3d(0, 0, 0);
         }
-        .reel-media-box { 
-            position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 88px); 
-            cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            border-radius: 16px; border: none !important; box-shadow: none !important;
+        .reel-media-box {
+            position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 88px);
+            cursor: pointer; background: #06060a; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 16px;
+            opacity: 0; transform: scale(0.96); transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .reel-primary-video-container {
-            width: 100%; height: 100%; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
-        }
+        .reel-card.ai-reel-revealed .reel-media-box { opacity: 1; transform: scale(1); }
+        .reel-primary-video-container { width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 0.55s ease;
-            will-change: opacity, transform;
-            animation: dynamicZoomInOut 9s ease-in-out infinite alternate;
-            backface-visibility: hidden;
+            transition: opacity 0.5s ease; will-change: opacity, transform; animation: dynamicZoomInOut 9s ease-in-out infinite alternate; backface-visibility: hidden;
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
+        @keyframes dynamicZoomInOut { 0% { transform: scale(1.0); } 50% { transform: scale(1.025); } 100% { transform: scale(1.0); } }
 
-        @keyframes dynamicZoomInOut {
-            0% { transform: scale(1.0); }
-            50% { transform: scale(1.025); }
-            100% { transform: scale(1.0); }
-        }
-
-        /* Elevated & Unclipped Price Overlay */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%);
-            z-index: 60; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
-            gap: 8px; padding: 6px 16px; border-radius: 22px;
-            background: rgba(8, 8, 14, 0.94) !important;
-            border: 1px solid rgba(212, 175, 55, 0.45);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.85);
-            white-space: nowrap;
+            position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%); z-index: 60; pointer-events: none;
+            display: flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 22px;
+            background: rgba(8, 8, 14, 0.94) !important; border: 1px solid rgba(212, 175, 55, 0.45); white-space: nowrap;
         }
-        .reel-center-price-badge {
-            font-size: 0.95rem; font-weight: 800; line-height: 1.2;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
-        .reel-center-discount-badge {
-            background: var(--pink-accent); color: #fff; font-size: 0.58rem; font-weight: 800;
-            padding: 2px 7px; border-radius: 10px; line-height: 1.2;
-        }
+        .reel-center-price-badge { font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .reel-center-discount-badge { background: var(--pink-accent); color: #fff; font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 
-        .overlay-sheet {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px; scrollbar-width: none;
-        }
+        /* Modals & Overlays */
+        .overlay-sheet { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 15px; scrollbar-width: none; }
         .overlay-sheet::-webkit-scrollbar { display: none; }
-
-        .buy-preview-modal {
-            width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5);
-            border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.95);
-        }
-        .preview-horizontal-scroll {
-            display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 10px 2px; scroll-snap-type: x mandatory; scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
+        .buy-preview-modal { width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5); border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px; }
+        .preview-horizontal-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 10px 2px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
-
-        .preview-img-item {
-            flex: 0 0 112px; width: 112px; height: 112px; border-radius: 14px; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000;
-            transition: transform 0.15s ease, border-color 0.15s ease;
-        }
-        .preview-img-item.selected { border-color: var(--pink-accent); transform: scale(1.03); box-shadow: 0 4px 14px rgba(255,42,133,0.35); }
+        .preview-img-item { flex: 0 0 112px; width: 112px; height: 112px; border-radius: 14px; overflow: hidden; border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000; transition: transform 0.12s ease, border-color 0.12s ease; }
+        .preview-img-item.selected { border-color: var(--pink-accent); transform: scale(1.03); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 34px; height: 34px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
-            box-shadow: 0 0 18px rgba(212,175,55,0.95);
-            will-change: left, top, transform, opacity;
+            box-shadow: 0 0 18px rgba(212,175,55,0.95); will-change: left, top, transform, opacity;
         }
-
-        .inpage-details-modal {
-            width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid);
-            border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
-            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); scrollbar-width: none;
-        }
+        .inpage-details-modal { width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid); border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; scrollbar-width: none; }
         .inpage-details-modal::-webkit-scrollbar { display: none; }
-
-        .fullscreen-iframe-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 54px); height: calc(100dvh - 54px);
-            background: #000000; z-index: 4500; flex-direction: column;
-        }
+        .fullscreen-iframe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 54px); height: calc(100dvh - 54px); background: #000; z-index: 4500; flex-direction: column; }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
-
-        /* Override z-index for Category & Saved Overlay so it opens smoothly above Reels */
-        .category-transparent-overlay, .saved-gallery-overlay {
-            z-index: 6500 !important;
-        }
+        .category-transparent-overlay, .saved-gallery-overlay { z-index: 6500 !important; }
         .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 8px; width: 100%; }
         .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
@@ -371,63 +204,38 @@
 <body id="mainBody">
 
     <div id="rorraxyLoaderOverlay">
-        <div class="loader-logo-box">
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy">
-        </div>
+        <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy"></div>
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Pull to Refresh Toast -->
-    <div id="pullRefreshIndicator">
-        <i class="fa-solid fa-rotate-right fa-spin"></i> <span>REFRESHING FEED...</span>
-    </div>
+    <div id="pullRefreshIndicator"><i class="fa-solid fa-rotate-right fa-spin"></i> <span>REFRESHING FEED...</span></div>
 
-    <!-- Smooth Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar search-hidden">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Desktop Up/Down Navigation Controls for Reels -->
     <div id="desktopReelNav" class="desktop-reel-nav">
         <button class="desktop-nav-circle" onclick="navigateReelStep(-1)" title="Previous Reel"><i class="fa-solid fa-chevron-up"></i></button>
         <button class="desktop-nav-circle" onclick="navigateReelStep(1)" title="Next Reel"><i class="fa-solid fa-chevron-down"></i></button>
     </div>
 
-    <!-- Crisp & Instant Side Action Bar -->
     <div id="fixedGlobalActionsBar" class="right-vertical-actions">
         <div class="side-action-item" id="cartDropZone" onclick="toggleCartPortal()" title="Cart" style="padding-top: 4px;">
             <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
             <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
         </div>
-
-        <div class="side-action-item" onclick="handlePinterestInterception(event, 'share')" title="Share">
-            <i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i>
-        </div>
+        <div class="side-action-item" onclick="handlePinterestInterception(event, 'share')" title="Share"><i class="fa-solid fa-reply action-pure-icon" style="transform:scaleX(-1);"></i></div>
         <div class="side-action-item love-action-btn" id="sideLoveActionBtn" onclick="handlePinterestInterception(event, 'like')" title="Like">
             <i class="fa-solid fa-heart action-pure-icon"></i>
             <span class="side-count-text love-count" id="sideLoveCountText"></span>
         </div>
-        <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search">
-            <i class="fa-solid fa-magnifying-glass action-pure-icon"></i>
-        </div>
-        <div class="side-action-item save-action-btn" id="sideSaveActionBtn" onclick="handlePinterestInterception(event, 'save')" title="Save">
-            <i class="fa-solid fa-bookmark action-pure-icon"></i>
-        </div>
-
-        <div class="side-action-item" onclick="toggleAccountPortal()" title="You">
-            <i class="fa-solid fa-user action-pure-icon"></i>
-            <span class="side-count-text">YOU</span>
-        </div>
-
-        <!-- Clean & Borderless IMAGE Gallery Icon Below YOU Menu -->
-        <div class="side-action-item" onclick="openCleanGalleryView()" title="Product Images Gallery" style="border:none; outline:none; box-shadow:none;">
-            <i class="fa-solid fa-image action-pure-icon" style="border:none; outline:none;"></i>
-            <span class="side-count-text">IMAGE</span>
-        </div>
+        <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search"><i class="fa-solid fa-magnifying-glass action-pure-icon"></i></div>
+        <div class="side-action-item save-action-btn" id="sideSaveActionBtn" onclick="handlePinterestInterception(event, 'save')" title="Save"><i class="fa-solid fa-bookmark action-pure-icon"></i></div>
+        <div class="side-action-item" onclick="toggleAccountPortal()" title="You"><i class="fa-solid fa-user action-pure-icon"></i><span class="side-count-text">YOU</span></div>
+        <div class="side-action-item" onclick="openCleanGalleryView()" title="Product Images Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">IMAGE</span></div>
     </div>
 
-    <!-- Borderless Compact Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -436,77 +244,61 @@
         <div id="bottomHomeToggleBtn" class="bottom-nav-item" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>HOME</span></div>
     </nav>
 
-    <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay">
-        <iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe>
-    </div>
+    <div id="fullscreenIframeOverlay" class="fullscreen-iframe-overlay"><iframe id="fullscreenIframeBody" class="fullscreen-iframe-body" src=""></iframe></div>
+    <div id="savedGalleryOverlay" class="saved-gallery-overlay" onclick="if(event.target===this) this.style.display='none'"><div class="seller-fullscreen-container" id="savedGalleryBody"></div></div>
+    <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()"><div class="buy-preview-modal" id="buyPreviewModalContent"></div></div>
+    <div id="inpageDetailsOverlay" class="overlay-sheet" onclick="if(event.target===this) closeInpageDetails()"><div class="inpage-details-modal" id="inpageDetailsModalContent"></div></div>
+    <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'"><div class="seller-fullscreen-container"><div class="category-fullscreen-view" id="categoryMainListView"></div></div></div>
 
-    <div id="savedGalleryOverlay" class="saved-gallery-overlay" onclick="if(event.target===this) this.style.display='none'">
-        <div class="seller-fullscreen-container" id="savedGalleryBody"></div>
-    </div>
-
-    <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()">
-        <div class="buy-preview-modal" id="buyPreviewModalContent"></div>
-    </div>
-
-    <div id="inpageDetailsOverlay" class="overlay-sheet" onclick="if(event.target===this) closeInpageDetails()">
-        <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
-    </div>
-
-    <!-- Category Accordion Overlay Connected to categories.js & style.css -->
-    <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
-        <div class="seller-fullscreen-container">
-            <div class="category-fullscreen-view" id="categoryMainListView"></div>
-        </div>
-    </div>
-
-    <!-- Clean Pinterest Grid View for Search, Category & Image Menu -->
     <main id="appContainer" class="pinterest-feed-container"></main>
+    <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 
-    <!-- Dedicated Default Reels View -->
-    <div id="reelModalOverlay" class="reel-modal-overlay">
-        <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
-    </div>
-
-    <!-- External Categories JS Linked -->
     <script src="categories.js"></script>
-
     <script>
-        const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
-        let globalMasterProductsList = [
-            {
-                id: '101',
-                title: 'rorraxy Premium Matte Black Edition',
-                category: 'Fashion',
-                price: '49.99',
-                discount_rate: '20',
-                image_url: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
-                description: 'Luxury matte finish crafted with highest precision.'
-            }
-        ];
+        const FALLBACK_LOGO = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
+        const CACHE_KEY = 'rorraxy_retail_feed_cache';
+        const REELS_BATCH_SIZE = 30; // Standard 30-item virtualized batch size for zero-lag playback
+
+        let globalMasterProductsList = [{
+            id: '101', title: 'rorraxy Premium Matte Black Edition', category: 'Fashion',
+            price: '49.99', discount_rate: '20', image_url: FALLBACK_LOGO,
+            description: 'Luxury matte finish crafted with highest precision.'
+        }];
         let activeProductList = [];
+        let renderedReelsCount = 0;
         let currentReelIndex = 0;
-        let slideIntervalsMap = {};
+        let activeSlideTimer = null;
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
 
-        function shuffleArray(array) {
-            let shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
+        const $ = id => document.getElementById(id);
+
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                [copy[i], copy[j]] = [copy[j], copy[i]];
             }
-            return shuffled;
+            return copy;
+        }
+
+        function extractImages(product) {
+            try {
+                if (product.images_json) {
+                    const parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
+                    if (Array.isArray(parsed) && parsed.length) return parsed;
+                }
+                if (product.image_url) return [product.image_url];
+            } catch (e) {}
+            return [FALLBACK_LOGO];
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            let refParam = urlParams.get('ref') || urlParams.get('seller_id') || urlParams.get('affiliate');
-            if (refParam) {
-                localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
-            } else if (!localStorage.getItem('rorraxy_active_affiliate_ref')) {
-                localStorage.setItem('rorraxy_active_affiliate_ref', 'rorraxy-store');
-            }
+            const refParam = urlParams.get('ref') || urlParams.get('seller_id') || urlParams.get('affiliate');
+            if (refParam) localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
+            else if (!localStorage.getItem('rorraxy_active_affiliate_ref')) localStorage.setItem('rorraxy_active_affiliate_ref', 'rorraxy-store');
 
             loadLiveProducts();
             updateCartBadgeCount();
@@ -517,246 +309,157 @@
             buildCategoriesAccordion();
 
             setTimeout(() => {
-                const loader = document.getElementById('rorraxyLoaderOverlay');
-                if(loader) {
+                const loader = $('rorraxyLoaderOverlay');
+                if (loader) {
                     loader.style.opacity = '0';
                     setTimeout(() => loader.style.display = 'none', 80);
                 }
             }, 10);
 
-            const searchInput = document.getElementById('floatingSearchInput');
-            const searchBtn = document.getElementById('floatingSearchBtn');
-
-            if(searchBtn && searchInput) {
-                searchBtn.addEventListener('click', () => { executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
+            const searchInput = $('floatingSearchInput'), searchBtn = $('floatingSearchBtn');
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', () => executeHeaderSearch(searchInput.value));
+                searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') executeHeaderSearch(searchInput.value); });
+                searchInput.addEventListener('input', e => executeHeaderSearch(e.target.value));
             }
         });
 
-        // Build Interactive Accordion Category Menu from categories.js (rorraxyCategoriesData)
         function buildCategoriesAccordion() {
-            const container = document.getElementById('categoryMainListView');
+            const container = $('categoryMainListView');
             if (!container) return;
-
-            const categoriesList = (typeof rorraxyCategoriesData !== 'undefined' && Array.isArray(rorraxyCategoriesData)) 
-                ? rorraxyCategoriesData 
-                : [];
-
-            if (categoriesList.length === 0) {
+            const list = (typeof rorraxyCategoriesData !== 'undefined' && Array.isArray(rorraxyCategoriesData)) ? rorraxyCategoriesData : [];
+            if (!list.length) {
                 container.innerHTML = `<div style="color:#fff; text-align:center; padding:20px;">CATEGORIES LOADING...</div>`;
                 return;
             }
-
-            let html = `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; width:100%;">
-                    <span style="font-size:0.9rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">ALL CATEGORIES</span>
-                    <button onclick="document.getElementById('categoryTransparentOverlay').style.display='none'" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1;">×</button>
-                </div>
-            `;
-
-            categoriesList.forEach((cat, idx) => {
-                let subItemsHtml = (cat.subCategories || []).map(sub => `
+            let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; width:100%;">
+                <span style="font-size:0.9rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">ALL CATEGORIES</span>
+                <button onclick="document.getElementById('categoryTransparentOverlay').style.display='none'" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1;">×</button>
+            </div>`;
+            list.forEach((cat, idx) => {
+                const subs = (cat.subCategories || []).map(sub => `
                     <div class="sub-cat-item" onclick="selectSubCategoryItem('${sub.key}', '${sub.name.replace(/'/g, "\\'")}')">
-                        <i class="${sub.icon || 'fa-solid fa-tag'}"></i>
-                        <span class="sub-cat-name">${sub.name}</span>
+                        <i class="${sub.icon || 'fa-solid fa-tag'}"></i><span class="sub-cat-name">${sub.name}</span>
+                    </div>`).join('');
+                html += `<div class="accordion-category-box ${idx === 0 ? 'active' : ''}" id="catBox_${cat.id}">
+                    <div class="accordion-header" onclick="toggleAccordionBox('catBox_${cat.id}')">
+                        <div class="accordion-title-wrap"><i class="${cat.icon} cat-main-icon"></i><span class="accordion-main-title">${cat.title}</span></div>
+                        <i class="fa-solid fa-chevron-down accordion-arrow"></i>
                     </div>
-                `).join('');
-
-                html += `
-                    <div class="accordion-category-box ${idx === 0 ? 'active' : ''}" id="catBox_${cat.id}">
-                        <div class="accordion-header" onclick="toggleAccordionBox('catBox_${cat.id}')">
-                            <div class="accordion-title-wrap">
-                                <i class="${cat.icon} cat-main-icon"></i>
-                                <span class="accordion-main-title">${cat.title}</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="sub-categories-grid">
-                                ${subItemsHtml}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                    <div class="accordion-content"><div class="sub-categories-grid">${subs}</div></div>
+                </div>`;
             });
-
             container.innerHTML = html;
         }
 
         function toggleAccordionBox(boxId) {
-            const targetBox = document.getElementById(boxId);
-            if (!targetBox) return;
-            const isAlreadyActive = targetBox.classList.contains('active');
-            document.querySelectorAll('.accordion-category-box').forEach(box => box.classList.remove('active'));
-            if (!isAlreadyActive) {
-                targetBox.classList.add('active');
-            }
+            const target = $(boxId);
+            if (!target) return;
+            const wasActive = target.classList.contains('active');
+            document.querySelectorAll('.accordion-category-box').forEach(b => b.classList.remove('active'));
+            if (!wasActive) target.classList.add('active');
         }
 
         function selectSubCategoryItem(subKey, subName) {
-            const overlay = document.getElementById('categoryTransparentOverlay');
-            if(overlay) overlay.style.display = 'none';
+            const overlay = $('categoryTransparentOverlay');
+            if (overlay) overlay.style.display = 'none';
+            switchToGridMode(true);
 
-            const gridContainer = document.getElementById('appContainer');
-            const reelModal = document.getElementById('reelModalOverlay');
-            const sideBar = document.getElementById('fixedGlobalActionsBar');
-            const searchBar = document.getElementById('floatingSearchContainer');
-
-            if(reelModal) reelModal.classList.add('hidden-reels');
-            if(gridContainer) gridContainer.classList.add('active-grid');
-            if(sideBar) sideBar.classList.add('clean-hidden');
-            if(searchBar) searchBar.classList.remove('search-hidden');
-
-            let keyClean = subKey.toLowerCase().replace(/-/g, ' ');
-            let nameClean = subName.toLowerCase();
-
-            let filtered = globalMasterProductsList.filter(item => {
-                const c = (item.category || '').toLowerCase();
-                const sc = (item.subcategory || item.sub_category || '').toLowerCase();
-                const t = (item.title || '').toLowerCase();
-                const d = (item.description || '').toLowerCase();
-                return c.includes(keyClean) || sc.includes(keyClean) || t.includes(keyClean) || 
-                       c.includes(nameClean) || sc.includes(nameClean) || t.includes(nameClean) || d.includes(nameClean);
+            const keyClean = subKey.toLowerCase().replace(/-/g, ' ');
+            const nameClean = subName.toLowerCase();
+            const filtered = globalMasterProductsList.filter(item => {
+                const blob = `${item.category || ''} ${item.subcategory || item.sub_category || ''} ${item.title || ''} ${item.description || ''}`.toLowerCase();
+                return blob.includes(keyClean) || blob.includes(nameClean);
             });
-
-            activeProductList = filtered.length > 0 ? filtered : [...globalMasterProductsList];
+            activeProductList = filtered.length ? filtered : [...globalMasterProductsList];
             renderPinterestHomeGrid(activeProductList);
         }
 
-        // Toggle Category Modal Fast
         function toggleCategoryModal(e) {
-            if(e) e.stopPropagation();
-            const overlay = document.getElementById('categoryTransparentOverlay');
-            if(!overlay) return;
-            
-            if (overlay.style.display === 'flex') {
-                overlay.style.display = 'none';
-            } else {
-                const listView = document.getElementById('categoryMainListView');
-                if (listView && listView.innerHTML.trim() === '') {
-                    buildCategoriesAccordion();
-                }
+            if (e) e.stopPropagation();
+            const overlay = $('categoryTransparentOverlay');
+            if (!overlay) return;
+            if (overlay.style.display === 'flex') overlay.style.display = 'none';
+            else {
+                if (!$('categoryMainListView').innerHTML.trim()) buildCategoriesAccordion();
                 overlay.style.display = 'flex';
             }
         }
 
-        // Auto-hide search bar when user scrolls either Reels or Grid
+        function switchToGridMode(showSearch = true) {
+            $('reelModalOverlay')?.classList.add('hidden-reels');
+            $('appContainer')?.classList.add('active-grid');
+            $('fixedGlobalActionsBar')?.classList.add('clean-hidden');
+            if ($('desktopReelNav')) $('desktopReelNav').style.display = 'none';
+            if (showSearch) $('floatingSearchContainer')?.classList.remove('search-hidden');
+        }
+
         function setupAutoHideSearchOnScroll() {
             const hideSearch = () => {
-                const searchBar = document.getElementById('floatingSearchContainer');
-                if (searchBar && !searchBar.classList.contains('search-hidden')) {
-                    searchBar.classList.add('search-hidden');
-                    searchBar.classList.remove('manual-open');
+                const sb = $('floatingSearchContainer');
+                if (sb && !sb.classList.contains('search-hidden')) {
+                    sb.classList.add('search-hidden');
+                    sb.classList.remove('manual-open');
                 }
             };
-
             window.addEventListener('scroll', hideSearch, { passive: true });
-            const wrapper = document.getElementById('reelModalWrapperBody');
+            const wrapper = $('reelModalWrapperBody');
             if (wrapper) {
                 wrapper.addEventListener('touchmove', hideSearch, { passive: true });
                 wrapper.addEventListener('wheel', hideSearch, { passive: true });
             }
         }
 
-        // Open Clean Pinterest Photo Gallery View (Triggered by IMAGE icon below YOU - Shuffled Variety Default)
         function openCleanGalleryView() {
-            const gridContainer = document.getElementById('appContainer');
-            const reelModal = document.getElementById('reelModalOverlay');
-            const sideBar = document.getElementById('fixedGlobalActionsBar');
-            const desktopNav = document.getElementById('desktopReelNav');
-            const searchBar = document.getElementById('floatingSearchContainer');
-
-            if(reelModal) reelModal.classList.add('hidden-reels');
-            if(gridContainer) gridContainer.classList.add('active-grid');
-            if(sideBar) sideBar.classList.add('clean-hidden');
-            if(desktopNav) desktopNav.style.display = 'none';
-            if(searchBar) searchBar.classList.remove('search-hidden');
-
+            switchToGridMode(true);
             activeProductList = shuffleArray(globalMasterProductsList);
             renderPinterestHomeGrid(activeProductList);
         }
 
-        // Desktop Mouse Wheel, Drag & Keyboard Arrow Support for Reels
         function setupDesktopNavigation() {
-            const wrapper = document.getElementById('reelModalWrapperBody');
+            const wrapper = $('reelModalWrapperBody');
             if (!wrapper) return;
-
             let wheelLock = false;
-            wrapper.addEventListener('wheel', (e) => {
-                const reelModal = document.getElementById('reelModalOverlay');
-                if (!reelModal || reelModal.style.display === 'none' || reelModal.classList.contains('hidden-reels')) return;
-                
+            wrapper.addEventListener('wheel', e => {
+                const rm = $('reelModalOverlay');
+                if (!rm || rm.style.display === 'none' || rm.classList.contains('hidden-reels')) return;
                 e.preventDefault();
-                if (wheelLock) return;
-                if (Math.abs(e.deltaY) < 12) return;
-
+                if (wheelLock || Math.abs(e.deltaY) < 12) return;
                 wheelLock = true;
                 navigateReelStep(e.deltaY > 0 ? 1 : -1);
-                setTimeout(() => { wheelLock = false; }, 320);
+                setTimeout(() => { wheelLock = false; }, 300);
             }, { passive: false });
 
-            window.addEventListener('keydown', (e) => {
+            window.addEventListener('keydown', e => {
                 if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-                const reelModal = document.getElementById('reelModalOverlay');
-                if (!reelModal || reelModal.style.display === 'none' || reelModal.classList.contains('hidden-reels')) return;
-
-                if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-                    e.preventDefault();
-                    navigateReelStep(1);
-                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-                    e.preventDefault();
-                    navigateReelStep(-1);
-                }
+                const rm = $('reelModalOverlay');
+                if (!rm || rm.style.display === 'none' || rm.classList.contains('hidden-reels')) return;
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); navigateReelStep(1); }
+                else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); navigateReelStep(-1); }
             });
         }
 
-        function navigateReelStep(direction) {
-            const wrapper = document.getElementById('reelModalWrapperBody');
+        function navigateReelStep(dir) {
+            const wrapper = $('reelModalWrapperBody');
             if (!wrapper) return;
-            const list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            const nextIndex = Math.max(0, Math.min(list.length - 1, currentReelIndex + direction));
-            const cardHeight = wrapper.clientHeight;
-            wrapper.scrollTo({
-                top: nextIndex * cardHeight,
-                behavior: 'smooth'
-            });
-            currentReelIndex = nextIndex;
-            updateSideActionState();
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            const nextIdx = Math.max(0, Math.min(list.length - 1, currentReelIndex + dir));
+            if (nextIdx >= renderedReelsCount - 3 && renderedReelsCount < list.length) appendReelsBatch(REELS_BATCH_SIZE);
+            wrapper.scrollTo({ top: nextIdx * wrapper.clientHeight, behavior: 'smooth' });
+            activateReelAtIndex(nextIdx);
         }
 
-        // Pull-To-Refresh Mechanism on Top Scroll
         function setupPullToRefresh() {
-            const wrapper = document.getElementById('reelModalWrapperBody');
-            const indicator = document.getElementById('pullRefreshIndicator');
-            if(!wrapper || !indicator) return;
-
-            let startY = 0;
-            let isPulling = false;
-
-            wrapper.addEventListener('touchstart', (e) => {
-                if (wrapper.scrollTop <= 0) {
-                    startY = e.touches[0].clientY;
-                    isPulling = true;
-                }
-            }, { passive: true });
-
-            wrapper.addEventListener('touchmove', (e) => {
-                if (!isPulling) return;
-                let diff = e.touches[0].clientY - startY;
-                if (diff > 60 && wrapper.scrollTop <= 0) {
-                    indicator.classList.add('visible');
-                }
-            }, { passive: true });
-
+            const wrapper = $('reelModalWrapperBody'), ind = $('pullRefreshIndicator');
+            if (!wrapper || !ind) return;
+            let startY = 0, pulling = false;
+            wrapper.addEventListener('touchstart', e => { if (wrapper.scrollTop <= 0) { startY = e.touches[0].clientY; pulling = true; } }, { passive: true });
+            wrapper.addEventListener('touchmove', e => { if (pulling && e.touches[0].clientY - startY > 60 && wrapper.scrollTop <= 0) ind.classList.add('visible'); }, { passive: true });
             wrapper.addEventListener('touchend', () => {
-                if (!isPulling) return;
-                isPulling = false;
-                if (indicator.classList.contains('visible')) {
-                    setTimeout(() => {
-                        indicator.classList.remove('visible');
-                        refreshAndShuffleFeed();
-                    }, 220);
+                if (!pulling) return;
+                pulling = false;
+                if (ind.classList.contains('visible')) {
+                    setTimeout(() => { ind.classList.remove('visible'); refreshAndShuffleFeed(); }, 200);
                 }
             });
         }
@@ -765,12 +468,12 @@
             activeProductList = shuffleArray(globalMasterProductsList);
             openReelsModal(0);
             try {
-                const response = await fetch('/api/products');
-                const result = await response.json();
-                let productsList = (result && result.success && Array.isArray(result.data)) ? result.data : (Array.isArray(result) ? result : []);
-                if (productsList.length > 0) {
-                    globalMasterProductsList = productsList;
-                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
+                const res = await fetch('/api/products');
+                const json = await res.json();
+                const list = (json && json.success && Array.isArray(json.data)) ? json.data : (Array.isArray(json) ? json : []);
+                if (list.length) {
+                    globalMasterProductsList = list;
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(list));
                     activeProductList = shuffleArray(globalMasterProductsList);
                     openReelsModal(0);
                 }
@@ -778,127 +481,74 @@
         }
 
         function toggleWorldPortal() { window.location.href = 'https://rorraxy.com/world.html'; }
-
-        function handleBottomBuy() {
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(list.length > 0) {
-                let targetProd = list[currentReelIndex] || list[0];
-                openBuyPreviewModal(targetProd);
-            }
-        }
-
-        function handleBottomDetails() {
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(list.length > 0) {
-                let targetProd = list[currentReelIndex] || list[0];
-                openInpageDetailsModal(targetProd);
-            }
-        }
+        function handleBottomBuy() { const l = activeProductList.length ? activeProductList : globalMasterProductsList; if (l.length) openBuyPreviewModal(l[currentReelIndex] || l[0]); }
+        function handleBottomDetails() { const l = activeProductList.length ? activeProductList : globalMasterProductsList; if (l.length) openInpageDetailsModal(l[currentReelIndex] || l[0]); }
 
         function handleHomeToggle() {
-            // Close all open overlays/modals immediately
-            const iframeOverlay = document.getElementById('fullscreenIframeOverlay');
-            if (iframeOverlay && iframeOverlay.style.display === 'flex') {
-                iframeOverlay.style.display = 'none';
-                document.getElementById('fullscreenIframeBody').src = '';
+            if ($('fullscreenIframeOverlay')?.style.display === 'flex') {
+                $('fullscreenIframeOverlay').style.display = 'none';
+                $('fullscreenIframeBody').src = '';
             }
-            const catOverlay = document.getElementById('categoryTransparentOverlay');
-            if (catOverlay) catOverlay.style.display = 'none';
-            const savedOverlay = document.getElementById('savedGalleryOverlay');
-            if (savedOverlay) savedOverlay.style.display = 'none';
+            if ($('categoryTransparentOverlay')) $('categoryTransparentOverlay').style.display = 'none';
+            if ($('savedGalleryOverlay')) $('savedGalleryOverlay').style.display = 'none';
             closeBuyPreview();
             closeInpageDetails();
-            
-            const gridContainer = document.getElementById('appContainer');
-            const reelModal = document.getElementById('reelModalOverlay');
-            const sideBar = document.getElementById('fixedGlobalActionsBar');
-            const desktopNav = document.getElementById('desktopReelNav');
-            const searchBar = document.getElementById('floatingSearchContainer');
 
-            if(gridContainer) gridContainer.classList.remove('active-grid');
-            if(reelModal) reelModal.classList.remove('hidden-reels');
-            if(sideBar) sideBar.classList.remove('clean-hidden');
-            if(desktopNav) desktopNav.style.display = 'flex';
-            if(searchBar) {
-                searchBar.classList.add('search-hidden');
-                searchBar.classList.remove('manual-open');
-            }
+            $('appContainer')?.classList.remove('active-grid');
+            $('reelModalOverlay')?.classList.remove('hidden-reels');
+            $('fixedGlobalActionsBar')?.classList.remove('clean-hidden');
+            if ($('desktopReelNav')) $('desktopReelNav').style.display = 'flex';
+            const sb = $('floatingSearchContainer');
+            if (sb) { sb.classList.add('search-hidden'); sb.classList.remove('manual-open'); }
+            if ($('floatingSearchInput')) $('floatingSearchInput').value = '';
 
-            // Reset search input if any
-            const searchInput = document.getElementById('floatingSearchInput');
-            if (searchInput) searchInput.value = '';
-
-            // Always return smoothly to Reels feed
             activeProductList = shuffleArray(globalMasterProductsList);
             openReelsModal(0);
         }
 
         function toggleAccountPortal() { openFullscreenPortal('/account.html'); }
         function toggleCartPortal() { openFullscreenPortal('/cart.html'); }
-
-        function openFullscreenPortal(pageUrl) {
-            const overlay = document.getElementById('fullscreenIframeOverlay');
-            const iframe = document.getElementById('fullscreenIframeBody');
-            iframe.src = pageUrl;
-            overlay.style.display = 'flex';
+        function openFullscreenPortal(url) {
+            $('fullscreenIframeBody').src = url;
+            $('fullscreenIframeOverlay').style.display = 'flex';
             updateCartBadgeCount();
         }
 
         async function loadLiveProducts() {
-            const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-            let hasRendered = false;
-
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        globalMasterProductsList = parsed;
-                        checkInitialProductParam();
-                        hasRendered = true;
-                    }
-                } catch (e) {}
-            }
+            let rendered = false;
+            try {
+                const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+                if (Array.isArray(cached) && cached.length) {
+                    globalMasterProductsList = cached;
+                    checkInitialProductParam();
+                    rendered = true;
+                }
+            } catch (e) {}
 
             try {
-                const response = await fetch('/api/products');
-                const result = await response.json();
-                let productsList = [];
-                if (result && result.success && Array.isArray(result.data)) productsList = result.data;
-                else if (Array.isArray(result)) productsList = result;
-
-                if (productsList.length > 0) {
-                    globalMasterProductsList = productsList;
-                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    if (!hasRendered) {
-                        checkInitialProductParam();
-                    }
-                } else if (!hasRendered) {
-                    checkInitialProductParam();
-                }
-            } catch (error) {
-                if (!hasRendered) {
-                    checkInitialProductParam();
-                }
-            }
+                const res = await fetch('/api/products');
+                const json = await res.json();
+                const list = (json && json.success && Array.isArray(json.data)) ? json.data : (Array.isArray(json) ? json : []);
+                if (list.length) {
+                    globalMasterProductsList = list;
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(list));
+                    if (!rendered) checkInitialProductParam();
+                } else if (!rendered) checkInitialProductParam();
+            } catch (e) { if (!rendered) checkInitialProductParam(); }
         }
 
         function checkInitialProductParam() {
-            const urlParams = new URLSearchParams(window.location.search);
-            let targetProductId = urlParams.get('product') || urlParams.get('id');
-            let targetCategory = urlParams.get('category');
+            const params = new URLSearchParams(window.location.search);
+            const targetId = params.get('product') || params.get('id');
+            const targetCat = params.get('category');
 
-            if (targetCategory) {
-                selectSubCategoryItem(targetCategory, targetCategory);
-                return;
-            }
-            
-            if (targetProductId) {
-                let targetProd = globalMasterProductsList.find(p => String(p.id || p.product_id) === String(targetProductId));
+            if (targetCat) { selectSubCategoryItem(targetCat, targetCat); return; }
+            if (targetId) {
+                const targetProd = globalMasterProductsList.find(p => String(p.id || p.product_id) === String(targetId));
                 if (targetProd) {
-                    let targetCat = (targetProd.category || '').toLowerCase();
-                    let related = globalMasterProductsList.filter(p => String(p.id || p.product_id) !== String(targetProductId) && (p.category || '').toLowerCase() === targetCat);
-                    let others = globalMasterProductsList.filter(p => String(p.id || p.product_id) !== String(targetProductId) && (p.category || '').toLowerCase() !== targetCat);
-                    
+                    const cat = (targetProd.category || '').toLowerCase();
+                    const related = globalMasterProductsList.filter(p => String(p.id || p.product_id) !== String(targetId) && (p.category || '').toLowerCase() === cat);
+                    const others = globalMasterProductsList.filter(p => String(p.id || p.product_id) !== String(targetId) && (p.category || '').toLowerCase() !== cat);
                     activeProductList = [targetProd, ...shuffleArray(related), ...shuffleArray(others)];
                     openReelsModal(0);
                     return;
@@ -909,481 +559,368 @@
         }
 
         function executeHeaderSearch(keyword) {
-            let query = keyword.toLowerCase().trim();
-            const gridContainer = document.getElementById('appContainer');
-            const reelModal = document.getElementById('reelModalOverlay');
-            const sideBar = document.getElementById('fixedGlobalActionsBar');
-
-            if (!query) {
-                if(gridContainer) gridContainer.classList.remove('active-grid');
-                if(reelModal) reelModal.classList.remove('hidden-reels');
-                if(sideBar) sideBar.classList.remove('clean-hidden');
+            const q = keyword.toLowerCase().trim();
+            if (!q) {
+                $('appContainer')?.classList.remove('active-grid');
+                $('reelModalOverlay')?.classList.remove('hidden-reels');
+                $('fixedGlobalActionsBar')?.classList.remove('clean-hidden');
                 activeProductList = shuffleArray(globalMasterProductsList);
                 openReelsModal(0);
                 return;
             }
-
-            if(reelModal) reelModal.classList.add('hidden-reels');
-            if(gridContainer) gridContainer.classList.add('active-grid');
-            if(sideBar) sideBar.classList.add('clean-hidden');
-
-            let filtered = globalMasterProductsList.filter(item => {
-                const title = (item.title || '').toLowerCase();
-                const cat = (item.category || item.description || '').toLowerCase();
-                return title.includes(query) || cat.includes(query);
-            });
-            activeProductList = filtered;
-            renderPinterestHomeGrid(filtered);
+            switchToGridMode(false);
+            activeProductList = globalMasterProductsList.filter(item => `${item.title || ''} ${item.category || ''} ${item.description || ''}`.toLowerCase().includes(q));
+            renderPinterestHomeGrid(activeProductList);
         }
 
         function renderPinterestHomeGrid(products) {
-            const container = document.getElementById('appContainer');
-            if(!container) return;
+            const container = $('appContainer');
+            if (!container) return;
             container.className = 'pinterest-feed-container active-grid';
-            const fragment = document.createDocumentFragment();
+            const frag = document.createDocumentFragment();
 
             products.forEach((item, index) => {
-                const title = item.title || 'rorraxy luxury item';
-                let resolvedImageUrl = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                try {
-                    if (item.images_json) {
-                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
-                        if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
-                    } else if (item.image_url) resolvedImageUrl = item.image_url;
-                } catch(e) {}
-
-                let price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
-                let discountPercent = parseFloat(item.discount_rate || item.discountRate || 0);
-                let discountBadge = discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : '';
-
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'product-card';
-                cardDiv.dataset.staggerIndex = index;
-                
-                cardDiv.onclick = (e) => {
+                const imgs = extractImages(item);
+                const price = item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$0.00';
+                const disc = parseFloat(item.discount_rate || item.discountRate || 0);
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = e => {
                     e.preventDefault();
                     container.classList.remove('active-grid');
-                    document.getElementById('fixedGlobalActionsBar').classList.remove('clean-hidden');
-                    const desktopNav = document.getElementById('desktopReelNav');
-                    if (desktopNav) desktopNav.style.display = 'flex';
-                    const searchBar = document.getElementById('floatingSearchContainer');
-                    if(searchBar) {
-                        searchBar.classList.add('search-hidden');
-                        searchBar.classList.remove('manual-open');
-                    }
+                    $('fixedGlobalActionsBar')?.classList.remove('clean-hidden');
+                    if ($('desktopReelNav')) $('desktopReelNav').style.display = 'flex';
+                    const sb = $('floatingSearchContainer');
+                    if (sb) { sb.classList.add('search-hidden'); sb.classList.remove('manual-open'); }
                     openReelsModal(index);
                 };
-
-                cardDiv.innerHTML = `
-                    <div class="product-media-box">
-                        ${discountBadge}
-                        <img src="${resolvedImageUrl}" onerror="this.onerror=null;this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';" alt="${title}" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async">
-                        <div class="card-clean-price-badge">${price}</div>
-                    </div>
-                `;
-                fragment.appendChild(cardDiv);
+                card.innerHTML = `<div class="product-media-box">
+                    ${disc > 0 ? `<div class="corner-discount-badge">${disc}% OFF</div>` : ''}
+                    <img src="${imgs[0]}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" alt="${item.title || 'rorraxy'}" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async">
+                    <div class="card-clean-price-badge">${price}</div>
+                </div>`;
+                frag.appendChild(card);
             });
 
             container.innerHTML = '';
-            container.appendChild(fragment);
+            container.appendChild(frag);
 
-            // AI Sequential Curtain Cascade Reveal using IntersectionObserver
             const cards = container.querySelectorAll('.product-card');
             if ('IntersectionObserver' in window) {
-                let batchCounter = 0;
-                const observer = new IntersectionObserver((entries, obs) => {
+                let batch = 0;
+                const obs = new IntersectionObserver((entries, o) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            const el = entry.target;
-                            const delayMs = Math.min(batchCounter * 55, 360);
-                            batchCounter++;
-                            setTimeout(() => {
-                                el.classList.add('ai-revealed');
-                            }, delayMs);
-                            obs.unobserve(el);
+                            const delay = Math.min(batch++ * 50, 320);
+                            setTimeout(() => entry.target.classList.add('ai-revealed'), delay);
+                            o.unobserve(entry.target);
                         }
                     });
-                    setTimeout(() => { batchCounter = 0; }, 120);
+                    setTimeout(() => { batch = 0; }, 100);
                 }, { rootMargin: '60px 0px', threshold: 0.05 });
-
-                cards.forEach(card => observer.observe(card));
-            } else {
-                cards.forEach((card, idx) => {
-                    setTimeout(() => card.classList.add('ai-revealed'), idx * 45);
-                });
-            }
+                cards.forEach(c => obs.observe(c));
+            } else cards.forEach((c, i) => setTimeout(() => c.classList.add('ai-revealed'), i * 40));
 
             updateSideActionState();
         }
 
         function updateSideActionState() {
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            let currentProd = list[currentReelIndex] || list[0] || {};
-            let targetId = currentProd.id || currentProd.product_id || '101';
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            const prod = list[currentReelIndex] || list[0] || {};
+            const id = prod.id || prod.product_id || '101';
 
-            let pLikes = getDynamicEngagement(targetId);
-            let loveCountElem = document.getElementById('sideLoveCountText');
-            if(loveCountElem) loveCountElem.innerText = pLikes;
+            if ($('sideLoveCountText')) $('sideLoveCountText').innerText = getDynamicEngagement(id);
+            const liked = localStorage.getItem(`rorraxy_retail_likes_${id}_active`) === 'true';
+            $('sideLoveActionBtn')?.classList.toggle('liked-active', liked);
 
-            let loveBtn = document.getElementById('sideLoveActionBtn');
-            let storageKeyLike = `rorraxy_retail_likes_${targetId}_active`;
-            let isLiked = localStorage.getItem(storageKeyLike) === 'true';
-            if(loveBtn) {
-                if(isLiked) loveBtn.classList.add('liked-active');
-                else loveBtn.classList.remove('liked-active');
-            }
-
-            let saveBtn = document.getElementById('sideSaveActionBtn');
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let isSaved = savedObjects.some(item => String(item.id || item.product_id) === String(targetId));
-            if(saveBtn) {
-                if(isSaved) saveBtn.classList.add('active');
-                else saveBtn.classList.remove('active');
-            }
+            const saved = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            const isSaved = saved.some(i => String(i.id || i.product_id) === String(id));
+            $('sideSaveActionBtn')?.classList.toggle('active', isSaved);
             updateCartBadgeCount();
         }
 
         function toggleReelSearchBox() {
-            const searchBar = document.getElementById('floatingSearchContainer');
-            if(searchBar) {
-                const isHidden = searchBar.classList.contains('search-hidden');
-                if (isHidden) {
-                    searchBar.classList.remove('search-hidden');
-                    searchBar.classList.add('manual-open');
-                    const input = document.getElementById('floatingSearchInput');
-                    if(input) setTimeout(() => input.focus(), 20);
+            const sb = $('floatingSearchContainer');
+            if (!sb) return;
+            if (sb.classList.contains('search-hidden')) {
+                sb.classList.remove('search-hidden');
+                sb.classList.add('manual-open');
+                setTimeout(() => $('floatingSearchInput')?.focus(), 20);
+            } else {
+                sb.classList.add('search-hidden');
+                sb.classList.remove('manual-open');
+            }
+        }
+
+        function handlePinterestInterception(e, type) {
+            if (e) e.stopPropagation();
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            const prod = list[currentReelIndex] || list[0] || {};
+            const id = prod.id || prod.product_id || '101';
+            if (type === 'like') toggleReelLove(id);
+            else if (type === 'save') handleDualSaveAction(id);
+            else if (type === 'share') openNativeShare(id);
+        }
+
+        // Single Active Reel Slideshow & Video Playback Manager (Zero Background CPU Waste)
+        function activateReelAtIndex(idx) {
+            currentReelIndex = idx;
+            updateSideActionState();
+
+            if (activeSlideTimer) { clearInterval(activeSlideTimer); activeSlideTimer = null; }
+
+            const wrapper = $('reelModalWrapperBody');
+            if (!wrapper) return;
+
+            // Reveal card with AI curtain animation immediately
+            const activeCard = wrapper.querySelector(`.reel-card[data-index="${idx}"]`);
+            if (activeCard && !activeCard.classList.contains('ai-reel-revealed')) {
+                requestAnimationFrame(() => activeCard.classList.add('ai-reel-revealed'));
+            }
+
+            // Pause all other videos & play only active video
+            wrapper.querySelectorAll('video').forEach(v => {
+                const cardIdx = Number(v.closest('.reel-card')?.dataset.index);
+                if (cardIdx === idx) { v.play().catch(() => {}); }
+                else if (!v.paused) { v.pause(); }
+            });
+
+            // Run slideshow ONLY for the currently visible reel card
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            const prod = list[idx];
+            if (!prod) return;
+            const pVideo = prod.video_url || prod.youtube_video || '';
+            const imgs = extractImages(prod);
+
+            if (imgs.length > 1 && !pVideo) {
+                let curImg = 0;
+                activeSlideTimer = setInterval(() => {
+                    const nextImg = (curImg + 1) % imgs.length;
+                    const currEl = $(`slide_${idx}_${curImg}`);
+                    const nextEl = $(`slide_${idx}_${nextImg}`);
+                    if (currEl && nextEl) {
+                        currEl.classList.remove('active');
+                        currEl.classList.add('previous');
+                        nextEl.classList.remove('previous');
+                        nextEl.classList.add('active');
+                        setTimeout(() => currEl.classList.remove('previous'), 500);
+                    }
+                    curImg = nextImg;
+                }, 2800);
+            }
+        }
+
+        // Progressive 30-Item Batch Renderer (Standard YouTube/Instagram Reels Engine)
+        function appendReelsBatch(count) {
+            const wrapper = $('reelModalWrapperBody');
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            if (!wrapper || renderedReelsCount >= list.length) return;
+
+            const endIdx = Math.min(renderedReelsCount + count, list.length);
+            const frag = document.createDocumentFragment();
+
+            for (let idx = renderedReelsCount; idx < endIdx; idx++) {
+                const product = list[idx];
+                const pId = String(product.id || product.product_id || '101');
+                const pVideo = product.video_url || product.youtube_video || '';
+                const imgs = extractImages(product);
+                const price = `$${parseFloat(product.price || 0).toFixed(2)}`;
+                const disc = parseFloat(product.discount_rate || product.discountRate || 0);
+
+                let mediaContent = '';
+                if (pVideo && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
+                    mediaContent = `<video src="${pVideo}" poster="${imgs[0]}" ${idx === 0 ? 'autoplay' : 'preload="metadata"'} muted loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
-                    searchBar.classList.add('search-hidden');
-                    searchBar.classList.remove('manual-open');
+                    const layers = imgs.map((url, i) => `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${idx}_${i}" alt="slide" loading="${idx <= 2 ? 'eager' : 'lazy'}" decoding="async">`).join('');
+                    mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layers}</div>`;
                 }
+
+                const card = document.createElement('div');
+                card.className = 'reel-card' + (idx === 0 ? ' ai-reel-revealed' : '');
+                card.dataset.index = idx;
+                card.dataset.productId = pId;
+                card.innerHTML = `<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
+                    <div class="reel-bottom-price-overlay">
+                        <span class="reel-center-price-badge">${price}</span>
+                        ${disc > 0 ? `<span class="reel-center-discount-badge">${disc}% OFF</span>` : ''}
+                    </div>
+                    <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">${mediaContent}</div>
+                </div>`;
+                frag.appendChild(card);
             }
-        }
 
-        function handlePinterestInterception(event, actionType) {
-            if(event) event.stopPropagation();
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            let currentProd = list[currentReelIndex] || list[0] || {};
-            let targetId = currentProd.id || currentProd.product_id || '101';
-
-            if (actionType === 'like') {
-                toggleReelLove(targetId);
-            } else if (actionType === 'save') {
-                handleDualSaveAction(targetId);
-            } else if (actionType === 'share') {
-                openNativeShare(targetId);
-            }
-        }
-
-        function clearAllSlideIntervals() {
-            for (let key in slideIntervalsMap) clearInterval(slideIntervalsMap[key]);
-            slideIntervalsMap = {};
+            wrapper.appendChild(frag);
+            renderedReelsCount = endIdx;
         }
 
         function openReelsModal(startIndex) {
-            const overlay = document.getElementById('reelModalOverlay');
-            const wrapper = document.getElementById('reelModalWrapperBody');
-            const gridContainer = document.getElementById('appContainer');
-            
-            if(gridContainer) gridContainer.classList.remove('active-grid');
-            if(overlay) overlay.classList.remove('hidden-reels');
-            clearAllSlideIntervals();
+            const overlay = $('reelModalOverlay'), wrapper = $('reelModalWrapperBody');
+            $('appContainer')?.classList.remove('active-grid');
+            overlay?.classList.remove('hidden-reels');
 
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(!list || list.length === 0) return;
+            let list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            if (!list || !list.length) return;
 
-            if(startIndex > 0 && startIndex < list.length) {
-                let targetItem = list[startIndex];
-                let targetCat = (targetItem.category || '').toLowerCase();
-                let related = list.filter((p, idx) => idx !== startIndex && (p.category || '').toLowerCase() === targetCat);
-                let others = list.filter((p, idx) => idx !== startIndex && (p.category || '').toLowerCase() !== targetCat);
-                
-                list = [targetItem, ...related, ...others];
+            if (startIndex > 0 && startIndex < list.length) {
+                const target = list[startIndex];
+                const cat = (target.category || '').toLowerCase();
+                const related = list.filter((p, i) => i !== startIndex && (p.category || '').toLowerCase() === cat);
+                const others = list.filter((p, i) => i !== startIndex && (p.category || '').toLowerCase() !== cat);
+                list = [target, ...related, ...others];
                 activeProductList = list;
-                startIndex = 0;
             }
 
-            let reelsHtml = '';
+            wrapper.innerHTML = '';
+            renderedReelsCount = 0;
+            appendReelsBatch(REELS_BATCH_SIZE); // Load initial 30 reels smoothly
 
-            list.forEach((product, idx) => {
-                let pId = String(product.id || product.product_id || '101');
-                let pVideo = product.video_url || product.youtube_video || '';
-                let extractedImages = [];
-
-                try {
-                    if(product.images_json) {
-                        let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                        if(Array.isArray(parsed)) extractedImages = parsed;
-                    } else if(product.image_url) extractedImages = [product.image_url];
-                } catch(e){}
-
-                if(extractedImages.length === 0) extractedImages = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-
-                let mediaContent = '';
-                if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaContent = `<video src="${pVideo}" poster="${extractedImages[0]}" ${idx === 0 ? 'autoplay' : 'preload="metadata"'} muted loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
-                } else {
-                    let layersHtml = extractedImages.map((imgUrl, imgIdx) => `
-                        <img src="${imgUrl}" onerror="this.onerror=null;this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" loading="${idx <= 2 ? 'eager' : 'lazy'}" decoding="async">
-                    `).join('');
-                    mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layersHtml}</div>`;
-                }
-
-                let priceVal = parseFloat(product.price || 0);
-                let price = `$${priceVal.toFixed(2)}`;
-                let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
-
-                reelsHtml += `
-                    <div class="reel-card" data-index="${idx}" data-product-id="${pId}">
-                        <div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
-                            <div class="reel-bottom-price-overlay">
-                                <span class="reel-center-price-badge">${price}</span>
-                                ${discountPercent > 0 ? `<span class="reel-center-discount-badge">${discountPercent}% OFF</span>` : ''}
-                            </div>
-                            <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">
-                                ${mediaContent}
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                if (extractedImages.length > 1 && (!pVideo || pVideo === '')) {
-                    let currentImgIdx = 0;
-                    slideIntervalsMap[idx] = setInterval(() => {
-                        let nextImgIdx = (currentImgIdx + 1) % extractedImages.length;
-                        let currSlide = document.getElementById(`slide_${idx}_${currentImgIdx}`);
-                        let nextSlide = document.getElementById(`slide_${idx}_${nextImgIdx}`);
-                        if(currSlide && nextSlide) {
-                            currSlide.classList.remove('active');
-                            currSlide.classList.add('previous');
-                            nextSlide.classList.remove('previous');
-                            nextSlide.classList.add('active');
-                            setTimeout(() => { currSlide.classList.remove('previous'); }, 550);
-                        }
-                        currentImgIdx = nextImgIdx;
-                    }, 3000);
-                }
-            });
-
-            wrapper.innerHTML = reelsHtml;
-            currentReelIndex = 0;
             wrapper.style.scrollBehavior = 'auto';
             wrapper.scrollTop = 0;
+            activateReelAtIndex(0);
 
-            let scrollTimer = null;
+            let scrollRaf = null;
             wrapper.onscroll = () => {
-                const searchBar = document.getElementById('floatingSearchContainer');
-                if (searchBar && !searchBar.classList.contains('search-hidden')) {
-                    searchBar.classList.add('search-hidden');
-                    searchBar.classList.remove('manual-open');
+                const sb = $('floatingSearchContainer');
+                if (sb && !sb.classList.contains('search-hidden')) {
+                    sb.classList.add('search-hidden');
+                    sb.classList.remove('manual-open');
                 }
-
-                clearTimeout(scrollTimer);
-                scrollTimer = setTimeout(() => {
-                    let cardHeight = wrapper.clientHeight;
-                    if(cardHeight > 0) {
-                        let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
-                        if (calculatedIdx >= 0 && calculatedIdx < list.length && calculatedIdx !== currentReelIndex) {
-                            currentReelIndex = calculatedIdx;
-                            updateSideActionState();
+                if (scrollRaf) cancelAnimationFrame(scrollRaf);
+                scrollRaf = requestAnimationFrame(() => {
+                    const h = wrapper.clientHeight;
+                    if (h > 0) {
+                        const idx = Math.round(wrapper.scrollTop / h);
+                        if (idx >= renderedReelsCount - 5 && renderedReelsCount < list.length) {
+                            appendReelsBatch(REELS_BATCH_SIZE); // Seamlessly append next 30 reels without reload
+                        }
+                        if (idx >= 0 && idx < list.length && idx !== currentReelIndex) {
+                            activateReelAtIndex(idx);
                         }
                     }
-                }, 5);
+                });
             };
-
-            updateSideActionState();
-        }
-
-        function closeReelModal() {
-            clearAllSlideIntervals();
-            const overlay = document.getElementById('reelModalOverlay');
-            if(overlay) overlay.classList.add('hidden-reels');
-            updateSideActionState();
         }
 
         function openBuyPreviewByIndex(index) {
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            if(list[index]) openBuyPreviewModal(list[index]);
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            if (list[index]) openBuyPreviewModal(list[index]);
         }
 
         function openInpageDetailsModal(product) {
-            const overlay = document.getElementById('inpageDetailsOverlay');
-            const content = document.getElementById('inpageDetailsModalContent');
-            if(!product) return;
-
-            let rawTitle = product.title || 'rorraxy luxury product';
-            let title = rawTitle.toLowerCase();
-            let priceNum = parseFloat(product.price || 0);
-            let marketPriceNum = (priceNum * 1.35).toFixed(2);
-            let price = `$${priceNum.toFixed(2)}`;
-            let marketPrice = `$${marketPriceNum}`;
-            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
-            let rawDesc = product.description || product.desc || '';
-            let stock = product.stock || 500;
+            if (!product) return;
+            const title = (product.title || 'rorraxy luxury product').toLowerCase();
+            const priceNum = parseFloat(product.price || 0);
+            const disc = parseFloat(product.discount_rate || product.discountRate || 0);
             currentProductQty = 1;
 
-            content.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin:0; padding:0;">
+            $('inpageDetailsModalContent').innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">${price}</span>
-                        <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
-                        ${discountPercent > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>` : ''}
+                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">$${priceNum.toFixed(2)}</span>
+                        <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">$${(priceNum * 1.35).toFixed(2)}</span>
+                        ${disc > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${disc}% OFF</span>` : ''}
                     </div>
                     <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer;">×</button>
                 </div>
-
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:700;">
                     <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free shipping</span>
-                    <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${stock} units</span>
+                    <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${product.stock || 500} units</span>
                 </div>
-
                 <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
-                    <span style="font-size:0.75rem; font-weight:700; color:#ffffff;">quantity</span>
+                    <span style="font-size:0.75rem; font-weight:700; color:#fff;">quantity</span>
                     <div style="display:flex; align-items:center; gap:12px;">
                         <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
-                        <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; color:#ffffff;">1</span>
+                        <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; color:#fff;">1</span>
                         <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">+</button>
                     </div>
                 </div>
-
                 <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.45; margin:4px 0 0 0;">${title}</h3>
-
-                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; text-transform:none !important; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
-                    ${rawDesc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}
+                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
+                    ${product.description || product.desc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}
                 </div>
-
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 12px;">
-                        <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; flex:1; text-transform:uppercase; resize:none; font-family:var(--font-main);"></textarea>
-                    </div>
-                </div>
-            `;
-            overlay.style.display = 'flex';
+                <div style="background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 12px;">
+                    <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="width:100%; background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase; resize:none; font-family:var(--font-main);"></textarea>
+                </div>`;
+            $('inpageDetailsOverlay').style.display = 'flex';
         }
 
-        function adjustDetailQty(amount) {
-            currentProductQty += amount;
-            if (currentProductQty < 1) currentProductQty = 1;
-            let disp = document.getElementById('detailQtyDisplay');
-            if (disp) disp.innerText = currentProductQty;
+        function adjustDetailQty(amt) {
+            currentProductQty = Math.max(1, currentProductQty + amt);
+            if ($('detailQtyDisplay')) $('detailQtyDisplay').innerText = currentProductQty;
         }
-
-        function closeInpageDetails() { document.getElementById('inpageDetailsOverlay').style.display = 'none'; }
+        function closeInpageDetails() { $('inpageDetailsOverlay').style.display = 'none'; }
 
         function openBuyPreviewModal(product) {
-            const overlay = document.getElementById('buyPreviewOverlay');
-            const content = document.getElementById('buyPreviewModalContent');
+            const imgs = extractImages(product);
+            selectedVariantImg = imgs[0];
+            const imgsHtml = imgs.map((img, i) => `<div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')"><img src="${img}" loading="lazy"></div>`).join('');
+            const pId = product.id || product.product_id || '101';
+            const titleEsc = (product.title || 'item').toLowerCase().replace(/'/g, "\\'");
+            const initialNote = $('inpageCustomNoteInput')?.value || '';
 
-            let images = [];
-            try {
-                if(product.images_json) {
-                    let parsed = typeof product.images_json === 'string' ? JSON.parse(product.images_json) : product.images_json;
-                    if(Array.isArray(parsed)) images = parsed;
-                } else if(product.image_url) images = [product.image_url];
-            } catch(e){}
-
-            if(images.length === 0) images = ['https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'];
-            selectedVariantImg = images[0];
-
-            let imgsHtml = images.map((img, i) => `
-                <div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')">
-                    <img src="${img}" loading="lazy">
-                </div>
-            `).join('');
-
-            let pId = product.id || product.product_id || '101';
-            let titleEsc = (product.title || 'item').toLowerCase().replace(/'/g, "\\'");
-            let priceVal = parseFloat(product.price || 0);
-            let sellerVal = product.seller_id || 'rorraxy-store';
-
-            // Preserve any note already typed in details modal
-            const existingDetailNote = document.getElementById('inpageCustomNoteInput');
-            const initialNoteVal = existingDetailNote ? existingDetailNote.value : '';
-
-            content.innerHTML = `
+            $('buyPreviewModalContent').innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.84rem; font-weight:800; letter-spacing:0.5px; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT / COLOR</span>
                     <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer; line-height:1;">×</button>
                 </div>
-
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-
                 <div style="display:flex; flex-direction:column; gap:6px;">
                     <label style="font-size:0.68rem; font-weight:700; color:var(--gold-solid); letter-spacing:0.4px;">CUSTOM SIZE / NOTE</label>
-                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.35); border-radius:10px; padding:10px 12px; color:#fff; font-size:0.74rem; outline:none; resize:none; font-family:var(--font-main);">${initialNoteVal}</textarea>
+                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.35); border-radius:10px; padding:10px 12px; color:#fff; font-size:0.74rem; outline:none; resize:none; font-family:var(--font-main);">${initialNote}</textarea>
                 </div>
-
-                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:10px; border-radius:10px; font-weight:700; font-size:0.78rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:7px; letter-spacing:0.4px;">
+                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:10px; border-radius:10px; font-weight:700; font-size:0.78rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:7px;">
                     <i class="fa-solid fa-circle-info"></i> DETAILS
                 </button>
-
-                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${priceVal}, '${sellerVal}')" style="background:var(--pink-accent); border:none; color:#fff; padding:13px; border-radius:10px; font-weight:800; font-size:0.86rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4); letter-spacing:0.5px;">
+                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${parseFloat(product.price || 0)}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:13px; border-radius:10px; font-weight:800; font-size:0.86rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM & ADD TO CART
-                </button>
-            `;
-            overlay.style.display = 'flex';
+                </button>`;
+            $('buyPreviewOverlay').style.display = 'flex';
         }
 
         function openDetailsFromOrderModal(pId) {
-            const orderNoteEl = document.getElementById('orderCustomNoteInput');
-            const savedNoteText = orderNoteEl ? orderNoteEl.value : '';
+            const note = $('orderCustomNoteInput')?.value || '';
             closeBuyPreview();
-
-            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
-            let targetProd = list.find(p => String(p.id || p.product_id) === String(pId)) || list[currentReelIndex] || list[0];
-            if (targetProd) {
-                openInpageDetailsModal(targetProd);
-                setTimeout(() => {
-                    const detailNoteEl = document.getElementById('inpageCustomNoteInput');
-                    if (detailNoteEl && savedNoteText) detailNoteEl.value = savedNoteText;
-                }, 10);
+            const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+            const prod = list.find(p => String(p.id || p.product_id) === String(pId)) || list[currentReelIndex] || list[0];
+            if (prod) {
+                openInpageDetailsModal(prod);
+                setTimeout(() => { if ($('inpageCustomNoteInput') && note) $('inpageCustomNoteInput').value = note; }, 10);
             }
         }
 
-        function selectPreviewImg(el, imgUrl) {
+        function selectPreviewImg(el, url) {
             document.querySelectorAll('.preview-img-item').forEach(i => i.classList.remove('selected'));
             el.classList.add('selected');
-            selectedVariantImg = imgUrl;
+            selectedVariantImg = url;
         }
+        function closeBuyPreview() { $('buyPreviewOverlay').style.display = 'none'; }
 
-        function closeBuyPreview() { document.getElementById('buyPreviewOverlay').style.display = 'none'; }
-
-        // Luxury Soft Silk Chime Sound (Web Audio API - Zero External Delay)
         function playLuxuryChimeSound() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
-                const ctx = new AudioCtx();
-                const now = ctx.currentTime;
-
-                const notes = [880, 1318.51]; // Soft A5 -> E6 harmonic chime
-                notes.forEach((freq, idx) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
+                const ctx = new AudioCtx(), now = ctx.currentTime;
+                [880, 1318.51].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator(), gain = ctx.createGain();
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + idx * 0.06);
-
                     gain.gain.setValueAtTime(0.001, now + idx * 0.06);
                     gain.gain.exponentialRampToValueAtTime(0.065, now + idx * 0.06 + 0.02);
                     gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.42);
-
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(now + idx * 0.06);
-                    osc.stop(now + idx * 0.06 + 0.45);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.06); osc.stop(now + idx * 0.06 + 0.45);
                 });
-            } catch (err) {}
+            } catch (e) {}
         }
 
         function triggerCoinDropAnimation(e) {
             playLuxuryChimeSound();
-
-            const cartIconElem = document.getElementById('cartTargetIcon');
-            let targetRect = cartIconElem ? cartIconElem.getBoundingClientRect() : null;
-            let targetX = targetRect ? targetRect.left + (targetRect.width / 2) : window.innerWidth - 33;
-            let targetY = targetRect ? targetRect.top + (targetRect.height / 2) : window.innerHeight - 280;
-
-            let startX = e && e.clientX ? e.clientX : window.innerWidth / 2;
-            let startY = e && e.clientY ? e.clientY : window.innerHeight / 2;
+            const cartIcon = $('cartTargetIcon');
+            const rect = cartIcon ? cartIcon.getBoundingClientRect() : null;
+            const targetX = rect ? rect.left + rect.width / 2 : window.innerWidth - 33;
+            const targetY = rect ? rect.top + rect.height / 2 : window.innerHeight - 280;
+            const startX = e?.clientX || window.innerWidth / 2;
+            const startY = e?.clientY || window.innerHeight / 2;
 
             const coin = document.createElement('div');
             coin.className = 'flying-gold-coin';
@@ -1392,239 +929,134 @@
             coin.style.top = `${startY - 17}px`;
             document.body.appendChild(coin);
 
-            const duration = 560;
-            const startTime = performance.now();
-            const controlX = Math.min(startX, targetX) - 75;
-            const controlY = Math.min(startY, targetY) - 95;
+            const duration = 540, startTime = performance.now();
+            const ctrlX = Math.min(startX, targetX) - 75, ctrlY = Math.min(startY, targetY) - 95;
 
-            function animateCurvedCoin(currentTime) {
-                const elapsed = currentTime - startTime;
-                const t = Math.min(elapsed / duration, 1);
+            function step(now) {
+                const t = Math.min((now - startTime) / duration, 1);
                 const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
                 const inv = 1 - ease;
-                const curX = inv * inv * startX + 2 * inv * ease * controlX + ease * ease * targetX;
-                const curY = inv * inv * startY + 2 * inv * ease * controlY + ease * ease * targetY;
+                coin.style.left = `${inv * inv * startX + 2 * inv * ease * ctrlX + ease * ease * targetX - 17}px`;
+                coin.style.top = `${inv * inv * startY + 2 * inv * ease * ctrlY + ease * ease * targetY - 17}px`;
+                coin.style.transform = `scale(${1 - 0.68 * ease}) rotate(${720 * ease}deg)`;
+                coin.style.opacity = t > 0.85 ? 1 - ((t - 0.85) / 0.15) : 1;
 
-                const scale = 1 - (0.68 * ease);
-                const rotate = 720 * ease;
-                const opacity = t > 0.85 ? 1 - ((t - 0.85) / 0.15) : 1;
-
-                coin.style.left = `${curX - 17}px`;
-                coin.style.top = `${curY - 17}px`;
-                coin.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
-                coin.style.opacity = opacity;
-
-                if (t < 1) {
-                    requestAnimationFrame(animateCurvedCoin);
-                } else {
-                    if (coin.parentNode) coin.parentNode.removeChild(coin);
-                    if (cartIconElem) {
-                        cartIconElem.style.transition = 'transform 0.15s ease';
-                        cartIconElem.style.transform = 'scale(1.28)';
-                        setTimeout(() => { cartIconElem.style.transform = 'scale(1)'; }, 150);
+                if (t < 1) requestAnimationFrame(step);
+                else {
+                    coin.remove();
+                    if (cartIcon) {
+                        cartIcon.style.transition = 'transform 0.14s ease';
+                        cartIcon.style.transform = 'scale(1.28)';
+                        setTimeout(() => { cartIcon.style.transform = 'scale(1)'; }, 140);
                     }
                 }
             }
-
-            requestAnimationFrame(animateCurvedCoin);
+            requestAnimationFrame(step);
         }
 
         function confirmAddToCart(e, pId, title, price, sellerId) {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
+            const cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]');
+            const ref = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
+            const note = ($('orderCustomNoteInput')?.value || $('inpageCustomNoteInput')?.value || '').trim();
+            const existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && (i.note || '') === note);
 
-            const orderNoteEl = document.getElementById('orderCustomNoteInput');
-            const detailNoteEl = document.getElementById('inpageCustomNoteInput');
-            let customNote = '';
-            if (orderNoteEl && orderNoteEl.value.trim() !== '') {
-                customNote = orderNoteEl.value.trim();
-            } else if (detailNoteEl && detailNoteEl.value.trim() !== '') {
-                customNote = detailNoteEl.value.trim();
-            }
+            if (existing) existing.qty += currentProductQty;
+            else cart.push({ productId: pId, sellerId: sellerId || 'rorraxy-store', affiliateRef: ref, title, price: `$${parseFloat(price).toFixed(2)}`, qty: currentProductQty, img: selectedVariantImg, note });
 
-            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && (i.note || '') === customNote);
-
-            if(existing) {
-                existing.qty += currentProductQty;
-            } else {
-                cart.push({
-                    productId: pId,
-                    sellerId: sellerId || 'rorraxy-store',
-                    affiliateRef: activeAffiliateRef,
-                    title: title,
-                    price: `$${parseFloat(price).toFixed(2)}`,
-                    qty: currentProductQty,
-                    img: selectedVariantImg,
-                    note: customNote
-                });
-            }
-            localStorage.setItem(cartKey, JSON.stringify(cart));
+            localStorage.setItem('rorraxy_cart', JSON.stringify(cart));
             updateCartBadgeCount();
             triggerCoinDropAnimation(e);
             closeBuyPreview();
         }
 
         function updateCartBadgeCount() {
-            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
-            let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
-            let badge = document.getElementById('sideCartBadgeCount');
-            if(badge) badge.innerText = totalQty;
+            const cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]');
+            const total = cart.reduce((s, i) => s + (parseInt(i.qty) || 0), 0);
+            if ($('sideCartBadgeCount')) $('sideCartBadgeCount').innerText = total;
         }
 
-        function getDynamicEngagement(productId) {
-            let storageKey = `rorraxy_retail_likes_${productId}`;
-            let storedData = localStorage.getItem(storageKey);
-            let currentVal;
-            if (storedData) {
-                currentVal = JSON.parse(storedData).value;
-            } else {
+        function getDynamicEngagement(id) {
+            const key = `rorraxy_retail_likes_${id}`;
+            const stored = localStorage.getItem(key);
+            let val;
+            if (stored) val = JSON.parse(stored).value;
+            else {
                 const pool = [185, 245, 445, 890, 1500, 3200, 7800, 15400, 48000, 125000];
-                let index = Math.abs(hashCode(String(productId))) % pool.length;
-                let base = pool[index];
-                let variance = (Math.abs(hashCode(String(productId))) % 199);
-                currentVal = base + variance;
-                localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
+                let h = 0; for (let i = 0; i < String(id).length; i++) h = ((h << 5) - h + String(id).charCodeAt(i)) | 0;
+                val = pool[Math.abs(h) % pool.length] + (Math.abs(h) % 199);
+                localStorage.setItem(key, JSON.stringify({ value: val }));
             }
-            return formatCompactNumber(currentVal);
+            return val >= 1000000 ? (val / 1000000).toFixed(1) + 'M' : (val >= 1000 ? (val / 1000).toFixed(1) + 'K' : String(val));
         }
 
-        function formatCompactNumber(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toString();
-        }
-
-        function hashCode(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = (hash << 5) - hash + str.charCodeAt(i);
-                hash |= 0;
-            }
-            return hash;
-        }
-
-        function toggleReelLove(productId) {
-            let storageKey = `rorraxy_retail_likes_${productId}`;
-            let activeStateKey = storageKey + '_active';
-            let isLiked = localStorage.getItem(activeStateKey) === 'true';
-            let storedData = localStorage.getItem(storageKey);
-            let currentVal = storedData ? JSON.parse(storedData).value : 1500;
-
-            if (isLiked) {
-                currentVal = Math.max(0, currentVal - 1);
-                localStorage.setItem(activeStateKey, 'false');
-            } else {
-                currentVal += 1;
-                localStorage.setItem(activeStateKey, 'true');
-            }
-
-            localStorage.setItem(storageKey, JSON.stringify({ value: currentVal }));
+        function toggleReelLove(id) {
+            const key = `rorraxy_retail_likes_${id}`, actKey = key + '_active';
+            const liked = localStorage.getItem(actKey) === 'true';
+            let val = JSON.parse(localStorage.getItem(key) || '{"value":1500}').value;
+            val = liked ? Math.max(0, val - 1) : val + 1;
+            localStorage.setItem(actKey, liked ? 'false' : 'true');
+            localStorage.setItem(key, JSON.stringify({ value: val }));
             updateSideActionState();
         }
 
         function handleDualSaveAction(pId) {
-            let currentTime = new Date().getTime();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let existingIndex = savedObjects.findIndex(item => String(item.id || item.product_id) === String(pId));
-            
-            let saveBtn = document.getElementById('sideSaveActionBtn');
-            let isBtnActive = saveBtn && saveBtn.classList.contains('active');
-
-            if (currentTime - lastSaveClickTime < 400 || isBtnActive || existingIndex > -1) {
+            const now = Date.now();
+            const saved = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            const exists = saved.findIndex(i => String(i.id || i.product_id) === String(pId));
+            if (now - lastSaveClickTime < 400 || $('sideSaveActionBtn')?.classList.contains('active') || exists > -1) {
                 renderSavedGalleryContent();
-                const overlay = document.getElementById('savedGalleryOverlay');
-                if(overlay) overlay.style.display = 'flex';
+                if ($('savedGalleryOverlay')) $('savedGalleryOverlay').style.display = 'flex';
                 lastSaveClickTime = 0;
             } else {
-                lastSaveClickTime = currentTime;
-                let targetProduct = globalMasterProductsList.find(item => String(item.id || item.product_id) === String(pId));
-                if(targetProduct && existingIndex === -1) {
-                    savedObjects.push(targetProduct);
-                    localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(savedObjects));
+                lastSaveClickTime = now;
+                const prod = globalMasterProductsList.find(i => String(i.id || i.product_id) === String(pId));
+                if (prod && exists === -1) {
+                    saved.push(prod);
+                    localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(saved));
                 }
             }
             updateSideActionState();
         }
 
         function renderSavedGalleryContent() {
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let containerBody = document.getElementById('savedGalleryBody');
-            if(!containerBody) return;
-
-            if (savedObjects.length === 0) {
-                containerBody.innerHTML = `
-                    <div class="fs-profile-header-box"><h2 class="fs-profile-name">SAVED VIDEOS</h2></div>
-                    <div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
-            } else {
-                let thumbsHtml = '';
-                savedObjects.forEach((v) => {
-                    let thumbImg = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
-                    try {
-                        if(v.images_json) {
-                            let parsed = typeof v.images_json === 'string' ? JSON.parse(v.images_json) : v.images_json;
-                            if(Array.isArray(parsed) && parsed.length > 0) thumbImg = parsed[0];
-                        } else if(v.image_url) thumbImg = v.image_url;
-                    } catch(e){}
-
-                    let vId = v.id || v.product_id;
-                    thumbsHtml += `
-                        <div class="saved-thumb-card">
-                            <div class="saved-thumb-preview" onclick="selectSavedVideo('${vId}')">
-                                <img src="${thumbImg}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">
-                                <i class="fa-solid fa-play" style="position:absolute; color:#fcf6ba; font-size:1.2rem;"></i>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 2px;">
-                                <span style="font-size:0.65rem; font-weight:700; color:#fff;">ID: ${vId}</span>
-                                <button onclick="removeSavedItem(event, '${vId}')" style="background:rgba(255,42,133,0.2); border:1px solid var(--pink-accent); color:#fff; font-size:0.6rem; padding:3px 8px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>`;
-                });
-                containerBody.innerHTML = `
-                    <div class="fs-profile-header-box">
-                        <h2 class="fs-profile-name">SAVED VIDEOS</h2>
-                        <button onclick="clearAllSavedVideos()" style="background:var(--pink-accent); border:none; color:#fff; font-size:0.7rem; font-weight:700; padding:6px 14px; border-radius:20px; cursor:pointer; box-shadow:0 4px 12px rgba(255,42,133,0.4);">DELETE ALL</button>
-                    </div>
-                    <div class="fs-videos-grid">${thumbsHtml}</div>`;
+            const saved = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
+            const body = $('savedGalleryBody');
+            if (!body) return;
+            if (!saved.length) {
+                body.innerHTML = `<div class="fs-profile-header-box"><h2 class="fs-profile-name">SAVED VIDEOS</h2></div><div style="text-align:center; color:#a0a0ab; padding:40px; font-size:0.85rem;">NO SAVED VIDEOS FOUND</div>`;
+                return;
             }
+            const thumbs = saved.map(v => {
+                const imgs = extractImages(v), vId = v.id || v.product_id;
+                return `<div class="saved-thumb-card">
+                    <div class="saved-thumb-preview" onclick="selectSavedVideo('${vId}')"><img src="${imgs[0]}" style="width:100%; height:100%; object-fit:cover;" loading="lazy"><i class="fa-solid fa-play" style="position:absolute; color:#fcf6ba; font-size:1.2rem;"></i></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 2px;">
+                        <span style="font-size:0.65rem; font-weight:700; color:#fff;">ID: ${vId}</span>
+                        <button onclick="removeSavedItem(event, '${vId}')" style="background:rgba(255,42,133,0.2); border:1px solid var(--pink-accent); color:#fff; font-size:0.6rem; padding:3px 8px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+            body.innerHTML = `<div class="fs-profile-header-box"><h2 class="fs-profile-name">SAVED VIDEOS</h2><button onclick="clearAllSavedVideos()" style="background:var(--pink-accent); border:none; color:#fff; font-size:0.7rem; font-weight:700; padding:6px 14px; border-radius:20px; cursor:pointer;">DELETE ALL</button></div><div class="fs-videos-grid">${thumbs}</div>`;
         }
 
-        window.removeSavedItem = function(e, videoId) {
-            if(e) e.stopPropagation();
-            let savedObjects = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]');
-            let filtered = savedObjects.filter(item => String(item.id || item.product_id) !== String(videoId));
-            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(filtered));
-            renderSavedGalleryContent();
-            updateSideActionState();
+        window.removeSavedItem = function(e, id) {
+            if (e) e.stopPropagation();
+            const saved = JSON.parse(localStorage.getItem('rorraxy_saved_video_objects') || '[]').filter(i => String(i.id || i.product_id) !== String(id));
+            localStorage.setItem('rorraxy_saved_video_objects', JSON.stringify(saved));
+            renderSavedGalleryContent(); updateSideActionState();
         };
-
-        window.clearAllSavedVideos = function() {
-            localStorage.removeItem('rorraxy_saved_video_objects');
-            renderSavedGalleryContent();
-            updateSideActionState();
+        window.clearAllSavedVideos = function() { localStorage.removeItem('rorraxy_saved_video_objects'); renderSavedGalleryContent(); updateSideActionState(); };
+        window.selectSavedVideo = function(id) {
+            let idx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(id));
+            if (idx === -1) { activeProductList = [...globalMasterProductsList]; idx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(id)); }
+            if (idx !== -1) openReelsModal(idx);
+            if ($('savedGalleryOverlay')) $('savedGalleryOverlay').style.display = 'none';
         };
-
-        window.selectSavedVideo = function(videoId) {
-            let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(videoId));
-            if(foundIdx === -1) {
-                activeProductList = [...globalMasterProductsList];
-                foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(videoId));
-            }
-            if(foundIdx !== -1) openReelsModal(foundIdx);
-            document.getElementById('savedGalleryOverlay').style.display = 'none';
-        };
-
-        // Instant Zero-Delay Share Handler
         window.openNativeShare = function(pId) {
-            let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
-            const shareUrl = `${window.location.origin}/index.html?ref=${encodeURIComponent(activeAffiliateRef)}&product=${encodeURIComponent(pId)}`;
-            
-            if (navigator.share) {
-                navigator.share({ title: 'rorraxy product', url: shareUrl }).catch(() => {});
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(shareUrl).catch(() => {});
-            }
+            const ref = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
+            const url = `${window.location.origin}/index.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(pId)}`;
+            if (navigator.share) navigator.share({ title: 'rorraxy product', url }).catch(() => {});
+            else if (navigator.clipboard) navigator.clipboard.writeText(url).catch(() => {});
         };
     </script>
 </body>
