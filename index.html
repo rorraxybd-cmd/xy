@@ -16,8 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- External Category CSS Linked -->
-    <link rel="stylesheet" href="category.css">
+    <!-- External Style CSS Linked -->
+    <link rel="stylesheet" href="style.css">
 
     <style>
         :root {
@@ -32,7 +32,7 @@
         }
 
         html, body { 
-            width: 100%; max-width: 100vw; overflow-x: hidden; 
+            width: 100%; max-width: 100vw; overflow-x: hidden; overflow-y: auto !important;
             background: var(--bg-retail) !important; 
             color: var(--text-white); font-family: var(--font-main); 
             min-height: 100vh; font-size: 14px;
@@ -41,19 +41,19 @@
             scrollbar-width: none;
         }
 
-        body { margin: 0; padding: 0 0 58px 0; }
+        body { margin: 0; padding: 0 0 58px 0; text-transform: none !important; }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* Ultra-Fast Loader */
+        /* Instant Loader */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 12px;
-            transition: opacity 0.1s ease-out;
+            transition: opacity 0.08s ease-out;
         }
         .loader-logo-box {
-            width: 70px; height: 70px; border-radius: 50%; overflow: hidden;
+            width: 68px; height: 68px; border-radius: 50%; overflow: hidden;
             border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3);
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -68,30 +68,42 @@
             z-index: 7000; background: #0c0c12; border: 1px solid var(--gold-solid);
             color: var(--gold-solid); padding: 6px 16px; border-radius: 20px;
             font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
-            transition: top 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: top 0.15s ease-out;
             box-shadow: 0 4px 15px rgba(0,0,0,0.8);
             pointer-events: none;
         }
         #pullRefreshIndicator.visible { top: 18px; }
 
         .animate-card-entry { 
-            animation: luxurySoftScaleFade 0.16s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: luxurySoftScaleFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             will-change: transform, opacity;
         }
 
         @keyframes luxurySoftScaleFade {
-            0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+            0% { opacity: 0; transform: translateY(14px) scale(0.95); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Smooth Lazy Image Loading Reveal */
+        .lazy-fade-img {
+            opacity: 0;
+            transform: scale(1.04);
+            transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .lazy-fade-img.loaded {
+            opacity: 1;
+            transform: scale(1);
         }
 
         /* Smooth Floating Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 15px; left: 50%; 
             transform: translate3d(-50%, 0, 0);
-            width: 90%; max-width: 400px; z-index: 5500; display: flex;
+            width: 90%; max-width: 400px; z-index: 5500; display: flex !important;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
             border-radius: 40px; padding: 4px 6px 4px 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.9);
-            transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+            transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease;
             will-change: transform, opacity;
         }
         .top-floating-search-bar.search-hidden {
@@ -110,13 +122,13 @@
 
         /* Crisp & Instant Side Action Bar */
         .right-vertical-actions {
-            position: fixed; right: 10px; bottom: 68px; z-index: 4500;
-            display: flex; flex-direction: column; align-items: center; gap: 13px;
-            pointer-events: auto; width: 44px;
+            position: fixed !important; right: 10px !important; bottom: 68px !important; z-index: 4500 !important;
+            display: flex; flex-direction: column; align-items: center; gap: 14px !important;
+            pointer-events: auto; width: 46px;
             transform: translate3d(0, 0, 0); 
             backface-visibility: hidden;
             -webkit-font-smoothing: subpixel-antialiased;
-            transition: opacity 0.12s ease;
+            transition: opacity 0.1s ease;
         }
         .right-vertical-actions.clean-hidden {
             opacity: 0; pointer-events: none; visibility: hidden;
@@ -124,20 +136,19 @@
         .side-action-item { 
             display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; 
             position: relative; width: 100%; transform: translateZ(0);
-            transition: transform 0.08s ease;
+            transition: transform 0.06s ease;
         }
-        .side-action-item:active { transform: scale(0.9); }
+        .side-action-item:active { transform: scale(0.88); }
         .action-pure-icon { 
-            font-size: 1.48rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            font-size: 1.5rem !important; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.95));
         }
         .side-count-text { 
-            font-size: 0.55rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
-            text-shadow: 0 1px 3px rgba(0,0,0,1); text-align: center; white-space: nowrap; max-width: 44px;
+            font-size: 0.56rem !important; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
+            text-shadow: 0 1px 3px rgba(0,0,0,1); text-align: center; white-space: nowrap; max-width: 46px;
         }
         .love-action-btn.liked-active .action-pure-icon,
-        .save-action-btn.active .action-pure-icon,
-        .cinema-toggle-btn.active .action-pure-icon { 
+        .save-action-btn.active .action-pure-icon { 
             color: var(--pink-accent) !important; background: none !important; 
             -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; 
         }
@@ -150,8 +161,8 @@
 
         /* Compact, Borderless Bottom Navigation Bar */
         .bottom-nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 54px;
-            background: rgba(0, 0, 0, 0.72);
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 54px !important;
+            background: rgba(0, 0, 0, 0.78) !important;
             border-top: none !important;
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
             transform: translate3d(0, 0, 0);
@@ -208,7 +219,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
-        /* Default Fullscreen Reels View with Ultra-Smooth Snap */
+        /* Default Fullscreen Reels View */
         .reel-modal-overlay {
             display: flex; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -221,35 +232,20 @@
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
             scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
             scrollbar-width: none; border: none;
-            transition: max-width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
 
-        /* Cinema / Long Wide View Mode */
-        .reel-modal-wrapper.cinema-wide-mode {
-            max-width: 100vw;
-        }
-        .reel-modal-wrapper.cinema-wide-mode .reel-media-box {
-            max-width: 96vw;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            max-height: calc(100dvh - 85px);
-            border-radius: 12px;
-        }
-
         .reel-card { 
-            width: 100%; height: calc(100vh - 54px); height: calc(100dvh - 54px); 
+            width: 100%; height: calc(100vh - 54px) !important; height: calc(100dvh - 54px) !important; 
             scroll-snap-align: start; scroll-snap-stop: always;
             display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
             align-items: center; justify-content: center; padding-bottom: 6px;
             transform: translate3d(0, 0, 0);
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .reel-media-box { 
             position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 72px); 
             cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
             border-radius: 16px; border: none !important; box-shadow: none !important;
-            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
         }
         
         .reel-primary-video-container {
@@ -259,7 +255,7 @@
 
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: opacity 0.55s ease;
             will-change: opacity, transform;
             animation: dynamicZoomInOut 9s ease-in-out infinite alternate;
             backface-visibility: hidden;
@@ -301,20 +297,22 @@
         .overlay-sheet::-webkit-scrollbar { display: none; }
 
         .buy-preview-modal {
-            width: 95%; max-width: 420px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5);
+            width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.95);
         }
         .preview-horizontal-scroll {
-            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; scrollbar-width: none;
+            display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 10px 2px; scroll-snap-type: x mandatory; scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
         .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
 
         .preview-img-item {
-            flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
-            border: 2px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
+            flex: 0 0 112px; width: 112px; height: 112px; border-radius: 14px; overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000;
+            transition: transform 0.15s ease, border-color 0.15s ease;
         }
-        .preview-img-item.selected { border-color: var(--pink-accent); }
+        .preview-img-item.selected { border-color: var(--pink-accent); transform: scale(1.03); box-shadow: 0 4px 14px rgba(255,42,133,0.35); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
         .flying-gold-coin {
@@ -337,19 +335,10 @@
         }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
 
-        /* Saved Gallery & Category Overlay Containers */
+        /* Override z-index for Category & Saved Overlay so it opens smoothly above Reels */
         .category-transparent-overlay, .saved-gallery-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.78) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 75px 15px; scrollbar-width: none;
+            z-index: 6500 !important;
         }
-        .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none; }
-        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
-        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
-
-        .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; border: 1px solid rgba(212,175,55,0.2); }
-        .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .fs-videos-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .fs-profile-header-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; gap: 8px; width: 100%; }
         .fs-profile-name { font-size: 0.95rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
@@ -395,21 +384,15 @@
             <i class="fa-solid fa-bookmark action-pure-icon"></i>
         </div>
 
-        <!-- Cinema / Long Wide Screen Toggle Button -->
-        <div class="side-action-item cinema-toggle-btn" id="sideCinemaToggleBtn" onclick="toggleCinemaWideMode()" title="Long / Wide Screen">
-            <i class="fa-solid fa-expand action-pure-icon" id="cinemaModeIcon"></i>
-            <span class="side-count-text" id="cinemaModeLabel">LONG</span>
-        </div>
-
         <div class="side-action-item" onclick="toggleAccountPortal()" title="You">
             <i class="fa-solid fa-user action-pure-icon"></i>
             <span class="side-count-text">YOU</span>
         </div>
 
-        <!-- Pinterest Gallery View Icon Below YOU Menu -->
-        <div class="side-action-item" onclick="openCleanGalleryView()" title="Photo Gallery">
-            <i class="fa-solid fa-table-cells-large action-pure-icon"></i>
-            <span class="side-count-text">PHOTOS</span>
+        <!-- Clean & Attractive IMAGES Gallery Icon Below YOU Menu -->
+        <div class="side-action-item" onclick="openCleanGalleryView()" title="Product Images Gallery">
+            <i class="fa-regular fa-images action-pure-icon"></i>
+            <span class="side-count-text">IMAGE</span>
         </div>
     </div>
 
@@ -438,14 +421,14 @@
         <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
     </div>
 
-    <!-- External Category Overlay Container Connected to category.css & category.js -->
+    <!-- Category Accordion Overlay Connected to categories.js & style.css -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView"></div>
         </div>
     </div>
 
-    <!-- Clean Pinterest Grid View for Search, Category & Photos Menu -->
+    <!-- Clean Pinterest Grid View for Search, Category & Image Menu -->
     <main id="appContainer" class="pinterest-feed-container"></main>
 
     <!-- Dedicated Default Reels View -->
@@ -453,8 +436,8 @@
         <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
     </div>
 
-    <!-- External Category JS Linked -->
-    <script src="category.js"></script>
+    <!-- External Categories JS Linked -->
+    <script src="categories.js"></script>
 
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_retail_feed_cache';
@@ -475,7 +458,6 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
-        let isCinemaWide = false;
 
         function shuffleArray(array) {
             let shuffled = [...array];
@@ -500,14 +482,15 @@
             updateSideActionState();
             setupPullToRefresh();
             setupAutoHideSearchOnScroll();
+            buildCategoriesAccordion();
 
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 100);
+                    setTimeout(() => loader.style.display = 'none', 80);
                 }
-            }, 15);
+            }, 10);
 
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
@@ -518,6 +501,113 @@
                 searchInput.addEventListener('input', (e) => { executeHeaderSearch(e.target.value); });
             }
         });
+
+        // Build Interactive Accordion Category Menu from categories.js (rorraxyCategoriesData)
+        function buildCategoriesAccordion() {
+            const container = document.getElementById('categoryMainListView');
+            if (!container) return;
+
+            const categoriesList = (typeof rorraxyCategoriesData !== 'undefined' && Array.isArray(rorraxyCategoriesData)) 
+                ? rorraxyCategoriesData 
+                : [];
+
+            if (categoriesList.length === 0) {
+                container.innerHTML = `<div style="color:#fff; text-align:center; padding:20px;">CATEGORIES LOADING...</div>`;
+                return;
+            }
+
+            let html = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; width:100%;">
+                    <span style="font-size:0.9rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">ALL CATEGORIES</span>
+                    <button onclick="document.getElementById('categoryTransparentOverlay').style.display='none'" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1;">×</button>
+                </div>
+            `;
+
+            categoriesList.forEach((cat, idx) => {
+                let subItemsHtml = (cat.subCategories || []).map(sub => `
+                    <div class="sub-cat-item" onclick="selectSubCategoryItem('${sub.key}', '${sub.name.replace(/'/g, "\\'")}')">
+                        <i class="${sub.icon || 'fa-solid fa-tag'}"></i>
+                        <span class="sub-cat-name">${sub.name}</span>
+                    </div>
+                `).join('');
+
+                html += `
+                    <div class="accordion-category-box ${idx === 0 ? 'active' : ''}" id="catBox_${cat.id}">
+                        <div class="accordion-header" onclick="toggleAccordionBox('catBox_${cat.id}')">
+                            <div class="accordion-title-wrap">
+                                <i class="${cat.icon} cat-main-icon"></i>
+                                <span class="accordion-main-title">${cat.title}</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="sub-categories-grid">
+                                ${subItemsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleAccordionBox(boxId) {
+            const targetBox = document.getElementById(boxId);
+            if (!targetBox) return;
+            const isAlreadyActive = targetBox.classList.contains('active');
+            document.querySelectorAll('.accordion-category-box').forEach(box => box.classList.remove('active'));
+            if (!isAlreadyActive) {
+                targetBox.classList.add('active');
+            }
+        }
+
+        function selectSubCategoryItem(subKey, subName) {
+            const overlay = document.getElementById('categoryTransparentOverlay');
+            if(overlay) overlay.style.display = 'none';
+
+            const gridContainer = document.getElementById('appContainer');
+            const reelModal = document.getElementById('reelModalOverlay');
+            const sideBar = document.getElementById('fixedGlobalActionsBar');
+            const searchBar = document.getElementById('floatingSearchContainer');
+
+            if(reelModal) reelModal.classList.add('hidden-reels');
+            if(gridContainer) gridContainer.classList.add('active-grid');
+            if(sideBar) sideBar.classList.add('clean-hidden');
+            if(searchBar) searchBar.classList.remove('search-hidden');
+
+            let keyClean = subKey.toLowerCase().replace(/-/g, ' ');
+            let nameClean = subName.toLowerCase();
+
+            let filtered = globalMasterProductsList.filter(item => {
+                const c = (item.category || '').toLowerCase();
+                const sc = (item.subcategory || item.sub_category || '').toLowerCase();
+                const t = (item.title || '').toLowerCase();
+                const d = (item.description || '').toLowerCase();
+                return c.includes(keyClean) || sc.includes(keyClean) || t.includes(keyClean) || 
+                       c.includes(nameClean) || sc.includes(nameClean) || t.includes(nameClean) || d.includes(nameClean);
+            });
+
+            activeProductList = filtered.length > 0 ? filtered : [...globalMasterProductsList];
+            renderPinterestHomeGrid(activeProductList);
+        }
+
+        // Toggle Category Modal Fast
+        function toggleCategoryModal(e) {
+            if(e) e.stopPropagation();
+            const overlay = document.getElementById('categoryTransparentOverlay');
+            if(!overlay) return;
+            
+            if (overlay.style.display === 'flex') {
+                overlay.style.display = 'none';
+            } else {
+                const listView = document.getElementById('categoryMainListView');
+                if (listView && listView.innerHTML.trim() === '') {
+                    buildCategoriesAccordion();
+                }
+                overlay.style.display = 'flex';
+            }
+        }
 
         // Auto-hide search bar when user scrolls either Reels or Grid
         function setupAutoHideSearchOnScroll() {
@@ -537,29 +627,7 @@
             }
         }
 
-        // Toggle between Short (9:16) and Long/Wide (16:9 Cinema) View
-        function toggleCinemaWideMode() {
-            const wrapper = document.getElementById('reelModalWrapperBody');
-            const btn = document.getElementById('sideCinemaToggleBtn');
-            const icon = document.getElementById('cinemaModeIcon');
-            const label = document.getElementById('cinemaModeLabel');
-            if (!wrapper) return;
-
-            isCinemaWide = !isCinemaWide;
-            if (isCinemaWide) {
-                wrapper.classList.add('cinema-wide-mode');
-                if(btn) btn.classList.add('active');
-                if(icon) icon.className = 'fa-solid fa-compress action-pure-icon';
-                if(label) label.innerText = 'SHORT';
-            } else {
-                wrapper.classList.remove('cinema-wide-mode');
-                if(btn) btn.classList.remove('active');
-                if(icon) icon.className = 'fa-solid fa-expand action-pure-icon';
-                if(label) label.innerText = 'LONG';
-            }
-        }
-
-        // Open Clean Pinterest Photo Gallery View (Triggered by PHOTOS icon below YOU)
+        // Open Clean Pinterest Photo Gallery View (Triggered by IMAGE icon below YOU)
         function openCleanGalleryView() {
             const gridContainer = document.getElementById('appContainer');
             const reelModal = document.getElementById('reelModalOverlay');
@@ -574,38 +642,6 @@
             activeProductList = [...globalMasterProductsList];
             renderPinterestHomeGrid(activeProductList);
         }
-
-        // Bridge Function for external category.js to filter products & show clean Pinterest Grid
-        window.applyExternalCategoryFilter = function(categoryName, subCategoryName) {
-            const overlay = document.getElementById('categoryTransparentOverlay');
-            if(overlay) overlay.style.display = 'none';
-
-            const gridContainer = document.getElementById('appContainer');
-            const reelModal = document.getElementById('reelModalOverlay');
-            const sideBar = document.getElementById('fixedGlobalActionsBar');
-            const searchBar = document.getElementById('floatingSearchContainer');
-
-            if(reelModal) reelModal.classList.add('hidden-reels');
-            if(gridContainer) gridContainer.classList.add('active-grid');
-            if(sideBar) sideBar.classList.add('clean-hidden');
-            if(searchBar) searchBar.classList.remove('search-hidden');
-
-            let query = (subCategoryName || categoryName || '').toLowerCase().trim();
-            if (!query || query === 'all' || query === 'all products') {
-                activeProductList = [...globalMasterProductsList];
-            } else {
-                activeProductList = globalMasterProductsList.filter(item => {
-                    const c = (item.category || '').toLowerCase();
-                    const sc = (item.subcategory || item.sub_category || '').toLowerCase();
-                    const t = (item.title || '').toLowerCase();
-                    return c.includes(query) || sc.includes(query) || t.includes(query);
-                });
-                if (activeProductList.length === 0) {
-                    activeProductList = [...globalMasterProductsList];
-                }
-            }
-            renderPinterestHomeGrid(activeProductList);
-        };
 
         // Pull-To-Refresh Mechanism on Top Scroll
         function setupPullToRefresh() {
@@ -626,7 +662,7 @@
             wrapper.addEventListener('touchmove', (e) => {
                 if (!isPulling) return;
                 let diff = e.touches[0].clientY - startY;
-                if (diff > 65 && wrapper.scrollTop <= 0) {
+                if (diff > 60 && wrapper.scrollTop <= 0) {
                     indicator.classList.add('visible');
                 }
             }, { passive: true });
@@ -638,7 +674,7 @@
                     setTimeout(() => {
                         indicator.classList.remove('visible');
                         refreshAndShuffleFeed();
-                    }, 300);
+                    }, 220);
                 }
             });
         }
@@ -661,24 +697,6 @@
 
         function toggleWorldPortal() { window.location.href = 'https://rorraxy.com/world.html'; }
 
-        // Connects directly to external category.js if available
-        function toggleCategoryModal(e) {
-            if(e) e.stopPropagation();
-            const overlay = document.getElementById('categoryTransparentOverlay');
-            if(!overlay) return;
-            
-            if (overlay.style.display === 'flex') {
-                overlay.style.display = 'none';
-            } else {
-                if (typeof window.initCategorySystem === 'function') {
-                    window.initCategorySystem(globalMasterProductsList);
-                } else if (typeof window.renderCategoryMenu === 'function') {
-                    window.renderCategoryMenu();
-                }
-                overlay.style.display = 'flex';
-            }
-        }
-
         function handleBottomBuy() {
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
             if(list.length > 0) {
@@ -696,11 +714,18 @@
         }
 
         function handleHomeToggle() {
-            const overlay = document.getElementById('fullscreenIframeOverlay');
-            if (overlay.style.display === 'flex') {
-                overlay.style.display = 'none';
+            // Close all open overlays/modals immediately
+            const iframeOverlay = document.getElementById('fullscreenIframeOverlay');
+            if (iframeOverlay && iframeOverlay.style.display === 'flex') {
+                iframeOverlay.style.display = 'none';
                 document.getElementById('fullscreenIframeBody').src = '';
             }
+            const catOverlay = document.getElementById('categoryTransparentOverlay');
+            if (catOverlay) catOverlay.style.display = 'none';
+            const savedOverlay = document.getElementById('savedGalleryOverlay');
+            if (savedOverlay) savedOverlay.style.display = 'none';
+            closeBuyPreview();
+            closeInpageDetails();
             
             const gridContainer = document.getElementById('appContainer');
             const reelModal = document.getElementById('reelModalOverlay');
@@ -715,6 +740,11 @@
                 searchBar.classList.remove('manual-open');
             }
 
+            // Reset search input if any
+            const searchInput = document.getElementById('floatingSearchInput');
+            if (searchInput) searchInput.value = '';
+
+            // Always return smoothly to Reels feed
             activeProductList = shuffleArray(globalMasterProductsList);
             openReelsModal(0);
         }
@@ -774,7 +804,7 @@
             let targetCategory = urlParams.get('category');
 
             if (targetCategory) {
-                window.applyExternalCategoryFilter(targetCategory, urlParams.get('subcategory'));
+                selectSubCategoryItem(targetCategory, targetCategory);
                 return;
             }
             
@@ -844,6 +874,7 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card animate-card-entry';
+                cardDiv.style.animationDelay = `${Math.min((index % 12) * 0.03, 0.35)}s`;
                 
                 cardDiv.onclick = (e) => {
                     e.preventDefault();
@@ -860,7 +891,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadge}
-                        <img src="${resolvedImageUrl}" alt="${title}" loading="lazy" decoding="async">
+                        <img data-src="${resolvedImageUrl}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="lazy-fade-img" alt="${title}" loading="lazy" decoding="async">
                         <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
@@ -869,7 +900,40 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
+            initLazyImageObserver();
             updateSideActionState();
+        }
+
+        // IntersectionObserver for Smooth Lazy Image Loading
+        function initLazyImageObserver() {
+            const lazyImages = document.querySelectorAll('img.lazy-fade-img');
+            if ('IntersectionObserver' in window) {
+                const imgObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            const realSrc = img.getAttribute('data-src');
+                            if (realSrc) {
+                                img.src = realSrc;
+                                img.onload = () => img.classList.add('loaded');
+                                img.onerror = () => img.classList.add('loaded');
+                                img.removeAttribute('data-src');
+                            }
+                            observer.unobserve(img);
+                        }
+                    });
+                }, { rootMargin: '180px 0px', threshold: 0.01 });
+
+                lazyImages.forEach(img => imgObserver.observe(img));
+            } else {
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute('data-src');
+                    if (realSrc) {
+                        img.src = realSrc;
+                        img.classList.add('loaded');
+                    }
+                });
+            }
         }
 
         function updateSideActionState() {
@@ -907,7 +971,7 @@
                     searchBar.classList.remove('search-hidden');
                     searchBar.classList.add('manual-open');
                     const input = document.getElementById('floatingSearchInput');
-                    if(input) setTimeout(() => input.focus(), 30);
+                    if(input) setTimeout(() => input.focus(), 20);
                 } else {
                     searchBar.classList.add('search-hidden');
                     searchBar.classList.remove('manual-open');
@@ -1013,7 +1077,7 @@
                             currSlide.classList.add('previous');
                             nextSlide.classList.remove('previous');
                             nextSlide.classList.add('active');
-                            setTimeout(() => { currSlide.classList.remove('previous'); }, 650);
+                            setTimeout(() => { currSlide.classList.remove('previous'); }, 550);
                         }
                         currentImgIdx = nextImgIdx;
                     }, 3000);
@@ -1026,7 +1090,6 @@
 
             let scrollTimer = null;
             wrapper.onscroll = () => {
-                // Hide floating search bar smoothly on scroll
                 const searchBar = document.getElementById('floatingSearchContainer');
                 if (searchBar && !searchBar.classList.contains('search-hidden')) {
                     searchBar.classList.add('search-hidden');
@@ -1043,7 +1106,7 @@
                             updateSideActionState();
                         }
                     }
-                }, 8);
+                }, 5);
             };
 
             updateSideActionState();
@@ -1151,17 +1214,48 @@
             let priceVal = parseFloat(product.price || 0);
             let sellerVal = product.seller_id || 'rorraxy-store';
 
+            // Preserve any note already typed in details modal
+            const existingDetailNote = document.getElementById('inpageCustomNoteInput');
+            const initialNoteVal = existingDetailNote ? existingDetailNote.value : '';
+
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT ($${priceVal.toFixed(2)})</span>
-                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">×</button>
+                    <span style="font-size:0.84rem; font-weight:800; letter-spacing:0.5px; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT / COLOR</span>
+                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer; line-height:1;">×</button>
                 </div>
+
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${priceVal}, '${sellerVal}')" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
+
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <label style="font-size:0.68rem; font-weight:700; color:var(--gold-solid); letter-spacing:0.4px;">CUSTOM SIZE / NOTE</label>
+                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.35); border-radius:10px; padding:10px 12px; color:#fff; font-size:0.74rem; outline:none; resize:none; font-family:var(--font-main);">${initialNoteVal}</textarea>
+                </div>
+
+                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:10px; border-radius:10px; font-weight:700; font-size:0.78rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:7px; letter-spacing:0.4px;">
+                    <i class="fa-solid fa-circle-info"></i> DETAILS
+                </button>
+
+                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${priceVal}, '${sellerVal}')" style="background:var(--pink-accent); border:none; color:#fff; padding:13px; border-radius:10px; font-weight:800; font-size:0.86rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4); letter-spacing:0.5px;">
                     CONFIRM & ADD TO CART
                 </button>
             `;
             overlay.style.display = 'flex';
+        }
+
+        function openDetailsFromOrderModal(pId) {
+            const orderNoteEl = document.getElementById('orderCustomNoteInput');
+            const savedNoteText = orderNoteEl ? orderNoteEl.value : '';
+            closeBuyPreview();
+
+            let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            let targetProd = list.find(p => String(p.id || p.product_id) === String(pId)) || list[currentReelIndex] || list[0];
+            if (targetProd) {
+                openInpageDetailsModal(targetProd);
+                setTimeout(() => {
+                    const detailNoteEl = document.getElementById('inpageCustomNoteInput');
+                    if (detailNoteEl && savedNoteText) detailNoteEl.value = savedNoteText;
+                }, 10);
+            }
         }
 
         function selectPreviewImg(el, imgUrl) {
@@ -1203,7 +1297,16 @@
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             let activeAffiliateRef = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
 
-            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg);
+            const orderNoteEl = document.getElementById('orderCustomNoteInput');
+            const detailNoteEl = document.getElementById('inpageCustomNoteInput');
+            let customNote = '';
+            if (orderNoteEl && orderNoteEl.value.trim() !== '') {
+                customNote = orderNoteEl.value.trim();
+            } else if (detailNoteEl && detailNoteEl.value.trim() !== '') {
+                customNote = detailNoteEl.value.trim();
+            }
+
+            let existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && (i.note || '') === customNote);
 
             if(existing) {
                 existing.qty += currentProductQty;
@@ -1215,7 +1318,8 @@
                     title: title,
                     price: `$${parseFloat(price).toFixed(2)}`,
                     qty: currentProductQty,
-                    img: selectedVariantImg
+                    img: selectedVariantImg,
+                    note: customNote
                 });
             }
             localStorage.setItem(cartKey, JSON.stringify(cart));
