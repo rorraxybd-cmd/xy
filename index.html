@@ -38,18 +38,19 @@
             scrollbar-width: none;
         }
 
-        body { margin: 0; padding: 0 0 75px 0; }
+        body { margin: 0; padding: 0 0 60px 0; }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+        /* Instant Loader */
         #rorraxyLoaderOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000000; z-index: 999999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 15px;
-            transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.15s ease;
+            align-items: center; justify-content: center; gap: 12px;
+            transition: opacity 0.12s ease-out;
         }
         .loader-logo-box {
-            width: 75px; height: 75px; border-radius: 50%; overflow: hidden;
+            width: 70px; height: 70px; border-radius: 50%; overflow: hidden;
             border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3);
         }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -58,25 +59,40 @@
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
+        /* Pull to Refresh Indicator */
+        #pullRefreshIndicator {
+            position: fixed; top: -50px; left: 50%; transform: translateX(-50%);
+            z-index: 7000; background: rgba(12, 12, 18, 0.95); border: 1px solid var(--gold-solid);
+            color: var(--gold-solid); padding: 6px 16px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
+            transition: top 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+        #pullRefreshIndicator.visible { top: 18px; }
+
         .animate-card-entry { 
-            animation: luxurySoftScaleFade 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            will-change: transform, opacity, filter;
+            animation: luxurySoftScaleFade 0.15s ease-out forwards;
+            will-change: transform, opacity;
         }
 
         @keyframes luxurySoftScaleFade {
-            0% { opacity: 0; transform: scale(0.96); filter: blur(1px); }
-            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+            0% { opacity: 0; transform: scale(0.97); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
+        /* Ultra Smooth Floating Search Bar */
         .top-floating-search-bar {
-            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            position: fixed; top: 15px; left: 50%; 
+            transform: translate3d(-50%, 0, 0);
             width: 90%; max-width: 400px; z-index: 5500; display: flex;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
-            border-radius: 40px; padding: 4px 6px 4px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-            transition: transform 0.15s ease, opacity 0.15s ease;
+            border-radius: 40px; padding: 4px 6px 4px 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.9);
+            transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.15s ease;
+            will-change: transform, opacity;
         }
         .top-floating-search-bar.search-hidden {
-            transform: translate(-50%, -100px); opacity: 0; pointer-events: none;
+            transform: translate3d(-50%, -90px, 0); opacity: 0; pointer-events: none;
         }
         .floating-search-input {
             flex: 1; background: transparent; border: none; outline: none;
@@ -84,80 +100,86 @@
         }
         .floating-search-input::placeholder { color: #7a7a85; }
         .floating-search-btn-circle {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient);
+            width: 34px; height: 34px; border-radius: 50%; background: var(--gold-gradient);
             border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #000; font-size: 0.9rem;
+            cursor: pointer; color: #000; font-size: 0.88rem;
         }
 
+        /* Crisp & Instant Side Action Bar (No Blur) */
         .right-vertical-actions {
-            position: fixed; right: 12px; bottom: 85px; z-index: 4500;
-            display: flex; flex-direction: column; align-items: center; gap: 16px;
-            pointer-events: auto; width: 45px;
+            position: fixed; right: 10px; bottom: 72px; z-index: 4500;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            pointer-events: auto; width: 44px;
             transform: translate3d(0, 0, 0); 
             backface-visibility: hidden;
-            contain: layout style;
-            will-change: transform;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
+            -webkit-font-smoothing: subpixel-antialiased;
+            transition: opacity 0.12s ease;
         }
         .right-vertical-actions.clean-hidden {
-            opacity: 0; visibility: hidden; pointer-events: none;
+            opacity: 0; pointer-events: none; visibility: hidden;
         }
-        .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; transition: transform 0.1s ease; width: 100%; }
-        .side-action-item:active { transform: scale(0.9); }
+        .side-action-item { 
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; 
+            position: relative; width: 100%; transform: translateZ(0);
+        }
+        .side-action-item:active { transform: scale(0.92); }
         .action-pure-icon { 
-            font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.9));
+            font-size: 1.55rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.95));
         }
         .side-count-text { 
             font-size: 0.58rem; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45px;
+            text-shadow: 0 1px 3px rgba(0,0,0,1); text-align: center; white-space: nowrap; max-width: 44px;
         }
         .love-action-btn.liked-active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .save-action-btn.active .action-pure-icon { color: var(--pink-accent) !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
 
         .cart-pink-badge {
-            position: absolute; top: -6px; right: -2px; background: var(--pink-accent); color: #fff;
-            font-size: 0.55rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
+            position: absolute; top: -5px; right: 0px; background: var(--pink-accent); color: #fff;
+            font-size: 0.55rem; font-weight: 800; width: 17px; height: 17px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 6px var(--pink-accent);
         }
 
+        /* Compact, Borderless, Crisp Bottom Navigation Bar */
         .bottom-nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 68px;
-            background: rgba(3, 3, 5, 0.99); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.25);
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 56px;
+            background: rgba(0, 0, 0, 0.78);
+            border-top: none !important;
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px;
-            transform: translateZ(0); will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
         }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.52rem; font-weight: 600; gap: 3px;
-            width: 100%; height: 100%; text-align: center; position: relative; transition: transform 0.1s ease;
+            text-decoration: none; cursor: pointer; color: #a0a0ab; font-size: 0.5rem; font-weight: 700; gap: 2px;
+            width: 100%; height: 100%; text-align: center; position: relative;
+            transform: translateZ(0);
         }
-        .bottom-nav-item:active { transform: scale(0.95); }
+        .bottom-nav-item:active { transform: scale(0.94); }
         .bottom-nav-item i { 
-            font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+            font-size: 1.18rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.95));
         }
         .bottom-nav-item span { 
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.95));
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65px; 
         }
 
+        /* Clean Pinterest Grid View */
         .pinterest-feed-container {
-            padding: 75px 8px 15px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
+            padding: 72px 8px 15px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto;
             display: none;
         }
         .pinterest-feed-container.active-grid { display: block; }
-        @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 85px 15px 15px 15px; } }
+        @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 80px 15px 15px 15px; } }
 
         .product-card {
             background: transparent; border-radius: 14px; overflow: hidden; 
             display: inline-block; width: 100%; border: none; 
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            transition: transform 0.12s ease;
         }
-        .product-card:active { transform: scale(0.97); }
+        .product-card:active { transform: scale(0.98); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; loading: lazy; }
@@ -178,6 +200,7 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         }
 
+        /* Default Fullscreen Reels View */
         .reel-modal-overlay {
             display: flex; position: fixed; inset: 0;
             background: #000000; z-index: 4000;
@@ -186,7 +209,7 @@
         .reel-modal-overlay.hidden-reels { display: none !important; }
 
         .reel-modal-wrapper {
-            position: relative; width: 100%; max-width: 420px; height: calc(100vh - 68px); height: calc(100dvh - 68px); top: 0;
+            position: relative; width: 100%; max-width: 420px; height: calc(100vh - 56px); height: calc(100dvh - 56px); top: 0;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
             scroll-behavior: auto; -webkit-overflow-scrolling: touch;
             scrollbar-width: none; border: none;
@@ -194,14 +217,14 @@
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
 
         .reel-card { 
-            width: 100%; height: calc(100vh - 68px); height: calc(100dvh - 68px); 
+            width: 100%; height: calc(100vh - 56px); height: calc(100dvh - 56px); 
             scroll-snap-align: start; scroll-snap-stop: always;
             display: flex; flex-direction: column; position: relative; background: #000000; flex-shrink: 0;
-            align-items: center; justify-content: center; padding-bottom: 10px;
-            transform: translateZ(0); will-change: transform;
+            align-items: center; justify-content: center; padding-bottom: 6px;
+            transform: translate3d(0, 0, 0);
         }
         .reel-media-box { 
-            position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 95px); 
+            position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 76px); 
             cursor: pointer; background: #000000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; 
             border-radius: 16px; border: none !important; box-shadow: none !important;
         }
@@ -213,10 +236,10 @@
 
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.55s ease;
             will-change: opacity, transform;
             animation: dynamicZoomInOut 8s ease-in-out infinite alternate;
-            image-rendering: -webkit-optimize-contrast; backface-visibility: hidden;
+            backface-visibility: hidden;
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
@@ -227,37 +250,37 @@
             100% { transform: scale(1.0); }
         }
 
+        /* Elevated & Unclipped Price Overlay */
         .reel-bottom-price-overlay {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             z-index: 50; pointer-events: none; display: flex; flex-direction: row; align-items: center; justify-content: center;
-            gap: 8px; padding: 5px 16px; border-radius: 20px;
-            background: rgba(8, 8, 14, 0.9) !important;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            gap: 8px; padding: 6px 16px; border-radius: 22px;
+            background: rgba(8, 8, 14, 0.92) !important;
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.85);
+            white-space: nowrap;
         }
         .reel-center-price-badge {
-            font-size: 0.95rem; font-weight: 800;
+            font-size: 0.95rem; font-weight: 800; line-height: 1.2;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: inline-block;
         }
         .reel-center-discount-badge {
             background: var(--pink-accent); color: #fff; font-size: 0.58rem; font-weight: 800;
-            padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            padding: 2px 7px; border-radius: 10px; line-height: 1.2;
         }
 
         .overlay-sheet {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.6); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px; scrollbar-width: none;
         }
         .overlay-sheet::-webkit-scrollbar { display: none; }
 
         .buy-preview-modal {
-            width: 95%; max-width: 420px; background: rgba(10, 10, 16, 0.98); border: 1.5px solid rgba(212,175,55,0.5);
+            width: 95%; max-width: 420px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5);
             border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.95);
         }
         .preview-horizontal-scroll {
             display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -267,7 +290,6 @@
         .preview-img-item {
             flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; overflow: hidden;
             border: 2px solid transparent; cursor: pointer; scroll-snap-align: start; background: #000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
         }
         .preview-img-item.selected { border-color: var(--pink-accent); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -276,31 +298,41 @@
             position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
-            box-shadow: 0 0 15px rgba(212,175,55,0.8);
-            transition: left 0.25s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.25s cubic-bezier(0.5, 0, 0.75, 0.4), transform 0.25s linear, opacity 0.25s ease-in;
+            transition: left 0.25s ease-out, top 0.25s ease-in, transform 0.25s linear, opacity 0.25s ease-in;
         }
 
         .inpage-details-modal {
-            width: 94%; max-width: 440px; max-height: 85vh; background: rgba(8, 8, 14, 0.98); border: 1.5px solid var(--gold-solid);
+            width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid);
             border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px;
             overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); scrollbar-width: none;
         }
         .inpage-details-modal::-webkit-scrollbar { display: none; }
 
         .fullscreen-iframe-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 68px); height: calc(100dvh - 68px);
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 56px); height: calc(100dvh - 56px);
             background: #000000; z-index: 4500; flex-direction: column;
         }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
 
+        /* Category Modal Styling */
         .category-transparent-overlay, .saved-gallery-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0, 0, 0, 0.4) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 15px 85px 15px; scrollbar-width: none;
+            background: rgba(0, 0, 0, 0.78) !important; z-index: 6500; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 15px 75px 15px; scrollbar-width: none;
         }
         .category-transparent-overlay::-webkit-scrollbar, .saved-gallery-overlay::-webkit-scrollbar { display: none; }
-        .seller-fullscreen-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
-        .category-fullscreen-view { padding: 0; max-width: 100%; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .seller-fullscreen-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; position: relative; margin: auto; }
+        .category-fullscreen-view { 
+            padding: 16px; max-width: 100%; display: flex; flex-direction: column; gap: 10px; width: 100%; 
+            background: #09090f; border: 1.5px solid rgba(212, 175, 55, 0.45); border-radius: 18px;
+        }
+        .cat-chip-btn {
+            width: 100%; padding: 12px 16px; background: #11111a; border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px; color: #fff; font-weight: 700; font-size: 0.85rem; text-align: left;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+            text-transform: uppercase;
+        }
+        .cat-chip-btn:active { background: rgba(212, 175, 55, 0.2); transform: scale(0.98); }
 
         .saved-thumb-card { background: var(--card-retail); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; border: 1px solid rgba(212,175,55,0.2); }
         .saved-thumb-preview { width: 100%; height: 110px; background: #000; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -318,13 +350,18 @@
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
-    <!-- Always Visible Clean Floating Search Bar -->
+    <!-- Pull to Refresh Toast -->
+    <div id="pullRefreshIndicator">
+        <i class="fa-solid fa-rotate-right fa-spin"></i> <span>REFRESHING FEED...</span>
+    </div>
+
+    <!-- Smooth Floating Search Bar -->
     <div id="floatingSearchContainer" class="top-floating-search-bar search-hidden">
         <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- Permanent Single-DOM Side Action Bar -->
+    <!-- Crisp & Instant Side Action Bar -->
     <div id="fixedGlobalActionsBar" class="right-vertical-actions">
         <div class="side-action-item" onclick="toggleCartPortal()" title="Cart">
             <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
@@ -351,6 +388,7 @@
         </div>
     </div>
 
+    <!-- Borderless Compact Bottom Navigation Bar -->
     <nav class="bottom-nav-bar">
         <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
         <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -375,6 +413,7 @@
         <div class="inpage-details-modal" id="inpageDetailsModalContent"></div>
     </div>
 
+    <!-- Working Category Popup Modal -->
     <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'">
         <div class="seller-fullscreen-container">
             <div class="category-fullscreen-view" id="categoryMainListView"></div>
@@ -382,14 +421,10 @@
     </div>
 
     <!-- Clean Pinterest Grid View for Search & Category -->
-    <main id="appContainer" class="pinterest-feed-container">
-        <div style="text-align: center; padding: 50px 0; color: var(--gold-solid);">
-            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-        </div>
-    </main>
+    <main id="appContainer" class="pinterest-feed-container"></main>
 
-    <!-- Dedicated Reels Popup Modal -->
-    <div id="reelModalOverlay" class="reel-modal-overlay" onclick="if(event.target===this) closeReelModal()">
+    <!-- Dedicated Default Reels View -->
+    <div id="reelModalOverlay" class="reel-modal-overlay">
         <div class="reel-modal-wrapper" id="reelModalWrapperBody"></div>
     </div>
 
@@ -399,6 +434,7 @@
             {
                 id: '101',
                 title: 'rorraxy Premium Matte Black Edition',
+                category: 'Fashion',
                 price: '49.99',
                 discount_rate: '20',
                 image_url: 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png',
@@ -411,7 +447,16 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
-        let isHomeGridActive = false;
+
+        // Shuffle Array Utility for Randomizing Products
+        function shuffleArray(array) {
+            let shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -425,14 +470,15 @@
             loadLiveProducts();
             updateCartBadgeCount();
             updateSideActionState();
+            setupPullToRefresh();
 
             setTimeout(() => {
                 const loader = document.getElementById('rorraxyLoaderOverlay');
                 if(loader) {
                     loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 150);
+                    setTimeout(() => loader.style.display = 'none', 120);
                 }
-            }, 30);
+            }, 20);
 
             const searchInput = document.getElementById('floatingSearchInput');
             const searchBtn = document.getElementById('floatingSearchBtn');
@@ -444,11 +490,133 @@
             }
         });
 
+        // Pull-To-Refresh Mechanism on Top Scroll
+        function setupPullToRefresh() {
+            const wrapper = document.getElementById('reelModalWrapperBody');
+            const indicator = document.getElementById('pullRefreshIndicator');
+            if(!wrapper || !indicator) return;
+
+            let startY = 0;
+            let isPulling = false;
+
+            wrapper.addEventListener('touchstart', (e) => {
+                if (wrapper.scrollTop <= 0) {
+                    startY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            }, { passive: true });
+
+            wrapper.addEventListener('touchmove', (e) => {
+                if (!isPulling) return;
+                let diff = e.touches[0].clientY - startY;
+                if (diff > 65 && wrapper.scrollTop <= 0) {
+                    indicator.classList.add('visible');
+                }
+            }, { passive: true });
+
+            wrapper.addEventListener('touchend', () => {
+                if (!isPulling) return;
+                isPulling = false;
+                if (indicator.classList.contains('visible')) {
+                    setTimeout(() => {
+                        indicator.classList.remove('visible');
+                        refreshAndShuffleFeed();
+                    }, 350);
+                }
+            });
+        }
+
+        async function refreshAndShuffleFeed() {
+            // Re-fetch or shuffle existing products for fresh update
+            activeProductList = shuffleArray(globalMasterProductsList);
+            openReelsModal(0);
+            try {
+                const response = await fetch('/api/products');
+                const result = await response.json();
+                let productsList = (result && result.success && Array.isArray(result.data)) ? result.data : (Array.isArray(result) ? result : []);
+                if (productsList.length > 0) {
+                    globalMasterProductsList = productsList;
+                    localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
+                    activeProductList = shuffleArray(globalMasterProductsList);
+                    openReelsModal(0);
+                }
+            } catch (e) {}
+        }
+
         function toggleWorldPortal() { window.location.href = 'https://rorraxy.com/world.html'; }
+
         function toggleCategoryModal(e) {
             if(e) e.stopPropagation();
             const overlay = document.getElementById('categoryTransparentOverlay');
-            if(overlay) overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+            if(!overlay) return;
+            
+            if (overlay.style.display === 'flex') {
+                overlay.style.display = 'none';
+            } else {
+                renderCategoryModalList();
+                overlay.style.display = 'flex';
+            }
+        }
+
+        function renderCategoryModalList() {
+            const listView = document.getElementById('categoryMainListView');
+            if(!listView) return;
+
+            // Extract unique categories dynamically from products
+            let categorySet = new Set(['ALL PRODUCTS']);
+            globalMasterProductsList.forEach(p => {
+                if(p.category && p.category.trim() !== '') {
+                    categorySet.add(p.category.trim().toUpperCase());
+                }
+            });
+
+            // Fallback categories if database has none yet
+            if(categorySet.size === 1) {
+                ['FASHION', 'ELECTRONICS', 'WATCHES', 'ACCESSORIES', 'LUXURY'].forEach(c => categorySet.add(c));
+            }
+
+            let html = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="font-size:0.9rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT CATEGORY</span>
+                    <button onclick="document.getElementById('categoryTransparentOverlay').style.display='none'" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer;">×</button>
+                </div>
+            `;
+
+            categorySet.forEach(cat => {
+                html += `
+                    <button class="cat-chip-btn" onclick="selectCategoryFilter('${cat.replace(/'/g, "\\'")}')">
+                        <span>${cat}</span>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--gold-solid); font-size:0.75rem;"></i>
+                    </button>
+                `;
+            });
+
+            listView.innerHTML = html;
+        }
+
+        function selectCategoryFilter(selectedCat) {
+            document.getElementById('categoryTransparentOverlay').style.display = 'none';
+            const gridContainer = document.getElementById('appContainer');
+            const reelModal = document.getElementById('reelModalOverlay');
+            const sideBar = document.getElementById('fixedGlobalActionsBar');
+            const searchBar = document.getElementById('floatingSearchContainer');
+
+            if(reelModal) reelModal.classList.add('hidden-reels');
+            if(gridContainer) gridContainer.classList.add('active-grid');
+            if(sideBar) sideBar.classList.add('clean-hidden');
+            if(searchBar) searchBar.classList.remove('search-hidden');
+
+            if(selectedCat === 'ALL PRODUCTS') {
+                activeProductList = [...globalMasterProductsList];
+            } else {
+                activeProductList = globalMasterProductsList.filter(item => {
+                    const c = (item.category || '').toUpperCase().trim();
+                    const t = (item.title || '').toUpperCase();
+                    return c === selectedCat || t.includes(selectedCat);
+                });
+                if(activeProductList.length === 0) activeProductList = [...globalMasterProductsList];
+            }
+            renderPinterestHomeGrid(activeProductList);
         }
 
         function handleBottomBuy() {
@@ -472,21 +640,23 @@
             if (overlay.style.display === 'flex') {
                 overlay.style.display = 'none';
                 document.getElementById('fullscreenIframeBody').src = '';
-            } else {
-                // Return to Default Reels View
-                isHomeGridActive = false;
-                const gridContainer = document.getElementById('appContainer');
-                const reelModal = document.getElementById('reelModalOverlay');
-                const sideBar = document.getElementById('fixedGlobalActionsBar');
-                const searchBar = document.getElementById('floatingSearchContainer');
-
-                if(gridContainer) gridContainer.classList.remove('active-grid');
-                if(reelModal) reelModal.classList.remove('hidden-reels');
-                if(sideBar) sideBar.classList.remove('clean-hidden');
-                if(searchBar) searchBar.classList.add('search-hidden');
-
-                openReelsModal(0);
             }
+            
+            const gridContainer = document.getElementById('appContainer');
+            const reelModal = document.getElementById('reelModalOverlay');
+            const sideBar = document.getElementById('fixedGlobalActionsBar');
+            const searchBar = document.getElementById('floatingSearchContainer');
+
+            if(gridContainer) gridContainer.classList.remove('active-grid');
+            if(reelModal) reelModal.classList.remove('hidden-reels');
+            if(sideBar) sideBar.classList.remove('clean-hidden');
+            if(searchBar) {
+                searchBar.classList.add('search-hidden');
+                searchBar.classList.remove('manual-open');
+            }
+
+            activeProductList = shuffleArray(globalMasterProductsList);
+            openReelsModal(0);
         }
 
         function toggleAccountPortal() { openFullscreenPortal('/account.html'); }
@@ -502,13 +672,15 @@
 
         async function loadLiveProducts() {
             const cachedData = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+            let hasRendered = false;
+
             if (cachedData) {
                 try {
                     const parsed = JSON.parse(cachedData);
                     if (Array.isArray(parsed) && parsed.length > 0) {
                         globalMasterProductsList = parsed;
-                        activeProductList = globalMasterProductsList;
                         checkInitialProductParam();
+                        hasRendered = true;
                     }
                 } catch (e) {}
             }
@@ -523,12 +695,16 @@
                 if (productsList.length > 0) {
                     globalMasterProductsList = productsList;
                     localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(productsList));
-                    activeProductList = globalMasterProductsList;
+                    if (!hasRendered) {
+                        checkInitialProductParam();
+                    }
+                } else if (!hasRendered) {
                     checkInitialProductParam();
                 }
             } catch (error) {
-                activeProductList = globalMasterProductsList;
-                checkInitialProductParam();
+                if (!hasRendered) {
+                    checkInitialProductParam();
+                }
             }
         }
 
@@ -537,13 +713,20 @@
             let targetProductId = urlParams.get('product') || urlParams.get('id');
             
             if (targetProductId) {
-                let foundIndex = globalMasterProductsList.findIndex(p => String(p.id || p.product_id) === String(targetProductId));
-                if (foundIndex !== -1) {
-                    openReelsModal(foundIndex);
+                let targetProd = globalMasterProductsList.find(p => String(p.id || p.product_id) === String(targetProductId));
+                if (targetProd) {
+                    // Put target product first, followed by related category items, then other items
+                    let targetCat = (targetProd.category || '').toLowerCase();
+                    let related = globalMasterProductsList.filter(p => String(p.id || p.product_id) !== String(targetProductId) && (p.category || '').toLowerCase() === targetCat);
+                    let others = globalMasterProductsList.filter(p => String(p.id || p.product_id) !== String(targetProductId) && (p.category || '').toLowerCase() !== targetCat);
+                    
+                    activeProductList = [targetProd, ...shuffleArray(related), ...shuffleArray(others)];
+                    openReelsModal(0);
                     return;
                 }
             }
-            // Default load Reels view from start
+            // Default: Random products across all categories in Reels
+            activeProductList = shuffleArray(globalMasterProductsList);
             openReelsModal(0);
         }
 
@@ -554,16 +737,14 @@
             const sideBar = document.getElementById('fixedGlobalActionsBar');
 
             if (!query) {
-                isHomeGridActive = false;
                 if(gridContainer) gridContainer.classList.remove('active-grid');
                 if(reelModal) reelModal.classList.remove('hidden-reels');
                 if(sideBar) sideBar.classList.remove('clean-hidden');
-                activeProductList = globalMasterProductsList;
+                activeProductList = shuffleArray(globalMasterProductsList);
                 openReelsModal(0);
                 return;
             }
 
-            isHomeGridActive = true;
             if(reelModal) reelModal.classList.add('hidden-reels');
             if(gridContainer) gridContainer.classList.add('active-grid');
             if(sideBar) sideBar.classList.add('clean-hidden');
@@ -602,10 +783,13 @@
                 
                 cardDiv.onclick = (e) => {
                     e.preventDefault();
-                    isHomeGridActive = false;
                     container.classList.remove('active-grid');
                     document.getElementById('fixedGlobalActionsBar').classList.remove('clean-hidden');
-                    currentReelIndex = index;
+                    const searchBar = document.getElementById('floatingSearchContainer');
+                    if(searchBar) {
+                        searchBar.classList.add('search-hidden');
+                        searchBar.classList.remove('manual-open');
+                    }
                     openReelsModal(index);
                 };
 
@@ -654,10 +838,16 @@
         function toggleReelSearchBox() {
             const searchBar = document.getElementById('floatingSearchContainer');
             if(searchBar) {
-                searchBar.classList.toggle('search-hidden');
-                searchBar.classList.toggle('manual-open');
-                const input = document.getElementById('floatingSearchInput');
-                if(input && !searchBar.classList.contains('search-hidden')) input.focus();
+                const isHidden = searchBar.classList.contains('search-hidden');
+                if (isHidden) {
+                    searchBar.classList.remove('search-hidden');
+                    searchBar.classList.add('manual-open');
+                    const input = document.getElementById('floatingSearchInput');
+                    if(input) setTimeout(() => input.focus(), 50);
+                } else {
+                    searchBar.classList.add('search-hidden');
+                    searchBar.classList.remove('manual-open');
+                }
             }
         }
 
@@ -693,11 +883,13 @@
             let list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
             if(!list || list.length === 0) return;
 
-            // If a specific product is viewed, reorder list so that selected product is first, followed by related products
             if(startIndex > 0 && startIndex < list.length) {
                 let targetItem = list[startIndex];
-                let otherItems = list.filter((_, idx) => idx !== startIndex);
-                list = [targetItem, ...otherItems];
+                let targetCat = (targetItem.category || '').toLowerCase();
+                let related = list.filter((p, idx) => idx !== startIndex && (p.category || '').toLowerCase() === targetCat);
+                let others = list.filter((p, idx) => idx !== startIndex && (p.category || '').toLowerCase() !== targetCat);
+                
+                list = [targetItem, ...related, ...others];
                 activeProductList = list;
                 startIndex = 0;
             }
@@ -728,7 +920,8 @@
                     mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layersHtml}</div>`;
                 }
 
-                let price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '$0.00';
+                let priceVal = parseFloat(product.price || 0);
+                let price = `$${priceVal.toFixed(2)}`;
                 let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
 
                 reelsHtml += `
@@ -756,7 +949,7 @@
                             currSlide.classList.add('previous');
                             nextSlide.classList.remove('previous');
                             nextSlide.classList.add('active');
-                            setTimeout(() => { currSlide.classList.remove('previous'); }, 600);
+                            setTimeout(() => { currSlide.classList.remove('previous'); }, 550);
                         }
                         currentImgIdx = nextImgIdx;
                     }, 2800);
@@ -765,23 +958,21 @@
 
             wrapper.innerHTML = reelsHtml;
             currentReelIndex = startIndex;
-
-            setTimeout(() => {
-                let targetCard = wrapper.querySelector(`[data-index="${startIndex}"]`);
-                if (targetCard) wrapper.scrollTop = targetCard.offsetTop;
-            }, 0);
+            wrapper.scrollTop = 0;
 
             let scrollTimer = null;
             wrapper.onscroll = () => {
                 clearTimeout(scrollTimer);
                 scrollTimer = setTimeout(() => {
                     let cardHeight = wrapper.clientHeight;
-                    let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
-                    if (calculatedIdx >= 0 && calculatedIdx < list.length) {
-                        currentReelIndex = calculatedIdx;
-                        updateSideActionState();
+                    if(cardHeight > 0) {
+                        let calculatedIdx = Math.round(wrapper.scrollTop / cardHeight);
+                        if (calculatedIdx >= 0 && calculatedIdx < list.length && calculatedIdx !== currentReelIndex) {
+                            currentReelIndex = calculatedIdx;
+                            updateSideActionState();
+                        }
                     }
-                }, 15);
+                }, 10);
             };
 
             updateSideActionState();
@@ -806,11 +997,11 @@
 
             let rawTitle = product.title || 'rorraxy luxury product';
             let title = rawTitle.toLowerCase();
-            let priceNum = parseFloat(product.price || 21.17);
+            let priceNum = parseFloat(product.price || 0);
             let marketPriceNum = (priceNum * 1.35).toFixed(2);
             let price = `$${priceNum.toFixed(2)}`;
             let marketPrice = `$${marketPriceNum}`;
-            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 25);
+            let discountPercent = parseFloat(product.discount_rate || product.discountRate || 0);
             let rawDesc = product.description || product.desc || '';
             let stock = product.stock || 500;
             currentProductQty = 1;
@@ -820,7 +1011,7 @@
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                         <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">${price}</span>
                         <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">${marketPrice}</span>
-                        <span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>
+                        ${discountPercent > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${discountPercent}% OFF</span>` : ''}
                     </div>
                     <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer;">×</button>
                 </div>
@@ -886,12 +1077,12 @@
 
             let pId = product.id || product.product_id || '101';
             let titleEsc = (product.title || 'item').toLowerCase().replace(/'/g, "\\'");
-            let priceVal = product.price || 35;
+            let priceVal = parseFloat(product.price || 0);
             let sellerVal = product.seller_id || 'rorraxy-store';
 
             content.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT</span>
+                    <span style="font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT ($${priceVal.toFixed(2)})</span>
                     <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">×</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
@@ -1102,7 +1293,11 @@
         };
 
         window.selectSavedVideo = function(videoId) {
-            let foundIdx = globalMasterProductsList.findIndex(p => String(p.id || p.product_id) === String(videoId));
+            let foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(videoId));
+            if(foundIdx === -1) {
+                activeProductList = [...globalMasterProductsList];
+                foundIdx = activeProductList.findIndex(p => String(p.id || p.product_id) === String(videoId));
+            }
             if(foundIdx !== -1) openReelsModal(foundIdx);
             document.getElementById('savedGalleryOverlay').style.display = 'none';
         };
@@ -1114,7 +1309,6 @@
                 try { await navigator.share({ title: 'rorraxy product', url: shareUrl }); } catch (err) {}
             } else if (navigator.clipboard) {
                 await navigator.clipboard.writeText(shareUrl);
-                alert('Affiliate product link copied to clipboard!');
             }
         };
     </script>
