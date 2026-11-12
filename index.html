@@ -74,27 +74,58 @@
         }
         #pullRefreshIndicator.visible { top: 18px; }
 
-        .animate-card-entry { 
-            animation: luxurySoftScaleFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* AI-Style Luxury Curtain Reveal & Cascade Animation for Images */
+        .product-card {
+            background: transparent; border-radius: 14px; overflow: hidden; 
+            display: inline-block; width: 100%; border: none; 
+            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
+            opacity: 0;
+            transform: translateY(22px) scale(0.94);
+            transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform, opacity;
         }
-
-        @keyframes luxurySoftScaleFade {
-            0% { opacity: 0; transform: translateY(14px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Smooth Lazy Image Loading Reveal - Zero Black Flicker */
-        .lazy-fade-img {
+        .product-card.ai-revealed {
             opacity: 1;
-            transition: transform 0.25s ease-out;
-            will-change: transform;
-            background: #0d0d14;
+            transform: translateY(0) scale(1);
         }
-        .lazy-fade-img.loaded {
-            opacity: 1;
-            transform: scale(1);
+        .product-card:active { transform: scale(0.97); }
+
+        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #07070c; border-radius: 12px; overflow: hidden; }
+        .product-media-box::after {
+            content: ''; position: absolute; inset: 0; z-index: 30;
+            background: linear-gradient(180deg, rgba(12,12,18,0.95) 0%, rgba(212,175,55,0.18) 50%, #050508 100%);
+            transform: translateY(0%);
+            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
         }
+        .product-card.ai-revealed .product-media-box::after {
+            transform: translateY(105%);
+        }
+        .product-media-box img { 
+            width: 100%; height: 100%; display: block; object-fit: cover; 
+            transform: scale(1.08); filter: brightness(0.8);
+            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
+        }
+        .product-card.ai-revealed .product-media-box img {
+            transform: scale(1); filter: brightness(1);
+        }
+
+        /* Desktop Up/Down Navigation Controls */
+        .desktop-reel-nav {
+            position: fixed; right: 74px; top: 50%; transform: translateY(-50%);
+            z-index: 4600; display: flex; flex-direction: column; gap: 14px;
+        }
+        @media (max-width: 768px) { .desktop-reel-nav { display: none !important; } }
+        .desktop-nav-circle {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(12, 12, 18, 0.9); border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #fcf6ba; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.85);
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .desktop-nav-circle:hover { transform: scale(1.08); background: rgba(212, 175, 55, 0.18); }
+        .desktop-nav-circle:active { transform: scale(0.92); }
 
         /* Smooth Floating Search Bar */
         .top-floating-search-bar {
@@ -155,9 +186,11 @@
         }
 
         .cart-pink-badge {
-            position: absolute; top: -5px; right: 0px; background: var(--pink-accent); color: #fff;
-            font-size: 0.55rem; font-weight: 800; width: 17px; height: 17px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 6px var(--pink-accent);
+            position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+            background: var(--pink-accent); color: #fff;
+            font-size: 0.54rem; font-weight: 800; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent);
+            z-index: 10; pointer-events: none;
         }
 
         /* Compact, Borderless Bottom Navigation Bar */
@@ -193,16 +226,6 @@
         }
         .pinterest-feed-container.active-grid { display: block; }
         @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 80px 15px 15px 15px; } }
-
-        .product-card {
-            background: transparent; border-radius: 14px; overflow: hidden; 
-            display: inline-block; width: 100%; border: none; 
-            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-        }
-        .product-card:active { transform: scale(0.98); }
-
-        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; border-radius: 12px; overflow: hidden; }
-        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; decoding: async; loading: lazy; }
 
         .corner-discount-badge {
             position: absolute; top: 8px; left: 8px; z-index: 45;
@@ -317,10 +340,11 @@
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
         .flying-gold-coin {
-            position: fixed; z-index: 9999999; width: 32px; height: 32px; border-radius: 50%;
+            position: fixed; z-index: 9999999; width: 34px; height: 34px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
-            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #4d3300;
-            transition: left 0.25s ease-out, top 0.25s ease-in, transform 0.25s linear, opacity 0.25s ease-in;
+            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
+            box-shadow: 0 0 18px rgba(212,175,55,0.95);
+            will-change: left, top, transform, opacity;
         }
 
         .inpage-details-modal {
@@ -364,9 +388,15 @@
         <button id="floatingSearchBtn" class="floating-search-btn-circle"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
+    <!-- Desktop Up/Down Navigation Controls for Reels -->
+    <div id="desktopReelNav" class="desktop-reel-nav">
+        <button class="desktop-nav-circle" onclick="navigateReelStep(-1)" title="Previous Reel"><i class="fa-solid fa-chevron-up"></i></button>
+        <button class="desktop-nav-circle" onclick="navigateReelStep(1)" title="Next Reel"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
     <!-- Crisp & Instant Side Action Bar -->
     <div id="fixedGlobalActionsBar" class="right-vertical-actions">
-        <div class="side-action-item" onclick="toggleCartPortal()" title="Cart">
+        <div class="side-action-item" id="cartDropZone" onclick="toggleCartPortal()" title="Cart" style="padding-top: 4px;">
             <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
             <span class="cart-pink-badge" id="sideCartBadgeCount">0</span>
         </div>
@@ -483,6 +513,7 @@
             updateSideActionState();
             setupPullToRefresh();
             setupAutoHideSearchOnScroll();
+            setupDesktopNavigation();
             buildCategoriesAccordion();
 
             setTimeout(() => {
@@ -633,15 +664,65 @@
             const gridContainer = document.getElementById('appContainer');
             const reelModal = document.getElementById('reelModalOverlay');
             const sideBar = document.getElementById('fixedGlobalActionsBar');
+            const desktopNav = document.getElementById('desktopReelNav');
             const searchBar = document.getElementById('floatingSearchContainer');
 
             if(reelModal) reelModal.classList.add('hidden-reels');
             if(gridContainer) gridContainer.classList.add('active-grid');
             if(sideBar) sideBar.classList.add('clean-hidden');
+            if(desktopNav) desktopNav.style.display = 'none';
             if(searchBar) searchBar.classList.remove('search-hidden');
 
             activeProductList = shuffleArray(globalMasterProductsList);
             renderPinterestHomeGrid(activeProductList);
+        }
+
+        // Desktop Mouse Wheel, Drag & Keyboard Arrow Support for Reels
+        function setupDesktopNavigation() {
+            const wrapper = document.getElementById('reelModalWrapperBody');
+            if (!wrapper) return;
+
+            let wheelLock = false;
+            wrapper.addEventListener('wheel', (e) => {
+                const reelModal = document.getElementById('reelModalOverlay');
+                if (!reelModal || reelModal.style.display === 'none' || reelModal.classList.contains('hidden-reels')) return;
+                
+                e.preventDefault();
+                if (wheelLock) return;
+                if (Math.abs(e.deltaY) < 12) return;
+
+                wheelLock = true;
+                navigateReelStep(e.deltaY > 0 ? 1 : -1);
+                setTimeout(() => { wheelLock = false; }, 320);
+            }, { passive: false });
+
+            window.addEventListener('keydown', (e) => {
+                if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+                const reelModal = document.getElementById('reelModalOverlay');
+                if (!reelModal || reelModal.style.display === 'none' || reelModal.classList.contains('hidden-reels')) return;
+
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                    e.preventDefault();
+                    navigateReelStep(1);
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    navigateReelStep(-1);
+                }
+            });
+        }
+
+        function navigateReelStep(direction) {
+            const wrapper = document.getElementById('reelModalWrapperBody');
+            if (!wrapper) return;
+            const list = activeProductList.length > 0 ? activeProductList : globalMasterProductsList;
+            const nextIndex = Math.max(0, Math.min(list.length - 1, currentReelIndex + direction));
+            const cardHeight = wrapper.clientHeight;
+            wrapper.scrollTo({
+                top: nextIndex * cardHeight,
+                behavior: 'smooth'
+            });
+            currentReelIndex = nextIndex;
+            updateSideActionState();
         }
 
         // Pull-To-Refresh Mechanism on Top Scroll
@@ -731,11 +812,13 @@
             const gridContainer = document.getElementById('appContainer');
             const reelModal = document.getElementById('reelModalOverlay');
             const sideBar = document.getElementById('fixedGlobalActionsBar');
+            const desktopNav = document.getElementById('desktopReelNav');
             const searchBar = document.getElementById('floatingSearchContainer');
 
             if(gridContainer) gridContainer.classList.remove('active-grid');
             if(reelModal) reelModal.classList.remove('hidden-reels');
             if(sideBar) sideBar.classList.remove('clean-hidden');
+            if(desktopNav) desktopNav.style.display = 'flex';
             if(searchBar) {
                 searchBar.classList.add('search-hidden');
                 searchBar.classList.remove('manual-open');
@@ -874,13 +957,15 @@
                 let discountBadge = discountPercent > 0 ? `<div class="corner-discount-badge">${discountPercent}% OFF</div>` : '';
 
                 const cardDiv = document.createElement('div');
-                cardDiv.className = 'product-card animate-card-entry';
-                cardDiv.style.animationDelay = `${Math.min((index % 12) * 0.03, 0.35)}s`;
+                cardDiv.className = 'product-card';
+                cardDiv.dataset.staggerIndex = index;
                 
                 cardDiv.onclick = (e) => {
                     e.preventDefault();
                     container.classList.remove('active-grid');
                     document.getElementById('fixedGlobalActionsBar').classList.remove('clean-hidden');
+                    const desktopNav = document.getElementById('desktopReelNav');
+                    if (desktopNav) desktopNav.style.display = 'flex';
                     const searchBar = document.getElementById('floatingSearchContainer');
                     if(searchBar) {
                         searchBar.classList.add('search-hidden');
@@ -892,7 +977,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadge}
-                        <img src="${resolvedImageUrl}" onerror="this.onerror=null;this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';" class="lazy-fade-img" alt="${title}" loading="${index < 8 ? 'eager' : 'lazy'}" decoding="async">
+                        <img src="${resolvedImageUrl}" onerror="this.onerror=null;this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';" alt="${title}" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async">
                         <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
@@ -901,6 +986,33 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
+
+            // AI Sequential Curtain Cascade Reveal using IntersectionObserver
+            const cards = container.querySelectorAll('.product-card');
+            if ('IntersectionObserver' in window) {
+                let batchCounter = 0;
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const delayMs = Math.min(batchCounter * 55, 360);
+                            batchCounter++;
+                            setTimeout(() => {
+                                el.classList.add('ai-revealed');
+                            }, delayMs);
+                            obs.unobserve(el);
+                        }
+                    });
+                    setTimeout(() => { batchCounter = 0; }, 120);
+                }, { rootMargin: '60px 0px', threshold: 0.05 });
+
+                cards.forEach(card => observer.observe(card));
+            } else {
+                cards.forEach((card, idx) => {
+                    setTimeout(() => card.classList.add('ai-revealed'), idx * 45);
+                });
+            }
+
             updateSideActionState();
         }
 
@@ -1235,30 +1347,87 @@
 
         function closeBuyPreview() { document.getElementById('buyPreviewOverlay').style.display = 'none'; }
 
+        // Luxury Soft Silk Chime Sound (Web Audio API - Zero External Delay)
+        function playLuxuryChimeSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+
+                const notes = [880, 1318.51]; // Soft A5 -> E6 harmonic chime
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+
+                    gain.gain.setValueAtTime(0.001, now + idx * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.065, now + idx * 0.06 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.42);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.06);
+                    osc.stop(now + idx * 0.06 + 0.45);
+                });
+            } catch (err) {}
+        }
+
         function triggerCoinDropAnimation(e) {
+            playLuxuryChimeSound();
+
             const cartIconElem = document.getElementById('cartTargetIcon');
             let targetRect = cartIconElem ? cartIconElem.getBoundingClientRect() : null;
-            let targetX = targetRect ? targetRect.left + (targetRect.width / 2) : window.innerWidth - 30;
-            let targetY = targetRect ? targetRect.top + (targetRect.height / 2) : window.innerHeight - 50;
+            let targetX = targetRect ? targetRect.left + (targetRect.width / 2) : window.innerWidth - 33;
+            let targetY = targetRect ? targetRect.top + (targetRect.height / 2) : window.innerHeight - 280;
 
-            let startX = e ? e.clientX : window.innerWidth / 2;
-            let startY = e ? e.clientY : window.innerHeight / 2;
+            let startX = e && e.clientX ? e.clientX : window.innerWidth / 2;
+            let startY = e && e.clientY ? e.clientY : window.innerHeight / 2;
 
             const coin = document.createElement('div');
             coin.className = 'flying-gold-coin';
             coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
-            coin.style.left = `${startX - 16}px`;
-            coin.style.top = `${startY - 16}px`;
+            coin.style.left = `${startX - 17}px`;
+            coin.style.top = `${startY - 17}px`;
             document.body.appendChild(coin);
 
-            requestAnimationFrame(() => {
-                coin.style.left = `${targetX - 16}px`;
-                coin.style.top = `${targetY - 16}px`;
-                coin.style.transform = 'scale(0.3) rotate(720deg)';
-                coin.style.opacity = '0';
-            });
+            const duration = 560;
+            const startTime = performance.now();
+            const controlX = Math.min(startX, targetX) - 75;
+            const controlY = Math.min(startY, targetY) - 95;
 
-            setTimeout(() => { if(coin.parentNode) coin.parentNode.removeChild(coin); }, 250);
+            function animateCurvedCoin(currentTime) {
+                const elapsed = currentTime - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+                const inv = 1 - ease;
+                const curX = inv * inv * startX + 2 * inv * ease * controlX + ease * ease * targetX;
+                const curY = inv * inv * startY + 2 * inv * ease * controlY + ease * ease * targetY;
+
+                const scale = 1 - (0.68 * ease);
+                const rotate = 720 * ease;
+                const opacity = t > 0.85 ? 1 - ((t - 0.85) / 0.15) : 1;
+
+                coin.style.left = `${curX - 17}px`;
+                coin.style.top = `${curY - 17}px`;
+                coin.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+                coin.style.opacity = opacity;
+
+                if (t < 1) {
+                    requestAnimationFrame(animateCurvedCoin);
+                } else {
+                    if (coin.parentNode) coin.parentNode.removeChild(coin);
+                    if (cartIconElem) {
+                        cartIconElem.style.transition = 'transform 0.15s ease';
+                        cartIconElem.style.transform = 'scale(1.28)';
+                        setTimeout(() => { cartIconElem.style.transform = 'scale(1)'; }, 150);
+                    }
+                }
+            }
+
+            requestAnimationFrame(animateCurvedCoin);
         }
 
         function confirmAddToCart(e, pId, title, price, sellerId) {
