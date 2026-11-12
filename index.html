@@ -84,12 +84,12 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Smooth Lazy Image Loading Reveal */
+        /* Smooth Lazy Image Loading Reveal - Zero Black Flicker */
         .lazy-fade-img {
-            opacity: 0;
-            transform: scale(1.04);
-            transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
+            opacity: 1;
+            transition: transform 0.25s ease-out;
+            will-change: transform;
+            background: #0d0d14;
         }
         .lazy-fade-img.loaded {
             opacity: 1;
@@ -142,6 +142,7 @@
         .action-pure-icon { 
             font-size: 1.5rem !important; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
             filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.95));
+            border: none !important; outline: none !important; box-shadow: none !important;
         }
         .side-count-text { 
             font-size: 0.56rem !important; font-weight: 700; color: #ffffff; letter-spacing: 0px; 
@@ -230,7 +231,7 @@
         .reel-modal-wrapper {
             position: relative; width: 100%; max-width: 420px; height: calc(100vh - 54px); height: calc(100dvh - 54px); top: 0;
             background: #000000; overflow-y: scroll; scroll-snap-type: y mandatory;
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            scroll-behavior: auto; -webkit-overflow-scrolling: touch;
             scrollbar-width: none; border: none;
         }
         .reel-modal-wrapper::-webkit-scrollbar { display: none; }
@@ -389,9 +390,9 @@
             <span class="side-count-text">YOU</span>
         </div>
 
-        <!-- Clean & Attractive IMAGES Gallery Icon Below YOU Menu -->
-        <div class="side-action-item" onclick="openCleanGalleryView()" title="Product Images Gallery">
-            <i class="fa-regular fa-images action-pure-icon"></i>
+        <!-- Clean & Borderless IMAGE Gallery Icon Below YOU Menu -->
+        <div class="side-action-item" onclick="openCleanGalleryView()" title="Product Images Gallery" style="border:none; outline:none; box-shadow:none;">
+            <i class="fa-solid fa-image action-pure-icon" style="border:none; outline:none;"></i>
             <span class="side-count-text">IMAGE</span>
         </div>
     </div>
@@ -627,7 +628,7 @@
             }
         }
 
-        // Open Clean Pinterest Photo Gallery View (Triggered by IMAGE icon below YOU)
+        // Open Clean Pinterest Photo Gallery View (Triggered by IMAGE icon below YOU - Shuffled Variety Default)
         function openCleanGalleryView() {
             const gridContainer = document.getElementById('appContainer');
             const reelModal = document.getElementById('reelModalOverlay');
@@ -639,7 +640,7 @@
             if(sideBar) sideBar.classList.add('clean-hidden');
             if(searchBar) searchBar.classList.remove('search-hidden');
 
-            activeProductList = [...globalMasterProductsList];
+            activeProductList = shuffleArray(globalMasterProductsList);
             renderPinterestHomeGrid(activeProductList);
         }
 
@@ -891,7 +892,7 @@
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         ${discountBadge}
-                        <img data-src="${resolvedImageUrl}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="lazy-fade-img" alt="${title}" loading="lazy" decoding="async">
+                        <img src="${resolvedImageUrl}" onerror="this.onerror=null;this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';" class="lazy-fade-img" alt="${title}" loading="${index < 8 ? 'eager' : 'lazy'}" decoding="async">
                         <div class="card-clean-price-badge">${price}</div>
                     </div>
                 `;
@@ -900,40 +901,7 @@
 
             container.innerHTML = '';
             container.appendChild(fragment);
-            initLazyImageObserver();
             updateSideActionState();
-        }
-
-        // IntersectionObserver for Smooth Lazy Image Loading
-        function initLazyImageObserver() {
-            const lazyImages = document.querySelectorAll('img.lazy-fade-img');
-            if ('IntersectionObserver' in window) {
-                const imgObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            const realSrc = img.getAttribute('data-src');
-                            if (realSrc) {
-                                img.src = realSrc;
-                                img.onload = () => img.classList.add('loaded');
-                                img.onerror = () => img.classList.add('loaded');
-                                img.removeAttribute('data-src');
-                            }
-                            observer.unobserve(img);
-                        }
-                    });
-                }, { rootMargin: '180px 0px', threshold: 0.01 });
-
-                lazyImages.forEach(img => imgObserver.observe(img));
-            } else {
-                lazyImages.forEach(img => {
-                    const realSrc = img.getAttribute('data-src');
-                    if (realSrc) {
-                        img.src = realSrc;
-                        img.classList.add('loaded');
-                    }
-                });
-            }
         }
 
         function updateSideActionState() {
@@ -1040,10 +1008,10 @@
 
                 let mediaContent = '';
                 if (pVideo !== '' && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaContent = `<video src="${pVideo}" autoplay loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+                    mediaContent = `<video src="${pVideo}" poster="${extractedImages[0]}" ${idx === 0 ? 'autoplay' : 'preload="metadata"'} muted loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
                     let layersHtml = extractedImages.map((imgUrl, imgIdx) => `
-                        <img src="${imgUrl}" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" loading="${idx === startIndex ? 'eager' : 'lazy'}" decoding="async">
+                        <img src="${imgUrl}" onerror="this.onerror=null;this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';" class="slide-layer ${imgIdx === 0 ? 'active' : ''}" id="slide_${idx}_${imgIdx}" alt="slide" loading="${idx <= 2 ? 'eager' : 'lazy'}" decoding="async">
                     `).join('');
                     mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layersHtml}</div>`;
                 }
@@ -1085,7 +1053,8 @@
             });
 
             wrapper.innerHTML = reelsHtml;
-            currentReelIndex = startIndex;
+            currentReelIndex = 0;
+            wrapper.style.scrollBehavior = 'auto';
             wrapper.scrollTop = 0;
 
             let scrollTimer = null;
