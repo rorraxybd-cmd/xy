@@ -8,7 +8,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev" crossorigin>
+    <link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
 
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png">
@@ -41,7 +42,7 @@
         #rorraxyLoaderOverlay {
             position: fixed; inset: 0; background: #000; z-index: 999999;
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-            transition: opacity 0.08s ease-out;
+            transition: opacity 0.08s ease-out; pointer-events: none;
         }
         .loader-logo-box { width: 68px; height: 68px; border-radius: 50%; overflow: hidden; border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -55,30 +56,19 @@
         }
         #pullRefreshIndicator.visible { top: 18px; }
 
-        /* AI Curtain Reveal & Cascade Animation (Grid + Reels) */
         .product-card {
             background: transparent; border-radius: 14px; overflow: hidden; display: inline-block; width: 100%;
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            opacity: 0; transform: translateY(20px) scale(0.95);
-            transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1), transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0; transform: translateY(14px);
+            transition: opacity 0.28s ease-out, transform 0.28s ease-out;
             will-change: transform, opacity;
         }
-        .product-card.ai-revealed { opacity: 1; transform: translateY(0) scale(1); }
+        .product-card.ai-revealed { opacity: 1; transform: translateY(0); }
         .product-card:active { transform: scale(0.97); }
 
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #07070c; border-radius: 12px; overflow: hidden; }
-        .product-media-box::after, .reel-media-box::after {
-            content: ''; position: absolute; inset: 0; z-index: 30;
-            background: linear-gradient(180deg, rgba(10,10,16,0.96) 0%, rgba(212,175,55,0.16) 50%, #050508 100%);
-            transform: translateY(0%); transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none;
-        }
-        .product-card.ai-revealed .product-media-box::after,
-        .reel-card.ai-reel-revealed .reel-media-box::after { transform: translateY(105%); }
+        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.06); transition: transform 0.48s cubic-bezier(0.16, 1, 0.3, 1); }
-        .product-card.ai-revealed .product-media-box img { transform: scale(1); }
-
-        /* Desktop Up/Down Navigation Controls */
         .desktop-reel-nav { position: fixed; right: 74px; top: 50%; transform: translateY(-50%); z-index: 4600; display: flex; flex-direction: column; gap: 14px; }
         @media (max-width: 768px) { .desktop-reel-nav { display: none !important; } }
         .desktop-nav-circle {
@@ -88,7 +78,6 @@
         }
         .desktop-nav-circle:hover { transform: scale(1.08); background: rgba(212, 175, 55, 0.18); }
 
-        /* Smooth Floating Search Bar */
         .top-floating-search-bar {
             position: fixed; top: 15px; left: 50%; transform: translate3d(-50%, 0, 0);
             width: 90%; max-width: 400px; z-index: 5500; display: flex !important;
@@ -101,7 +90,6 @@
         .floating-search-input::placeholder { color: #7a7a85; }
         .floating-search-btn-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--gold-gradient); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; font-size: 0.88rem; }
 
-        /* Crisp Side Action Bar */
         .right-vertical-actions {
             position: fixed !important; right: 10px !important; bottom: 68px !important; z-index: 4500 !important;
             display: flex; flex-direction: column; align-items: center; gap: 14px !important; width: 46px;
@@ -119,10 +107,9 @@
             display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px var(--pink-accent); z-index: 10; pointer-events: none;
         }
 
-        /* Compact Bottom Navigation Bar */
         .bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 54px !important;
-            background: rgba(0, 0, 0, 0.78) !important; border-top: none !important;
+            background: rgba(0, 0, 0, 0.85) !important; border-top: none !important;
             display: flex; justify-content: space-around; align-items: center; z-index: 5000; padding: 0 4px; transform: translate3d(0, 0, 0);
         }
         .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 0.5rem; font-weight: 700; gap: 2px; width: 100%; height: 100%; }
@@ -130,14 +117,12 @@
         .bottom-nav-item i { font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .bottom-nav-item span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Clean Pinterest Grid View */
         .pinterest-feed-container { padding: 72px 8px 15px 8px; column-count: 2; column-gap: 8px; width: 100%; max-width: 1200px; margin: 0 auto; display: none; }
         .pinterest-feed-container.active-grid { display: block; }
         @media (min-width: 768px) { .pinterest-feed-container { column-count: 4; column-gap: 12px; padding: 80px 15px 15px 15px; } }
         .corner-discount-badge { position: absolute; top: 8px; left: 8px; z-index: 45; background: var(--pink-accent); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
         .card-clean-price-badge { position: absolute; bottom: 8px; right: 8px; z-index: 45; font-size: 0.88rem; font-weight: 800; background: var(--gold-gradient) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; filter: drop-shadow(0px 2px 4px #000); }
 
-        /* Standard YouTube/Instagram Style Reels View */
         .reel-modal-overlay { display: flex; position: fixed; inset: 0; background: #000; z-index: 4000; align-items: center; justify-content: center; }
         .reel-modal-overlay.hidden-reels { display: none !important; }
         .reel-modal-wrapper {
@@ -149,24 +134,21 @@
             width: 100%; height: calc(100vh - 54px) !important; height: calc(100dvh - 54px) !important;
             scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column;
             position: relative; background: #000; flex-shrink: 0; align-items: center; justify-content: center; padding-bottom: 18px;
-            contain: content; transform: translate3d(0, 0, 0);
+            contain: layout style paint; transform: translate3d(0, 0, 0);
         }
         .reel-media-box {
             position: relative; width: 100%; max-width: 390px; aspect-ratio: 9 / 16; max-height: calc(100dvh - 88px);
-            cursor: pointer; background: #06060a; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 16px;
-            opacity: 0; transform: scale(0.96); transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 16px;
         }
-        .reel-card.ai-reel-revealed .reel-media-box { opacity: 1; transform: scale(1); }
         .reel-primary-video-container { width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .reel-primary-video-container video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 0.5s ease; will-change: opacity, transform; animation: dynamicZoomInOut 9s ease-in-out infinite alternate; backface-visibility: hidden;
+            transition: opacity 0.42s ease-in-out; will-change: opacity; backface-visibility: hidden; transform: translateZ(0);
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
-        @keyframes dynamicZoomInOut { 0% { transform: scale(1.0); } 50% { transform: scale(1.025); } 100% { transform: scale(1.0); } }
 
         .reel-bottom-price-overlay {
             position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%); z-index: 60; pointer-events: none;
@@ -176,7 +158,6 @@
         .reel-center-price-badge { font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .reel-center-discount-badge { background: var(--pink-accent); color: #fff; font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 
-        /* Modals & Overlays */
         .overlay-sheet { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 15px; scrollbar-width: none; }
         .overlay-sheet::-webkit-scrollbar { display: none; }
         .buy-preview-modal { width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5); border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px; }
@@ -204,7 +185,7 @@
 <body id="mainBody">
 
     <div id="rorraxyLoaderOverlay">
-        <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy"></div>
+        <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy" decoding="sync"></div>
         <div class="loader-brand-name">rorraxy</div>
     </div>
 
@@ -257,7 +238,7 @@
     <script>
         const FALLBACK_LOGO = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png';
         const CACHE_KEY = 'rorraxy_retail_feed_cache';
-        const REELS_BATCH_SIZE = 30; // Standard 30-item virtualized batch size for zero-lag playback
+        const REELS_BATCH_SIZE = 6;
 
         let globalMasterProductsList = [{
             id: '101', title: 'rorraxy Premium Matte Black Edition', category: 'Fashion',
@@ -271,8 +252,26 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
+        const preloadedUrls = new Set();
 
         const $ = id => document.getElementById(id);
+
+        function hideLoaderFast() {
+            const loader = $('rorraxyLoaderOverlay');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 80);
+            }
+        }
+
+        function preloadImageUrl(url, highPriority = false) {
+            if (!url || preloadedUrls.has(url)) return;
+            preloadedUrls.add(url);
+            const img = new Image();
+            if (highPriority) img.fetchPriority = 'high';
+            img.decoding = 'async';
+            img.src = url;
+        }
 
         function shuffleArray(arr) {
             const copy = [...arr];
@@ -308,13 +307,7 @@
             setupDesktopNavigation();
             buildCategoriesAccordion();
 
-            setTimeout(() => {
-                const loader = $('rorraxyLoaderOverlay');
-                if (loader) {
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 80);
-                }
-            }, 10);
+            setTimeout(hideLoaderFast, 120);
 
             const searchInput = $('floatingSearchInput'), searchBtn = $('floatingSearchBtn');
             if (searchBtn && searchInput) {
@@ -427,7 +420,7 @@
                 if (wheelLock || Math.abs(e.deltaY) < 12) return;
                 wheelLock = true;
                 navigateReelStep(e.deltaY > 0 ? 1 : -1);
-                setTimeout(() => { wheelLock = false; }, 300);
+                setTimeout(() => { wheelLock = false; }, 260);
             }, { passive: false });
 
             window.addEventListener('keydown', e => {
@@ -444,7 +437,7 @@
             if (!wrapper) return;
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
             const nextIdx = Math.max(0, Math.min(list.length - 1, currentReelIndex + dir));
-            if (nextIdx >= renderedReelsCount - 3 && renderedReelsCount < list.length) appendReelsBatch(REELS_BATCH_SIZE);
+            if (nextIdx >= renderedReelsCount - 2 && renderedReelsCount < list.length) appendReelsBatch(REELS_BATCH_SIZE);
             wrapper.scrollTo({ top: nextIdx * wrapper.clientHeight, behavior: 'smooth' });
             activateReelAtIndex(nextIdx);
         }
@@ -459,7 +452,7 @@
                 if (!pulling) return;
                 pulling = false;
                 if (ind.classList.contains('visible')) {
-                    setTimeout(() => { ind.classList.remove('visible'); refreshAndShuffleFeed(); }, 200);
+                    setTimeout(() => { ind.classList.remove('visible'); refreshAndShuffleFeed(); }, 180);
                 }
             });
         }
@@ -542,7 +535,7 @@
             const targetId = params.get('product') || params.get('id');
             const targetCat = params.get('category');
 
-            if (targetCat) { selectSubCategoryItem(targetCat, targetCat); return; }
+            if (targetCat) { selectSubCategoryItem(targetCat, targetCat); hideLoaderFast(); return; }
             if (targetId) {
                 const targetProd = globalMasterProductsList.find(p => String(p.id || p.product_id) === String(targetId));
                 if (targetProd) {
@@ -596,7 +589,7 @@
                 };
                 card.innerHTML = `<div class="product-media-box">
                     ${disc > 0 ? `<div class="corner-discount-badge">${disc}% OFF</div>` : ''}
-                    <img src="${imgs[0]}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" alt="${item.title || 'rorraxy'}" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async">
+                    <img src="${imgs[0]}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" alt="${item.title || 'rorraxy'}" loading="${index < 8 ? 'eager' : 'lazy'}" decoding="async">
                     <div class="card-clean-price-badge">${price}</div>
                 </div>`;
                 frag.appendChild(card);
@@ -611,15 +604,15 @@
                 const obs = new IntersectionObserver((entries, o) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            const delay = Math.min(batch++ * 50, 320);
+                            const delay = Math.min(batch++ * 35, 220);
                             setTimeout(() => entry.target.classList.add('ai-revealed'), delay);
                             o.unobserve(entry.target);
                         }
                     });
-                    setTimeout(() => { batch = 0; }, 100);
-                }, { rootMargin: '60px 0px', threshold: 0.05 });
+                    setTimeout(() => { batch = 0; }, 80);
+                }, { rootMargin: '100px 0px', threshold: 0.02 });
                 cards.forEach(c => obs.observe(c));
-            } else cards.forEach((c, i) => setTimeout(() => c.classList.add('ai-revealed'), i * 40));
+            } else cards.forEach(c => c.classList.add('ai-revealed'));
 
             updateSideActionState();
         }
@@ -664,7 +657,6 @@
             else if (type === 'share') openNativeShare(id);
         }
 
-        // Single Active Reel Slideshow & Video Playback Manager (Super Fast Zero Background Waste)
         function activateReelAtIndex(idx) {
             currentReelIndex = idx;
             updateSideActionState();
@@ -674,11 +666,6 @@
             const wrapper = $('reelModalWrapperBody');
             if (!wrapper) return;
 
-            const activeCard = wrapper.querySelector(`.reel-card[data-index="${idx}"]`);
-            if (activeCard && !activeCard.classList.contains('ai-reel-revealed')) {
-                requestAnimationFrame(() => activeCard.classList.add('ai-reel-revealed'));
-            }
-
             wrapper.querySelectorAll('video').forEach(v => {
                 const cardIdx = Number(v.closest('.reel-card')?.dataset.index);
                 if (cardIdx === idx) { v.play().catch(() => {}); }
@@ -686,12 +673,20 @@
             });
 
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
+
+            for (let lookahead = idx + 1; lookahead <= idx + 2 && lookahead < list.length; lookahead++) {
+                const nextImgs = extractImages(list[lookahead]);
+                if (nextImgs[0]) preloadImageUrl(nextImgs[0], false);
+            }
+
             const prod = list[idx];
             if (!prod) return;
             const pVideo = prod.video_url || prod.youtube_video || '';
             const imgs = extractImages(prod);
 
             if (imgs.length > 1 && !pVideo) {
+                imgs.slice(1).forEach(u => preloadImageUrl(u, false));
+
                 let curImg = 0;
                 activeSlideTimer = setInterval(() => {
                     const nextImg = (curImg + 1) % imgs.length;
@@ -702,10 +697,10 @@
                         currEl.classList.add('previous');
                         nextEl.classList.remove('previous');
                         nextEl.classList.add('active');
-                        setTimeout(() => currEl.classList.remove('previous'), 500);
+                        setTimeout(() => currEl.classList.remove('previous'), 420);
                     }
                     curImg = nextImg;
-                }, 2800);
+                }, 2500);
             }
         }
 
@@ -725,16 +720,22 @@
                 const price = `$${parseFloat(product.price || 0).toFixed(2)}`;
                 const disc = parseFloat(product.discount_rate || product.discountRate || 0);
 
+                if (idx === 0) preloadImageUrl(imgs[0], true);
+
                 let mediaContent = '';
                 if (pVideo && (pVideo.includes('.mp4') || pVideo.includes('.r2.dev') || pVideo.includes('http'))) {
-                    mediaContent = `<video src="${pVideo}" poster="${imgs[0]}" ${idx === 0 ? 'autoplay' : 'preload="metadata"'} muted loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+                    mediaContent = `<video src="${pVideo}" poster="${imgs[0]}" ${idx === 0 ? 'autoplay preload="auto"' : 'preload="none"'} muted loop controls playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
                 } else {
-                    const layers = imgs.map((url, i) => `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${idx}_${i}" alt="slide" loading="${idx <= 2 ? 'eager' : 'lazy'}" decoding="async">`).join('');
+                    const layers = imgs.map((url, i) => {
+                        const isFirst = (idx === 0 && i === 0);
+                        const isEager = (idx <= 1 && i === 0);
+                        return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${idx}_${i}" alt="slide" ${isFirst ? 'fetchpriority="high" decoding="sync" onload="hideLoaderFast()"' : `loading="${isEager ? 'eager' : 'lazy'}" decoding="async"`}>`;
+                    }).join('');
                     mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layers}</div>`;
                 }
 
                 const card = document.createElement('div');
-                card.className = 'reel-card ai-reel-revealed';
+                card.className = 'reel-card';
                 card.dataset.index = idx;
                 card.dataset.productId = pId;
                 card.innerHTML = `<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
@@ -788,7 +789,7 @@
                     const h = wrapper.clientHeight;
                     if (h > 0) {
                         const idx = Math.round(wrapper.scrollTop / h);
-                        if (idx >= renderedReelsCount - 5 && renderedReelsCount < list.length) {
+                        if (idx >= renderedReelsCount - 2 && renderedReelsCount < list.length) {
                             appendReelsBatch(REELS_BATCH_SIZE);
                         }
                         if (idx >= 0 && idx < list.length && idx !== currentReelIndex) {
