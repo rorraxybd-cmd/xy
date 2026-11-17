@@ -220,7 +220,7 @@
                         <span class="rorraxy-orbit-item item-3">Solutions</span>
                         <span class="rorraxy-orbit-item item-4">Academy</span>
                     </div>
-                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="rorraxy" class="rorraxy-pwa-logo">
+                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="rorraxy-pwa-logo">
                 </div>
                 <div>
                     <button id="rorraxyPwaInstallBtn" class="rorraxy-pwa-btn">
