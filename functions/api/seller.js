@@ -67,8 +67,8 @@ export async function onRequest(context) {
 
       const sqlMagic = `
         INSERT INTO sellers (
-          seller_id, email, mobile_number, verification_token, token_expires_at, last_ip, ip_country, user_agent, is_verified
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
+          seller_id, email, mobile_number, verification_token, token_expires_at, last_ip, ip_country, user_agent, is_verified, admin_approval_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 'pending')
         ON CONFLICT(email) DO UPDATE SET 
           verification_token = excluded.verification_token, 
           token_expires_at = excluded.token_expires_at, 
@@ -124,6 +124,28 @@ export async function onRequest(context) {
       const redirectUrl = `https://${url.hostname}/seller/index.html?verified=true&email=${encodeURIComponent(record.email)}&complete=${isComplete}`;
       
       return Response.redirect(redirectUrl, 302);
+    }
+
+    // NEW ADDED: 2.5. Admin Update Status Endpoint (/update-status) -> Approve / Reject
+    if (pathname.includes("/update-status")) {
+      if (request.method !== "POST") {
+        return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: corsHeaders });
+      }
+
+      const bodyData = await request.json().catch(() => ({}));
+      const email = (bodyData.email || "").toLowerCase().trim();
+      const newStatus = bodyData.status || "pending"; // approved, rejected, pending
+
+      if (!email) {
+        return new Response(JSON.stringify({ success: false, error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      await db.prepare("UPDATE sellers SET admin_approval_status = ? WHERE email = ?").bind(newStatus, email).run();
+
+      return new Response(
+        JSON.stringify({ success: true, message: `Seller status updated to ${newStatus}` }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // 3. POST Upsert / Save Seller Profile Information
@@ -213,24 +235,26 @@ export async function onRequest(context) {
       );
     }
 
-    // 4. GET Seller Profile
+    // 4. GET Seller Profile or All Sellers List for Admin
     if (request.method === "GET") {
       const email = url.searchParams.get("email");
-      if (!email) {
+      if (email) {
+        const sqlFetch = "SELECT * FROM sellers WHERE email = ?";
+        const seller = await db.prepare(sqlFetch).bind(email.toLowerCase()).all();
+
         return new Response(
-          JSON.stringify({ success: false, error: "Email parameter required" }),
+          JSON.stringify({ success: true, data: seller.results }),
           {
-            status: 400,
+            status: 200,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           }
         );
       }
 
-      const sqlFetch = "SELECT * FROM sellers WHERE email = ?";
-      const seller = await db.prepare(sqlFetch).bind(email.toLowerCase()).all();
-
+      // If no email query param, return all sellers list for Admin Panel (`seller.html`)
+      const allSellers = await db.prepare("SELECT * FROM sellers ORDER BY created_at DESC").all();
       return new Response(
-        JSON.stringify({ success: true, data: seller.results }),
+        JSON.stringify({ success: true, data: allSellers.results }),
         {
           status: 200,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
