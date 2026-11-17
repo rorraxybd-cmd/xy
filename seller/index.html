@@ -96,6 +96,14 @@
         .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.25); }
         .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.25); }
 
+        /* Approval Status Box Styling */
+        .approval-status-card { background: #000000; border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px 12px; text-align: center; margin-bottom: 4px; }
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .status-pill.pending { background: rgba(255, 193, 7, 0.14); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.35); }
+        .status-pill.approved { background: rgba(46, 213, 115, 0.14); color: #2ed573; border: 1px solid rgba(46, 213, 115, 0.35); }
+        .status-pill.rejected { background: rgba(255, 77, 77, 0.14); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.35); }
+        .approval-subtext { font-size: 0.66rem; color: var(--text-gray); text-transform: none; line-height: 1.45; }
+
         .preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; width: 100%; }
         .preview-card { position: relative; width: 95px; height: 95px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--border-soft); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .preview-card img, .preview-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -251,6 +259,17 @@
                                 <p id="prevBusinessDesc" style="font-size: 0.65rem; color: var(--text-gray); text-transform: none; margin-top: 2px; word-break: break-word;">--</p>
                             </div>
                         </div>
+
+                        <!-- Professional 24-Hour Pending / Approved / Rejected Verification Status Card -->
+                        <div class="approval-status-card" id="approvalStatusCard">
+                            <div id="approvalBadgeWrap">
+                                <span class="status-pill pending"><i class="fa-solid fa-clock"></i> PENDING VERIFICATION (24H)</span>
+                            </div>
+                            <p class="approval-subtext" id="approvalMessageText">
+                                আপনার সেলার প্রোফাইল ও তথ্যাদি সফলভাবে জমা হয়েছে। অ্যাডমিন টিম আপনার ডকুমেন্টস যাচাই করছে—এজন্য অনুগ্রহ করে সর্বোচ্চ ২৪ ঘণ্টা অপেক্ষা করুন।
+                            </p>
+                        </div>
+
                         <div class="form-grid">
                             <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">EMAIL</label><span id="prevEmail" style="font-size: 0.65rem; text-transform: none; word-break: break-all;">--</span></div>
                             <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.65rem;">--</span></div>
@@ -259,7 +278,7 @@
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 4px;">
                             <button type="button" class="btn-secondary" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT</button>
-                            <button type="button" class="btn-gold" onclick="switchTab('dashboard')" style="background: var(--pink-solid); color: #fff;">DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
+                            <button type="button" class="btn-gold" id="enterDashboardBtn" onclick="switchTab('dashboard')" style="background: var(--pink-solid); color: #fff;" disabled>DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -700,6 +719,7 @@
         let generatedMagicCode = '';
         let temporarySellerEmail = '';
         let temporarySellerPhone = '';
+        let currentApprovalStatus = localStorage.getItem('rorraxy_seller_approval_status') || 'pending';
 
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
@@ -725,6 +745,10 @@
             const isVerified = localStorage.getItem('rorraxy_seller_verified') === 'true';
             const infoCompleted = localStorage.getItem('rorraxy_seller_info_completed') === 'true';
             return isVerified && infoCompleted;
+        }
+
+        function isSellerApproved() {
+            return (localStorage.getItem('rorraxy_seller_approval_status') || currentApprovalStatus) === 'approved';
         }
 
         async function autoDetectCountryCode() {
@@ -758,6 +782,14 @@
         function switchTab(tabName) {
             if (tabName !== 'info' && !isSellerVerifiedAndComplete()) {
                 showCustomNotify("PLEASE COMPLETE SELLER VERIFICATION AND PROFILE INFO FIRST!", false);
+                tabName = 'info';
+            } else if (tabName !== 'info' && !isSellerApproved()) {
+                const st = localStorage.getItem('rorraxy_seller_approval_status') || currentApprovalStatus;
+                if (st === 'rejected') {
+                    showCustomNotify("আপনার সেলার আবেদনটি প্রত্যাখ্যান (DENIED) করা হয়েছে।", false);
+                } else {
+                    showCustomNotify("আপনার অ্যাকাউন্টটি অ্যাডমিন কর্তৃক যাচাইাধীন (PENDING)। অনুগ্রহ করে ২৪ ঘণ্টা অপেক্ষা করুন।", false);
+                }
                 tabName = 'info';
             }
 
@@ -1451,7 +1483,8 @@
                     doc_type: document.getElementById('docTypeSelect').value,
                     doc_number: document.getElementById('docNumberInput').value.trim(),
                     trade_license: document.getElementById('tradeLicenseInput').value.trim() || "N/A",
-                    logo_url: compressedLogoData
+                    logo_url: compressedLogoData,
+                    admin_approval_status: 'pending'
                 };
 
                 try {
@@ -1463,17 +1496,42 @@
                     const data = await res.json();
                     if (data.success || true) {
                         localStorage.setItem('rorraxy_seller_info_completed', 'true');
+                        localStorage.setItem('rorraxy_seller_approval_status', 'pending');
                         renderCvPreview(profilePayload);
-                        showCustomNotify("PROFILE SAVED SUCCESSFULLY!", true);
+                        showCustomNotify("প্রোফাইল সংরক্ষিত হয়েছে! অনুমোদনের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।", true);
                     }
                 } catch (err) {
                     localStorage.setItem('rorraxy_seller_info_completed', 'true');
+                    localStorage.setItem('rorraxy_seller_approval_status', 'pending');
                     renderCvPreview(profilePayload);
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = 'SAVE PROFILE & VIEW CV <i class="fa-solid fa-arrow-right"></i>';
                 }
             });
+        }
+
+        function updateApprovalBannerUI(status) {
+            currentApprovalStatus = status || 'pending';
+            localStorage.setItem('rorraxy_seller_approval_status', currentApprovalStatus);
+
+            const badgeWrap = document.getElementById('approvalBadgeWrap');
+            const msgText = document.getElementById('approvalMessageText');
+            const dashBtn = document.getElementById('enterDashboardBtn');
+
+            if (currentApprovalStatus === 'approved') {
+                badgeWrap.innerHTML = `<span class="status-pill approved"><i class="fa-solid fa-circle-check"></i> VERIFIED & APPROVED</span>`;
+                msgText.innerText = "অভিনন্দন! আপনার সেলার অ্যাকাউন্টটি অ্যাডমিন কর্তৃক অনুমোদিত হয়েছে। এখন আপনি সম্পূর্ণ ড্যাশবোর্ড ও বিক্রয় সেবা ব্যবহার করতে পারবেন।";
+                if (dashBtn) dashBtn.disabled = false;
+            } else if (currentApprovalStatus === 'rejected') {
+                badgeWrap.innerHTML = `<span class="status-pill rejected"><i class="fa-solid fa-circle-xmark"></i> APPLICATION DENIED</span>`;
+                msgText.innerText = "দুঃখিত, যাচাইকরণের পর আপনার সেলার আবেদনটি প্রত্যাখ্যান করা হয়েছে। সঠিক ডকুমেন্টস সহ তথ্য হালনাগাদ করুন।";
+                if (dashBtn) dashBtn.disabled = true;
+            } else {
+                badgeWrap.innerHTML = `<span class="status-pill pending"><i class="fa-solid fa-clock"></i> PENDING VERIFICATION (24H)</span>`;
+                msgText.innerText = "আপনার সেলার প্রোফাইল ও তথ্যাদি যাচাই প্রক্রিয়াধীন রয়েছে। অনুমোদনের জন্য অনুগ্রহ করে সর্বোচ্চ ২৪ ঘণ্টা অপেক্ষা করুন।";
+                if (dashBtn) dashBtn.disabled = true;
+            }
         }
 
         function renderCvPreview(data) {
@@ -1485,8 +1543,14 @@
             document.getElementById('prevCountry').innerText = data.country || "---";
             document.getElementById('prevSellerId').innerText = data.seller_id || "---";
 
+            updateApprovalBannerUI(data.admin_approval_status || 'pending');
+
+            document.getElementById('verificationSection').style.display = 'none';
+            document.getElementById('businessInfoSection').style.display = 'block';
             document.getElementById('businessInfoForm').style.display = 'none';
             document.getElementById('profilePreviewSection').style.display = 'block';
+            document.getElementById('stepTracker1').className = 'step-item completed';
+            document.getElementById('stepTracker2').className = 'step-item completed';
             document.getElementById('cardTitleText').innerText = "SELLER PROFILE CV";
         }
 
@@ -1513,8 +1577,11 @@
                         const res = await fetch(`/api/seller?email=${encodeURIComponent(savedEmail)}`);
                         const result = await res.json();
                         if (result.success && result.data && result.data.length > 0) {
-                            renderCvPreview(result.data[0]);
-                            switchTab('dashboard');
+                            const sellerData = result.data[0];
+                            renderCvPreview(sellerData);
+                            if (sellerData.admin_approval_status === 'approved') {
+                                switchTab('dashboard');
+                            }
                             return;
                         }
                     } catch (e) {}
