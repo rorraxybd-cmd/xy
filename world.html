@@ -11,13 +11,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- PWA Manifest & Theme Color -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#030305">
+<meta name="theme-color" content="#000000">
 <style>
 :root {
---bg-retail: #030305;
---card-retail: #08080c;
+--bg-retail: #000000;
+--card-retail: #07070b;
 --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
 --gold-solid: #d4af37;
+--gold-light: #fcf6ba;
+--pink-love: #ff2a85;
 --text-white: #ffffff;
 --text-gray: #a0a0ab;
 --font-main: 'Poppins', sans-serif;
@@ -75,7 +77,7 @@ display: inline-block;
 .search-modal-overlay {
 position: fixed;
 top: 0; left: 0; width: 100vw; height: 100vh;
-background: rgba(3, 3, 5, 0.95);
+background: rgba(0, 0, 0, 0.95);
 backdrop-filter: blur(10px);
 display: flex;
 align-items: flex-start;
@@ -97,7 +99,6 @@ background: var(--card-retail);
 border: 1px solid rgba(212, 175, 55, 0.3);
 border-radius: 16px;
 padding: 20px;
-box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 .search-input-group {
 display: flex;
@@ -153,8 +154,8 @@ text-overflow: ellipsis;
 50% { transform: translateY(-4px) scale(1.02); }
 }
 
-/* Borderless Clean Ecosystem Grid */
-.ecosystem-hub { width: 100%; padding: 10px; }
+/* Ecosystem Hub Grid */
+.ecosystem-hub { width: 100%; padding: 10px; max-width: 1100px; margin: 0 auto; }
 .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; align-items: stretch; }
 .hub-card {
 background: var(--card-retail);
@@ -166,13 +167,13 @@ flex-direction: column;
 align-items: center;
 justify-content: space-between;
 position: relative;
-border: none;
+border: 1px solid rgba(212, 175, 55, 0.12);
 overflow: hidden;
 text-decoration: none;
 color: inherit;
-transition: transform 0.25s ease;
+transition: transform 0.25s ease, border-color 0.25s ease;
 }
-.hub-card:hover { transform: translateY(-3px); }
+.hub-card:hover { transform: translateY(-3px); border-color: rgba(212, 175, 55, 0.35); }
 .hub-card h3 {
 font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; min-height: 32px; display: flex; align-items: center; justify-content: center; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; width: 100%; margin: 0;
 }
@@ -191,7 +192,7 @@ font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 
 @keyframes creatorRingRotate { 0% { transform: rotate(0deg) scale(0.9); } 100% { transform: rotate(180deg) scale(1.12); } }
 
 .btn {
-display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--gold-gradient); color: #030305; font-weight: 700; font-size: 0.68rem; padding: 7px 16px; border-radius: 20px; margin-top: 4px; letter-spacing: 0.5px; pointer-events: none;
+display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--gold-gradient); color: #000000; font-weight: 700; font-size: 0.68rem; padding: 7px 16px; border-radius: 20px; margin-top: 4px; letter-spacing: 0.5px; pointer-events: none;
 }
 
 /* Logo Marquee & MD Section */
@@ -210,9 +211,9 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
 .md-luxury-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border-top: 2px solid var(--gold-solid); border-right: 2px solid transparent; border-bottom: 2px solid rgba(212, 175, 55, 0.1); border-left: 2px solid transparent; animation: luxurySpin 2.5s linear infinite; }
 @keyframes luxurySpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .md-title { font-size: 1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-.md-btn-link { width: 100%; max-width: 440px; padding: 11px 18px; background: var(--gold-gradient); border-radius: 12px; color: #030305; text-decoration: none; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 0.82rem; }
+.md-btn-link { width: 100%; max-width: 440px; padding: 11px 18px; background: var(--gold-gradient); border-radius: 12px; color: #000000; text-decoration: none; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 0.82rem; }
 
-/* Legal & Policy Center Styles with View Button Animation */
+/* Legal & Policy Center Styles */
 .policy-center-section {
   background: var(--card-retail);
   padding: 18px 14px;
@@ -236,6 +237,8 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   flex-direction: column;
   gap: 8px;
   width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
 }
 .policy-link-item {
   display: flex;
@@ -243,8 +246,8 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   justify-content: space-between;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(212, 175, 55, 0.15);
-  border-radius: 8px;
-  padding: 9px 12px;
+  border-radius: 10px;
+  padding: 10px 14px;
   text-decoration: none;
   transition: all 0.25s ease;
 }
@@ -279,103 +282,125 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   50% { transform: translateX(4px); }
 }
 
-.about-section { background: var(--card-retail); padding: 18px 14px; margin-bottom: 15px; width: 100%; }
-.ceo-signature-box { text-align: center; background: rgba(212, 175, 55, 0.02); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
-.ceo-signature-box h3 { font-size: 0.85rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 4px; }
+.about-section { background: #000000; padding: 24px 14px; margin-bottom: 10px; width: 100%; }
+.ceo-signature-box { text-align: center; background: #07070b; border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 14px; padding: 18px 14px; margin: 0 auto 20px auto; max-width: 820px; }
+.ceo-signature-box h3 { font-size: 0.88rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 4px; }
 .ceo-signature-link { display: inline-block; text-decoration: none; }
 .ceo-signature-link:hover .md-logo-box { transform: scale(1.05); transition: transform 0.2s ease; }
 
-/* Ultra-Soft & Borderless Ecosystem Directory Box */
-.ecosystem-directory-box {
-  background: rgba(255, 255, 255, 0.015);
-  border: none !important;
-  border-radius: 18px;
-  padding: 20px 16px;
-  margin-bottom: 18px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  max-width: 780px;
-  margin-left: auto;
-  margin-right: auto;
+/* ==========================================================================
+   ORGANIZED RESPONSIVE ECOSYSTEM DIRECTORY (CLEAN CARDS FOR MOBILE & PC)
+   ========================================================================== */
+.ecosystem-directory-wrapper {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto 20px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
-.ecosystem-category-item {
-  border: none !important;
-  padding: 6px 0;
+
+@media (max-width: 768px) {
+  .ecosystem-directory-wrapper {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.ecosystem-category-card {
+  background: #07070b;
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  border-radius: 14px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
+  text-align: center;
+  gap: 10px;
+  transition: border-color 0.2s ease;
 }
-.ecosystem-category-title {
+
+.ecosystem-category-card:hover {
+  border-color: rgba(212, 175, 55, 0.42);
+}
+
+.ecosystem-category-card.full-span {
+  grid-column: 1 / -1;
+}
+
+.ecosystem-category-header {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-size: 0.78rem;
   font-weight: 800;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 1.2px;
-  text-transform: uppercase !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  letter-spacing: 1.1px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  padding-bottom: 6px;
+  width: 100%;
 }
-.ecosystem-domains-flow {
+
+.ecosystem-pills-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 6px 8px;
-  line-height: 1.5;
+  gap: 6px;
+  width: 100%;
 }
-.ecosystem-domain-link {
-  font-size: 0.72rem;
+
+.domain-chip-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  font-size: 0.69rem;
   font-weight: 600;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fcf6ba;
   text-decoration: none;
   text-transform: lowercase !important;
   letter-spacing: 0.3px;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
-.ecosystem-domain-link:hover {
-  opacity: 0.8;
+
+.domain-chip-link:hover {
+  background: rgba(212, 175, 55, 0.14);
+  border-color: var(--pink-love);
   transform: translateY(-1px);
 }
-.ecosystem-dot-sep {
-  color: var(--gold-solid);
-  opacity: 0.45;
-  font-size: 0.65rem;
-  user-select: none;
-}
-.ecosystem-email-row {
-  margin-top: 2px;
-}
-.ecosystem-email-link {
-  font-size: 0.7rem;
+
+.ecosystem-email-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
   font-weight: 500;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-gray);
   text-decoration: none;
   text-transform: lowercase !important;
   letter-spacing: 0.4px;
-  opacity: 0.9;
-  transition: opacity 0.25s ease;
-}
-.ecosystem-email-link:hover {
-  opacity: 1;
+  padding-top: 2px;
+  transition: color 0.2s ease;
 }
 
-/* Standard Footer Social Media Icons Styling (One Single Clean Line for Mobile & PC) */
+.ecosystem-email-badge:hover {
+  color: #fcf6ba;
+}
+
+/* Standard Footer Social Media Icons Styling */
 .social-icons-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 14px;
-  margin-top: 14px;
+  margin-top: 16px;
   width: 100%;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -385,29 +410,328 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #07070b;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  transition: transform 0.2s ease, border-color 0.2s ease;
   text-decoration: none;
   flex-shrink: 0;
 }
 .social-icon-link:hover {
-  transform: scale(1.15);
-  opacity: 0.9;
+  transform: scale(1.12);
+  border-color: var(--pink-love);
 }
 .social-icon-link svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   fill: url(#goldGradientDef);
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 
-.core-arch-banner { text-align: center; padding: 12px 8px; margin: 15px 0 25px 0; background: rgba(212, 175, 55, 0.02); width: 100%; }
-.core-arch-title { font-size: 0.75rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: lowercase !important; }
+.core-arch-banner { text-align: center; padding: 14px 8px; margin: 8px 0 0 0; background: #000000; width: 100%; border-top: 1px solid rgba(212, 175, 55, 0.14); }
+.core-arch-title { font-size: 0.76rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: lowercase !important; letter-spacing: 0.6px; }
+
+/* ==========================================================================
+   WORLD FIRST & BANGLADESH SECOND — CRISP, SUBTLE & ULTRA-FAST MAPS
+   ========================================================================== */
+.network-showcase-band {
+  width: 100%;
+  background: #000000;
+  padding: 46px 16px;
+  border-top: 1px solid rgba(212, 175, 55, 0.14);
+  position: relative;
+  overflow: hidden;
+  contain: layout style;
+}
+
+.network-showcase-band.bd-band {
+  border-top: 1px solid rgba(255, 42, 133, 0.16);
+  padding-bottom: 62px;
+}
+
+.network-inner-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 32px;
+}
+
+@media (max-width: 900px) {
+  .network-inner-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 24px;
+  }
+}
+
+.map-frame-world {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  aspect-ratio: 820 / 430;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-frame-bd {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 460 / 560;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+svg.geo-map-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+/* Crisp, subtle connection lines without heavy glow */
+.net-route-gold {
+  fill: none;
+  stroke: var(--gold-solid);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 4 5;
+  opacity: 0.62;
+  animation: routeDashGold 22s linear infinite;
+}
+
+.net-route-pink {
+  fill: none;
+  stroke: var(--pink-love);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 4 6;
+  opacity: 0.78;
+  animation: routeDashPink 18s linear infinite;
+}
+
+@keyframes routeDashGold {
+  to { stroke-dashoffset: -240; }
+}
+
+@keyframes routeDashPink {
+  to { stroke-dashoffset: 240; }
+}
+
+/* Subtle, clean pulse rings */
+.node-ripple {
+  fill: none;
+  stroke: var(--pink-love);
+  stroke-width: 1.1;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nodeRippleAnim 3s ease-out infinite;
+}
+
+.node-ripple.gold-ring {
+  stroke: var(--gold-solid);
+}
+
+@keyframes nodeRippleAnim {
+  0% { transform: scale(0.7); opacity: 0.75; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+.node-core {
+  fill: var(--pink-love);
+  stroke: #000000;
+  stroke-width: 1.4;
+}
+
+.node-core.hub-gold {
+  fill: var(--gold-light);
+  stroke: var(--pink-love);
+  stroke-width: 1.8;
+}
+
+.map-badge-rect {
+  fill: #07070b;
+  stroke: rgba(212, 175, 55, 0.42);
+  stroke-width: 1;
+  rx: 5;
+  ry: 5;
+}
+
+.map-badge-rect.hub-rect {
+  stroke: var(--pink-love);
+  stroke-width: 1.2;
+}
+
+.map-badge-txt {
+  fill: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.map-badge-txt.gold-label {
+  fill: #fcf6ba;
+}
+
+.geo-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .geo-content-col {
+    align-items: center;
+  }
+}
+
+.geo-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  border-radius: 999px;
+  background: #07070c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  color: var(--gold-solid);
+}
+
+.geo-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pink-love);
+  animation: pulseDotLive 1.8s infinite alternate;
+}
+
+@keyframes pulseDotLive {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+.geo-main-heading {
+  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: 0.4px;
+  color: var(--text-white);
+  margin: 0;
+}
+
+.geo-description {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  line-height: 1.72;
+  letter-spacing: 0.6px;
+  max-width: 490px;
+  margin: 0;
+}
+
+.geo-pillars-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+  .geo-pillars-list {
+    justify-content: center;
+  }
+}
+
+.geo-pillar-chip {
+  background: #08080e;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 8px;
+  padding: 6px 11px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #fcf6ba;
+}
+
+.geo-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 490px;
+  margin-top: 2px;
+}
+
+.geo-metric-card {
+  background: #07070c;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 12px;
+  padding: 13px 8px;
+  text-align: center;
+}
+
+.geo-metric-val {
+  font-size: 1.12rem;
+  font-weight: 800;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.geo-metric-lbl {
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  letter-spacing: 0.9px;
+  margin-top: 2px;
+}
+
+.geo-action-btn {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.42);
+  background: #0a0a10;
+  color: var(--text-white);
+  font-family: var(--font-main);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.geo-action-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--pink-love);
+}
+
+.geo-btn-arrow {
+  color: var(--pink-love);
+  font-size: 0.92rem;
+}
 
 /* Bottom Navigation Bar */
 .bottom-nav-bar {
-position: fixed; bottom: 0; left: 0; width: 100%; max-width: 100vw; background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 2000; box-sizing: border-box;
+position: fixed; bottom: 0; left: 0; width: 100%; max-width: 100vw; background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 2000; box-sizing: border-box;
 }
 .bottom-nav-item {
 display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-gray); font-size: 0.62rem; font-weight: 600; flex: 1; text-align: center;
@@ -504,7 +828,7 @@ color: #ff2d55 !important;
 .policy-modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(3, 3, 5, 0.95);
+  background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   display: flex;
@@ -532,7 +856,6 @@ color: #ff2d55 !important;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.95);
   overflow: hidden;
   position: relative;
 }
@@ -553,7 +876,6 @@ color: #ff2d55 !important;
   justify-content: center;
   z-index: 5000;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.9);
 }
 .policy-floating-close-btn:hover {
   background: var(--gold-gradient);
@@ -721,7 +1043,7 @@ color: #ff2d55 !important;
 <div class="md-logo-box"><div class="md-luxury-ring"></div><i class="fa-solid fa-user-tie md-logo-icon gold-gradient-icon"></i></div>
 <h2 class="md-title">MANAGING DIRECTOR</h2>
 <div style="font-size: 0.72rem; font-weight: 600; color: var(--text-gray); text-transform: lowercase;"><a href="mailto:director@rorraxy.com" class="gold-gradient-text" style="text-decoration:none;">director@rorraxy.com</a></div>
-<a href="/bs/managing.html" target="_self" class="md-btn-link"><span><i class="fa-solid fa-user-check"></i> JOIN</span><i class="fa-solid fa-arrow-right-long" style="color:#030305;"></i></a>
+<a href="/bs/managing.html" target="_self" class="md-btn-link"><span><i class="fa-solid fa-user-check"></i> JOIN</span><i class="fa-solid fa-arrow-right-long" style="color:#000000;"></i></a>
 </section>
 
 <section class="about-section">
@@ -733,111 +1055,89 @@ color: #ff2d55 !important;
     </div>
     <h3 style="margin-top: 6px;">Founder & CEO: Mr Masudar</h3>
   </a>
-<p style="color: var(--text-gray); font-size: 0.7rem; line-height: 1.4; margin: 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
+<p style="color: var(--text-gray); font-size: 0.7rem; line-height: 1.4; margin: 4px 0 0 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
 </div>
 
-<!-- SOFT, BORDERLESS GOLDEN GRADIENT ECOSYSTEM DIRECTORY -->
-<div class="ecosystem-directory-box">
+<!-- CLEAN, STRUCTURED & RESPONSIVE ECOSYSTEM DIRECTORY -->
+<div class="ecosystem-directory-wrapper">
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-globe gold-gradient-icon"></i> GLOBAL ECOSYSTEM</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://world.rorraxy.com" target="_blank" class="ecosystem-domain-link">world.rorraxy.com</a>
+  <!-- 1. GLOBAL ECOSYSTEM -->
+  <div class="ecosystem-category-card full-span">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-globe gold-gradient-icon"></i> GLOBAL ECOSYSTEM</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://world.rorraxy.com" target="_blank" class="domain-chip-link">world.rorraxy.com</a>
     </div>
   </div>
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-bag-shopping gold-gradient-icon"></i> RETAIL</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://rorraxy.com" target="_blank" class="ecosystem-domain-link">rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://retail.rorraxy.com" target="_blank" class="ecosystem-domain-link">retail.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://shop.rorraxy.com" target="_blank" class="ecosystem-domain-link">shop.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://fashion.rorraxy.com" target="_blank" class="ecosystem-domain-link">fashion.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://r.rorraxy.com" target="_blank" class="ecosystem-domain-link">r.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://x.rorraxy.com" target="_blank" class="ecosystem-domain-link">x.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://b2c.rorraxy.com" target="_blank" class="ecosystem-domain-link">b2c.rorraxy.com</a>
+  <!-- 2. RETAIL -->
+  <div class="ecosystem-category-card">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-bag-shopping gold-gradient-icon"></i> RETAIL</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://rorraxy.com" target="_blank" class="domain-chip-link">rorraxy.com</a>
+      <a href="https://retail.rorraxy.com" target="_blank" class="domain-chip-link">retail.rorraxy.com</a>
+      <a href="https://shop.rorraxy.com" target="_blank" class="domain-chip-link">shop.rorraxy.com</a>
+      <a href="https://fashion.rorraxy.com" target="_blank" class="domain-chip-link">fashion.rorraxy.com</a>
+      <a href="https://r.rorraxy.com" target="_blank" class="domain-chip-link">r.rorraxy.com</a>
+      <a href="https://x.rorraxy.com" target="_blank" class="domain-chip-link">x.rorraxy.com</a>
+      <a href="https://b2c.rorraxy.com" target="_blank" class="domain-chip-link">b2c.rorraxy.com</a>
     </div>
-    <div class="ecosystem-email-row">
-      <a href="mailto:support@rorraxy.com" class="ecosystem-email-link">support@rorraxy.com</a>
-    </div>
+    <a href="mailto:support@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> support@rorraxy.com</a>
   </div>
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-boxes-stacked gold-gradient-icon"></i> WHOLESALE</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://www.rorraxy.com" target="_blank" class="ecosystem-domain-link">www.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://b2b.rorraxy.com" target="_blank" class="ecosystem-domain-link">b2b.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://w.rorraxy.com" target="_blank" class="ecosystem-domain-link">w.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://wholesale.rorraxy.com" target="_blank" class="ecosystem-domain-link">wholesale.rorraxy.com</a>
+  <!-- 3. WHOLESALE -->
+  <div class="ecosystem-category-card">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-boxes-stacked gold-gradient-icon"></i> WHOLESALE</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://www.rorraxy.com" target="_blank" class="domain-chip-link">www.rorraxy.com</a>
+      <a href="https://b2b.rorraxy.com" target="_blank" class="domain-chip-link">b2b.rorraxy.com</a>
+      <a href="https://w.rorraxy.com" target="_blank" class="domain-chip-link">w.rorraxy.com</a>
+      <a href="https://wholesale.rorraxy.com" target="_blank" class="domain-chip-link">wholesale.rorraxy.com</a>
     </div>
-    <div class="ecosystem-email-row">
-      <a href="mailto:support@rorraxy.com" class="ecosystem-email-link">support@rorraxy.com</a>
-    </div>
+    <a href="mailto:support@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> support@rorraxy.com</a>
   </div>
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-building-shield gold-gradient-icon"></i> BUSINESS PROBLEM SOLVING</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://b.rorraxy.com" target="_blank" class="ecosystem-domain-link">b.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://business.rorraxy.com" target="_blank" class="ecosystem-domain-link">business.rorraxy.com</a>
+  <!-- 4. BUSINESS PROBLEM SOLVING -->
+  <div class="ecosystem-category-card">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-building-shield gold-gradient-icon"></i> BUSINESS PROBLEM SOLVING</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://b.rorraxy.com" target="_blank" class="domain-chip-link">b.rorraxy.com</a>
+      <a href="https://business.rorraxy.com" target="_blank" class="domain-chip-link">business.rorraxy.com</a>
     </div>
-    <div class="ecosystem-email-row">
-      <a href="mailto:official@rorraxy.com" class="ecosystem-email-link">official@rorraxy.com</a>
-    </div>
+    <a href="mailto:official@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> official@rorraxy.com</a>
   </div>
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-user-tie gold-gradient-icon"></i> SELLER PORTAL</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://s.rorraxy.com" target="_blank" class="ecosystem-domain-link">s.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://seller.rorraxy.com" target="_blank" class="ecosystem-domain-link">seller.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://v.rorraxy.com" target="_blank" class="ecosystem-domain-link">v.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://ventor.rorraxy.com" target="_blank" class="ecosystem-domain-link">ventor.rorraxy.com</a>
+  <!-- 5. SELLER PORTAL -->
+  <div class="ecosystem-category-card">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-user-tie gold-gradient-icon"></i> SELLER PORTAL</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://s.rorraxy.com" target="_blank" class="domain-chip-link">s.rorraxy.com</a>
+      <a href="https://seller.rorraxy.com" target="_blank" class="domain-chip-link">seller.rorraxy.com</a>
+      <a href="https://v.rorraxy.com" target="_blank" class="domain-chip-link">v.rorraxy.com</a>
+      <a href="https://ventor.rorraxy.com" target="_blank" class="domain-chip-link">ventor.rorraxy.com</a>
     </div>
-    <div class="ecosystem-email-row">
-      <a href="mailto:seller@rorraxy.com" class="ecosystem-email-link">seller@rorraxy.com</a>
-    </div>
+    <a href="mailto:seller@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> seller@rorraxy.com</a>
   </div>
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-crown gold-gradient-icon"></i> AFFILIATE PROGRAM</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://affiliate.rorraxy.com" target="_blank" class="ecosystem-domain-link">affiliate.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://f.rorraxy.com" target="_blank" class="ecosystem-domain-link">f.rorraxy.com</a>
+  <!-- 6. AFFILIATE PROGRAM -->
+  <div class="ecosystem-category-card">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-crown gold-gradient-icon"></i> AFFILIATE PROGRAM</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://affiliate.rorraxy.com" target="_blank" class="domain-chip-link">affiliate.rorraxy.com</a>
+      <a href="https://f.rorraxy.com" target="_blank" class="domain-chip-link">f.rorraxy.com</a>
     </div>
-    <div class="ecosystem-email-row">
-      <a href="mailto:affiliate@rorraxy.com" class="ecosystem-email-link">affiliate@rorraxy.com</a>
-    </div>
+    <a href="mailto:affiliate@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> affiliate@rorraxy.com</a>
   </div>
 
-  <div class="ecosystem-category-item">
-    <div class="ecosystem-category-title"><i class="fa-solid fa-comments gold-gradient-icon"></i> COMMUNICATION & CHAT</div>
-    <div class="ecosystem-domains-flow">
-      <a href="https://chat.rorraxy.com" target="_blank" class="ecosystem-domain-link">chat.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://message.rorraxy.com" target="_blank" class="ecosystem-domain-link">message.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://m.rorraxy.com" target="_blank" class="ecosystem-domain-link">m.rorraxy.com</a>
-      <span class="ecosystem-dot-sep">•</span>
-      <a href="https://c.rorraxy.com" target="_blank" class="ecosystem-domain-link">c.rorraxy.com</a>
+  <!-- 7. COMMUNICATION & CHAT -->
+  <div class="ecosystem-category-card">
+    <div class="ecosystem-category-header"><i class="fa-solid fa-comments gold-gradient-icon"></i> COMMUNICATION & CHAT</div>
+    <div class="ecosystem-pills-grid">
+      <a href="https://chat.rorraxy.com" target="_blank" class="domain-chip-link">chat.rorraxy.com</a>
+      <a href="https://message.rorraxy.com" target="_blank" class="domain-chip-link">message.rorraxy.com</a>
+      <a href="https://m.rorraxy.com" target="_blank" class="domain-chip-link">m.rorraxy.com</a>
+      <a href="https://c.rorraxy.com" target="_blank" class="domain-chip-link">c.rorraxy.com</a>
     </div>
-    <div class="ecosystem-email-row">
-      <a href="mailto:info@rorraxy.com" class="ecosystem-email-link">info@rorraxy.com</a>
-    </div>
+    <a href="mailto:info@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> info@rorraxy.com</a>
   </div>
 
 </div>
@@ -877,6 +1177,121 @@ color: #ff2d55 !important;
 </section>
 
 <div class="core-arch-banner"><span class="core-arch-title"><i class="fa-solid fa-microchip gold-gradient-icon"></i> rorraxy core architecture & infrastructure</span></div>
+
+<!-- 1. WORLD ANIMATED DOT-MATRIX MAP SECTION (FIRST — ALL CONTINENTS CONNECTED) -->
+<section class="network-showcase-band" aria-label="Global B2B and B2C Ecosystem Map">
+  <div class="network-inner-grid">
+    <div class="map-frame-world">
+      <svg class="geo-map-svg" id="worldMapSvg" viewBox="0 0 820 430" xmlns="http://www.w3.org/2000/svg">
+        <g id="worldDotsGroup"></g>
+        <g id="worldRoutesGroup"></g>
+        <g id="worldPacketsGroup"></g>
+        <g id="worldHubsGroup"></g>
+      </svg>
+    </div>
+
+    <div class="geo-content-col">
+      <div class="geo-tag-pill">
+        <span class="geo-pulse-dot"></span>
+        <span>GLOBAL REACH • WORLDWIDE B2B &amp; B2C</span>
+      </div>
+
+      <h2 class="geo-main-heading">
+        SERVING EVERY<br>
+        <span class="gold-gradient-text">CORNER OF</span><br>
+        THE WORLD.
+      </h2>
+
+      <p class="geo-description">
+        ALL-IN-ONE GLOBAL COMMERCE &amp; ENTERPRISE OPERATIONS CONNECTING NORTH &amp; SOUTH AMERICA, EUROPE, AFRICA, ASIA, AND OCEANIA WITH UNIFIED B2B + B2C FULFILLMENT, FINANCIAL TRACKING, AND TAX COMPLIANCE.
+      </p>
+
+      <div class="geo-pillars-list">
+        <span class="geo-pillar-chip">WORLDWIDE B2B &amp; B2C</span>
+        <span class="geo-pillar-chip">ALL-IN-ONE PLATFORM</span>
+        <span class="geo-pillar-chip">AUTOMATED ACCOUNTS &amp; VAT</span>
+      </div>
+
+      <div class="geo-metrics-row">
+        <div class="geo-metric-card">
+          <div class="geo-metric-val">200</div>
+          <div class="geo-metric-lbl">COUNTRIES</div>
+        </div>
+        <div class="geo-metric-card">
+          <div class="geo-metric-val">B2B+B2C</div>
+          <div class="geo-metric-lbl">DUAL ENGINE</div>
+        </div>
+        <div class="geo-metric-card">
+          <div class="geo-metric-val">24/7</div>
+          <div class="geo-metric-lbl">GLOBAL SYNC</div>
+        </div>
+      </div>
+
+      <a href="https://rorraxy.com/" target="_self" class="geo-action-btn">
+        <span class="gold-gradient-text">EXPLORE GLOBAL ECOSYSTEM</span>
+        <span class="geo-btn-arrow">&#10142;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 2. BANGLADESH ANIMATED DOT-MATRIX MAP SECTION (SECOND — AT THE VERY BOTTOM) -->
+<section class="network-showcase-band bd-band" aria-label="Bangladesh B2B and B2C Ecosystem Map">
+  <div class="network-inner-grid">
+    <div class="map-frame-bd">
+      <svg class="geo-map-svg" id="bdMapSvg" viewBox="0 0 460 560" xmlns="http://www.w3.org/2000/svg">
+        <g id="bdDotsGroup"></g>
+        <g id="bdRoutesGroup"></g>
+        <g id="bdPacketsGroup"></g>
+        <g id="bdCitiesGroup"></g>
+      </svg>
+    </div>
+
+    <div class="geo-content-col">
+      <div class="geo-tag-pill">
+        <span class="geo-pulse-dot"></span>
+        <span>BANGLADESH • B2B &amp; B2C ECOSYSTEM</span>
+      </div>
+
+      <h2 class="geo-main-heading">
+        FULL-SETTLED<br>
+        <span class="gold-gradient-text">B2B &amp; B2C</span><br>
+        COMMERCE ENGINE.
+      </h2>
+
+      <p class="geo-description">
+        FROM BUYER &amp; CUSTOMER ORDERS TO END-TO-END ACCOUNTING AND VAT SETTLEMENT — POWERING BUSINESS PROBLEM SOLVING ACROSS ALL 8 DIVISIONS AND 64 DISTRICTS.
+      </p>
+
+      <div class="geo-pillars-list">
+        <span class="geo-pillar-chip">B2B &amp; B2C READY</span>
+        <span class="geo-pillar-chip">PROBLEM SOLVING</span>
+        <span class="geo-pillar-chip">CUSTOMER TO VAT ACCOUNTING</span>
+      </div>
+
+      <div class="geo-metrics-row">
+        <div class="geo-metric-card">
+          <div class="geo-metric-val">08</div>
+          <div class="geo-metric-lbl">DIVISIONS</div>
+        </div>
+        <div class="geo-metric-card">
+          <div class="geo-metric-val">64</div>
+          <div class="geo-metric-lbl">DISTRICTS</div>
+        </div>
+        <div class="geo-metric-card">
+          <div class="geo-metric-val">100%</div>
+          <div class="geo-metric-lbl">LEDGER &amp; VAT</div>
+        </div>
+      </div>
+
+      <a href="/bs/index.html" target="_self" class="geo-action-btn">
+        <span class="gold-gradient-text">LAUNCH BUSINESS SOLUTIONS</span>
+        <span class="geo-btn-arrow">&#10142;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 </div>
 
 <!-- SECTION 2: SHORTS & VIDEO FEED VIEW -->
@@ -931,7 +1346,6 @@ function switchSection(sectionId) {
   }
 }
 
-// In-Page Policy Modal Handling Functions using Iframe for 100% accurate page styling and colors
 function openPolicyModal(filename) {
   const modal = document.getElementById('policyModalOverlay');
   const modalBody = document.getElementById('policyModalBody');
@@ -1065,6 +1479,285 @@ function toggleVideoAspect() {
     expandIcon.className = "fa-solid fa-expand gold-gradient-icon";
   }
 }
+
+// ==========================================================================
+// ULTRA-FAST CRISP DOT-MATRIX MAP RENDERER (WORLD FIRST, BANGLADESH SECOND)
+// ==========================================================================
+(function renderGeoMaps() {
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  function pointInPolygon(px, py, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0], yi = poly[i][1];
+      const xj = poly[j][0], yj = poly[j][1];
+      const intersect = ((yi > py) !== (yj > py)) &&
+        (px < (xj - xi) * (py - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  function createSvgEl(tag, attrs) {
+    const el = document.createElementNS(svgNS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function populateNetwork({
+    dotsGroup, routesGroup, packetsGroup, hubsGroup,
+    polygons, bounds, step, dotRadius,
+    nodes, edges
+  }) {
+    if (!dotsGroup || !routesGroup || !packetsGroup || !hubsGroup) return;
+
+    const dotsFrag = document.createDocumentFragment();
+    for (let x = bounds.minX; x <= bounds.maxX; x += step) {
+      for (let y = bounds.minY; y <= bounds.maxY; y += step) {
+        let hit = false;
+        for (let p = 0; p < polygons.length; p++) {
+          if (pointInPolygon(x, y, polygons[p])) {
+            hit = true;
+            break;
+          }
+        }
+        if (hit) {
+          const hash = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+          const rand = hash - Math.floor(hash);
+          let fill = "#7d611e", opacity = "0.38";
+          if (rand > 0.80) { fill = "#fcf6ba"; opacity = "0.85"; }
+          else if (rand > 0.32) { fill = "#d4af37"; opacity = "0.55"; }
+
+          dotsFrag.appendChild(createSvgEl("circle", {
+            cx: x.toFixed(1),
+            cy: y.toFixed(1),
+            r: dotRadius,
+            fill,
+            opacity
+          }));
+        }
+      }
+    }
+    dotsGroup.appendChild(dotsFrag);
+
+    const nodeMap = {};
+    nodes.forEach(n => nodeMap[n.id] = n);
+
+    const routesFrag = document.createDocumentFragment();
+    const packetsFrag = document.createDocumentFragment();
+
+    edges.forEach(([aId, bId, isPink, curveSign], i) => {
+      const n1 = nodeMap[aId];
+      const n2 = nodeMap[bId];
+      if (!n1 || !n2) return;
+
+      const sign = curveSign || 1;
+      const mx = (n1.x + n2.x) / 2 + (n2.y - n1.y) * 0.09 * sign;
+      const my = (n1.y + n2.y) / 2 - (n2.x - n1.x) * 0.09 * sign;
+      const d = `M ${n1.x} ${n1.y} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${n2.x} ${n2.y}`;
+
+      routesFrag.appendChild(createSvgEl("path", {
+        d,
+        class: isPink ? "net-route-pink" : "net-route-gold"
+      }));
+
+      const packet = createSvgEl("circle", {
+        r: isPink ? "2.3" : "1.9",
+        fill: isPink ? "#ff2a85" : "#fcf6ba"
+      });
+      const motion = createSvgEl("animateMotion", {
+        dur: `${3.2 + (i % 4) * 0.65}s`,
+        repeatCount: "indefinite",
+        path: d,
+        begin: `${(i * 0.35).toFixed(2)}s`
+      });
+      packet.appendChild(motion);
+      packetsFrag.appendChild(packet);
+    });
+
+    routesGroup.appendChild(routesFrag);
+    packetsGroup.appendChild(packetsFrag);
+
+    const hubsFrag = document.createDocumentFragment();
+    nodes.forEach((node, idx) => {
+      const g = createSvgEl("g", {});
+
+      const ripple = createSvgEl("circle", {
+        cx: node.x,
+        cy: node.y,
+        r: node.isHub ? "6.2" : "4.6",
+        class: node.isHub ? "node-ripple gold-ring" : "node-ripple"
+      });
+      ripple.style.animationDelay = `${idx * 0.35}s`;
+      g.appendChild(ripple);
+
+      g.appendChild(createSvgEl("circle", {
+        cx: node.x,
+        cy: node.y,
+        r: node.isHub ? "5" : "3.8",
+        class: node.isHub ? "node-core hub-gold" : "node-core"
+      }));
+
+      if (node.name) {
+        const lx = node.x + (node.dx || 0);
+        const ly = node.y + (node.dy || -20);
+        const bw = node.name.length * 7.1 + 15;
+        const bh = 18.5;
+
+        g.appendChild(createSvgEl("rect", {
+          x: (lx - bw / 2).toFixed(1),
+          y: (ly - bh / 2).toFixed(1),
+          width: bw.toFixed(1),
+          height: bh,
+          class: node.isHub ? "map-badge-rect hub-rect" : "map-badge-rect"
+        }));
+
+        const txt = createSvgEl("text", {
+          x: lx,
+          y: ly,
+          class: node.isHub ? "map-badge-txt gold-label" : "map-badge-txt"
+        });
+        txt.textContent = node.name;
+        g.appendChild(txt);
+      }
+
+      hubsFrag.appendChild(g);
+    });
+    hubsGroup.appendChild(hubsFrag);
+  }
+
+  // 1. WORLD MAP DATA (Refined Continents + North & South America Explicitly Connected)
+  const worldContinents = [
+    // North America & Central America
+    [
+      [42, 68], [76, 48], [138, 42], [206, 46], [254, 62], [268, 86],
+      [238, 114], [216, 138], [192, 166], [178, 194], [194, 212],
+      [172, 214], [146, 188], [116, 158], [86, 128], [56, 98]
+    ],
+    // Greenland
+    [
+      [268, 32], [312, 28], [326, 52], [296, 72], [272, 56]
+    ],
+    // South America
+    [
+      [196, 216], [238, 218], [286, 242], [314, 272], [298, 318],
+      [272, 362], [248, 398], [228, 398], [224, 346], [214, 294], [194, 248]
+    ],
+    // Europe
+    [
+      [364, 64], [412, 48], [468, 52], [496, 76], [488, 118],
+      [456, 138], [416, 144], [374, 136], [358, 102]
+    ],
+    // Africa
+    [
+      [362, 158], [424, 156], [472, 178], [496, 214], [482, 274],
+      [452, 336], [422, 354], [398, 314], [386, 256], [346, 224], [344, 184]
+    ],
+    // Asia
+    [
+      [496, 62], [584, 48], [686, 58], [758, 84], [766, 124],
+      [726, 164], [684, 196], [642, 226], [596, 236], [556, 218],
+      [518, 186], [488, 148]
+    ],
+    // Southeast Asia & Indonesia
+    [
+      [626, 242], [678, 246], [696, 274], [646, 278], [616, 258]
+    ],
+    // Australia & Oceania
+    [
+      [656, 298], [734, 296], [762, 334], [736, 374], [672, 372], [648, 334]
+    ]
+  ];
+
+  const worldHubs = [
+    { id: "north_america", name: "NORTH AMERICA", x: 154, y: 118, dx: 0,   dy: -20, isHub: false },
+    { id: "south_america", name: "SOUTH AMERICA", x: 252, y: 288, dx: 0,   dy: 22,  isHub: false },
+    { id: "europe",        name: "EUROPE",        x: 424, y: 96,  dx: 0,   dy: -20, isHub: false },
+    { id: "africa",        name: "AFRICA",        x: 422, y: 234, dx: 0,   dy: 21,  isHub: false },
+    { id: "asia",          name: "ASIA HUB",      x: 604, y: 142, dx: 0,   dy: -21, isHub: true  },
+    { id: "oceania",       name: "OCEANIA",       x: 706, y: 334, dx: 0,   dy: 21,  isHub: false }
+  ];
+
+  const worldEdges = [
+    ["north_america", "south_america", true,  -1], // North America <-> South America Connected!
+    ["north_america", "europe",        false,  1],
+    ["north_america", "asia",          true,   1],
+    ["south_america", "africa",        false,  1],
+    ["south_america", "europe",        false, -1],
+    ["europe",        "africa",        true,   1],
+    ["europe",        "asia",          true,   1],
+    ["africa",        "asia",          false,  1],
+    ["asia",          "oceania",       true,   1]
+  ];
+
+  populateNetwork({
+    dotsGroup: document.getElementById("worldDotsGroup"),
+    routesGroup: document.getElementById("worldRoutesGroup"),
+    packetsGroup: document.getElementById("worldPacketsGroup"),
+    hubsGroup: document.getElementById("worldHubsGroup"),
+    polygons: worldContinents,
+    bounds: { minX: 38, maxX: 775, minY: 26, maxY: 405 },
+    step: 10.5,
+    dotRadius: "1.65",
+    nodes: worldHubs,
+    edges: worldEdges
+  });
+
+  // 2. BANGLADESH MAP DATA (Second — At The Bottom)
+  const bdPoly = [
+    [95, 28], [116, 26], [122, 48], [148, 52], [174, 58], [192, 74],
+    [198, 108], [192, 138], [218, 142], [254, 148], [295, 146], [338, 144],
+    [385, 136], [408, 148], [398, 178], [365, 202], [352, 224], [326, 228],
+    [312, 255], [318, 285], [338, 295], [344, 335], [368, 345], [398, 342],
+    [416, 365], [408, 415], [392, 448], [398, 495], [405, 535], [390, 542],
+    [376, 505], [362, 465], [345, 425], [326, 392], [305, 398], [285, 428],
+    [264, 446], [238, 452], [212, 456], [182, 458], [156, 454], [146, 422],
+    [154, 385], [142, 355], [128, 326], [142, 298], [126, 268], [94, 252],
+    [76, 222], [95, 198], [126, 192], [135, 165], [118, 136], [128, 105],
+    [108, 82], [92, 56]
+  ];
+
+  const bdCities = [
+    { id: "rangpur",    name: "RANGPUR",    x: 152, y: 88,  dx: 0,   dy: -21, isHub: false },
+    { id: "rajshahi",   name: "RAJSHAHI",   x: 118, y: 205, dx: -10, dy: -21, isHub: false },
+    { id: "mymensingh", name: "MYMENSINGH", x: 235, y: 175, dx: 0,   dy: -21, isHub: false },
+    { id: "sylhet",     name: "SYLHET",     x: 356, y: 168, dx: 6,   dy: -21, isHub: false },
+    { id: "dhaka",      name: "DHAKA",      x: 236, y: 266, dx: 0,   dy: -23, isHub: true  },
+    { id: "khulna",     name: "KHULNA",     x: 168, y: 368, dx: -10, dy: 22,  isHub: false },
+    { id: "barishal",   name: "BARISHAL",   x: 246, y: 378, dx: 0,   dy: 22,  isHub: false },
+    { id: "chattogram", name: "CHATTOGRAM", x: 362, y: 405, dx: 10,  dy: 22,  isHub: false }
+  ];
+
+  const bdEdges = [
+    ["dhaka", "rangpur", true, 1],
+    ["dhaka", "rajshahi", false, 1],
+    ["dhaka", "mymensingh", true, 1],
+    ["dhaka", "sylhet", false, 1],
+    ["dhaka", "khulna", false, 1],
+    ["dhaka", "barishal", true, 1],
+    ["dhaka", "chattogram", true, 1],
+    ["rangpur", "rajshahi", false, 1],
+    ["rangpur", "mymensingh", false, 1],
+    ["mymensingh", "sylhet", true, 1],
+    ["rajshahi", "khulna", false, 1],
+    ["khulna", "barishal", false, 1],
+    ["barishal", "chattogram", false, 1],
+    ["sylhet", "chattogram", false, 1]
+  ];
+
+  populateNetwork({
+    dotsGroup: document.getElementById("bdDotsGroup"),
+    routesGroup: document.getElementById("bdRoutesGroup"),
+    packetsGroup: document.getElementById("bdPacketsGroup"),
+    hubsGroup: document.getElementById("bdCitiesGroup"),
+    polygons: [bdPoly],
+    bounds: { minX: 70, maxX: 420, minY: 20, maxY: 545 },
+    step: 8.8,
+    dotRadius: "1.65",
+    nodes: bdCities,
+    edges: bdEdges
+  });
+})();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
