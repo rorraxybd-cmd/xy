@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     <!-- Icons & Fonts -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
@@ -58,7 +59,7 @@
         .media-viewport { 
             width: 100%; position: relative; border-radius: 14px; overflow: hidden; background: #050508; 
             display: flex; align-items: center; justify-content: center; min-height: 280px; 
-            border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.2s ease; contain: layout style;
         }
         @media(min-width: 768px) { .media-viewport { min-height: 440px; } }
         
@@ -70,7 +71,7 @@
         
         .thumb-item { 
             width: 58px; height: 58px; border-radius: 10px; overflow: hidden; cursor: pointer; flex-shrink: 0; 
-            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: transform 0.2s ease, border-color 0.2s ease; 
+            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: transform 0.15s ease, border-color 0.15s ease; 
         }
         .thumb-item img, .thumb-item video { width: 100%; height: 100%; object-fit: cover; }
         .thumb-item:hover { border-color: rgba(212, 175, 55, 0.5); }
@@ -104,7 +105,7 @@
         .preset-btn {
             background: #040407; border: 1px solid rgba(212, 175, 55, 0.4); color: #ffffff;
             font-size: 0.72rem; font-weight: 800; padding: 8px 10px; border-radius: 8px; cursor: pointer;
-            text-align: center; transition: all 0.25s ease;
+            text-align: center; transition: all 0.2s ease;
             display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;
         }
         .preset-btn .btn-price { font-size: 0.80rem; color: var(--gold-solid); font-weight: 800; }
@@ -151,8 +152,9 @@
         .main-product-share-btn {
             background: none; border: none; cursor: pointer; font-size: 1.1rem;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; justify-content: center; padding: 4px;
+            display: flex; align-items: center; justify-content: center; padding: 4px; transition: transform 0.15s ease;
         }
+        .main-product-share-btn:active { transform: scale(0.9); }
 
         /* Related Wholesale Products Section */
         .related-products-wrapper { margin-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 14px; }
@@ -164,7 +166,7 @@
         .product-card {
             background: var(--card-wholesale); border-radius: 12px; overflow: hidden; 
             display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
-            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
+            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid; content-visibility: auto;
         }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
@@ -178,8 +180,9 @@
         .share-icon-only-btn { 
             background: none; border: none; font-size: 0.95rem; cursor: pointer; 
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            display: flex; align-items: center; justify-content: center; padding: 2px;
+            display: flex; align-items: center; justify-content: center; padding: 2px; transition: transform 0.15s ease;
         }
+        .share-icon-only-btn:active { transform: scale(0.9); }
 
         /* Fixed Bottom Checkout Bar */
         .fixed-bottom-checkout-bar {
@@ -209,18 +212,42 @@
         .footer-cart-badge {
             position: absolute; top: -5px; right: -8px; background: #ff2a85; color: #ffffff;
             font-size: 0.52rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
         }
+        .footer-cart-badge.pulse-badge { transform: scale(1.3); }
 
         .flying-gold-coin {
             position: fixed; z-index: 9999999; width: 30px; height: 30px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
-            box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.75s ease, top 0.75s ease, transform 0.75s linear, opacity 0.75s ease;
+            box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1), top 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s linear, opacity 0.65s ease;
         }
 
         .animated-welcome-msg { background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; border: 1px solid rgba(212, 175, 55, 0.2); }
         .chat-warning-msg { background: rgba(255, 42, 133, 0.15); color: #ff2a85; border: 1px solid #ff2a85; padding: 6px 10px; border-radius: 8px; font-size: 0.62rem; font-weight: 700; text-align: center; margin-top: 4px; }
+
+        /* Desktop / Universal Share Fallback Modal */
+        .universal-share-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px;
+        }
+        .share-target-btn {
+            background: #040407; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 10px;
+            padding: 10px 6px; color: #ffffff; font-size: 0.62rem; font-weight: 700; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+            text-decoration: none; transition: all 0.2s ease;
+        }
+        .share-target-btn:hover {
+            background: var(--gold-gradient); color: #000000; border-color: transparent;
+        }
+        .share-target-btn i { font-size: 1.05rem; }
+        .share-link-copy-row {
+            display: flex; gap: 6px; margin-top: 8px;
+        }
+        .share-link-box {
+            flex: 1; min-width: 0; background: #040407; border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 8px; padding: 7px 10px; color: var(--gold-solid); font-size: 0.62rem;
+            outline: none; text-transform: none !important;
+        }
     </style>
 </head>
 <body>
@@ -332,7 +359,7 @@
         <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
                 <span style="font-size:0.70rem; font-weight:700; color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
-                <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">&times;</button>
+                <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">×</button>
             </div>
             <div id="chatMessagesContainer" style="background:#040407; border-radius:10px; padding:10px; height:170px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
                 <div class="animated-welcome-msg">WELCOME! HOW CAN WE HELP YOUR BULK ORDER TODAY?</div>
@@ -345,14 +372,33 @@
         </div>
     </div>
 
+    <!-- ডেস্কটপ ও সব সফটওয়্যারে ডাইরেক্ট শেয়ার মডাল (যখন সরাসরি সিস্টেম শেয়ার না খুলে বা কম্পিউটারে কুইক শেয়ার দরকার হয়) -->
+    <div id="universalShareModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) closeShareModal()">
+        <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
+                <span style="font-size:0.70rem; font-weight:700; color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
+                <button type="button" onclick="closeShareModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">×</button>
+            </div>
+            <div id="shareTargetGrid" class="universal-share-grid"></div>
+            <div class="share-link-copy-row">
+                <input type="text" id="shareModalUrlInput" class="share-link-box" readonly>
+                <button type="button" id="shareModalCopyBtn" onclick="copyShareLinkFromModal()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 12px; border-radius:8px; font-weight:800; font-size:0.65rem; cursor:pointer;">COPY</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE_URL = '';
         let currentActiveProduct = null;
         let currentItemQuantity = 1; // ডিফল্টভাবে স্যাম্পল ১ পিস
         let selectedProductColorImage = "";
         let currentBaseUnitPrice = 25.00;
+        let cachedAffiliateId = null;
+        let audioCtxInstance = null;
 
         function getActiveAffiliateId() {
+            if (cachedAffiliateId !== null) return cachedAffiliateId;
+
             const urlParams = new URLSearchParams(window.location.search);
             const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
             
@@ -361,23 +407,25 @@
                     localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
                     sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
                 } catch(e) {}
-                return refFromUrl;
+                cachedAffiliateId = refFromUrl;
+                return cachedAffiliateId;
             }
 
             let userProfile = {};
             try {
-                userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account')) || JSON.parse(localStorage.getItem('user_profile')) || {};
+                userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account') || 'null') || JSON.parse(localStorage.getItem('user_profile') || 'null') || {};
             } catch(e) {}
 
-            return userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
+            cachedAffiliateId = userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
+            return cachedAffiliateId;
         }
 
         function generateAffiliateUrl(productId) {
-            let baseUrl = `${window.location.origin}${window.location.pathname}`;
-            let currentParams = new URLSearchParams(window.location.search);
+            const baseUrl = `${window.location.origin}${window.location.pathname}`;
+            const currentParams = new URLSearchParams(window.location.search);
             currentParams.set('id', productId);
             
-            let affId = getActiveAffiliateId();
+            const affId = getActiveAffiliateId();
             if (affId) currentParams.set('ref', affId);
             
             return `${baseUrl}?${currentParams.toString()}`;
@@ -388,28 +436,36 @@
             const reqId = urlParams.get('id');
 
             getActiveAffiliateId();
+            updateCartBadgeCount();
 
             if (reqId) {
                 fetchWholesaleProductDetails(reqId);
             } else {
                 renderFallbackProductDetails('101');
             }
-            updateCartBadgeCount();
         });
 
         async function fetchWholesaleProductDetails(productId) {
             try {
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
-                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache')) || [];
-                let foundItem = [...localProducts, ...cachedFeed].find(p => String(p.id || p.product_id || p.product_code) === String(productId));
+                let localProducts = [];
+                let cachedFeed = [];
+                try {
+                    localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products') || '[]') || [];
+                    cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache') || '[]') || [];
+                } catch(e) {}
+
+                const combinedLocal = [...localProducts, ...cachedFeed];
+                const foundItem = combinedLocal.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
                 
                 if (foundItem) {
                     renderProductDetails(foundItem);
-                    renderRelatedProducts([...localProducts, ...cachedFeed], foundItem);
+                    renderRelatedProducts(combinedLocal, foundItem);
                 }
 
                 const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
+                if (!response.ok) throw new Error('Network error');
                 const result = await response.json();
+                
                 let products = [];
                 if (result && result.success && Array.isArray(result.data)) {
                     products = result.data;
@@ -417,12 +473,18 @@
                     products = result;
                 }
 
-                let mergedMap = new Map();
-                [...localProducts, ...cachedFeed, ...products].forEach(p => {
-                    let pId = p.id || p.product_id || p.product_code || p.title;
-                    if(pId) mergedMap.set(String(pId), p);
-                });
-                let allProducts = Array.from(mergedMap.values());
+                const mergedMap = new Map();
+                for (let i = 0; i < combinedLocal.length; i++) {
+                    const p = combinedLocal[i];
+                    const pId = p.id || p.product_id || p.product_code || p.title;
+                    if (pId) mergedMap.set(String(pId), p);
+                }
+                for (let i = 0; i < products.length; i++) {
+                    const p = products[i];
+                    const pId = p.id || p.product_id || p.product_code || p.title;
+                    if (pId) mergedMap.set(String(pId), p);
+                }
+                const allProducts = Array.from(mergedMap.values());
 
                 if (allProducts.length > 0) {
                     const matchedProduct = allProducts.find(p => String(p.id) === String(productId) || String(p.product_id) === String(productId) || String(p.product_code) === String(productId));
@@ -434,12 +496,12 @@
                 }
                 if (!foundItem) renderFallbackProductDetails(productId);
             } catch (err) {
-                renderFallbackProductDetails(productId);
+                if (!currentActiveProduct) renderFallbackProductDetails(productId);
             }
         }
 
         function renderFallbackProductDetails(productId) {
-            let sampleProduct = {
+            const sampleProduct = {
                 id: productId,
                 title: "RORRAXY WHOLESALE BULK LUXURY ITEM",
                 price: 25.00,
@@ -464,10 +526,10 @@
         function renderProductDetails(prod) {
             currentActiveProduct = prod;
             currentBaseUnitPrice = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
-            let oldP = currentBaseUnitPrice * 1.35;
+            const oldP = currentBaseUnitPrice * 1.35;
 
-            let p100 = parseFloat(prod.price_100 || (currentBaseUnitPrice * 0.8)).toFixed(2);
-            let p300 = parseFloat(prod.price_300 || (currentBaseUnitPrice * 0.72)).toFixed(2);
+            const p100 = parseFloat(prod.price_100 || (currentBaseUnitPrice * 0.8)).toFixed(2);
+            const p300 = parseFloat(prod.price_300 || (currentBaseUnitPrice * 0.72)).toFixed(2);
 
             document.getElementById('btnPrice100').innerText = `$${p100}`;
             document.getElementById('btnPrice300').innerText = `$${p300}`;
@@ -480,77 +542,73 @@
             document.getElementById('activeProductPriceTag').innerText = `$${currentBaseUnitPrice.toFixed(2)}`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
             
-            let rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+            const rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
             document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
             
-            let stockNum = prod.stock || 1500;
+            const stockNum = prod.stock || 1500;
             document.getElementById('inStockBadgeLabel').innerText = `STOCK: ${stockNum} UNITS READY`;
 
             const strip = document.getElementById('productThumbnailsStrip');
-            let mediaList = [];
+            const mediaList = [];
+            const seenUrls = new Set();
+
+            const addMedia = (type, url) => {
+                if (!url || typeof url !== 'string') return;
+                const clean = url.trim();
+                if (!clean || seenUrls.has(clean)) return;
+                if (type === 'image' && clean.includes('mr masudar logo')) return;
+                seenUrls.add(clean);
+                mediaList.push({ type, url: clean });
+            };
             
             let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
-            if (primaryImg && typeof primaryImg === 'string' && primaryImg.startsWith('[')) {
+            if (primaryImg && primaryImg.startsWith('[')) {
                 try {
-                    let parsedArr = JSON.parse(primaryImg);
+                    const parsedArr = JSON.parse(primaryImg);
                     if (Array.isArray(parsedArr) && parsedArr.length > 0) primaryImg = parsedArr[0];
                 } catch(e) {}
             }
-            if (primaryImg && !primaryImg.includes('mr masudar logo')) {
-                mediaList.push({ type: 'image', url: primaryImg });
-            }
+            addMedia('image', primaryImg);
 
             if (prod.images_json) {
                 try {
-                    let parsedImages = typeof prod.images_json === 'string' ? JSON.parse(prod.images_json) : prod.images_json;
+                    const parsedImages = typeof prod.images_json === 'string' ? JSON.parse(prod.images_json) : prod.images_json;
                     if (Array.isArray(parsedImages)) {
-                        parsedImages.forEach(imgUrl => {
-                            if (imgUrl && !mediaList.some(m => m.url === imgUrl)) mediaList.push({ type: 'image', url: imgUrl });
-                        });
+                        parsedImages.forEach(imgUrl => addMedia('image', imgUrl));
                     } else if (typeof parsedImages === 'string') {
-                        if (!mediaList.some(m => m.url === parsedImages)) mediaList.push({ type: 'image', url: parsedImages });
+                        parsedImages.split(',').forEach(imgUrl => addMedia('image', imgUrl));
                     }
                 } catch (e) {
                     if (typeof prod.images_json === 'string') {
-                        prod.images_json.split(',').forEach(imgUrl => {
-                            let cleanUrl = imgUrl.trim();
-                            if (cleanUrl && !mediaList.some(m => m.url === cleanUrl)) mediaList.push({ type: 'image', url: cleanUrl });
-                        });
+                        prod.images_json.split(',').forEach(imgUrl => addMedia('image', imgUrl));
                     }
                 }
             }
 
-            if (mediaList.length === 0 && prod.image_url) {
-                if (typeof prod.image_url === 'string' && prod.image_url.startsWith('[')) {
-                    try {
-                        let parsed = JSON.parse(prod.image_url);
-                        if (Array.isArray(parsed)) parsed.forEach(u => mediaList.push({ type: 'image', url: u }));
-                    } catch(e) { mediaList.push({ type: 'image', url: prod.image_url }); }
-                } else {
-                    mediaList.push({ type: 'image', url: prod.image_url });
-                }
-            }
+            const videoFileUrl = prod.video_url || prod.videoUrl || "";
+            if (videoFileUrl) addMedia('video', videoFileUrl);
 
-            let videoFileUrl = prod.video_url || prod.videoUrl || "";
-            if (videoFileUrl) mediaList.push({ type: 'video', url: videoFileUrl });
-
-            if(mediaList.length === 0) {
+            if (mediaList.length === 0) {
                 mediaList.push({ type: 'image', url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" });
             }
 
             selectedProductColorImage = mediaList[0].url;
             updateMainViewport(mediaList[0]);
 
-            let thumbHtml = '';
+            const fragment = document.createDocumentFragment();
             mediaList.forEach((m, idx) => {
-                let activeCls = idx === 0 ? 'active' : '';
-                if(m.type === 'video') {
-                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><video src="${m.url}" muted></video></div>`;
+                const thumbDiv = document.createElement('div');
+                thumbDiv.className = `thumb-item ${idx === 0 ? 'active' : ''}`;
+                thumbDiv.onclick = function() { switchMediaView(m, this); };
+                if (m.type === 'video') {
+                    thumbDiv.innerHTML = `<video src="${m.url}" muted playsinline preload="metadata"></video>`;
                 } else {
-                    thumbHtml += `<div class="thumb-item ${activeCls}" onclick='switchMediaView(${JSON.stringify(m)}, this)'><img src="${m.url}" alt="Thumb" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'"></div>`;
+                    thumbDiv.innerHTML = `<img src="${m.url}" alt="Thumb" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
                 }
+                fragment.appendChild(thumbDiv);
             });
-            strip.innerHTML = thumbHtml;
+            strip.innerHTML = '';
+            strip.appendChild(fragment);
         }
 
         function renderRelatedProducts(allProducts, currentProd) {
@@ -560,57 +618,59 @@
                 return;
             }
 
-            let currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
-            let currentCat = currentProd ? (currentProd.category || currentProd.cat || '').toLowerCase().trim() : '';
-            let currentTitle = currentProd ? (currentProd.title || '').toLowerCase() : '';
+            const currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
+            const currentCat = currentProd ? (currentProd.category || currentProd.cat || '').toLowerCase().trim() : '';
+            const currentTitle = currentProd ? (currentProd.title || '').toLowerCase() : '';
 
             // ১. মেইন প্রোডাক্ট বাদে বাকি সব প্রোডাক্ট ফিল্টার
-            let filteredList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
+            const filteredList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
 
             // ২. ক্যাটাগরি অথবা টাইটেল দিয়ে একই ক্যাটাগরির প্রোডাক্ট সার্চ করা
-            let sameCategoryList = filteredList.filter(item => {
-                let itemCat = (item.category || item.cat || '').toLowerCase().trim();
-                let itemTitle = (item.title || '').toLowerCase();
+            const titleWords = currentTitle ? currentTitle.split(/\s+/).filter(w => w.length > 3) : [];
+            const sameCategoryList = filteredList.filter(item => {
+                const itemCat = (item.category || item.cat || '').toLowerCase().trim();
+                const itemTitle = (item.title || '').toLowerCase();
 
                 if (currentCat && itemCat) {
                     return itemCat === currentCat;
                 }
-                
-                // যদি স্পষ্ট ক্যাটাগরি না থাকে, তবে টাইটেল থেকে কি-ওয়ার্ড ম্যাচ করে ফিল্টার করবে
-                if (currentTitle) {
-                    let words = currentTitle.split(' ').filter(w => w.length > 3);
-                    return words.some(w => itemTitle.includes(w));
+                if (titleWords.length > 0) {
+                    return titleWords.some(w => itemTitle.includes(w));
                 }
-
                 return false;
             });
 
             // ৩. একই ক্যাটাগরির প্রোডাক্ট না পাওয়া গেলে ব্যাকআপ হিসেবে অন্য যেকোনো প্রোডাক্ট লোড করবে
-            let relatedList = sameCategoryList.length > 0 ? sameCategoryList : filteredList;
+            const relatedList = (sameCategoryList.length > 0 ? sameCategoryList : filteredList).slice(0, 8);
+            const fallbackImg = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
 
-            container.innerHTML = relatedList.slice(0, 8).map(item => {
-                const prodId = item.id || item.product_id || item.product_code || '101';
+            container.innerHTML = relatedList.map(item => {
+                const prodId = String(item.id || item.product_id || item.product_code || '101');
                 const title = item.title || 'rorraxy Bulk Item';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
 
-                let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
+                let imageUrl = fallbackImg;
                 try {
                     if (item.images_json) {
-                        let parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
+                        const parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
                         if (Array.isArray(parsed) && parsed.length > 0) imageUrl = parsed[0];
                     } else if (item.image_url) {
                         imageUrl = typeof item.image_url === 'string' && item.image_url.startsWith('[') ? JSON.parse(item.image_url)[0] : item.image_url;
                     }
-                } catch(e) { imageUrl = item.image_url || imageUrl; }
+                } catch(e) { imageUrl = item.image_url || fallbackImg; }
+
+                const safeTitleAttr = escapeHtmlAttr(title);
+                const safeTitleJs = escapeJsSingle(title);
+                const safeIdJs = escapeJsSingle(prodId);
 
                 return `
-                    <div class="product-card" onclick="window.location.href='${generateAffiliateUrl(prodId)}'">
+                    <div class="product-card" onclick="navigateToProduct('${safeIdJs}')">
                         <div class="product-media-box">
-                            <img src="${imageUrl}" alt="${title}" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png'">
+                            <img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'">
                         </div>
                         <div class="card-footer-actions" onclick="event.stopPropagation()">
                             <span class="product-price-tag">${bulkPrice}</span>
-                            <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${prodId}', '${title.replace(/'/g, "\\'")}')" title="Share Product">
+                            <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share Product">
                                 <i class="fa-solid fa-share-nodes"></i>
                             </button>
                         </div>
@@ -619,60 +679,82 @@
             }).join('');
         }
 
+        function escapeHtmlAttr(str) {
+            return String(str || '').replace(/&/g, '&').replace(/"/g, '"').replace(/</g, '<').replace(/>/g, '>');
+        }
+
+        function escapeJsSingle(str) {
+            return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
+        }
+
+        function navigateToProduct(productId) {
+            window.location.href = generateAffiliateUrl(productId);
+        }
+
         function updateMainViewport(mediaObj) {
             const viewport = document.getElementById('mediaViewportContainer');
-            if(!mediaObj || !mediaObj.url) return;
-            if(mediaObj.type === 'video') {
-                viewport.innerHTML = `<video src="${mediaObj.url}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
+            if (!mediaObj || !mediaObj.url) return;
+            const safeUrl = escapeHtmlAttr(mediaObj.url);
+            if (mediaObj.type === 'video') {
+                viewport.innerHTML = `<video src="${safeUrl}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
             } else {
-                viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${mediaObj.url}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png'">`;
+                viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${safeUrl}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png'">`;
             }
         }
 
         function switchMediaView(mediaObj, thumbElement) {
             updateMainViewport(mediaObj);
             selectedProductColorImage = mediaObj.url;
-            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            thumbElement.classList.add('active');
+            const thumbs = document.querySelectorAll('.thumb-item');
+            for (let i = 0; i < thumbs.length; i++) thumbs[i].classList.remove('active');
+            if (thumbElement) thumbElement.classList.add('active');
         }
 
         function setQuantityPreset(qty, btn) {
             currentItemQuantity = qty;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
+            const btns = document.querySelectorAll('.preset-btn');
+            for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+            if (btn) btn.classList.add('active');
         }
 
         function modifyQuantity(val) {
             currentItemQuantity += val;
             if (currentItemQuantity < 1) currentItemQuantity = 1;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            const btns = document.querySelectorAll('.preset-btn');
+            for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
         }
 
         function manualQuantityInput(input) {
-            let val = parseInt(input.value);
+            const val = parseInt(input.value, 10);
             currentItemQuantity = (isNaN(val) || val < 1) ? 1 : val;
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            const btns = document.querySelectorAll('.preset-btn');
+            for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
         }
 
         function playCoinDropChime() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
-                const ctx = new AudioCtx();
-                const now = ctx.currentTime;
+                if (!audioCtxInstance || audioCtxInstance.state === 'closed') {
+                    audioCtxInstance = new AudioCtx();
+                }
+                if (audioCtxInstance.state === 'suspended') {
+                    audioCtxInstance.resume();
+                }
+                const now = audioCtxInstance.currentTime;
                 const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01]; 
                 freqs.forEach((freq, idx) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
+                    const osc = audioCtxInstance.createOscillator();
+                    const gain = audioCtxInstance.createGain();
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + (idx * 0.035));
                     gain.gain.setValueAtTime(0, now + (idx * 0.035));
                     gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.035) + 0.01);
                     gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.035) + 1.1);
                     osc.connect(gain);
-                    gain.connect(ctx.destination);
+                    gain.connect(audioCtxInstance.destination);
                     osc.start(now + (idx * 0.035));
                     osc.stop(now + (idx * 0.035) + 1.1);
                 });
@@ -703,20 +785,22 @@
             document.body.appendChild(coin);
 
             requestAnimationFrame(() => {
-                coin.style.left = `${targetX}px`;
-                coin.style.top = `${targetY}px`;
-                coin.style.transform = 'scale(0.35) rotate(720deg)';
-                coin.style.opacity = '0';
+                requestAnimationFrame(() => {
+                    coin.style.left = `${targetX}px`;
+                    coin.style.top = `${targetY}px`;
+                    coin.style.transform = 'scale(0.35) rotate(720deg)';
+                    coin.style.opacity = '0';
+                });
             });
 
             setTimeout(() => {
                 if (coin.parentNode) coin.parentNode.removeChild(coin);
                 playCoinDropChime();
-                if(cartBadge) {
+                if (cartBadge) {
                     cartBadge.classList.add('pulse-badge');
                     setTimeout(() => cartBadge.classList.remove('pulse-badge'), 350);
                 }
-            }, 750);
+            }, 650);
         }
 
         function executeOrderNow(event) {
@@ -731,20 +815,24 @@
                 };
             }
 
-            let customNoteVal = document.getElementById('customSizeInputField').value.trim();
-            let chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
+            const customNoteVal = document.getElementById('customSizeInputField').value.trim();
+            const chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
             
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            const cartKey = 'rorraxy_cart';
+            let cart = [];
+            try {
+                cart = JSON.parse(localStorage.getItem(cartKey) || '[]') || [];
+            } catch(e) { cart = []; }
             
-            let prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            let finalImgUrl = selectedProductColorImage || document.getElementById('mainDisplayMediaElement').src || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
-            let activeAffId = getActiveAffiliateId();
+            const prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
+            const mainImgEl = document.getElementById('mainDisplayMediaElement');
+            const finalImgUrl = selectedProductColorImage || (mainImgEl && mainImgEl.src) || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+            const activeAffId = getActiveAffiliateId();
 
-            let existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
+            const existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
             
             // কোয়ান্টিটি অনুযায়ী সঠিক প্রাইস নির্ধারণ (যদি ১০০ বা ৩০০ পিস বাটন সিলেক্ট করা থাকে)
-            let activePreset = document.querySelector('.preset-btn.active');
+            const activePreset = document.querySelector('.preset-btn.active');
             let priceNum = currentBaseUnitPrice;
             if (activePreset) {
                 if (currentItemQuantity >= 300) {
@@ -752,11 +840,9 @@
                 } else if (currentItemQuantity >= 100) {
                     priceNum = parseFloat(currentActiveProduct.price_100 || (currentBaseUnitPrice * 0.8));
                 }
-            } else {
-                priceNum = currentBaseUnitPrice;
             }
 
-            if(existingItem) {
+            if (existingItem) {
                 existingItem.qty += currentItemQuantity;
                 if (activeAffId) existingItem.affiliateId = activeAffId;
             } else {
@@ -773,7 +859,9 @@
                 });
             }
             
-            localStorage.setItem(cartKey, JSON.stringify(cart));
+            try {
+                localStorage.setItem(cartKey, JSON.stringify(cart));
+            } catch(e) {}
             updateCartBadgeCount();
             triggerCoinDropAnimation(event);
         }
@@ -783,26 +871,35 @@
         }
 
         function updateCartBadgeCount() {
-            let cart = JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
-            let totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty) || 0), 0);
-            let badge = document.getElementById('footerCartItemCountBadge');
-            if(badge) badge.innerText = totalQty;
+            let cart = [];
+            try {
+                cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || [];
+            } catch(e) { cart = []; }
+            const totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
+            const badge = document.getElementById('footerCartItemCountBadge');
+            if (badge) badge.innerText = totalQty;
         }
 
         function toggleChatModal() {
-            let modal = document.getElementById('chatModalOverlay');
-            let isOpening = modal.style.display !== 'flex';
+            const modal = document.getElementById('chatModalOverlay');
+            const isOpening = modal.style.display !== 'flex';
             modal.style.display = isOpening ? 'flex' : 'none';
+            if (isOpening) {
+                setTimeout(() => {
+                    const inp = document.getElementById('chatMessageInput');
+                    if (inp) inp.focus();
+                }, 50);
+            }
         }
 
         function sendChatMessage() {
-            let input = document.getElementById('chatMessageInput');
-            let box = document.getElementById('chatMessagesContainer');
-            let warningArea = document.getElementById('chatWarningArea');
-            let text = input.value.trim();
+            const input = document.getElementById('chatMessageInput');
+            const box = document.getElementById('chatMessagesContainer');
+            const warningArea = document.getElementById('chatWarningArea');
+            const text = input.value.trim();
             warningArea.innerHTML = "";
 
-            if(text !== "") {
+            if (text !== "") {
                 const phoneRegex = /(\+?\d{1,4}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}|\d{10,11}/;
                 const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
                 const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|dev|app|store))/i;
@@ -812,12 +909,18 @@
                     return;
                 }
 
-                box.innerHTML += `<div style="background:var(--gold-gradient); color:#000; padding:6px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end;">${text}</div>`;
+                const msgDiv = document.createElement('div');
+                msgDiv.style.cssText = "background:var(--gold-gradient); color:#000; padding:6px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end; word-break:break-word;";
+                msgDiv.textContent = text;
+                box.appendChild(msgDiv);
                 input.value = "";
                 box.scrollTop = box.scrollHeight;
             }
         }
 
+        /* =====================================================================
+           UNIVERSAL SHARE SYSTEM (MOBILE APPS + COMPUTER SOFTWARE & DIRECT SHARE)
+           ===================================================================== */
         async function triggerMainAffiliateShare(event) {
             if (event) event.stopPropagation();
             const prodId = currentActiveProduct ? (currentActiveProduct.id || currentActiveProduct.product_id || '101') : '101';
@@ -825,19 +928,117 @@
             await triggerAutoShare(event, prodId, title);
         }
 
+        function isMobileDevice() {
+            return /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(navigator.userAgent || '') || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && window.innerWidth < 900);
+        }
+
+        async function copyTextToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (e) {}
+            }
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                return ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function showShareFeedback(btnEl) {
+            if (!btnEl) return;
+            const orig = btnEl.innerHTML;
+            btnEl.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            setTimeout(() => { btnEl.innerHTML = orig; }, 1400);
+        }
+
         async function triggerAutoShare(event, productId, productTitle) {
-            event.stopPropagation();
+            if (event) event.stopPropagation();
+            const btnEl = event && event.currentTarget ? event.currentTarget : null;
             const shareUrl = generateAffiliateUrl(productId);
-            if (navigator.share) {
-                try { await navigator.share({ title: productTitle, url: shareUrl }); } catch (err) {}
-            } else if (navigator.clipboard) {
-                await navigator.clipboard.writeText(shareUrl);
-                const btn = event.currentTarget;
-                if(btn) {
-                    const orig = btn.innerHTML;
-                    btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
-                    setTimeout(() => { btn.innerHTML = orig; }, 1500);
+            const shareText = `${productTitle} - rorraxy Wholesale`;
+
+            // মোবাইলে বা যেকোনো ডিভাইসে Web Share API থাকলে সরাসরি সব অ্যাপের শেয়ার শিট খুলবে
+            if (typeof navigator.share === 'function') {
+                try {
+                    await navigator.share({
+                        title: productTitle,
+                        text: shareText,
+                        url: shareUrl
+                    });
+                    showShareFeedback(btnEl);
+                    return;
+                } catch (err) {
+                    // ইউজার নিজে ক্যান্সেল করলে মডাল খুলবে না; অন্য কোনো ত্রুটি হলে নিচের ফ্লব্যাক চলবে
+                    if (err && err.name === 'AbortError') return;
                 }
+            }
+
+            // কম্পিউটারে বা যেখানে সরাসরি নেটিভ শেয়ার পপআপ আসে না, সেখানে ক্লিপবোর্ডে কপি + সব সফটওয়্যার/অ্যাপে ডাইরেক্ট শেয়ার প্যানেল
+            await copyTextToClipboard(shareUrl);
+            showShareFeedback(btnEl);
+            openUniversalShareModal(productTitle, shareText, shareUrl);
+        }
+
+        function openUniversalShareModal(title, text, url) {
+            const modal = document.getElementById('universalShareModal');
+            const grid = document.getElementById('shareTargetGrid');
+            const urlInput = document.getElementById('shareModalUrlInput');
+            const copyBtn = document.getElementById('shareModalCopyBtn');
+
+            if (copyBtn) copyBtn.innerText = 'COPY';
+            if (urlInput) urlInput.value = url;
+
+            const encUrl = encodeURIComponent(url);
+            const encText = encodeURIComponent(`${text}\n${url}`);
+            const encTitle = encodeURIComponent(title);
+
+            const targets = [
+                { name: 'WHATSAPP', icon: 'fa-brands fa-whatsapp', href: `https://wa.me/?text=${encText}` },
+                { name: 'TELEGRAM', icon: 'fa-brands fa-telegram', href: `https://t.me/share/url?url=${encUrl}&text=${encText}` },
+                { name: 'MESSENGER', icon: 'fa-brands fa-facebook-messenger', href: `https://www.facebook.com/dialog/send?link=${encUrl}&app_id=291494419107518&redirect_uri=${encUrl}` },
+                { name: 'FACEBOOK', icon: 'fa-brands fa-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}` },
+                { name: 'X / TWITTER', icon: 'fa-brands fa-x-twitter', href: `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}` },
+                { name: 'LINKEDIN', icon: 'fa-brands fa-linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}` },
+                { name: 'REDDIT', icon: 'fa-brands fa-reddit', href: `https://www.reddit.com/submit?url=${encUrl}&title=${encTitle}` },
+                { name: 'EMAIL APP', icon: 'fa-solid fa-envelope', href: `mailto:?subject=${encTitle}&body=${encText}` },
+                { name: 'SYSTEM / APP', icon: 'fa-solid fa-up-right-from-square', href: url, copyFirst: true }
+            ];
+
+            grid.innerHTML = targets.map(t => `
+                <a class="share-target-btn" href="${escapeHtmlAttr(t.href)}" target="_blank" rel="noopener noreferrer" ${t.copyFirst ? `onclick="copyTextToClipboard('${escapeJsSingle(url)}')"` : ''}>
+                    <i class="${t.icon}"></i>
+                    <span>${t.name}</span>
+                </a>
+            `).join('');
+
+            modal.style.display = 'flex';
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById('universalShareModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        async function copyShareLinkFromModal() {
+            const input = document.getElementById('shareModalUrlInput');
+            const btn = document.getElementById('shareModalCopyBtn');
+            if (!input) return;
+            input.select();
+            await copyTextToClipboard(input.value);
+            if (btn) {
+                btn.innerText = 'COPIED';
+                setTimeout(() => { btn.innerText = 'COPY'; }, 1400);
             }
         }
     </script>
