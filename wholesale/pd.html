@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>rorraxy - Wholesale Product Details</title>
-    
     <script src="/ecosystem-core.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-
-    <!-- Icons & Fonts -->
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,18 +23,14 @@
             --text-gray: #a0a0b8;
             --font-main: 'Poppins', sans-serif;
         }
-
         * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        
         html, body {
             width: 100%; max-width: 100%; background: var(--bg-wholesale) !important; color: var(--text-white);
             font-family: var(--font-main); font-size: 14px; text-transform: uppercase !important;
             -webkit-font-smoothing: antialiased; overflow-x: hidden !important; position: relative;
             scroll-behavior: smooth;
         }
-
         body { padding-bottom: 75px; }
-
         .ecommerce-main-wrapper {
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 12px 10px 50px 10px;
             display: flex; flex-direction: column; gap: 16px; overflow-x: hidden;
@@ -46,60 +38,47 @@
         @media(min-width: 768px) {
             .ecommerce-main-wrapper { padding: 20px 24px 60px 24px; gap: 24px; }
         }
-
-        .product-details-clean-section { 
+        .product-details-clean-section {
             width: 100%; display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start;
         }
         @media(min-width: 950px) {
             .product-details-clean-section { grid-template-columns: 1.1fr 0.9fr; gap: 28px; }
         }
-
         .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-
-        .media-viewport { 
-            width: 100%; position: relative; border-radius: 14px; overflow: hidden; background: #050508; 
-            display: flex; align-items: center; justify-content: center; min-height: 280px; 
+        .media-viewport {
+            width: 100%; position: relative; border-radius: 14px; overflow: hidden; background: #050508;
+            display: flex; align-items: center; justify-content: center; min-height: 280px;
             border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.2s ease; contain: layout style;
         }
         @media(min-width: 768px) { .media-viewport { min-height: 440px; } }
-        
         .main-media-element { width: 100%; height: auto; max-height: 440px; object-fit: contain; display: block; background: #000; }
-
         .thumbnail-slider-wrapper { position: relative; width: 100%; display: flex; align-items: center; overflow: hidden; }
         .thumbnail-strip { display: flex; gap: 10px; padding: 4px 0; overflow-x: auto; width: 100%; scrollbar-width: none; }
         .thumbnail-strip::-webkit-scrollbar { display: none; }
-        
-        .thumb-item { 
-            width: 58px; height: 58px; border-radius: 10px; overflow: hidden; cursor: pointer; flex-shrink: 0; 
-            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: transform 0.15s ease, border-color 0.15s ease; 
+        .thumb-item {
+            width: 58px; height: 58px; border-radius: 10px; overflow: hidden; cursor: pointer; flex-shrink: 0;
+            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: transform 0.15s ease, border-color 0.15s ease;
         }
         .thumb-item img, .thumb-item video { width: 100%; height: 100%; object-fit: cover; }
         .thumb-item:hover { border-color: rgba(212, 175, 55, 0.5); }
         .thumb-item.active { border-color: var(--gold-solid); transform: scale(1.05); }
-
         .product-right-col { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 0; }
-
         .price-discount-card, .qty-section-card, .seller-chat-compact-btn, .product-info-section-box {
             background: var(--card-wholesale); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
         .price-discount-card { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
-        
         .sample-price-block { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
         .sample-price-label { font-size: 0.65rem; color: var(--gold-solid); font-weight: 700; letter-spacing: 0.5px; }
-
         .price-row-bottom { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
         .current-main-price {
             font-size: 1.35rem; font-weight: 800; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1;
         }
         .old-crossed-price { font-size: 0.78rem; font-weight: 600; color: var(--text-gray); text-decoration: line-through; }
-
         .in-stock-clean-badge {
             font-size: 0.65rem; font-weight: 700; color: #00e676; display: flex; align-items: center; gap: 5px; text-transform: uppercase;
         }
         .in-stock-clean-badge::before { content: ""; width: 6px; height: 6px; background: #00e676; border-radius: 50%; display: inline-block; }
-
         .qty-section-card { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
         .wholesale-preset-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
         .preset-btn {
@@ -111,44 +90,36 @@
         .preset-btn .btn-price { font-size: 0.80rem; color: var(--gold-solid); font-weight: 800; }
         .preset-btn.active, .preset-btn:hover { background: var(--gold-gradient); color: #000; border-color: transparent; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
         .preset-btn.active .btn-price, .preset-btn:hover .btn-price { color: #000; }
-
         .qty-label-mini { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); text-align: center; letter-spacing: 0.5px; }
         .qty-controls-flex { display: flex; align-items: center; justify-content: center; gap: 14px; }
-        .qty-btn-ch { 
-            background: var(--gold-gradient); border: none; color: #000; font-size: 0.95rem; font-weight: 800; 
-            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; 
+        .qty-btn-ch {
+            background: var(--gold-gradient); border: none; color: #000; font-size: 0.95rem; font-weight: 800;
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
-        .qty-num-input { 
-            font-size: 1.05rem; font-weight: 800; color: #ffffff; width: 80px; text-align: center; 
-            background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; outline: none; padding: 4px 0; 
+        .qty-num-input {
+            font-size: 1.05rem; font-weight: 800; color: #ffffff; width: 80px; text-align: center;
+            background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; outline: none; padding: 4px 0;
         }
-
         .product-info-section-box { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
         .section-box-title { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
-        
-        .product-title-restricted { 
-            font-size: 1.05rem; font-weight: 700; letter-spacing: 0.4px; line-height: 1.35; 
+        .product-title-restricted {
+            font-size: 1.05rem; font-weight: 700; letter-spacing: 0.4px; line-height: 1.35;
             width: 100%; word-break: break-word; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         @media(min-width: 768px) { .product-title-restricted { font-size: 1.3rem; } }
-
         .standard-description-box { font-size: 0.72rem; color: var(--text-gray); line-height: 1.5; text-transform: none !important; word-break: break-word; }
-
         .integrated-custom-note-group { display: flex; flex-direction: column; gap: 4px; width: 100%; margin-top: 2px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 8px; }
         .integrated-note-label { font-size: 0.62rem; font-weight: 600; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
-        .custom-note-input { 
-            width: 100%; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 10px; 
-            color: #ffffff; font-size: 0.70rem; outline: none; font-family: var(--font-main); text-transform: uppercase; 
+        .custom-note-input {
+            width: 100%; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 10px;
+            color: #ffffff; font-size: 0.70rem; outline: none; font-family: var(--font-main); text-transform: uppercase;
         }
-
         .action-buttons-flex-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; width: 100%; }
-
         .seller-chat-compact-btn {
             color: var(--gold-solid); font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer;
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
         }
-
         .main-product-share-btn {
             background: none; border: none; cursor: pointer; font-size: 1.1rem;
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -156,58 +127,48 @@
         }
         .main-product-share-btn:active { transform: scale(0.9); }
 
-        /* Related Wholesale Products Section */
         .related-products-wrapper { margin-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 14px; }
         .related-section-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; }
-        
         .feed-container { padding: 2px 0; column-count: 2; column-gap: 8px; width: 100%; }
         @media (min-width: 768px) { .feed-container { column-count: 4; column-gap: 12px; } }
-        
         .product-card {
-            background: var(--card-wholesale); border-radius: 12px; overflow: hidden; 
-            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12); 
+            background: var(--card-wholesale); border-radius: 12px; overflow: hidden;
+            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12);
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid; content-visibility: auto;
         }
         .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
-        
-        .card-footer-actions { 
-            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; 
+        .card-footer-actions {
+            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px;
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto;
         }
         .product-price-tag { font-size: 0.80rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .share-icon-only-btn { 
-            background: none; border: none; font-size: 0.95rem; cursor: pointer; 
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        .share-icon-only-btn {
+            background: none; border: none; font-size: 0.95rem; cursor: pointer;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: flex; align-items: center; justify-content: center; padding: 2px; transition: transform 0.15s ease;
         }
         .share-icon-only-btn:active { transform: scale(0.9); }
 
-        /* Fixed Bottom Checkout Bar */
         .fixed-bottom-checkout-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px; 
-            display: flex; justify-content: space-around; align-items: center; z-index: 999999; 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px;
+            display: flex; justify-content: space-around; align-items: center; z-index: 999999;
             border-top: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 -5px 15px rgba(0,0,0,0.8); height: 56px;
         }
         @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 80px; padding: 6px 30px; height: 60px; } }
-        
-        .footer-menu-item { 
+        .footer-menu-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; gap: 2px; background: transparent !important; 
+            text-decoration: none; cursor: pointer; gap: 2px; background: transparent !important;
             border: none !important; padding: 4px 12px; white-space: nowrap;
         }
-        
         .footer-menu-icon { font-size: 1.05rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .footer-menu-label { font-size: 0.58rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.4px; }
-
         .footer-menu-item.order-now-highlight {
             background: var(--gold-gradient) !important; border-radius: 10px !important; padding: 6px 28px !important;
             box-shadow: 0 2px 10px rgba(212,175,55,0.3);
         }
         .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.72rem; font-weight: 800; background: none !important; }
-
         .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
         .footer-cart-badge {
             position: absolute; top: -5px; right: -8px; background: #ff2a85; color: #ffffff;
@@ -222,11 +183,9 @@
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
             box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1), top 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s linear, opacity 0.65s ease;
         }
-
         .animated-welcome-msg { background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; border: 1px solid rgba(212, 175, 55, 0.2); }
         .chat-warning-msg { background: rgba(255, 42, 133, 0.15); color: #ff2a85; border: 1px solid #ff2a85; padding: 6px 10px; border-radius: 8px; font-size: 0.62rem; font-weight: 700; text-align: center; margin-top: 4px; }
 
-        /* Desktop / Universal Share Fallback Modal */
         .universal-share-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px;
         }
@@ -251,15 +210,12 @@
     </style>
 </head>
 <body>
-
     <div class="ecommerce-main-wrapper" id="mainStoreContainer">
-        
         <div class="product-details-clean-section" id="productDetailsViewSection">
             <div class="product-left-col">
                 <div class="media-viewport" id="mediaViewportContainer">
                     <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%2308080c'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23d4af37' font-family='Poppins, sans-serif' font-size='14' font-weight='700'%3ELOADING WHOLESALE PRODUCT...%3C/text%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
                 </div>
-
                 <div class="thumbnail-slider-wrapper">
                     <div class="thumbnail-strip" id="productThumbnailsStrip"></div>
                 </div>
@@ -288,7 +244,6 @@
                             <span>/ 300 PCS</span>
                         </button>
                     </div>
-
                     <span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
                     <div class="qty-controls-flex">
                         <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
@@ -299,23 +254,18 @@
 
                 <div class="product-info-section-box">
                     <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
-                    
                     <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
-                    
                     <div class="standard-description-box" id="unlimitedDescriptionContent">
                         Fetching wholesale ecosystem details from Cloudflare database...
                     </div>
-
                     <div class="integrated-custom-note-group">
                         <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / SPEC</span>
                         <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off">
                     </div>
-
                     <div class="action-buttons-flex-row">
                         <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
                             <i class="fa-solid fa-headset"></i> <span>SELLER</span>
                         </button>
-
                         <button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product">
                             <i class="fa-solid fa-share-nodes"></i>
                         </button>
@@ -330,21 +280,16 @@
                 <p style="grid-column: 1 / -1; text-align: center; color: var(--gold-solid); padding: 15px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED BULK ITEMS...</p>
             </div>
         </div>
-
     </div>
 
-    <!-- স্থায়ী ফিক্সড বটম ফুটার বার -->
     <div class="fixed-bottom-checkout-bar">
         <a href="/wholesale/" class="footer-menu-item">
             <i class="fa-solid fa-house footer-menu-icon"></i>
             <span class="footer-menu-label">HOME</span>
         </a>
-
         <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
             <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
         </div>
-
-        <!-- কার্ট মেনু: ক্লিক করলে সরাসরি cart.html পেজে যাবে -->
         <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
             <div class="footer-cart-icon-wrapper">
                 <i class="fa-solid fa-cart-shopping footer-menu-icon"></i>
@@ -354,7 +299,6 @@
         </button>
     </div>
 
-    <!-- সেলার চ্যাট মডাল -->
     <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
         <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.2);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
@@ -372,7 +316,6 @@
         </div>
     </div>
 
-    <!-- ডেস্কটপ ও সব সফটওয়্যারে ডাইরেক্ট শেয়ার মডাল (যখন সরাসরি সিস্টেম শেয়ার না খুলে বা কম্পিউটারে কুইক শেয়ার দরকার হয়) -->
     <div id="universalShareModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) closeShareModal()">
         <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.25);">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
@@ -390,7 +333,7 @@
     <script>
         const API_BASE_URL = '';
         let currentActiveProduct = null;
-        let currentItemQuantity = 1; // ডিফল্টভাবে স্যাম্পল ১ পিস
+        let currentItemQuantity = 1;
         let selectedProductColorImage = "";
         let currentBaseUnitPrice = 25.00;
         let cachedAffiliateId = null;
@@ -401,7 +344,7 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-            
+
             if (refFromUrl) {
                 try {
                     localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
@@ -424,10 +367,10 @@
             const baseUrl = `${window.location.origin}${window.location.pathname}`;
             const currentParams = new URLSearchParams(window.location.search);
             currentParams.set('id', productId);
-            
+
             const affId = getActiveAffiliateId();
             if (affId) currentParams.set('ref', affId);
-            
+
             return `${baseUrl}?${currentParams.toString()}`;
         }
 
@@ -456,7 +399,7 @@
 
                 const combinedLocal = [...localProducts, ...cachedFeed];
                 const foundItem = combinedLocal.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
-                
+
                 if (foundItem) {
                     renderProductDetails(foundItem);
                     renderRelatedProducts(combinedLocal, foundItem);
@@ -465,7 +408,7 @@
                 const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
                 if (!response.ok) throw new Error('Network error');
                 const result = await response.json();
-                
+
                 let products = [];
                 if (result && result.success && Array.isArray(result.data)) {
                     products = result.data;
@@ -534,17 +477,16 @@
             document.getElementById('btnPrice100').innerText = `$${p100}`;
             document.getElementById('btnPrice300').innerText = `$${p300}`;
 
-            // ডিফল্টভাবে স্যাম্পল কোয়ান্টিটি ১ এবং কোনো বাটন সিলেক্টেড থাকবে না
             currentItemQuantity = 1;
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
 
             document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY WHOLESALE PRODUCT";
             document.getElementById('activeProductPriceTag').innerText = `$${currentBaseUnitPrice.toFixed(2)}`;
             document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
-            
+
             const rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
             document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
-            
+
             const stockNum = prod.stock || 1500;
             document.getElementById('inStockBadgeLabel').innerText = `STOCK: ${stockNum} UNITS READY`;
 
@@ -560,7 +502,7 @@
                 seenUrls.add(clean);
                 mediaList.push({ type, url: clean });
             };
-            
+
             let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
             if (primaryImg && primaryImg.startsWith('[')) {
                 try {
@@ -622,10 +564,8 @@
             const currentCat = currentProd ? (currentProd.category || currentProd.cat || '').toLowerCase().trim() : '';
             const currentTitle = currentProd ? (currentProd.title || '').toLowerCase() : '';
 
-            // ১. মেইন প্রোডাক্ট বাদে বাকি সব প্রোডাক্ট ফিল্টার
             const filteredList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
 
-            // ২. ক্যাটাগরি অথবা টাইটেল দিয়ে একই ক্যাটাগরির প্রোডাক্ট সার্চ করা
             const titleWords = currentTitle ? currentTitle.split(/\s+/).filter(w => w.length > 3) : [];
             const sameCategoryList = filteredList.filter(item => {
                 const itemCat = (item.category || item.cat || '').toLowerCase().trim();
@@ -640,7 +580,6 @@
                 return false;
             });
 
-            // ৩. একই ক্যাটাগরির প্রোডাক্ট না পাওয়া গেলে ব্যাকআপ হিসেবে অন্য যেকোনো প্রোডাক্ট লোড করবে
             const relatedList = (sameCategoryList.length > 0 ? sameCategoryList : filteredList).slice(0, 8);
             const fallbackImg = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
 
@@ -744,7 +683,7 @@
                     audioCtxInstance.resume();
                 }
                 const now = audioCtxInstance.currentTime;
-                const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01]; 
+                const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01];
                 freqs.forEach((freq, idx) => {
                     const osc = audioCtxInstance.createOscillator();
                     const gain = audioCtxInstance.createGain();
@@ -817,21 +756,20 @@
 
             const customNoteVal = document.getElementById('customSizeInputField').value.trim();
             const chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
-            
+
             const cartKey = 'rorraxy_cart';
             let cart = [];
             try {
                 cart = JSON.parse(localStorage.getItem(cartKey) || '[]') || [];
             } catch(e) { cart = []; }
-            
+
             const prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
             const mainImgEl = document.getElementById('mainDisplayMediaElement');
             const finalImgUrl = selectedProductColorImage || (mainImgEl && mainImgEl.src) || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
             const activeAffId = getActiveAffiliateId();
 
             const existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
-            
-            // কোয়ান্টিটি অনুযায়ী সঠিক প্রাইস নির্ধারণ (যদি ১০০ বা ৩০০ পিস বাটন সিলেক্ট করা থাকে)
+
             const activePreset = document.querySelector('.preset-btn.active');
             let priceNum = currentBaseUnitPrice;
             if (activePreset) {
@@ -858,7 +796,7 @@
                     img: finalImgUrl
                 });
             }
-            
+
             try {
                 localStorage.setItem(cartKey, JSON.stringify(cart));
             } catch(e) {}
@@ -918,9 +856,6 @@
             }
         }
 
-        /* =====================================================================
-           UNIVERSAL SHARE SYSTEM (MOBILE APPS + COMPUTER SOFTWARE & DIRECT SHARE)
-           ===================================================================== */
         async function triggerMainAffiliateShare(event) {
             if (event) event.stopPropagation();
             const prodId = currentActiveProduct ? (currentActiveProduct.id || currentActiveProduct.product_id || '101') : '101';
@@ -968,7 +903,6 @@
             const shareUrl = generateAffiliateUrl(productId);
             const shareText = `${productTitle} - rorraxy Wholesale`;
 
-            // মোবাইলে বা যেকোনো ডিভাইসে Web Share API থাকলে সরাসরি সব অ্যাপের শেয়ার শিট খুলবে
             if (typeof navigator.share === 'function') {
                 try {
                     await navigator.share({
@@ -979,12 +913,10 @@
                     showShareFeedback(btnEl);
                     return;
                 } catch (err) {
-                    // ইউজার নিজে ক্যান্সেল করলে মডাল খুলবে না; অন্য কোনো ত্রুটি হলে নিচের ফ্লব্যাক চলবে
                     if (err && err.name === 'AbortError') return;
                 }
             }
 
-            // কম্পিউটারে বা যেখানে সরাসরি নেটিভ শেয়ার পপআপ আসে না, সেখানে ক্লিপবোর্ডে কপি + সব সফটওয়্যার/অ্যাপে ডাইরেক্ট শেয়ার প্যানেল
             await copyTextToClipboard(shareUrl);
             showShareFeedback(btnEl);
             openUniversalShareModal(productTitle, shareText, shareUrl);
