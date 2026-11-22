@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>rorraxy - Wholesale B2B Categories & Search</title>
-    
     <script src="/ecosystem-core.js"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
     <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -30,22 +26,19 @@
             --text-gray: #a0a0b5;
             --font-main: 'Poppins', sans-serif;
         }
-
-        html, body { 
-            width: 100%; max-width: 100%; overflow-x: hidden; 
-            background: var(--bg-wholesale) !important; 
-            color: var(--text-white); font-family: var(--font-main); 
+        html, body {
+            width: 100%; max-width: 100%; overflow-x: hidden;
+            background: var(--bg-wholesale) !important;
+            color: var(--text-white); font-family: var(--font-main);
             min-height: 100vh; font-size: 15px;
             -webkit-font-smoothing: antialiased;
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
         }
-        
         body { padding-top: 15px; padding-bottom: 25px; text-transform: uppercase !important; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         .category-fullscreen-view { padding: 12px 14px; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-        
         .accordion-category-box {
             background: var(--card-wholesale); border-radius: 14px; overflow: hidden;
             transition: all 0.3s ease; border: 1px solid rgba(212, 175, 55, 0.15);
@@ -54,27 +47,22 @@
             background: #101018; border-color: rgba(212, 175, 55, 0.35);
             box-shadow: 0 6px 25px rgba(212, 175, 55, 0.08);
         }
-
         .accordion-header {
             padding: 18px 20px; display: flex; align-items: center; justify-content: space-between;
             cursor: pointer; user-select: none; background: rgba(255,255,255,0.01); transition: background 0.2s ease;
         }
         .accordion-header:hover { background: rgba(212, 175, 55, 0.03); }
-
         .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
         .accordion-icon-box { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .accordion-icon-box i { font-size: 1.35rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
         .accordion-texts { display: flex; flex-direction: column; gap: 2px; }
         .accordion-main-title {
             font-size: 0.92rem; font-weight: 700; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px;
         }
         .accordion-sub-hint { font-size: 0.60rem; color: var(--text-gray); font-weight: 500; letter-spacing: 0.3px; }
-
         .accordion-arrow { font-size: 0.9rem; color: var(--gold-solid); transition: transform 0.3s ease; flex-shrink: 0; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
-
         .accordion-content {
             max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
             background: #06060a; padding: 0 16px;
@@ -83,10 +71,8 @@
             max-height: 1400px; transition: max-height 0.4s ease-in-out;
             padding: 14px 16px 18px 16px; border-top: 1px solid rgba(212, 175, 55, 0.08);
         }
-
         .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
-
         .sub-cat-item {
             background: #0f0f17; border-radius: 10px; padding: 12px 10px;
             display: flex; align-items: center; gap: 10px; cursor: pointer;
@@ -96,7 +82,6 @@
         .sub-cat-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
         .sub-cat-name { font-size: 0.68rem; color: var(--text-white); font-weight: 600; }
 
-        /* ডাইনামিক প্রোডাক্ট ডিসপ্লে সেকশন */
         .dynamic-product-section { display: none; margin-top: 15px; padding: 10px 0; }
         .dynamic-product-section.active { display: block; }
         .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
@@ -106,54 +91,47 @@
             color: var(--gold-solid); padding: 6px 14px; border-radius: 8px; font-size: 0.65rem;
             cursor: pointer; font-weight: 600; text-transform: uppercase;
         }
-
         .feed-container {
-            padding: 4px 0; 
-            column-count: 2; 
-            column-gap: 8px; 
-            width: 100%; 
-            max-width: 1400px; 
+            padding: 4px 0;
+            column-count: 2;
+            column-gap: 8px;
+            width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
         }
-        @media (min-width: 768px) { 
-            .feed-container { 
-                column-count: 4; 
-                column-gap: 12px; 
-            } 
+        @media (min-width: 768px) {
+            .feed-container {
+                column-count: 4;
+                column-gap: 12px;
+            }
         }
-
         .product-card {
-            background: var(--card-wholesale); border-radius: 12px; overflow: hidden; 
-            display: inline-block; width: 100%; 
+            background: var(--card-wholesale); border-radius: 12px; overflow: hidden;
+            display: inline-block; width: 100%;
             border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
             margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
             transition: transform 0.2s ease;
         }
         .product-card:active { transform: scale(0.98); }
-
         .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; background: transparent; }
-        
-        .card-footer-actions { 
-            display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; 
+        .card-footer-actions {
+            display: flex; align-items: center; justify-content: space-between; padding: 8px 10px;
             background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
             white-space: nowrap; overflow: hidden;
         }
-        
         .wholesale-info-inline { display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
         .product-price-tag { font-size: 0.80rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .moq-tag { font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
-        
-        .share-icon-btn { 
-            background: none; border: none; cursor: pointer; 
-            font-size: 1.15rem; background: var(--gold-gradient); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        .share-icon-btn {
+            background: none; border: none; cursor: pointer;
+            font-size: 1.15rem; background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             padding: 4px; display: flex; align-items: center; justify-content: center;
             flex-shrink: 0; transition: transform 0.15s ease;
         }
         .share-icon-btn:active { transform: scale(1.2); }
 
-        /* ট্রান্সপারেন্ট ওভারলে সার্চ মডাল */
         .floating-search-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -161,7 +139,6 @@
             opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; padding: 16px;
         }
         .floating-search-modal.active { opacity: 1; visibility: visible; }
-
         .floating-search-box {
             background: rgba(8, 8, 12, 0.95); border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 480px;
@@ -189,7 +166,6 @@
     </style>
 </head>
 <body id="mainBody">
-
     <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
       <linearGradient id="goldGradientSvg" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#bf953f" />
@@ -200,10 +176,7 @@
       </linearGradient>
     </svg>
 
-    <!-- ক্যাটাগরি তালিকা ভিউ -->
     <main class="category-fullscreen-view" id="categoryMainListView">
-        
-        <!-- ১. WOMEN'S FASHION -->
         <div class="accordion-category-box" id="cat-women">
             <div class="accordion-header" onclick="toggleAccordion('cat-women')">
                 <div class="accordion-title-wrap">
@@ -231,7 +204,6 @@
             </div>
         </div>
 
-        <!-- ২. MEN'S FASHION -->
         <div class="accordion-category-box" id="cat-men">
             <div class="accordion-header" onclick="toggleAccordion('cat-men')">
                 <div class="accordion-title-wrap">
@@ -254,7 +226,6 @@
             </div>
         </div>
 
-        <!-- ৩. GIRLS' FASHION -->
         <div class="accordion-category-box" id="cat-girls">
             <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
                 <div class="accordion-title-wrap">
@@ -282,7 +253,6 @@
             </div>
         </div>
 
-        <!-- ৪. BOYS' FASHION -->
         <div class="accordion-category-box" id="cat-boys">
             <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
                 <div class="accordion-title-wrap">
@@ -305,7 +275,6 @@
             </div>
         </div>
 
-        <!-- ৫. MATCHING SETS -->
         <div class="accordion-category-box" id="cat-matching">
             <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
                 <div class="accordion-title-wrap">
@@ -333,7 +302,6 @@
             </div>
         </div>
 
-        <!-- ৬. LUXURY GIFTS -->
         <div class="accordion-category-box" id="cat-gifts">
             <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
                 <div class="accordion-title-wrap">
@@ -357,7 +325,6 @@
             </div>
         </div>
 
-        <!-- ৭. MOTHER & BABY -->
         <div class="accordion-category-box" id="cat-mother">
             <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
                 <div class="accordion-title-wrap">
@@ -380,28 +347,22 @@
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- ডাইনামিক প্রোডাক্ট ফিড সেকশন (Pinterest Style Feed) -->
     <div class="category-fullscreen-view dynamic-product-section" id="dynamicProductSection">
         <div class="section-header-row">
             <span class="section-title-result" id="resultCategoryTitle">WHOLESALE PRODUCTS</span>
             <button class="back-to-cat-btn" onclick="goBackToCategories()"><i class="fa-solid fa-arrow-left"></i> BACK TO CATEGORIES</button>
         </div>
-        <div class="feed-container" id="categoryProductFeed">
-            <!-- ডাইনামিক প্রোডাক্ট গ্রিড -->
-        </div>
+        <div class="feed-container" id="categoryProductFeed"></div>
     </div>
 
-    <!-- ট্রান্সপারেন্ট ওভারলে সার্চ মডাল -->
     <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event)">
         <div class="floating-search-box" id="searchBoxContainer">
             <button class="close-modal-btn" onclick="closeSearchModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
             <div class="modal-input-container">
                 <input type="text" id="modalSearchInput" class="modal-input" placeholder="Type bulk product name..." autocomplete="off">
-                
                 <div class="search-bottom-actions">
                     <label class="search-action-item-btn" style="cursor: pointer;">
                         <i class="fa-solid fa-camera"></i>
@@ -427,7 +388,7 @@
         function getActiveAffiliateId() {
             const urlParams = new URLSearchParams(window.location.search);
             const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-            
+
             if (refFromUrl) {
                 try {
                     localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
@@ -512,7 +473,7 @@
                 const title = item.title || 'WHOLESALE ITEM';
                 const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
                 const moqCount = item.moq || item.min_order_qty || 1;
-                
+
                 let imageUrl = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
                 try {
                     if (item.images_json) {
@@ -613,7 +574,7 @@
 
             let affId = getActiveAffiliateId();
             let shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
-            
+
             if (affId) {
                 shareUrl += `&ref=${affId}`;
             }
