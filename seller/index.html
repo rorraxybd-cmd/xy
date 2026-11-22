@@ -87,8 +87,8 @@
         .form-select option { background: #08080c; color: #fff; }
 
         .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
-        .country-code-select { background: #050508; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; max-width: 115px; }
-        .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
+        .country-code-select { background: #050508; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; min-width: 122px; max-width: 138px; flex-shrink: 0; }
+        .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; min-width: 0; }
 
         .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 8px 10px; border-radius: 8px; margin-top: 8px; word-break: break-word; }
         .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.25); }
@@ -689,6 +689,34 @@
         let temporarySellerPhone = '';
         let currentApprovalStatus = localStorage.getItem('rorraxy_seller_approval_status') || 'pending';
 
+        function ensureCountriesLoadedImmediately() {
+            const targetEl = document.getElementById('target_country');
+            const dialEl = document.getElementById('countryDialCode');
+            const profileEl = document.getElementById('countrySelect');
+
+            if (typeof WORLD_COUNTRIES !== 'undefined' && Array.isArray(WORLD_COUNTRIES)) {
+                if (targetEl && targetEl.options.length === 0) {
+                    targetEl.innerHTML = WORLD_COUNTRIES.map(c =>
+                        `<option value="${c.code}">${c.flag} ${c.name}</option>`
+                    ).join('');
+                    targetEl.value = 'bd';
+                }
+                if (dialEl && dialEl.options.length === 0) {
+                    dialEl.innerHTML = WORLD_COUNTRIES.map(c =>
+                        `<option value="${c.dial}">${c.flag} ${c.dial}</option>`
+                    ).join('');
+                    dialEl.value = '+880';
+                }
+                if (profileEl && profileEl.options.length === 0) {
+                    profileEl.innerHTML = WORLD_COUNTRIES.map(c => {
+                        const titleName = c.name.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+                        return `<option value="${titleName}">${c.flag} ${titleName}</option>`;
+                    }).join('');
+                    profileEl.value = 'Bangladesh';
+                }
+            }
+        }
+
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
             const txt = document.getElementById('notifyModalText');
@@ -790,6 +818,7 @@
             } else if (tabName === 'list') {
                 loadProductsIntoTable();
             } else if (tabName === 'upload') {
+                ensureCountriesLoadedImmediately();
                 if (document.getElementById('editingProductId').value === "") resetUploadForm();
                 updateUploadStepUI(currentUploadStep || 1);
             }
@@ -889,6 +918,7 @@
             if (targetStep === 2 && !selectedModeValue) { showCustomNotify("Select upload mode.", false); return; }
             if (targetStep === 3 && !window.selectedCategoryValue) { showCustomNotify("Select category.", false); return; }
             if (targetStep === 4 && uploadedImageUrls.length === 0) { showCustomNotify("Upload at least one image.", false); return; }
+            ensureCountriesLoadedImmediately();
             updateUploadStepUI(targetStep);
         }
 
@@ -1485,6 +1515,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
+            ensureCountriesLoadedImmediately();
             if (typeof initRorraxyCountries === 'function') {
                 await initRorraxyCountries();
             }
