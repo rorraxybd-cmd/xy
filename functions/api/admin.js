@@ -15,7 +15,6 @@ export async function onRequest(context) {
   try {
     const action = url.searchParams.get("action");
 
-    // ১. ভেরিফিকেশন রিকোয়েস্ট
     if (action === "verify") {
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -49,7 +48,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ২. ইনফো ও পাসওয়ার্ড রেজিস্ট্রেশন / আপডেট
     if (action === "register" && request.method === "POST") {
       const data = await request.json();
       const email = (data.email || "").toLowerCase();
@@ -96,14 +94,13 @@ export async function onRequest(context) {
       });
     }
 
-    // ৩. পাসওয়ার্ড ভেরিফিকেশন (লগইন)
     if (action === "login" && request.method === "POST") {
       const data = await request.json();
       const email = (data.email || "").toLowerCase();
       const inputPassword = data.password || "";
 
       const record = await env.retail.prepare(`SELECT password_hash FROM admin_info WHERE email = ?`).bind(email).first();
-      
+
       if (!record) {
         return new Response(JSON.stringify({ success: false, error: "Admin profile not found!" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
@@ -118,7 +115,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ৪. প্রোফাইল ডাটা ফেচ (GET)
     if (action === "info" && request.method === "GET") {
       const email = url.searchParams.get("email");
       if (!email) {
@@ -133,7 +129,6 @@ export async function onRequest(context) {
     }
 
     return new Response(JSON.stringify({ message: "Admin API Active" }), { status: 200, headers: corsHeaders });
-
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
