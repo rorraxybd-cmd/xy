@@ -518,10 +518,16 @@
                             <div class="form-group">
                                 <label>TARGET COUNTRY<span class="req-star">*</span></label>
                                 <select id="target_country" class="form-select">
-                                    <option value="bd" selected>🇧🇩 BANGLADESH</option>
-                                    <option value="us">🇺🇸 UNITED STATES</option>
-                                    <option value="gb">🇬🇧 UNITED KINGDOM</option>
-                                    <option value="ae">🇦🇪 UNITED ARAB EMIRATES</option>
+                                    <option value="bd" selected>🇧🇩 বাংলাদেশ (BANGLADESH)</option>
+                                    <option value="in">🇮🇳 ভারত (INDIA)</option>
+                                    <option value="pk">🇵🇰 পাকিস্তান (PAKISTAN)</option>
+                                    <option value="ae">🇦🇪 সংযুক্ত আরব আমিরাত (UAE)</option>
+                                    <option value="sa">🇸🇦 সৌদি আরব (SAUDI ARABIA)</option>
+                                    <option value="my">🇲🇾 মালয়েশিয়া (MALAYSIA)</option>
+                                    <option value="sg">🇸🇬 সিঙ্গাপুর (SINGAPORE)</option>
+                                    <option value="us">🇺🇸 যুক্তরাষ্ট্র (UNITED STATES)</option>
+                                    <option value="gb">🇬🇧 যুক্তরাজ্য (UNITED KINGDOM)</option>
+                                    <option value="au">🇦🇺 অস্ট্রেলিয়া (AUSTRALIA)</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -711,6 +717,16 @@
         let temporarySellerEmail = '';
         let temporarySellerPhone = '';
         let currentApprovalStatus = localStorage.getItem('rorraxy_seller_approval_status') || 'pending';
+        let autoDetectedCountryData = { code: 'bd', dialCode: '+880', name: 'Bangladesh', flag: '🇧🇩' };
+
+        function getCountryFlagEmoji(countryCode) {
+            if (!countryCode || countryCode.length !== 2) return '🌐';
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
 
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
@@ -785,20 +801,91 @@
                 if (res && res.ok) {
                     const data = await res.json();
                     const dialCode = data.country_calling_code || "+880";
+                    const countryCode = (data.country_code || "BD").toLowerCase();
+                    const countryName = data.country_name || "Bangladesh";
+                    const flagEmoji = getCountryFlagEmoji(countryCode);
+
+                    autoDetectedCountryData = {
+                        code: countryCode,
+                        dialCode: dialCode,
+                        name: countryName,
+                        flag: flagEmoji
+                    };
+
+                    // ১. উপরের মোবাইল ডায়াল কোড অটোমেটিক সেট ও যুক্ত করা
                     const select = document.getElementById('countryDialCode');
                     if (select) {
+                        let foundDial = false;
                         for (let opt of select.options) {
-                            if (opt.value === dialCode) { select.value = dialCode; break; }
+                            if (opt.value === dialCode) { 
+                                select.value = dialCode; 
+                                foundDial = true;
+                                break; 
+                            }
+                        }
+                        if (!foundDial && dialCode) {
+                            const newOpt = document.createElement('option');
+                            newOpt.value = dialCode;
+                            newOpt.text = `${flagEmoji} ${dialCode}`;
+                            select.prepend(newOpt);
+                            select.value = dialCode;
                         }
                     }
+
+                    // ২. প্রোফাইলের দেশের নাম অটোমেটিক সেট ও যুক্ত করা
                     const countrySelect = document.getElementById('countrySelect');
-                    if (countrySelect && data.country_name) {
+                    if (countrySelect && countryName) {
+                        let foundCountry = false;
                         for (let opt of countrySelect.options) {
-                            if (opt.value.toLowerCase() === data.country_name.toLowerCase()) { countrySelect.value = opt.value; break; }
+                            if (opt.value.toLowerCase() === countryName.toLowerCase()) { 
+                                countrySelect.value = opt.value; 
+                                foundCountry = true;
+                                break; 
+                            }
+                        }
+                        if (!foundCountry) {
+                            const newCountryOpt = document.createElement('option');
+                            newCountryOpt.value = countryName;
+                            newCountryOpt.text = countryName;
+                            countrySelect.prepend(newCountryOpt);
+                            countrySelect.value = countryName;
                         }
                     }
+
+                    // ৩. নিচের ডিসকাউন্ট/টার্গেট কান্ট্রিতে পতাকা ও দেশের নাম অটোমেটিক সেট করা
+                    applyAutoTargetCountry();
                 }
             } catch (e) {}
+        }
+
+        function applyAutoTargetCountry() {
+            const targetCountrySelect = document.getElementById('target_country');
+            if (!targetCountrySelect || !autoDetectedCountryData.code) return;
+
+            const code = autoDetectedCountryData.code.toLowerCase();
+            let foundTarget = false;
+            for (let opt of targetCountrySelect.options) {
+                if (opt.value.toLowerCase() === code) {
+                    targetCountrySelect.value = opt.value;
+                    foundTarget = true;
+                    break;
+                }
+            }
+            if (!foundTarget) {
+                let displayName = autoDetectedCountryData.name.toUpperCase();
+                try {
+                    const bnName = new Intl.DisplayNames(['bn'], { type: 'region' }).of(code.toUpperCase());
+                    if (bnName) {
+                        displayName = `${bnName} (${autoDetectedCountryData.name.toUpperCase()})`;
+                    }
+                } catch (err) {}
+
+                const newTargetOpt = document.createElement('option');
+                newTargetOpt.value = code;
+                newTargetOpt.text = `${autoDetectedCountryData.flag} ${displayName}`;
+                targetCountrySelect.prepend(newTargetOpt);
+                targetCountrySelect.value = code;
+            }
         }
 
         function switchTab(tabName) {
@@ -1108,6 +1195,7 @@
             document.getElementById('product_video').value = "";
             document.getElementById('youtube_live').value = "";
             document.getElementById('custom_size_note').checked = true;
+            applyAutoTargetCountry();
             uploadedImageUrls = [];
             uploadedVideoUrl = "";
             document.getElementById('image-preview').innerHTML = "";
@@ -1294,6 +1382,10 @@
                 document.getElementById('product_video').value = p.youtube_video || "";
                 document.getElementById('youtube_live').value = p.youtube_live || "";
                 document.getElementById('custom_size_note').checked = p.allow_custom_note === 1;
+                if (p.target_country) {
+                    const tcSel = document.getElementById('target_country');
+                    if (tcSel) tcSel.value = p.target_country;
+                }
                 selectedModeValue = p.upload_mode || "retail";
                 window.selectedCategoryValue = p.category || "";
                 
