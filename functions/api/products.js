@@ -1,6 +1,6 @@
 export async function onRequest(context) {
   const { request, env } = context;
-  
+
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -21,8 +21,7 @@ export async function onRequest(context) {
 
   try {
     const url = new URL(request.url);
-    
-    // 1. GET Request (উন্নত ও নমনীয় ফিল্টারিং যাতে কোনো প্রোডাক্ট মিস না হয়)
+
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
       const sellerId = url.searchParams.get("seller_id");
@@ -40,8 +39,7 @@ export async function onRequest(context) {
         conditions.push("seller_id = ?");
         params.push(sellerId);
       }
-      
-      // মোড ফিল্টারটি যদি একান্তই দেওয়া হয়, তবে যেন wholesale, both বা ফাঁকা সব রিলায়েবল ডাটা নিয়ে আসে
+
       if (mode && mode.toLowerCase() !== 'all') {
         const cleanMode = mode.toLowerCase().trim();
         if (cleanMode === 'wholesale') {
@@ -66,7 +64,6 @@ export async function onRequest(context) {
       });
     }
 
-    // 2. POST Request
     if (request.method === "POST") {
       const body = await request.json();
       const {
@@ -79,10 +76,10 @@ export async function onRequest(context) {
 
       const insertQuery = `
         INSERT INTO products (
-          seller_id, product_code, title, upload_mode, category, price, market_price, 
-          dropship_base_price, dropship_resell_price, price_sample, price_min_whole, 
-          price_bulk, stock, moq, image_url, images_json, video_url, youtube_video, 
-          youtube_live, facebook_live, target_country, discount_rate, allow_custom_note, 
+          seller_id, product_code, title, upload_mode, category, price, market_price,
+          dropship_base_price, dropship_resell_price, price_sample, price_min_whole,
+          price_bulk, stock, moq, image_url, images_json, video_url, youtube_video,
+          youtube_live, facebook_live, target_country, discount_rate, allow_custom_note,
           chat_with_seller, description, like_count, created_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, datetime('now'))
       `;
@@ -91,7 +88,7 @@ export async function onRequest(context) {
         seller_id || null, product_code || null, title || null, upload_mode || "both",
         category || null, price || 0, market_price || 0, dropship_base_price || 0,
         dropship_resell_price || 0, price_sample || 0, price_min_whole || 0, price_bulk || 0,
-        stock || 0, moq || 1, image_url || null, 
+        stock || 0, moq || 1, image_url || null,
         images_json ? (typeof images_json === 'string' ? images_json : JSON.stringify(images_json)) : null,
         video_url || null, youtube_video || null, youtube_live || null, facebook_live || null,
         target_country || "bd", discount_rate || "0", allow_custom_note ? 1 : 0,
@@ -103,7 +100,6 @@ export async function onRequest(context) {
       });
     }
 
-    // 3. PUT Request (Edit)
     if (request.method === "PUT") {
       const body = await request.json();
       const targetId = body.id || url.searchParams.get("id");
@@ -116,7 +112,7 @@ export async function onRequest(context) {
       }
 
       const updateQuery = `
-        UPDATE products 
+        UPDATE products
         SET title = COALESCE(?, title),
             price = COALESCE(?, price),
             price_min_whole = COALESCE(?, price_min_whole),
@@ -134,7 +130,6 @@ export async function onRequest(context) {
       });
     }
 
-    // 4. DELETE Request
     if (request.method === "DELETE") {
       const deleteId = url.searchParams.get("id") || url.pathname.split('/').pop();
 
@@ -157,7 +152,6 @@ export async function onRequest(context) {
       status: 405,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
-
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
