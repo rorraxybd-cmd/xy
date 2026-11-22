@@ -1,4 +1,3 @@
-// categories.js - সমস্ত ক্যাটাগরি এবং সাব-ক্যাটাগরির ডেটা
 const rorraxyCategoriesData = [
     {
         id: "cat-women",
