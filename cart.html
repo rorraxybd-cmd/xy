@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>rorraxy - Retail Checkout</title>
-    
     <script src="/ecosystem-core.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
@@ -29,44 +26,37 @@
             --card-bg: #0b0b10;
             --input-bg: #14141d;
         }
-
         * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; word-break: break-word; }
-        
         html, body {
             width: 100%; max-width: 100%; background: var(--bg-retail) !important; color: var(--text-white);
             font-family: var(--font-main); font-size: 14px; text-transform: uppercase !important;
             -webkit-font-smoothing: antialiased; overflow-x: hidden !important; min-height: 100vh;
         }
-
         .checkout-container {
             max-width: 760px; width: 100%; margin: 0 auto; padding: 20px 12px 110px 12px; display: flex; flex-direction: column; gap: 16px;
         }
-
         .cart-brand-logo {
             width: 105px; height: auto; object-fit: contain; margin: 0 auto; display: block; filter: none !important;
         }
-
         .address-form-section, .summary-card-box {
-            display: flex; background: var(--card-bg); border-radius: 16px; padding: 16px 14px; flex-direction: column; gap: 12px; 
+            display: flex; background: var(--card-bg); border-radius: 16px; padding: 16px 14px; flex-direction: column; gap: 12px;
             border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); width: 100%;
         }
         .section-center-header { text-align: center; padding-bottom: 2px; width: 100%; }
         .section-center-header h2 { font-size: 0.82rem; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 6px; color: #fff; max-width: 100%; text-overflow: ellipsis; }
-
         .luxury-form-label { font-size: 0.62rem; color: #ffffff !important; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
         .luxury-form-input {
-            background: var(--input-bg) !important; border: none !important; 
-            padding: 11px 12px !important; border-radius: 9px !important; color: #ffffff !important; 
+            background: var(--input-bg) !important; border: none !important;
+            padding: 11px 12px !important; border-radius: 9px !important; color: #ffffff !important;
             font-size: 0.82rem !important; font-family: var(--font-main) !important; width: 100% !important; outline: none !important;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
         }
         .luxury-form-input:focus { box-shadow: 0 0 10px rgba(212,175,55,0.2), inset 0 1px 3px rgba(0,0,0,0.3) !important; background: #181824 !important; }
         .luxury-form-input.input-error { box-shadow: 0 0 8px rgba(255, 59, 48, 0.6) !important; }
-
         .iti { width: 100% !important; display: block; }
         .iti__selected-flag { background-color: rgba(255, 255, 255, 0.05) !important; border-radius: 9px 0 0 9px !important; border-right: none !important; }
         .iti input[type="tel"] { padding-left: 88px !important; width: 100% !important; color: #ffffff !important; }
-        .iti__country-list { 
+        .iti__country-list {
             background-color: #0b0b10 !important; border: none !important; box-shadow: 0 8px 25px rgba(0,0,0,0.8) !important;
             color: #ffffff !important; text-transform: none !important; max-height: 220px !important; width: 280px !important; z-index: 99999 !important;
             border-radius: 9px;
@@ -74,24 +64,21 @@
         .iti__country { padding: 9px 10px; }
         .iti__country:hover { background-color: rgba(212, 175, 55, 0.15) !important; }
         .iti__selected-dial-code { color: #ffffff !important; font-weight: 700; }
-
         .save-address-checkbox-row {
             display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text-white); font-weight: 600; cursor: pointer; margin-top: 4px;
         }
         .save-address-checkbox-row input[type="checkbox"] {
             width: 16px; height: 16px; accent-color: var(--gold-solid); cursor: pointer; flex-shrink: 0;
         }
-
         .cart-items-box {
             background: var(--card-bg); border-radius: 16px; padding: 14px; width: 100%;
             display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto;
             border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
-        .cart-row-item { 
+        .cart-row-item {
             display: flex; align-items: center; justify-content: space-between; background: #12121a; padding: 10px; border-radius: 10px; gap: 8px; width: 100%;
         }
         .cart-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; background: #000; flex-shrink: 0; }
-
         .details-toggle-btn {
             background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); color: var(--gold-solid);
             padding: 3px 6px; border-radius: 6px; font-size: 0.52rem; font-weight: 700; cursor: pointer; margin-top: 3px; display: inline-block;
@@ -100,16 +87,12 @@
             display: none; font-size: 0.6rem; color: var(--text-gray); text-transform: none !important; margin-top: 4px; line-height: 1.4;
             background: #0b0b10; padding: 6px; border-radius: 6px; border-left: 2px solid var(--gold-solid);
         }
-
         .summary-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 0.74rem; font-weight: 600; color: var(--text-gray); gap: 10px; }
-
         #step2PaymentSection { display: none; flex-direction: column; gap: 14px; animation: fadeIn 0.3s ease-in-out; width: 100%; }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .payment-accordion-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         .payment-method-item {
             background: rgba(18, 18, 26, 0.85); border-radius: 14px; overflow: hidden; cursor: pointer; width: 100%;
@@ -118,13 +101,9 @@
         .payment-method-item.active { border-color: var(--gold-solid); background: rgba(24, 24, 36, 0.98); box-shadow: 0 0 18px rgba(212,175,55,0.25); }
         .payment-method-header { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .payment-method-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; font-weight: 800; color: #fff; gap: 8px; }
-
         .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
         .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; }
-
         .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; width: 100%; }
-        
-        /* Premium Image/SVG Brand Badges Container */
         .brand-payout-card {
             display: inline-flex; align-items: center; justify-content: center;
             background: #ffffff; padding: 4px 10px; border-radius: 8px; height: 34px; min-width: 54px;
@@ -132,7 +111,6 @@
         }
         .brand-payout-card:hover { transform: scale(1.04); }
         .brand-payout-card img { height: 20px; width: auto; max-width: 48px; object-fit: contain; }
-
         #currenciesModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
             z-index: 99999999; display: none; align-items: center; justify-content: center; padding: 15px;
@@ -143,7 +121,6 @@
         }
         .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
         .currency-tag { background: #181824; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
-
         .single-fixed-checkout-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
             background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px);
@@ -157,10 +134,8 @@
             font-family: var(--font-main); box-shadow: 0 4px 18px rgba(212,175,55,0.3); text-align: center;
         }
         .btn-action-main:active { transform: scale(0.98); }
-
         .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
         .gold-gradient-price { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-
         #toastBox {
             position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%); background: #181824; color: #ffffff; padding: 9px 16px;
             border-radius: 8px; z-index: 9999999; display: none; font-size: 0.72rem; font-weight: 700; text-transform: none !important; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
@@ -168,10 +143,8 @@
     </style>
 </head>
 <body>
-
     <div id="toastBox"></div>
 
-    <!-- 150+ CURRENCIES MODAL -->
     <div id="currenciesModal">
         <div class="modal-content-box">
             <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px;">
@@ -199,20 +172,14 @@
     </div>
 
     <div class="checkout-container">
-        
-        <!-- ব্র্যান্ড লোগো এবং রিভিউ কার্ট প্রোডাক্ট হেডার -->
         <div style="display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; width:100%;">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" class="cart-brand-logo">
             <h2 class="gold-gradient-text" style="font-size: 0.85rem; letter-spacing: 1.2px;"><i class="fa-solid fa-cart-shopping"></i> REVIEW CART PRODUCTS</h2>
         </div>
 
-        <!-- STEP 1: CART REVIEW & SHIPPING ADDRESS -->
         <div id="step1CartSection" style="display:flex; flex-direction:column; gap:14px; width:100%;">
-
-            <!-- কার্ট আইটেম বক্স -->
             <div id="cartItemsListContainer" class="cart-items-box"></div>
 
-            <!-- রিয়েল-টাইম কারেন্সি ক্যালকুলেশন ও টোটাল অ্যামাউন্ট বক্স -->
             <div class="summary-card-box">
                 <div class="summary-row">
                     <span style="font-weight:700; color:var(--text-gray);">TOTAL QUANTITY:</span>
@@ -228,53 +195,40 @@
                 </div>
             </div>
 
-            <!-- শিপিং অ্যাড্রেস ফরম -->
             <div id="addressFormSection" class="address-form-section">
                 <div class="section-center-header">
                     <h2 class="gold-gradient-text">
                         <i class="fa-solid fa-location-dot" style="color: var(--gold-solid);"></i> SHIPPING ADDRESS
                     </h2>
                 </div>
-                
                 <form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex; flex-direction:column; gap:10px; width:100%;">
-                    
                     <div class="form-group" style="display:flex; flex-direction:column; gap:6px; width:100%;">
                         <label class="luxury-form-label">WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
                         <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="Enter mobile number">
                     </div>
-
                     <div style="display:flex; flex-direction:column; width:100%;">
                         <label class="luxury-form-label">FULL NAME <span style="color:var(--danger-red);">*</span></label>
                         <input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN">
                     </div>
-
                     <div style="display:flex; flex-direction:column; width:100%;">
                         <label class="luxury-form-label">SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label>
                         <textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="2" style="resize:none;"></textarea>
                     </div>
-
                     <label class="save-address-checkbox-row">
                         <input type="checkbox" id="saveAddressCheckbox" checked> Save my info for easy future purchases
                     </label>
-
                 </form>
             </div>
-
         </div>
 
-        <!-- STEP 2: PAYMENT METHOD & CONFIRMATION -->
         <div id="step2PaymentSection">
-            
             <div class="address-form-section">
                 <div class="section-center-header">
                     <h2 class="gold-gradient-text">
                         <i class="fa-solid fa-shield-halved" style="color: var(--gold-solid);"></i> SELECT PAYMENT METHOD
                     </h2>
                 </div>
-
                 <div class="payment-accordion-group">
-
-                    <!-- INTERNATIONAL CARDS WITH ACCURATE R2 LOGOS -->
                     <div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
@@ -282,23 +236,19 @@
                                 <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="payout-icons-row">
-                                <!-- VISA LOGO -->
                                 <div class="brand-payout-card" title="VISA">
                                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/1547549.webp" alt="Visa">
                                 </div>
-                                <!-- MASTERCARD LOGO -->
                                 <div class="brand-payout-card" title="MasterCard">
                                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/mastercard-svgrepo-com.svg" alt="MasterCard">
                                 </div>
-                                <!-- AMERICAN EXPRESS (AMEX) LOGO -->
                                 <div class="brand-payout-card" title="American Express">
                                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/american-express.svg" alt="Amex">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- BANGLADESH LOCAL CARDS & MOBILE WALLETS (BKASH, NAGAD) -->
+
                     <div class="payment-method-item" id="method-bd" onclick="selectPaymentMethod('Bangladesh Cards', 'method-bd')">
                         <div class="payment-method-header">
                             <div class="payment-method-title">
@@ -306,18 +256,15 @@
                                 <span class="badge-local-bd">BDT PAYMENT</span>
                             </div>
                             <div class="payout-icons-row">
-                                <!-- BKASH LOGO -->
                                 <div class="brand-payout-card" title="bKash">
                                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/bKash%20Icon%20Vector.svg%20.png" alt="bKash">
                                 </div>
-                                <!-- NAGAD LOGO -->
                                 <div class="brand-payout-card" title="Nagad">
                                     <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/idNpcxg37S_1794380383524.png" alt="Nagad">
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -336,12 +283,9 @@
                     <span id="summaryTotalDisplay" class="gold-gradient-price" style="font-size:0.92rem; text-align:right;">$0.00 USD</span>
                 </div>
             </div>
-
         </div>
-
     </div>
 
-    <!-- MAIN ACTION BUTTON -->
     <div class="single-fixed-checkout-wrapper">
         <button type="button" id="mainCheckoutBtn" class="btn-action-main">
             PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>
@@ -367,7 +311,7 @@
 
             const phoneInput = document.getElementById('chkPhone');
             phoneInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/\D/g, ''); 
+                e.target.value = e.target.value.replace(/\D/g, '');
                 clearError('chkPhone');
             });
 
@@ -412,7 +356,7 @@
                     const countryCode = data.country_code || 'BD';
                     currentCurrencyCode = data.currency || 'BDT';
                     currentCountryFlag = getFlagEmoji(countryCode);
-                    
+
                     fetch(`https://open.er-api.com/v6/latest/USD`)
                         .then(res => res.json())
                         .then(rateData => {
@@ -451,7 +395,7 @@
             }
 
             let html = '', totalAmt = 0, totalQty = 0;
-            
+
             let updatedCart = cart.map((item, index) => {
                 let priceNum = parseFloat((item.price || "0").toString().replace('$', ''));
                 let itemTotal = priceNum * item.qty;
@@ -556,9 +500,9 @@
 
             let hasError = false;
 
-            if (!phone || (iti && !iti.isValidNumber())) { 
-                phoneEl.classList.add('input-error'); 
-                hasError = true; 
+            if (!phone || (iti && !iti.isValidNumber())) {
+                phoneEl.classList.add('input-error');
+                hasError = true;
                 showToast("Please enter a VALID COMPLETE phone number!", true);
             }
             if (!name) { nameEl.classList.add('input-error'); hasError = true; }
