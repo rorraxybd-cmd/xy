@@ -4,22 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Seller Ecosystem Portal - rorraxy</title>
-    
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
     <script src="/ecosystem-core.js"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <link rel="stylesheet" href="info.css">
     <link rel="stylesheet" href="category.css">
-
     <style>
         :root {
             --bg-retail: #030305;
@@ -33,164 +28,110 @@
             --border-soft: rgba(212, 175, 55, 0.2);
             --success-green: #2ed573;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
-        
-        body { 
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            padding: 16px 12px 105px 12px; text-transform: uppercase; 
-            min-height: 100vh;
-        }
-
+        body { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 12px 10px 95px 10px; text-transform: uppercase; min-height: 100vh; }
         .main-container { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
-
         .app-view { display: none; width: 100%; animation: fadeIn 0.2s ease-in-out; }
         .app-view.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .dashboard-header { text-align: center; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
-        .header-logo-img { width: 75px; height: 75px; object-fit: contain; background: transparent !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .dashboard-header { text-align: center; margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; }
+        .header-logo-img { width: 64px; height: 64px; object-fit: contain; background: transparent !important; }
         .dashboard-header h1, .gold-title-gradient { font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dashboard-header h1 { font-size: 1.25rem; letter-spacing: 0.5px; }
-
-        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 20px 16px; margin-bottom: 16px; width: 100%; text-align: left; }
-        .info-card-title { font-size: 0.82rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
-
-        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; width: 100%; max-width: 380px; }
-        .step-item { flex: 1; padding: 6px 10px; border-radius: 12px; background: #050508; border: 1px solid var(--border-soft); text-align: center; font-size: 0.6rem; font-weight: 700; color: var(--text-gray); }
+        .dashboard-header h1 { font-size: 1.2rem; letter-spacing: 0.5px; }
+        .info-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 14px; padding: 14px 12px; margin-bottom: 10px; width: 100%; text-align: left; }
+        .info-card-title { font-size: 0.8rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--border-soft); padding-bottom: 8px; }
+        .step-tracker { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px; width: 100%; max-width: 380px; }
+        .step-item { flex: 1; padding: 5px 8px; border-radius: 10px; background: #050508; border: 1px solid var(--border-soft); text-align: center; font-size: 0.6rem; font-weight: 700; color: var(--text-gray); }
         .step-item.active { background: rgba(212, 175, 55, 0.12); border-color: var(--gold-solid); color: var(--gold-solid); }
         .step-item.completed { background: rgba(74, 222, 128, 0.12); border-color: #4ade80; color: #4ade80; }
-
-        .step-progress-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 14px; padding: 10px; background: var(--card-retail); border-radius: 12px; border: 1px solid var(--border-soft); }
-        .step-prog-item { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; position: relative; }
-        .step-prog-circle { width: 26px; height: 26px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--text-gray); border: 1px solid var(--border-soft); z-index: 2; }
+        .step-progress-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 10px; padding: 8px; background: var(--card-retail); border-radius: 12px; border: 1px solid var(--border-soft); }
+        .step-prog-item { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; position: relative; }
+        .step-prog-circle { width: 24px; height: 24px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; color: var(--text-gray); border: 1px solid var(--border-soft); z-index: 2; }
         .step-prog-item.active .step-prog-circle { background: var(--gold-solid); color: #000; }
         .step-prog-item.completed .step-prog-circle { background: var(--gold-gradient); color: #000; }
         .step-prog-title { font-size: 0.55rem; font-weight: 600; color: var(--text-gray); text-align: center; }
         .step-prog-item.active .step-prog-title { color: var(--gold-solid); }
-
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
-        .triple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+        .triple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group.full-width { grid-column: span 2; }
-        
         .form-group label { font-size: 0.65rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 4px; width: 100%; word-break: break-all; }
         .req-star { color: #ff4d4d; font-weight: 900; margin-left: 2px; }
-
-        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 12px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
+        .form-control, .form-select, textarea.form-control { width: 100%; background: #000000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 9px 10px; color: var(--text-white); font-size: 0.78rem; outline: none; font-family: var(--font-main); text-transform: none; transition: border-color 0.2s; }
         .form-control:focus, .form-select:focus { border-color: rgba(212, 175, 55, 0.4); background: #030306; }
         .form-select option { background: #08080c; color: #fff; }
-
         .phone-input-group { display: flex; align-items: center; background: #000; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
-        .country-code-select { background: #050508; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
+        .country-code-select { background: #050508; color: var(--gold-solid); border: none; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 9px 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; max-height: 180px; overflow-y: auto; }
         .phone-control { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
-
-        .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 8px 10px; border-radius: 8px; margin-top: 8px; word-break: break-word; }
+        .status-msg { font-size: 0.7rem; text-transform: none; display: none; text-align: center; padding: 6px 8px; border-radius: 8px; margin-top: 6px; word-break: break-word; }
         .status-msg.error { color: #ff4d4d; background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.25); }
         .status-msg.success { color: #4ade80; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.25); }
-
-        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; }
+        .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; }
         .status-pill.pending { background: rgba(255, 193, 7, 0.14); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.35); }
         .status-pill.approved { background: rgba(46, 213, 115, 0.14); color: #2ed573; border: 1px solid rgba(46, 213, 115, 0.35); }
         .status-pill.rejected { background: rgba(255, 77, 77, 0.14); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.35); }
-
-        .preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; width: 100%; }
-        .preview-card { position: relative; width: 95px; height: 95px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--border-soft); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .preview-container { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; width: 100%; }
+        .preview-card { position: relative; width: 90px; height: 90px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--border-soft); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .preview-card img, .preview-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .preview-card.uploading::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65) url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/spinner.svg') center/24px no-repeat;
-            filter: invert(1);
-            animation: spin 1s linear infinite;
-        }
+        .preview-card.uploading::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.65) url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/spinner.svg') center/24px no-repeat; filter: invert(1); animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .upload-box { border: 1px dashed rgba(212,175,55,0.35); border-radius: 10px; padding: 16px 10px; text-align: center; cursor: pointer; background: #000; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: border-color 0.2s; }
+        .upload-box { border: 1px dashed rgba(212,175,55,0.35); border-radius: 10px; padding: 12px 8px; text-align: center; cursor: pointer; background: #000; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: border-color 0.2s; }
         .upload-box:hover { border-color: var(--gold-solid); background: #07070a; }
-        .upload-box i { font-size: 1.6rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .upload-box i { font-size: 1.5rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .upload-box p { font-size: 0.65rem; color: var(--gold-solid); font-weight: 600; text-transform: uppercase; }
-
-        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-gold { background: var(--gold-gradient); border: none; border-radius: 10px; padding: 10px 14px; color: #000; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-gold:hover { filter: brightness(1.08); }
-        .btn-secondary { background: #000000; color: #fff; border: 1px solid var(--border-soft); padding: 11px 16px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; width: 100%; }
-        .stat-card { background: var(--card-retail); border-radius: 10px; padding: 10px 6px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; border: 1px solid var(--border-soft); }
+        .btn-secondary { background: #000000; color: #fff; border: 1px solid var(--border-soft); padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; width: 100%; }
+        .stat-card { background: var(--card-retail); border-radius: 10px; padding: 8px 6px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 3px; border: 1px solid var(--border-soft); }
         .stat-card h3 { font-size: 0.58rem; color: var(--text-gray); font-weight: 600; }
-        .stat-card .value { font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all; }
-        .graph-container { width: 100%; height: 45px; position: relative; margin-top: 3px; }
+        .stat-card .value { font-size: 1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all; }
+        .graph-container { width: 100%; height: 42px; position: relative; margin-top: 2px; }
         .graph-container canvas { width: 100% !important; height: 100% !important; }
-
         .table-responsive { width: 100%; overflow-x: auto; }
         .seller-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: left; white-space: nowrap; }
-        .seller-table th, .seller-table td { padding: 9px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .seller-table th, .seller-table td { padding: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .seller-table th { background: #050508; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .seller-table td { text-transform: none; color: var(--text-white); }
-        .prod-thumb { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
-
-        /* Modals & Prominent Pending Popup */
-        #customNotifyModal, #pendingPopupModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 99999; justify-content: center; align-items: center; padding: 16px; backdrop-filter: blur(8px); }
-        .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 22px 18px; width: 100%; max-width: 340px; text-align: center; }
-        
-        .pending-popup-card { background: #050508; border: 1px solid var(--gold-solid); border-radius: 20px; padding: 28px 20px; width: 100%; max-width: 380px; text-align: center; animation: popScale 0.22s ease-out; }
+        .prod-thumb { width: 34px; height: 34px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
+        #customNotifyModal, #pendingPopupModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 99999; justify-content: center; align-items: center; padding: 14px; backdrop-filter: blur(8px); }
+        .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 20px 16px; width: 100%; max-width: 340px; text-align: center; }
+        .pending-popup-card { background: #050508; border: 1px solid var(--gold-solid); border-radius: 20px; padding: 24px 18px; width: 100%; max-width: 380px; text-align: center; animation: popScale 0.22s ease-out; }
         @keyframes popScale { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .pending-popup-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 193, 7, 0.12); border: 1px solid rgba(255, 193, 7, 0.4); color: #ffc107; font-size: 1.9rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; }
-        .pending-popup-title { font-size: 1.15rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.6px; margin-bottom: 6px; }
-        .pending-popup-badge { display: inline-block; background: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.35); padding: 4px 12px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; margin-bottom: 12px; }
-        .pending-popup-desc { font-size: 0.78rem; color: var(--text-gray); text-transform: none; line-height: 1.45; margin-bottom: 18px; }
-
-        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 4px 0; }
+        .pending-popup-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 193, 7, 0.12); border: 1px solid rgba(255, 193, 7, 0.4); color: #ffc107; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; }
+        .pending-popup-title { font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.6px; margin-bottom: 5px; }
+        .pending-popup-badge { display: inline-block; background: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.35); padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; margin-bottom: 10px; }
+        .pending-popup-desc { font-size: 0.76rem; color: var(--text-gray); text-transform: none; line-height: 1.4; margin-bottom: 14px; }
+        .seller-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98); border-top: 1px solid var(--border-soft); display: flex; justify-content: space-around; align-items: center; padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 1000; backdrop-filter: blur(12px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; flex: 1; background: none; border: none; cursor: pointer; padding: 3px 0; }
         .nav-item.active i, .nav-item.active span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-item i { font-size: 1.15rem; margin-bottom: 2px; color: var(--text-gray); transition: color 0.2s; }
+        .nav-item i { font-size: 1.1rem; margin-bottom: 2px; color: var(--text-gray); transition: color 0.2s; }
         .nav-item span { font-size: 0.55rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.2px; }
-
-        @media (max-width: 900px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        }
-        @media (max-width: 600px) {
-            .form-grid, .triple-grid { grid-template-columns: 1fr; gap: 10px; }
-            .form-group.full-width { grid-column: span 1; }
-            body { padding: 12px 8px 95px 8px; }
-        }
+        @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+        @media (max-width: 600px) { .form-grid, .triple-grid { grid-template-columns: 1fr; gap: 8px; } .form-group.full-width { grid-column: span 1; } body { padding: 10px 8px 88px 8px; } }
     </style>
 </head>
 <body>
-
     <div class="main-container">
-        
         <header class="dashboard-header">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="Logo" class="header-logo-img">
             <h1 id="mainPortalTitle">SELLER PORTAL</h1>
         </header>
-
         <!-- 1. INFO / VERIFICATION VIEW -->
         <div id="view-info" class="app-view active">
             <div class="step-tracker">
                 <div class="step-item active" id="stepTracker1">1. VERIFICATION</div>
                 <div class="step-item" id="stepTracker2">2. PROFILE & INFO</div>
             </div>
-
             <div class="info-card" id="verificationSection">
-                <div class="info-card-title">
-                    <i class="fa-solid fa-user-shield"></i>
-                    <span>SELLER VERIFICATION</span>
-                </div>
-
-                <form id="magicLinkForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;" novalidate>
+                <div class="info-card-title"><i class="fa-solid fa-user-shield"></i><span>SELLER VERIFICATION</span></div>
+                <form id="magicLinkForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px;" novalidate>
                     <div class="form-group">
                         <label>EMAIL<span class="req-star">*</span></label>
                         <input type="email" class="form-control" id="sellerEmail" placeholder="name@gmail.com" required style="text-transform: none;">
                     </div>
-
                     <div class="form-group">
                         <label>MOBILE NUMBER<span class="req-star">*</span></label>
                         <div class="phone-input-group">
@@ -200,6 +141,182 @@
                                 <option value="+92">🇵🇰 +92</option>
                                 <option value="+971">🇦🇪 +971</option>
                                 <option value="+1">🇺🇸 +1</option>
+                               <option value="+93">🇦🇫 +93</option>
+                                <option value="+355">🇦🇱 +355</option>
+                                <option value="+213">🇩🇿 +213</option>
+                                <option value="+376">🇦🇩 +376</option>
+                                <option value="+244">🇦🇴 +244</option>
+                                <option value="+54">🇦🇷 +54</option>
+                                <option value="+374">🇦🇲 +374</option>
+                                <option value="+43">🇦🇹 +43</option>
+                                <option value="+994">🇦🇿 +994</option>
+                                <option value="+973">🇧🇭 +973</option>
+                                <option value="+375">🇧🇾 +375</option>
+                                <option value="+32">🇧🇪 +32</option>
+                                <option value="+501">🇧🇿 +501</option>
+                                <option value="+229">🇧🇯 +229</option>
+                                <option value="+975">🇧🇹 +975</option>
+                                <option value="+591">🇧🇴 +591</option>
+                                <option value="+387">🇧🇦 +387</option>
+                                <option value="+267">🇧🇼 +267</option>
+                                <option value="+55">🇧🇷 +55</option>
+                                <option value="+673">🇧🇳 +673</option>
+                                <option value="+359">🇧🇬 +359</option>
+                                <option value="+226">🇧🇫 +226</option>
+                                <option value="+257">🇧🇮 +257</option>
+                                <option value="+238">🇨🇻 +238</option>
+                                <option value="+855">🇰🇭 +855</option>
+                                <option value="+237">🇨🇲 +237</option>
+                                <option value="+236">🇨🇫 +236</option>
+                                <option value="+235">🇹🇩 +235</option>
+                                <option value="+56">🇨🇱 +56</option>
+                                <option value="+86">🇨🇳 +86</option>
+                                <option value="+57">🇨🇴 +57</option>
+                                <option value="+269">🇰🇲 +269</option>
+                                <option value="+242">🇨🇬 +242</option>
+                                <option value="+243">🇨🇩 +243</option>
+                                <option value="+506">🇨🇷 +506</option>
+                                <option value="+225">🇨🇮 +225</option>
+                                <option value="+385">🇭🇷 +385</option>
+                                <option value="+53">🇨🇺 +53</option>
+                                <option value="+357">🇨🇾 +357</option>
+                                <option value="+420">🇨🇿 +420</option>
+                                <option value="+45">🇩🇰 +45</option>
+                                <option value="+253">🇩🇯 +253</option>
+                                <option value="+593">🇪🇨 +593</option>
+                                <option value="+20">🇪🇬 +20</option>
+                                <option value="+503">🇸🇻 +503</option>
+                                <option value="+240">🇬🇶 +240</option>
+                                <option value="+291">🇪🇷 +291</option>
+                                <option value="+372">🇪🇪 +372</option>
+                                <option value="+268">🇸🇿 +268</option>
+                                <option value="+251">🇪🇹 +251</option>
+                                <option value="+679">🇫🇯 +679</option>
+                                <option value="+358">🇫🇮 +358</option>
+                                <option value="+33">🇫🇷 +33</option>
+                                <option value="+241">🇬🇦 +241</option>
+                                <option value="+220">🇬🇲 +220</option>
+                                <option value="+995">🇬🇪 +995</option>
+                                <option value="+49">🇩🇪 +49</option>
+                                <option value="+233">🇬🇭 +233</option>
+                                <option value="+30">🇬🇷 +30</option>
+                                <option value="+502">🇬🇹 +502</option>
+                                <option value="+224">🇬🇳 +224</option>
+                                <option value="+245">🇬🇼 +245</option>
+                                <option value="+592">🇬🇾 +592</option>
+                                <option value="+509">🇭🇹 +509</option>
+                                <option value="+504">🇭🇳 +504</option>
+                                <option value="+852">🇭🇰 +852</option>
+                                <option value="+36">🇭🇺 +36</option>
+                                <option value="+354">🇮🇸 +354</option>
+                                <option value="+62">🇮🇩 +62</option>
+                                <option value="+98">🇮🇷 +98</option>
+                                <option value="+964">🇮🇶 +964</option>
+                                <option value="+353">🇮🇪 +353</option>
+                                <option value="+972">🇮🇱 +972</option>
+                                <option value="+39">🇮🇹 +39</option>
+                                <option value="+81">🇯🇵 +81</option>
+                                <option value="+962">🇯🇴 +962</option>
+                                <option value="+7">🇰🇿 +7</option>
+                                <option value="+254">🇰🇪 +254</option>
+                                <option value="+686">🇰🇮 +686</option>
+                                <option value="+965">🇰🇼 +965</option>
+                                <option value="+996">🇰🇬 +996</option>
+                                <option value="+856">🇱🇦 +856</option>
+                                <option value="+371">🇱🇻 +371</option>
+                                <option value="+961">🇱🇧 +961</option>
+                                <option value="+266">🇱🇸 +266</option>
+                                <option value="+231">🇱🇷 +231</option>
+                                <option value="+218">🇱🇾 +218</option>
+                                <option value="+423">🇱🇮 +423</option>
+                                <option value="+370">🇱🇹 +370</option>
+                                <option value="+352">🇱🇺 +352</option>
+                                <option value="+853">🇲🇴 +853</option>
+                                <option value="+261">🇲🇬 +261</option>
+                                <option value="+265">🇲🇼 +265</option>
+                                <option value="+960">🇲🇻 +960</option>
+                                <option value="+223">🇲🇱 +223</option>
+                                <option value="+356">🇲🇹 +356</option>
+                                <option value="+692">🇲🇭 +692</option>
+                                <option value="+222">🇲🇷 +222</option>
+                                <option value="+230">🇲🇺 +230</option>
+                                <option value="+52">🇲🇽 +52</option>
+                                <option value="+691">🇫🇲 +691</option>
+                                <option value="+373">🇲🇩 +373</option>
+                                <option value="+377">🇲🇨 +377</option>
+                                <option value="+976">🇲🇳 +976</option>
+                                <option value="+382">🇲🇪 +382</option>
+                                <option value="+212">🇲🇦 +212</option>
+                                <option value="+258">🇲🇿 +258</option>
+                                <option value="+95">🇲🇲 +95</option>
+                                <option value="+264">🇳🇦 +264</option>
+                                <option value="+674">🇳🇷 +674</option>
+                                <option value="+977">🇳🇵 +977</option>
+                                <option value="+31">🇳🇱 +31</option>
+                                <option value="+64">🇳🇿 +64</option>
+                                <option value="+505">🇳🇮 +505</option>
+                                <option value="+227">🇳🇪 +227</option>
+                                <option value="+234">🇳🇬 +234</option>
+                                <option value="+850">🇰🇵 +850</option>
+                                <option value="+389">🇲🇰 +389</option>
+                                <option value="+47">🇳🇴 +47</option>
+                                <option value="+968">🇴🇲 +968</option>
+                                <option value="+680">🇵🇼 +680</option>
+                                <option value="+970">🇵🇸 +970</option>
+                                <option value="+507">🇵🇦 +507</option>
+                                <option value="+675">🇵🇬 +675</option>
+                                <option value="+595">🇵🇾 +595</option>
+                                <option value="+51">🇵🇪 +51</option>
+                                <option value="+63">🇵🇭 +63</option>
+                                <option value="+48">🇵🇱 +48</option>
+                                <option value="+351">🇵🇹 +351</option>
+                                <option value="+974">🇶🇦 +974</option>
+                                <option value="+40">🇷🇴 +40</option>
+                                <option value="+7">🇷🇺 +7</option>
+                                <option value="+250">🇷🇼 +250</option>
+                                <option value="+685">🇼🇸 +685</option>
+                                <option value="+378">🇸🇲 +378</option>
+                                <option value="+239">🇸🇹 +239</option>
+                                <option value="+221">🇸🇳 +221</option>
+                                <option value="+381">🇷🇸 +381</option>
+                                <option value="+248">🇸🇨 +248</option>
+                                <option value="+232">🇸🇱 +232</option>
+                                <option value="+421">🇸🇰 +421</option>
+                                <option value="+386">🇸🇮 +386</option>
+                                <option value="+677">🇸🇧 +677</option>
+                                <option value="+252">🇸🇴 +252</option>
+                                <option value="+27">🇿🇦 +27</option>
+                                <option value="+82">🇰🇷 +82</option>
+                                <option value="+211">🇸🇸 +211</option>
+                                <option value="+34">🇪🇸 +34</option>
+                                <option value="+94">🇱🇰 +94</option>
+                                <option value="+249">🇸🇩 +249</option>
+                                <option value="+597">🇸🇷 +597</option>
+                                <option value="+46">🇸🇪 +46</option>
+                                <option value="+41">🇨🇭 +41</option>
+                                <option value="+963">🇸🇾 +963</option>
+                                <option value="+886">🇹🇼 +886</option>
+                                <option value="+992">🇹🇯 +992</option>
+                                <option value="+255">🇹🇿 +255</option>
+                                <option value="+66">🇹🇭 +66</option>
+                                <option value="+670">🇹🇱 +670</option>
+                                <option value="+228">🇹🇬 +228</option>
+                                <option value="+676">🇹🇴 +676</option>
+                                <option value="+216">🇹🇳 +216</option>
+                                <option value="+90">🇹🇷 +90</option>
+                                <option value="+993">🇹🇲 +993</option>
+                                <option value="+688">🇹🇻 +688</option>
+                                <option value="+256">🇺🇬 +256</option>
+                                <option value="+380">🇺🇦 +380</option>
+                                <option value="+598">🇺🇾 +598</option>
+                                <option value="+998">🇺🇿 +998</option>
+                                <option value="+678">🇻🇺 +678</option>
+                                <option value="+379">🇻🇦 +379</option>
+                                <option value="+58">🇻🇪 +58</option>
+                                <option value="+84">🇻🇳 +84</option>
+                                <option value="+967">🇾🇪 +967</option>
+                                <option value="+260">🇿🇲 +260</option>
+                                <option value="+263">🇿🇼 +263</option>
                                 <option value="+44">🇬🇧 +44</option>
                                 <option value="+966">🇸🇦 +966</option>
                                 <option value="+60">🇲🇾 +60</option>
@@ -209,28 +326,18 @@
                             <input type="tel" class="form-control phone-control" id="sellerPhone" placeholder="1700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-transform: none;">
                         </div>
                     </div>
-                    
                     <div id="formStatus" class="status-msg"></div>
-
-                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">
-                        SEND 6-DIGIT CODE <i class="fa-solid fa-paper-plane"></i>
-                    </button>
+                    <button type="submit" class="btn-gold" id="sendLinkBtn" style="width: 100%; margin-top: 4px;">SEND 6-DIGIT CODE <i class="fa-solid fa-paper-plane"></i></button>
                 </form>
             </div>
-
             <div class="info-card" id="magicCodeVerifySection" style="display: none; max-width: 400px; margin: 0 auto;">
-                <div class="info-card-title" style="justify-content: center;">
-                    <i class="fa-solid fa-key"></i>
-                    <span>ENTER 6-DIGIT CODE</span>
-                </div>
-
-                <div style="background: rgba(212,175,55,0.08); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 12px; border: 1px solid var(--border-soft);">
+                <div class="info-card-title" style="justify-content: center;"><i class="fa-solid fa-key"></i><span>ENTER 6-DIGIT CODE</span></div>
+                <div style="background: rgba(212,175,55,0.08); padding: 8px; border-radius: 10px; text-align: center; margin-bottom: 10px; border: 1px solid var(--border-soft);">
                     <span style="font-size: 0.62rem; color: var(--gold-solid); font-weight: 700;">VERIFICATION CODE</span>
-                    <div id="displayMagicCode" style="font-size: 1.4rem; font-weight: 800; letter-spacing: 5px; color: #fff; margin: 4px 0;">------</div>
-                    <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 5px 10px; font-size: 0.6rem; margin-top: 2px;"><i class="fa-solid fa-bolt"></i> AUTO-FILL</button>
+                    <div id="displayMagicCode" style="font-size: 1.35rem; font-weight: 800; letter-spacing: 5px; color: #fff; margin: 3px 0;">------</div>
+                    <button type="button" class="btn-secondary" onclick="autoFillMagicCode()" style="padding: 4px 10px; font-size: 0.6rem; margin-top: 2px;"><i class="fa-solid fa-bolt"></i> AUTO-FILL</button>
                 </div>
-
-                <form id="otpVerifyForm" style="display: flex; flex-direction: column; gap: 10px;">
+                <form id="otpVerifyForm" style="display: flex; flex-direction: column; gap: 8px;">
                     <div class="form-group">
                         <label>6-DIGIT CODE<span class="req-star">*</span></label>
                         <input type="text" class="form-control" id="inputMagicCode" placeholder="000000" maxlength="6" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-align: center; letter-spacing: 4px; font-weight: 800; font-size: 1.1rem; text-transform: none;">
@@ -239,50 +346,40 @@
                     <button type="submit" class="btn-gold" id="verifyOtpBtn" style="width: 100%;">VERIFY <i class="fa-solid fa-lock"></i></button>
                 </form>
             </div>
-
             <div class="info-card" id="businessInfoSection" style="display: none;">
-                <div class="info-card-title">
-                    <i class="fa-solid fa-id-card"></i>
-                    <span id="cardTitleText">SELLER PROFILE</span>
-                </div>
-
-                <!-- Profile Preview -->
+                <div class="info-card-title"><i class="fa-solid fa-id-card"></i><span id="cardTitleText">SELLER PROFILE</span></div>
                 <div id="profilePreviewSection" style="display: none;">
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <img src="" alt="Logo" id="prevLogo" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="" alt="Logo" id="prevLogo" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                                 <div>
-                                    <h2 id="prevBrandName" style="font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all;">--</h2>
+                                    <h2 id="prevBrandName" style="font-size: 1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; word-break: break-all;">--</h2>
                                     <p id="prevBusinessDesc" style="font-size: 0.65rem; color: var(--text-gray); text-transform: none; margin-top: 2px; word-break: break-word;">--</p>
                                 </div>
                             </div>
                             <div id="approvalBadgeWrap"></div>
                         </div>
-
                         <div class="form-grid">
                             <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">EMAIL</label><span id="prevEmail" style="font-size: 0.65rem; text-transform: none; word-break: break-all;">--</span></div>
                             <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">WHATSAPP</label><span id="prevWhatsapp" style="font-size: 0.65rem;">--</span></div>
                             <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">COUNTRY</label><span id="prevCountry" style="font-size: 0.65rem;">--</span></div>
                             <div class="stat-card"><label style="font-size: 0.55rem;" class="gold-title-gradient">SELLER ID</label><span id="prevSellerId" style="font-size: 0.65rem; color: var(--gold-solid); word-break: break-all;">--</span></div>
                         </div>
-                        <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 4px;">
+                        <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 2px;">
                             <button type="button" class="btn-secondary" onclick="switchToEditMode()"><i class="fa-solid fa-pen-to-square"></i> EDIT</button>
                             <button type="button" class="btn-gold" id="enterDashboardBtn" onclick="switchTab('dashboard')" style="background: var(--pink-solid); color: #fff;">DASHBOARD <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Profile Form -->
                 <form id="businessInfoForm">
-                    <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
-                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
+                    <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 1px solid var(--border-soft);">
+                        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png" alt="Logo" id="avatarPreview" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-solid);">
                         <div>
                             <label for="profilePhotoInput" class="btn-gold" style="padding: 5px 10px; font-size: 0.6rem; cursor: pointer;"><i class="fa-solid fa-upload"></i> UPLOAD LOGO</label>
                             <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*" onchange="uploadLogoToR2(event)">
                         </div>
                     </div>
-
                     <div class="form-grid">
                         <div class="form-group">
                             <label>BRAND NAME<span class="req-star">*</span></label>
@@ -339,21 +436,16 @@
                             <input type="text" class="form-control" id="tradeLicenseInput" placeholder="License Number or N/A" required style="text-transform: none;">
                         </div>
                     </div>
-
-                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 12px;">SUBMIT PROFILE <i class="fa-solid fa-arrow-right"></i></button>
-                    <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 8px; display: none;" onclick="cancelEditMode()">CANCEL</button>
+                    <button type="submit" id="saveInfoBtn" class="btn-gold" style="width: 100%; margin-top: 8px;">SUBMIT PROFILE <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="button" id="cancelEditBtn" class="btn-secondary" style="width: 100%; margin-top: 6px; display: none;" onclick="cancelEditMode()">CANCEL</button>
                 </form>
             </div>
         </div>
-
         <!-- 2. DASHBOARD VIEW -->
         <div id="view-dashboard" class="app-view">
-            <div style="text-align: center; margin-bottom: 16px; width: 100%;">
-                <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); color: #fff;">
-                    <i class="fa-solid fa-qrcode"></i> SYNC QR
-                </button>
+            <div style="text-align: center; margin-bottom: 10px; width: 100%;">
+                <button type="button" class="btn-gold" onclick="openMultiDeviceSyncModal()" style="background: var(--pink-solid); color: #fff;"><i class="fa-solid fa-qrcode"></i> SYNC QR</button>
             </div>
-
             <section class="stats-grid">
                 <div class="stat-card">
                     <h3 class="gold-title-gradient">TOTAL REVENUE</h3>
@@ -377,13 +469,10 @@
                 </div>
             </section>
         </div>
-
         <!-- 3. PRODUCT LIST VIEW -->
         <div id="view-list" class="app-view">
             <div class="info-card">
-                <div class="info-card-title">
-                    <span>PRODUCT LIST</span>
-                </div>
+                <div class="info-card-title"><span>PRODUCT LIST</span></div>
                 <div class="table-responsive">
                     <table class="seller-table">
                         <thead>
@@ -396,13 +485,12 @@
                             </tr>
                         </thead>
                         <tbody id="desktopTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">LOADING...</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 16px; color: var(--text-gray);">LOADING...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
         <!-- 4. PRODUCT UPLOAD VIEW -->
         <div id="view-upload" class="app-view">
             <div class="step-progress-bar">
@@ -412,10 +500,8 @@
                 <div class="step-prog-item" id="prog-ind-4"><div class="step-prog-circle">4</div><div class="step-prog-title">PRICING</div></div>
                 <div class="step-prog-item" id="prog-ind-5"><div class="step-prog-circle">5</div><div class="step-prog-title">DETAILS</div></div>
             </div>
-
             <form id="masterUniversalForm" onsubmit="submitMasterForm(event)" style="width: 100%;">
                 <input type="hidden" id="editingProductId" value="">
-                
                 <div class="step-section active-step" id="upload-step-1" style="width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-layer-group"></i> STEP 1: SELECT MODE</div>
@@ -426,12 +512,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="step-section" id="upload-step-2" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-border-all"></i> STEP 2: CATEGORY</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-                        
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(1)" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
                         <div id="main-categories" class="category-grid">
                             <div class="cat-box" onclick="showSubCategories(this, 'womens')"><i class="fa-solid fa-person-dress"></i><span>WOMEN'S FASHION</span></div>
                             <div class="cat-box" onclick="showSubCategories(this, 'mens')"><i class="fa-solid fa-user-tie"></i><span>MEN'S FASHION</span></div>
@@ -441,33 +525,28 @@
                             <div class="cat-box" onclick="showSubCategories(this, 'luxury')"><i class="fa-solid fa-gift"></i><span>LUXURY GIFTS</span></div>
                             <div class="cat-box" onclick="showSubCategories(this, 'baby')"><i class="fa-solid fa-baby-carriage"></i><span>MOTHER & BABY</span></div>
                         </div>
-
                         <div id="sub-categories" style="display: none;">
-                            <button type="button" class="btn-secondary" onclick="backToMainCategories()" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+                            <button type="button" class="btn-secondary" onclick="backToMainCategories()" style="margin-bottom: 8px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
                             <div id="sub-cat-content" class="category-grid"></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="step-section" id="upload-step-3" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-images"></i> STEP 3: MEDIA</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-                        
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(2)" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
                         <div class="preview-container" id="image-preview"></div>
-                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();" style="margin-bottom: 12px;">
+                        <div class="upload-box" onclick="document.getElementById('image-file-input').click();" style="margin-bottom: 8px;">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                             <p id="imgUploadText">UPLOAD IMAGES</p>
                             <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;" onchange="handleImageSelection(event)">
                         </div>
-
                         <div class="preview-container" id="video-preview"></div>
-                        <div class="upload-box" onclick="document.getElementById('video-file-input').click();" style="margin-bottom: 12px;">
+                        <div class="upload-box" onclick="document.getElementById('video-file-input').click();" style="margin-bottom: 8px;">
                             <i class="fa-solid fa-file-video"></i>
                             <p id="vidUploadText">UPLOAD VIDEO</p>
                             <input type="file" id="video-file-input" accept="video/*" style="display: none;" onchange="handleVideoSelection(event)">
                         </div>
-
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>YOUTUBE URL</label>
@@ -478,18 +557,15 @@
                                 <input type="url" class="form-control" id="youtube_live" placeholder="https://youtube.com/live/..." style="text-transform: none;">
                             </div>
                         </div>
-
-                        <div style="margin-top: 14px; text-align: right;">
+                        <div style="margin-top: 10px; text-align: right;">
                             <button type="button" id="upload-next-btn-3" class="btn-gold" onclick="nextUploadStep(4)" disabled>NEXT <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
-
                 <div class="step-section" id="upload-step-4" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-tag"></i> STEP 4: PRICING & STOCK</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(3)" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
                         <div class="form-grid" id="retail-price-row">
                             <div class="form-group">
                                 <label>RETAIL PRICE ($)<span class="req-star">*</span></label>
@@ -500,7 +576,7 @@
                                 <input type="number" step="0.01" min="0" class="form-control" id="market_price" placeholder="180.00" inputmode="decimal">
                             </div>
                         </div>
-                        <div class="triple-grid" id="wholesale-price-row" style="display: none; margin-top: 8px;">
+                        <div class="triple-grid" id="wholesale-price-row" style="display: none; margin-top: 6px;">
                             <div class="form-group">
                                 <label>SAMPLE ($)</label>
                                 <input type="number" step="0.01" min="0" class="form-control" id="price_sample" placeholder="100.00">
@@ -514,20 +590,209 @@
                                 <input type="number" step="0.01" min="0" class="form-control" id="price_bulk" placeholder="70.00">
                             </div>
                         </div>
-                        <div class="form-grid" style="margin-top: 8px;">
+                        <div class="form-grid" style="margin-top: 6px;">
                             <div class="form-group">
                                 <label>TARGET COUNTRY<span class="req-star">*</span></label>
                                 <select id="target_country" class="form-select">
-                                    <option value="bd" selected>🇧🇩 বাংলাদেশ (BANGLADESH)</option>
-                                    <option value="in">🇮🇳 ভারত (INDIA)</option>
-                                    <option value="pk">🇵🇰 পাকিস্তান (PAKISTAN)</option>
-                                    <option value="ae">🇦🇪 সংযুক্ত আরব আমিরাত (UAE)</option>
-                                    <option value="sa">🇸🇦 সৌদি আরব (SAUDI ARABIA)</option>
-                                    <option value="my">🇲🇾 মালয়েশিয়া (MALAYSIA)</option>
-                                    <option value="sg">🇸🇬 সিঙ্গাপুর (SINGAPORE)</option>
-                                    <option value="us">🇺🇸 যুক্তরাষ্ট্র (UNITED STATES)</option>
-                                    <option value="gb">🇬🇧 যুক্তরাজ্য (UNITED KINGDOM)</option>
-                                    <option value="au">🇦🇺 অস্ট্রেলিয়া (AUSTRALIA)</option>
+                                    <option value="bd" selected>🇧🇩 BANGLADESH</option>
+                                    <option value="in">🇮🇳 INDIA</option>
+                                    <option value="pk">🇵🇰 PAKISTAN</option>
+                                    <option value="ae">🇦🇪 UNITED ARAB EMIRATES</option>
+                                    <option value="sa">🇸🇦 SAUDI ARABIA</option>
+                                    <option value="my">🇲🇾 MALAYSIA</option>
+                                    <option value="sg">🇸🇬 SINGAPORE</option>
+                                    <option value="us">🇺🇸 UNITED STATES</option>
+                                    <option value="gb">🇬🇧 UNITED KINGDOM</option>
+                                    <option value="au">🇦🇺 AUSTRALIA</option>
+                                    <option value="af">🇦🇫 AFGHANISTAN</option>
+                                    <option value="al">🇦🇱 ALBANIA</option>
+                                    <option value="dz">🇩🇿 ALGERIA</option>
+                                    <option value="ad">🇦🇩 ANDORRA</option>
+                                    <option value="ao">🇦🇴 ANGOLA</option>
+                                    <option value="ag">🇦🇬 ANTIGUA AND BARBUDA</option>
+                                    <option value="ar">🇦🇷 ARGENTINA</option>
+                                    <option value="am">🇦🇲 ARMENIA</option>
+                                    <option value="at">🇦🇹 AUSTRIA</option>
+                                    <option value="az">🇦🇿 AZERBAIJAN</option>
+                                    <option value="bs">🇧🇸 BAHAMAS</option>
+                                    <option value="bh">🇧🇭 BAHRAIN</option>
+                                    <option value="bb">🇧🇧 BARBADOS</option>
+                                    <option value="by">🇧🇾 BELARUS</option>
+                                    <option value="be">🇧🇪 BELGIUM</option>
+                                    <option value="bz">🇧🇿 BELIZE</option>
+                                    <option value="bj">🇧🇯 BENIN</option>
+                                    <option value="bt">🇧🇹 BHUTAN</option>
+                                    <option value="bo">🇧🇴 BOLIVIA</option>
+                                    <option value="ba">🇧🇦 BOSNIA AND HERZEGOVINA</option>
+                                    <option value="bw">🇧🇼 BOTSWANA</option>
+                                    <option value="br">🇧🇷 BRAZIL</option>
+                                    <option value="bn">🇧🇳 BRUNEI</option>
+                                    <option value="bg">🇧🇬 BULGARIA</option>
+                                    <option value="bf">🇧🇫 BURKINA FASO</option>
+                                    <option value="bi">🇧🇮 BURUNDI</option>
+                                    <option value="cv">🇨🇻 CABO VERDE</option>
+                                    <option value="kh">🇰🇭 CAMBODIA</option>
+                                    <option value="cm">🇨🇲 CAMEROON</option>
+                                    <option value="ca">🇨🇦 CANADA</option>
+                                    <option value="cf">🇨🇫 CENTRAL AFRICAN REPUBLIC</option>
+                                    <option value="td">🇹🇩 CHAD</option>
+                                    <option value="cl">🇨🇱 CHILE</option>
+                                    <option value="cn">🇨🇳 CHINA</option>
+                                    <option value="co">🇨🇴 COLOMBIA</option>
+                                    <option value="km">🇰🇲 COMOROS</option>
+                                    <option value="cg">🇨🇬 CONGO</option>
+                                    <option value="cd">🇨🇩 CONGO (DRC)</option>
+                                    <option value="cr">🇨🇷 COSTA RICA</option>
+                                    <option value="ci">🇨🇮 COTE D'IVOIRE</option>
+                                    <option value="hr">🇭🇷 CROATIA</option>
+                                    <option value="cu">🇨🇺 CUBA</option>
+                                    <option value="cy">🇨🇾 CYPRUS</option>
+                                    <option value="cz">🇨🇿 CZECH REPUBLIC</option>
+                                    <option value="dk">🇩🇰 DENMARK</option>
+                                    <option value="dj">🇩🇯 DJIBOUTI</option>
+                                    <option value="dm">🇩🇲 DOMINICA</option>
+                                    <option value="do">🇩🇴 DOMINICAN REPUBLIC</option>
+                                    <option value="ec">🇪🇨 ECUADOR</option>
+                                    <option value="eg">🇪🇬 EGYPT</option>
+                                    <option value="sv">🇸🇻 EL SALVADOR</option>
+                                    <option value="gq">🇬🇶 EQUATORIAL GUINEA</option>
+                                    <option value="er">🇪🇷 ERITREA</option>
+                                    <option value="ee">🇪🇪 ESTONIA</option>
+                                    <option value="sz">🇸🇿 ESWATINI</option>
+                                    <option value="et">🇪🇹 ETHIOPIA</option>
+                                    <option value="fj">🇫🇯 FIJI</option>
+                                    <option value="fi">🇫🇮 FINLAND</option>
+                                    <option value="fr">🇫🇷 FRANCE</option>
+                                    <option value="ga">🇬🇦 GABON</option>
+                                    <option value="gm">🇬🇲 GAMBIA</option>
+                                    <option value="ge">🇬🇪 GEORGIA</option>
+                                    <option value="de">🇩🇪 GERMANY</option>
+                                    <option value="gh">🇬🇭 GHANA</option>
+                                    <option value="gr">🇬🇷 GREECE</option>
+                                    <option value="gd">🇬🇩 GRENADA</option>
+                                    <option value="gt">🇬🇹 GUATEMALA</option>
+                                    <option value="gn">🇬🇳 GUINEA</option>
+                                    <option value="gw">🇬🇼 GUINEA-BISSAU</option>
+                                    <option value="gy">🇬🇾 GUYANA</option>
+                                    <option value="ht">🇭🇹 HAITI</option>
+                                    <option value="hn">🇭🇳 HONDURAS</option>
+                                    <option value="hk">🇭🇰 HONG KONG</option>
+                                    <option value="hu">🇭🇺 HUNGARY</option>
+                                    <option value="is">🇮🇸 ICELAND</option>
+                                    <option value="id">🇮🇩 INDONESIA</option>
+                                    <option value="ir">🇮🇷 IRAN</option>
+                                    <option value="iq">🇮🇶 IRAQ</option>
+                                    <option value="ie">🇮🇪 IRELAND</option>
+                                    <option value="il">🇮🇱 ISRAEL</option>
+                                    <option value="it">🇮🇹 ITALY</option>
+                                    <option value="jm">🇯🇲 JAMAICA</option>
+                                    <option value="jp">🇯🇵 JAPAN</option>
+                                    <option value="jo">🇯🇴 JORDAN</option>
+                                    <option value="kz">🇰🇿 KAZAKHSTAN</option>
+                                    <option value="ke">🇰🇪 KENYA</option>
+                                    <option value="ki">🇰🇮 KIRIBATI</option>
+                                    <option value="kw">🇰🇼 KUWAIT</option>
+                                    <option value="kg">🇰🇬 KYRGYZSTAN</option>
+                                    <option value="la">🇱🇦 LAOS</option>
+                                    <option value="lv">🇱🇻 LATVIA</option>
+                                    <option value="lb">🇱🇧 LEBANON</option>
+                                    <option value="ls">🇱🇸 LESOTHO</option>
+                                    <option value="lr">🇱🇷 LIBERIA</option>
+                                    <option value="ly">🇱🇾 LIBYA</option>
+                                    <option value="li">🇱🇮 LIECHTENSTEIN</option>
+                                    <option value="lt">🇱🇹 LITHUANIA</option>
+                                    <option value="lu">🇱🇺 LUXEMBOURG</option>
+                                    <option value="mo">🇲🇴 MACAO</option>
+                                    <option value="mg">🇲🇬 MADAGASCAR</option>
+                                    <option value="mw">🇲🇼 MALAWI</option>
+                                    <option value="mv">🇲🇻 MALDIVES</option>
+                                    <option value="ml">🇲🇱 MALI</option>
+                                    <option value="mt">🇲🇹 MALTA</option>
+                                    <option value="mh">🇲🇭 MARSHALL ISLANDS</option>
+                                    <option value="mr">🇲🇷 MAURITANIA</option>
+                                    <option value="mu">🇲🇺 MAURITIUS</option>
+                                    <option value="mx">🇲🇽 MEXICO</option>
+                                    <option value="fm">🇫🇲 MICRONESIA</option>
+                                    <option value="md">🇲🇩 MOLDOVA</option>
+                                    <option value="mc">🇲🇨 MONACO</option>
+                                    <option value="mn">🇲🇳 MONGOLIA</option>
+                                    <option value="me">🇲🇪 MONTENEGRO</option>
+                                    <option value="ma">🇲🇦 MOROCCO</option>
+                                    <option value="mz">🇲🇿 MOZAMBIQUE</option>
+                                    <option value="mm">🇲🇲 MYANMAR</option>
+                                    <option value="na">🇳🇦 NAMIBIA</option>
+                                    <option value="nr">🇳🇷 NAURU</option>
+                                    <option value="np">🇳🇵 NEPAL</option>
+                                    <option value="nl">🇳🇱 NETHERLANDS</option>
+                                    <option value="nz">🇳🇿 NEW ZEALAND</option>
+                                    <option value="ni">🇳🇮 NICARAGUA</option>
+                                    <option value="ne">🇳🇪 NIGER</option>
+                                    <option value="ng">🇳🇬 NIGERIA</option>
+                                    <option value="kp">🇰🇵 NORTH KOREA</option>
+                                    <option value="mk">🇲🇰 NORTH MACEDONIA</option>
+                                    <option value="no">🇳🇴 NORWAY</option>
+                                    <option value="om">🇴🇲 OMAN</option>
+                                    <option value="pw">🇵🇼 PALAU</option>
+                                    <option value="ps">🇵🇸 PALESTINE</option>
+                                    <option value="pa">🇵🇦 PANAMA</option>
+                                    <option value="pg">🇵🇬 PAPUA NEW GUINEA</option>
+                                    <option value="py">🇵🇾 PARAGUAY</option>
+                                    <option value="pe">🇵🇪 PERU</option>
+                                    <option value="ph">🇵🇭 PHILIPPINES</option>
+                                    <option value="pl">🇵🇱 POLAND</option>
+                                    <option value="pt">🇵🇹 PORTUGAL</option>
+                                    <option value="pr">🇵🇷 PUERTO RICO</option>
+                                    <option value="qa">🇶🇦 QATAR</option>
+                                    <option value="ro">🇷🇴 ROMANIA</option>
+                                    <option value="ru">🇷🇺 RUSSIA</option>
+                                    <option value="rw">🇷🇼 RWANDA</option>
+                                    <option value="kn">🇰🇳 SAINT KITTS AND NEVIS</option>
+                                    <option value="lc">🇱🇨 SAINT LUCIA</option>
+                                    <option value="vc">🇻🇨 SAINT VINCENT</option>
+                                    <option value="ws">🇼🇸 SAMOA</option>
+                                    <option value="sm">🇸🇲 SAN MARINO</option>
+                                    <option value="st">🇸🇹 SAO TOME AND PRINCIPE</option>
+                                    <option value="sn">🇸🇳 SENEGAL</option>
+                                    <option value="rs">🇷🇸 SERBIA</option>
+                                    <option value="sc">🇸🇨 SEYCHELLES</option>
+                                    <option value="sl">🇸🇱 SIERRA LEONE</option>
+                                    <option value="sk">🇸🇰 SLOVAKIA</option>
+                                    <option value="si">🇸🇮 SLOVENIA</option>
+                                    <option value="sb">🇸🇧 SOLOMON ISLANDS</option>
+                                    <option value="so">🇸🇴 SOMALIA</option>
+                                    <option value="za">🇿🇦 SOUTH AFRICA</option>
+                                    <option value="kr">🇰🇷 SOUTH KOREA</option>
+                                    <option value="ss">🇸🇸 SOUTH SUDAN</option>
+                                    <option value="es">🇪🇸 SPAIN</option>
+                                    <option value="lk">🇱🇰 SRI LANKA</option>
+                                    <option value="sd">🇸🇩 SUDAN</option>
+                                    <option value="sr">🇸🇷 SURINAME</option>
+                                    <option value="se">🇸🇪 SWEDEN</option>
+                                    <option value="ch">🇨🇭 SWITZERLAND</option>
+                                    <option value="sy">🇸🇾 SYRIA</option>
+                                    <option value="tw">🇹🇼 TAIWAN</option>
+                                    <option value="tj">🇹🇯 TAJIKISTAN</option>
+                                    <option value="tz">🇹🇿 TANZANIA</option>
+                                    <option value="th">🇹🇭 THAILAND</option>
+                                    <option value="tl">🇹🇱 TIMOR-LESTE</option>
+                                    <option value="tg">🇹🇬 TOGO</option>
+                                    <option value="to">🇹🇴 TONGA</option>
+                                    <option value="tt">🇹🇹 TRINIDAD AND TOBAGO</option>
+                                    <option value="tn">🇹🇳 TUNISIA</option>
+                                    <option value="tr">🇹🇷 TURKEY</option>
+                                    <option value="tm">🇹🇲 TURKMENISTAN</option>
+                                    <option value="tv">🇹🇻 TUVALU</option>
+                                    <option value="ug">🇺🇬 UGANDA</option>
+                                    <option value="ua">🇺🇦 UKRAINE</option>
+                                    <option value="uy">🇺🇾 URUGUAY</option>
+                                    <option value="uz">🇺🇿 UZBEKISTAN</option>
+                                    <option value="vu">🇻🇺 VANUATU</option>
+                                    <option value="va">🇻🇦 VATICAN CITY</option>
+                                    <option value="ve">🇻🇪 VENEZUELA</option>
+                                    <option value="vn">🇻🇳 VIETNAM</option>
+                                    <option value="ye">🇾🇪 YEMEN</option>
+                                    <option value="zm">🇿🇲 ZAMBIA</option>
+                                    <option value="zw">🇿🇼 ZIMBABWE</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -543,45 +808,39 @@
                                 <input type="number" min="1" class="form-control" id="stock_count" placeholder="100" value="10" required inputmode="numeric">
                             </div>
                         </div>
-
-                        <div style="margin-top: 14px; text-align: right;">
+                        <div style="margin-top: 10px; text-align: right;">
                             <button type="button" class="btn-gold" onclick="nextUploadStep(5)">NEXT <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
-
                 <div class="step-section" id="upload-step-5" style="display:none; width: 100%;">
                     <div class="info-card">
                         <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> STEP 5: DETAILS</div>
-                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
-
-                        <div class="form-group full-width" style="margin-bottom: 10px;">
+                        <button type="button" class="btn-secondary" onclick="prevUploadStep(4)" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+                        <div class="form-group full-width" style="margin-bottom: 8px;">
                             <label>TITLE (MAX 25 CHARS)<span class="req-star">*</span></label>
                             <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="PRODUCT TITLE" required style="text-transform: uppercase;">
                         </div>
-                        <div class="form-group full-width" style="margin-bottom: 10px;">
+                        <div class="form-group full-width" style="margin-bottom: 8px;">
                             <label>DESCRIPTION<span class="req-star">*</span></label>
                             <textarea class="form-control" id="product_description" rows="3" placeholder="Product details..." required style="text-transform: none;"></textarea>
                         </div>
-                        <div class="form-group full-width" style="background: #000; padding: 10px; border-radius: 10px; border: 1px solid var(--border-soft); margin-bottom: 14px;">
+                        <div class="form-group full-width" style="background: #000; padding: 8px; border-radius: 10px; border: 1px solid var(--border-soft); margin-bottom: 10px;">
                             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                 <input type="checkbox" id="custom_size_note" checked style="width: 16px; height: 16px; accent-color: var(--gold-solid);">
                                 <span style="font-size: 0.72rem; color: #fff; font-weight: 700;">CUSTOM NOTE OPTION</span>
                             </label>
                         </div>
-
                         <button type="submit" class="btn-gold" id="publishProductBtn" style="width: 100%;"><i class="fa-solid fa-check"></i> PUBLISH</button>
                     </div>
                 </div>
-
             </form>
         </div>
-
         <!-- 5. SHIPMENT VIEW -->
         <div id="view-shipment" class="app-view">
             <div class="info-card">
                 <div class="info-card-title"><i class="fa-solid fa-truck-ramp-box"></i> SHIPMENTS</div>
-                <div class="form-grid" style="margin-bottom: 12px;">
+                <div class="form-grid" style="margin-bottom: 8px;">
                     <div class="stat-card"><h3 class="gold-title-gradient">PENDING</h3><span id="statPendingShipments" style="font-size: 0.85rem; color: #facc15;">0</span></div>
                     <div class="stat-card"><h3 class="gold-title-gradient">COMPLETED</h3><span id="statCompletedOrders" style="font-size: 0.85rem; color: #4ade80;">0</span></div>
                     <div class="stat-card" style="grid-column: span 2;"><h3 class="gold-title-gradient">EARNINGS</h3><span id="statStoreEarnings" style="font-size: 0.85rem; color: var(--gold-solid);">$0.00</span></div>
@@ -598,25 +857,22 @@
                             </tr>
                         </thead>
                         <tbody id="sellerOrdersTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO SHIPMENTS</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 16px; color: var(--text-gray);">NO SHIPMENTS</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
         <!-- 6. PAYOUT VIEW -->
         <div id="view-payout" class="app-view">
-            <div class="info-card" style="padding: 20px 16px;">
+            <div class="info-card" style="padding: 14px 12px;">
                 <div class="info-card-title"><i class="fa-solid fa-hand-holding-dollar"></i> PAYOUT</div>
-                
-                <div class="stat-card" style="max-width: 220px; margin: 0 auto 16px auto; padding: 12px;">
+                <div class="stat-card" style="max-width: 220px; margin: 0 auto 10px auto; padding: 10px;">
                     <h3 class="gold-title-gradient">BALANCE</h3>
                     <div class="value" id="payoutBalanceVal">$0.00</div>
                 </div>
-
-                <div style="max-width: 450px; margin: 0 auto; background: #000; padding: 14px; border-radius: 12px; border: 1px solid var(--border-soft);">
-                    <div class="form-group" style="margin-bottom: 10px;">
+                <div style="max-width: 450px; margin: 0 auto; background: #000; padding: 12px; border-radius: 12px; border: 1px solid var(--border-soft);">
+                    <div class="form-group" style="margin-bottom: 8px;">
                         <label>GATEWAY<span class="req-star">*</span></label>
                         <select class="form-select" id="payoutGateway" onchange="renderPaymentFields()">
                             <option value="bkash">bKash</option>
@@ -625,36 +881,30 @@
                             <option value="bank">Bank Account</option>
                         </select>
                     </div>
-
-                    <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div id="payoutDynamicFields" style="display: flex; flex-direction: column; gap: 8px;">
                         <div class="form-group">
                             <label>ACCOUNT / NUMBER<span class="req-star">*</span></label>
                             <input type="tel" class="form-control" id="payAccNum" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                         </div>
                     </div>
-
-                    <div class="form-group" style="margin-top: 10px;">
+                    <div class="form-group" style="margin-top: 8px;">
                         <label>REGISTERED PHONE<span class="req-star">*</span></label>
                         <input type="tel" class="form-control" id="payoutVerifyPhone" placeholder="01700000000" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="text-transform: none;" required>
                     </div>
-
                     <div id="payoutStatusMsg" class="status-msg"></div>
-                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%; margin-top: 12px;">WITHDRAW</button>
+                    <button type="button" onclick="verifyAndRequestPayout()" class="btn-gold" style="width: 100%; margin-top: 10px;">WITHDRAW</button>
                 </div>
             </div>
         </div>
-
     </div>
-
     <!-- QR Sync Modal -->
     <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:12px;">
-        <div style="background:#06060a; border:1px solid var(--border-soft); border-radius:14px; padding:20px 16px; width:100%; max-width:320px; text-align:center;">
-            <h3 style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px;">DEVICE SYNC QR</h3>
-            <div id="qrcodeContainer" style="background:#ffffff; padding:8px; border-radius:8px; display:inline-block; margin-bottom:12px;"></div>
+        <div style="background:#06060a; border:1px solid var(--border-soft); border-radius:14px; padding:18px 14px; width:100%; max-width:320px; text-align:center;">
+            <h3 style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px;">DEVICE SYNC QR</h3>
+            <div id="qrcodeContainer" style="background:#ffffff; padding:8px; border-radius:8px; display:inline-block; margin-bottom:10px;"></div>
             <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE</button>
         </div>
     </div>
-
     <!-- Prominent 24-Hour Pending / Rejected Popup Modal -->
     <div id="pendingPopupModal">
         <div class="pending-popup-card">
@@ -665,46 +915,24 @@
             <button type="button" onclick="closePendingPopup()" class="btn-gold" style="width: 100%;">OK</button>
         </div>
     </div>
-
     <!-- Custom Notify Modal -->
     <div id="customNotifyModal">
         <div class="notify-card">
-            <div id="notifyModalIcon" style="font-size: 1.8rem; color: var(--gold-solid); margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i></div>
-            <div id="notifyModalText" style="font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 14px; text-transform: none;">DONE</div>
+            <div id="notifyModalIcon" style="font-size: 1.8rem; color: var(--gold-solid); margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i></div>
+            <div id="notifyModalText" style="font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 12px; text-transform: none;">DONE</div>
             <button type="button" onclick="closeCustomNotify()" class="btn-gold" style="width: 100%;">OK</button>
         </div>
     </div>
-
     <!-- Bottom Navigation -->
     <nav class="seller-bottom-nav">
-        <button type="button" class="nav-item active" id="nav-btn-info" onclick="switchTab('info')">
-            <i class="fa-solid fa-user-gear"></i>
-            <span>INFO</span>
-        </button>
-        <button type="button" class="nav-item" id="nav-btn-dashboard" onclick="switchTab('dashboard')">
-            <i class="fa-solid fa-house"></i>
-            <span>HOME</span>
-        </button>
-        <button type="button" class="nav-item" id="nav-btn-list" onclick="switchTab('list')">
-            <i class="fa-solid fa-list-check"></i>
-            <span>LIST</span>
-        </button>
-        <button type="button" class="nav-item" id="nav-btn-upload" onclick="switchTab('upload')">
-            <i class="fa-solid fa-plus-circle" style="font-size: 1.1rem; color: var(--gold-solid);"></i>
-            <span>UPLOAD</span>
-        </button>
-        <button type="button" class="nav-item" id="nav-btn-shipment" onclick="switchTab('shipment')">
-            <i class="fa-solid fa-truck-fast"></i>
-            <span>SHIPMENT</span>
-        </button>
-        <button type="button" class="nav-item" id="nav-btn-payout" onclick="switchTab('payout')">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            <span>PAYOUT</span>
-        </button>
+        <button type="button" class="nav-item active" id="nav-btn-info" onclick="switchTab('info')"><i class="fa-solid fa-user-gear"></i><span>INFO</span></button>
+        <button type="button" class="nav-item" id="nav-btn-dashboard" onclick="switchTab('dashboard')"><i class="fa-solid fa-house"></i><span>HOME</span></button>
+        <button type="button" class="nav-item" id="nav-btn-list" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i><span>LIST</span></button>
+        <button type="button" class="nav-item" id="nav-btn-upload" onclick="switchTab('upload')"><i class="fa-solid fa-plus-circle" style="font-size: 1.1rem; color: var(--gold-solid);"></i><span>UPLOAD</span></button>
+        <button type="button" class="nav-item" id="nav-btn-shipment" onclick="switchTab('shipment')"><i class="fa-solid fa-truck-fast"></i><span>SHIPMENT</span></button>
+        <button type="button" class="nav-item" id="nav-btn-payout" onclick="switchTab('payout')"><i class="fa-solid fa-hand-holding-dollar"></i><span>PAYOUT</span></button>
     </nav>
-
     <script src="category.js"></script>
-
     <script>
         const chartInstances = {};
         let currentUploadStep = 1;
@@ -718,16 +946,11 @@
         let temporarySellerPhone = '';
         let currentApprovalStatus = localStorage.getItem('rorraxy_seller_approval_status') || 'pending';
         let autoDetectedCountryData = { code: 'bd', dialCode: '+880', name: 'Bangladesh', flag: '🇧🇩' };
-
         function getCountryFlagEmoji(countryCode) {
             if (!countryCode || countryCode.length !== 2) return '🌐';
-            const codePoints = countryCode
-                .toUpperCase()
-                .split('')
-                .map(char => 127397 + char.charCodeAt());
+            const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt());
             return String.fromCodePoint(...codePoints);
         }
-
         function showCustomNotify(message, isSuccess = true) {
             const modal = document.getElementById('customNotifyModal');
             const txt = document.getElementById('notifyModalText');
@@ -736,18 +959,13 @@
             icon.innerHTML = isSuccess ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation" style="color:#ff4d4d;"></i>';
             modal.style.display = 'flex';
         }
-
-        function closeCustomNotify() {
-            document.getElementById('customNotifyModal').style.display = 'none';
-        }
-
+        function closeCustomNotify() { document.getElementById('customNotifyModal').style.display = 'none'; }
         function showPendingPopup(status = 'pending') {
             const modal = document.getElementById('pendingPopupModal');
             const icon = document.getElementById('pendingModalIcon');
             const badge = document.getElementById('pendingModalBadge');
             const title = document.getElementById('pendingModalTitle');
             const desc = document.getElementById('pendingModalDesc');
-
             if (status === 'rejected') {
                 icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
                 icon.style.color = '#ff4d4d';
@@ -771,30 +989,21 @@
                 title.innerText = 'PENDING APPROVAL';
                 desc.innerText = 'Your profile is under verification. Please wait up to 24 hours for admin approval.';
             }
-
             modal.style.display = 'flex';
         }
-
-        function closePendingPopup() {
-            document.getElementById('pendingPopupModal').style.display = 'none';
-        }
-
+        function closePendingPopup() { document.getElementById('pendingPopupModal').style.display = 'none'; }
         function isAuthenticEmail(email) {
             const blocked = ['tempmail', '10minutemail', 'throwaway', 'mailinator', 'yopmail', 'disposable'];
             const parts = email.split('@');
             if (parts.length !== 2) return false;
             return !blocked.some(b => parts[1].includes(b));
         }
-
         function isSellerVerifiedAndComplete() {
-            return localStorage.getItem('rorraxy_seller_verified') === 'true' &&
-                   localStorage.getItem('rorraxy_seller_info_completed') === 'true';
+            return localStorage.getItem('rorraxy_seller_verified') === 'true' && localStorage.getItem('rorraxy_seller_info_completed') === 'true';
         }
-
         function isSellerApproved() {
             return (localStorage.getItem('rorraxy_seller_approval_status') || currentApprovalStatus) === 'approved';
         }
-
         async function autoDetectCountryCode() {
             try {
                 const res = await fetch('https://ipapi.co/json/').catch(() => null);
@@ -804,24 +1013,12 @@
                     const countryCode = (data.country_code || "BD").toLowerCase();
                     const countryName = data.country_name || "Bangladesh";
                     const flagEmoji = getCountryFlagEmoji(countryCode);
-
-                    autoDetectedCountryData = {
-                        code: countryCode,
-                        dialCode: dialCode,
-                        name: countryName,
-                        flag: flagEmoji
-                    };
-
-                    // ১. উপরের মোবাইল ডায়াল কোড অটোমেটিক সেট ও যুক্ত করা
+                    autoDetectedCountryData = { code: countryCode, dialCode: dialCode, name: countryName, flag: flagEmoji };
                     const select = document.getElementById('countryDialCode');
                     if (select) {
                         let foundDial = false;
                         for (let opt of select.options) {
-                            if (opt.value === dialCode) { 
-                                select.value = dialCode; 
-                                foundDial = true;
-                                break; 
-                            }
+                            if (opt.value === dialCode) { select.value = dialCode; foundDial = true; break; }
                         }
                         if (!foundDial && dialCode) {
                             const newOpt = document.createElement('option');
@@ -831,17 +1028,11 @@
                             select.value = dialCode;
                         }
                     }
-
-                    // ২. প্রোফাইলের দেশের নাম অটোমেটিক সেট ও যুক্ত করা
                     const countrySelect = document.getElementById('countrySelect');
                     if (countrySelect && countryName) {
                         let foundCountry = false;
                         for (let opt of countrySelect.options) {
-                            if (opt.value.toLowerCase() === countryName.toLowerCase()) { 
-                                countrySelect.value = opt.value; 
-                                foundCountry = true;
-                                break; 
-                            }
+                            if (opt.value.toLowerCase() === countryName.toLowerCase()) { countrySelect.value = opt.value; foundCountry = true; break; }
                         }
                         if (!foundCountry) {
                             const newCountryOpt = document.createElement('option');
@@ -851,35 +1042,24 @@
                             countrySelect.value = countryName;
                         }
                     }
-
-                    // ৩. নিচের ডিসকাউন্ট/টার্গেট কান্ট্রিতে পতাকা ও দেশের নাম অটোমেটিক সেট করা
                     applyAutoTargetCountry();
                 }
             } catch (e) {}
         }
-
         function applyAutoTargetCountry() {
             const targetCountrySelect = document.getElementById('target_country');
             if (!targetCountrySelect || !autoDetectedCountryData.code) return;
-
             const code = autoDetectedCountryData.code.toLowerCase();
             let foundTarget = false;
             for (let opt of targetCountrySelect.options) {
-                if (opt.value.toLowerCase() === code) {
-                    targetCountrySelect.value = opt.value;
-                    foundTarget = true;
-                    break;
-                }
+                if (opt.value.toLowerCase() === code) { targetCountrySelect.value = opt.value; foundTarget = true; break; }
             }
             if (!foundTarget) {
                 let displayName = autoDetectedCountryData.name.toUpperCase();
                 try {
                     const bnName = new Intl.DisplayNames(['bn'], { type: 'region' }).of(code.toUpperCase());
-                    if (bnName) {
-                        displayName = `${bnName} (${autoDetectedCountryData.name.toUpperCase()})`;
-                    }
+                    if (bnName) { displayName = `${bnName} (${autoDetectedCountryData.name.toUpperCase()})`; }
                 } catch (err) {}
-
                 const newTargetOpt = document.createElement('option');
                 newTargetOpt.value = code;
                 newTargetOpt.text = `${autoDetectedCountryData.flag} ${displayName}`;
@@ -887,7 +1067,6 @@
                 targetCountrySelect.value = code;
             }
         }
-
         function switchTab(tabName) {
             if (tabName !== 'info' && !isSellerVerifiedAndComplete()) {
                 showCustomNotify("Complete verification and profile first.", false);
@@ -897,16 +1076,12 @@
                 showPendingPopup(st);
                 tabName = 'info';
             }
-
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.seller-bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
-
             const targetView = document.getElementById('view-' + tabName);
             const targetNav = document.getElementById('nav-btn-' + tabName);
-
             if (targetView) targetView.classList.add('active');
             if (targetNav) targetNav.classList.add('active');
-
             const titles = {
                 'info': 'SELLER INFO',
                 'dashboard': 'DASHBOARD',
@@ -916,23 +1091,17 @@
                 'payout': 'PAYOUT'
             };
             document.getElementById('mainPortalTitle').innerText = titles[tabName] || 'SELLER PORTAL';
-
-            if (tabName === 'dashboard') {
-                renderDashboardCharts();
-            } else if (tabName === 'list') {
-                loadProductsIntoTable();
-            } else if (tabName === 'upload') {
+            if (tabName === 'dashboard') { renderDashboardCharts(); }
+            else if (tabName === 'list') { loadProductsIntoTable(); }
+            else if (tabName === 'upload') {
                 if (document.getElementById('editingProductId').value === "") resetUploadForm();
                 updateUploadStepUI(currentUploadStep || 1);
             }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         function renderPaymentFields() {
             const gw = document.getElementById('payoutGateway').value;
             const container = document.getElementById('payoutDynamicFields');
-
             if (gw === 'bank') {
                 container.innerHTML = `
                     <div class="form-group">
@@ -964,30 +1133,24 @@
                 `;
             }
         }
-
         function verifyAndRequestPayout() {
             const inputPhone = document.getElementById('payoutVerifyPhone').value.trim();
             const msgEl = document.getElementById('payoutStatusMsg');
-
             if (!inputPhone || inputPhone.length < 5) {
                 msgEl.innerText = "Enter registered mobile number.";
                 msgEl.className = "status-msg error";
                 msgEl.style.display = "block";
                 return;
             }
-
             msgEl.innerText = "Withdrawal request submitted.";
             msgEl.className = "status-msg success";
             msgEl.style.display = "block";
-            
             if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         }
-
         function openMultiDeviceSyncModal() {
             document.getElementById('deviceSyncModal').style.display = 'flex';
             const qrcodeDiv = document.getElementById('qrcodeContainer');
             qrcodeDiv.innerHTML = '';
-            
             const syncToken = "rorraxy_sync_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
             new QRCode(qrcodeDiv, {
                 text: window.location.origin + "/seller/index.html?sync_token=" + syncToken,
@@ -998,16 +1161,11 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
-
-        function closeMultiDeviceSyncModal() {
-            document.getElementById('deviceSyncModal').style.display = 'none';
-        }
-
+        function closeMultiDeviceSyncModal() { document.getElementById('deviceSyncModal').style.display = 'none'; }
         function updateUploadStepUI(step) {
             currentUploadStep = step;
             document.querySelectorAll('#view-upload .step-section').forEach(sec => sec.style.display = 'none');
             document.getElementById(`upload-step-${step}`).style.display = 'block';
-
             for (let i = 1; i <= 5; i++) {
                 const item = document.getElementById(`prog-ind-${i}`);
                 if (i < step) item.className = 'step-prog-item completed';
@@ -1016,23 +1174,17 @@
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         function nextUploadStep(targetStep) {
             if (targetStep === 2 && !selectedModeValue) { showCustomNotify("Select upload mode.", false); return; }
             if (targetStep === 3 && !window.selectedCategoryValue) { showCustomNotify("Select category.", false); return; }
             if (targetStep === 4 && uploadedImageUrls.length === 0) { showCustomNotify("Upload at least one image.", false); return; }
             updateUploadStepUI(targetStep);
         }
-
-        function prevUploadStep(targetStep) {
-            updateUploadStepUI(targetStep);
-        }
-
+        function prevUploadStep(targetStep) { updateUploadStepUI(targetStep); }
         function selectUploadMode(mode, element) {
             document.querySelectorAll('.mode-box').forEach(b => b.classList.remove('clicked'));
             element.classList.add('clicked');
             selectedModeValue = mode;
-
             const wholesaleRow = document.getElementById('wholesale-price-row');
             const moqGroup = document.getElementById('moq-input-group');
             if (mode === 'wholesale' || mode === 'both') {
@@ -1044,7 +1196,6 @@
             }
             setTimeout(() => { nextUploadStep(2); }, 200);
         }
-
         function compressImageToWebP(file, maxWidth = 1000, maxHeight = 1000, quality = 0.8) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -1055,11 +1206,8 @@
                     img.onload = function() {
                         let w = img.width;
                         let h = img.height;
-                        if (w > h) {
-                            if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
-                        } else {
-                            if (h > maxHeight) { w = Math.round((w * maxHeight) / h); h = maxHeight; }
-                        }
+                        if (w > h) { if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; } }
+                        else { if (h > maxHeight) { w = Math.round((w * maxHeight) / h); h = maxHeight; } }
                         const canvas = document.createElement('canvas');
                         canvas.width = w;
                         canvas.height = h;
@@ -1072,13 +1220,11 @@
                 reader.onerror = () => resolve(file);
             });
         }
-
         async function uploadLogoToR2(event) {
             const file = event.target.files[0];
             if (!file) return;
             const indicator = document.getElementById('avatarPreview');
             indicator.style.opacity = '0.5';
-
             try {
                 const optimizedBlob = await compressImageToWebP(file, 300, 300, 0.75);
                 const res = await fetch('/api/upload?type=image', {
@@ -1091,32 +1237,23 @@
                     compressedLogoData = data.url;
                     indicator.src = compressedLogoData;
                     showCustomNotify("Logo uploaded.", true);
-                } else {
-                    showCustomNotify(data.error || "Upload failed.", false);
-                }
-            } catch (err) {
-                showCustomNotify("Upload error.", false);
-            } finally {
-                indicator.style.opacity = '1';
-            }
+                } else { showCustomNotify(data.error || "Upload failed.", false); }
+            } catch (err) { showCustomNotify("Upload error.", false); }
+            finally { indicator.style.opacity = '1'; }
         }
-
         window.handleImageSelection = async function(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
             const previewContainer = document.getElementById('image-preview');
             const labelTxt = document.getElementById('imgUploadText');
             labelTxt.innerText = "UPLOADING...";
-
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
                 let tempLocalUrl = URL.createObjectURL(file);
-                
                 let card = document.createElement('div');
                 card.className = 'preview-card uploading';
                 card.innerHTML = `<img src="${tempLocalUrl}">`;
                 previewContainer.appendChild(card);
-
                 try {
                     const optimizedBlob = await compressImageToWebP(file, 1200, 1200, 0.82);
                     const res = await fetch('/api/upload?type=image', {
@@ -1129,31 +1266,23 @@
                         uploadedImageUrls.push(data.url);
                         card.className = 'preview-card';
                         card.innerHTML = `<img src="${data.url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${data.url}'); checkMediaButtonState();" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button>`;
-                    } else {
-                        card.remove();
-                    }
-                } catch (err) {
-                    card.remove();
-                }
+                    } else { card.remove(); }
+                } catch (err) { card.remove(); }
             }
-
             labelTxt.innerText = "UPLOAD IMAGES";
             checkMediaButtonState();
         };
-
         window.handleVideoSelection = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const previewContainer = document.getElementById('video-preview');
             const labelTxt = document.getElementById('vidUploadText');
             labelTxt.innerText = "UPLOADING...";
-
             let tempLocalUrl = URL.createObjectURL(file);
             let card = document.createElement('div');
             card.className = 'preview-card uploading';
             card.innerHTML = `<video src="${tempLocalUrl}"></video>`;
             previewContainer.appendChild(card);
-
             try {
                 const res = await fetch('/api/upload?type=video', {
                     method: 'POST',
@@ -1166,24 +1295,14 @@
                     card.className = 'preview-card';
                     card.innerHTML = `<video src="${uploadedVideoUrl}" controls></video><button type="button" onclick="this.parentElement.remove(); uploadedVideoUrl='';" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button>`;
                     showCustomNotify("Video uploaded.", true);
-                } else {
-                    card.remove();
-                    showCustomNotify(data.error || "Upload failed.", false);
-                }
-            } catch (err) {
-                card.remove();
-                showCustomNotify("Upload error.", false);
-            } finally {
-                labelTxt.innerText = "UPLOAD VIDEO";
-                checkMediaButtonState();
-            }
+                } else { card.remove(); showCustomNotify(data.error || "Upload failed.", false); }
+            } catch (err) { card.remove(); showCustomNotify("Upload error.", false); }
+            finally { labelTxt.innerText = "UPLOAD VIDEO"; checkMediaButtonState(); }
         };
-
         function checkMediaButtonState() {
             const nextBtn = document.getElementById('upload-next-btn-3');
             if (nextBtn) nextBtn.disabled = uploadedImageUrls.length === 0;
         }
-
         function resetUploadForm() {
             document.getElementById('editingProductId').value = "";
             document.getElementById('product_title').value = "";
@@ -1205,17 +1324,11 @@
             if (nextBtn) nextBtn.disabled = true;
             document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH';
         }
-
         async function submitMasterForm(event) {
             event.preventDefault();
-            if (uploadedImageUrls.length === 0) {
-                showCustomNotify("Upload at least one image.", false);
-                return;
-            }
-
+            if (uploadedImageUrls.length === 0) { showCustomNotify("Upload at least one image.", false); return; }
             const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "rorraxy-unknown";
             const editingId = document.getElementById('editingProductId').value;
-
             const productPayload = {
                 id: editingId || undefined,
                 seller_id: sellerId,
@@ -1240,11 +1353,9 @@
                 allow_custom_note: document.getElementById('custom_size_note').checked ? 1 : 0,
                 description: document.getElementById('product_description').value || ""
             };
-
             const btn = document.getElementById('publishProductBtn');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SAVING...';
-
             try {
                 const method = editingId ? "PUT" : "POST";
                 const res = await fetch('/api/products', {
@@ -1253,15 +1364,12 @@
                     body: JSON.stringify(productPayload)
                 });
                 const data = await res.json();
-
                 if (data.success || true) {
                     showCustomNotify(editingId ? "Product updated." : "Product published.", true);
                     if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
                     resetUploadForm();
                     setTimeout(() => { switchTab('list'); }, 800);
-                } else {
-                    showCustomNotify(data.error || "Save failed.", false);
-                }
+                } else { showCustomNotify(data.error || "Save failed.", false); }
             } catch (err) {
                 showCustomNotify("Product published.", true);
                 if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
@@ -1272,12 +1380,10 @@
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> PUBLISH';
             }
         }
-
         function createSparkline(canvasId, dataPoints, isBar = false) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
-
             const ctx = canvas.getContext('2d');
             chartInstances[canvasId] = new Chart(ctx, {
                 type: isBar ? 'bar' : 'line',
@@ -1302,42 +1408,35 @@
                 }
             });
         }
-
         async function renderDashboardCharts() {
             const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "";
             try {
                 const res = await fetch(`/api/products?seller_id=${encodeURIComponent(sellerId)}`);
                 const result = await res.json();
                 const products = result.success ? (result.data || []) : [];
-                
                 document.getElementById('statProductsVal').innerText = products.length;
                 document.getElementById('statOrdersVal').innerText = "0";
                 document.getElementById('statRevenueVal').innerText = "$0.00";
                 document.getElementById('statBalanceVal').innerText = "$0.00";
-
                 createSparkline('chartRevenue', [0, 0, 0, 0, 0]);
                 createSparkline('chartBalance', [0, 0, 0, 0, 0]);
                 createSparkline('chartProducts', products.length > 0 ? [0, Math.ceil(products.length*0.5), products.length] : [0, 0, 0], true);
                 createSparkline('chartOrders', [0, 0, 0, 0, 0]);
             } catch (err) {}
         }
-
         async function loadProductsIntoTable() {
             const sellerId = localStorage.getItem('seller_id') || localStorage.getItem('rorraxy_seller_email') || "";
             const tbody = document.getElementById('desktopTableBody');
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">LOADING...</td></tr>`;
-
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 16px; color: var(--text-gray);">LOADING...</td></tr>`;
             try {
                 const res = await fetch(`/api/products?seller_id=${encodeURIComponent(sellerId)}`);
                 const result = await res.json();
                 const products = result.success ? (result.data || []) : [];
-
                 if (products.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray);">NO PRODUCTS</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 16px; color: var(--text-gray);">NO PRODUCTS</td></tr>`;
                     document.getElementById('statProductsVal').innerText = "0";
                     return;
                 }
-
                 document.getElementById('statProductsVal').innerText = products.length;
                 let html = '';
                 products.forEach((p) => {
@@ -1362,17 +1461,15 @@
                 });
                 tbody.innerHTML = html;
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #ff4d4d;">LOAD FAILED</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 16px; color: #ff4d4d;">LOAD FAILED</td></tr>`;
             }
         }
-
         async function editProduct(productId) {
             try {
                 const res = await fetch(`/api/products?code=${encodeURIComponent(productId)}`);
                 const result = await res.json();
                 const p = result.success && result.data && result.data.length > 0 ? result.data[0] : null;
                 if (!p) { showCustomNotify("Product not found.", false); return; }
-
                 document.getElementById('editingProductId').value = p.id || p.product_code;
                 document.getElementById('product_title').value = p.title || "";
                 document.getElementById('product_description').value = p.description || "";
@@ -1388,7 +1485,6 @@
                 }
                 selectedModeValue = p.upload_mode || "retail";
                 window.selectedCategoryValue = p.category || "";
-                
                 uploadedImageUrls = p.images_json ? JSON.parse(p.images_json) : [p.image_url];
                 const previewContainer = document.getElementById('image-preview');
                 previewContainer.innerHTML = '';
@@ -1398,32 +1494,21 @@
                     card.innerHTML = `<img src="${url}"><button type="button" onclick="this.parentElement.remove(); uploadedImageUrls = uploadedImageUrls.filter(u=>u!=='${url}'); checkMediaButtonState();" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.85); color:#fff; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer; font-size:9px;"><i class="fa-solid fa-xmark"></i></button>`;
                     previewContainer.appendChild(card);
                 });
-
                 checkMediaButtonState();
                 document.getElementById('publishProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> UPDATE';
                 switchTab('upload');
-            } catch (err) {
-                showCustomNotify("Fetch failed.", false);
-            }
+            } catch (err) { showCustomNotify("Fetch failed.", false); }
         }
-
         async function deleteProduct(productId) {
             if (confirm("Delete this product?")) {
                 try {
                     const res = await fetch(`/api/products?id=${encodeURIComponent(productId)}`, { method: 'DELETE' });
                     const data = await res.json();
-                    if (data.success) {
-                        showCustomNotify("Product deleted.", true);
-                        loadProductsIntoTable();
-                    } else {
-                        showCustomNotify(data.error || "Delete failed.", false);
-                    }
-                } catch (err) {
-                    showCustomNotify("Delete error.", false);
-                }
+                    if (data.success) { showCustomNotify("Product deleted.", true); loadProductsIntoTable(); }
+                    else { showCustomNotify(data.error || "Delete failed.", false); }
+                } catch (err) { showCustomNotify("Delete error.", false); }
             }
         }
-
         const magicLinkForm = document.getElementById('magicLinkForm');
         if (magicLinkForm) {
             magicLinkForm.addEventListener('submit', async (e) => {
@@ -1433,28 +1518,23 @@
                 const fullPhone = document.getElementById('countryDialCode').value + rawPhone;
                 const statusEl = document.getElementById('formStatus');
                 const btn = document.getElementById('sendLinkBtn');
-
                 if (!email || !isAuthenticEmail(email)) {
                     statusEl.innerText = "Enter valid email.";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
                 }
-
                 if (!rawPhone || rawPhone.length < 5) {
                     statusEl.innerText = "Enter valid mobile number.";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
                 }
-
                 btn.disabled = true;
                 btn.innerText = "GENERATING...";
-
                 temporarySellerEmail = email;
                 temporarySellerPhone = fullPhone;
                 generatedMagicCode = Math.floor(100000 + Math.random() * 900000).toString();
-
                 try {
                     await fetch('/api/seller/send-magic-link', {
                         method: 'POST',
@@ -1470,12 +1550,10 @@
                 }
             });
         }
-
         function autoFillMagicCode() {
             document.getElementById('inputMagicCode').value = generatedMagicCode;
             document.getElementById('otpVerifyForm').dispatchEvent(new Event('submit'));
         }
-
         const otpVerifyForm = document.getElementById('otpVerifyForm');
         if (otpVerifyForm) {
             otpVerifyForm.addEventListener('submit', async (e) => {
@@ -1483,43 +1561,32 @@
                 const enteredCode = document.getElementById('inputMagicCode').value.trim();
                 const statusEl = document.getElementById('otpStatusMsg');
                 const btn = document.getElementById('verifyOtpBtn');
-
                 if (enteredCode !== generatedMagicCode && enteredCode !== '123456') {
                     statusEl.innerText = "Invalid code.";
                     statusEl.className = "status-msg error";
                     statusEl.style.display = "block";
                     return;
                 }
-
                 btn.disabled = true;
                 btn.innerText = "VERIFYING...";
-
                 try {
                     const emailPrefix = temporarySellerEmail.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
                     const fallbackId = `rorraxy-${emailPrefix}-${Math.random().toString(36).substring(2,8)}`;
-                    
                     localStorage.setItem('rorraxy_seller_verified', 'true');
                     localStorage.setItem('rorraxy_seller_email', temporarySellerEmail);
                     localStorage.setItem('rorraxy_seller_phone', temporarySellerPhone);
                     localStorage.setItem('seller_id', fallbackId);
-
                     document.getElementById('magicCodeVerifySection').style.display = 'none';
                     document.getElementById('businessInfoSection').style.display = 'block';
                     document.getElementById('businessEmail').value = temporarySellerEmail;
                     document.getElementById('stepTracker1').className = 'step-item completed';
                     document.getElementById('stepTracker2').className = 'step-item active';
-
                     if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                     showCustomNotify("Verified.", true);
-                } catch (err) {
-                    showCustomNotify("Verification failed.", false);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = "VERIFY";
-                }
+                } catch (err) { showCustomNotify("Verification failed.", false); }
+                finally { btn.disabled = false; btn.innerText = "VERIFY"; }
             });
         }
-
         const businessInfoForm = document.getElementById('businessInfoForm');
         if (businessInfoForm) {
             businessInfoForm.addEventListener('submit', async (e) => {
@@ -1527,13 +1594,11 @@
                 const btn = document.getElementById('saveInfoBtn');
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SUBMITTING...';
-
                 const userEmail = document.getElementById('businessEmail').value.trim().toLowerCase();
                 const rawBrand = document.getElementById('brandName').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
                 const formattedBrand = rawBrand.startsWith('rorraxy-') ? rawBrand : `rorraxy-${rawBrand}`;
                 const finalSellerId = `${formattedBrand}-${Math.random().toString(36).substring(2,6)}`;
                 localStorage.setItem('seller_id', finalSellerId);
-
                 const profilePayload = {
                     seller_id: finalSellerId,
                     email: userEmail,
@@ -1551,7 +1616,6 @@
                     logo_url: compressedLogoData,
                     admin_approval_status: 'pending'
                 };
-
                 try {
                     await fetch('/api/seller', {
                         method: 'POST',
@@ -1568,14 +1632,11 @@
                 }
             });
         }
-
         function updateApprovalBadgeUI(status) {
             currentApprovalStatus = status || 'pending';
             localStorage.setItem('rorraxy_seller_approval_status', currentApprovalStatus);
-
             const badgeWrap = document.getElementById('approvalBadgeWrap');
             const dashBtn = document.getElementById('enterDashboardBtn');
-
             if (currentApprovalStatus === 'approved') {
                 badgeWrap.innerHTML = `<span class="status-pill approved"><i class="fa-solid fa-circle-check"></i> APPROVED</span>`;
                 if (dashBtn) dashBtn.disabled = false;
@@ -1587,7 +1648,6 @@
                 if (dashBtn) dashBtn.disabled = false;
             }
         }
-
         function renderCvPreview(data) {
             document.getElementById('prevLogo').src = data.logo_url || compressedLogoData;
             document.getElementById('prevBrandName').innerText = data.brand_name || "---";
@@ -1596,9 +1656,7 @@
             document.getElementById('prevWhatsapp').innerText = data.whatsapp || "---";
             document.getElementById('prevCountry').innerText = data.country || "---";
             document.getElementById('prevSellerId').innerText = data.seller_id || "---";
-
             updateApprovalBadgeUI(data.admin_approval_status || 'pending');
-
             document.getElementById('verificationSection').style.display = 'none';
             document.getElementById('businessInfoSection').style.display = 'block';
             document.getElementById('businessInfoForm').style.display = 'none';
@@ -1607,23 +1665,19 @@
             document.getElementById('stepTracker2').className = 'step-item completed';
             document.getElementById('cardTitleText').innerText = "SELLER PROFILE";
         }
-
         function switchToEditMode() {
             document.getElementById('profilePreviewSection').style.display = 'none';
             document.getElementById('businessInfoForm').style.display = 'block';
             document.getElementById('cancelEditBtn').style.display = 'block';
             document.getElementById('cardTitleText').innerText = "EDIT PROFILE";
         }
-
         function cancelEditMode() {
             document.getElementById('businessInfoForm').style.display = 'none';
             document.getElementById('profilePreviewSection').style.display = 'block';
             document.getElementById('cardTitleText').innerText = "SELLER PROFILE";
         }
-
         window.addEventListener('DOMContentLoaded', async () => {
             autoDetectCountryCode();
-
             if (isSellerVerifiedAndComplete()) {
                 const savedEmail = localStorage.getItem('rorraxy_seller_email') || "";
                 if (savedEmail) {
@@ -1633,11 +1687,8 @@
                         if (result.success && result.data && result.data.length > 0) {
                             const sellerData = result.data[0];
                             renderCvPreview(sellerData);
-                            if (sellerData.admin_approval_status === 'approved') {
-                                switchTab('dashboard');
-                            } else {
-                                showPendingPopup(sellerData.admin_approval_status || 'pending');
-                            }
+                            if (sellerData.admin_approval_status === 'approved') { switchTab('dashboard'); }
+                            else { showPendingPopup(sellerData.admin_approval_status || 'pending'); }
                             return;
                         }
                     } catch (e) {}
