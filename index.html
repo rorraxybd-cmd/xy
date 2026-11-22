@@ -7,7 +7,6 @@
     <meta name="theme-color" content="#000000">
     <title>rorraxy - Retail & Reels</title>
 
-    <!-- PWA Manifest Link -->
     <link rel="manifest" href="/manifest.json">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,13 +21,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Central Script Tag -->
     <script src="/ecosystem-core.js" defer></script>
-
-    <!-- Popup JS Link -->
     <script src="/popup.js" defer></script>
 
-    <!-- Service Worker Registration Script -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -51,9 +46,9 @@
             --font-main: 'Poppins', sans-serif;
         }
 
-        html, body { 
+        html, body {
             width: 100%; max-width: 100vw; overflow-x: hidden; overflow-y: auto !important;
-            background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); 
+            background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main);
             min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-overflow-scrolling: touch; scrollbar-width: none;
         }
         body { margin: 0; padding: 0 0 58px 0; text-transform: none !important; }
@@ -645,7 +640,7 @@
 
             const dynamicEngagement = getDynamicEngagement(id);
             if ($('sideLoveCountText')) $('sideLoveCountText').innerText = dynamicEngagement.formatted;
-            
+
             const liked = localStorage.getItem(`rorraxy_retail_likes_${id}_active`) === 'true';
             $('sideLoveActionBtn')?.classList.toggle('liked-active', liked);
 
