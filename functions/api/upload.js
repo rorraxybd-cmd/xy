@@ -1,6 +1,6 @@
 export async function onRequest(context) {
   const { request, env } = context;
-  
+
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -19,9 +19,7 @@ export async function onRequest(context) {
 
   try {
     const url = new URL(request.url);
-    const bucketType = url.searchParams.get("type") || "image"; // 'image' অথবা 'video'
-    
-    // R2 বাকেট বাইন্ডিং সিলেক্ট করা
+    const bucketType = url.searchParams.get("type") || "image";
     const targetBucket = bucketType === "video" ? env.video : env.image;
 
     if (!targetBucket) {
@@ -32,8 +30,6 @@ export async function onRequest(context) {
 
     const originalName = request.headers.get("X-File-Name") || `file_${Date.now()}`;
     const fileName = `${Date.now()}_${originalName.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
-    
-    // রিকোয়েস্ট বডি থেকে সরাসরি বাইনারি ডেটা রিড করা (FormData-এর পরিবর্তে রেশনালাইজড স্ট্রিম)
     const fileBuffer = await request.arrayBuffer();
 
     if (!fileBuffer || fileBuffer.byteLength === 0) {
@@ -42,14 +38,12 @@ export async function onRequest(context) {
       });
     }
 
-    // R2-এ ফাইল পুট করা
     await targetBucket.put(fileName, fileBuffer, {
       httpMetadata: {
         contentType: request.headers.get("Content-Type") || (bucketType === "video" ? "video/mp4" : "image/webp"),
       },
     });
 
-    // কাস্টম ডোমেইন অনুযায়ী সঠিক পাবলিক লিংক তৈরি
     const domainMap = {
       image: "https://img.rorraxy.com",
       video: "https://vid.rorraxy.com"
@@ -57,15 +51,14 @@ export async function onRequest(context) {
 
     const fileUrl = `${domainMap[bucketType] || "https://img.rorraxy.com"}/${fileName}`;
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      message: "File uploaded to R2 successfully!", 
+    return new Response(JSON.stringify({
+      success: true,
+      message: "File uploaded to R2 successfully!",
       url: fileUrl,
       file_name: fileName
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
-
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
