@@ -26,7 +26,6 @@ export async function onRequest(context) {
   try {
     const pathname = url.pathname;
 
-    // 1. Send Magic Link & Check Existing Profile Status
     if (pathname.includes("/send-magic-link")) {
       if (request.method !== "POST") {
         return new Response(
@@ -52,15 +51,14 @@ export async function onRequest(context) {
         );
       }
 
-      // Check if seller already exists and has completed profile info
       const existingSeller = await db.prepare("SELECT * FROM sellers WHERE email = ?").bind(email).first();
-      
+
       const emailPrefix = email.split('@')[0].replace(/[^a-z0-9]/g, '').substring(0, 6);
       const randomSuffix = Math.random().toString(36).substring(2, 8);
       const uniqueSellerId = existingSeller?.seller_id || `rorraxy-${emailPrefix}-${randomSuffix}`;
 
       const token = crypto.randomUUID();
-      const expiresAt = Date.now() + 300 * 1000; // 5 minutes expiration
+      const expiresAt = Date.now() + 300 * 1000;
       const clientIp = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for") || "Unknown";
       const ipCountry = request.headers.get("cf-ipcountry") || "BD";
       const userAgent = request.headers.get("user-agent") || "Unknown";
@@ -69,9 +67,9 @@ export async function onRequest(context) {
         INSERT INTO sellers (
           seller_id, email, mobile_number, verification_token, token_expires_at, last_ip, ip_country, user_agent, is_verified, admin_approval_status
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 'pending')
-        ON CONFLICT(email) DO UPDATE SET 
-          verification_token = excluded.verification_token, 
-          token_expires_at = excluded.token_expires_at, 
+        ON CONFLICT(email) DO UPDATE SET
+          verification_token = excluded.verification_token,
+          token_expires_at = excluded.token_expires_at,
           mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number),
           last_ip = excluded.last_ip,
           ip_country = excluded.ip_country,
@@ -81,14 +79,12 @@ export async function onRequest(context) {
       await db.prepare(sqlMagic).bind(uniqueSellerId, email, mobile_number, token, expiresAt, clientIp, ipCountry, userAgent).run();
 
       const magicLink = `https://${url.hostname}/api/seller/verify-magic?token=${token}`;
-
-      // If profile is already complete (e.g. brand_name exists), we can signal a direct dashboard bypass flag
       const isProfileComplete = existingSeller && existingSeller.brand_name && existingSeller.full_name ? true : false;
 
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: "Verification token generated successfully", 
+        JSON.stringify({
+          success: true,
+          message: "Verification token generated successfully",
           magicLink: magicLink,
           seller_id: uniqueSellerId,
           isProfileComplete: isProfileComplete
@@ -100,7 +96,6 @@ export async function onRequest(context) {
       );
     }
 
-    // 2. Verify Magic Link Token Endpoint & Smart Redirect
     if (pathname.includes("/verify-magic")) {
       const token = url.searchParams.get("token");
       if (!token) {
@@ -119,14 +114,12 @@ export async function onRequest(context) {
 
       await db.prepare(sqlVerify).bind(now, token).run();
 
-      // Check if user profile is already fully filled out. If yes, send directly to dashboard tab/view.
       const isComplete = record.brand_name && record.full_name ? "true" : "false";
       const redirectUrl = `https://${url.hostname}/seller/index.html?verified=true&email=${encodeURIComponent(record.email)}&complete=${isComplete}`;
-      
+
       return Response.redirect(redirectUrl, 302);
     }
 
-    // NEW ADDED: 2.5. Admin Update Status Endpoint (/update-status) -> Approve / Reject
     if (pathname.includes("/update-status")) {
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: corsHeaders });
@@ -134,7 +127,7 @@ export async function onRequest(context) {
 
       const bodyData = await request.json().catch(() => ({}));
       const email = (bodyData.email || "").toLowerCase().trim();
-      const newStatus = bodyData.status || "pending"; // approved, rejected, pending
+      const newStatus = bodyData.status || "pending";
 
       if (!email) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -148,7 +141,6 @@ export async function onRequest(context) {
       );
     }
 
-    // 3. POST Upsert / Save Seller Profile Information
     if (request.method === "POST") {
       const data = await request.json().catch(() => ({}));
       const email = (data.email || data.seller_id || "").toLowerCase().trim();
@@ -174,11 +166,11 @@ export async function onRequest(context) {
 
       const sqlUpsert = `
         INSERT INTO sellers (
-          seller_id, email, mobile_number, brand_name, full_name, business_desc, 
-          whatsapp, emergency_phone, country, full_address, doc_type, doc_number, 
+          seller_id, email, mobile_number, brand_name, full_name, business_desc,
+          whatsapp, emergency_phone, country, full_address, doc_type, doc_number,
           trade_license, logo_url, is_verified, admin_approval_status, last_ip, ip_country, user_agent, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'pending', ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?)) 
-        ON CONFLICT(email) DO UPDATE SET 
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'pending', ?, ?, ?, COALESCE((SELECT created_at FROM sellers WHERE email = ?), ?))
+        ON CONFLICT(email) DO UPDATE SET
           seller_id = COALESCE(NULLIF(sellers.seller_id, ''), excluded.seller_id),
           mobile_number = COALESCE(NULLIF(excluded.mobile_number, ''), sellers.mobile_number),
           brand_name = excluded.brand_name,
@@ -235,7 +227,6 @@ export async function onRequest(context) {
       );
     }
 
-    // 4. GET Seller Profile or All Sellers List for Admin
     if (request.method === "GET") {
       const email = url.searchParams.get("email");
       if (email) {
@@ -251,7 +242,6 @@ export async function onRequest(context) {
         );
       }
 
-      // If no email query param, return all sellers list for Admin Panel (`seller.html`)
       const allSellers = await db.prepare("SELECT * FROM sellers ORDER BY created_at DESC").all();
       return new Response(
         JSON.stringify({ success: true, data: allSellers.results }),
