@@ -43,10 +43,10 @@ export async function onRequest(context) {
         "INSERT INTO customer_auth_logs (phone, country_code, ip_address, device_info, auth_token, status, last_login) VALUES (?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP)"
       ).bind(phone, countryCode, clientIp, body.device_info || userAgent, otpCode).run();
 
-      return new Response(JSON.stringify({ 
-        success: true, 
+      return new Response(JSON.stringify({
+        success: true,
         message: "OTP sent successfully",
-        debug_otp: otpCode 
+        debug_otp: otpCode
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -81,10 +81,10 @@ export async function onRequest(context) {
 
       const authToken = "rorraxy_cust_" + Math.random().toString(36).substring(2) + Date.now();
 
-      return new Response(JSON.stringify({ 
-        success: true, 
+      return new Response(JSON.stringify({
+        success: true,
         token: authToken,
-        message: "Verification successful. Access granted." 
+        message: "Verification successful. Access granted."
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -108,9 +108,9 @@ export async function onRequest(context) {
         "INSERT INTO customer_auth_logs (phone, ip_address, device_info, customer_name, shipping_address, master_order_id, auth_token, status, last_login) VALUES (?, ?, ?, ?, ?, ?, 'SYNCED_TOKEN', 'Verified', CURRENT_TIMESTAMP)"
       ).bind(phone, clientIp, userAgent, customerName, shippingAddress, masterOrderId).run();
 
-      return new Response(JSON.stringify({ 
-        success: true, 
-        message: "Customer account and order data synced successfully." 
+      return new Response(JSON.stringify({
+        success: true,
+        message: "Customer account and order data synced successfully."
       }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -121,7 +121,6 @@ export async function onRequest(context) {
       status: 404,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
-
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
