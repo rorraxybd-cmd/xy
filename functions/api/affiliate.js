@@ -15,14 +15,11 @@ export async function onRequest(context) {
   try {
     const action = url.searchParams.get("action");
 
-    // ==========================================
-    // ১. ম্যাজিক লিংক ও আইপি ভেরিফিকেশন (Send Magic Code & IP Security)
-    // ==========================================
     if (action === "send_magic_link" || action === "verify") {
       if (request.method !== "POST") {
-        return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), { 
-          status: 405, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), {
+          status: 405,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
@@ -30,30 +27,29 @@ export async function onRequest(context) {
       const email = (body.email || "").toLowerCase().trim();
       const countryCode = body.country_code || "+880";
       const phone = (body.phone || "").trim();
-      
+
       const cfIp = request.headers.get("cf-connecting-ip");
       const forwardedIp = request.headers.get("x-forwarded-for");
       const clientIp = body.ip;
-      
+
       let userIp = "127.0.0.1";
       if (clientIp && clientIp !== "Detecting..." && clientIp.trim() !== "") {
-          userIp = clientIp;
+        userIp = clientIp;
       } else if (cfIp) {
-          userIp = cfIp;
+        userIp = cfIp;
       } else if (forwardedIp) {
-          userIp = forwardedIp.split(',')[0].trim();
+        userIp = forwardedIp.split(',')[0].trim();
       }
 
       const userAgent = request.headers.get("user-agent") || "";
 
       if (!email) {
-        return new Response(JSON.stringify({ success: false, error: "Email required" }), { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        return new Response(JSON.stringify({ success: false, error: "Email required" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
-      // চেক করব এই ইমেইলের কোনো রেকর্ড আগে থেকেই আছে কি না
       let existingRecord = await env.retail.prepare(
         `SELECT * FROM rorraxy_affiliates_master WHERE email = ?`
       ).bind(email).first();
@@ -80,9 +76,9 @@ export async function onRequest(context) {
           updated_at = excluded.updated_at
       `).bind(generatedUniqueId, email, countryCode, phone, userIp, userAgent, now, now).run();
 
-      return new Response(JSON.stringify({ 
-        success: true, 
-        message: "Magic verification code and IP recorded successfully", 
+      return new Response(JSON.stringify({
+        success: true,
+        message: "Magic verification code and IP recorded successfully",
         unique_affiliate_id: generatedUniqueId,
         is_existing: !!existingRecord && !!existingRecord.first_name
       }), {
@@ -91,24 +87,21 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ২. ম্যাজিক কোড ভেরিফিকেশন এন্ডপয়েন্ট (স্মার্ট লগইন রিডাইরেক্ট সহ)
-    // ==========================================
     if (action === "verify_magic_code" && request.method === "POST") {
       const body = await request.json();
       const email = (body.email || "").toLowerCase().trim();
-      
+
       const cfIp = request.headers.get("cf-connecting-ip");
       const forwardedIp = request.headers.get("x-forwarded-for");
       const clientIp = body.ip;
-      
+
       let userIp = "127.0.0.1";
       if (clientIp && clientIp !== "Detecting..." && clientIp.trim() !== "") {
-          userIp = clientIp;
+        userIp = clientIp;
       } else if (cfIp) {
-          userIp = cfIp;
+        userIp = cfIp;
       } else if (forwardedIp) {
-          userIp = forwardedIp.split(',')[0].trim();
+        userIp = forwardedIp.split(',')[0].trim();
       }
 
       const now = new Date().toISOString();
@@ -126,9 +119,9 @@ export async function onRequest(context) {
 
       const isComplete = record && record.first_name && record.first_name.trim() !== "";
 
-      return new Response(JSON.stringify({ 
-        success: true, 
-        message: "Magic code and IP verified", 
+      return new Response(JSON.stringify({
+        success: true,
+        message: "Magic code and IP verified",
         unique_affiliate_id: record?.unique_affiliate_id,
         is_complete: !!isComplete,
         user_data: record || null
@@ -138,18 +131,15 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ৩. প্রোফাইল ইনফো রেজিস্টার ও আপডেট
-    // ==========================================
     if (action === "register" && request.method === "POST") {
       const data = await request.json();
       const email = (data.email || "").toLowerCase().trim();
       const now = new Date().toISOString();
 
       if (!email) {
-        return new Response(JSON.stringify({ success: false, error: "Email required" }), { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        return new Response(JSON.stringify({ success: false, error: "Email required" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
@@ -182,21 +172,18 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ৪. প্রোফাইল ডাটা ফেচ (GET)
-    // ==========================================
     if (action === "info" && request.method === "GET") {
       const affiliateId = url.searchParams.get("affiliate_id");
       if (!affiliateId) {
-        return new Response(JSON.stringify({ success: false, error: "Affiliate ID required" }), { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        return new Response(JSON.stringify({ success: false, error: "Affiliate ID required" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
       const queryParam = affiliateId.toLowerCase().trim();
       const info = await env.retail.prepare(`
-        SELECT * FROM rorraxy_affiliates_master 
+        SELECT * FROM rorraxy_affiliates_master
         WHERE email = ? OR unique_affiliate_id = ?
       `).bind(queryParam, queryParam).all();
 
@@ -206,23 +193,20 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ৫. ড্যাশবোর্ড স্ট্যাটস
-    // ==========================================
     if (action === "stats" && request.method === "GET") {
       const affiliateId = (url.searchParams.get("affiliate_id") || "").toLowerCase().trim();
 
       const stats = await env.retail.prepare(`
-        SELECT 
+        SELECT
           unique_affiliate_id,
-          total_earnings, 
-          available_balance, 
-          total_clicks, 
+          total_earnings,
+          available_balance,
+          total_clicks,
           total_referrals,
           status,
           admin_approval,
           payout_status
-        FROM rorraxy_affiliates_master 
+        FROM rorraxy_affiliates_master
         WHERE email = ? OR unique_affiliate_id = ?
       `).bind(affiliateId, affiliateId).all();
 
@@ -232,9 +216,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ==========================================
-    // ৬. পেআউট রিকোয়েস্ট
-    // ==========================================
     if (action === "payout" || action === "payout_request") {
       if (request.method === "POST") {
         const data = await request.json();
@@ -244,9 +225,9 @@ export async function onRequest(context) {
 
         await env.retail.prepare(`
           UPDATE rorraxy_affiliates_master SET
-            available_balance = CASE 
-              WHEN available_balance >= ? THEN available_balance - ? 
-              ELSE available_balance 
+            available_balance = CASE
+              WHEN available_balance >= ? THEN available_balance - ?
+              ELSE available_balance
             END,
             payout_status = 'pending',
             updated_at = ?
@@ -260,11 +241,10 @@ export async function onRequest(context) {
       }
     }
 
-    return new Response(JSON.stringify({ message: "rorraxy Master Affiliate API Active" }), { 
-      status: 200, 
-      headers: corsHeaders 
+    return new Response(JSON.stringify({ message: "rorraxy Master Affiliate API Active" }), {
+      status: 200,
+      headers: corsHeaders
     });
-
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
