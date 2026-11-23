@@ -44,21 +44,28 @@
             --text-white: #ffffff;
             --text-gray: #a0a0ab;
             --font-main: 'Poppins', sans-serif;
+            --snap-ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         html, body {
             width: 100%; max-width: 100vw; overflow-x: hidden; overflow-y: auto !important;
             background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main);
             min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+            text-rendering: optimizeSpeed;
         }
         body { margin: 0; padding: 0 0 58px 0; text-transform: none !important; }
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        button, .product-card, .side-action-item, .bottom-nav-item, .desktop-nav-circle, .preview-img-item {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
         #rorraxyLoaderOverlay {
             position: fixed; inset: 0; background: #000; z-index: 999999;
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-            transition: opacity 0.08s ease-out; pointer-events: none;
+            transition: opacity 0.1s linear; pointer-events: none;
         }
         .loader-logo-box { width: 68px; height: 68px; border-radius: 50%; overflow: hidden; border: 2px solid var(--gold-solid); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
         .loader-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -72,18 +79,49 @@
         }
         #pullRefreshIndicator.visible { top: 18px; }
 
+        /* ============================================
+           SUPER FAST CARD ANIMATION
+           - No stagger, no setTimeout
+           - Cards reveal before entering viewport (rootMargin 300px)
+           - Snappy 0.18s easing
+           ============================================ */
         .product-card {
             background: transparent; border-radius: 14px; overflow: hidden; display: inline-block; width: 100%;
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
-            opacity: 0; transform: translateY(14px);
-            transition: opacity 0.28s ease-out, transform 0.28s ease-out;
-            will-change: transform, opacity;
+            opacity: 0;
+            transform: translate3d(0, 8px, 0) scale(0.985);
+            transition: opacity 0.18s var(--snap-ease), transform 0.18s var(--snap-ease);
+            contain: layout style paint;
+            backface-visibility: hidden;
         }
-        .product-card.ai-revealed { opacity: 1; transform: translateY(0); }
-        .product-card:active { transform: scale(0.97); }
+        .product-card.ai-revealed {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+        .product-card:active { transform: scale(0.97); transition-duration: 0.05s; }
 
-        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #07070c; border-radius: 12px; overflow: hidden; }
-        .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; }
+        .product-media-box {
+            position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden;
+            background: #0a0a12;
+        }
+        .product-media-box::before {
+            content: ''; position: absolute; inset: 0; z-index: 0;
+            background: linear-gradient(90deg, #0a0a12 0%, #151523 50%, #0a0a12 100%);
+            background-size: 200% 100%;
+            animation: cardShimmer 1.2s linear infinite;
+        }
+        @keyframes cardShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .product-media-box img {
+            width: 100%; height: 100%; display: block; object-fit: cover;
+            position: relative; z-index: 1; background: #0a0a12;
+            opacity: 0; transition: opacity 0.2s ease-out;
+        }
+        .product-media-box img.img-ready { opacity: 1; }
+        /* Remove shimmer once image ready */
+        .product-media-box.img-loaded::before { display: none; }
 
         .desktop-reel-nav { position: fixed; right: 74px; top: 50%; transform: translateY(-50%); z-index: 4600; display: flex; flex-direction: column; gap: 14px; }
         @media (max-width: 768px) { .desktop-reel-nav { display: none !important; } }
@@ -99,7 +137,8 @@
             width: 90%; max-width: 400px; z-index: 5500; display: flex !important;
             align-items: center; background: #090a0f; border: 1.5px solid #6b5523;
             border-radius: 40px; padding: 4px 6px 4px 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.9);
-            transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.14s ease; will-change: transform, opacity;
+            transition: transform 0.18s var(--snap-ease), opacity 0.12s linear;
+            will-change: transform, opacity;
         }
         .top-floating-search-bar.search-hidden { transform: translate3d(-50%, -95px, 0); opacity: 0; pointer-events: none; }
         .floating-search-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 0.85rem; font-family: var(--font-main); }
@@ -109,7 +148,7 @@
         .right-vertical-actions {
             position: fixed !important; right: 10px !important; bottom: 68px !important; z-index: 4500 !important;
             display: flex; flex-direction: column; align-items: center; gap: 14px !important; width: 46px;
-            transform: translate3d(0, 0, 0); backface-visibility: hidden; transition: opacity 0.1s ease;
+            transform: translate3d(0, 0, 0); backface-visibility: hidden; transition: opacity 0.1s linear;
         }
         .right-vertical-actions.clean-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
         .side-action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; position: relative; width: 100%; transition: transform 0.06s ease; }
@@ -161,7 +200,7 @@
 
         .slide-layer {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 0.42s ease-in-out; will-change: opacity; backface-visibility: hidden; transform: translateZ(0);
+            transition: opacity 0.38s var(--snap-ease); will-change: opacity; backface-visibility: hidden; transform: translateZ(0);
         }
         .slide-layer.active { opacity: 1; z-index: 2; }
         .slide-layer.previous { opacity: 0; z-index: 1; }
@@ -174,12 +213,12 @@
         .reel-center-price-badge { font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .reel-center-discount-badge { background: var(--pink-accent); color: #fff; font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 
-        .overlay-sheet { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 12px; scrollbar-width: none; }
+        .overlay-sheet { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 10px; scrollbar-width: none; }
         .overlay-sheet::-webkit-scrollbar { display: none; }
-        .buy-preview-modal { width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5); border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px; }
-        .preview-horizontal-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 6px 2px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .buy-preview-modal { width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5); border-radius: 16px; padding: 14px; margin: auto; display: flex; flex-direction: column; gap: 8px; }
+        .preview-horizontal-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 4px 2px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
-        .preview-img-item { flex: 0 0 108px; width: 108px; height: 108px; border-radius: 12px; overflow: hidden; border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000; transition: transform 0.12s ease, border-color 0.12s ease; }
+        .preview-img-item { flex: 0 0 100px; width: 100px; height: 100px; border-radius: 12px; overflow: hidden; border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000; transition: transform 0.12s ease, border-color 0.12s ease; }
         .preview-img-item.selected { border-color: var(--pink-accent); transform: scale(1.03); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -189,7 +228,7 @@
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
             box-shadow: 0 0 18px rgba(212,175,55,0.95); will-change: left, top, transform, opacity;
         }
-        .inpage-details-modal { width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid); border-radius: 18px; padding: 14px; margin: auto; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; scrollbar-width: none; }
+        .inpage-details-modal { width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid); border-radius: 14px; padding: 12px; margin: auto; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; scrollbar-width: none; }
         .inpage-details-modal::-webkit-scrollbar { display: none; }
         .fullscreen-iframe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 54px); height: calc(100dvh - 54px); background: #000; z-index: 4500; flex-direction: column; }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
@@ -273,6 +312,17 @@
 
         const $ = id => document.getElementById(id);
 
+        // ============================================
+        // SUPER FAST LOADER — hides on first paint ready
+        // ============================================
+        function hideLoaderFast() {
+            const loader = $('rorraxyLoaderOverlay');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 100);
+            }
+        }
+
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -280,14 +330,6 @@
                 clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
             };
-        }
-
-        function hideLoaderFast() {
-            const loader = $('rorraxyLoaderOverlay');
-            if (loader && loader.style.display !== 'none') {
-                loader.style.opacity = '0';
-                setTimeout(() => { loader.style.display = 'none'; }, 80);
-            }
         }
 
         function preloadImageUrl(url, highPriority = false) {
@@ -333,11 +375,12 @@
             setupDesktopNavigation();
             buildCategoriesAccordion();
 
-            setTimeout(hideLoaderFast, 120);
+            // Hide loader fast — never block UI
+            setTimeout(hideLoaderFast, 60);
 
             const searchInput = $('floatingSearchInput'), searchBtn = $('floatingSearchBtn');
             if (searchBtn && searchInput) {
-                const debouncedSearch = debounce((val) => executeHeaderSearch(val), 250);
+                const debouncedSearch = debounce((val) => executeHeaderSearch(val), 220);
                 searchBtn.addEventListener('click', () => executeHeaderSearch(searchInput.value));
                 searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') executeHeaderSearch(searchInput.value); });
                 searchInput.addEventListener('input', e => debouncedSearch(e.target.value));
@@ -447,7 +490,7 @@
                 if (wheelLock || Math.abs(e.deltaY) < 12) return;
                 wheelLock = true;
                 navigateReelStep(e.deltaY > 0 ? 1 : -1);
-                setTimeout(() => { wheelLock = false; }, 260);
+                setTimeout(() => { wheelLock = false; }, 240);
             }, { passive: false });
 
             window.addEventListener('keydown', e => {
@@ -593,6 +636,11 @@
             renderPinterestHomeGrid(activeProductList);
         }
 
+        // ============================================
+        // INSTANT CARD GRID — no stagger, instant reveal
+        // Cards are observed with large rootMargin, so
+        // they're already revealed before user scrolls to them.
+        // ============================================
         function renderPinterestHomeGrid(products) {
             const container = $('appContainer');
             if (!container) return;
@@ -616,9 +664,22 @@
                 };
                 card.innerHTML = `<div class="product-media-box">
                     ${disc > 0 ? `<div class="corner-discount-badge">${disc}% OFF</div>` : ''}
-                    <img src="${imgs[0]}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" alt="${item.title || 'rorraxy'}" loading="${index < 8 ? 'eager' : 'lazy'}" decoding="async">
+                    <img src="${imgs[0]}" alt="${item.title || 'rorraxy'}" loading="${index < 12 ? 'eager' : 'lazy'}" decoding="async">
                     <div class="card-clean-price-badge">${price}</div>
                 </div>`;
+
+                // Smooth image fade-in
+                const img = card.querySelector('img');
+                const mediaBox = card.querySelector('.product-media-box');
+                const onReady = () => {
+                    img.classList.add('img-ready');
+                    mediaBox.classList.add('img-loaded');
+                };
+                if (img.complete && img.naturalWidth) onReady();
+                else {
+                    img.addEventListener('load', onReady, { once: true });
+                    img.addEventListener('error', () => { img.onerror = null; img.src = FALLBACK_LOGO; onReady(); }, { once: true });
+                }
                 frag.appendChild(card);
             });
 
@@ -627,19 +688,29 @@
 
             const cards = container.querySelectorAll('.product-card');
             if ('IntersectionObserver' in window) {
-                let batch = 0;
+                // Large rootMargin = cards reveal way before user sees them.
+                // threshold 0 = triggers the moment ANY pixel intersects.
+                // Result: user perceives cards as "already there" when scrolled to.
                 const obs = new IntersectionObserver((entries, o) => {
-                    entries.forEach(entry => {
+                    for (let i = 0; i < entries.length; i++) {
+                        const entry = entries[i];
                         if (entry.isIntersecting) {
-                            const delay = Math.min(batch++ * 35, 220);
-                            setTimeout(() => entry.target.classList.add('ai-revealed'), delay);
+                            entry.target.classList.add('ai-revealed');
                             o.unobserve(entry.target);
                         }
-                    });
-                    setTimeout(() => { batch = 0; }, 80);
-                }, { rootMargin: '100px 0px', threshold: 0.02 });
+                    }
+                }, { rootMargin: '300px 0px', threshold: 0 });
                 cards.forEach(c => obs.observe(c));
-            } else cards.forEach(c => c.classList.add('ai-revealed'));
+                // Safety fallback: reveal everything after 400ms in case some cards
+                // are outside the observer's root (e.g. container just shown)
+                setTimeout(() => {
+                    cards.forEach(c => {
+                        if (!c.classList.contains('ai-revealed')) c.classList.add('ai-revealed');
+                    });
+                }, 400);
+            } else {
+                cards.forEach(c => c.classList.add('ai-revealed'));
+            }
 
             updateSideActionState();
         }
@@ -701,9 +772,10 @@
 
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
 
-            for (let lookahead = idx + 1; lookahead <= idx + 2 && lookahead < list.length; lookahead++) {
+            // Aggressive preload: next 4 items (instead of 2)
+            for (let lookahead = idx + 1; lookahead <= idx + 4 && lookahead < list.length; lookahead++) {
                 const nextImgs = extractImages(list[lookahead]);
-                if (nextImgs[0]) preloadImageUrl(nextImgs[0], false);
+                if (nextImgs[0]) preloadImageUrl(nextImgs[0], lookahead === idx + 1);
             }
 
             const prod = list[idx];
@@ -724,7 +796,7 @@
                         currEl.classList.add('previous');
                         nextEl.classList.remove('previous');
                         nextEl.classList.add('active');
-                        setTimeout(() => currEl.classList.remove('previous'), 420);
+                        setTimeout(() => currEl.classList.remove('previous'), 380);
                     }
                     curImg = nextImg;
                 }, 2500);
@@ -755,7 +827,7 @@
                 } else {
                     const layers = imgs.map((url, i) => {
                         const isFirst = (idx === 0 && i === 0);
-                        const isEager = (idx <= 1 && i === 0);
+                        const isEager = (idx <= 2 && i === 0);
                         return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" class="slide-layer ${i === 0 ? 'active' : ''}" id="slide_${idx}_${i}" alt="slide" ${isFirst ? 'fetchpriority="high" decoding="sync" onload="hideLoaderFast()"' : `loading="${isEager ? 'eager' : 'lazy'}" decoding="async"`}>`;
                     }).join('');
                     mediaContent = `<div style="width:100%; height:100%; position:relative; overflow:hidden;">${layers}</div>`;
@@ -832,6 +904,9 @@
             if (list[index]) openBuyPreviewModal(list[index]);
         }
 
+        // ============================================
+        // COMPACT DETAILS MODAL — 4 tight blocks only
+        // ============================================
         function openInpageDetailsModal(product) {
             if (!product) return;
             const title = (product.title || 'rorraxy luxury product').toLowerCase();
@@ -848,36 +923,32 @@
             }
 
             $('inpageDetailsModalContent').innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-                    <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
-                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                            <span style="font-size:1.3rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">$${priceNum.toFixed(2)}</span>
-                            <span style="font-size:0.78rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">$${(priceNum * 1.35).toFixed(2)}</span>
-                            ${disc > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.56rem; font-weight:800; padding:2px 6px; border-radius:4px;">${disc}% OFF</span>` : ''}
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                    <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                        <div style="display:flex; align-items:baseline; gap:5px; flex-wrap:wrap;">
+                            <span style="font-size:1.2rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1;">$${priceNum.toFixed(2)}</span>
+                            <span style="font-size:0.66rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">$${(priceNum * 1.35).toFixed(2)}</span>
+                            ${disc > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.5rem; font-weight:800; padding:1px 5px; border-radius:3px; line-height:1.4;">${disc}%</span>` : ''}
                         </div>
-                        <div style="display:flex; gap:12px; font-size:0.66rem; font-weight:700;">
-                            <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free shipping</span>
-                            <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:4px; vertical-align:middle;"></i> stock: ${product.stock || 500}</span>
+                        <div style="display:flex; gap:8px; font-size:0.56rem; font-weight:600; margin-top:1px;">
+                            <span style="color:var(--gold-solid);"><i class="fa-solid fa-truck-fast"></i> FREE</span>
+                            <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:3px; vertical-align:middle;"></i> ${product.stock || 500}</span>
                         </div>
                     </div>
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; line-height:1; padding:0; flex-shrink:0;">×</button>
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer; line-height:1; padding:0; flex-shrink:0;">×</button>
                 </div>
-                <h3 style="font-size:0.88rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.35; margin:0;">${title}</h3>
-                <div style="font-size:0.7rem; color:var(--text-gray); line-height:1.5; background:rgba(0,0,0,0.4); padding:8px 10px; border-radius:6px; border-left:2px solid var(--gold-solid);">
-                    ${product.description || product.desc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}
-                </div>
-                <div style="background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px; display:flex; flex-direction:column; gap:6px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                        <span style="font-size:0.7rem; font-weight:700; color:#fff; letter-spacing:0.3px;">QUANTITY</span>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:26px; height:26px; border-radius:6px; cursor:pointer; font-weight:700; line-height:1;">-</button>
-                            <span id="detailQtyDisplay" style="font-size:0.85rem; font-weight:800; color:#fff; min-width:16px; text-align:center;">1</span>
-                            <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:26px; height:26px; border-radius:6px; cursor:pointer; font-weight:700; line-height:1;">+</button>
+                <h3 style="margin:0; font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.25;">${title}</h3>
+                <p style="margin:0; font-size:0.64rem; color:var(--text-gray); line-height:1.35;">${product.description || product.desc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}</p>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.6rem; font-weight:700; color:#fff; letter-spacing:0.3px;">QTY</span>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:22px; height:22px; border-radius:5px; cursor:pointer; font-weight:700; line-height:1; font-size:0.8rem;">-</button>
+                            <span id="detailQtyDisplay" style="font-size:0.78rem; font-weight:800; color:#fff; min-width:12px; text-align:center;">1</span>
+                            <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:22px; height:22px; border-radius:5px; cursor:pointer; font-weight:700; line-height:1; font-size:0.8rem;">+</button>
                         </div>
                     </div>
-                    <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
-                        <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="width:100%; background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase; resize:none; font-family:var(--font-main); line-height:1.4;">${noteValue}</textarea>
-                    </div>
+                    <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.25); border-radius:7px; padding:7px 10px; color:#fff; font-size:0.66rem; outline:none; text-transform:uppercase; resize:none; font-family:var(--font-main); line-height:1.35;">${noteValue}</textarea>
                 </div>`;
             $('inpageDetailsOverlay').style.display = 'flex';
         }
@@ -892,6 +963,9 @@
             $('inpageDetailsOverlay').style.display = 'none';
         }
 
+        // ============================================
+        // COMPACT BUY PREVIEW MODAL — tighter spacing
+        // ============================================
         function openBuyPreviewModal(product) {
             const imgs = extractImages(product);
             selectedVariantImg = imgs[0];
@@ -909,18 +983,18 @@
 
             $('buyPreviewModalContent').innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; font-weight:800; letter-spacing:0.4px; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT / COLOR</span>
-                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; line-height:1; padding:0;">×</button>
+                    <span style="font-size:0.74rem; font-weight:800; letter-spacing:0.4px; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT</span>
+                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer; line-height:1; padding:0;">×</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <div style="display:flex; flex-direction:column; gap:4px;">
-                    <label style="font-size:0.64rem; font-weight:700; color:var(--gold-solid); letter-spacing:0.4px;">CUSTOM SIZE / NOTE</label>
-                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.35); border-radius:10px; padding:9px 12px; color:#fff; font-size:0.74rem; outline:none; resize:none; font-family:var(--font-main); line-height:1.4;">${initialNote}</textarea>
+                <div style="display:flex; flex-direction:column; gap:3px;">
+                    <label style="font-size:0.58rem; font-weight:700; color:var(--gold-solid); letter-spacing:0.3px;">CUSTOM SIZE / NOTE</label>
+                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:8px 10px; color:#fff; font-size:0.7rem; outline:none; resize:none; font-family:var(--font-main); line-height:1.35;">${initialNote}</textarea>
                 </div>
-                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:9px; border-radius:10px; font-weight:700; font-size:0.76rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;">
+                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:8px; border-radius:8px; font-weight:700; font-size:0.72rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:5px;">
                     <i class="fa-solid fa-circle-info"></i> DETAILS
                 </button>
-                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${parseFloat(product.price || 0)}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.84rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
+                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${parseFloat(product.price || 0)}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:11px; border-radius:8px; font-weight:800; font-size:0.82rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM & ADD TO CART
                 </button>`;
             $('buyPreviewOverlay').style.display = 'flex';
