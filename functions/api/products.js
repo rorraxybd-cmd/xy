@@ -13,10 +13,10 @@ export async function onRequest(context) {
 
   const db = env.retail || env.DB;
   if (!db) {
-    return new Response(JSON.stringify({ success: false, error: "Database binding not found" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
+    return new Response(
+      JSON.stringify({ success: false, error: "Database binding not found" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 
   try {
@@ -29,28 +29,30 @@ export async function onRequest(context) {
       const mode = url.searchParams.get("mode");
 
       let query = "SELECT * FROM products";
-      let params = [];
-      let conditions = [];
+      const params = [];
+      const conditions = [];
 
       if (productCode) {
         conditions.push("(product_code = ? OR id = ?)");
-        params.push(productCode, productCode);
-      }
-      if (sku) {
-        conditions.push("sku = ?");
-        params.push(sku);
-      }
-      if (sellerId) {
-        conditions.push("seller_id = ?");
-        params.push(sellerId);
+        params.push(productCode.trim(), productCode.trim());
       }
 
-      if (mode && mode.toLowerCase() !== 'all') {
+      if (sku) {
+        conditions.push("UPPER(TRIM(sku)) = UPPER(TRIM(?))");
+        params.push(sku);
+      }
+
+      if (sellerId) {
+        conditions.push("seller_id = ?");
+        params.push(sellerId.trim());
+      }
+
+      if (mode && mode.toLowerCase() !== "all") {
         const cleanMode = mode.toLowerCase().trim();
-        if (cleanMode === 'wholesale') {
-          conditions.push("(LOWER(upload_mode) = 'wholesale' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')");
-        } else if (cleanMode === 'retail') {
-          conditions.push("(LOWER(upload_mode) = 'retail' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')");
+        if (cleanMode === "wholesale" || cleanMode === "retail") {
+          conditions.push(
+            `(LOWER(upload_mode) = '${cleanMode}' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')`
+          );
         } else {
           conditions.push("LOWER(upload_mode) = ?");
           params.push(cleanMode);
@@ -64,9 +66,10 @@ export async function onRequest(context) {
       query += " ORDER BY created_at DESC";
       const { results } = await db.prepare(query).bind(...params).all();
 
-      return new Response(JSON.stringify({ success: true, data: results }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ success: true, data: results }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     if (request.method === "POST") {
@@ -90,19 +93,38 @@ export async function onRequest(context) {
       `;
 
       await db.prepare(insertQuery).bind(
-        seller_id || null, product_code || null, sku || null, title || null, upload_mode || "both",
-        category || null, price || 0, market_price || 0, dropship_base_price || 0,
-        dropship_resell_price || 0, price_sample || 0, price_min_whole || 0, price_bulk || 0,
-        stock || 0, moq || 1, image_url || null,
-        images_json ? (typeof images_json === 'string' ? images_json : JSON.stringify(images_json)) : null,
-        video_url || null, youtube_video || null, youtube_live || null, facebook_live || null,
-        target_country || "bd", discount_rate || "0", allow_custom_note ? 1 : 0,
-        chat_with_seller ? 1 : 0, description || null
+        seller_id || null,
+        product_code || null,
+        sku ? String(sku).trim() : null,
+        title || null,
+        upload_mode || "both",
+        category || null,
+        price ?? 0,
+        market_price ?? 0,
+        dropship_base_price ?? 0,
+        dropship_resell_price ?? 0,
+        price_sample ?? 0,
+        price_min_whole ?? 0,
+        price_bulk ?? 0,
+        stock ?? 0,
+        moq ?? 1,
+        image_url || null,
+        images_json ? (typeof images_json === "string" ? images_json : JSON.stringify(images_json)) : null,
+        video_url || null,
+        youtube_video || null,
+        youtube_live || null,
+        facebook_live || null,
+        target_country || "bd",
+        discount_rate ?? "0",
+        allow_custom_note ? 1 : 0,
+        chat_with_seller ? 1 : 0,
+        description || null
       ).run();
 
-      return new Response(JSON.stringify({ success: true, message: "Product uploaded successfully!" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ success: true, message: "Product uploaded successfully!" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     if (request.method === "PUT") {
@@ -110,10 +132,10 @@ export async function onRequest(context) {
       const targetId = body.id || url.searchParams.get("id");
 
       if (!targetId) {
-        return new Response(JSON.stringify({ success: false, error: "Product ID is required" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
-        });
+        return new Response(
+          JSON.stringify({ success: false, error: "Product ID is required" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
 
       const updateQuery = `
@@ -127,41 +149,48 @@ export async function onRequest(context) {
       `;
 
       await db.prepare(updateQuery).bind(
-        body.sku || null, body.title || null, body.price || null, body.price_min_whole || null,
-        body.stock || null, targetId, targetId
+        body.sku !== undefined && body.sku !== null ? String(body.sku).trim() : null,
+        body.title ?? null,
+        body.price ?? null,
+        body.price_min_whole ?? null,
+        body.stock ?? null,
+        targetId,
+        targetId
       ).run();
 
-      return new Response(JSON.stringify({ success: true, message: "Product updated successfully!" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ success: true, message: "Product updated successfully!" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     if (request.method === "DELETE") {
-      const deleteId = url.searchParams.get("id") || url.pathname.split('/').pop();
+      const deleteId = url.searchParams.get("id") || url.pathname.split("/").pop();
 
       if (!deleteId || deleteId === "products") {
-        return new Response(JSON.stringify({ success: false, error: "Valid Product ID is required for deletion" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
-        });
+        return new Response(
+          JSON.stringify({ success: false, error: "Valid Product ID is required for deletion" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
 
-      const deleteQuery = `DELETE FROM products WHERE id = ? OR product_code = ?`;
+      const deleteQuery = "DELETE FROM products WHERE id = ? OR product_code = ?";
       await db.prepare(deleteQuery).bind(deleteId, deleteId).run();
 
-      return new Response(JSON.stringify({ success: true, message: "Product deleted successfully!" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ success: true, message: "Product deleted successfully!" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
+    return new Response(
+      JSON.stringify({ success: false, error: "Method not allowed" }),
+      { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
+    return new Response(
+      JSON.stringify({ success: false, error: err.message }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 }
