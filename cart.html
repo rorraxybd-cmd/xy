@@ -72,7 +72,7 @@
         }
         .cart-items-box {
             background: var(--card-bg); border-radius: 16px; padding: 14px; width: 100%;
-            display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 10px; max-height: 420px; overflow-y: auto;
             border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
         .cart-row-item {
@@ -86,6 +86,36 @@
         .product-extended-details {
             display: none; font-size: 0.6rem; color: var(--text-gray); text-transform: none !important; margin-top: 4px; line-height: 1.4;
             background: #0b0b10; padding: 6px; border-radius: 6px; border-left: 2px solid var(--gold-solid);
+        }
+        /* ==== CUSTOM SIZE / NOTE — PROMINENT DISPLAY ==== */
+        .custom-note-block {
+            margin-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .custom-note-label {
+            font-size: 0.54rem;
+            font-weight: 800;
+            color: var(--gold-solid);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .custom-note-value {
+            font-size: 0.64rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(212, 175, 55, 0.13);
+            border-left: 3px solid var(--gold-solid);
+            padding: 4px 8px;
+            border-radius: 0 6px 6px 0;
+            text-transform: none !important;
+            line-height: 1.35;
+            word-break: break-word;
+            white-space: pre-wrap;
         }
         .summary-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 0.74rem; font-weight: 600; color: var(--text-gray); gap: 10px; }
         #step2PaymentSection { display: none; flex-direction: column; gap: 14px; animation: fadeIn 0.3s ease-in-out; width: 100%; }
@@ -377,6 +407,17 @@
 
         function generateUniqueId(prefix) { return prefix + '-' + Math.floor(100000 + Math.random() * 900000); }
 
+        // Escape HTML to prevent XSS in custom notes
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         function renderCartList() {
             let cartKey = 'rorraxy_cart';
             let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
@@ -409,14 +450,36 @@
                 let itemTitleText = item.title || item.product_title || 'Product Item';
                 let itemDescText = item.description || item.desc || 'High quality global product item with secure warranty.';
 
+                // ==== Custom Note from index.html ====
+                const customNoteRaw = (item.note || item.custom_note || item.customNote || item.size || '').toString().trim();
+                const safeNote = escapeHtml(customNoteRaw);
+                const sizeRaw = (item.size || '').toString().trim();
+                const safeSize = escapeHtml(sizeRaw);
+
+                // Build the custom note block (only if there's a note)
+                let customNoteHtml = '';
+                if (customNoteRaw) {
+                    customNoteHtml = `
+                        <div class="custom-note-block">
+                            <span class="custom-note-label"><i class="fa-solid fa-note-sticky"></i> CUSTOM SIZE / NOTE</span>
+                            <div class="custom-note-value">${safeNote}</div>
+                        </div>`;
+                } else if (safeSize) {
+                    customNoteHtml = `
+                        <div class="custom-note-block">
+                            <span class="custom-note-label"><i class="fa-solid fa-ruler"></i> SIZE</span>
+                            <div class="custom-note-value">${safeSize}</div>
+                        </div>`;
+                }
+
                 html += `
                 <div class="cart-row-item">
                     <img src="${itemImgUrl}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
                     <div style="flex:1; text-align:left; min-width:0; overflow:hidden;">
                         <div style="font-size:0.7rem; font-weight:700; color:#ffffff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${itemTitleText}</div>
-                        <div style="font-size:0.56rem; color:var(--gold-solid); font-weight:600; margin-top:1px;">SIZE: ${item.size || 'STANDARD'}</div>
+                        ${customNoteHtml}
                         <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
-                        <div id="prodDetails-${index}" class="product-extended-details">${itemDescText}</div>
+                        <div id="prodDetails-${index}" class="product-extended-details">${escapeHtml(itemDescText)}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
                         <button class="btn-qty-minus" data-index="${index}" style="background:var(--gold-gradient); border:none; color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; cursor:pointer;">-</button>
@@ -574,6 +637,7 @@
             document.getElementById(elementId).classList.add('active');
         }
 
+        // ==== Cloudflare-ready structured payload with custom_note ====
         async function finalizeAndConfirmOrderToCloudflare() {
             let checkoutData = localStorage.getItem('rorraxy_current_checkout');
             if(!checkoutData) {
@@ -591,6 +655,27 @@
             let masterOrderId = 'RRX-RET-' + Math.floor(100000 + Math.random() * 900000);
             let singleOrderId = (orderPayload.items.length === 1 && orderPayload.items[0].orderId) ? orderPayload.items[0].orderId : generateUniqueId('ORD');
 
+            // Structured items for Cloudflare DB with custom_note explicitly separated
+            const structuredItems = orderPayload.items.map(it => {
+                const customNote = (it.note || it.custom_note || it.customNote || '').toString().trim();
+                const priceNum = parseFloat((it.price || "0").toString().replace('$', ''));
+                return {
+                    product_id: String(it.productId || it.product_id || ''),
+                    title: it.title || it.product_title || '',
+                    qty: parseInt(it.qty) || 1,
+                    price: priceNum,
+                    price_display: `$${priceNum.toFixed(2)}`,
+                    image: it.img || it.image_url || '',
+                    size: (it.size || '').toString().trim() || 'STANDARD',
+                    custom_note: customNote,           // <-- the actual note text
+                    custom_note_uppercase: customNote ? customNote.toUpperCase() : '',
+                    seller_id: it.sellerId || 'rorraxy-store',
+                    affiliate_ref: it.affiliateRef || 'rorraxy-store',
+                    order_id: it.orderId || singleOrderId,
+                    tracking_id: it.trackingId || ''
+                };
+            });
+
             let cloudflareDbPayload = {
                 master_order_id: masterOrderId,
                 order_id: singleOrderId,
@@ -605,7 +690,8 @@
                 currency: "USD",
                 order_status: "Pending",
                 created_at: new Date().toISOString(),
-                items: orderPayload.items
+                items: structuredItems,
+                has_custom_notes: structuredItems.some(i => i.custom_note.length > 0)
             };
 
             let customerAuthSyncPayload = {
