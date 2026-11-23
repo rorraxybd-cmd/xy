@@ -100,6 +100,10 @@
             font-size: 1.05rem; font-weight: 800; color: #ffffff; width: 80px; text-align: center;
             background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; outline: none; padding: 4px 0;
         }
+        .applied-unit-price-display {
+            font-size: 0.65rem; font-weight: 700; text-align: center; color: var(--gold-solid);
+            letter-spacing: 0.5px; margin-top: 2px;
+        }
         .product-info-section-box { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
         .section-box-title { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
         .product-title-restricted {
@@ -247,8 +251,11 @@
                     <span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
                     <div class="qty-controls-flex">
                         <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
-                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" oninput="manualQuantityInput(this)">
+                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" max="999999" oninput="manualQuantityInput(this)">
                         <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+                    </div>
+                    <div class="applied-unit-price-display">
+                        APPLIED UNIT PRICE: <span id="appliedUnitPriceDisplay">$25.00</span>
                     </div>
                 </div>
 
@@ -260,7 +267,7 @@
                     </div>
                     <div class="integrated-custom-note-group">
                         <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / SPEC</span>
-                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off">
+                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off" maxlength="100">
                     </div>
                     <div class="action-buttons-flex-row">
                         <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
@@ -380,6 +387,7 @@
 
             getActiveAffiliateId();
             updateCartBadgeCount();
+            updateAppliedUnitPriceDisplay();
 
             if (reqId) {
                 fetchWholesaleProductDetails(reqId);
@@ -534,7 +542,8 @@
                 mediaList.push({ type: 'image', url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" });
             }
 
-            selectedProductColorImage = mediaList[0].url;
+            const firstImageMedia = mediaList.find(m => m.type === 'image');
+            selectedProductColorImage = firstImageMedia ? firstImageMedia.url : "";
             updateMainViewport(mediaList[0]);
 
             const fragment = document.createDocumentFragment();
@@ -551,6 +560,8 @@
             });
             strip.innerHTML = '';
             strip.appendChild(fragment);
+
+            updateAppliedUnitPriceDisplay();
         }
 
         function renderRelatedProducts(allProducts, currentProd) {
@@ -619,7 +630,11 @@
         }
 
         function escapeHtmlAttr(str) {
-            return String(str || '').replace(/&/g, '&').replace(/"/g, '"').replace(/</g, '<').replace(/>/g, '>');
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
 
         function escapeJsSingle(str) {
@@ -643,10 +658,27 @@
 
         function switchMediaView(mediaObj, thumbElement) {
             updateMainViewport(mediaObj);
-            selectedProductColorImage = mediaObj.url;
+            if (mediaObj && mediaObj.type === 'image') {
+                selectedProductColorImage = mediaObj.url;
+            }
             const thumbs = document.querySelectorAll('.thumb-item');
             for (let i = 0; i < thumbs.length; i++) thumbs[i].classList.remove('active');
             if (thumbElement) thumbElement.classList.add('active');
+        }
+
+        function calculateAppliedUnitPrice() {
+            let priceNum = currentBaseUnitPrice;
+            if (currentItemQuantity >= 300) {
+                priceNum = parseFloat((currentActiveProduct && currentActiveProduct.price_300) || (currentBaseUnitPrice * 0.72));
+            } else if (currentItemQuantity >= 100) {
+                priceNum = parseFloat((currentActiveProduct && currentActiveProduct.price_100) || (currentBaseUnitPrice * 0.8));
+            }
+            return priceNum;
+        }
+
+        function updateAppliedUnitPriceDisplay() {
+            const el = document.getElementById('appliedUnitPriceDisplay');
+            if (el) el.innerText = '$' + calculateAppliedUnitPrice().toFixed(2);
         }
 
         function setQuantityPreset(qty, btn) {
@@ -655,6 +687,7 @@
             const btns = document.querySelectorAll('.preset-btn');
             for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
             if (btn) btn.classList.add('active');
+            updateAppliedUnitPriceDisplay();
         }
 
         function modifyQuantity(val) {
@@ -663,13 +696,20 @@
             document.getElementById('itemQtyInputVal').value = currentItemQuantity;
             const btns = document.querySelectorAll('.preset-btn');
             for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+            updateAppliedUnitPriceDisplay();
         }
 
         function manualQuantityInput(input) {
             const val = parseInt(input.value, 10);
-            currentItemQuantity = (isNaN(val) || val < 1) ? 1 : val;
+            if (isNaN(val) || val < 1) {
+                currentItemQuantity = 1;
+                if (input) input.value = 1;
+            } else {
+                currentItemQuantity = val;
+            }
             const btns = document.querySelectorAll('.preset-btn');
             for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+            updateAppliedUnitPriceDisplay();
         }
 
         function playCoinDropChime() {
@@ -754,8 +794,8 @@
                 };
             }
 
-            const customNoteVal = document.getElementById('customSizeInputField').value.trim();
-            const chosenSize = customNoteVal !== "" ? customNoteVal : "STANDARD BULK";
+            const rawNote = document.getElementById('customSizeInputField').value.trim();
+            const chosenSize = rawNote !== "" ? rawNote.toUpperCase() : "STANDARD BULK";
 
             const cartKey = 'rorraxy_cart';
             let cart = [];
@@ -764,25 +804,24 @@
             } catch(e) { cart = []; }
 
             const prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-            const mainImgEl = document.getElementById('mainDisplayMediaElement');
-            const finalImgUrl = selectedProductColorImage || (mainImgEl && mainImgEl.src) || currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+
+            const finalImgUrl = (selectedProductColorImage && !selectedProductColorImage.startsWith('data:'))
+                ? selectedProductColorImage
+                : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+
             const activeAffId = getActiveAffiliateId();
+            const priceNum = calculateAppliedUnitPrice();
 
-            const existingItem = cart.find(item => String(item.productId) === String(prodId) && item.size === chosenSize && item.img === finalImgUrl);
-
-            const activePreset = document.querySelector('.preset-btn.active');
-            let priceNum = currentBaseUnitPrice;
-            if (activePreset) {
-                if (currentItemQuantity >= 300) {
-                    priceNum = parseFloat(currentActiveProduct.price_300 || (currentBaseUnitPrice * 0.72));
-                } else if (currentItemQuantity >= 100) {
-                    priceNum = parseFloat(currentActiveProduct.price_100 || (currentBaseUnitPrice * 0.8));
-                }
-            }
+            const existingItem = cart.find(item =>
+                String(item.productId) === String(prodId) &&
+                String(item.size || '').toUpperCase() === chosenSize
+            );
 
             if (existingItem) {
                 existingItem.qty += currentItemQuantity;
                 if (activeAffId) existingItem.affiliateId = activeAffId;
+                existingItem.img = finalImgUrl;
+                existingItem.price = `$${priceNum.toFixed(2)}`;
             } else {
                 cart.push({
                     productId: prodId,
