@@ -79,12 +79,6 @@
         }
         #pullRefreshIndicator.visible { top: 18px; }
 
-        /* ============================================
-           SUPER FAST CARD ANIMATION
-           - No stagger, no setTimeout
-           - Cards reveal before entering viewport (rootMargin 300px)
-           - Snappy 0.18s easing
-           ============================================ */
         .product-card {
             background: transparent; border-radius: 14px; overflow: hidden; display: inline-block; width: 100%;
             position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid;
@@ -120,7 +114,6 @@
             opacity: 0; transition: opacity 0.2s ease-out;
         }
         .product-media-box img.img-ready { opacity: 1; }
-        /* Remove shimmer once image ready */
         .product-media-box.img-loaded::before { display: none; }
 
         .desktop-reel-nav { position: fixed; right: 74px; top: 50%; transform: translateY(-50%); z-index: 4600; display: flex; flex-direction: column; gap: 14px; }
@@ -312,9 +305,6 @@
 
         const $ = id => document.getElementById(id);
 
-        // ============================================
-        // SUPER FAST LOADER — hides on first paint ready
-        // ============================================
         function hideLoaderFast() {
             const loader = $('rorraxyLoaderOverlay');
             if (loader && loader.style.display !== 'none') {
@@ -375,7 +365,6 @@
             setupDesktopNavigation();
             buildCategoriesAccordion();
 
-            // Hide loader fast — never block UI
             setTimeout(hideLoaderFast, 60);
 
             const searchInput = $('floatingSearchInput'), searchBtn = $('floatingSearchBtn');
@@ -636,11 +625,6 @@
             renderPinterestHomeGrid(activeProductList);
         }
 
-        // ============================================
-        // INSTANT CARD GRID — no stagger, instant reveal
-        // Cards are observed with large rootMargin, so
-        // they're already revealed before user scrolls to them.
-        // ============================================
         function renderPinterestHomeGrid(products) {
             const container = $('appContainer');
             if (!container) return;
@@ -668,7 +652,6 @@
                     <div class="card-clean-price-badge">${price}</div>
                 </div>`;
 
-                // Smooth image fade-in
                 const img = card.querySelector('img');
                 const mediaBox = card.querySelector('.product-media-box');
                 const onReady = () => {
@@ -688,9 +671,6 @@
 
             const cards = container.querySelectorAll('.product-card');
             if ('IntersectionObserver' in window) {
-                // Large rootMargin = cards reveal way before user sees them.
-                // threshold 0 = triggers the moment ANY pixel intersects.
-                // Result: user perceives cards as "already there" when scrolled to.
                 const obs = new IntersectionObserver((entries, o) => {
                     for (let i = 0; i < entries.length; i++) {
                         const entry = entries[i];
@@ -701,8 +681,6 @@
                     }
                 }, { rootMargin: '300px 0px', threshold: 0 });
                 cards.forEach(c => obs.observe(c));
-                // Safety fallback: reveal everything after 400ms in case some cards
-                // are outside the observer's root (e.g. container just shown)
                 setTimeout(() => {
                     cards.forEach(c => {
                         if (!c.classList.contains('ai-revealed')) c.classList.add('ai-revealed');
@@ -772,7 +750,6 @@
 
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
 
-            // Aggressive preload: next 4 items (instead of 2)
             for (let lookahead = idx + 1; lookahead <= idx + 4 && lookahead < list.length; lookahead++) {
                 const nextImgs = extractImages(list[lookahead]);
                 if (nextImgs[0]) preloadImageUrl(nextImgs[0], lookahead === idx + 1);
@@ -904,9 +881,6 @@
             if (list[index]) openBuyPreviewModal(list[index]);
         }
 
-        // ============================================
-        // COMPACT DETAILS MODAL — 4 tight blocks only
-        // ============================================
         function openInpageDetailsModal(product) {
             if (!product) return;
             const title = (product.title || 'rorraxy luxury product').toLowerCase();
@@ -937,6 +911,7 @@
                     </div>
                     <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer; line-height:1; padding:0; flex-shrink:0;">×</button>
                 </div>
+                <div style="font-size:0.56rem; font-weight:800; letter-spacing:0.6px; text-transform:uppercase; color:var(--pink-accent); line-height:1.2;">CUSTOM SIZE & COLOR • TEAK, MAHOGANY, GAMARI</div>
                 <h3 style="margin:0; font-size:0.8rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.25;">${title}</h3>
                 <p style="margin:0; font-size:0.64rem; color:var(--text-gray); line-height:1.35;">${product.description || product.desc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}</p>
                 <div style="display:flex; flex-direction:column; gap:4px;">
@@ -963,9 +938,6 @@
             $('inpageDetailsOverlay').style.display = 'none';
         }
 
-        // ============================================
-        // COMPACT BUY PREVIEW MODAL — tighter spacing
-        // ============================================
         function openBuyPreviewModal(product) {
             const imgs = extractImages(product);
             selectedVariantImg = imgs[0];
