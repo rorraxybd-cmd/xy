@@ -9,7 +9,20 @@ export async function onRequestPost(context) {
   try {
     const { request, env } = context;
     const data = await request.json();
-    const { fullName, email, whatsapp, budget, projectDetails, country, countryCode, ipAddress } = data;
+    
+    // ✅ নতুন ফিল্ডগুলো যুক্ত করা হয়েছে (dialCode, affiliateRef)
+    const { 
+      fullName, 
+      email, 
+      whatsapp, 
+      budget, 
+      projectDetails, 
+      country, 
+      countryCode, 
+      dialCode, 
+      ipAddress, 
+      affiliateRef 
+    } = data;
 
     if (!fullName || !email || !whatsapp || !budget || !projectDetails) {
       return new Response(JSON.stringify({ success: false, error: "Missing required fields" }), {
@@ -18,9 +31,22 @@ export async function onRequestPost(context) {
       });
     }
 
+    // ✅ SQL কুয়েরিতে নতুন কলামগুলো যুক্ত করা হয়েছে
     const query = `
-      INSERT INTO project_requests (fullName, email, whatsapp, budget, projectDetails, country, countryCode, ipAddress, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+      INSERT INTO project_requests (
+        fullName, 
+        email, 
+        whatsapp, 
+        budget, 
+        projectDetails, 
+        country, 
+        countryCode, 
+        dialCode, 
+        ipAddress, 
+        affiliate_ref, 
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
     `;
 
     await env.retail.prepare(query)
@@ -32,7 +58,9 @@ export async function onRequestPost(context) {
         projectDetails,
         country || 'Global Region',
         countryCode || 'un',
-        ipAddress || ''
+        dialCode || '',
+        ipAddress || '',
+        affiliateRef || 'Direct/None'
       )
       .run();
 
