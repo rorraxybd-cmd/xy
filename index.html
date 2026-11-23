@@ -174,12 +174,12 @@
         .reel-center-price-badge { font-size: 0.95rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .reel-center-discount-badge { background: var(--pink-accent); color: #fff; font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 
-        .overlay-sheet { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 15px; scrollbar-width: none; }
+        .overlay-sheet { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 6000; overflow-y: auto; flex-direction: column; align-items: center; justify-content: center; padding: 12px; scrollbar-width: none; }
         .overlay-sheet::-webkit-scrollbar { display: none; }
-        .buy-preview-modal { width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5); border-radius: 18px; padding: 18px; margin: auto; display: flex; flex-direction: column; gap: 14px; }
-        .preview-horizontal-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 10px 2px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .buy-preview-modal { width: 96%; max-width: 460px; background: #0a0a10; border: 1.5px solid rgba(212,175,55,0.5); border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px; }
+        .preview-horizontal-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 6px 2px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .preview-horizontal-scroll::-webkit-scrollbar { display: none; }
-        .preview-img-item { flex: 0 0 112px; width: 112px; height: 112px; border-radius: 14px; overflow: hidden; border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000; transition: transform 0.12s ease, border-color 0.12s ease; }
+        .preview-img-item { flex: 0 0 108px; width: 108px; height: 108px; border-radius: 12px; overflow: hidden; border: 2px solid rgba(255,255,255,0.12); cursor: pointer; scroll-snap-align: start; background: #000; transition: transform 0.12s ease, border-color 0.12s ease; }
         .preview-img-item.selected { border-color: var(--pink-accent); transform: scale(1.03); }
         .preview-img-item img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -189,7 +189,7 @@
             border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #4d3300;
             box-shadow: 0 0 18px rgba(212,175,55,0.95); will-change: left, top, transform, opacity;
         }
-        .inpage-details-modal { width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid); border-radius: 18px; padding: 16px; margin: auto; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; scrollbar-width: none; }
+        .inpage-details-modal { width: 94%; max-width: 440px; max-height: 85vh; background: #08080e; border: 1.5px solid var(--gold-solid); border-radius: 18px; padding: 14px; margin: auto; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; scrollbar-width: none; }
         .inpage-details-modal::-webkit-scrollbar { display: none; }
         .fullscreen-iframe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 54px); height: calc(100dvh - 54px); background: #000; z-index: 4500; flex-direction: column; }
         .fullscreen-iframe-body { flex: 1; width: 100%; border: none; background: #000; }
@@ -268,9 +268,19 @@
         let selectedVariantImg = '';
         let lastSaveClickTime = 0;
         let currentProductQty = 1;
+        let persistentCustomNote = '';
         const preloadedUrls = new Set();
 
         const $ = id => document.getElementById(id);
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => { clearTimeout(timeout); func(...args); };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
 
         function hideLoaderFast() {
             const loader = $('rorraxyLoaderOverlay');
@@ -327,9 +337,10 @@
 
             const searchInput = $('floatingSearchInput'), searchBtn = $('floatingSearchBtn');
             if (searchBtn && searchInput) {
+                const debouncedSearch = debounce((val) => executeHeaderSearch(val), 250);
                 searchBtn.addEventListener('click', () => executeHeaderSearch(searchInput.value));
                 searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') executeHeaderSearch(searchInput.value); });
-                searchInput.addEventListener('input', e => executeHeaderSearch(e.target.value));
+                searchInput.addEventListener('input', e => debouncedSearch(e.target.value));
             }
         });
 
@@ -828,33 +839,45 @@
             const disc = parseFloat(product.discount_rate || product.discountRate || 0);
             currentProductQty = 1;
 
+            let noteValue = '';
+            const orderNoteInput = $('orderCustomNoteInput');
+            if (orderNoteInput && orderNoteInput.value.trim()) {
+                noteValue = orderNoteInput.value.trim();
+            } else if (persistentCustomNote) {
+                noteValue = persistentCustomNote;
+            }
+
             $('inpageDetailsModalContent').innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                        <span style="font-size:1.4rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">$${priceNum.toFixed(2)}</span>
-                        <span style="font-size:0.88rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">$${(priceNum * 1.35).toFixed(2)}</span>
-                        ${disc > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:4px;">${disc}% OFF</span>` : ''}
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                    <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span style="font-size:1.3rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">$${priceNum.toFixed(2)}</span>
+                            <span style="font-size:0.78rem; color:var(--text-gray); text-decoration:line-through; font-weight:600;">$${(priceNum * 1.35).toFixed(2)}</span>
+                            ${disc > 0 ? `<span style="background:var(--pink-accent); color:#fff; font-size:0.56rem; font-weight:800; padding:2px 6px; border-radius:4px;">${disc}% OFF</span>` : ''}
+                        </div>
+                        <div style="display:flex; gap:12px; font-size:0.66rem; font-weight:700;">
+                            <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free shipping</span>
+                            <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:4px; vertical-align:middle;"></i> stock: ${product.stock || 500}</span>
+                        </div>
                     </div>
-                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer;">×</button>
+                    <button onclick="closeInpageDetails()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; line-height:1; padding:0; flex-shrink:0;">×</button>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:700;">
-                    <span style="background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"><i class="fa-solid fa-truck-fast"></i> free shipping</span>
-                    <span style="color:#00e676;"><i class="fa-solid fa-circle" style="font-size:5px;"></i> in stock: ${product.stock || 500} units</span>
-                </div>
-                <div style="display:flex; align-items:center; justify-content:space-between; background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px;">
-                    <span style="font-size:0.75rem; font-weight:700; color:#fff;">quantity</span>
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">-</button>
-                        <span id="detailQtyDisplay" style="font-size:0.88rem; font-weight:800; color:#fff;">1</span>
-                        <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:28px; height:28px; border-radius:6px; cursor:pointer; font-weight:700;">+</button>
-                    </div>
-                </div>
-                <h3 style="font-size:0.95rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.45; margin:4px 0 0 0;">${title}</h3>
-                <div style="font-size:0.75rem; color:var(--text-gray); line-height:1.6; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border-left:2px solid var(--gold-solid);">
+                <h3 style="font-size:0.88rem; font-weight:700; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:lowercase; line-height:1.35; margin:0;">${title}</h3>
+                <div style="font-size:0.7rem; color:var(--text-gray); line-height:1.5; background:rgba(0,0,0,0.4); padding:8px 10px; border-radius:6px; border-left:2px solid var(--gold-solid);">
                     ${product.description || product.desc || 'crafted with precision luxury materials for ultimate comfort and elegance.'}
                 </div>
-                <div style="background:#040407; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 12px;">
-                    <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="width:100%; background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase; resize:none; font-family:var(--font-main);"></textarea>
+                <div style="background:#040407; border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:8px 12px; display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <span style="font-size:0.7rem; font-weight:700; color:#fff; letter-spacing:0.3px;">QUANTITY</span>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <button onclick="adjustDetailQty(-1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:26px; height:26px; border-radius:6px; cursor:pointer; font-weight:700; line-height:1;">-</button>
+                            <span id="detailQtyDisplay" style="font-size:0.85rem; font-weight:800; color:#fff; min-width:16px; text-align:center;">1</span>
+                            <button onclick="adjustDetailQty(1)" style="background:#151520; color:#fff; border:1px solid rgba(212,175,55,0.4); width:26px; height:26px; border-radius:6px; cursor:pointer; font-weight:700; line-height:1;">+</button>
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
+                        <textarea id="inpageCustomNoteInput" rows="2" placeholder="ENTER SIZE OR NOTE..." style="width:100%; background:transparent; border:none; color:#fff; font-size:0.7rem; outline:none; text-transform:uppercase; resize:none; font-family:var(--font-main); line-height:1.4;">${noteValue}</textarea>
+                    </div>
                 </div>`;
             $('inpageDetailsOverlay').style.display = 'flex';
         }
@@ -863,7 +886,11 @@
             currentProductQty = Math.max(1, currentProductQty + amt);
             if ($('detailQtyDisplay')) $('detailQtyDisplay').innerText = currentProductQty;
         }
-        function closeInpageDetails() { $('inpageDetailsOverlay').style.display = 'none'; }
+        function closeInpageDetails() {
+            const noteInput = $('inpageCustomNoteInput');
+            if (noteInput && noteInput.value.trim()) persistentCustomNote = noteInput.value.trim();
+            $('inpageDetailsOverlay').style.display = 'none';
+        }
 
         function openBuyPreviewModal(product) {
             const imgs = extractImages(product);
@@ -871,22 +898,29 @@
             const imgsHtml = imgs.map((img, i) => `<div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this, '${img}')"><img src="${img}" loading="lazy"></div>`).join('');
             const pId = product.id || product.product_id || '101';
             const titleEsc = (product.title || 'item').toLowerCase().replace(/'/g, "\\'");
-            const initialNote = $('inpageCustomNoteInput')?.value || '';
+
+            let initialNote = '';
+            const detailsNoteInput = $('inpageCustomNoteInput');
+            if (detailsNoteInput && detailsNoteInput.value.trim()) {
+                initialNote = detailsNoteInput.value.trim();
+            } else if (persistentCustomNote) {
+                initialNote = persistentCustomNote;
+            }
 
             $('buyPreviewModalContent').innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.84rem; font-weight:800; letter-spacing:0.5px; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT / COLOR</span>
-                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.35rem; cursor:pointer; line-height:1;">×</button>
+                    <span style="font-size:0.8rem; font-weight:800; letter-spacing:0.4px; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SELECT VARIANT / COLOR</span>
+                    <button onclick="closeBuyPreview()" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; line-height:1; padding:0;">×</button>
                 </div>
                 <div class="preview-horizontal-scroll">${imgsHtml}</div>
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                    <label style="font-size:0.68rem; font-weight:700; color:var(--gold-solid); letter-spacing:0.4px;">CUSTOM SIZE / NOTE</label>
-                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.35); border-radius:10px; padding:10px 12px; color:#fff; font-size:0.74rem; outline:none; resize:none; font-family:var(--font-main);">${initialNote}</textarea>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <label style="font-size:0.64rem; font-weight:700; color:var(--gold-solid); letter-spacing:0.4px;">CUSTOM SIZE / NOTE</label>
+                    <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%; background:#040407; border:1px solid rgba(212,175,55,0.35); border-radius:10px; padding:9px 12px; color:#fff; font-size:0.74rem; outline:none; resize:none; font-family:var(--font-main); line-height:1.4;">${initialNote}</textarea>
                 </div>
-                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:10px; border-radius:10px; font-weight:700; font-size:0.78rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:7px;">
+                <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.55); color:#fcf6ba; padding:9px; border-radius:10px; font-weight:700; font-size:0.76rem; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;">
                     <i class="fa-solid fa-circle-info"></i> DETAILS
                 </button>
-                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${parseFloat(product.price || 0)}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:13px; border-radius:10px; font-weight:800; font-size:0.86rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
+                <button onclick="confirmAddToCart(event, '${pId}', '${titleEsc}', ${parseFloat(product.price || 0)}, '${product.seller_id || 'rorraxy-store'}')" style="background:var(--pink-accent); border:none; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:0.84rem; cursor:pointer; width:100%; box-shadow:0 4px 15px rgba(255,42,133,0.4);">
                     CONFIRM & ADD TO CART
                 </button>`;
             $('buyPreviewOverlay').style.display = 'flex';
@@ -894,12 +928,16 @@
 
         function openDetailsFromOrderModal(pId) {
             const note = $('orderCustomNoteInput')?.value || '';
+            if (note.trim()) persistentCustomNote = note.trim();
             closeBuyPreview();
             const list = activeProductList.length ? activeProductList : globalMasterProductsList;
             const prod = list.find(p => String(p.id || p.product_id) === String(pId)) || list[currentReelIndex] || list[0];
             if (prod) {
                 openInpageDetailsModal(prod);
-                setTimeout(() => { if ($('inpageCustomNoteInput') && note) $('inpageCustomNoteInput').value = note; }, 10);
+                setTimeout(() => {
+                    const inpageNote = $('inpageCustomNoteInput');
+                    if (inpageNote && note) inpageNote.value = note;
+                }, 10);
             }
         }
 
@@ -908,7 +946,11 @@
             el.classList.add('selected');
             selectedVariantImg = url;
         }
-        function closeBuyPreview() { $('buyPreviewOverlay').style.display = 'none'; }
+        function closeBuyPreview() {
+            const noteInput = $('orderCustomNoteInput');
+            if (noteInput && noteInput.value.trim()) persistentCustomNote = noteInput.value.trim();
+            $('buyPreviewOverlay').style.display = 'none';
+        }
 
         function playLuxuryChimeSound() {
             try {
@@ -972,7 +1014,19 @@
         function confirmAddToCart(e, pId, title, price, sellerId) {
             const cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]');
             const ref = localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
-            const note = ($('orderCustomNoteInput')?.value || $('inpageCustomNoteInput')?.value || '').trim();
+
+            let note = '';
+            const orderNote = $('orderCustomNoteInput');
+            if (orderNote && orderNote.value.trim()) {
+                note = orderNote.value.trim();
+            } else {
+                const detailsNote = $('inpageCustomNoteInput');
+                if (detailsNote && detailsNote.value.trim()) {
+                    note = detailsNote.value.trim();
+                }
+            }
+            if (note) persistentCustomNote = note;
+
             const existing = cart.find(i => String(i.productId) === String(pId) && i.img === selectedVariantImg && (i.note || '') === note);
 
             if (existing) existing.qty += currentProductQty;
