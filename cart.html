@@ -339,10 +339,16 @@ let orderPayload=JSON.parse(checkoutData);
 let totalAmountVal=orderPayload.items.reduce((sum,item)=>{let pNum=parseFloat((item.price||"0").toString().replace('$',''));return sum+(pNum*item.qty);},0);
 let masterOrderId='RRX-RET-'+Math.floor(100000+Math.random()*900000);
 let singleOrderId=(orderPayload.items.length===1&&orderPayload.items[0].orderId)?orderPayload.items[0].orderId:generateUniqueId('ORD');
+
+// ✅ Update: Process Affiliate, Rate, and Platform
 const structuredItems=orderPayload.items.map(it=>{
 const customNote=(it.note||it.custom_note||it.customNote||'').toString().trim();
 const priceNum=parseFloat((it.price||"0").toString().replace('$',''));
 const skuValue=String(it.sku||it.product_code||it.productCode||'').trim().toUpperCase();
+const affRef=it.affiliateRef||it.affiliateId||localStorage.getItem('rorraxy_active_affiliate_ref')||'rorraxy-store';
+const commRate=parseFloat(it.commissionRate||localStorage.getItem('rorraxy_active_commission_rate')||13);
+const plat=it.platform||localStorage.getItem('rorraxy_active_platform')||'retail';
+
 return{
 product_id:String(it.productId||it.product_id||''),
 sku:skuValue,
@@ -355,11 +361,20 @@ size:(it.size||'').toString().trim()||'STANDARD',
 custom_note:customNote,
 custom_note_uppercase:customNote?customNote.toUpperCase():'',
 seller_id:it.sellerId||'rorraxy-store',
-affiliate_ref:it.affiliateRef||'rorraxy-store',
+affiliate_ref:affRef,
+commission_rate:commRate,
+platform:plat,
 order_id:it.orderId||singleOrderId,
 tracking_id:it.trackingId||''
 };
 });
+
+// ✅ Extract Top-Level Affiliate Data
+const firstAffItem=structuredItems.find(i=>i.affiliate_ref!=='rorraxy-store')||structuredItems[0];
+const topLevelAffRef=firstAffItem?firstAffItem.affiliate_ref:null;
+const topLevelRate=firstAffItem?firstAffItem.commission_rate:0;
+const topLevelPlatform=firstAffItem?firstAffItem.platform:'retail';
+
 let cloudflareDbPayload={
 master_order_id:masterOrderId,
 order_id:singleOrderId,
@@ -376,7 +391,12 @@ order_status:"Pending",
 created_at:new Date().toISOString(),
 items:structuredItems,
 has_custom_notes:structuredItems.some(i=>i.custom_note.length>0),
-has_skus:structuredItems.some(i=>i.sku.length>0)
+has_skus:structuredItems.some(i=>i.sku.length>0),
+// ✅ Top-level affiliate info
+affiliate_ref:topLevelAffRef,
+commission_rate:topLevelRate,
+platform:topLevelPlatform,
+has_affiliate:!!(topLevelAffRef&&topLevelAffRef!=='rorraxy-store')
 };
 let customerAuthSyncPayload={phone:orderPayload.customer.phone,customer_name:orderPayload.customer.fullName,shipping_address:orderPayload.customer.address,master_order_id:masterOrderId,order_id:singleOrderId,updated_at:new Date().toISOString()};
 showToast("Submitting order and syncing account data...");
