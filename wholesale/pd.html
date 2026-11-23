@@ -226,17 +226,33 @@ try{userProfile=JSON.parse(localStorage.getItem('rorraxy_user_account')||'null')
 cachedAffiliateId=userProfile.affiliate_id||userProfile.id||userProfile.userId||localStorage.getItem('rorraxy_my_affiliate_id')||localStorage.getItem('rorraxy_active_affiliate_ref')||sessionStorage.getItem('rorraxy_active_affiliate_ref')||null;
 return cachedAffiliateId;
 }
+// ✅ আপডেট: লিংকে rate এবং platform যুক্ত করা
 function generateAffiliateUrl(productId){
 const baseUrl=`${window.location.origin}${window.location.pathname}`;
 const currentParams=new URLSearchParams(window.location.search);
 currentParams.set('id',productId);
 const affId=getActiveAffiliateId();
 if(affId)currentParams.set('ref',affId);
+const rate=localStorage.getItem('rorraxy_active_commission_rate')||'3';
+const platform=localStorage.getItem('rorraxy_active_platform')||'wholesale';
+if(rate)currentParams.set('rate',rate);
+if(platform)currentParams.set('platform',platform);
 return `${baseUrl}?${currentParams.toString()}`;
 }
+// ✅ আপডেট: পেজ লোডের সময় rate এবং platform ক্যাপচার
 window.addEventListener('DOMContentLoaded',()=>{
 const urlParams=new URLSearchParams(window.location.search);
 const reqId=urlParams.get('id');
+const refParam=urlParams.get('ref')||urlParams.get('aff')||urlParams.get('affiliate');
+const rateParam=urlParams.get('rate')||'3';
+const platformParam=urlParams.get('platform')||'wholesale';
+
+if(refParam){
+    localStorage.setItem('rorraxy_active_affiliate_ref',refParam);
+    localStorage.setItem('rorraxy_active_commission_rate',rateParam);
+    localStorage.setItem('rorraxy_active_platform',platformParam);
+}
+
 getActiveAffiliateId();
 updateCartBadgeCount();
 updateAppliedUnitPriceDisplay();
@@ -293,7 +309,6 @@ document.getElementById('itemQtyInputVal').value=currentItemQuantity;
 document.getElementById('activeProductTitleHeading').innerText=prod.title||"RORRAXY WHOLESALE PRODUCT";
 document.getElementById('activeProductPriceTag').innerText=`$${currentBaseUnitPrice.toFixed(2)}`;
 document.getElementById('activeProductOldPriceTag').innerText=`$${oldP.toFixed(2)}`;
-// ✅ SKU রেন্ডার
 const skuValue=String(prod.sku||prod.product_code||prod.productCode||'').trim().toUpperCase();
 const skuEl=document.getElementById('productSkuText');
 if(skuEl)skuEl.innerText=skuValue||'N/A';
@@ -466,6 +481,7 @@ document.body.appendChild(coin);
 requestAnimationFrame(()=>{requestAnimationFrame(()=>{coin.style.left=`${targetX}px`;coin.style.top=`${targetY}px`;coin.style.transform='scale(0.35) rotate(720deg)';coin.style.opacity='0';});});
 setTimeout(()=>{if(coin.parentNode)coin.parentNode.removeChild(coin);playCoinDropChime();if(cartBadge){cartBadge.classList.add('pulse-badge');setTimeout(()=>cartBadge.classList.remove('pulse-badge'),350);}},650);
 }
+// ✅ আপডেট: কার্টে rate এবং platform পাঠানো
 function executeOrderNow(event){
 if(event)event.preventDefault();
 if(!currentActiveProduct){currentActiveProduct={id:new URLSearchParams(window.location.search).get('id')||'101',title:document.getElementById('activeProductTitleHeading').innerText||'RORRAXY WHOLESALE BULK ITEM',price:25.00,seller_id:'SELLER-RORRAXY-01',sku:''};}
@@ -475,24 +491,44 @@ const cartKey='rorraxy_cart';
 let cart=[];
 try{cart=JSON.parse(localStorage.getItem(cartKey)||'[]')||[];}catch(e){cart=[];}
 const prodId=currentActiveProduct.id||currentActiveProduct.productId||currentActiveProduct.product_code||'101';
-// ✅ SKU extract
 const skuValue=String(currentActiveProduct.sku||currentActiveProduct.product_code||currentActiveProduct.productCode||'').trim().toUpperCase();
 const finalImgUrl=(selectedProductColorImage&&!selectedProductColorImage.startsWith('data:'))?selectedProductColorImage:(currentActiveProduct.image_url||"https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
 const activeAffId=getActiveAffiliateId();
+const rate=localStorage.getItem('rorraxy_active_commission_rate')||'3';
+const platform=localStorage.getItem('rorraxy_active_platform')||'wholesale';
 const priceNum=calculateAppliedUnitPrice();
 const productDescText=cleanDescriptionText(currentActiveProduct.description||currentActiveProduct.desc||"")||"High-grade bulk wholesale manufacturing supply meeting international standards.";
+
 const existingItem=cart.find(item=>String(item.productId)===String(prodId)&&String(item.size||'').toUpperCase()===chosenSize);
 if(existingItem){
-existingItem.qty+=currentItemQuantity;
-if(activeAffId)existingItem.affiliateId=activeAffId;
-existingItem.img=finalImgUrl;
-existingItem.price=`$${priceNum.toFixed(2)}`;
-if(!existingItem.sku&&skuValue)existingItem.sku=skuValue;
-if(!existingItem.description)existingItem.description=productDescText;
-if(!existingItem.title)existingItem.title=currentActiveProduct.title||"RORRAXY WHOLESALE PRODUCT";
-if(!existingItem.sellerId)existingItem.sellerId=currentActiveProduct.seller_id||"SELLER-RORRAXY-01";
+    existingItem.qty+=currentItemQuantity;
+    if(activeAffId){existingItem.affiliateId=activeAffId;existingItem.affiliateRef=activeAffId;}
+    existingItem.commissionRate=parseFloat(rate);
+    existingItem.platform=platform;
+    existingItem.img=finalImgUrl;
+    existingItem.price=`$${priceNum.toFixed(2)}`;
+    if(!existingItem.sku&&skuValue)existingItem.sku=skuValue;
+    if(!existingItem.description)existingItem.description=productDescText;
+    if(!existingItem.title)existingItem.title=currentActiveProduct.title||"RORRAXY WHOLESALE PRODUCT";
+    if(!existingItem.sellerId)existingItem.sellerId=currentActiveProduct.seller_id||"SELLER-RORRAXY-01";
 }else{
-cart.push({productId:prodId,sku:skuValue,sellerId:currentActiveProduct.seller_id||currentActiveProduct.sellerId||"SELLER-RORRAXY-01",affiliateId:activeAffId||null,title:currentActiveProduct.title||document.getElementById('activeProductTitleHeading').innerText,description:productDescText,price:`$${priceNum.toFixed(2)}`,qty:currentItemQuantity,size:chosenSize,mode:'wholesale',img:finalImgUrl,added_at:new Date().toISOString()});
+    cart.push({
+        productId:prodId,
+        sku:skuValue,
+        sellerId:currentActiveProduct.seller_id||currentActiveProduct.sellerId||"SELLER-RORRAXY-01",
+        affiliateId:activeAffId||null,
+        affiliateRef:activeAffId||null,
+        commissionRate:parseFloat(rate),
+        platform:platform,
+        title:currentActiveProduct.title||document.getElementById('activeProductTitleHeading').innerText,
+        description:productDescText,
+        price:`$${priceNum.toFixed(2)}`,
+        qty:currentItemQuantity,
+        size:chosenSize,
+        mode:'wholesale',
+        img:finalImgUrl,
+        added_at:new Date().toISOString()
+    });
 }
 try{localStorage.setItem(cartKey,JSON.stringify(cart));}catch(e){}
 updateCartBadgeCount();
