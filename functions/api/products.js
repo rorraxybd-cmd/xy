@@ -24,6 +24,7 @@ export async function onRequest(context) {
 
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
+      const sku = url.searchParams.get("sku");
       const sellerId = url.searchParams.get("seller_id");
       const mode = url.searchParams.get("mode");
 
@@ -34,6 +35,10 @@ export async function onRequest(context) {
       if (productCode) {
         conditions.push("(product_code = ? OR id = ?)");
         params.push(productCode, productCode);
+      }
+      if (sku) {
+        conditions.push("sku = ?");
+        params.push(sku);
       }
       if (sellerId) {
         conditions.push("seller_id = ?");
@@ -67,7 +72,7 @@ export async function onRequest(context) {
     if (request.method === "POST") {
       const body = await request.json();
       const {
-        seller_id, product_code, title, upload_mode, category, price, market_price,
+        seller_id, product_code, sku, title, upload_mode, category, price, market_price,
         dropship_base_price, dropship_resell_price, price_sample, price_min_whole,
         price_bulk, stock, moq, image_url, images_json, video_url, youtube_video,
         youtube_live, facebook_live, target_country, discount_rate, allow_custom_note,
@@ -76,16 +81,16 @@ export async function onRequest(context) {
 
       const insertQuery = `
         INSERT INTO products (
-          seller_id, product_code, title, upload_mode, category, price, market_price,
+          seller_id, product_code, sku, title, upload_mode, category, price, market_price,
           dropship_base_price, dropship_resell_price, price_sample, price_min_whole,
           price_bulk, stock, moq, image_url, images_json, video_url, youtube_video,
           youtube_live, facebook_live, target_country, discount_rate, allow_custom_note,
           chat_with_seller, description, like_count, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, datetime('now'))
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, datetime('now'))
       `;
 
       await db.prepare(insertQuery).bind(
-        seller_id || null, product_code || null, title || null, upload_mode || "both",
+        seller_id || null, product_code || null, sku || null, title || null, upload_mode || "both",
         category || null, price || 0, market_price || 0, dropship_base_price || 0,
         dropship_resell_price || 0, price_sample || 0, price_min_whole || 0, price_bulk || 0,
         stock || 0, moq || 1, image_url || null,
@@ -113,7 +118,8 @@ export async function onRequest(context) {
 
       const updateQuery = `
         UPDATE products
-        SET title = COALESCE(?, title),
+        SET sku = COALESCE(?, sku),
+            title = COALESCE(?, title),
             price = COALESCE(?, price),
             price_min_whole = COALESCE(?, price_min_whole),
             stock = COALESCE(?, stock)
@@ -121,7 +127,7 @@ export async function onRequest(context) {
       `;
 
       await db.prepare(updateQuery).bind(
-        body.title || null, body.price || null, body.price_min_whole || null,
+        body.sku || null, body.title || null, body.price || null, body.price_min_whole || null,
         body.stock || null, targetId, targetId
       ).run();
 
