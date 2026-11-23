@@ -405,7 +405,19 @@
             return userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
         }
 
+        // ✅ আপডেট: পেজ লোডের সময় rate এবং platform ক্যাপচার
         window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+            const rateParam = urlParams.get('rate') || '3';
+            const platformParam = urlParams.get('platform') || 'wholesale';
+
+            if (refParam) {
+                localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
+                localStorage.setItem('rorraxy_active_commission_rate', rateParam);
+                localStorage.setItem('rorraxy_active_platform', platformParam);
+            }
+
             getActiveAffiliateId();
         });
 
@@ -505,10 +517,16 @@
             }).join('');
         }
 
+        // ✅ আপডেট: প্রোডাক্টে ক্লিক করলে rate এবং platform পাঠানো
         function openProductDetails(productId) {
             let affId = getActiveAffiliateId();
+            let rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
+            let platform = localStorage.getItem('rorraxy_active_platform') || 'wholesale';
+            
             let url = `/wholesale/pd.html?id=${productId}`;
-            if (affId) url += `&ref=${affId}`;
+            if (affId) {
+                url += `&ref=${affId}&rate=${rate}&platform=${platform}`;
+            }
             window.location.href = url;
         }
 
@@ -569,14 +587,18 @@
             fetchAndDisplayProducts("search");
         }
 
+        // ✅ আপডেট: শেয়ার লিংকে rate এবং platform যুক্ত করা
         async function shareProduct(event, title, productId) {
             if(event) event.stopPropagation();
 
             let affId = getActiveAffiliateId();
+            let rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
+            let platform = localStorage.getItem('rorraxy_active_platform') || 'wholesale';
+            
             let shareUrl = `${window.location.origin}/wholesale/pd.html?id=${productId}`;
 
             if (affId) {
-                shareUrl += `&ref=${affId}`;
+                shareUrl += `&ref=${affId}&rate=${rate}&platform=${platform}`;
             }
 
             if (navigator.share) {
