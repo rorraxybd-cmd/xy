@@ -732,10 +732,27 @@
             createSparkline('chartReferrals', [1, 3, 5, 8, 10, 14, 18]);
         }
 
+        // ✅ UPDATED: Generate Link with Rate & Platform
         function generateAffiliateLink(baseUrl, commissionRate) {
             const trackingId = currentUniqueId || localStorage.getItem('rorraxy_unique_aff_id') || currentUserEmail;
-            const link = `${baseUrl}?ref=${encodeURIComponent(trackingId)}`;
-            document.getElementById('generatedLinkOutput').value = link;
+            
+            if (!trackingId) {
+                showCustomNotify("YOUR AFFILIATE ID IS MISSING. PLEASE COMPLETE YOUR PROFILE.", false);
+                return;
+            }
+
+            // Determine platform based on URL
+            let platformName = 'retail';
+            if (baseUrl.includes('/bs')) platformName = 'business';
+            else if (baseUrl.includes('/wholesale')) platformName = 'wholesale';
+
+            // Construct URL safely using URL object
+            const url = new URL(baseUrl);
+            url.searchParams.set('ref', trackingId);
+            url.searchParams.set('rate', commissionRate);
+            url.searchParams.set('platform', platformName);
+            
+            document.getElementById('generatedLinkOutput').value = url.toString();
             document.getElementById('promoteResultCard').style.display = 'block';
         }
 
@@ -889,7 +906,7 @@
             document.getElementById('otpVerifyForm').dispatchEvent(new Event('submit'));
         }
 
-        // 2. OTP Magic Code Verification Handler (স্মার্ট অটো-লগইন রিডাইরেক্ট লজিক সহ)
+        // 2. OTP Magic Code Verification Handler
         const otpVerifyForm = document.getElementById('otpVerifyForm');
         if (otpVerifyForm) {
             otpVerifyForm.addEventListener('submit', async (e) => {
@@ -930,7 +947,6 @@
 
                     document.getElementById('view-verification').style.display = 'none';
 
-                    // চেক করছি ইউজারের তথ্য আগে থেকেই সম্পূর্ণ কি না
                     if (data && data.is_complete && data.user_data) {
                         const p = data.user_data;
                         document.getElementById('firstName').value = p.first_name || '';
@@ -946,7 +962,6 @@
                         switchTab('dashboard');
                         showCustomNotify("WELCOME BACK! LOGGED IN SUCCESSFULLY.", true);
                     } else {
-                        // নতুন ব্যবহারকারী হলে প্রোফাইল পেজে নিয়ে যাবে
                         switchTab('info');
                         document.getElementById('infoEmail').value = currentUserEmail;
                         document.getElementById('infoPhone').value = currentPhone;
