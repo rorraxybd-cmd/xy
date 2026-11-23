@@ -31,7 +31,7 @@
             background-color: var(--bg-black); 
             color: var(--text-white); 
             font-family: var(--font-body); 
-            padding: 20px 0 110px 0; 
+            padding: 20px 0 120px 0; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
             word-wrap: break-word;
@@ -513,6 +513,119 @@
             background: #ffffff;
             color: #000000;
         }
+
+        /* ==== SHARE BUTTON & MODAL ==== */
+        .floating-share-btn {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            z-index: 9998;
+            border: none;
+            transition: transform 0.2s ease;
+        }
+        .floating-share-btn:active { transform: scale(0.9); }
+
+        .share-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .share-modal-overlay.active { display: flex; }
+
+        .share-modal-box {
+            background: #0f0f18;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.9);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .share-modal-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .universal-share-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .share-target-btn {
+            background: #06060a;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 10px;
+            padding: 10px 6px;
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .share-target-btn:hover {
+            background: var(--gold-gradient);
+            color: #000000;
+            border-color: transparent;
+        }
+        .share-target-btn i { font-size: 1.1rem; }
+        .share-link-copy-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .share-link-box {
+            flex: 1;
+            min-width: 0;
+            background: #050508;
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: var(--gold-solid);
+            font-size: 0.65rem;
+            outline: none;
+            text-transform: none;
+        }
+        .copy-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 0 14px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -581,6 +694,22 @@
 
     </div>
 
+    <!-- Floating Share Button -->
+    <button class="floating-share-btn" onclick="openShareModal()"><i class="fa-solid fa-share-nodes"></i></button>
+
+    <!-- Share Modal -->
+    <div id="universalShareModal" class="share-modal-overlay" onclick="if(event.target===this) closeShareModal()">
+        <div class="share-modal-box">
+            <div class="share-modal-title"><i class="fa-solid fa-share-nodes"></i> SHARE BUSINESS PORTAL</div>
+            <div id="shareTargetGrid" class="universal-share-grid"></div>
+            <div class="share-link-copy-row">
+                <input type="text" id="shareModalUrlInput" class="share-link-box" readonly>
+                <button type="button" id="shareModalCopyBtn" onclick="copyShareLinkFromModal()" class="copy-btn">COPY</button>
+            </div>
+            <button type="button" onclick="closeShareModal()" style="background:#181824; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:800; font-size:0.75rem; cursor:pointer;">CLOSE</button>
+        </div>
+    </div>
+
     <nav class="fixed-bottom-nav">
         <div class="fixed-nav-container">
             <a href="/bs/ov.html" class="fixed-nav-item">
@@ -599,11 +728,133 @@
     </nav>
 
     <script>
+        // ✅ Capture Affiliate Params
+        const urlParams = new URLSearchParams(window.location.search);
+        const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+        const rateParam = urlParams.get('rate') || '20';
+        const platformParam = urlParams.get('platform') || 'business';
+
+        if (refParam) {
+            localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
+            localStorage.setItem('rorraxy_active_commission_rate', rateParam);
+            localStorage.setItem('rorraxy_active_platform', platformParam);
+        }
+
+        function getActiveAffiliateId() {
+            return localStorage.getItem('rorraxy_active_affiliate_ref') || null;
+        }
+
+        function buildShareUrl() {
+            const affId = getActiveAffiliateId();
+            const baseUrl = window.location.origin + window.location.pathname;
+            
+            if (!affId) return baseUrl;
+
+            const rate = localStorage.getItem('rorraxy_active_commission_rate') || '20';
+            const platform = localStorage.getItem('rorraxy_active_platform') || 'business';
+            
+            return `${baseUrl}?ref=${encodeURIComponent(affId)}&rate=${rate}&platform=${platform}`;
+        }
+
+        function openShareModal() {
+            const modal = document.getElementById('universalShareModal');
+            const grid = document.getElementById('shareTargetGrid');
+            const urlInput = document.getElementById('shareModalUrlInput');
+            const copyBtn = document.getElementById('shareModalCopyBtn');
+
+            const shareUrl = buildShareUrl();
+            const shareText = `rorraxy Business Problem Solving - Global Ecosystem`;
+            const shareTitle = `rorraxy Business Solutions`;
+
+            if (copyBtn) copyBtn.innerText = 'COPY';
+            if (urlInput) urlInput.value = shareUrl;
+
+            const encUrl = encodeURIComponent(shareUrl);
+            const encText = encodeURIComponent(`${shareText}\n${shareUrl}`);
+            const encTitle = encodeURIComponent(shareTitle);
+
+            const targets = [
+                { name: 'WHATSAPP', icon: 'fa-brands fa-whatsapp', href: `https://wa.me/?text=${encText}` },
+                { name: 'TELEGRAM', icon: 'fa-brands fa-telegram', href: `https://t.me/share/url?url=${encUrl}&text=${encText}` },
+                { name: 'MESSENGER', icon: 'fa-brands fa-facebook-messenger', href: `https://www.facebook.com/dialog/send?link=${encUrl}&app_id=291494419107518&redirect_uri=${encUrl}` },
+                { name: 'FACEBOOK', icon: 'fa-brands fa-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}` },
+                { name: 'X / TWITTER', icon: 'fa-brands fa-x-twitter', href: `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}` },
+                { name: 'LINKEDIN', icon: 'fa-brands fa-linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}` },
+                { name: 'EMAIL APP', icon: 'fa-solid fa-envelope', href: `mailto:?subject=${encTitle}&body=${encText}` },
+                { name: 'SYSTEM SHARE', icon: 'fa-solid fa-up-right-from-square', href: '#', onclick: `triggerNativeShare(event, '${shareUrl}', '${shareTitle}')` }
+            ];
+
+            grid.innerHTML = targets.map(t => {
+                let onclickAttr = t.onclick ? `onclick="${t.onclick}"` : '';
+                let hrefAttr = t.href && t.href !== '#' ? `href="${t.href}" target="_blank" rel="noopener noreferrer"` : `href="#"`;
+                return `
+                    <a class="share-target-btn" ${hrefAttr} ${onclickAttr}>
+                        <i class="${t.icon}"></i>
+                        <span>${t.name}</span>
+                    </a>
+                `;
+            }).join('');
+
+            modal.classList.add('active');
+        }
+
+        function closeShareModal() {
+            document.getElementById('universalShareModal').classList.remove('active');
+        }
+
+        async function copyTextToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (e) {}
+            }
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                return ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function copyShareLinkFromModal() {
+            const input = document.getElementById('shareModalUrlInput');
+            const btn = document.getElementById('shareModalCopyBtn');
+            if (!input) return;
+            input.select();
+            await copyTextToClipboard(input.value);
+            if (btn) {
+                btn.innerText = 'COPIED';
+                setTimeout(() => { btn.innerText = 'COPY'; }, 1400);
+            }
+        }
+
+        async function triggerNativeShare(event, url, title) {
+            if (event) event.preventDefault();
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: title, url: url });
+                    closeShareModal();
+                } catch (e) {}
+            } else {
+                await copyShareToClipboard(url);
+                alert("Link copied to clipboard!");
+            }
+        }
+
         const ecosystemContactForm = document.getElementById('ecosystemContactForm');
         const submitProposalBtn = document.getElementById('submitProposalBtn');
         const locText = document.getElementById('locText');
 
-        let userCountryInfo = { country: "Global Region", countryCode: "un", ip: "" };
+        let userCountryInfo = { country: "Global Region", countryCode: "un", ip: "", dialCode: "" };
 
         async function fetchEcosystemGeoLocation() {
             try {
@@ -612,11 +863,16 @@
                 if (data && data.country_code) {
                     const cCode = data.country_code.toUpperCase();
                     const cName = data.country_name;
+                    const dialCode = data.country_calling_code || '';
                     userCountryInfo.country = cName;
                     userCountryInfo.countryCode = cCode.toLowerCase();
                     userCountryInfo.ip = data.ip;
+                    userCountryInfo.dialCode = dialCode;
 
                     locText.innerHTML = `<img src="https://flagcdn.com/w40/${userCountryInfo.countryCode}.png" alt="${cCode}"> ${cName}`;
+                    
+                    // Auto track dial code in WhatsApp placeholder
+                    document.getElementById('whatsapp').placeholder = `Enter WhatsApp (e.g. ${dialCode} 1700000000) *`;
                     return;
                 }
             } catch (e) {}
@@ -627,11 +883,14 @@
                 if (fallbackData && fallbackData.success) {
                     const cCode = fallbackData.country_code.toUpperCase();
                     const cName = fallbackData.country;
+                    const dialCode = fallbackData.calling_code ? '+' + fallbackData.calling_code : '';
                     userCountryInfo.country = cName;
                     userCountryInfo.countryCode = cCode.toLowerCase();
                     userCountryInfo.ip = fallbackData.ip;
+                    userCountryInfo.dialCode = dialCode;
 
                     locText.innerHTML = `<img src="https://flagcdn.com/w40/${userCountryInfo.countryCode}.png" alt="${cCode}"> ${cName}`;
+                    document.getElementById('whatsapp').placeholder = `Enter WhatsApp (e.g. ${dialCode} 1700000000) *`;
                 } else {
                     locText.innerHTML = `Global Region`;
                 }
@@ -641,7 +900,6 @@
         }
         fetchEcosystemGeoLocation();
 
-        // নোটিফিকেশন পপআপ সম্পূর্ণ রিমুভ করে ব্যাকগ্রাউন্ডে Cloudflare D1 এ ডাটা সেভ করার কোড
         ecosystemContactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -667,7 +925,9 @@
                     projectDetails: businessPlan,
                     country: userCountryInfo.country,
                     countryCode: userCountryInfo.countryCode,
-                    ipAddress: userCountryInfo.ip
+                    dialCode: userCountryInfo.dialCode,
+                    ipAddress: userCountryInfo.ip,
+                    affiliateRef: getActiveAffiliateId() // Optional: tracking form submission via affiliate
                 };
 
                 const response = await fetch('/api/business', {
