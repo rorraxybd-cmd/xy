@@ -812,6 +812,12 @@
             const activeAffId = getActiveAffiliateId();
             const priceNum = calculateAppliedUnitPrice();
 
+            // ✅ প্রোডাক্টের আসল বর্ণনা সংরক্ষণ (DETAILS-এ দেখানোর জন্য)
+            const productDescText = cleanDescriptionText(
+                currentActiveProduct.description || currentActiveProduct.desc || ""
+            ) || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+
+            // ✅ ডুপ্লিকেট চেক: productId + size (ইমেজ বাদ)
             const existingItem = cart.find(item =>
                 String(item.productId) === String(prodId) &&
                 String(item.size || '').toUpperCase() === chosenSize
@@ -822,17 +828,22 @@
                 if (activeAffId) existingItem.affiliateId = activeAffId;
                 existingItem.img = finalImgUrl;
                 existingItem.price = `$${priceNum.toFixed(2)}`;
+                if (!existingItem.description) existingItem.description = productDescText;
+                if (!existingItem.title) existingItem.title = currentActiveProduct.title || "RORRAXY WHOLESALE PRODUCT";
+                if (!existingItem.sellerId) existingItem.sellerId = currentActiveProduct.seller_id || "SELLER-RORRAXY-01";
             } else {
                 cart.push({
                     productId: prodId,
                     sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
                     affiliateId: activeAffId || null,
                     title: currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText,
+                    description: productDescText,                    // ✅ আসল description
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
-                    size: chosenSize,
+                    size: chosenSize,                                 // ✅ কাস্টম নোট/স্পেক
                     mode: 'wholesale',
-                    img: finalImgUrl
+                    img: finalImgUrl,
+                    added_at: new Date().toISOString()                // ✅ ট্র্যাকিং
                 });
             }
 
@@ -900,10 +911,6 @@
             const prodId = currentActiveProduct ? (currentActiveProduct.id || currentActiveProduct.product_id || '101') : '101';
             const title = currentActiveProduct ? (currentActiveProduct.title || 'Product Details') : 'Product Details';
             await triggerAutoShare(event, prodId, title);
-        }
-
-        function isMobileDevice() {
-            return /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(navigator.userAgent || '') || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && window.innerWidth < 900);
         }
 
         async function copyTextToClipboard(text) {
