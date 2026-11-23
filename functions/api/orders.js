@@ -10,38 +10,24 @@ export async function onRequestPost(context) {
     const { request, env } = context;
     const data = await request.json();
 
+    // ✅ ফ্রন্টএন্ড থেকে নতুন ডাটাগুলো রিসিভ করা হচ্ছে
     const {
-      master_order_id,
-      customer_name,
-      customer_phone,
-      shipping_address,
-      customer_country,
-      payment_method,
-      payment_status,
-      transaction_id,
-      total_amount,
-      currency,
-      affiliate_id,
-      affiliate_commission,
-      admin_commission,
-      order_status,
-      items
+      master_order_id, order_id, customer_name, customer_phone, shipping_address,
+      customer_country, payment_method, payment_status, transaction_id,
+      total_amount, currency, order_status, items,
+      affiliate_ref, commission_rate, platform, has_affiliate
     } = data;
 
     if (!master_order_id || !customer_name || !customer_phone || !shipping_address || !items || !Array.isArray(items)) {
       return new Response(JSON.stringify({ success: false, error: "Missing required retail order fields or items" }), {
-        status: 400,
-        headers: corsHeaders
+        status: 400, headers: corsHeaders
       });
     }
 
-    // Group items by seller
     const sellerGroups = {};
     items.forEach(item => {
       const sellerId = item.sellerId || item.seller_id || 'RRX-MAIN-SELLER';
-      if (!sellerGroups[sellerId]) {
-        sellerGroups[sellerId] = [];
-      }
+      if (!sellerGroups[sellerId]) sellerGroups[sellerId] = [];
       sellerGroups[sellerId].push(item);
     });
 
@@ -50,98 +36,87 @@ export async function onRequestPost(context) {
 
     for (const [sellerId, sellerItems] of Object.entries(sellerGroups)) {
       const subOrderId = master_order_id + '-' + sellerId.substring(0, 6).toUpperCase() + '-' + Math.floor(100 + Math.random() * 900);
-
       let subOrderTotal = 0;
-      let combinedCustomNotes = []; // নোট একত্রিত করার জন্য অ্যারে
+      let combinedCustomNotes = [];
 
       sellerItems.forEach(item => {
         const price = parseFloat((item.price || "0").toString().replace('$', ''));
         const qty = parseInt(item.qty || 1, 10);
         subOrderTotal += (price * qty);
-
-        // কাস্টম নোট এক্সট্রাক্ট করা
         const noteText = (item.custom_note || item.note || '').toString().trim();
         if (noteText) {
-            // যদি একাধিক প্রোডাক্ট থাকে তবে প্রোডাক্টের নামসহ নোট দেখাবে
-            if (sellerItems.length > 1) {
-                combinedCustomNotes.push(`[${item.title || 'Item'}]: ${noteText}`);
-            } else {
-                combinedCustomNotes.push(noteText);
-            }
+            combinedCustomNotes.push(sellerItems.length > 1 ? `[${item.title || 'Item'}]: ${noteText}` : noteText);
         }
       });
 
-      // নোটগুলোকে একটি স্ট্রিং-এ রূপান্তর (নতুন লাইন দিয়ে আলাদা করা)
       const finalCustomNote = combinedCustomNotes.join('\n');
 
-      const calculatedAffiliateComm = Number(affiliate_commission || 0);
-      const calculatedAdminComm = Number(admin_commission || 0);
+      // ✅ ব্যাকএন্ডে কমিশন ক্যালকুলেশন (নিরাপদ পদ্ধতি)
+      let calculatedAffiliateComm = 0;
+      if (has_affiliate && affiliate_ref && commission_rate) {
+          calculatedAffiliateComm = subOrderTotal * (parseFloat(commission_rate) / 100);
+      }
+      // এডমিন কমিশন (আপনার লজিক অনুযায়ী)
+      let calculatedAdminComm = subOrderTotal - calculatedAffiliateComm; 
 
-      // SQL Query-তে custom_note যুক্ত করা হয়েছে
       const query = `
         INSERT INTO retail_orders (
           master_order_id, sub_order_id, seller_id, customer_name, customer_phone,
           shipping_address, customer_country, payment_method, payment_status,
           transaction_id, total_amount, currency, affiliate_id,
           affiliate_commission, admin_commission, order_status, items,
-          custom_note
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          custom_note, commission_rate, platform
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       await db.prepare(query)
         .bind(
-          master_order_id,
-          subOrderId,
-          sellerId,
-          customer_name,
-          customer_phone,
-          shipping_address,
-          customer_country || 'Bangladesh',
+          master_order_id, subOrderId, sellerId, customer_name, customer_phone,
+          shipping_address, customer_country || 'Bangladesh',
           payment_method || 'Credit / Debit Card',
-          payment_status || (payment_method === 'Cash on Delivery' ? 'Pending' : 'Paid'),
-          transaction_id || '',
-          subOrderTotal,
-          currency || 'USD',
-          affiliate_id || 'AFF-DIRECT',
-          calculatedAffiliateComm,
-          calculatedAdminComm,
+          payment_status || 'Paid', transaction_id || '',
+          subOrderTotal, currency || 'USD',
+          affiliate_ref || 'rorraxy-store', // অ্যাফিলিয়েট আইডি
+          calculatedAffiliateComm, calculatedAdminComm,
           order_status || 'Pending',
           JSON.stringify(sellerItems),
-          finalCustomNote // <- এখানে কাস্টম নোট বাইন্ড করা হলো
-        )
-        .run();
+          finalCustomNote,
+          commission_rate || 0, // নতুন কলাম
+          platform || 'retail'  // নতুন কলাম
+        ).run();
 
-      insertedSubOrders.push({
-        sub_order_id: subOrderId,
-        seller_id: sellerId,
-        amount: subOrderTotal
-      });
+      insertedSubOrders.push({ sub_order_id: subOrderId, seller_id: sellerId, amount: subOrderTotal });
+    }
+
+    // ✅ অ্যাফিলিয়েটের ব্যালেন্স আপডেট করা
+    if (has_affiliate && affiliate_ref && affiliate_ref !== 'rorraxy-store') {
+        const totalAffiliateComm = insertedSubOrders.reduce((sum, order) => {
+            // এখানে লুপ চালিয়ে মোট কমিশন বের করছি (সহজ রাখার জন্য)
+            return sum + (order.amount * (parseFloat(commission_rate) / 100));
+        }, 0);
+
+        await db.prepare(`
+            UPDATE rorraxy_affiliates_master 
+            SET total_earnings = COALESCE(total_earnings, 0) + ?,
+                available_balance = COALESCE(available_balance, 0) + ?,
+                total_referrals = COALESCE(total_referrals, 0) + 1
+            WHERE unique_affiliate_id = ?
+        `).bind(totalAffiliateComm, totalAffiliateComm, affiliate_ref).run();
     }
 
     return new Response(JSON.stringify({
-      success: true,
-      message: "Retail orders successfully placed and separated by sellers!",
-      master_order_id: master_order_id,
-      sub_orders: insertedSubOrders
-    }), {
-      status: 200,
-      headers: corsHeaders
-    });
+      success: true, message: "Retail orders placed successfully!",
+      master_order_id: master_order_id, sub_orders: insertedSubOrders
+    }), { status: 200, headers: corsHeaders });
+
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
-      status: 500,
-      headers: corsHeaders
-    });
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
   }
 }
 
 export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type"
-    }
+    headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type" }
   });
 }
