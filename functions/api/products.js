@@ -11,17 +11,21 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const json = (data, status = 200) =>
+    new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+
   const db = env.retail || env.DB;
   if (!db) {
-    return new Response(
-      JSON.stringify({ success: false, error: "Database binding not found" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ success: false, error: "Database binding not found" }, 500);
   }
 
   try {
     const url = new URL(request.url);
 
+    // ========== GET ==========
     if (request.method === "GET") {
       const productCode = url.searchParams.get("code") || url.searchParams.get("id");
       const sku = url.searchParams.get("sku");
@@ -33,13 +37,15 @@ export async function onRequest(context) {
       const conditions = [];
 
       if (productCode) {
-        conditions.push("(product_code = ? OR id = ?)");
-        params.push(productCode.trim(), productCode.trim());
+        conditions.push(
+          "(product_code = ? OR id = ? OR UPPER(TRIM(sku)) = UPPER(TRIM(?)))"
+        );
+        params.push(productCode.trim(), productCode.trim(), productCode.trim());
       }
 
       if (sku) {
         conditions.push("UPPER(TRIM(sku)) = UPPER(TRIM(?))");
-        params.push(sku);
+        params.push(sku.trim());
       }
 
       if (sellerId) {
@@ -51,8 +57,9 @@ export async function onRequest(context) {
         const cleanMode = mode.toLowerCase().trim();
         if (cleanMode === "wholesale" || cleanMode === "retail") {
           conditions.push(
-            `(LOWER(upload_mode) = '${cleanMode}' OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')`
+            "(LOWER(upload_mode) = ? OR LOWER(upload_mode) = 'both' OR upload_mode IS NULL OR upload_mode = '')"
           );
+          params.push(cleanMode);
         } else {
           conditions.push("LOWER(upload_mode) = ?");
           params.push(cleanMode);
@@ -65,22 +72,33 @@ export async function onRequest(context) {
 
       query += " ORDER BY created_at DESC";
       const { results } = await db.prepare(query).bind(...params).all();
-
-      return new Response(
-        JSON.stringify({ success: true, data: results }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({ success: true, data: results || [] });
     }
 
+    // ========== POST (Create) ==========
     if (request.method === "POST") {
       const body = await request.json();
-      const {
-        seller_id, product_code, sku, title, upload_mode, category, price, market_price,
-        dropship_base_price, dropship_resell_price, price_sample, price_min_whole,
-        price_bulk, stock, moq, image_url, images_json, video_url, youtube_video,
-        youtube_live, facebook_live, target_country, discount_rate, allow_custom_note,
-        chat_with_seller, description
-      } = body;
+
+      if (!body.sku || String(body.sku).trim().length < 3) {
+        return json({ success: false, error: "SKU is required (min 3 chars)." }, 400);
+      }
+      if (!body.title) {
+        return json({ success: false, error: "Title is required." }, 400);
+      }
+
+      const cleanSku = String(body.sku).trim().toUpperCase();
+
+      // Duplicate SKU check — friendly error
+      const existing = await db
+        .prepare("SELECT id FROM products WHERE UPPER(TRIM(sku)) = ?")
+        .bind(cleanSku)
+        .first();
+      if (existing) {
+        return json(
+          { success: false, error: "SKU already exists. Please use a unique SKU." },
+          409
+        );
+      }
 
       const insertQuery = `
         INSERT INTO products (
@@ -92,105 +110,159 @@ export async function onRequest(context) {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, datetime('now'))
       `;
 
-      await db.prepare(insertQuery).bind(
-        seller_id || null,
-        product_code || null,
-        sku ? String(sku).trim() : null,
-        title || null,
-        upload_mode || "both",
-        category || null,
-        price ?? 0,
-        market_price ?? 0,
-        dropship_base_price ?? 0,
-        dropship_resell_price ?? 0,
-        price_sample ?? 0,
-        price_min_whole ?? 0,
-        price_bulk ?? 0,
-        stock ?? 0,
-        moq ?? 1,
-        image_url || null,
-        images_json ? (typeof images_json === "string" ? images_json : JSON.stringify(images_json)) : null,
-        video_url || null,
-        youtube_video || null,
-        youtube_live || null,
-        facebook_live || null,
-        target_country || "bd",
-        discount_rate ?? "0",
-        allow_custom_note ? 1 : 0,
-        chat_with_seller ? 1 : 0,
-        description || null
-      ).run();
+      const result = await db
+        .prepare(insertQuery)
+        .bind(
+          body.seller_id || null,
+          body.product_code || cleanSku,
+          cleanSku,
+          body.title || null,
+          body.upload_mode || "both",
+          body.category || null,
+          body.price ?? 0,
+          body.market_price ?? 0,
+          body.dropship_base_price ?? 0,
+          body.dropship_resell_price ?? 0,
+          body.price_sample ?? 0,
+          body.price_min_whole ?? 0,
+          body.price_bulk ?? 0,
+          body.stock ?? 0,
+          body.moq ?? 1,
+          body.image_url || null,
+          body.images_json
+            ? typeof body.images_json === "string"
+              ? body.images_json
+              : JSON.stringify(body.images_json)
+            : null,
+          body.video_url || null,
+          body.youtube_video || null,
+          body.youtube_live || null,
+          body.facebook_live || null,
+          body.target_country || "bd",
+          body.discount_rate ?? "0",
+          body.allow_custom_note ? 1 : 0,
+          body.chat_with_seller ? 1 : 0,
+          body.description || null
+        )
+        .run();
 
-      return new Response(
-        JSON.stringify({ success: true, message: "Product uploaded successfully!" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({
+        success: true,
+        message: "Product uploaded successfully!",
+        id: result.meta?.last_row_id ?? null,
+        sku: cleanSku,
+      });
     }
 
+    // ========== PUT (Update) ==========
     if (request.method === "PUT") {
       const body = await request.json();
-      const targetId = body.id || url.searchParams.get("id");
+      const targetId =
+        body.id || url.searchParams.get("id") || body.product_code || body.sku;
 
       if (!targetId) {
-        return new Response(
-          JSON.stringify({ success: false, error: "Product ID is required" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return json({ success: false, error: "Product ID / SKU is required." }, 400);
       }
 
-      const updateQuery = `
-        UPDATE products
-        SET sku = COALESCE(?, sku),
-            title = COALESCE(?, title),
-            price = COALESCE(?, price),
-            price_min_whole = COALESCE(?, price_min_whole),
-            stock = COALESCE(?, stock)
-        WHERE id = ? OR product_code = ?
-      `;
+      // Find the record first (id / product_code / sku — যেকোনোটা দিয়ে)
+      const target = await db
+        .prepare(
+          "SELECT id, sku FROM products WHERE id = ? OR product_code = ? OR UPPER(TRIM(sku)) = UPPER(TRIM(?)) LIMIT 1"
+        )
+        .bind(targetId, targetId, targetId)
+        .first();
 
-      await db.prepare(updateQuery).bind(
-        body.sku !== undefined && body.sku !== null ? String(body.sku).trim() : null,
-        body.title ?? null,
-        body.price ?? null,
-        body.price_min_whole ?? null,
-        body.stock ?? null,
-        targetId,
-        targetId
-      ).run();
+      if (!target) {
+        return json({ success: false, error: "Product not found." }, 404);
+      }
 
-      return new Response(
-        JSON.stringify({ success: true, message: "Product updated successfully!" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      // SKU uniqueness check (excluding self)
+      if (body.sku) {
+        const newSku = String(body.sku).trim().toUpperCase();
+        const dup = await db
+          .prepare("SELECT id FROM products WHERE UPPER(TRIM(sku)) = ? AND id != ?")
+          .bind(newSku, target.id)
+          .first();
+        if (dup) {
+          return json({ success: false, error: "SKU already exists." }, 409);
+        }
+      }
+
+      const allowedFields = [
+        "sku", "title", "price", "market_price", "price_sample", "price_min_whole",
+        "price_bulk", "stock", "moq", "upload_mode", "category", "image_url",
+        "images_json", "video_url", "youtube_video", "youtube_live", "facebook_live",
+        "target_country", "discount_rate", "allow_custom_note", "chat_with_seller",
+        "description",
+      ];
+
+      const setParts = [];
+      const values = [];
+
+      for (const field of allowedFields) {
+        if (body[field] === undefined) continue;
+        let val = body[field];
+
+        if (field === "sku" && val !== null) val = String(val).trim().toUpperCase();
+        if (field === "images_json" && val !== null && typeof val !== "string") {
+          val = JSON.stringify(val);
+        }
+        if (field === "allow_custom_note" || field === "chat_with_seller") {
+          val = val ? 1 : 0;
+        }
+
+        setParts.push(`${field} = ?`);
+        values.push(val);
+      }
+
+      if (setParts.length === 0) {
+        return json({ success: false, error: "No fields to update." }, 400);
+      }
+
+      values.push(target.id);
+
+      const result = await db
+        .prepare(`UPDATE products SET ${setParts.join(", ")} WHERE id = ?`)
+        .bind(...values)
+        .run();
+
+      return json({
+        success: true,
+        message: "Product updated successfully!",
+        changes: result.meta?.changes ?? 0,
+      });
     }
 
+    // ========== DELETE ==========
     if (request.method === "DELETE") {
-      const deleteId = url.searchParams.get("id") || url.pathname.split("/").pop();
+      const deleteId =
+        url.searchParams.get("id") ||
+        url.searchParams.get("sku") ||
+        url.pathname.split("/").pop();
 
       if (!deleteId || deleteId === "products") {
-        return new Response(
-          JSON.stringify({ success: false, error: "Valid Product ID is required for deletion" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        return json(
+          { success: false, error: "Valid Product ID / SKU is required." },
+          400
         );
       }
 
-      const deleteQuery = "DELETE FROM products WHERE id = ? OR product_code = ?";
-      await db.prepare(deleteQuery).bind(deleteId, deleteId).run();
+      const result = await db
+        .prepare(
+          "DELETE FROM products WHERE id = ? OR product_code = ? OR UPPER(TRIM(sku)) = UPPER(TRIM(?))"
+        )
+        .bind(deleteId, deleteId, deleteId)
+        .run();
 
-      return new Response(
-        JSON.stringify({ success: true, message: "Product deleted successfully!" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({
+        success: true,
+        message: "Product deleted successfully!",
+        changes: result.meta?.changes ?? 0,
+      });
     }
 
-    return new Response(
-      JSON.stringify({ success: false, error: "Method not allowed" }),
-      { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ success: false, error: "Method not allowed." }, 405);
   } catch (err) {
-    return new Response(
-      JSON.stringify({ success: false, error: err.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ success: false, error: err.message }, 500);
   }
 }
