@@ -1,745 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>rorraxy - Retail Checkout</title>
-    <script src="/ecosystem-core.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
-
-    <style>
-        :root {
-            --bg-retail: #000000;
-            --gold-gradient: linear-gradient(135deg, #dfb75c 0%, #fef3c7 25%, #c59b27 50%, #fef3c7 75%, #b38728 100%);
-            --green-gradient: linear-gradient(135deg, #00b09b, #96c93d);
-            --gold-solid: #d4af37;
-            --danger-red: #ff3b30;
-            --text-white: #ffffff;
-            --text-gray: #c0c0d0;
-            --font-main: 'Poppins', 'Plus Jakarta Sans', sans-serif;
-            --card-bg: #0b0b10;
-            --input-bg: #14141d;
-        }
-        * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; word-break: break-word; }
-        html, body {
-            width: 100%; max-width: 100%; background: var(--bg-retail) !important; color: var(--text-white);
-            font-family: var(--font-main); font-size: 14px; text-transform: uppercase !important;
-            -webkit-font-smoothing: antialiased; overflow-x: hidden !important; min-height: 100vh;
-        }
-        .checkout-container {
-            max-width: 760px; width: 100%; margin: 0 auto; padding: 20px 12px 110px 12px; display: flex; flex-direction: column; gap: 16px;
-        }
-        .cart-brand-logo {
-            width: 105px; height: auto; object-fit: contain; margin: 0 auto; display: block; filter: none !important;
-        }
-        .address-form-section, .summary-card-box {
-            display: flex; background: var(--card-bg); border-radius: 16px; padding: 16px 14px; flex-direction: column; gap: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); width: 100%;
-        }
-        .section-center-header { text-align: center; padding-bottom: 2px; width: 100%; }
-        .section-center-header h2 { font-size: 0.82rem; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 6px; color: #fff; max-width: 100%; text-overflow: ellipsis; }
-        .luxury-form-label { font-size: 0.62rem; color: #ffffff !important; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-        .luxury-form-input {
-            background: var(--input-bg) !important; border: none !important;
-            padding: 11px 12px !important; border-radius: 9px !important; color: #ffffff !important;
-            font-size: 0.82rem !important; font-family: var(--font-main) !important; width: 100% !important; outline: none !important;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-        }
-        .luxury-form-input:focus { box-shadow: 0 0 10px rgba(212,175,55,0.2), inset 0 1px 3px rgba(0,0,0,0.3) !important; background: #181824 !important; }
-        .luxury-form-input.input-error { box-shadow: 0 0 8px rgba(255, 59, 48, 0.6) !important; }
-        .iti { width: 100% !important; display: block; }
-        .iti__selected-flag { background-color: rgba(255, 255, 255, 0.05) !important; border-radius: 9px 0 0 9px !important; border-right: none !important; }
-        .iti input[type="tel"] { padding-left: 88px !important; width: 100% !important; color: #ffffff !important; }
-        .iti__country-list {
-            background-color: #0b0b10 !important; border: none !important; box-shadow: 0 8px 25px rgba(0,0,0,0.8) !important;
-            color: #ffffff !important; text-transform: none !important; max-height: 220px !important; width: 280px !important; z-index: 99999 !important;
-            border-radius: 9px;
-        }
-        .iti__country { padding: 9px 10px; }
-        .iti__country:hover { background-color: rgba(212, 175, 55, 0.15) !important; }
-        .iti__selected-dial-code { color: #ffffff !important; font-weight: 700; }
-        .save-address-checkbox-row {
-            display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text-white); font-weight: 600; cursor: pointer; margin-top: 4px;
-        }
-        .save-address-checkbox-row input[type="checkbox"] {
-            width: 16px; height: 16px; accent-color: var(--gold-solid); cursor: pointer; flex-shrink: 0;
-        }
-        .cart-items-box {
-            background: var(--card-bg); border-radius: 16px; padding: 14px; width: 100%;
-            display: flex; flex-direction: column; gap: 10px; max-height: 420px; overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-        .cart-row-item {
-            display: flex; align-items: center; justify-content: space-between; background: #12121a; padding: 10px; border-radius: 10px; gap: 8px; width: 100%;
-        }
-        .cart-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; background: #000; flex-shrink: 0; }
-        .details-toggle-btn {
-            background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); color: var(--gold-solid);
-            padding: 3px 6px; border-radius: 6px; font-size: 0.52rem; font-weight: 700; cursor: pointer; margin-top: 3px; display: inline-block;
-        }
-        .product-extended-details {
-            display: none; font-size: 0.6rem; color: var(--text-gray); text-transform: none !important; margin-top: 4px; line-height: 1.4;
-            background: #0b0b10; padding: 6px; border-radius: 6px; border-left: 2px solid var(--gold-solid);
-        }
-        /* ==== CUSTOM SIZE / NOTE — PROMINENT DISPLAY ==== */
-        .custom-note-block {
-            margin-top: 4px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .custom-note-label {
-            font-size: 0.54rem;
-            font-weight: 800;
-            color: var(--gold-solid);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .custom-note-value {
-            font-size: 0.64rem;
-            font-weight: 700;
-            color: #ffffff;
-            background: rgba(212, 175, 55, 0.13);
-            border-left: 3px solid var(--gold-solid);
-            padding: 4px 8px;
-            border-radius: 0 6px 6px 0;
-            text-transform: none !important;
-            line-height: 1.35;
-            word-break: break-word;
-            white-space: pre-wrap;
-        }
-        .summary-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 0.74rem; font-weight: 600; color: var(--text-gray); gap: 10px; }
-        #step2PaymentSection { display: none; flex-direction: column; gap: 14px; animation: fadeIn 0.3s ease-in-out; width: 100%; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .payment-accordion-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        .payment-method-item {
-            background: rgba(18, 18, 26, 0.85); border-radius: 14px; overflow: hidden; cursor: pointer; width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease;
-        }
-        .payment-method-item.active { border-color: var(--gold-solid); background: rgba(24, 24, 36, 0.98); box-shadow: 0 0 18px rgba(212,175,55,0.25); }
-        .payment-method-header { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
-        .payment-method-title { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; font-weight: 800; color: #fff; gap: 8px; }
-        .badge-global-gold { background: var(--gold-gradient); color: #000; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
-        .badge-local-bd { background: linear-gradient(135deg, #0052d4, #4364f7); color: #fff; font-size: 0.58rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; }
-        .payout-icons-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; width: 100%; }
-        .brand-payout-card {
-            display: inline-flex; align-items: center; justify-content: center;
-            background: #ffffff; padding: 4px 10px; border-radius: 8px; height: 34px; min-width: 54px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); transition: transform 0.2s ease;
-        }
-        .brand-payout-card:hover { transform: scale(1.04); }
-        .brand-payout-card img { height: 20px; width: auto; max-width: 48px; object-fit: contain; }
-        #currenciesModal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-            z-index: 99999999; display: none; align-items: center; justify-content: center; padding: 15px;
-        }
-        .modal-content-box {
-            background: #0f0f18; border-radius: 16px; width: 100%; max-width: 440px;
-            padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 35px rgba(0,0,0,0.9);
-        }
-        .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
-        .currency-tag { background: #181824; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
-        .single-fixed-checkout-wrapper {
-            position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
-            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px);
-            padding: 12px 16px; display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.6); width: 100%;
-        }
-        .btn-action-main {
-            background: var(--gold-gradient); color: #000000; font-weight: 800; font-size: 0.84rem;
-            padding: 13px 20px; border-radius: 24px; border: none !important; display: flex; align-items: center;
-            justify-content: center; gap: 8px; cursor: pointer; letter-spacing: 0.8px; width: 100%; max-width: 420px;
-            font-family: var(--font-main); box-shadow: 0 4px 18px rgba(212,175,55,0.3); text-align: center;
-        }
-        .btn-action-main:active { transform: scale(0.98); }
-        .gold-gradient-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
-        .gold-gradient-price { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-        #toastBox {
-            position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%); background: #181824; color: #ffffff; padding: 9px 16px;
-            border-radius: 8px; z-index: 9999999; display: none; font-size: 0.72rem; font-weight: 700; text-transform: none !important; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>rorraxy - Retail Checkout</title>
+<script src="/ecosystem-core.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+<style>
+:root{--bg-retail:#000000;--gold-gradient:linear-gradient(135deg,#dfb75c 0%,#fef3c7 25%,#c59b27 50%,#fef3c7 75%,#b38728 100%);--green-gradient:linear-gradient(135deg,#00b09b,#96c93d);--gold-solid:#d4af37;--danger-red:#ff3b30;--text-white:#ffffff;--text-gray:#c0c0d0;--font-main:'Poppins','Plus Jakarta Sans',sans-serif;--card-bg:#0b0b10;--input-bg:#14141d;}
+*{box-sizing:border-box!important;margin:0;padding:0;-webkit-tap-highlight-color:transparent;word-break:break-word;}
+html,body{width:100%;max-width:100%;background:var(--bg-retail)!important;color:var(--text-white);font-family:var(--font-main);font-size:14px;text-transform:uppercase!important;-webkit-font-smoothing:antialiased;overflow-x:hidden!important;min-height:100vh;}
+.checkout-container{max-width:760px;width:100%;margin:0 auto;padding:20px 12px 110px 12px;display:flex;flex-direction:column;gap:16px;}
+.cart-brand-logo{width:105px;height:auto;object-fit:contain;margin:0 auto;display:block;filter:none!important;}
+.address-form-section,.summary-card-box{display:flex;background:var(--card-bg);border-radius:16px;padding:16px 14px;flex-direction:column;gap:12px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.4);width:100%;}
+.section-center-header{text-align:center;padding-bottom:2px;width:100%;}
+.section-center-header h2{font-size:0.82rem;font-weight:800;letter-spacing:1px;display:inline-flex;align-items:center;gap:6px;color:#fff;max-width:100%;text-overflow:ellipsis;}
+.luxury-form-label{font-size:0.62rem;color:#ffffff!important;font-weight:700;letter-spacing:0.5px;display:block;margin-bottom:4px;}
+.luxury-form-input{background:var(--input-bg)!important;border:none!important;padding:11px 12px!important;border-radius:9px!important;color:#ffffff!important;font-size:0.82rem!important;font-family:var(--font-main)!important;width:100%!important;outline:none!important;box-shadow:inset 0 1px 3px rgba(0,0,0,0.3);}
+.luxury-form-input:focus{box-shadow:0 0 10px rgba(212,175,55,0.2),inset 0 1px 3px rgba(0,0,0,0.3)!important;background:#181824!important;}
+.luxury-form-input.input-error{box-shadow:0 0 8px rgba(255,59,48,0.6)!important;}
+.iti{width:100%!important;display:block;}
+.iti__selected-flag{background-color:rgba(255,255,255,0.05)!important;border-radius:9px 0 0 9px!important;border-right:none!important;}
+.iti input[type="tel"]{padding-left:88px!important;width:100%!important;color:#ffffff!important;}
+.iti__country-list{background-color:#0b0b10!important;border:none!important;box-shadow:0 8px 25px rgba(0,0,0,0.8)!important;color:#ffffff!important;text-transform:none!important;max-height:220px!important;width:280px!important;z-index:99999!important;border-radius:9px;}
+.iti__country{padding:9px 10px;}
+.iti__country:hover{background-color:rgba(212,175,55,0.15)!important;}
+.iti__selected-dial-code{color:#ffffff!important;font-weight:700;}
+.save-address-checkbox-row{display:flex;align-items:center;gap:8px;font-size:0.68rem;color:var(--text-white);font-weight:600;cursor:pointer;margin-top:4px;}
+.save-address-checkbox-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--gold-solid);cursor:pointer;flex-shrink:0;}
+.cart-items-box{background:var(--card-bg);border-radius:16px;padding:14px;width:100%;display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+.cart-row-item{display:flex;align-items:center;justify-content:space-between;background:#12121a;padding:10px;border-radius:10px;gap:8px;width:100%;}
+.cart-img{width:50px;height:50px;object-fit:cover;border-radius:8px;background:#000;flex-shrink:0;}
+.details-toggle-btn{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold-solid);padding:3px 6px;border-radius:6px;font-size:0.52rem;font-weight:700;cursor:pointer;margin-top:3px;display:inline-block;}
+.product-extended-details{display:none;font-size:0.6rem;color:var(--text-gray);text-transform:none!important;margin-top:4px;line-height:1.4;background:#0b0b10;padding:6px;border-radius:6px;border-left:2px solid var(--gold-solid);}
+.custom-note-block{margin-top:4px;display:flex;flex-direction:column;gap:2px;}
+.custom-note-label{font-size:0.54rem;font-weight:800;color:var(--gold-solid);letter-spacing:0.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:3px;}
+.custom-note-value{font-size:0.64rem;font-weight:700;color:#ffffff;background:rgba(212,175,55,0.13);border-left:3px solid var(--gold-solid);padding:4px 8px;border-radius:0 6px 6px 0;text-transform:none!important;line-height:1.35;word-break:break-word;white-space:pre-wrap;}
+.summary-row{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:0.74rem;font-weight:600;color:var(--text-gray);gap:10px;}
+#step2PaymentSection{display:none;flex-direction:column;gap:14px;animation:fadeIn 0.3s ease-in-out;width:100%;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.payment-accordion-group{display:flex;flex-direction:column;gap:12px;width:100%;}
+.payment-method-item{background:rgba(18,18,26,0.85);border-radius:14px;overflow:hidden;cursor:pointer;width:100%;box-shadow:0 4px 15px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);transition:all 0.25s ease;}
+.payment-method-item.active{border-color:var(--gold-solid);background:rgba(24,24,36,0.98);box-shadow:0 0 18px rgba(212,175,55,0.25);}
+.payment-method-header{padding:14px 16px;display:flex;flex-direction:column;gap:10px;width:100%;}
+.payment-method-title{display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;font-weight:800;color:#fff;gap:8px;}
+.badge-global-gold{background:var(--gold-gradient);color:#000;font-size:0.58rem;font-weight:900;padding:4px 10px;border-radius:6px;cursor:pointer;flex-shrink:0;}
+.badge-local-bd{background:linear-gradient(135deg,#0052d4,#4364f7);color:#fff;font-size:0.58rem;font-weight:900;padding:4px 10px;border-radius:6px;flex-shrink:0;}
+.payout-icons-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px;width:100%;}
+.brand-payout-card{display:inline-flex;align-items:center;justify-content:center;background:#ffffff;padding:4px 10px;border-radius:8px;height:34px;min-width:54px;box-shadow:0 2px 6px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);transition:transform 0.2s ease;}
+.brand-payout-card:hover{transform:scale(1.04);}
+.brand-payout-card img{height:20px;width:auto;max-width:48px;object-fit:contain;}
+#currenciesModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999999;display:none;align-items:center;justify-content:center;padding:15px;}
+.modal-content-box{background:#0f0f18;border-radius:16px;width:100%;max-width:440px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 35px rgba(0,0,0,0.9);}
+.currency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:260px;overflow-y:auto;padding-right:4px;}
+.currency-tag{background:#181824;padding:8px;border-radius:6px;text-align:center;font-size:0.7rem;font-weight:700;color:#fff;}
+.single-fixed-checkout-wrapper{position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.96);backdrop-filter:blur(10px);padding:12px 16px;display:flex;justify-content:center;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.6);width:100%;}
+.btn-action-main{background:var(--gold-gradient);color:#000000;font-weight:800;font-size:0.84rem;padding:13px 20px;border-radius:24px;border:none!important;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;letter-spacing:0.8px;width:100%;max-width:420px;font-family:var(--font-main);box-shadow:0 4px 18px rgba(212,175,55,0.3);text-align:center;}
+.btn-action-main:active{transform:scale(0.98);}
+.gold-gradient-text{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;}
+.gold-gradient-price{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+#toastBox{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);background:#181824;color:#ffffff;padding:9px 16px;border-radius:8px;z-index:9999999;display:none;font-size:0.72rem;font-weight:700;text-transform:none!important;width:90%;max-width:320px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.8);}
+</style>
 </head>
 <body>
-    <div id="toastBox"></div>
-
-    <div id="currenciesModal">
-        <div class="modal-content-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px;">
-                <h3 class="gold-gradient-text" style="font-size:0.85rem;"><i class="fa-solid fa-globe"></i> SUPPORTED CURRENCIES (150+)</h3>
-                <button type="button" onclick="closeCurrenciesModal()" style="background:none; border:none; color:#ff3b30; font-size:1rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div style="font-size:0.68rem; color:var(--text-gray); text-transform:none !important; line-height:1.4;">
-                Our global gateway automatically accepts over 150+ international currencies with real-time conversion rates:
-            </div>
-            <div class="currency-grid">
-                <div class="currency-tag">USD ($)</div>
-                <div class="currency-tag">EUR (€)</div>
-                <div class="currency-tag">GBP (£)</div>
-                <div class="currency-tag">CAD ($)</div>
-                <div class="currency-tag">AUD ($)</div>
-                <div class="currency-tag">SGD ($)</div>
-                <div class="currency-tag">AED (د.إ)</div>
-                <div class="currency-tag">SAR (ر.س)</div>
-                <div class="currency-tag">INR (₹)</div>
-                <div class="currency-tag">MYR (RM)</div>
-                <div class="currency-tag">+ 140 MORE</div>
-            </div>
-            <button type="button" onclick="closeCurrenciesModal()" style="background:var(--gold-gradient); color:#000; border:none; padding:10px; border-radius:8px; font-weight:800; font-size:0.75rem; cursor:pointer; margin-top:4px;">CLOSE WINDOW</button>
-        </div>
-    </div>
-
-    <div class="checkout-container">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; width:100%;">
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" class="cart-brand-logo">
-            <h2 class="gold-gradient-text" style="font-size: 0.85rem; letter-spacing: 1.2px;"><i class="fa-solid fa-cart-shopping"></i> REVIEW CART PRODUCTS</h2>
-        </div>
-
-        <div id="step1CartSection" style="display:flex; flex-direction:column; gap:14px; width:100%;">
-            <div id="cartItemsListContainer" class="cart-items-box"></div>
-
-            <div class="summary-card-box">
-                <div class="summary-row">
-                    <span style="font-weight:700; color:var(--text-gray);">TOTAL QUANTITY:</span>
-                    <span id="cartTotalQty" style="font-weight:800; color:var(--gold-solid);">0 UNITS</span>
-                </div>
-                <div style="height: 1px; background: rgba(255,255,255,0.06); margin: 2px 0; width:100%;"></div>
-                <div class="summary-row">
-                    <span style="font-weight:700; color:var(--text-gray);">TOTAL AMOUNT:</span>
-                    <div style="text-align:right;">
-                        <span id="cartTotalVal" class="gold-gradient-price" style="font-size:1rem;">$0.00</span>
-                        <span id="cartLocalVal" style="font-size:0.64rem; color:var(--text-gray); font-weight:600; margin-left:5px;">--</span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="addressFormSection" class="address-form-section">
-                <div class="section-center-header">
-                    <h2 class="gold-gradient-text">
-                        <i class="fa-solid fa-location-dot" style="color: var(--gold-solid);"></i> SHIPPING ADDRESS
-                    </h2>
-                </div>
-                <form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex; flex-direction:column; gap:10px; width:100%;">
-                    <div class="form-group" style="display:flex; flex-direction:column; gap:6px; width:100%;">
-                        <label class="luxury-form-label">WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
-                        <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="Enter mobile number">
-                    </div>
-                    <div style="display:flex; flex-direction:column; width:100%;">
-                        <label class="luxury-form-label">FULL NAME <span style="color:var(--danger-red);">*</span></label>
-                        <input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN">
-                    </div>
-                    <div style="display:flex; flex-direction:column; width:100%;">
-                        <label class="luxury-form-label">SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label>
-                        <textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="2" style="resize:none;"></textarea>
-                    </div>
-                    <label class="save-address-checkbox-row">
-                        <input type="checkbox" id="saveAddressCheckbox" checked> Save my info for easy future purchases
-                    </label>
-                </form>
-            </div>
-        </div>
-
-        <div id="step2PaymentSection">
-            <div class="address-form-section">
-                <div class="section-center-header">
-                    <h2 class="gold-gradient-text">
-                        <i class="fa-solid fa-shield-halved" style="color: var(--gold-solid);"></i> SELECT PAYMENT METHOD
-                    </h2>
-                </div>
-                <div class="payment-accordion-group">
-                    <div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
-                        <div class="payment-method-header">
-                            <div class="payment-method-title">
-                                <span><i class="fa-solid fa-globe" style="color:var(--gold-solid); margin-right:6px;"></i> INTERNATIONAL CARDS</span>
-                                <span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span>
-                            </div>
-                            <div class="payout-icons-row">
-                                <div class="brand-payout-card" title="VISA">
-                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/1547549.webp" alt="Visa">
-                                </div>
-                                <div class="brand-payout-card" title="MasterCard">
-                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/mastercard-svgrepo-com.svg" alt="MasterCard">
-                                </div>
-                                <div class="brand-payout-card" title="American Express">
-                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/american-express.svg" alt="Amex">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="payment-method-item" id="method-bd" onclick="selectPaymentMethod('Bangladesh Cards', 'method-bd')">
-                        <div class="payment-method-header">
-                            <div class="payment-method-title">
-                                <span><i class="fa-solid fa-building-columns" style="color:#3b82f6; margin-right:6px;"></i> BANGLADESH CARDS & MOBILE BANKING</span>
-                                <span class="badge-local-bd">BDT PAYMENT</span>
-                            </div>
-                            <div class="payout-icons-row">
-                                <div class="brand-payout-card" title="bKash">
-                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/bKash%20Icon%20Vector.svg%20.png" alt="bKash">
-                                </div>
-                                <div class="brand-payout-card" title="Nagad">
-                                    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/idNpcxg37S_1794380383524.png" alt="Nagad">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="summary-card-box">
-                <div class="summary-row">
-                    <span>SUBTOTAL:</span>
-                    <span id="summarySubtotal" style="font-weight:800; color:#fff;">$0.00 USD</span>
-                </div>
-                <div class="summary-row">
-                    <span>SHIPPING:</span>
-                    <span style="color:#00e676; font-weight:800;">FREE</span>
-                </div>
-                <div style="height:1px; background:rgba(255,255,255,0.06); margin: 3px 0; width:100%;"></div>
-                <div class="summary-row" style="align-items: center;">
-                    <span style="font-size:0.78rem; font-weight:800; color:var(--gold-solid);">TOTAL PAYABLE:</span>
-                    <span id="summaryTotalDisplay" class="gold-gradient-price" style="font-size:0.92rem; text-align:right;">$0.00 USD</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="single-fixed-checkout-wrapper">
-        <button type="button" id="mainCheckoutBtn" class="btn-action-main">
-            PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>
-        </button>
-    </div>
-
-    <script>
-        const API_BASE_URL = '';
-        let iti;
-        let currentStep = 1;
-        let currentExchangeRate = 120;
-        let currentCurrencyCode = "BDT";
-        let currentCountryFlag = "🇧🇩";
-        window.selectedPaymentType = "International Cards";
-
-        window.addEventListener('DOMContentLoaded', () => {
-            renderCartList();
-            initIntlPhoneInput();
-            detectUserLocationAndRealtimeCurrency();
-            loadSavedAddressToForm();
-
-            document.getElementById('mainCheckoutBtn').addEventListener('click', handleMainActionButton);
-
-            const phoneInput = document.getElementById('chkPhone');
-            phoneInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/\D/g, '');
-                clearError('chkPhone');
-            });
-
-            ['chkFullName', 'chkAddress'].forEach(id => {
-                document.getElementById(id).addEventListener('input', () => clearError(id));
-            });
-        });
-
-        function openCurrenciesModal() { document.getElementById('currenciesModal').style.display = 'flex'; }
-        function closeCurrenciesModal() { document.getElementById('currenciesModal').style.display = 'none'; }
-        function clearError(fieldId) { document.getElementById(fieldId).classList.remove('input-error'); }
-
-        function initIntlPhoneInput() {
-            const phoneInput = document.querySelector("#chkPhone");
-            iti = window.intlTelInput(phoneInput, {
-                initialCountry: "auto",
-                separateDialCode: true,
-                autoPlaceholder: "off",
-                geoIpLookup: function(success, failure) {
-                    fetch('https://ipapi.co/json/')
-                        .then(res => res.json())
-                        .then(data => success(data.country_code))
-                        .catch(() => success('bd'));
-                }
-            });
-        }
-
-        function loadSavedAddressToForm() {
-            let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
-            if (saved.length > 0) {
-                let latest = saved[0];
-                if (latest.phone) document.getElementById('chkPhone').value = latest.phone;
-                if (latest.fullName) document.getElementById('chkFullName').value = latest.fullName;
-                if (latest.address) document.getElementById('chkAddress').value = latest.address;
-            }
-        }
-
-        function detectUserLocationAndRealtimeCurrency() {
-            fetch('https://ipapi.co/json/')
-                .then(res => res.json())
-                .then(data => {
-                    const countryCode = data.country_code || 'BD';
-                    currentCurrencyCode = data.currency || 'BDT';
-                    currentCountryFlag = getFlagEmoji(countryCode);
-
-                    fetch(`https://open.er-api.com/v6/latest/USD`)
-                        .then(res => res.json())
-                        .then(rateData => {
-                            if (rateData && rateData.rates && rateData.rates[currentCurrencyCode]) {
-                                currentExchangeRate = rateData.rates[currentCurrencyCode];
-                            }
-                            renderCartList();
-                        })
-                        .catch(() => renderCartList());
-                })
-                .catch(() => renderCartList());
-        }
-
-        function getFlagEmoji(countryCode) {
-            const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt());
-            return String.fromCodePoint(...codePoints);
-        }
-
-        function generateUniqueId(prefix) { return prefix + '-' + Math.floor(100000 + Math.random() * 900000); }
-
-        // Escape HTML to prevent XSS in custom notes
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function renderCartList() {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let container = document.getElementById('cartItemsListContainer');
-            let totalValEl = document.getElementById('cartTotalVal');
-            let localValEl = document.getElementById('cartLocalVal');
-            let totalQtyEl = document.getElementById('cartTotalQty');
-
-            if(cart.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-gray); text-align:center; font-size:0.72rem; padding:15px;">YOUR CART IS EMPTY.</div>';
-                totalValEl.innerText = "$0.00";
-                localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} 0.00`;
-                totalQtyEl.innerText = "0 UNITS";
-                updateSummaryTotals(0);
-                return;
-            }
-
-            let html = '', totalAmt = 0, totalQty = 0;
-
-            let updatedCart = cart.map((item, index) => {
-                let priceNum = parseFloat((item.price || "0").toString().replace('$', ''));
-                let itemTotal = priceNum * item.qty;
-                totalAmt += itemTotal;
-                totalQty += item.qty;
-
-                if (!item.orderId) item.orderId = generateUniqueId('ORD');
-                if (!item.trackingId) item.trackingId = generateUniqueId('TRK');
-
-                let itemImgUrl = item.img || item.image_url || item.imageUrl || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp';
-                let itemTitleText = item.title || item.product_title || 'Product Item';
-                let itemDescText = item.description || item.desc || 'High quality global product item with secure warranty.';
-
-                // ==== Custom Note from index.html ====
-                const customNoteRaw = (item.note || item.custom_note || item.customNote || item.size || '').toString().trim();
-                const safeNote = escapeHtml(customNoteRaw);
-                const sizeRaw = (item.size || '').toString().trim();
-                const safeSize = escapeHtml(sizeRaw);
-
-                // Build the custom note block (only if there's a note)
-                let customNoteHtml = '';
-                if (customNoteRaw) {
-                    customNoteHtml = `
-                        <div class="custom-note-block">
-                            <span class="custom-note-label"><i class="fa-solid fa-note-sticky"></i> CUSTOM SIZE / NOTE</span>
-                            <div class="custom-note-value">${safeNote}</div>
-                        </div>`;
-                } else if (safeSize) {
-                    customNoteHtml = `
-                        <div class="custom-note-block">
-                            <span class="custom-note-label"><i class="fa-solid fa-ruler"></i> SIZE</span>
-                            <div class="custom-note-value">${safeSize}</div>
-                        </div>`;
-                }
-
-                html += `
-                <div class="cart-row-item">
-                    <img src="${itemImgUrl}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
-                    <div style="flex:1; text-align:left; min-width:0; overflow:hidden;">
-                        <div style="font-size:0.7rem; font-weight:700; color:#ffffff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${itemTitleText}</div>
-                        ${customNoteHtml}
-                        <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
-                        <div id="prodDetails-${index}" class="product-extended-details">${escapeHtml(itemDescText)}</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
-                        <button class="btn-qty-minus" data-index="${index}" style="background:var(--gold-gradient); border:none; color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; cursor:pointer;">-</button>
-                        <span style="font-size:0.7rem; font-weight:700; color:#ffffff; width:16px; text-align:center;">${item.qty}</span>
-                        <button class="btn-qty-plus" data-index="${index}" style="background:var(--gold-gradient); border:none; color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; cursor:pointer;">+</button>
-                    </div>
-                    <div class="gold-gradient-price" style="font-size:0.75rem; flex-shrink:0;">$${itemTotal.toFixed(2)}</div>
-                    <button class="btn-qty-remove" data-index="${index}" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-size:0.78rem; padding:2px; flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button>
-                </div>`;
-
-                return item;
-            });
-
-            localStorage.setItem(cartKey, JSON.stringify(updatedCart));
-
-            container.innerHTML = html;
-            totalValEl.innerText = `$${totalAmt.toFixed(2)}`;
-            let convertedVal = totalAmt * currentExchangeRate;
-            localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} ${convertedVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            totalQtyEl.innerText = `${totalQty} UNITS`;
-
-            updateSummaryTotals(totalAmt);
-
-            document.querySelectorAll('.btn-qty-minus').forEach(btn => btn.addEventListener('click', (e) => changeQty(e.currentTarget.dataset.index, -1)));
-            document.querySelectorAll('.btn-qty-plus').forEach(btn => btn.addEventListener('click', (e) => changeQty(e.currentTarget.dataset.index, 1)));
-            document.querySelectorAll('.btn-qty-remove').forEach(btn => btn.addEventListener('click', (e) => removeCartItem(e.currentTarget.dataset.index)));
-        }
-
-        function toggleProductDetails(index) {
-            let box = document.getElementById(`prodDetails-${index}`);
-            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function updateSummaryTotals(totalAmt) {
-            let bdtVal = totalAmt * currentExchangeRate;
-            let formattedText = `$${totalAmt.toFixed(2)} USD (${currentCurrencyCode} ${bdtVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
-            document.getElementById('summarySubtotal').innerText = `$${totalAmt.toFixed(2)} USD`;
-            document.getElementById('summaryTotalDisplay').innerText = formattedText;
-        }
-
-        function changeQty(index, val) {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            cart[index].qty += val;
-            if(cart[index].qty < 1) cart[index].qty = 1;
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-            renderCartList();
-        }
-
-        function removeCartItem(index) {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            cart.splice(index, 1);
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-            renderCartList();
-        }
-
-        function handleMainActionButton() {
-            if(currentStep === 1) {
-                validateAndProceedToNextStep();
-            } else if(currentStep === 2) {
-                finalizeAndConfirmOrderToCloudflare();
-            }
-        }
-
-        function validateAndProceedToNextStep() {
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            if(cart.length === 0) {
-                showToast("Your cart is empty!", true);
-                return;
-            }
-
-            const phoneEl = document.getElementById('chkPhone');
-            const nameEl = document.getElementById('chkFullName');
-            const addressEl = document.getElementById('chkAddress');
-
-            const phone = phoneEl.value.trim();
-            const name = nameEl.value.trim();
-            const address = addressEl.value.trim();
-
-            let hasError = false;
-
-            if (!phone || (iti && !iti.isValidNumber())) {
-                phoneEl.classList.add('input-error');
-                hasError = true;
-                showToast("Please enter a VALID COMPLETE phone number!", true);
-            }
-            if (!name) { nameEl.classList.add('input-error'); hasError = true; }
-            if (!address) { addressEl.classList.add('input-error'); hasError = true; }
-
-            if (hasError) {
-                if(!phone || (iti && !iti.isValidNumber())) phoneEl.focus();
-                else if(!name) nameEl.focus();
-                else if(!address) addressEl.focus();
-            } else {
-                saveAddressToLocalStorage();
-                goToStep(2);
-            }
-        }
-
-        function saveAddressToLocalStorage() {
-            let fullPhoneNumber = iti ? iti.getNumber() : document.getElementById('chkPhone').value;
-            let cartKey = 'rorraxy_cart';
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-            let checkoutPayload = {
-                customer: {
-                    fullName: document.getElementById('chkFullName').value,
-                    phone: fullPhoneNumber,
-                    address: document.getElementById('chkAddress').value
-                },
-                items: cart,
-                mode: 'retail',
-                timestamp: new Date().toISOString()
-            };
-
-            if(document.getElementById('saveAddressCheckbox').checked) {
-                let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
-                let existIndex = saved.findIndex(a => a.phone === fullPhoneNumber);
-                if(existIndex >= 0) {
-                    saved[existIndex] = checkoutPayload.customer;
-                } else {
-                    saved.unshift(checkoutPayload.customer);
-                }
-                localStorage.setItem('rorraxy_saved_addresses', JSON.stringify(saved));
-            }
-
-            localStorage.setItem('rorraxy_current_checkout', JSON.stringify(checkoutPayload));
-            localStorage.setItem('rorraxy_customer_phone', fullPhoneNumber);
-            localStorage.setItem('rorraxy_customer_token', 'verified_token_' + Date.now());
-        }
-
-        function goToStep(stepNumber) {
-            currentStep = stepNumber;
-            const step1 = document.getElementById('step1CartSection');
-            const step2 = document.getElementById('step2PaymentSection');
-            const mainBtn = document.getElementById('mainCheckoutBtn');
-
-            if(stepNumber === 1) {
-                step1.style.display = 'flex';
-                step2.style.display = 'none';
-                mainBtn.innerHTML = 'PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>';
-            } else if(stepNumber === 2) {
-                step1.style.display = 'none';
-                step2.style.display = 'flex';
-                mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM ORDER';
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function selectPaymentMethod(method, elementId) {
-            window.selectedPaymentType = method;
-            document.querySelectorAll('.payment-method-item').forEach(item => { item.classList.remove('active'); });
-            document.getElementById(elementId).classList.add('active');
-        }
-
-        // ==== Cloudflare-ready structured payload with custom_note ====
-        async function finalizeAndConfirmOrderToCloudflare() {
-            let checkoutData = localStorage.getItem('rorraxy_current_checkout');
-            if(!checkoutData) {
-                showToast("Checkout session expired!", true);
-                goToStep(1);
-                return;
-            }
-
-            let orderPayload = JSON.parse(checkoutData);
-            let totalAmountVal = orderPayload.items.reduce((sum, item) => {
-                let pNum = parseFloat((item.price || "0").toString().replace('$', ''));
-                return sum + (pNum * item.qty);
-            }, 0);
-
-            let masterOrderId = 'RRX-RET-' + Math.floor(100000 + Math.random() * 900000);
-            let singleOrderId = (orderPayload.items.length === 1 && orderPayload.items[0].orderId) ? orderPayload.items[0].orderId : generateUniqueId('ORD');
-
-            // Structured items for Cloudflare DB with custom_note explicitly separated
-            const structuredItems = orderPayload.items.map(it => {
-                const customNote = (it.note || it.custom_note || it.customNote || '').toString().trim();
-                const priceNum = parseFloat((it.price || "0").toString().replace('$', ''));
-                return {
-                    product_id: String(it.productId || it.product_id || ''),
-                    title: it.title || it.product_title || '',
-                    qty: parseInt(it.qty) || 1,
-                    price: priceNum,
-                    price_display: `$${priceNum.toFixed(2)}`,
-                    image: it.img || it.image_url || '',
-                    size: (it.size || '').toString().trim() || 'STANDARD',
-                    custom_note: customNote,           // <-- the actual note text
-                    custom_note_uppercase: customNote ? customNote.toUpperCase() : '',
-                    seller_id: it.sellerId || 'rorraxy-store',
-                    affiliate_ref: it.affiliateRef || 'rorraxy-store',
-                    order_id: it.orderId || singleOrderId,
-                    tracking_id: it.trackingId || ''
-                };
-            });
-
-            let cloudflareDbPayload = {
-                master_order_id: masterOrderId,
-                order_id: singleOrderId,
-                customer_name: orderPayload.customer.fullName,
-                customer_phone: orderPayload.customer.phone,
-                shipping_address: orderPayload.customer.address,
-                customer_country: "Bangladesh",
-                payment_method: window.selectedPaymentType || "International Cards",
-                payment_status: "Paid",
-                transaction_id: "TRX-" + Math.floor(10000000 + Math.random() * 90000000),
-                total_amount: totalAmountVal,
-                currency: "USD",
-                order_status: "Pending",
-                created_at: new Date().toISOString(),
-                items: structuredItems,
-                has_custom_notes: structuredItems.some(i => i.custom_note.length > 0)
-            };
-
-            let customerAuthSyncPayload = {
-                phone: orderPayload.customer.phone,
-                customer_name: orderPayload.customer.fullName,
-                shipping_address: orderPayload.customer.address,
-                master_order_id: masterOrderId,
-                order_id: singleOrderId,
-                updated_at: new Date().toISOString()
-            };
-
-            showToast("Submitting order and syncing account data...");
-
-            try {
-                await Promise.all([
-                    fetch(`${API_BASE_URL}/api/orders`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(cloudflareDbPayload)
-                    }),
-                    fetch(`${API_BASE_URL}/api/customer-auth-sync`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(customerAuthSyncPayload)
-                    }).catch(() => {})
-                ]);
-            } catch(err) {
-                console.warn("Cloudflare API sync notice:", err);
-            }
-
-            localStorage.setItem('rorraxy_last_order', JSON.stringify(cloudflareDbPayload));
-            localStorage.removeItem('rorraxy_current_checkout');
-            localStorage.removeItem('rorraxy_cart');
-
-            showToast("Order Confirmed Successfully!");
-
-            setTimeout(() => {
-                window.location.href = `/account.html`;
-            }, 800);
-        }
-
-        function showToast(msg, isErr = false) {
-            let toast = document.getElementById('toastBox');
-            toast.innerText = msg;
-            toast.style.color = isErr ? '#ff4d4d' : '#ffffff';
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3200);
-        }
-    </script>
+<div id="toastBox"></div>
+<div id="currenciesModal">
+<div class="modal-content-box">
+<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;">
+<h3 class="gold-gradient-text" style="font-size:0.85rem;"><i class="fa-solid fa-globe"></i> SUPPORTED CURRENCIES (150+)</h3>
+<button type="button" onclick="closeCurrenciesModal()" style="background:none;border:none;color:#ff3b30;font-size:1rem;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div style="font-size:0.68rem;color:var(--text-gray);text-transform:none!important;line-height:1.4;">Our global gateway automatically accepts over 150+ international currencies with real-time conversion rates:</div>
+<div class="currency-grid">
+<div class="currency-tag">USD ($)</div><div class="currency-tag">EUR (€)</div><div class="currency-tag">GBP (£)</div>
+<div class="currency-tag">CAD ($)</div><div class="currency-tag">AUD ($)</div><div class="currency-tag">SGD ($)</div>
+<div class="currency-tag">AED (د.إ)</div><div class="currency-tag">SAR (ر.س)</div><div class="currency-tag">INR (₹)</div>
+<div class="currency-tag">MYR (RM)</div><div class="currency-tag">+ 140 MORE</div>
+</div>
+<button type="button" onclick="closeCurrenciesModal()" style="background:var(--gold-gradient);color:#000;border:none;padding:10px;border-radius:8px;font-weight:800;font-size:0.75rem;cursor:pointer;margin-top:4px;">CLOSE WINDOW</button>
+</div>
+</div>
+<div class="checkout-container">
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:100%;">
+<img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" class="cart-brand-logo">
+<h2 class="gold-gradient-text" style="font-size:0.85rem;letter-spacing:1.2px;"><i class="fa-solid fa-cart-shopping"></i> REVIEW CART PRODUCTS</h2>
+</div>
+<div id="step1CartSection" style="display:flex;flex-direction:column;gap:14px;width:100%;">
+<div id="cartItemsListContainer" class="cart-items-box"></div>
+<div class="summary-card-box">
+<div class="summary-row"><span style="font-weight:700;color:var(--text-gray);">TOTAL QUANTITY:</span><span id="cartTotalQty" style="font-weight:800;color:var(--gold-solid);">0 UNITS</span></div>
+<div style="height:1px;background:rgba(255,255,255,0.06);margin:2px 0;width:100%;"></div>
+<div class="summary-row"><span style="font-weight:700;color:var(--text-gray);">TOTAL AMOUNT:</span><div style="text-align:right;"><span id="cartTotalVal" class="gold-gradient-price" style="font-size:1rem;">$0.00</span><span id="cartLocalVal" style="font-size:0.64rem;color:var(--text-gray);font-weight:600;margin-left:5px;">--</span></div></div>
+</div>
+<div id="addressFormSection" class="address-form-section">
+<div class="section-center-header"><h2 class="gold-gradient-text"><i class="fa-solid fa-location-dot" style="color:var(--gold-solid);"></i> SHIPPING ADDRESS</h2></div>
+<form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex;flex-direction:column;gap:10px;width:100%;">
+<div class="form-group" style="display:flex;flex-direction:column;gap:6px;width:100%;">
+<label class="luxury-form-label">WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
+<input type="tel" id="chkPhone" class="luxury-form-input" placeholder="Enter mobile number">
+</div>
+<div style="display:flex;flex-direction:column;width:100%;"><label class="luxury-form-label">FULL NAME <span style="color:var(--danger-red);">*</span></label><input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN"></div>
+<div style="display:flex;flex-direction:column;width:100%;"><label class="luxury-form-label">SHIPPING ADDRESS <span style="color:var(--danger-red);">*</span></label><textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="2" style="resize:none;"></textarea></div>
+<label class="save-address-checkbox-row"><input type="checkbox" id="saveAddressCheckbox" checked> Save my info for easy future purchases</label>
+</form>
+</div>
+</div>
+<div id="step2PaymentSection">
+<div class="address-form-section">
+<div class="section-center-header"><h2 class="gold-gradient-text"><i class="fa-solid fa-shield-halved" style="color:var(--gold-solid);"></i> SELECT PAYMENT METHOD</h2></div>
+<div class="payment-accordion-group">
+<div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
+<div class="payment-method-header">
+<div class="payment-method-title"><span><i class="fa-solid fa-globe" style="color:var(--gold-solid);margin-right:6px;"></i> INTERNATIONAL CARDS</span><span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span></div>
+<div class="payout-icons-row">
+<div class="brand-payout-card" title="VISA"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/1547549.webp" alt="Visa"></div>
+<div class="brand-payout-card" title="MasterCard"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/mastercard-svgrepo-com.svg" alt="MasterCard"></div>
+<div class="brand-payout-card" title="American Express"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/american-express.svg" alt="Amex"></div>
+</div>
+</div>
+</div>
+<div class="payment-method-item" id="method-bd" onclick="selectPaymentMethod('Bangladesh Cards', 'method-bd')">
+<div class="payment-method-header">
+<div class="payment-method-title"><span><i class="fa-solid fa-building-columns" style="color:#3b82f6;margin-right:6px;"></i> BANGLADESH CARDS & MOBILE BANKING</span><span class="badge-local-bd">BDT PAYMENT</span></div>
+<div class="payout-icons-row">
+<div class="brand-payout-card" title="bKash"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/bKash%20Icon%20Vector.svg%20.png" alt="bKash"></div>
+<div class="brand-payout-card" title="Nagad"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/idNpcxg37S_1794380383524.png" alt="Nagad"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="summary-card-box">
+<div class="summary-row"><span>SUBTOTAL:</span><span id="summarySubtotal" style="font-weight:800;color:#fff;">$0.00 USD</span></div>
+<div class="summary-row"><span>SHIPPING:</span><span style="color:#00e676;font-weight:800;">FREE</span></div>
+<div style="height:1px;background:rgba(255,255,255,0.06);margin:3px 0;width:100%;"></div>
+<div class="summary-row" style="align-items:center;"><span style="font-size:0.78rem;font-weight:800;color:var(--gold-solid);">TOTAL PAYABLE:</span><span id="summaryTotalDisplay" class="gold-gradient-price" style="font-size:0.92rem;text-align:right;">$0.00 USD</span></div>
+</div>
+</div>
+</div>
+<div class="single-fixed-checkout-wrapper"><button type="button" id="mainCheckoutBtn" class="btn-action-main">PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i></button></div>
+<script>
+const API_BASE_URL='';
+let iti,currentStep=1,currentExchangeRate=120,currentCurrencyCode="BDT",currentCountryFlag="🇧🇩";
+window.selectedPaymentType="International Cards";
+window.addEventListener('DOMContentLoaded',()=>{
+renderCartList();
+initIntlPhoneInput();
+detectUserLocationAndRealtimeCurrency();
+loadSavedAddressToForm();
+document.getElementById('mainCheckoutBtn').addEventListener('click',handleMainActionButton);
+const phoneInput=document.getElementById('chkPhone');
+phoneInput.addEventListener('input',(e)=>{e.target.value=e.target.value.replace(/\D/g,'');clearError('chkPhone');});
+['chkFullName','chkAddress'].forEach(id=>{document.getElementById(id).addEventListener('input',()=>clearError(id));});
+});
+function openCurrenciesModal(){document.getElementById('currenciesModal').style.display='flex';}
+function closeCurrenciesModal(){document.getElementById('currenciesModal').style.display='none';}
+function clearError(fieldId){document.getElementById(fieldId).classList.remove('input-error');}
+function initIntlPhoneInput(){
+const phoneInput=document.querySelector("#chkPhone");
+iti=window.intlTelInput(phoneInput,{initialCountry:"auto",separateDialCode:true,autoPlaceholder:"off",geoIpLookup:function(success,failure){fetch('https://ipapi.co/json/').then(res=>res.json()).then(data=>success(data.country_code)).catch(()=>success('bd'));}});
+}
+function loadSavedAddressToForm(){
+let saved=JSON.parse(localStorage.getItem('rorraxy_saved_addresses'))||[];
+if(saved.length>0){let latest=saved[0];if(latest.phone)document.getElementById('chkPhone').value=latest.phone;if(latest.fullName)document.getElementById('chkFullName').value=latest.fullName;if(latest.address)document.getElementById('chkAddress').value=latest.address;}
+}
+function detectUserLocationAndRealtimeCurrency(){
+fetch('https://ipapi.co/json/').then(res=>res.json()).then(data=>{
+const countryCode=data.country_code||'BD';
+currentCurrencyCode=data.currency||'BDT';
+currentCountryFlag=getFlagEmoji(countryCode);
+fetch('https://open.er-api.com/v6/latest/USD').then(res=>res.json()).then(rateData=>{
+if(rateData&&rateData.rates&&rateData.rates[currentCurrencyCode]){currentExchangeRate=rateData.rates[currentCurrencyCode];}
+renderCartList();
+}).catch(()=>renderCartList());
+}).catch(()=>renderCartList());
+}
+function getFlagEmoji(countryCode){const codePoints=countryCode.toUpperCase().split('').map(char=>127397+char.charCodeAt());return String.fromCodePoint(...codePoints);}
+function generateUniqueId(prefix){return prefix+'-'+Math.floor(100000+Math.random()*900000);}
+function escapeHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+function renderCartList(){
+let cartKey='rorraxy_cart';
+let cart=JSON.parse(localStorage.getItem(cartKey))||[];
+let container=document.getElementById('cartItemsListContainer');
+let totalValEl=document.getElementById('cartTotalVal');
+let localValEl=document.getElementById('cartLocalVal');
+let totalQtyEl=document.getElementById('cartTotalQty');
+if(cart.length===0){
+container.innerHTML='<div style="color:var(--text-gray);text-align:center;font-size:0.72rem;padding:15px;">YOUR CART IS EMPTY.</div>';
+totalValEl.innerText="$0.00";
+localValEl.innerText=`${currentCountryFlag} ${currentCurrencyCode} 0.00`;
+totalQtyEl.innerText="0 UNITS";
+updateSummaryTotals(0);
+return;
+}
+let html='',totalAmt=0,totalQty=0;
+let updatedCart=cart.map((item,index)=>{
+let priceNum=parseFloat((item.price||"0").toString().replace('$',''));
+let itemTotal=priceNum*item.qty;
+totalAmt+=itemTotal;
+totalQty+=item.qty;
+if(!item.orderId)item.orderId=generateUniqueId('ORD');
+if(!item.trackingId)item.trackingId=generateUniqueId('TRK');
+let itemImgUrl=item.img||item.image_url||item.imageUrl||'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp';
+let itemTitleText=item.title||item.product_title||'Product Item';
+let itemDescText=item.description||item.desc||'High quality global product item with secure warranty.';
+const customNoteRaw=(item.note||item.custom_note||item.customNote||item.size||'').toString().trim();
+const safeNote=escapeHtml(customNoteRaw);
+const sizeRaw=(item.size||'').toString().trim();
+const safeSize=escapeHtml(sizeRaw);
+// ==== SKU EXTRACT ====
+const skuRaw=(item.sku||item.product_code||item.productCode||'').toString().trim();
+const safeSku=escapeHtml(skuRaw);
+let skuHtml=safeSku?`<div style="font-size:0.54rem;color:var(--gold-solid);font-weight:800;letter-spacing:0.3px;margin-top:2px;text-transform:none!important;"><i class="fa-solid fa-barcode" style="font-size:0.5rem;margin-right:2px;"></i>SKU: ${safeSku}</div>`:'';
+let customNoteHtml='';
+if(customNoteRaw){
+customNoteHtml=`<div class="custom-note-block"><span class="custom-note-label"><i class="fa-solid fa-note-sticky"></i> CUSTOM SIZE / NOTE</span><div class="custom-note-value">${safeNote}</div></div>`;
+}else if(safeSize){
+customNoteHtml=`<div class="custom-note-block"><span class="custom-note-label"><i class="fa-solid fa-ruler"></i> SIZE</span><div class="custom-note-value">${safeSize}</div></div>`;
+}
+html+=`<div class="cart-row-item">
+<img src="${itemImgUrl}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
+<div style="flex:1;text-align:left;min-width:0;overflow:hidden;">
+<div style="font-size:0.7rem;font-weight:700;color:#ffffff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${itemTitleText}</div>
+${skuHtml}
+${customNoteHtml}
+<button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
+<div id="prodDetails-${index}" class="product-extended-details">${escapeHtml(itemDescText)}</div>
+</div>
+<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+<button class="btn-qty-minus" data-index="${index}" style="background:var(--gold-gradient);border:none;color:#000;font-weight:800;width:20px;height:20px;border-radius:50%;cursor:pointer;">-</button>
+<span style="font-size:0.7rem;font-weight:700;color:#ffffff;width:16px;text-align:center;">${item.qty}</span>
+<button class="btn-qty-plus" data-index="${index}" style="background:var(--gold-gradient);border:none;color:#000;font-weight:800;width:20px;height:20px;border-radius:50%;cursor:pointer;">+</button>
+</div>
+<div class="gold-gradient-price" style="font-size:0.75rem;flex-shrink:0;">$${itemTotal.toFixed(2)}</div>
+<button class="btn-qty-remove" data-index="${index}" style="background:none;border:none;color:#ff3b30;cursor:pointer;font-size:0.78rem;padding:2px;flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button>
+</div>`;
+return item;
+});
+localStorage.setItem(cartKey,JSON.stringify(updatedCart));
+container.innerHTML=html;
+totalValEl.innerText=`$${totalAmt.toFixed(2)}`;
+let convertedVal=totalAmt*currentExchangeRate;
+localValEl.innerText=`${currentCountryFlag} ${currentCurrencyCode} ${convertedVal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+totalQtyEl.innerText=`${totalQty} UNITS`;
+updateSummaryTotals(totalAmt);
+document.querySelectorAll('.btn-qty-minus').forEach(btn=>btn.addEventListener('click',(e)=>changeQty(e.currentTarget.dataset.index,-1)));
+document.querySelectorAll('.btn-qty-plus').forEach(btn=>btn.addEventListener('click',(e)=>changeQty(e.currentTarget.dataset.index,1)));
+document.querySelectorAll('.btn-qty-remove').forEach(btn=>btn.addEventListener('click',(e)=>removeCartItem(e.currentTarget.dataset.index)));
+}
+function toggleProductDetails(index){let box=document.getElementById(`prodDetails-${index}`);box.style.display=(box.style.display==='block')?'none':'block';}
+function updateSummaryTotals(totalAmt){
+let bdtVal=totalAmt*currentExchangeRate;
+let formattedText=`$${totalAmt.toFixed(2)} USD (${currentCurrencyCode} ${bdtVal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})})`;
+document.getElementById('summarySubtotal').innerText=`$${totalAmt.toFixed(2)} USD`;
+document.getElementById('summaryTotalDisplay').innerText=formattedText;
+}
+function changeQty(index,val){
+let cartKey='rorraxy_cart';
+let cart=JSON.parse(localStorage.getItem(cartKey))||[];
+cart[index].qty+=val;
+if(cart[index].qty<1)cart[index].qty=1;
+localStorage.setItem(cartKey,JSON.stringify(cart));
+renderCartList();
+}
+function removeCartItem(index){
+let cartKey='rorraxy_cart';
+let cart=JSON.parse(localStorage.getItem(cartKey))||[];
+cart.splice(index,1);
+localStorage.setItem(cartKey,JSON.stringify(cart));
+renderCartList();
+}
+function handleMainActionButton(){
+if(currentStep===1)validateAndProceedToNextStep();
+else if(currentStep===2)finalizeAndConfirmOrderToCloudflare();
+}
+function validateAndProceedToNextStep(){
+let cartKey='rorraxy_cart';
+let cart=JSON.parse(localStorage.getItem(cartKey))||[];
+if(cart.length===0){showToast("Your cart is empty!",true);return;}
+const phoneEl=document.getElementById('chkPhone');
+const nameEl=document.getElementById('chkFullName');
+const addressEl=document.getElementById('chkAddress');
+const phone=phoneEl.value.trim();
+const name=nameEl.value.trim();
+const address=addressEl.value.trim();
+let hasError=false;
+if(!phone||(iti&&!iti.isValidNumber())){phoneEl.classList.add('input-error');hasError=true;showToast("Please enter a VALID COMPLETE phone number!",true);}
+if(!name){nameEl.classList.add('input-error');hasError=true;}
+if(!address){addressEl.classList.add('input-error');hasError=true;}
+if(hasError){
+if(!phone||(iti&&!iti.isValidNumber()))phoneEl.focus();
+else if(!name)nameEl.focus();
+else if(!address)addressEl.focus();
+}else{
+saveAddressToLocalStorage();
+goToStep(2);
+}
+}
+function saveAddressToLocalStorage(){
+let fullPhoneNumber=iti?iti.getNumber():document.getElementById('chkPhone').value;
+let cartKey='rorraxy_cart';
+let cart=JSON.parse(localStorage.getItem(cartKey))||[];
+let checkoutPayload={customer:{fullName:document.getElementById('chkFullName').value,phone:fullPhoneNumber,address:document.getElementById('chkAddress').value},items:cart,mode:'retail',timestamp:new Date().toISOString()};
+if(document.getElementById('saveAddressCheckbox').checked){
+let saved=JSON.parse(localStorage.getItem('rorraxy_saved_addresses'))||[];
+let existIndex=saved.findIndex(a=>a.phone===fullPhoneNumber);
+if(existIndex>=0){saved[existIndex]=checkoutPayload.customer;}else{saved.unshift(checkoutPayload.customer);}
+localStorage.setItem('rorraxy_saved_addresses',JSON.stringify(saved));
+}
+localStorage.setItem('rorraxy_current_checkout',JSON.stringify(checkoutPayload));
+localStorage.setItem('rorraxy_customer_phone',fullPhoneNumber);
+localStorage.setItem('rorraxy_customer_token','verified_token_'+Date.now());
+}
+function goToStep(stepNumber){
+currentStep=stepNumber;
+const step1=document.getElementById('step1CartSection');
+const step2=document.getElementById('step2PaymentSection');
+const mainBtn=document.getElementById('mainCheckoutBtn');
+if(stepNumber===1){step1.style.display='flex';step2.style.display='none';mainBtn.innerHTML='PROCESS <i class="fa-solid fa-arrow-right" style="color:#000;"></i>';}
+else if(stepNumber===2){step1.style.display='none';step2.style.display='flex';mainBtn.innerHTML='<i class="fa-solid fa-lock"></i> CONFIRM ORDER';}
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function selectPaymentMethod(method,elementId){
+window.selectedPaymentType=method;
+document.querySelectorAll('.payment-method-item').forEach(item=>{item.classList.remove('active');});
+document.getElementById(elementId).classList.add('active');
+}
+async function finalizeAndConfirmOrderToCloudflare(){
+let checkoutData=localStorage.getItem('rorraxy_current_checkout');
+if(!checkoutData){showToast("Checkout session expired!",true);goToStep(1);return;}
+let orderPayload=JSON.parse(checkoutData);
+let totalAmountVal=orderPayload.items.reduce((sum,item)=>{let pNum=parseFloat((item.price||"0").toString().replace('$',''));return sum+(pNum*item.qty);},0);
+let masterOrderId='RRX-RET-'+Math.floor(100000+Math.random()*900000);
+let singleOrderId=(orderPayload.items.length===1&&orderPayload.items[0].orderId)?orderPayload.items[0].orderId:generateUniqueId('ORD');
+const structuredItems=orderPayload.items.map(it=>{
+const customNote=(it.note||it.custom_note||it.customNote||'').toString().trim();
+const priceNum=parseFloat((it.price||"0").toString().replace('$',''));
+const skuValue=String(it.sku||it.product_code||it.productCode||'').trim().toUpperCase();
+return{
+product_id:String(it.productId||it.product_id||''),
+sku:skuValue,
+title:it.title||it.product_title||'',
+qty:parseInt(it.qty)||1,
+price:priceNum,
+price_display:`$${priceNum.toFixed(2)}`,
+image:it.img||it.image_url||'',
+size:(it.size||'').toString().trim()||'STANDARD',
+custom_note:customNote,
+custom_note_uppercase:customNote?customNote.toUpperCase():'',
+seller_id:it.sellerId||'rorraxy-store',
+affiliate_ref:it.affiliateRef||'rorraxy-store',
+order_id:it.orderId||singleOrderId,
+tracking_id:it.trackingId||''
+};
+});
+let cloudflareDbPayload={
+master_order_id:masterOrderId,
+order_id:singleOrderId,
+customer_name:orderPayload.customer.fullName,
+customer_phone:orderPayload.customer.phone,
+shipping_address:orderPayload.customer.address,
+customer_country:"Bangladesh",
+payment_method:window.selectedPaymentType||"International Cards",
+payment_status:"Paid",
+transaction_id:"TRX-"+Math.floor(10000000+Math.random()*90000000),
+total_amount:totalAmountVal,
+currency:"USD",
+order_status:"Pending",
+created_at:new Date().toISOString(),
+items:structuredItems,
+has_custom_notes:structuredItems.some(i=>i.custom_note.length>0),
+has_skus:structuredItems.some(i=>i.sku.length>0)
+};
+let customerAuthSyncPayload={phone:orderPayload.customer.phone,customer_name:orderPayload.customer.fullName,shipping_address:orderPayload.customer.address,master_order_id:masterOrderId,order_id:singleOrderId,updated_at:new Date().toISOString()};
+showToast("Submitting order and syncing account data...");
+try{
+await Promise.all([
+fetch(`${API_BASE_URL}/api/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cloudflareDbPayload)}),
+fetch(`${API_BASE_URL}/api/customer-auth-sync`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(customerAuthSyncPayload)}).catch(()=>{})
+]);
+}catch(err){console.warn("Cloudflare API sync notice:",err);}
+localStorage.setItem('rorraxy_last_order',JSON.stringify(cloudflareDbPayload));
+localStorage.removeItem('rorraxy_current_checkout');
+localStorage.removeItem('rorraxy_cart');
+showToast("Order Confirmed Successfully!");
+setTimeout(()=>{window.location.href=`/account.html`;},800);
+}
+function showToast(msg,isErr=false){
+let toast=document.getElementById('toastBox');
+toast.innerText=msg;
+toast.style.color=isErr?'#ff4d4d':'#ffffff';
+toast.style.display='block';
+setTimeout(()=>{toast.style.display='none';},3200);
+}
+</script>
 </body>
 </html>
