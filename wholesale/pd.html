@@ -1,1028 +1,604 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>rorraxy - Wholesale Product Details</title>
-    <script src="/ecosystem-core.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --bg-wholesale: #000000;
-            --card-wholesale: #08080c;
-            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            --gold-solid: #d4af37;
-            --pink-accent: #ff2a85;
-            --text-white: #ffffff;
-            --text-gray: #a0a0b8;
-            --font-main: 'Poppins', sans-serif;
-        }
-        * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html, body {
-            width: 100%; max-width: 100%; background: var(--bg-wholesale) !important; color: var(--text-white);
-            font-family: var(--font-main); font-size: 14px; text-transform: uppercase !important;
-            -webkit-font-smoothing: antialiased; overflow-x: hidden !important; position: relative;
-            scroll-behavior: smooth;
-        }
-        body { padding-bottom: 75px; }
-        .ecommerce-main-wrapper {
-            width: 100%; max-width: 1200px; margin: 0 auto; padding: 12px 10px 50px 10px;
-            display: flex; flex-direction: column; gap: 16px; overflow-x: hidden;
-        }
-        @media(min-width: 768px) {
-            .ecommerce-main-wrapper { padding: 20px 24px 60px 24px; gap: 24px; }
-        }
-        .product-details-clean-section {
-            width: 100%; display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start;
-        }
-        @media(min-width: 950px) {
-            .product-details-clean-section { grid-template-columns: 1.1fr 0.9fr; gap: 28px; }
-        }
-        .product-left-col { width: 100%; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-        .media-viewport {
-            width: 100%; position: relative; border-radius: 14px; overflow: hidden; background: #050508;
-            display: flex; align-items: center; justify-content: center; min-height: 280px;
-            border: 1px solid rgba(212, 175, 55, 0.2); transition: border-color 0.2s ease; contain: layout style;
-        }
-        @media(min-width: 768px) { .media-viewport { min-height: 440px; } }
-        .main-media-element { width: 100%; height: auto; max-height: 440px; object-fit: contain; display: block; background: #000; }
-        .thumbnail-slider-wrapper { position: relative; width: 100%; display: flex; align-items: center; overflow: hidden; }
-        .thumbnail-strip { display: flex; gap: 10px; padding: 4px 0; overflow-x: auto; width: 100%; scrollbar-width: none; }
-        .thumbnail-strip::-webkit-scrollbar { display: none; }
-        .thumb-item {
-            width: 58px; height: 58px; border-radius: 10px; overflow: hidden; cursor: pointer; flex-shrink: 0;
-            background: #08080c; border: 1px solid rgba(212, 175, 55, 0.2); transition: transform 0.15s ease, border-color 0.15s ease;
-        }
-        .thumb-item img, .thumb-item video { width: 100%; height: 100%; object-fit: cover; }
-        .thumb-item:hover { border-color: rgba(212, 175, 55, 0.5); }
-        .thumb-item.active { border-color: var(--gold-solid); transform: scale(1.05); }
-        .product-right-col { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 0; }
-        .price-discount-card, .qty-section-card, .seller-chat-compact-btn, .product-info-section-box {
-            background: var(--card-wholesale); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .price-discount-card { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
-        .sample-price-block { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-        .sample-price-label { font-size: 0.65rem; color: var(--gold-solid); font-weight: 700; letter-spacing: 0.5px; }
-        .price-row-bottom { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-        .current-main-price {
-            font-size: 1.35rem; font-weight: 800; background: var(--gold-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1;
-        }
-        .old-crossed-price { font-size: 0.78rem; font-weight: 600; color: var(--text-gray); text-decoration: line-through; }
-        .in-stock-clean-badge {
-            font-size: 0.65rem; font-weight: 700; color: #00e676; display: flex; align-items: center; gap: 5px; text-transform: uppercase;
-        }
-        .in-stock-clean-badge::before { content: ""; width: 6px; height: 6px; background: #00e676; border-radius: 50%; display: inline-block; }
-        .qty-section-card { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
-        .wholesale-preset-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
-        .preset-btn {
-            background: #040407; border: 1px solid rgba(212, 175, 55, 0.4); color: #ffffff;
-            font-size: 0.72rem; font-weight: 800; padding: 8px 10px; border-radius: 8px; cursor: pointer;
-            text-align: center; transition: all 0.2s ease;
-            display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;
-        }
-        .preset-btn .btn-price { font-size: 0.80rem; color: var(--gold-solid); font-weight: 800; }
-        .preset-btn.active, .preset-btn:hover { background: var(--gold-gradient); color: #000; border-color: transparent; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
-        .preset-btn.active .btn-price, .preset-btn:hover .btn-price { color: #000; }
-        .qty-label-mini { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); text-align: center; letter-spacing: 0.5px; }
-        .qty-controls-flex { display: flex; align-items: center; justify-content: center; gap: 14px; }
-        .qty-btn-ch {
-            background: var(--gold-gradient); border: none; color: #000; font-size: 0.95rem; font-weight: 800;
-            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .qty-num-input {
-            font-size: 1.05rem; font-weight: 800; color: #ffffff; width: 80px; text-align: center;
-            background: #040407; border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; outline: none; padding: 4px 0;
-        }
-        .applied-unit-price-display {
-            font-size: 0.65rem; font-weight: 700; text-align: center; color: var(--gold-solid);
-            letter-spacing: 0.5px; margin-top: 2px;
-        }
-        .product-info-section-box { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
-        .section-box-title { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
-        .custom-wood-top-badge {
-            font-size: 0.64rem; font-weight: 800; letter-spacing: 0.6px; color: var(--pink-accent);
-            line-height: 1.3; word-break: break-word;
-        }
-        .product-title-restricted {
-            font-size: 1.05rem; font-weight: 700; letter-spacing: 0.4px; line-height: 1.35;
-            width: 100%; word-break: break-word; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        @media(min-width: 768px) { .product-title-restricted { font-size: 1.3rem; } }
-        .standard-description-box { font-size: 0.72rem; color: var(--text-gray); line-height: 1.5; text-transform: none !important; word-break: break-word; }
-        .integrated-custom-note-group { display: flex; flex-direction: column; gap: 4px; width: 100%; margin-top: 2px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 8px; }
-        .integrated-note-label { font-size: 0.62rem; font-weight: 600; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
-        .custom-note-input {
-            width: 100%; background: #040407; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 10px;
-            color: #ffffff; font-size: 0.70rem; outline: none; font-family: var(--font-main); text-transform: uppercase;
-        }
-        .action-buttons-flex-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; width: 100%; }
-        .seller-chat-compact-btn {
-            color: var(--gold-solid); font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            background: rgba(212, 175, 55, 0.08); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.25);
-        }
-        .main-product-share-btn {
-            background: none; border: none; cursor: pointer; font-size: 1.1rem;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; justify-content: center; padding: 4px; transition: transform 0.15s ease;
-        }
-        .main-product-share-btn:active { transform: scale(0.9); }
-
-        .related-products-wrapper { margin-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 14px; }
-        .related-section-title { font-size: 0.85rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; }
-        .feed-container { padding: 2px 0; column-count: 2; column-gap: 8px; width: 100%; }
-        @media (min-width: 768px) { .feed-container { column-count: 4; column-gap: 12px; } }
-        .product-card {
-            background: var(--card-wholesale); border-radius: 12px; overflow: hidden;
-            display: inline-block; width: 100%; border: 1px solid rgba(212,175,55,0.12);
-            position: relative; cursor: pointer; margin-bottom: 8px; break-inside: avoid; content-visibility: auto;
-        }
-        .product-media-box { position: relative; width: 100%; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-media-box img { width: 100%; height: auto; display: block; object-fit: contain; background: #050508; }
-        .card-footer-actions {
-            display: flex; justify-content: space-between; align-items: center; padding: 8px 10px;
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 4px; margin-top: auto;
-        }
-        .product-price-tag { font-size: 0.80rem; font-weight: 600; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .share-icon-only-btn {
-            background: none; border: none; font-size: 0.95rem; cursor: pointer;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; justify-content: center; padding: 2px; transition: transform 0.15s ease;
-        }
-        .share-icon-only-btn:active { transform: scale(0.9); }
-
-        .fixed-bottom-checkout-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(3, 3, 5, 0.98);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px;
-            display: flex; justify-content: space-around; align-items: center; z-index: 999999;
-            border-top: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 -5px 15px rgba(0,0,0,0.8); height: 56px;
-        }
-        @media(min-width: 768px) { .fixed-bottom-checkout-bar { justify-content: center; gap: 80px; padding: 6px 30px; height: 60px; } }
-        .footer-menu-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; gap: 2px; background: transparent !important;
-            border: none !important; padding: 4px 12px; white-space: nowrap;
-        }
-        .footer-menu-icon { font-size: 1.05rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .footer-menu-label { font-size: 0.58rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.4px; }
-        .footer-menu-item.order-now-highlight {
-            background: var(--gold-gradient) !important; border-radius: 10px !important; padding: 6px 28px !important;
-            box-shadow: 0 2px 10px rgba(212,175,55,0.3);
-        }
-        .footer-menu-item.order-now-highlight .footer-menu-label { color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-size: 0.72rem; font-weight: 800; background: none !important; }
-        .footer-cart-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
-        .footer-cart-badge {
-            position: absolute; top: -5px; right: -8px; background: #ff2a85; color: #ffffff;
-            font-size: 0.52rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
-        }
-        .footer-cart-badge.pulse-badge { transform: scale(1.3); }
-
-        .flying-gold-coin {
-            position: fixed; z-index: 9999999; width: 30px; height: 30px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
-            border: 2px solid #fff; pointer-events: none; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4d3300;
-            box-shadow: 0 0 15px rgba(212,175,55,0.8); transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1), top 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s linear, opacity 0.65s ease;
-        }
-        .animated-welcome-msg { background: #12121c; padding: 8px 12px; border-radius: 8px; font-size: 0.68rem; color: var(--gold-solid); font-weight: 600; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .chat-warning-msg { background: rgba(255, 42, 133, 0.15); color: #ff2a85; border: 1px solid #ff2a85; padding: 6px 10px; border-radius: 8px; font-size: 0.62rem; font-weight: 700; text-align: center; margin-top: 4px; }
-
-        .universal-share-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px;
-        }
-        .share-target-btn {
-            background: #040407; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 10px;
-            padding: 10px 6px; color: #ffffff; font-size: 0.62rem; font-weight: 700; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-            text-decoration: none; transition: all 0.2s ease;
-        }
-        .share-target-btn:hover {
-            background: var(--gold-gradient); color: #000000; border-color: transparent;
-        }
-        .share-target-btn i { font-size: 1.05rem; }
-        .share-link-copy-row {
-            display: flex; gap: 6px; margin-top: 8px;
-        }
-        .share-link-box {
-            flex: 1; min-width: 0; background: #040407; border: 1px solid rgba(212,175,55,0.3);
-            border-radius: 8px; padding: 7px 10px; color: var(--gold-solid); font-size: 0.62rem;
-            outline: none; text-transform: none !important;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>rorraxy - Wholesale Product Details</title>
+<script src="/ecosystem-core.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--bg-wholesale:#000000;--card-wholesale:#08080c;--gold-gradient:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728,#fbf5b7,#aa771c);--gold-solid:#d4af37;--pink-accent:#ff2a85;--text-white:#ffffff;--text-gray:#a0a0b8;--font-main:'Poppins',sans-serif;}
+*{box-sizing:border-box!important;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;max-width:100%;background:var(--bg-wholesale)!important;color:var(--text-white);font-family:var(--font-main);font-size:14px;text-transform:uppercase!important;-webkit-font-smoothing:antialiased;overflow-x:hidden!important;position:relative;scroll-behavior:smooth;overflow-wrap:break-word;}
+body{padding-bottom:75px;}
+.ecommerce-main-wrapper{width:100%;max-width:1200px;margin:0 auto;padding:12px 10px 50px 10px;display:flex;flex-direction:column;gap:16px;overflow-x:hidden;}
+@media(min-width:768px){.ecommerce-main-wrapper{padding:20px 24px 60px 24px;gap:24px;}}
+.product-details-clean-section{width:100%;display:grid;grid-template-columns:1fr;gap:16px;align-items:start;}
+@media(min-width:950px){.product-details-clean-section{grid-template-columns:1.1fr 0.9fr;gap:28px;}}
+.product-left-col{width:100%;display:flex;flex-direction:column;gap:10px;min-width:0;}
+.media-viewport{width:100%;position:relative;border-radius:14px;overflow:hidden;background:#050508;display:flex;align-items:center;justify-content:center;min-height:280px;border:1px solid rgba(212,175,55,0.2);transition:border-color 0.2s ease;contain:layout style;}
+@media(min-width:768px){.media-viewport{min-height:440px;}}
+.main-media-element{width:100%;height:auto;max-height:440px;object-fit:contain;display:block;background:#000;}
+.thumbnail-slider-wrapper{position:relative;width:100%;display:flex;align-items:center;overflow:hidden;}
+.thumbnail-strip{display:flex;gap:10px;padding:4px 0;overflow-x:auto;width:100%;scrollbar-width:none;}
+.thumbnail-strip::-webkit-scrollbar{display:none;}
+.thumb-item{width:58px;height:58px;border-radius:10px;overflow:hidden;cursor:pointer;flex-shrink:0;background:#08080c;border:1px solid rgba(212,175,55,0.2);transition:transform 0.15s ease,border-color 0.15s ease;}
+.thumb-item img,.thumb-item video{width:100%;height:100%;object-fit:cover;}
+.thumb-item:hover{border-color:rgba(212,175,55,0.5);}
+.thumb-item.active{border-color:var(--gold-solid);transform:scale(1.05);}
+.product-right-col{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;}
+.price-discount-card,.qty-section-card,.seller-chat-compact-btn,.product-info-section-box{background:var(--card-wholesale);border-radius:12px;border:1px solid rgba(255,255,255,0.05);}
+.price-discount-card{padding:10px 14px;display:flex;flex-direction:column;gap:6px;width:100%;}
+.sample-price-block{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+.sample-price-label{font-size:0.68rem;color:var(--gold-solid);font-weight:700;letter-spacing:0.5px;}
+.price-row-bottom{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.current-main-price{font-size:1.35rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);line-height:1.1;}
+.old-crossed-price{font-size:0.78rem;font-weight:600;color:var(--text-gray);text-decoration:line-through;}
+.in-stock-clean-badge{font-size:0.68rem;font-weight:700;color:#00e676;display:flex;align-items:center;gap:5px;text-transform:uppercase;}
+.in-stock-clean-badge::before{content:"";width:6px;height:6px;background:#00e676;border-radius:50%;display:inline-block;}
+.qty-section-card{display:flex;flex-direction:column;gap:10px;padding:12px 14px;width:100%;}
+.wholesale-preset-buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;}
+.preset-btn{background:#040407;border:1px solid rgba(212,175,55,0.4);color:#ffffff;font-size:0.72rem;font-weight:800;padding:8px 10px;border-radius:8px;cursor:pointer;text-align:center;transition:all 0.2s ease;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:5px;white-space:nowrap;}
+.preset-btn .btn-price{font-size:0.80rem;color:var(--gold-solid);font-weight:800;}
+.preset-btn.active,.preset-btn:hover{background:var(--gold-gradient);color:#000;border-color:transparent;box-shadow:0 0 10px rgba(212,175,55,0.3);}
+.preset-btn.active .btn-price,.preset-btn:hover .btn-price{color:#000;}
+.qty-label-mini{font-size:0.65rem;font-weight:700;color:var(--gold-solid);text-align:center;letter-spacing:0.5px;}
+.qty-controls-flex{display:flex;align-items:center;justify-content:center;gap:14px;}
+.qty-btn-ch{background:var(--gold-gradient);border:none;color:#000;font-size:0.95rem;font-weight:800;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.qty-num-input{font-size:1.05rem;font-weight:800;color:#ffffff;width:80px;text-align:center;background:#040407;border:1px solid rgba(212,175,55,0.3);border-radius:8px;outline:none;padding:4px 0;}
+.applied-unit-price-display{font-size:0.68rem;font-weight:700;text-align:center;color:var(--gold-solid);letter-spacing:0.5px;margin-top:2px;}
+.product-info-section-box{display:flex;flex-direction:column;gap:10px;padding:12px 14px;width:100%;}
+.section-box-title{font-size:0.68rem;font-weight:700;color:var(--gold-solid);display:flex;align-items:center;gap:6px;}
+/* ==== SKU BADGE — NEW ==== */
+.sku-display-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.5);border-radius:8px;padding:6px 12px;font-size:0.72rem;font-weight:800;color:var(--gold-solid);letter-spacing:0.5px;margin-bottom:2px;max-width:100%;flex-wrap:wrap;word-break:break-all;}
+.sku-display-badge strong{color:#fff;font-weight:800;letter-spacing:1px;word-break:break-all;}
+.sku-display-badge i{font-size:0.75rem;}
+.custom-wood-top-badge{font-size:0.68rem;font-weight:800;letter-spacing:0.6px;color:var(--pink-accent);line-height:1.3;word-break:break-word;}
+.product-title-restricted{font-size:1.05rem;font-weight:700;letter-spacing:0.4px;line-height:1.35;width:100%;word-break:break-word;overflow-wrap:break-word;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
+@media(min-width:768px){.product-title-restricted{font-size:1.3rem;}}
+.standard-description-box{font-size:0.75rem;color:var(--text-gray);line-height:1.5;text-transform:none!important;word-break:break-word;overflow-wrap:break-word;}
+.integrated-custom-note-group{display:flex;flex-direction:column;gap:4px;width:100%;margin-top:2px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;}
+.integrated-note-label{font-size:0.65rem;font-weight:600;color:var(--gold-solid);display:flex;align-items:center;gap:6px;}
+.custom-note-input{width:100%;background:#040407;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:#ffffff;font-size:0.70rem;outline:none;font-family:var(--font-main);text-transform:uppercase;}
+.action-buttons-flex-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;width:100%;}
+.seller-chat-compact-btn{color:var(--gold-solid);font-size:0.68rem;font-weight:700;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(212,175,55,0.08);border-radius:8px;border:1px solid rgba(212,175,55,0.25);}
+.main-product-share-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:4px;transition:transform 0.15s ease;}
+.main-product-share-btn:active{transform:scale(0.9);}
+.related-products-wrapper{margin-top:15px;width:100%;display:flex;flex-direction:column;gap:12px;border-top:1px solid rgba(212,175,55,0.15);padding-top:14px;}
+.related-section-title{font-size:0.85rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);letter-spacing:0.8px;}
+.feed-container{padding:2px 0;column-count:2;column-gap:8px;width:100%;}
+@media (min-width: 768px){.feed-container{column-count:4;column-gap:12px;}}
+.product-card{background:var(--card-wholesale);border-radius:12px;overflow:hidden;display:inline-block;width:100%;border:1px solid rgba(212,175,55,0.12);position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;content-visibility:auto;}
+.product-media-box{position:relative;width:100%;background:#050508;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.product-media-box img{width:100%;height:auto;display:block;object-fit:contain;background:#050508;}
+.card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a!important;border-top:1px solid rgba(255,255,255,0.05);gap:4px;margin-top:auto;}
+.product-price-tag{font-size:0.80rem;font-weight:600;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
+.share-icon-only-btn{background:none;border:none;font-size:0.95rem;cursor:pointer;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:2px;transition:transform 0.15s ease;}
+.share-icon-only-btn:active{transform:scale(0.9);}
+.fixed-bottom-checkout-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(3,3,5,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:5px 12px;display:flex;justify-content:space-around;align-items:center;z-index:999999;border-top:1px solid rgba(212,175,55,0.2);box-shadow:0 -5px 15px rgba(0,0,0,0.8);height:56px;}
+@media(min-width:768px){.fixed-bottom-checkout-bar{justify-content:center;gap:80px;padding:6px 30px;height:60px;}}
+.footer-menu-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;gap:2px;background:transparent!important;border:none!important;padding:4px 12px;white-space:nowrap;}
+.footer-menu-icon{font-size:1.05rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
+.footer-menu-label{font-size:0.60rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);letter-spacing:0.4px;}
+.footer-menu-item.order-now-highlight{background:var(--gold-gradient)!important;border-radius:10px!important;padding:6px 28px!important;box-shadow:0 2px 10px rgba(212,175,55,0.3);}
+.footer-menu-item.order-now-highlight .footer-menu-label{color:#000000!important;-webkit-text-fill-color:#000000!important;font-size:0.72rem;font-weight:800;background:none!important;}
+.footer-cart-icon-wrapper{position:relative;display:flex;align-items:center;justify-content:center;}
+.footer-cart-badge{position:absolute;top:-5px;right:-8px;background:#ff2a85;color:#ffffff;font-size:0.52rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform 0.2s ease;}
+.footer-cart-badge.pulse-badge{transform:scale(1.3);}
+.flying-gold-coin{position:fixed;z-index:9999999;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffffff 0%,#fcf6ba 25%,#bf953f 65%,#8a5d0f 100%);border:2px solid #fff;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:14px;color:#4d3300;box-shadow:0 0 15px rgba(212,175,55,0.8);transition:left 0.65s cubic-bezier(0.22,1,0.36,1),top 0.65s cubic-bezier(0.22,1,0.36,1),transform 0.65s linear,opacity 0.65s ease;}
+.animated-welcome-msg{background:#12121c;padding:8px 12px;border-radius:8px;font-size:0.70rem;color:var(--gold-solid);font-weight:600;border:1px solid rgba(212,175,55,0.2);}
+.chat-warning-msg{background:rgba(255,42,133,0.15);color:#ff2a85;border:1px solid #ff2a85;padding:6px 10px;border-radius:8px;font-size:0.65rem;font-weight:700;text-align:center;margin-top:4px;}
+.universal-share-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
+.share-target-btn{background:#040407;border:1px solid rgba(212,175,55,0.25);border-radius:10px;padding:10px 6px;color:#ffffff;font-size:0.65rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-decoration:none;transition:all 0.2s ease;}
+.share-target-btn:hover{background:var(--gold-gradient);color:#000000;border-color:transparent;}
+.share-target-btn i{font-size:1.05rem;}
+.share-link-copy-row{display:flex;gap:6px;margin-top:8px;}
+.share-link-box{flex:1;min-width:0;background:#040407;border:1px solid rgba(212,175,55,0.3);border-radius:8px;padding:7px 10px;color:var(--gold-solid);font-size:0.68rem;outline:none;text-transform:none!important;}
+/* ==== GRADIENT TEXT FALLBACK ==== */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+.current-main-price,.related-section-title,.product-title-restricted,.product-price-tag,.footer-menu-icon,.footer-menu-label,.main-product-share-btn,.share-icon-only-btn{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
+}
+</style>
 </head>
 <body>
-    <div class="ecommerce-main-wrapper" id="mainStoreContainer">
-        <div class="product-details-clean-section" id="productDetailsViewSection">
-            <div class="product-left-col">
-                <div class="media-viewport" id="mediaViewportContainer">
-                    <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%2308080c'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23d4af37' font-family='Poppins, sans-serif' font-size='14' font-weight='700'%3ELOADING WHOLESALE PRODUCT...%3C/text%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
-                </div>
-                <div class="thumbnail-slider-wrapper">
-                    <div class="thumbnail-strip" id="productThumbnailsStrip"></div>
-                </div>
-            </div>
-
-            <div class="product-right-col">
-                <div class="price-discount-card">
-                    <div class="sample-price-block">
-                        <span class="sample-price-label">SAMPLE PRICE</span>
-                        <span class="in-stock-clean-badge" id="inStockBadgeLabel">STOCK: 1500 UNITS READY</span>
-                    </div>
-                    <div class="price-row-bottom">
-                        <div class="current-main-price" id="activeProductPriceTag">$25.00</div>
-                        <div class="old-crossed-price" id="activeProductOldPriceTag">$33.75</div>
-                    </div>
-                </div>
-
-                <div class="qty-section-card">
-                    <div class="wholesale-preset-buttons">
-                        <button type="button" class="preset-btn" onclick="setQuantityPreset(100, this)">
-                            <span class="btn-price" id="btnPrice100">$20.00</span>
-                            <span>/ 100 PCS</span>
-                        </button>
-                        <button type="button" class="preset-btn" onclick="setQuantityPreset(300, this)">
-                            <span class="btn-price" id="btnPrice300">$18.00</span>
-                            <span>/ 300 PCS</span>
-                        </button>
-                    </div>
-                    <span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
-                    <div class="qty-controls-flex">
-                        <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
-                        <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" max="999999" oninput="manualQuantityInput(this)">
-                        <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
-                    </div>
-                    <div class="applied-unit-price-display">
-                        APPLIED UNIT PRICE: <span id="appliedUnitPriceDisplay">$25.00</span>
-                    </div>
-                </div>
-
-                <div class="product-info-section-box">
-                    <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
-                    <div class="custom-wood-top-badge">CUSTOM SIZE & COLOR • TEAK, MAHOGANY, GAMARI</div>
-                    <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
-                    <div class="standard-description-box" id="unlimitedDescriptionContent">
-                        Fetching wholesale ecosystem details from Cloudflare database...
-                    </div>
-                    <div class="integrated-custom-note-group">
-                        <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / SPEC</span>
-                        <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off" maxlength="100">
-                    </div>
-                    <div class="action-buttons-flex-row">
-                        <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()">
-                            <i class="fa-solid fa-headset"></i> <span>SELLER</span>
-                        </button>
-                        <button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product">
-                            <i class="fa-solid fa-share-nodes"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="related-products-wrapper">
-            <h3 class="related-section-title"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS</h3>
-            <div class="feed-container" id="relatedProductsFeedContainer">
-                <p style="grid-column: 1 / -1; text-align: center; color: var(--gold-solid); padding: 15px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED BULK ITEMS...</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="fixed-bottom-checkout-bar">
-        <a href="/wholesale/" class="footer-menu-item">
-            <i class="fa-solid fa-house footer-menu-icon"></i>
-            <span class="footer-menu-label">HOME</span>
-        </a>
-        <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)">
-            <span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span>
-        </div>
-        <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
-            <div class="footer-cart-icon-wrapper">
-                <i class="fa-solid fa-cart-shopping footer-menu-icon"></i>
-                <span class="footer-cart-badge" id="footerCartItemCountBadge">0</span>
-            </div>
-            <span class="footer-menu-label">CART</span>
-        </button>
-    </div>
-
-    <div id="chatModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) toggleChatModal()">
-        <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.2);">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
-                <span style="font-size:0.70rem; font-weight:700; color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
-                <button type="button" onclick="toggleChatModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">×</button>
-            </div>
-            <div id="chatMessagesContainer" style="background:#040407; border-radius:10px; padding:10px; height:170px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-                <div class="animated-welcome-msg">WELCOME! HOW CAN WE HELP YOUR BULK ORDER TODAY?</div>
-            </div>
-            <div id="chatWarningArea"></div>
-            <div style="display:flex; gap:6px;">
-                <input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1; min-width:0; background:#040407; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 10px; color:#ffffff; font-size:0.68rem; outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
-                <button type="button" onclick="sendChatMessage()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 12px; border-radius:8px; font-weight:800; font-size:0.68rem; cursor:pointer;">SEND</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="universalShareModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999999; align-items:center; justify-content:center; padding:12px;" onclick="if(event.target===this) closeShareModal()">
-        <div style="background:#0c0c12; border-radius:14px; padding:16px; max-width:380px; width:100%; display:flex; flex-direction:column; gap:10px; border:1px solid rgba(212,175,55,0.25);">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">
-                <span style="font-size:0.70rem; font-weight:700; color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
-                <button type="button" onclick="closeShareModal()" style="background:none; border:none; color:var(--gold-solid); font-size:1.15rem; cursor:pointer;">×</button>
-            </div>
-            <div id="shareTargetGrid" class="universal-share-grid"></div>
-            <div class="share-link-copy-row">
-                <input type="text" id="shareModalUrlInput" class="share-link-box" readonly>
-                <button type="button" id="shareModalCopyBtn" onclick="copyShareLinkFromModal()" style="background:var(--gold-gradient); color:#000; border:none; padding:0 12px; border-radius:8px; font-weight:800; font-size:0.65rem; cursor:pointer;">COPY</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const API_BASE_URL = '';
-        let currentActiveProduct = null;
-        let currentItemQuantity = 1;
-        let selectedProductColorImage = "";
-        let currentBaseUnitPrice = 25.00;
-        let cachedAffiliateId = null;
-        let audioCtxInstance = null;
-
-        function getActiveAffiliateId() {
-            if (cachedAffiliateId !== null) return cachedAffiliateId;
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-
-            if (refFromUrl) {
-                try {
-                    localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
-                    sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
-                } catch(e) {}
-                cachedAffiliateId = refFromUrl;
-                return cachedAffiliateId;
-            }
-
-            let userProfile = {};
-            try {
-                userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account') || 'null') || JSON.parse(localStorage.getItem('user_profile') || 'null') || {};
-            } catch(e) {}
-
-            cachedAffiliateId = userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
-            return cachedAffiliateId;
-        }
-
-        function generateAffiliateUrl(productId) {
-            const baseUrl = `${window.location.origin}${window.location.pathname}`;
-            const currentParams = new URLSearchParams(window.location.search);
-            currentParams.set('id', productId);
-
-            const affId = getActiveAffiliateId();
-            if (affId) currentParams.set('ref', affId);
-
-            return `${baseUrl}?${currentParams.toString()}`;
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const reqId = urlParams.get('id');
-
-            getActiveAffiliateId();
-            updateCartBadgeCount();
-            updateAppliedUnitPriceDisplay();
-
-            if (reqId) {
-                fetchWholesaleProductDetails(reqId);
-            } else {
-                renderFallbackProductDetails('101');
-            }
-        });
-
-        async function fetchWholesaleProductDetails(productId) {
-            try {
-                let localProducts = [];
-                let cachedFeed = [];
-                try {
-                    localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products') || '[]') || [];
-                    cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache') || '[]') || [];
-                } catch(e) {}
-
-                const combinedLocal = [...localProducts, ...cachedFeed];
-                const foundItem = combinedLocal.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
-
-                if (foundItem) {
-                    renderProductDetails(foundItem);
-                    renderRelatedProducts(combinedLocal, foundItem);
-                }
-
-                const response = await fetch(`${API_BASE_URL}/api/products?t=` + Date.now(), { cache: 'no-store' });
-                if (!response.ok) throw new Error('Network error');
-                const result = await response.json();
-
-                let products = [];
-                if (result && result.success && Array.isArray(result.data)) {
-                    products = result.data;
-                } else if (Array.isArray(result)) {
-                    products = result;
-                }
-
-                const mergedMap = new Map();
-                for (let i = 0; i < combinedLocal.length; i++) {
-                    const p = combinedLocal[i];
-                    const pId = p.id || p.product_id || p.product_code || p.title;
-                    if (pId) mergedMap.set(String(pId), p);
-                }
-                for (let i = 0; i < products.length; i++) {
-                    const p = products[i];
-                    const pId = p.id || p.product_id || p.product_code || p.title;
-                    if (pId) mergedMap.set(String(pId), p);
-                }
-                const allProducts = Array.from(mergedMap.values());
-
-                if (allProducts.length > 0) {
-                    const matchedProduct = allProducts.find(p => String(p.id) === String(productId) || String(p.product_id) === String(productId) || String(p.product_code) === String(productId));
-                    if (matchedProduct) {
-                        renderProductDetails(matchedProduct);
-                        renderRelatedProducts(allProducts, matchedProduct);
-                        return;
-                    }
-                }
-                if (!foundItem) renderFallbackProductDetails(productId);
-            } catch (err) {
-                if (!currentActiveProduct) renderFallbackProductDetails(productId);
-            }
-        }
-
-        function renderFallbackProductDetails(productId) {
-            const sampleProduct = {
-                id: productId,
-                title: "RORRAXY WHOLESALE BULK LUXURY ITEM",
-                price: 25.00,
-                price_100: 20.00,
-                price_300: 18.00,
-                stock: 1500,
-                category: "Shoes",
-                description: "High-grade bulk wholesale manufacturing supply meeting international commercial standards.",
-                image_url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png"
-            };
-            renderProductDetails(sampleProduct);
-            renderRelatedProducts([sampleProduct], sampleProduct);
-        }
-
-        function cleanDescriptionText(text) {
-            if (!text) return '';
-            let cleaned = text.replace(/Packing\s*list\s*:[\s\S]*?(Product\s*Image\s*:?|$)/gi, '');
-            cleaned = cleaned.replace(/Product\s*Image\s*:?/gi, '');
-            return cleaned.trim();
-        }
-
-        function renderProductDetails(prod) {
-            currentActiveProduct = prod;
-            currentBaseUnitPrice = parseFloat(prod.price_bulk || prod.price || prod.wholesale_price) || 25.00;
-            const oldP = currentBaseUnitPrice * 1.35;
-
-            const p100 = parseFloat(prod.price_100 || (currentBaseUnitPrice * 0.8)).toFixed(2);
-            const p300 = parseFloat(prod.price_300 || (currentBaseUnitPrice * 0.72)).toFixed(2);
-
-            document.getElementById('btnPrice100').innerText = `$${p100}`;
-            document.getElementById('btnPrice300').innerText = `$${p300}`;
-
-            currentItemQuantity = 1;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-
-            document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY WHOLESALE PRODUCT";
-            document.getElementById('activeProductPriceTag').innerText = `$${currentBaseUnitPrice.toFixed(2)}`;
-            document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
-
-            const rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
-            document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
-
-            const stockNum = prod.stock || 1500;
-            document.getElementById('inStockBadgeLabel').innerText = `STOCK: ${stockNum} UNITS READY`;
-
-            const strip = document.getElementById('productThumbnailsStrip');
-            const mediaList = [];
-            const seenUrls = new Set();
-
-            const addMedia = (type, url) => {
-                if (!url || typeof url !== 'string') return;
-                const clean = url.trim();
-                if (!clean || seenUrls.has(clean)) return;
-                if (type === 'image' && clean.includes('mr masudar logo')) return;
-                seenUrls.add(clean);
-                mediaList.push({ type, url: clean });
-            };
-
-            let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
-            if (primaryImg && primaryImg.startsWith('[')) {
-                try {
-                    const parsedArr = JSON.parse(primaryImg);
-                    if (Array.isArray(parsedArr) && parsedArr.length > 0) primaryImg = parsedArr[0];
-                } catch(e) {}
-            }
-            addMedia('image', primaryImg);
-
-            if (prod.images_json) {
-                try {
-                    const parsedImages = typeof prod.images_json === 'string' ? JSON.parse(prod.images_json) : prod.images_json;
-                    if (Array.isArray(parsedImages)) {
-                        parsedImages.forEach(imgUrl => addMedia('image', imgUrl));
-                    } else if (typeof parsedImages === 'string') {
-                        parsedImages.split(',').forEach(imgUrl => addMedia('image', imgUrl));
-                    }
-                } catch (e) {
-                    if (typeof prod.images_json === 'string') {
-                        prod.images_json.split(',').forEach(imgUrl => addMedia('image', imgUrl));
-                    }
-                }
-            }
-
-            const videoFileUrl = prod.video_url || prod.videoUrl || "";
-            if (videoFileUrl) addMedia('video', videoFileUrl);
-
-            if (mediaList.length === 0) {
-                mediaList.push({ type: 'image', url: "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" });
-            }
-
-            const firstImageMedia = mediaList.find(m => m.type === 'image');
-            selectedProductColorImage = firstImageMedia ? firstImageMedia.url : "";
-            updateMainViewport(mediaList[0]);
-
-            const fragment = document.createDocumentFragment();
-            mediaList.forEach((m, idx) => {
-                const thumbDiv = document.createElement('div');
-                thumbDiv.className = `thumb-item ${idx === 0 ? 'active' : ''}`;
-                thumbDiv.onclick = function() { switchMediaView(m, this); };
-                if (m.type === 'video') {
-                    thumbDiv.innerHTML = `<video src="${m.url}" muted playsinline preload="metadata"></video>`;
-                } else {
-                    thumbDiv.innerHTML = `<img src="${m.url}" alt="Thumb" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;
-                }
-                fragment.appendChild(thumbDiv);
-            });
-            strip.innerHTML = '';
-            strip.appendChild(fragment);
-
-            updateAppliedUnitPriceDisplay();
-        }
-
-        function renderRelatedProducts(allProducts, currentProd) {
-            const container = document.getElementById('relatedProductsFeedContainer');
-            if (!allProducts || allProducts.length <= 1) {
-                container.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); font-size: 0.75rem;">NO RELATED WHOLESALE PRODUCTS FOUND.</p>`;
-                return;
-            }
-
-            const currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
-            const currentCat = currentProd ? (currentProd.category || currentProd.cat || '').toLowerCase().trim() : '';
-            const currentTitle = currentProd ? (currentProd.title || '').toLowerCase() : '';
-
-            const filteredList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
-
-            const titleWords = currentTitle ? currentTitle.split(/\s+/).filter(w => w.length > 3) : [];
-            const sameCategoryList = filteredList.filter(item => {
-                const itemCat = (item.category || item.cat || '').toLowerCase().trim();
-                const itemTitle = (item.title || '').toLowerCase();
-
-                if (currentCat && itemCat) {
-                    return itemCat === currentCat;
-                }
-                if (titleWords.length > 0) {
-                    return titleWords.some(w => itemTitle.includes(w));
-                }
-                return false;
-            });
-
-            const relatedList = (sameCategoryList.length > 0 ? sameCategoryList : filteredList).slice(0, 8);
-            const fallbackImg = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
-
-            container.innerHTML = relatedList.map(item => {
-                const prodId = String(item.id || item.product_id || item.product_code || '101');
-                const title = item.title || 'rorraxy Bulk Item';
-                const bulkPrice = item.price_bulk ? `$${parseFloat(item.price_bulk).toFixed(2)}` : (item.price ? `$${parseFloat(item.price).toFixed(2)}` : '$25.00');
-
-                let imageUrl = fallbackImg;
-                try {
-                    if (item.images_json) {
-                        const parsed = typeof item.images_json === 'string' ? JSON.parse(item.images_json) : item.images_json;
-                        if (Array.isArray(parsed) && parsed.length > 0) imageUrl = parsed[0];
-                    } else if (item.image_url) {
-                        imageUrl = typeof item.image_url === 'string' && item.image_url.startsWith('[') ? JSON.parse(item.image_url)[0] : item.image_url;
-                    }
-                } catch(e) { imageUrl = item.image_url || fallbackImg; }
-
-                const safeTitleAttr = escapeHtmlAttr(title);
-                const safeTitleJs = escapeJsSingle(title);
-                const safeIdJs = escapeJsSingle(prodId);
-
-                return `
-                    <div class="product-card" onclick="navigateToProduct('${safeIdJs}')">
-                        <div class="product-media-box">
-                            <img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'">
-                        </div>
-                        <div class="card-footer-actions" onclick="event.stopPropagation()">
-                            <span class="product-price-tag">${bulkPrice}</span>
-                            <button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share Product">
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function escapeHtmlAttr(str) {
-            return String(str || '')
-                .replace(/&/g, '&')
-                .replace(/"/g, '"')
-                .replace(/</g, '<')
-                .replace(/>/g, '>');
-        }
-
-        function escapeJsSingle(str) {
-            return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
-        }
-
-        function navigateToProduct(productId) {
-            window.location.href = generateAffiliateUrl(productId);
-        }
-
-        function updateMainViewport(mediaObj) {
-            const viewport = document.getElementById('mediaViewportContainer');
-            if (!mediaObj || !mediaObj.url) return;
-            const safeUrl = escapeHtmlAttr(mediaObj.url);
-            if (mediaObj.type === 'video') {
-                viewport.innerHTML = `<video src="${safeUrl}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
-            } else {
-                viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${safeUrl}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png'">`;
-            }
-        }
-
-        function switchMediaView(mediaObj, thumbElement) {
-            updateMainViewport(mediaObj);
-            if (mediaObj && mediaObj.type === 'image') {
-                selectedProductColorImage = mediaObj.url;
-            }
-            const thumbs = document.querySelectorAll('.thumb-item');
-            for (let i = 0; i < thumbs.length; i++) thumbs[i].classList.remove('active');
-            if (thumbElement) thumbElement.classList.add('active');
-        }
-
-        function calculateAppliedUnitPrice() {
-            let priceNum = currentBaseUnitPrice;
-            if (currentItemQuantity >= 300) {
-                priceNum = parseFloat((currentActiveProduct && currentActiveProduct.price_300) || (currentBaseUnitPrice * 0.72));
-            } else if (currentItemQuantity >= 100) {
-                priceNum = parseFloat((currentActiveProduct && currentActiveProduct.price_100) || (currentBaseUnitPrice * 0.8));
-            }
-            return priceNum;
-        }
-
-        function updateAppliedUnitPriceDisplay() {
-            const el = document.getElementById('appliedUnitPriceDisplay');
-            if (el) el.innerText = '$' + calculateAppliedUnitPrice().toFixed(2);
-        }
-
-        function setQuantityPreset(qty, btn) {
-            currentItemQuantity = qty;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            const btns = document.querySelectorAll('.preset-btn');
-            for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-            if (btn) btn.classList.add('active');
-            updateAppliedUnitPriceDisplay();
-        }
-
-        function modifyQuantity(val) {
-            currentItemQuantity += val;
-            if (currentItemQuantity < 1) currentItemQuantity = 1;
-            document.getElementById('itemQtyInputVal').value = currentItemQuantity;
-            const btns = document.querySelectorAll('.preset-btn');
-            for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-            updateAppliedUnitPriceDisplay();
-        }
-
-        function manualQuantityInput(input) {
-            const val = parseInt(input.value, 10);
-            if (isNaN(val) || val < 1) {
-                currentItemQuantity = 1;
-                if (input) input.value = 1;
-            } else {
-                currentItemQuantity = val;
-            }
-            const btns = document.querySelectorAll('.preset-btn');
-            for (let i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-            updateAppliedUnitPriceDisplay();
-        }
-
-        function playCoinDropChime() {
-            try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (!AudioCtx) return;
-                if (!audioCtxInstance || audioCtxInstance.state === 'closed') {
-                    audioCtxInstance = new AudioCtx();
-                }
-                if (audioCtxInstance.state === 'suspended') {
-                    audioCtxInstance.resume();
-                }
-                const now = audioCtxInstance.currentTime;
-                const freqs = [1567.98, 2093.00, 2637.02, 3135.96, 4186.01];
-                freqs.forEach((freq, idx) => {
-                    const osc = audioCtxInstance.createOscillator();
-                    const gain = audioCtxInstance.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.035));
-                    gain.gain.setValueAtTime(0, now + (idx * 0.035));
-                    gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.035) + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.035) + 1.1);
-                    osc.connect(gain);
-                    gain.connect(audioCtxInstance.destination);
-                    osc.start(now + (idx * 0.035));
-                    osc.stop(now + (idx * 0.035) + 1.1);
-                });
-            } catch (e) {}
-        }
-
-        function triggerCoinDropAnimation(event) {
-            const cartBtn = document.getElementById('footerCartMenuBtn');
-            const cartBadge = document.getElementById('footerCartItemCountBadge');
-            if (!cartBtn) return;
-
-            const cartRect = cartBtn.getBoundingClientRect();
-            const targetX = cartRect.left + (cartRect.width / 2) - 15;
-            const targetY = cartRect.top + (cartRect.height / 2) - 15;
-
-            let startX = window.innerWidth / 2 - 15;
-            let startY = window.innerHeight - 80;
-            if (event && event.clientX && event.clientY) {
-                startX = event.clientX - 15;
-                startY = event.clientY - 15;
-            }
-
-            const coin = document.createElement('div');
-            coin.className = 'flying-gold-coin';
-            coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
-            coin.style.left = `${startX}px`;
-            coin.style.top = `${startY}px`;
-            document.body.appendChild(coin);
-
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    coin.style.left = `${targetX}px`;
-                    coin.style.top = `${targetY}px`;
-                    coin.style.transform = 'scale(0.35) rotate(720deg)';
-                    coin.style.opacity = '0';
-                });
-            });
-
-            setTimeout(() => {
-                if (coin.parentNode) coin.parentNode.removeChild(coin);
-                playCoinDropChime();
-                if (cartBadge) {
-                    cartBadge.classList.add('pulse-badge');
-                    setTimeout(() => cartBadge.classList.remove('pulse-badge'), 350);
-                }
-            }, 650);
-        }
-
-        function executeOrderNow(event) {
-            if (event) event.preventDefault();
-
-            if (!currentActiveProduct) {
-                currentActiveProduct = {
-                    id: new URLSearchParams(window.location.search).get('id') || '101',
-                    title: document.getElementById('activeProductTitleHeading').innerText || 'RORRAXY WHOLESALE BULK ITEM',
-                    price: 25.00,
-                    seller_id: 'SELLER-RORRAXY-01'
-                };
-            }
-
-            const rawNote = document.getElementById('customSizeInputField').value.trim();
-            const chosenSize = rawNote !== "" ? rawNote.toUpperCase() : "STANDARD BULK";
-
-            const cartKey = 'rorraxy_cart';
-            let cart = [];
-            try {
-                cart = JSON.parse(localStorage.getItem(cartKey) || '[]') || [];
-            } catch(e) { cart = []; }
-
-            const prodId = currentActiveProduct.id || currentActiveProduct.productId || currentActiveProduct.product_code || '101';
-
-            const finalImgUrl = (selectedProductColorImage && !selectedProductColorImage.startsWith('data:'))
-                ? selectedProductColorImage
-                : (currentActiveProduct.image_url || "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
-
-            const activeAffId = getActiveAffiliateId();
-            const priceNum = calculateAppliedUnitPrice();
-
-            const productDescText = cleanDescriptionText(
-                currentActiveProduct.description || currentActiveProduct.desc || ""
-            ) || "High-grade bulk wholesale manufacturing supply meeting international standards.";
-
-            const existingItem = cart.find(item =>
-                String(item.productId) === String(prodId) &&
-                String(item.size || '').toUpperCase() === chosenSize
-            );
-
-            if (existingItem) {
-                existingItem.qty += currentItemQuantity;
-                if (activeAffId) existingItem.affiliateId = activeAffId;
-                existingItem.img = finalImgUrl;
-                existingItem.price = `$${priceNum.toFixed(2)}`;
-                if (!existingItem.description) existingItem.description = productDescText;
-                if (!existingItem.title) existingItem.title = currentActiveProduct.title || "RORRAXY WHOLESALE PRODUCT";
-                if (!existingItem.sellerId) existingItem.sellerId = currentActiveProduct.seller_id || "SELLER-RORRAXY-01";
-            } else {
-                cart.push({
-                    productId: prodId,
-                    sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
-                    affiliateId: activeAffId || null,
-                    title: currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText,
-                    description: productDescText,
-                    price: `$${priceNum.toFixed(2)}`,
-                    qty: currentItemQuantity,
-                    size: chosenSize,
-                    mode: 'wholesale',
-                    img: finalImgUrl,
-                    added_at: new Date().toISOString()
-                });
-            }
-
-            try {
-                localStorage.setItem(cartKey, JSON.stringify(cart));
-            } catch(e) {}
-            updateCartBadgeCount();
-            triggerCoinDropAnimation(event);
-        }
-
-        function redirectToCartPage() {
-            window.location.href = './cart.html';
-        }
-
-        function updateCartBadgeCount() {
-            let cart = [];
-            try {
-                cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || [];
-            } catch(e) { cart = []; }
-            const totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
-            const badge = document.getElementById('footerCartItemCountBadge');
-            if (badge) badge.innerText = totalQty;
-        }
-
-        function toggleChatModal() {
-            const modal = document.getElementById('chatModalOverlay');
-            const isOpening = modal.style.display !== 'flex';
-            modal.style.display = isOpening ? 'flex' : 'none';
-            if (isOpening) {
-                setTimeout(() => {
-                    const inp = document.getElementById('chatMessageInput');
-                    if (inp) inp.focus();
-                }, 50);
-            }
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chatMessageInput');
-            const box = document.getElementById('chatMessagesContainer');
-            const warningArea = document.getElementById('chatWarningArea');
-            const text = input.value.trim();
-            warningArea.innerHTML = "";
-
-            if (text !== "") {
-                const phoneRegex = /(\+?\d{1,4}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}|\d{10,11}/;
-                const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-                const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|dev|app|store))/i;
-
-                if (phoneRegex.test(text) || emailRegex.test(text) || urlRegex.test(text)) {
-                    warningArea.innerHTML = `<div class="chat-warning-msg"><i class="fa-solid fa-triangle-exclamation"></i> SHARING PHONE NUMBERS, EMAILS, OR LINKS IS STRICTLY PROHIBITED.</div>`;
-                    return;
-                }
-
-                const msgDiv = document.createElement('div');
-                msgDiv.style.cssText = "background:var(--gold-gradient); color:#000; padding:6px 10px; border-radius:8px; font-size:0.68rem; font-weight:700; max-width:85%; align-self:flex-end; word-break:break-word;";
-                msgDiv.textContent = text;
-                box.appendChild(msgDiv);
-                input.value = "";
-                box.scrollTop = box.scrollHeight;
-            }
-        }
-
-        async function triggerMainAffiliateShare(event) {
-            if (event) event.stopPropagation();
-            const prodId = currentActiveProduct ? (currentActiveProduct.id || currentActiveProduct.product_id || '101') : '101';
-            const title = currentActiveProduct ? (currentActiveProduct.title || 'Product Details') : 'Product Details';
-            await triggerAutoShare(event, prodId, title);
-        }
-
-        async function copyTextToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
-                } catch (e) {}
-            }
-            try {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                ta.style.position = 'fixed';
-                ta.style.left = '-9999px';
-                document.body.appendChild(ta);
-                ta.focus();
-                ta.select();
-                const ok = document.execCommand('copy');
-                document.body.removeChild(ta);
-                return ok;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        function showShareFeedback(btnEl) {
-            if (!btnEl) return;
-            const orig = btnEl.innerHTML;
-            btnEl.innerHTML = `<i class="fa-solid fa-check"></i>`;
-            setTimeout(() => { btnEl.innerHTML = orig; }, 1400);
-        }
-
-        async function triggerAutoShare(event, productId, productTitle) {
-            if (event) event.stopPropagation();
-            const btnEl = event && event.currentTarget ? event.currentTarget : null;
-            const shareUrl = generateAffiliateUrl(productId);
-            const shareText = `${productTitle} - rorraxy Wholesale`;
-
-            if (typeof navigator.share === 'function') {
-                try {
-                    await navigator.share({
-                        title: productTitle,
-                        text: shareText,
-                        url: shareUrl
-                    });
-                    showShareFeedback(btnEl);
-                    return;
-                } catch (err) {
-                    if (err && err.name === 'AbortError') return;
-                }
-            }
-
-            await copyTextToClipboard(shareUrl);
-            showShareFeedback(btnEl);
-            openUniversalShareModal(productTitle, shareText, shareUrl);
-        }
-
-        function openUniversalShareModal(title, text, url) {
-            const modal = document.getElementById('universalShareModal');
-            const grid = document.getElementById('shareTargetGrid');
-            const urlInput = document.getElementById('shareModalUrlInput');
-            const copyBtn = document.getElementById('shareModalCopyBtn');
-
-            if (copyBtn) copyBtn.innerText = 'COPY';
-            if (urlInput) urlInput.value = url;
-
-            const encUrl = encodeURIComponent(url);
-            const encText = encodeURIComponent(`${text}\n${url}`);
-            const encTitle = encodeURIComponent(title);
-
-            const targets = [
-                { name: 'WHATSAPP', icon: 'fa-brands fa-whatsapp', href: `https://wa.me/?text=${encText}` },
-                { name: 'TELEGRAM', icon: 'fa-brands fa-telegram', href: `https://t.me/share/url?url=${encUrl}&text=${encText}` },
-                { name: 'MESSENGER', icon: 'fa-brands fa-facebook-messenger', href: `https://www.facebook.com/dialog/send?link=${encUrl}&app_id=291494419107518&redirect_uri=${encUrl}` },
-                { name: 'FACEBOOK', icon: 'fa-brands fa-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}` },
-                { name: 'X / TWITTER', icon: 'fa-brands fa-x-twitter', href: `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}` },
-                { name: 'LINKEDIN', icon: 'fa-brands fa-linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}` },
-                { name: 'REDDIT', icon: 'fa-brands fa-reddit', href: `https://www.reddit.com/submit?url=${encUrl}&title=${encTitle}` },
-                { name: 'EMAIL APP', icon: 'fa-solid fa-envelope', href: `mailto:?subject=${encTitle}&body=${encText}` },
-                { name: 'SYSTEM / APP', icon: 'fa-solid fa-up-right-from-square', href: url, copyFirst: true }
-            ];
-
-            grid.innerHTML = targets.map(t => `
-                <a class="share-target-btn" href="${escapeHtmlAttr(t.href)}" target="_blank" rel="noopener noreferrer" ${t.copyFirst ? `onclick="copyTextToClipboard('${escapeJsSingle(url)}')"` : ''}>
-                    <i class="${t.icon}"></i>
-                    <span>${t.name}</span>
-                </a>
-            `).join('');
-
-            modal.style.display = 'flex';
-        }
-
-        function closeShareModal() {
-            const modal = document.getElementById('universalShareModal');
-            if (modal) modal.style.display = 'none';
-        }
-
-        async function copyShareLinkFromModal() {
-            const input = document.getElementById('shareModalUrlInput');
-            const btn = document.getElementById('shareModalCopyBtn');
-            if (!input) return;
-            input.select();
-            await copyTextToClipboard(input.value);
-            if (btn) {
-                btn.innerText = 'COPIED';
-                setTimeout(() => { btn.innerText = 'COPY'; }, 1400);
-            }
-        }
-    </script>
+<div class="ecommerce-main-wrapper" id="mainStoreContainer">
+<div class="product-details-clean-section" id="productDetailsViewSection">
+<div class="product-left-col">
+<div class="media-viewport" id="mediaViewportContainer">
+<img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%2308080c'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23d4af37' font-family='Poppins, sans-serif' font-size='14' font-weight='700'%3ELOADING WHOLESALE PRODUCT...%3C/text%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
+</div>
+<div class="thumbnail-slider-wrapper">
+<div class="thumbnail-strip" id="productThumbnailsStrip"></div>
+</div>
+</div>
+<div class="product-right-col">
+<div class="price-discount-card">
+<div class="sample-price-block">
+<span class="sample-price-label">SAMPLE PRICE</span>
+<span class="in-stock-clean-badge" id="inStockBadgeLabel">STOCK: 1500 UNITS READY</span>
+</div>
+<div class="price-row-bottom">
+<div class="current-main-price" id="activeProductPriceTag">$25.00</div>
+<div class="old-crossed-price" id="activeProductOldPriceTag">$33.75</div>
+</div>
+</div>
+<div class="qty-section-card">
+<div class="wholesale-preset-buttons">
+<button type="button" class="preset-btn" onclick="setQuantityPreset(100, this)">
+<span class="btn-price" id="btnPrice100">$20.00</span>
+<span>/ 100 PCS</span>
+</button>
+<button type="button" class="preset-btn" onclick="setQuantityPreset(300, this)">
+<span class="btn-price" id="btnPrice300">$18.00</span>
+<span>/ 300 PCS</span>
+</button>
+</div>
+<span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
+<div class="qty-controls-flex">
+<button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
+<input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" max="999999" oninput="manualQuantityInput(this)">
+<button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+</div>
+<div class="applied-unit-price-display">APPLIED UNIT PRICE: <span id="appliedUnitPriceDisplay">$25.00</span></div>
+</div>
+<div class="product-info-section-box">
+<span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
+<div class="sku-display-badge"><i class="fa-solid fa-barcode"></i><span>SKU:</span><strong id="productSkuText">--</strong></div>
+<div class="custom-wood-top-badge">CUSTOM SIZE & COLOR • TEAK, MAHOGANY, GAMARI</div>
+<h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
+<div class="standard-description-box" id="unlimitedDescriptionContent">Fetching wholesale ecosystem details from Cloudflare database...</div>
+<div class="integrated-custom-note-group">
+<span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / SPEC</span>
+<input type="text" id="customSizeInputField" class="custom-note-input" placeholder="ENTER CUSTOM BULK NOTE..." value="" autocomplete="off" maxlength="100">
+</div>
+<div class="action-buttons-flex-row">
+<button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()"><i class="fa-solid fa-headset"></i> <span>SELLER</span></button>
+<button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button>
+</div>
+</div>
+</div>
+</div>
+<div class="related-products-wrapper">
+<h3 class="related-section-title"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS</h3>
+<div class="feed-container" id="relatedProductsFeedContainer">
+<p style="grid-column:1/-1;text-align:center;color:var(--gold-solid);padding:15px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED BULK ITEMS...</p>
+</div>
+</div>
+</div>
+<div class="fixed-bottom-checkout-bar">
+<a href="/wholesale/" class="footer-menu-item"><i class="fa-solid fa-house footer-menu-icon"></i><span class="footer-menu-label">HOME</span></a>
+<div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)"><span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span></div>
+<button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
+<div class="footer-cart-icon-wrapper"><i class="fa-solid fa-cart-shopping footer-menu-icon"></i><span class="footer-cart-badge" id="footerCartItemCountBadge">0</span></div>
+<span class="footer-menu-label">CART</span>
+</button>
+</div>
+<div id="chatModalOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:9999999;align-items:center;justify-content:center;padding:12px;" onclick="if(event.target===this) toggleChatModal()">
+<div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.2);">
+<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
+<span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
+<button type="button" onclick="toggleChatModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
+</div>
+<div id="chatMessagesContainer" style="background:#040407;border-radius:10px;padding:10px;height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+<div class="animated-welcome-msg">WELCOME! HOW CAN WE HELP YOUR BULK ORDER TODAY?</div>
+</div>
+<div id="chatWarningArea"></div>
+<div style="display:flex;gap:6px;">
+<input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1;min-width:0;background:#040407;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:#ffffff;font-size:0.70rem;outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+<button type="button" onclick="sendChatMessage()" style="background:var(--gold-gradient);color:#000;border:none;padding:0 12px;border-radius:8px;font-weight:800;font-size:0.70rem;cursor:pointer;">SEND</button>
+</div>
+</div>
+</div>
+<div id="universalShareModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:9999999;align-items:center;justify-content:center;padding:12px;" onclick="if(event.target===this) closeShareModal()">
+<div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.25);">
+<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
+<span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
+<button type="button" onclick="closeShareModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
+</div>
+<div id="shareTargetGrid" class="universal-share-grid"></div>
+<div class="share-link-copy-row">
+<input type="text" id="shareModalUrlInput" class="share-link-box" readonly>
+<button type="button" id="shareModalCopyBtn" onclick="copyShareLinkFromModal()" style="background:var(--gold-gradient);color:#000;border:none;padding:0 12px;border-radius:8px;font-weight:800;font-size:0.68rem;cursor:pointer;">COPY</button>
+</div>
+</div>
+</div>
+<script>
+const API_BASE_URL='';
+let currentActiveProduct=null;
+let currentItemQuantity=1;
+let selectedProductColorImage="";
+let currentBaseUnitPrice=25.00;
+let cachedAffiliateId=null;
+let audioCtxInstance=null;
+function getActiveAffiliateId(){
+if(cachedAffiliateId!==null)return cachedAffiliateId;
+const urlParams=new URLSearchParams(window.location.search);
+const refFromUrl=urlParams.get('ref')||urlParams.get('aff')||urlParams.get('affiliate');
+if(refFromUrl){try{localStorage.setItem('rorraxy_active_affiliate_ref',refFromUrl);sessionStorage.setItem('rorraxy_active_affiliate_ref',refFromUrl);}catch(e){}cachedAffiliateId=refFromUrl;return cachedAffiliateId;}
+let userProfile={};
+try{userProfile=JSON.parse(localStorage.getItem('rorraxy_user_account')||'null')||JSON.parse(localStorage.getItem('user_profile')||'null')||{};}catch(e){}
+cachedAffiliateId=userProfile.affiliate_id||userProfile.id||userProfile.userId||localStorage.getItem('rorraxy_my_affiliate_id')||localStorage.getItem('rorraxy_active_affiliate_ref')||sessionStorage.getItem('rorraxy_active_affiliate_ref')||null;
+return cachedAffiliateId;
+}
+function generateAffiliateUrl(productId){
+const baseUrl=`${window.location.origin}${window.location.pathname}`;
+const currentParams=new URLSearchParams(window.location.search);
+currentParams.set('id',productId);
+const affId=getActiveAffiliateId();
+if(affId)currentParams.set('ref',affId);
+return `${baseUrl}?${currentParams.toString()}`;
+}
+window.addEventListener('DOMContentLoaded',()=>{
+const urlParams=new URLSearchParams(window.location.search);
+const reqId=urlParams.get('id');
+getActiveAffiliateId();
+updateCartBadgeCount();
+updateAppliedUnitPriceDisplay();
+if(reqId){fetchWholesaleProductDetails(reqId);}else{renderFallbackProductDetails('101');}
+});
+async function fetchWholesaleProductDetails(productId){
+try{
+let localProducts=[];
+let cachedFeed=[];
+try{localProducts=JSON.parse(localStorage.getItem('rorraxy_wholesale_products')||'[]')||[];cachedFeed=JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache')||'[]')||[];}catch(e){}
+const combinedLocal=[...localProducts,...cachedFeed];
+const foundItem=combinedLocal.find(p=>String(p.id||p.product_id||p.product_code)===String(productId));
+if(foundItem){renderProductDetails(foundItem);renderRelatedProducts(combinedLocal,foundItem);}
+const response=await fetch(`${API_BASE_URL}/api/products?t=`+Date.now(),{cache:'no-store'});
+if(!response.ok)throw new Error('Network error');
+const result=await response.json();
+let products=[];
+if(result&&result.success&&Array.isArray(result.data)){products=result.data;}
+else if(Array.isArray(result)){products=result;}
+const mergedMap=new Map();
+for(let i=0;i<combinedLocal.length;i++){const p=combinedLocal[i];const pId=p.id||p.product_id||p.product_code||p.title;if(pId)mergedMap.set(String(pId),p);}
+for(let i=0;i<products.length;i++){const p=products[i];const pId=p.id||p.product_id||p.product_code||p.title;if(pId)mergedMap.set(String(pId),p);}
+const allProducts=Array.from(mergedMap.values());
+if(allProducts.length>0){
+const matchedProduct=allProducts.find(p=>String(p.id)===String(productId)||String(p.product_id)===String(productId)||String(p.product_code)===String(productId));
+if(matchedProduct){renderProductDetails(matchedProduct);renderRelatedProducts(allProducts,matchedProduct);return;}
+}
+if(!foundItem)renderFallbackProductDetails(productId);
+}catch(err){
+if(!currentActiveProduct)renderFallbackProductDetails(productId);
+}
+}
+function renderFallbackProductDetails(productId){
+const sampleProduct={id:productId,sku:'ROR-SAMPLE-'+String(productId).substring(0,4).toUpperCase(),title:"RORRAXY WHOLESALE BULK LUXURY ITEM",price:25.00,price_100:20.00,price_300:18.00,stock:1500,category:"Shoes",description:"High-grade bulk wholesale manufacturing supply meeting international commercial standards.",image_url:"https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png"};
+renderProductDetails(sampleProduct);
+renderRelatedProducts([sampleProduct],sampleProduct);
+}
+function cleanDescriptionText(text){
+if(!text)return'';
+let cleaned=text.replace(/Packing\s*list\s*:[\s\S]*?(Product\s*Image\s*:?|$)/gi,'');
+cleaned=cleaned.replace(/Product\s*Image\s*:?/gi,'');
+return cleaned.trim();
+}
+function renderProductDetails(prod){
+currentActiveProduct=prod;
+currentBaseUnitPrice=parseFloat(prod.price_bulk||prod.price||prod.wholesale_price)||25.00;
+const oldP=currentBaseUnitPrice*1.35;
+const p100=parseFloat(prod.price_100||(currentBaseUnitPrice*0.8)).toFixed(2);
+const p300=parseFloat(prod.price_300||(currentBaseUnitPrice*0.72)).toFixed(2);
+document.getElementById('btnPrice100').innerText=`$${p100}`;
+document.getElementById('btnPrice300').innerText=`$${p300}`;
+currentItemQuantity=1;
+document.getElementById('itemQtyInputVal').value=currentItemQuantity;
+document.getElementById('activeProductTitleHeading').innerText=prod.title||"RORRAXY WHOLESALE PRODUCT";
+document.getElementById('activeProductPriceTag').innerText=`$${currentBaseUnitPrice.toFixed(2)}`;
+document.getElementById('activeProductOldPriceTag').innerText=`$${oldP.toFixed(2)}`;
+// ✅ SKU রেন্ডার
+const skuValue=String(prod.sku||prod.product_code||prod.productCode||'').trim().toUpperCase();
+const skuEl=document.getElementById('productSkuText');
+if(skuEl)skuEl.innerText=skuValue||'N/A';
+const rawDesc=prod.description||prod.desc||"High-grade bulk wholesale manufacturing supply meeting international standards.";
+document.getElementById('unlimitedDescriptionContent').innerText=cleanDescriptionText(rawDesc);
+const stockNum=prod.stock||1500;
+document.getElementById('inStockBadgeLabel').innerText=`STOCK: ${stockNum} UNITS READY`;
+const strip=document.getElementById('productThumbnailsStrip');
+const mediaList=[];
+const seenUrls=new Set();
+const addMedia=(type,url)=>{
+if(!url||typeof url!=='string')return;
+const clean=url.trim();
+if(!clean||seenUrls.has(clean))return;
+if(type==='image'&&clean.includes('mr masudar logo'))return;
+seenUrls.add(clean);
+mediaList.push({type,url:clean});
+};
+let primaryImg=prod.image_url||prod.imageUrl||prod.img||"";
+if(primaryImg&&primaryImg.startsWith('[')){try{const parsedArr=JSON.parse(primaryImg);if(Array.isArray(parsedArr)&&parsedArr.length>0)primaryImg=parsedArr[0];}catch(e){}}
+addMedia('image',primaryImg);
+if(prod.images_json){
+try{
+const parsedImages=typeof prod.images_json==='string'?JSON.parse(prod.images_json):prod.images_json;
+if(Array.isArray(parsedImages)){parsedImages.forEach(imgUrl=>addMedia('image',imgUrl));}
+else if(typeof parsedImages==='string'){parsedImages.split(',').forEach(imgUrl=>addMedia('image',imgUrl));}
+}catch(e){if(typeof prod.images_json==='string'){prod.images_json.split(',').forEach(imgUrl=>addMedia('image',imgUrl));}}
+}
+const videoFileUrl=prod.video_url||prod.videoUrl||"";
+if(videoFileUrl)addMedia('video',videoFileUrl);
+if(mediaList.length===0){mediaList.push({type:'image',url:"https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png"});}
+const firstImageMedia=mediaList.find(m=>m.type==='image');
+selectedProductColorImage=firstImageMedia?firstImageMedia.url:"";
+updateMainViewport(mediaList[0]);
+const fragment=document.createDocumentFragment();
+mediaList.forEach((m,idx)=>{
+const thumbDiv=document.createElement('div');
+thumbDiv.className=`thumb-item ${idx===0?'active':''}`;
+thumbDiv.onclick=function(){switchMediaView(m,this);};
+if(m.type==='video'){thumbDiv.innerHTML=`<video src="${m.url}" muted playsinline preload="metadata"></video>`;}
+else{thumbDiv.innerHTML=`<img src="${m.url}" alt="Thumb" loading="lazy" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png'">`;}
+fragment.appendChild(thumbDiv);
+});
+strip.innerHTML='';
+strip.appendChild(fragment);
+updateAppliedUnitPriceDisplay();
+}
+function renderRelatedProducts(allProducts,currentProd){
+const container=document.getElementById('relatedProductsFeedContainer');
+if(!allProducts||allProducts.length<=1){container.innerHTML=`<p style="grid-column:1/-1;text-align:center;color:var(--text-gray);font-size:0.78rem;">NO RELATED WHOLESALE PRODUCTS FOUND.</p>`;return;}
+const currentId=currentProd?String(currentProd.id||currentProd.product_id||currentProd.product_code):'';
+const currentCat=currentProd?(currentProd.category||currentProd.cat||'').toLowerCase().trim():'';
+const currentTitle=currentProd?(currentProd.title||'').toLowerCase():'';
+const filteredList=allProducts.filter(p=>String(p.id||p.product_id||p.product_code)!==currentId);
+const titleWords=currentTitle?currentTitle.split(/\s+/).filter(w=>w.length>3):[];
+const sameCategoryList=filteredList.filter(item=>{
+const itemCat=(item.category||item.cat||'').toLowerCase().trim();
+const itemTitle=(item.title||'').toLowerCase();
+if(currentCat&&itemCat){return itemCat===currentCat;}
+if(titleWords.length>0){return titleWords.some(w=>itemTitle.includes(w));}
+return false;
+});
+const relatedList=(sameCategoryList.length>0?sameCategoryList:filteredList).slice(0,8);
+const fallbackImg="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
+container.innerHTML=relatedList.map(item=>{
+const prodId=String(item.id||item.product_id||item.product_code||'101');
+const title=item.title||'rorraxy Bulk Item';
+const bulkPrice=item.price_bulk?`$${parseFloat(item.price_bulk).toFixed(2)}`:(item.price?`$${parseFloat(item.price).toFixed(2)}`:'$25.00');
+let imageUrl=fallbackImg;
+try{
+if(item.images_json){const parsed=typeof item.images_json==='string'?JSON.parse(item.images_json):item.images_json;if(Array.isArray(parsed)&&parsed.length>0)imageUrl=parsed[0];}
+else if(item.image_url){imageUrl=typeof item.image_url==='string'&&item.image_url.startsWith('[')?JSON.parse(item.image_url)[0]:item.image_url;}
+}catch(e){imageUrl=item.image_url||fallbackImg;}
+const safeTitleAttr=escapeHtmlAttr(title);
+const safeTitleJs=escapeJsSingle(title);
+const safeIdJs=escapeJsSingle(prodId);
+return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button></div></div>`;
+}).join('');
+}
+function escapeHtmlAttr(str){return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escapeJsSingle(str){return String(str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
+function navigateToProduct(productId){window.location.href=generateAffiliateUrl(productId);}
+function updateMainViewport(mediaObj){
+const viewport=document.getElementById('mediaViewportContainer');
+if(!mediaObj||!mediaObj.url)return;
+const safeUrl=escapeHtmlAttr(mediaObj.url);
+if(mediaObj.type==='video'){viewport.innerHTML=`<video src="${safeUrl}" class="main-media-element" controls autoplay muted loop playsinline></video>`;}
+else{viewport.innerHTML=`<img id="mainDisplayMediaElement" src="${safeUrl}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png'">`;}
+}
+function switchMediaView(mediaObj,thumbElement){
+updateMainViewport(mediaObj);
+if(mediaObj&&mediaObj.type==='image'){selectedProductColorImage=mediaObj.url;}
+const thumbs=document.querySelectorAll('.thumb-item');
+for(let i=0;i<thumbs.length;i++)thumbs[i].classList.remove('active');
+if(thumbElement)thumbElement.classList.add('active');
+}
+function calculateAppliedUnitPrice(){
+let priceNum=currentBaseUnitPrice;
+if(currentItemQuantity>=300){priceNum=parseFloat((currentActiveProduct&&currentActiveProduct.price_300)||(currentBaseUnitPrice*0.72));}
+else if(currentItemQuantity>=100){priceNum=parseFloat((currentActiveProduct&&currentActiveProduct.price_100)||(currentBaseUnitPrice*0.8));}
+return priceNum;
+}
+function updateAppliedUnitPriceDisplay(){
+const el=document.getElementById('appliedUnitPriceDisplay');
+if(el)el.innerText='$'+calculateAppliedUnitPrice().toFixed(2);
+}
+function setQuantityPreset(qty,btn){
+currentItemQuantity=qty;
+document.getElementById('itemQtyInputVal').value=currentItemQuantity;
+const btns=document.querySelectorAll('.preset-btn');
+for(let i=0;i<btns.length;i++)btns[i].classList.remove('active');
+if(btn)btn.classList.add('active');
+updateAppliedUnitPriceDisplay();
+}
+function modifyQuantity(val){
+currentItemQuantity+=val;
+if(currentItemQuantity<1)currentItemQuantity=1;
+document.getElementById('itemQtyInputVal').value=currentItemQuantity;
+const btns=document.querySelectorAll('.preset-btn');
+for(let i=0;i<btns.length;i++)btns[i].classList.remove('active');
+updateAppliedUnitPriceDisplay();
+}
+function manualQuantityInput(input){
+const val=parseInt(input.value,10);
+if(isNaN(val)||val<1){currentItemQuantity=1;if(input)input.value=1;}
+else{currentItemQuantity=val;}
+const btns=document.querySelectorAll('.preset-btn');
+for(let i=0;i<btns.length;i++)btns[i].classList.remove('active');
+updateAppliedUnitPriceDisplay();
+}
+function playCoinDropChime(){
+try{
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+if(!AudioCtx)return;
+if(!audioCtxInstance||audioCtxInstance.state==='closed'){audioCtxInstance=new AudioCtx();}
+if(audioCtxInstance.state==='suspended'){audioCtxInstance.resume();}
+const now=audioCtxInstance.currentTime;
+const freqs=[1567.98,2093.00,2637.02,3135.96,4186.01];
+freqs.forEach((freq,idx)=>{
+const osc=audioCtxInstance.createOscillator();
+const gain=audioCtxInstance.createGain();
+osc.type='sine';
+osc.frequency.setValueAtTime(freq,now+(idx*0.035));
+gain.gain.setValueAtTime(0,now+(idx*0.035));
+gain.gain.linearRampToValueAtTime(0.12/(idx+1),now+(idx*0.035)+0.01);
+gain.gain.exponentialRampToValueAtTime(0.00001,now+(idx*0.035)+1.1);
+osc.connect(gain);
+gain.connect(audioCtxInstance.destination);
+osc.start(now+(idx*0.035));
+osc.stop(now+(idx*0.035)+1.1);
+});
+}catch(e){}
+}
+function triggerCoinDropAnimation(event){
+const cartBtn=document.getElementById('footerCartMenuBtn');
+const cartBadge=document.getElementById('footerCartItemCountBadge');
+if(!cartBtn)return;
+const cartRect=cartBtn.getBoundingClientRect();
+const targetX=cartRect.left+(cartRect.width/2)-15;
+const targetY=cartRect.top+(cartRect.height/2)-15;
+let startX=window.innerWidth/2-15;
+let startY=window.innerHeight-80;
+if(event&&event.clientX&&event.clientY){startX=event.clientX-15;startY=event.clientY-15;}
+const coin=document.createElement('div');
+coin.className='flying-gold-coin';
+coin.innerHTML='<i class="fa-solid fa-coins"></i>';
+coin.style.left=`${startX}px`;
+coin.style.top=`${startY}px`;
+document.body.appendChild(coin);
+requestAnimationFrame(()=>{requestAnimationFrame(()=>{coin.style.left=`${targetX}px`;coin.style.top=`${targetY}px`;coin.style.transform='scale(0.35) rotate(720deg)';coin.style.opacity='0';});});
+setTimeout(()=>{if(coin.parentNode)coin.parentNode.removeChild(coin);playCoinDropChime();if(cartBadge){cartBadge.classList.add('pulse-badge');setTimeout(()=>cartBadge.classList.remove('pulse-badge'),350);}},650);
+}
+function executeOrderNow(event){
+if(event)event.preventDefault();
+if(!currentActiveProduct){currentActiveProduct={id:new URLSearchParams(window.location.search).get('id')||'101',title:document.getElementById('activeProductTitleHeading').innerText||'RORRAXY WHOLESALE BULK ITEM',price:25.00,seller_id:'SELLER-RORRAXY-01',sku:''};}
+const rawNote=document.getElementById('customSizeInputField').value.trim();
+const chosenSize=rawNote!==""?rawNote.toUpperCase():"STANDARD BULK";
+const cartKey='rorraxy_cart';
+let cart=[];
+try{cart=JSON.parse(localStorage.getItem(cartKey)||'[]')||[];}catch(e){cart=[];}
+const prodId=currentActiveProduct.id||currentActiveProduct.productId||currentActiveProduct.product_code||'101';
+// ✅ SKU extract
+const skuValue=String(currentActiveProduct.sku||currentActiveProduct.product_code||currentActiveProduct.productCode||'').trim().toUpperCase();
+const finalImgUrl=(selectedProductColorImage&&!selectedProductColorImage.startsWith('data:'))?selectedProductColorImage:(currentActiveProduct.image_url||"https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png");
+const activeAffId=getActiveAffiliateId();
+const priceNum=calculateAppliedUnitPrice();
+const productDescText=cleanDescriptionText(currentActiveProduct.description||currentActiveProduct.desc||"")||"High-grade bulk wholesale manufacturing supply meeting international standards.";
+const existingItem=cart.find(item=>String(item.productId)===String(prodId)&&String(item.size||'').toUpperCase()===chosenSize);
+if(existingItem){
+existingItem.qty+=currentItemQuantity;
+if(activeAffId)existingItem.affiliateId=activeAffId;
+existingItem.img=finalImgUrl;
+existingItem.price=`$${priceNum.toFixed(2)}`;
+if(!existingItem.sku&&skuValue)existingItem.sku=skuValue;
+if(!existingItem.description)existingItem.description=productDescText;
+if(!existingItem.title)existingItem.title=currentActiveProduct.title||"RORRAXY WHOLESALE PRODUCT";
+if(!existingItem.sellerId)existingItem.sellerId=currentActiveProduct.seller_id||"SELLER-RORRAXY-01";
+}else{
+cart.push({productId:prodId,sku:skuValue,sellerId:currentActiveProduct.seller_id||currentActiveProduct.sellerId||"SELLER-RORRAXY-01",affiliateId:activeAffId||null,title:currentActiveProduct.title||document.getElementById('activeProductTitleHeading').innerText,description:productDescText,price:`$${priceNum.toFixed(2)}`,qty:currentItemQuantity,size:chosenSize,mode:'wholesale',img:finalImgUrl,added_at:new Date().toISOString()});
+}
+try{localStorage.setItem(cartKey,JSON.stringify(cart));}catch(e){}
+updateCartBadgeCount();
+triggerCoinDropAnimation(event);
+}
+function redirectToCartPage(){window.location.href='./cart.html';}
+function updateCartBadgeCount(){
+let cart=[];
+try{cart=JSON.parse(localStorage.getItem('rorraxy_cart')||'[]')||[];}catch(e){cart=[];}
+const totalQty=cart.reduce((sum,item)=>sum+(parseInt(item.qty,10)||0),0);
+const badge=document.getElementById('footerCartItemCountBadge');
+if(badge)badge.innerText=totalQty;
+}
+function toggleChatModal(){
+const modal=document.getElementById('chatModalOverlay');
+const isOpening=modal.style.display!=='flex';
+modal.style.display=isOpening?'flex':'none';
+if(isOpening){setTimeout(()=>{const inp=document.getElementById('chatMessageInput');if(inp)inp.focus();},50);}
+}
+function sendChatMessage(){
+const input=document.getElementById('chatMessageInput');
+const box=document.getElementById('chatMessagesContainer');
+const warningArea=document.getElementById('chatWarningArea');
+const text=input.value.trim();
+warningArea.innerHTML="";
+if(text!==""){
+const phoneRegex=/(\+?\d{1,4}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}|\d{10,11}/;
+const emailRegex=/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+const urlRegex=/(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|dev|app|store))/i;
+if(phoneRegex.test(text)||emailRegex.test(text)||urlRegex.test(text)){
+warningArea.innerHTML=`<div class="chat-warning-msg"><i class="fa-solid fa-triangle-exclamation"></i> SHARING PHONE NUMBERS, EMAILS, OR LINKS IS STRICTLY PROHIBITED.</div>`;
+return;
+}
+const msgDiv=document.createElement('div');
+msgDiv.style.cssText="background:var(--gold-gradient);color:#000;padding:6px 10px;border-radius:8px;font-size:0.70rem;font-weight:700;max-width:85%;align-self:flex-end;word-break:break-word;";
+msgDiv.textContent=text;
+box.appendChild(msgDiv);
+input.value="";
+box.scrollTop=box.scrollHeight;
+}
+}
+async function triggerMainAffiliateShare(event){
+if(event)event.stopPropagation();
+const prodId=currentActiveProduct?(currentActiveProduct.id||currentActiveProduct.product_id||'101'):'101';
+const title=currentActiveProduct?(currentActiveProduct.title||'Product Details'):'Product Details';
+await triggerAutoShare(event,prodId,title);
+}
+async function copyTextToClipboard(text){
+if(navigator.clipboard&&window.isSecureContext){try{await navigator.clipboard.writeText(text);return true;}catch(e){}}
+try{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}
+}
+function showShareFeedback(btnEl){
+if(!btnEl)return;
+const orig=btnEl.innerHTML;
+btnEl.innerHTML=`<i class="fa-solid fa-check"></i>`;
+setTimeout(()=>{btnEl.innerHTML=orig;},1400);
+}
+async function triggerAutoShare(event,productId,productTitle){
+if(event)event.stopPropagation();
+const btnEl=event&&event.currentTarget?event.currentTarget:null;
+const shareUrl=generateAffiliateUrl(productId);
+const shareText=`${productTitle} - rorraxy Wholesale`;
+if(typeof navigator.share==='function'){
+try{
+await navigator.share({title:productTitle,text:shareText,url:shareUrl});
+showShareFeedback(btnEl);
+return;
+}catch(err){if(err&&err.name==='AbortError')return;}
+}
+await copyTextToClipboard(shareUrl);
+showShareFeedback(btnEl);
+openUniversalShareModal(productTitle,shareText,shareUrl);
+}
+function openUniversalShareModal(title,text,url){
+const modal=document.getElementById('universalShareModal');
+const grid=document.getElementById('shareTargetGrid');
+const urlInput=document.getElementById('shareModalUrlInput');
+const copyBtn=document.getElementById('shareModalCopyBtn');
+if(copyBtn)copyBtn.innerText='COPY';
+if(urlInput)urlInput.value=url;
+const encUrl=encodeURIComponent(url);
+const encText=encodeURIComponent(`${text}\n${url}`);
+const encTitle=encodeURIComponent(title);
+const targets=[
+{name:'WHATSAPP',icon:'fa-brands fa-whatsapp',href:`https://wa.me/?text=${encText}`},
+{name:'TELEGRAM',icon:'fa-brands fa-telegram',href:`https://t.me/share/url?url=${encUrl}&text=${encText}`},
+{name:'MESSENGER',icon:'fa-brands fa-facebook-messenger',href:`https://www.facebook.com/dialog/send?link=${encUrl}&app_id=291494419107518&redirect_uri=${encUrl}`},
+{name:'FACEBOOK',icon:'fa-brands fa-facebook',href:`https://www.facebook.com/sharer/sharer.php?u=${encUrl}`},
+{name:'X / TWITTER',icon:'fa-brands fa-x-twitter',href:`https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}`},
+{name:'LINKEDIN',icon:'fa-brands fa-linkedin',href:`https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}`},
+{name:'REDDIT',icon:'fa-brands fa-reddit',href:`https://www.reddit.com/submit?url=${encUrl}&title=${encTitle}`},
+{name:'EMAIL APP',icon:'fa-solid fa-envelope',href:`mailto:?subject=${encTitle}&body=${encText}`},
+{name:'SYSTEM / APP',icon:'fa-solid fa-up-right-from-square',href:url,copyFirst:true}
+];
+grid.innerHTML=targets.map(t=>`<a class="share-target-btn" href="${escapeHtmlAttr(t.href)}" target="_blank" rel="noopener noreferrer" ${t.copyFirst?`onclick="copyTextToClipboard('${escapeJsSingle(url)}')"`:''}><i class="${t.icon}"></i><span>${t.name}</span></a>`).join('');
+modal.style.display='flex';
+}
+function closeShareModal(){const modal=document.getElementById('universalShareModal');if(modal)modal.style.display='none';}
+async function copyShareLinkFromModal(){
+const input=document.getElementById('shareModalUrlInput');
+const btn=document.getElementById('shareModalCopyBtn');
+if(!input)return;
+input.select();
+await copyTextToClipboard(input.value);
+if(btn){btn.innerText='COPIED';setTimeout(()=>{btn.innerText='COPY';},1400);}
+}
+</script>
 </body>
 </html>
