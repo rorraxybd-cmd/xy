@@ -1001,6 +1001,97 @@ color: #ff2d55 !important;
   border: none;
   background: #000000;
 }
+
+/* ==== SHARE MODAL ==== */
+.share-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+.share-modal-overlay.active { display: flex; }
+.share-modal-box {
+    background: #0f0f18;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.9);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.share-modal-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    text-transform: uppercase;
+}
+.universal-share-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.share-target-btn {
+    background: #06060a;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+    padding: 10px 6px;
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.share-target-btn:hover {
+    background: var(--gold-gradient);
+    color: #000000;
+    border-color: transparent;
+}
+.share-target-btn i { font-size: 1.1rem; }
+.share-link-copy-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+.share-link-box {
+    flex: 1;
+    min-width: 0;
+    background: #050508;
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--gold-solid);
+    font-size: 0.65rem;
+    outline: none;
+    text-transform: none;
+}
+.copy-btn {
+    background: var(--gold-gradient);
+    color: #000;
+    border: none;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.65rem;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -1429,6 +1520,19 @@ color: #ff2d55 !important;
 </div>
 </div>
 
+<!-- Share Modal -->
+<div id="worldShareModal" class="share-modal-overlay" onclick="if(event.target===this) closeWorldShareModal()">
+    <div class="share-modal-box">
+        <div class="share-modal-title"><i class="fa-solid fa-share-nodes"></i> SHARE BUSINESS LINK</div>
+        <div id="worldShareTargetGrid" class="universal-share-grid"></div>
+        <div class="share-link-copy-row">
+            <input type="text" id="worldShareUrlInput" class="share-link-box" readonly>
+            <button type="button" id="worldShareCopyBtn" onclick="copyWorldShareLink()" class="copy-btn">COPY</button>
+        </div>
+        <button type="button" onclick="closeWorldShareModal()" style="background:#181824; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:800; font-size:0.75rem; cursor:pointer;">CLOSE</button>
+    </div>
+</div>
+
 </div>
 
 <nav class="bottom-nav-bar">
@@ -1558,18 +1662,108 @@ function toggleLike() {
   btn.classList.toggle('liked');
 }
 
+// ✅ Update: Add worldShareModal functionality
 function shareAffiliateVideo() {
-  const affiliateId = localStorage.getItem('rorraxy_affiliate_id') || 'mrmasudar'; 
-  const currentUrl = window.location.origin + window.location.pathname + '?ref=' + affiliateId;
-  if (navigator.share) {
-    navigator.share({
-      title: 'rorraxy Ecosystem Video',
-      url: currentUrl
-    }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(currentUrl);
-    alert('Affiliate link copied! ID: ' + affiliateId);
-  }
+    const affId = localStorage.getItem('rorraxy_active_affiliate_ref') || localStorage.getItem('rorraxy_affiliate_id') || 'mrmasudar';
+    const shareUrl = `${window.location.origin}/bs/index.html?ref=${encodeURIComponent(affId)}&rate=20&platform=business`;
+    
+    const modal = document.getElementById('worldShareModal');
+    const grid = document.getElementById('worldShareTargetGrid');
+    const urlInput = document.getElementById('worldShareUrlInput');
+    const copyBtn = document.getElementById('worldShareCopyBtn');
+    
+    if (copyBtn) copyBtn.innerText = 'COPY';
+    if (urlInput) urlInput.value = shareUrl;
+    
+    const shareText = `rorraxy Business Problem Solving - Global Ecosystem`;
+    const shareTitle = `rorraxy Business Solutions`;
+    
+    const encUrl = encodeURIComponent(shareUrl);
+    const encText = encodeURIComponent(`${shareText}\n${shareUrl}`);
+    const encTitle = encodeURIComponent(shareTitle);
+    
+    const targets = [
+        { name: 'WHATSAPP', icon: 'fa-brands fa-whatsapp', href: `https://wa.me/?text=${encText}` },
+        { name: 'TELEGRAM', icon: 'fa-brands fa-telegram', href: `https://t.me/share/url?url=${encUrl}&text=${encText}` },
+        { name: 'MESSENGER', icon: 'fa-brands fa-facebook-messenger', href: `https://www.facebook.com/dialog/send?link=${encUrl}&app_id=291494419107518&redirect_uri=${encUrl}` },
+        { name: 'FACEBOOK', icon: 'fa-brands fa-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}` },
+        { name: 'X / TWITTER', icon: 'fa-brands fa-x-twitter', href: `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}` },
+        { name: 'LINKEDIN', icon: 'fa-brands fa-linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}` },
+        { name: 'EMAIL APP', icon: 'fa-solid fa-envelope', href: `mailto:?subject=${encTitle}&body=${encText}` },
+        { name: 'SYSTEM SHARE', icon: 'fa-solid fa-up-right-from-square', href: '#', onclick: `triggerNativeWorldShare(event, '${shareUrl}', '${shareTitle}')` }
+    ];
+    
+    grid.innerHTML = targets.map(t => {
+        let onclickAttr = t.onclick ? `onclick="${t.onclick}"` : '';
+        let hrefAttr = t.href && t.href !== '#' ? `href="${t.href}" target="_blank" rel="noopener noreferrer"` : `href="#"`;
+        return `
+            <a class="share-target-btn" ${hrefAttr} ${onclickAttr}>
+                <i class="${t.icon}"></i>
+                <span>${t.name}</span>
+            </a>
+        `;
+    }).join('');
+    
+    modal.classList.add('active');
+}
+
+function closeWorldShareModal() {
+    document.getElementById('worldShareModal').classList.remove('active');
+}
+
+async function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (e) {}
+    }
+    try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+    } catch (e) {
+        return false;
+    }
+}
+
+async function copyWorldShareLink() {
+    const input = document.getElementById('worldShareUrlInput');
+    const btn = document.getElementById('worldShareCopyBtn');
+    if (!input) return;
+    input.select();
+    await copyTextToClipboard(input.value);
+    if (btn) {
+        btn.innerText = 'COPIED';
+        setTimeout(() => { btn.innerText = 'COPY'; }, 1400);
+    }
+}
+
+async function triggerNativeWorldShare(event, url, title) {
+    if (event) event.preventDefault();
+    if (navigator.share) {
+        try {
+            await navigator.share({ title: title, url: url });
+            closeWorldShareModal();
+        } catch (e) {}
+    } else {
+        await copyTextToClipboard(url);
+        alert("Link copied to clipboard!");
+    }
+}
+
+// Capture ref param if user lands here from an affiliate link
+const urlParams = new URLSearchParams(window.location.search);
+const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+if (refParam) {
+    localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
 }
 
 function toggleVideoAspect() {
