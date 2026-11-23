@@ -18,8 +18,7 @@ export async function onRequest(context) {
     if (action === "send_magic_link" || action === "verify") {
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), {
-          status: 405,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+          status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
@@ -45,8 +44,7 @@ export async function onRequest(context) {
 
       if (!email) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
@@ -78,13 +76,10 @@ export async function onRequest(context) {
 
       return new Response(JSON.stringify({
         success: true,
-        message: "Magic verification code and IP recorded successfully",
+        message: "Magic verification code recorded successfully",
         unique_affiliate_id: generatedUniqueId,
         is_existing: !!existingRecord && !!existingRecord.first_name
-      }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
+      }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     if (action === "verify_magic_code" && request.method === "POST") {
@@ -107,10 +102,7 @@ export async function onRequest(context) {
       const now = new Date().toISOString();
 
       await env.retail.prepare(`
-        UPDATE rorraxy_affiliates_master SET
-          user_ip = ?,
-          updated_at = ?
-        WHERE email = ?
+        UPDATE rorraxy_affiliates_master SET user_ip = ?, updated_at = ? WHERE email = ?
       `).bind(userIp, now, email).run();
 
       const record = await env.retail.prepare(
@@ -125,10 +117,7 @@ export async function onRequest(context) {
         unique_affiliate_id: record?.unique_affiliate_id,
         is_complete: !!isComplete,
         user_data: record || null
-      }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
+      }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     if (action === "register" && request.method === "POST") {
@@ -138,37 +127,23 @@ export async function onRequest(context) {
 
       if (!email) {
         return new Response(JSON.stringify({ success: false, error: "Email required" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
       await env.retail.prepare(`
         UPDATE rorraxy_affiliates_master SET
-          first_name = ?,
-          last_name = ?,
-          country_code = COALESCE(NULLIF(?, ''), country_code),
-          phone = ?,
-          promo_channel = ?,
-          payment_method = ?,
-          account_details = ?,
-          updated_at = ?
+          first_name = ?, last_name = ?, country_code = COALESCE(NULLIF(?, ''), country_code),
+          phone = ?, promo_channel = ?, payment_method = ?, account_details = ?, updated_at = ?
         WHERE email = ?
       `).bind(
-        data.first_name || "",
-        data.last_name || "",
-        data.country_code || "",
-        data.phone || "",
-        data.promo_channel || "",
-        data.payment_method || "",
-        data.account_details || "",
-        now,
-        email
+        data.first_name || "", data.last_name || "", data.country_code || "",
+        data.phone || "", data.promo_channel || "", data.payment_method || "",
+        data.account_details || "", now, email
       ).run();
 
       return new Response(JSON.stringify({ success: true, message: "Affiliate info updated successfully" }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
@@ -176,20 +151,17 @@ export async function onRequest(context) {
       const affiliateId = url.searchParams.get("affiliate_id");
       if (!affiliateId) {
         return new Response(JSON.stringify({ success: false, error: "Affiliate ID required" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
       const queryParam = affiliateId.toLowerCase().trim();
       const info = await env.retail.prepare(`
-        SELECT * FROM rorraxy_affiliates_master
-        WHERE email = ? OR unique_affiliate_id = ?
+        SELECT * FROM rorraxy_affiliates_master WHERE email = ? OR unique_affiliate_id = ?
       `).bind(queryParam, queryParam).all();
 
       return new Response(JSON.stringify({ success: true, data: info.results }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
@@ -197,22 +169,29 @@ export async function onRequest(context) {
       const affiliateId = (url.searchParams.get("affiliate_id") || "").toLowerCase().trim();
 
       const stats = await env.retail.prepare(`
-        SELECT
-          unique_affiliate_id,
-          total_earnings,
-          available_balance,
-          total_clicks,
-          total_referrals,
-          status,
-          admin_approval,
-          payout_status
-        FROM rorraxy_affiliates_master
-        WHERE email = ? OR unique_affiliate_id = ?
+        SELECT unique_affiliate_id, total_earnings, available_balance, total_clicks, total_referrals, status, admin_approval, payout_status
+        FROM rorraxy_affiliates_master WHERE email = ? OR unique_affiliate_id = ?
       `).bind(affiliateId, affiliateId).all();
 
       return new Response(JSON.stringify({ success: true, data: stats.results }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    // ✅ রিপোর্ট পেজের জন্য নতুন কনভার্সন লজিক
+    if (action === "conversion" && request.method === "GET") {
+      const affiliateId = (url.searchParams.get("affiliate_id") || "").toLowerCase().trim();
+
+      const conversions = await env.retail.prepare(`
+        SELECT order_id, total_amount as order_amount, affiliate_commission as commission_amount, 
+               platform as platform_name, order_status as status, created_at
+        FROM retail_orders 
+        WHERE affiliate_id = ? AND affiliate_id != 'rorraxy-store'
+        ORDER BY created_at DESC LIMIT 50
+      `).bind(affiliateId).all();
+
+      return new Response(JSON.stringify({ success: true, data: conversions.results }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
@@ -225,30 +204,23 @@ export async function onRequest(context) {
 
         await env.retail.prepare(`
           UPDATE rorraxy_affiliates_master SET
-            available_balance = CASE
-              WHEN available_balance >= ? THEN available_balance - ?
-              ELSE available_balance
-            END,
-            payout_status = 'pending',
-            updated_at = ?
+            available_balance = CASE WHEN available_balance >= ? THEN available_balance - ? ELSE available_balance END,
+            payout_status = 'pending', updated_at = ?
           WHERE (email = ? OR unique_affiliate_id = ?) AND available_balance >= ?
         `).bind(requestedAmount, requestedAmount, now, affiliateId, affiliateId, requestedAmount).run();
 
         return new Response(JSON.stringify({ success: true, message: "Payout request logged successfully" }), {
-          status: 200,
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+          status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
     }
 
     return new Response(JSON.stringify({ message: "rorraxy Master Affiliate API Active" }), {
-      status: 200,
-      headers: corsHeaders
+      status: 200, headers: corsHeaders
     });
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 }
