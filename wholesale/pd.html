@@ -19,6 +19,7 @@
             --card-wholesale: #08080c;
             --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             --gold-solid: #d4af37;
+            --pink-accent: #ff2a85;
             --text-white: #ffffff;
             --text-gray: #a0a0b8;
             --font-main: 'Poppins', sans-serif;
@@ -106,6 +107,10 @@
         }
         .product-info-section-box { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; width: 100%; }
         .section-box-title { font-size: 0.65rem; font-weight: 700; color: var(--gold-solid); display: flex; align-items: center; gap: 6px; }
+        .custom-wood-top-badge {
+            font-size: 0.64rem; font-weight: 800; letter-spacing: 0.6px; color: var(--pink-accent);
+            line-height: 1.3; word-break: break-word;
+        }
         .product-title-restricted {
             font-size: 1.05rem; font-weight: 700; letter-spacing: 0.4px; line-height: 1.35;
             width: 100%; word-break: break-word; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -261,6 +266,7 @@
 
                 <div class="product-info-section-box">
                     <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
+                    <div class="custom-wood-top-badge">CUSTOM SIZE & COLOR • TEAK, MAHOGANY, GAMARI</div>
                     <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
                     <div class="standard-description-box" id="unlimitedDescriptionContent">
                         Fetching wholesale ecosystem details from Cloudflare database...
@@ -631,10 +637,10 @@
 
         function escapeHtmlAttr(str) {
             return String(str || '')
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+                .replace(/&/g, '&')
+                .replace(/"/g, '"')
+                .replace(/</g, '<')
+                .replace(/>/g, '>');
         }
 
         function escapeJsSingle(str) {
@@ -812,12 +818,10 @@
             const activeAffId = getActiveAffiliateId();
             const priceNum = calculateAppliedUnitPrice();
 
-            // ✅ প্রোডাক্টের আসল বর্ণনা সংরক্ষণ (DETAILS-এ দেখানোর জন্য)
             const productDescText = cleanDescriptionText(
                 currentActiveProduct.description || currentActiveProduct.desc || ""
             ) || "High-grade bulk wholesale manufacturing supply meeting international standards.";
 
-            // ✅ ডুপ্লিকেট চেক: productId + size (ইমেজ বাদ)
             const existingItem = cart.find(item =>
                 String(item.productId) === String(prodId) &&
                 String(item.size || '').toUpperCase() === chosenSize
@@ -837,13 +841,13 @@
                     sellerId: currentActiveProduct.seller_id || currentActiveProduct.sellerId || "SELLER-RORRAXY-01",
                     affiliateId: activeAffId || null,
                     title: currentActiveProduct.title || document.getElementById('activeProductTitleHeading').innerText,
-                    description: productDescText,                    // ✅ আসল description
+                    description: productDescText,
                     price: `$${priceNum.toFixed(2)}`,
                     qty: currentItemQuantity,
-                    size: chosenSize,                                 // ✅ কাস্টম নোট/স্পেক
+                    size: chosenSize,
                     mode: 'wholesale',
                     img: finalImgUrl,
-                    added_at: new Date().toISOString()                // ✅ ট্র্যাকিং
+                    added_at: new Date().toISOString()
                 });
             }
 
