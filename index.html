@@ -182,11 +182,22 @@ function debounce(func,wait){let timeout;return function executedFunction(...arg
 function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url))return;preloadedUrls.add(url);const img=new Image();if(highPriority)img.fetchPriority='high';img.decoding='async';img.src=url;}
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
 function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
+
+// ✅ UPDATED: Capture ref, rate, and platform from URL
 window.addEventListener('DOMContentLoaded',()=>{
 const urlParams=new URLSearchParams(window.location.search);
 const refParam=urlParams.get('ref')||urlParams.get('seller_id')||urlParams.get('affiliate');
-if(refParam)localStorage.setItem('rorraxy_active_affiliate_ref',refParam);
-else if(!localStorage.getItem('rorraxy_active_affiliate_ref'))localStorage.setItem('rorraxy_active_affiliate_ref','rorraxy-store');
+const rateParam=urlParams.get('rate');
+const platformParam=urlParams.get('platform');
+
+if(refParam){
+    localStorage.setItem('rorraxy_active_affiliate_ref',refParam);
+    if(rateParam)localStorage.setItem('rorraxy_active_commission_rate',rateParam);
+    if(platformParam)localStorage.setItem('rorraxy_active_platform',platformParam);
+}else if(!localStorage.getItem('rorraxy_active_affiliate_ref')){
+    localStorage.setItem('rorraxy_active_affiliate_ref','rorraxy-store');
+}
+
 loadLiveProducts();
 updateCartBadgeCount();
 updateSideActionState();
@@ -607,21 +618,39 @@ if(cartIcon){cartIcon.style.transition='transform 0.14s ease';cartIcon.style.tra
 }
 requestAnimationFrame(step);
 }
+
+// ✅ UPDATED: Added rate and platform into Cart
 function confirmAddToCart(e,pId,title,price,sellerId,sku){
 const cart=JSON.parse(localStorage.getItem('rorraxy_cart')||'[]');
 const ref=localStorage.getItem('rorraxy_active_affiliate_ref')||'rorraxy-store';
+const rate=localStorage.getItem('rorraxy_active_commission_rate')||'13'; 
+const platform=localStorage.getItem('rorraxy_active_platform')||'retail';
+
 let note='';
 const orderNote=$('orderCustomNoteInput');
 if(orderNote&&orderNote.value.trim()){note=orderNote.value.trim();}
 else{const detailsNote=$('inpageCustomNoteInput');if(detailsNote&&detailsNote.value.trim()){note=detailsNote.value.trim();}}
 if(note)persistentCustomNote=note;
+
 const skuValue=String(sku||'').trim().toUpperCase();
 const existing=cart.find(i=>String(i.productId)===String(pId)&&i.img===selectedVariantImg&&(i.note||'')===note);
 if(existing){
-existing.qty+=currentProductQty;
-if(skuValue&&!existing.sku)existing.sku=skuValue;
+    existing.qty+=currentProductQty;
+    if(skuValue&&!existing.sku)existing.sku=skuValue;
 }else{
-cart.push({productId:pId,sellerId:sellerId||'rorraxy-store',sku:skuValue,affiliateRef:ref,title,price:`$${parseFloat(price).toFixed(2)}`,qty:currentProductQty,img:selectedVariantImg,note});
+    cart.push({
+        productId:pId,
+        sellerId:sellerId||'rorraxy-store',
+        sku:skuValue,
+        affiliateRef:ref,
+        affiliateId:ref,
+        commissionRate:parseFloat(rate),
+        platform:platform,
+        title,price:`$${parseFloat(price).toFixed(2)}`,
+        qty:currentProductQty,
+        img:selectedVariantImg,
+        note
+    });
 }
 localStorage.setItem('rorraxy_cart',JSON.stringify(cart));
 updateCartBadgeCount();
@@ -698,9 +727,13 @@ body.innerHTML=`<div class="fs-profile-header-box"><h2 class="fs-profile-name">S
 window.removeSavedItem=function(e,id){if(e)e.stopPropagation();const saved=JSON.parse(localStorage.getItem('rorraxy_saved_video_objects')||'[]').filter(i=>String(i.id||i.product_id)!==String(id));localStorage.setItem('rorraxy_saved_video_objects',JSON.stringify(saved));renderSavedGalleryContent();updateSideActionState();};
 window.clearAllSavedVideos=function(){localStorage.removeItem('rorraxy_saved_video_objects');renderSavedGalleryContent();updateSideActionState();};
 window.selectSavedVideo=function(id){let idx=activeProductList.findIndex(p=>String(p.id||p.product_id)===String(id));if(idx===-1){activeProductList=[...globalMasterProductsList];idx=activeProductList.findIndex(p=>String(p.id||p.product_id)===String(id));}if(idx!==-1)openReelsModal(idx);if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';};
+
+// ✅ UPDATED: Native Share keeps rate & platform
 window.openNativeShare=function(pId){
 const ref=localStorage.getItem('rorraxy_active_affiliate_ref')||'rorraxy-store';
-const url=`${window.location.origin}/index.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(pId)}`;
+const rate=localStorage.getItem('rorraxy_active_commission_rate')||'13';
+const platform=localStorage.getItem('rorraxy_active_platform')||'retail';
+const url=`${window.location.origin}/index.html?ref=${encodeURIComponent(ref)}&rate=${rate}&platform=${platform}&product=${encodeURIComponent(pId)}`;
 if(navigator.share)navigator.share({title:'rorraxy product',url}).catch(()=>{});
 else if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
 };
