@@ -96,6 +96,7 @@
         .seller-table th { background: #050508; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .seller-table td { text-transform: none; color: var(--text-white); }
         .prod-thumb { width: 34px; height: 34px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-soft); background: #000; }
+        .sku-tag { display: inline-block; font-size: 0.58rem; color: var(--gold-solid); background: rgba(212, 175, 55, 0.1); padding: 1px 6px; border-radius: 4px; margin-top: 2px; font-weight: 700; letter-spacing: 0.3px; }
         #customNotifyModal, #pendingPopupModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 99999; justify-content: center; align-items: center; padding: 14px; backdrop-filter: blur(8px); }
         .notify-card { background: var(--card-retail); border: 1px solid var(--border-soft); border-radius: 16px; padding: 20px 16px; width: 100%; max-width: 340px; text-align: center; }
         .pending-popup-card { background: #050508; border: 1px solid var(--gold-solid); border-radius: 20px; padding: 24px 18px; width: 100%; max-width: 380px; text-align: center; animation: popScale 0.22s ease-out; }
@@ -141,7 +142,7 @@
                                 <option value="+92">🇵🇰 +92</option>
                                 <option value="+971">🇦🇪 +971</option>
                                 <option value="+1">🇺🇸 +1</option>
-                               <option value="+93">🇦🇫 +93</option>
+                                <option value="+93">🇦🇫 +93</option>
                                 <option value="+355">🇦🇱 +355</option>
                                 <option value="+213">🇩🇿 +213</option>
                                 <option value="+376">🇦🇩 +376</option>
@@ -477,7 +478,7 @@
                     <table class="seller-table">
                         <thead>
                             <tr>
-                                <th>PRODUCT</th>
+                                <th>PRODUCT & SKU</th>
                                 <th>CATEGORY</th>
                                 <th>PRICE</th>
                                 <th>STOCK</th>
@@ -815,11 +816,18 @@
                 </div>
                 <div class="step-section" id="upload-step-5" style="display:none; width: 100%;">
                     <div class="info-card">
-                        <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> STEP 5: DETAILS</div>
+                        <div class="info-card-title"><i class="fa-solid fa-circle-info"></i> STEP 5: DETAILS & SKU</div>
                         <button type="button" class="btn-secondary" onclick="prevUploadStep(4)" style="margin-bottom: 10px;"><i class="fa-solid fa-arrow-left"></i> BACK</button>
                         <div class="form-group full-width" style="margin-bottom: 8px;">
                             <label>TITLE (MAX 25 CHARS)<span class="req-star">*</span></label>
-                            <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="PRODUCT TITLE" required style="text-transform: uppercase;">
+                            <input type="text" class="form-control" id="product_title" maxlength="25" placeholder="PRODUCT TITLE" oninput="autoGenerateSellerSku()" required style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group full-width" style="margin-bottom: 8px;">
+                            <label>SKU (AUTO-GENERATED / EDITABLE)</label>
+                            <div style="display: flex; gap: 6px;">
+                                <input type="text" class="form-control" id="product_sku" placeholder="AUTO-GENERATED SKU" style="text-transform: uppercase; color: var(--gold-solid); font-weight: 700;">
+                                <button type="button" class="btn-secondary" onclick="autoGenerateSellerSku(true)" style="padding: 8px 10px; font-size: 0.65rem; flex-shrink: 0;"><i class="fa-solid fa-rotate"></i> AUTO</button>
+                            </div>
                         </div>
                         <div class="form-group full-width" style="margin-bottom: 8px;">
                             <label>DESCRIPTION<span class="req-star">*</span></label>
@@ -900,6 +908,10 @@
     <!-- QR Sync Modal -->
     <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:12px;">
         <div style="background:#06060a; border:1px solid var(--border-soft); border-radius:14px; padding:18px 14px; width:100%; max-width:320px; text-align:center;">
+            <h3 style="font-size
+    <!-- QR Sync Modal -->
+    <div id="deviceSyncModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center; padding:12px;">
+        <div style="background:#06060a; border:1px solid var(--border-soft); border-radius:14px; padding:18px 14px; width:100%; max-width:320px; text-align:center;">
             <h3 style="font-size:0.85rem; font-weight:800; background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px;">DEVICE SYNC QR</h3>
             <div id="qrcodeContainer" style="background:#ffffff; padding:8px; border-radius:8px; display:inline-block; margin-bottom:10px;"></div>
             <button type="button" onclick="closeMultiDeviceSyncModal()" class="btn-gold" style="width:100%;">CLOSE</button>
@@ -940,7 +952,7 @@
         window.selectedCategoryValue = "";
         let uploadedImageUrls = [];
         let uploadedVideoUrl = "";
-        let compressedLogoData = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/mr%20masudar%20logo%20(3).png";
+        let compressedLogoData = "https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
         let generatedMagicCode = '';
         let temporarySellerEmail = '';
         let temporarySellerPhone = '';
