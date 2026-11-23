@@ -35,6 +35,7 @@ export async function onRequestPost(context) {
       });
     }
 
+    // Group items by seller
     const sellerGroups = {};
     items.forEach(item => {
       const sellerId = item.sellerId || item.seller_id || 'RRX-MAIN-SELLER';
@@ -51,22 +52,40 @@ export async function onRequestPost(context) {
       const subOrderId = master_order_id + '-' + sellerId.substring(0, 6).toUpperCase() + '-' + Math.floor(100 + Math.random() * 900);
 
       let subOrderTotal = 0;
+      let combinedCustomNotes = []; // নোট একত্রিত করার জন্য অ্যারে
+
       sellerItems.forEach(item => {
         const price = parseFloat((item.price || "0").toString().replace('$', ''));
         const qty = parseInt(item.qty || 1, 10);
         subOrderTotal += (price * qty);
+
+        // কাস্টম নোট এক্সট্রাক্ট করা
+        const noteText = (item.custom_note || item.note || '').toString().trim();
+        if (noteText) {
+            // যদি একাধিক প্রোডাক্ট থাকে তবে প্রোডাক্টের নামসহ নোট দেখাবে
+            if (sellerItems.length > 1) {
+                combinedCustomNotes.push(`[${item.title || 'Item'}]: ${noteText}`);
+            } else {
+                combinedCustomNotes.push(noteText);
+            }
+        }
       });
+
+      // নোটগুলোকে একটি স্ট্রিং-এ রূপান্তর (নতুন লাইন দিয়ে আলাদা করা)
+      const finalCustomNote = combinedCustomNotes.join('\n');
 
       const calculatedAffiliateComm = Number(affiliate_commission || 0);
       const calculatedAdminComm = Number(admin_commission || 0);
 
+      // SQL Query-তে custom_note যুক্ত করা হয়েছে
       const query = `
         INSERT INTO retail_orders (
           master_order_id, sub_order_id, seller_id, customer_name, customer_phone,
           shipping_address, customer_country, payment_method, payment_status,
           transaction_id, total_amount, currency, affiliate_id,
-          affiliate_commission, admin_commission, order_status, items
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          affiliate_commission, admin_commission, order_status, items,
+          custom_note
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       await db.prepare(query)
@@ -87,7 +106,8 @@ export async function onRequestPost(context) {
           calculatedAffiliateComm,
           calculatedAdminComm,
           order_status || 'Pending',
-          JSON.stringify(sellerItems)
+          JSON.stringify(sellerItems),
+          finalCustomNote // <- এখানে কাস্টম নোট বাইন্ড করা হলো
         )
         .run();
 
