@@ -19,7 +19,13 @@
 <script src="/ecosystem-core.js" defer></script>
 <script src="/popup.js" defer></script>
 <script>
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('SW ok:',reg.scope)).catch(err=>console.log('SW fail:',err));});}
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js').then(reg=>{
+      reg.update();
+    }).catch(err=>console.log('SW fail:',err));
+  });
+}
 </script>
 <style>
 :root{--bg-retail:#000000;--card-retail:#08080c;--gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 25%,#b38728 50%,#fbf5b7 75%,#aa771c 100%);--gold-solid:#d4af37;--pink-accent:#ff2a85;--pink-gradient:linear-gradient(135deg,#ff2a85 0%,#ff479b 100%);--text-white:#ffffff;--text-gray:#a0a0ab;--font-main:'Poppins',sans-serif;--snap-ease:cubic-bezier(0.16,1,0.3,1);}
@@ -30,17 +36,19 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
 /* ================= SECURE GATEWAY OVERLAY ================= */
-#secureGatewayOverlay {
+#rorraxyAccessGatewayModal {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
-    z-index: 6200;
+    z-index: 6800;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 20px 20px 80px 20px;
-    transition: opacity 0.3s ease;
+}
+#rorraxyAccessGatewayModal.gateway-open {
+    display: flex !important;
 }
 .gateway-card {
     width: 100%;
@@ -63,8 +71,9 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
     background: none;
     border: none;
     color: var(--text-gray);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     cursor: pointer;
+    line-height: 1;
 }
 .gateway-logo {
     width: 80px;
@@ -86,7 +95,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition: transform 0.15s ease;
     text-decoration: none;
 }
 .gateway-btn:active {
@@ -198,26 +207,26 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </head>
 <body id="mainBody">
 
-<!-- SECURE GATEWAY OVERLAY -->
-<div id="secureGatewayOverlay" onclick="if(event.target===this) closeSecureGateway()">
-    <div class="gateway-card">
-        <button type="button" class="gateway-close-btn" onclick="closeSecureGateway()">×</button>
+<!-- SECURE GATEWAY OVERLAY (ISOLATED ID TO PREVENT EXTERNAL SCRIPT OVERRIDE) -->
+<div id="rorraxyAccessGatewayModal" onclick="if(event.target===this) closeRorraxyGateway()">
+    <div class="gateway-card" onclick="event.stopPropagation()">
+        <button type="button" class="gateway-close-btn" onclick="closeRorraxyGateway()">×</button>
         <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
         
         <!-- Customer Access (Directs to account.html) -->
-        <button type="button" class="gateway-btn gold" onclick="goToCustomerAccount()">
+        <a href="/account.html" class="gateway-btn gold" onclick="closeRorraxyGateway()">
             <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
-        </button>
+        </a>
         
         <!-- Seller Access Link -->
-        <button type="button" class="gateway-btn pink" onclick="goToSellerPortal()">
+        <a href="https://seller.rorraxy.com" class="gateway-btn pink" onclick="closeRorraxyGateway()">
             <i class="fa-solid fa-store"></i> SELLER ACCESS
-        </button>
+        </a>
         
         <!-- Affiliate Access Link -->
-        <button type="button" class="gateway-btn pink" onclick="goToAffiliatePortal()">
+        <a href="https://affiliate.rorraxy.com" class="gateway-btn pink" onclick="closeRorraxyGateway()">
             <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
-        </button>
+        </a>
         
         <div class="gateway-footer-text">Secure Encrypted Gateway</div>
     </div>
@@ -250,7 +259,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </div>
 <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search"><i class="fa-solid fa-magnifying-glass action-pure-icon"></i></div>
 <div class="side-action-item save-action-btn" id="sideSaveActionBtn" onclick="handlePinterestInterception(event, 'save')" title="Save"><i class="fa-solid fa-bookmark action-pure-icon"></i></div>
-<div class="side-action-item" id="youActionBtn" onclick="event.stopPropagation(); toggleAccountPortal();" title="You"><i class="fa-solid fa-user action-pure-icon"></i><span class="side-count-text">YOU</span></div>
+<div class="side-action-item" id="youGatewayTriggerBtn" title="You"><i class="fa-solid fa-user action-pure-icon"></i><span class="side-count-text">YOU</span></div>
 <div class="side-action-item" onclick="openCleanGalleryView()" title="Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">GALLERY</span></div>
 </div>
 
@@ -272,44 +281,37 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 <script src="categories.js"></script>
 <script>
-// ================= CLEAN GATEWAY & UI LOGIC =================
-function closeSecureGateway() {
-    const overlay = document.getElementById('secureGatewayOverlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-        overlay.style.opacity = '0';
+// ================= ISOLATED GATEWAY CONTROL (NO DOUBLE TOGGLE) =================
+function openRorraxyGateway(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
+        }
+    }
+    const modal = document.getElementById('rorraxyAccessGatewayModal');
+    if (modal) {
+        modal.classList.add('gateway-open');
     }
 }
-function toggleAccountPortal() {
-    const overlay = document.getElementById('secureGatewayOverlay');
-    if (!overlay) return;
-    const isOpen = overlay.style.display === 'flex';
-    if (isOpen) {
-        closeSecureGateway();
-    } else {
-        overlay.style.display = 'flex';
-        overlay.style.opacity = '1';
+function closeRorraxyGateway() {
+    const modal = document.getElementById('rorraxyAccessGatewayModal');
+    if (modal) {
+        modal.classList.remove('gateway-open');
     }
 }
-function goToCustomerAccount() {
-    closeSecureGateway();
-    window.location.href = '/account.html';
-}
-function goToSellerPortal() {
-    closeSecureGateway();
-    window.location.href = 'https://seller.rorraxy.com';
-}
-function goToAffiliatePortal() {
-    closeSecureGateway();
-    window.location.href = 'https://affiliate.rorraxy.com';
-}
+window.openRorraxyGateway = openRorraxyGateway;
+window.closeRorraxyGateway = closeRorraxyGateway;
+window.toggleAccountPortal = openRorraxyGateway;
 
-window.closeSecureGateway = closeSecureGateway;
-window.toggleAccountPortal = toggleAccountPortal;
-window.goToCustomerAccount = goToCustomerAccount;
-window.goToSellerPortal = goToSellerPortal;
-window.goToAffiliatePortal = goToAffiliatePortal;
-// ============================================================
+(function bindYouButtonSafely() {
+    const btn = document.getElementById('youGatewayTriggerBtn');
+    if (btn) {
+        btn.addEventListener('click', openRorraxyGateway, true);
+    }
+})();
+// ===============================================================================
 
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
@@ -395,7 +397,7 @@ function setupAutoHideSearchOnScroll(){const hideSearch=()=>{const sb=$('floatin
 
 // CLEAN GALLERY FUNCTION (No Gateway Overlap)
 function openCleanGalleryView(){
-    closeSecureGateway();
+    closeRorraxyGateway();
     switchToGridMode(true);
     activeProductList=shuffleArray(globalMasterProductsList);
     renderPinterestHomeGrid(activeProductList);
@@ -427,7 +429,7 @@ function handleHomeToggle(){
 if($('fullscreenIframeOverlay')?.style.display==='flex'){$('fullscreenIframeOverlay').style.display='none';$('fullscreenIframeBody').src='';}
 if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
 if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
-closeSecureGateway(); 
+closeRorraxyGateway(); 
 closeBuyPreview();
 closeInpageDetails();
 $('appContainer')?.classList.remove('active-grid');
