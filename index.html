@@ -107,7 +107,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
     margin-top: 10px;
     letter-spacing: 0.5px;
 }
-/* ================================================================ */
+<button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
 #rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.1s linear;pointer-events:none;}
 .loader-logo-box{width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-solid);box-shadow:0 0 15px rgba(212,175,55,0.3);}
@@ -188,6 +188,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .detail-sku-badge i{font-size:0.6rem;flex-shrink:0;}
 .fullscreen-iframe-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:calc(100vh - 54px);height:calc(100dvh - 54px);background:#000;z-index:4500;flex-direction:column;}
 .fullscreen-iframe-body{flex:1;width:100%;border:none;background:#000;}
+.side-action-item.you-active .action-pure-icon,.side-action-item.you-active .side-count-text{color:var(--pink-accent)!important;background:none!important;-webkit-background-clip:initial!important;-webkit-text-fill-color:initial!important;}
 .category-transparent-overlay,.saved-gallery-overlay{z-index:6500!important;}
 .fs-profile-header-box{display:flex;flex-direction:column;align-items:center;margin-bottom:15px;gap:8px;width:100%;}
 .fs-profile-name{font-size:0.95rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -197,31 +198,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </style>
 </head>
 <body id="mainBody">
-
-<!-- SECURE GATEWAY OVERLAY -->
-<div id="secureGatewayOverlay" onclick="if(event.target===this) closeSecureGateway()">
-    <div class="gateway-card">
-        <button type="button" class="gateway-close-btn" onclick="closeSecureGateway()">×</button>
-        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
-        
-        <!-- Customer Access (Directs directly to Customer Login/Dashboard view in account.html) -->
-        <button type="button" class="gateway-btn gold" onclick="goToCustomerAccount(event)">
-            <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
-        </button>
-        
-        <!-- Seller Access Link (Subdomain) -->
-        <button type="button" class="gateway-btn pink" onclick="goToSellerPortal()">
-            <i class="fa-solid fa-store"></i> SELLER ACCESS
-        </button>
-        
-        <!-- Affiliate Access Link (Subdomain) -->
-        <button type="button" class="gateway-btn pink" onclick="goToAffiliatePortal()">
-            <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
-        </button>
-        
-        <div class="gateway-footer-text">Secure Encrypted Gateway</div>
-    </div>
-</div>
 
 <div id="rorraxyLoaderOverlay">
 <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" decoding="sync"></div>
@@ -272,50 +248,57 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 <script src="categories.js"></script>
 <script>
-// ================= CLEAN GATEWAY & UI LOGIC =================
-function closeSecureGateway() {
-    const overlay = document.getElementById('secureGatewayOverlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-        overlay.style.opacity = '0';
-    }
-}
-function toggleAccountPortal() {
-    const overlay = document.getElementById('secureGatewayOverlay');
-    if (!overlay) return;
-    const isOpen = overlay.style.display === 'flex';
-    if (isOpen) {
-        closeSecureGateway();
-    } else {
-        overlay.style.display = 'flex';
-        overlay.style.opacity = '1';
-    }
-}
-function goToCustomerAccount(e) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    closeSecureGateway();
-    // Direct parameter so account.html skips duplicate portal screen
-    const targetUrl = new URL('/account.html?mode=customer&direct=1', window.location.origin).href;
-    window.location.assign(targetUrl);
-}
-function goToSellerPortal() {
-    closeSecureGateway();
-    window.location.href = 'https://seller.rorraxy.com';
-}
-function goToAffiliatePortal() {
-    closeSecureGateway();
-    window.location.href = 'https://affiliate.rorraxy.com';
+// ================= CLEAN YOU TOGGLE ACCOUNT LOGIC =================
+function isAccountPortalOpen() {
+    const overlay = document.getElementById('fullscreenIframeOverlay');
+    const iframe = document.getElementById('fullscreenIframeBody');
+    if (!overlay || !iframe) return false;
+    const currentSrc = iframe.getAttribute('src') || '';
+    return overlay.style.display === 'flex' && currentSrc.includes('account.html');
 }
 
-window.closeSecureGateway = closeSecureGateway;
+function closeAccountPortal() {
+    const overlay = document.getElementById('fullscreenIframeOverlay');
+    const iframe = document.getElementById('fullscreenIframeBody');
+    const youBtn = document.getElementById('youActionBtn');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+    if (iframe) {
+        iframe.src = '';
+    }
+    if (youBtn) {
+        youBtn.classList.remove('you-active');
+    }
+}
+
+function toggleAccountPortal() {
+    const overlay = document.getElementById('fullscreenIframeOverlay');
+    const iframe = document.getElementById('fullscreenIframeBody');
+    const youBtn = document.getElementById('youActionBtn');
+    if (!overlay || !iframe) return;
+
+    if (isAccountPortalOpen()) {
+        closeAccountPortal();
+        return;
+    }
+
+    if ($('categoryTransparentOverlay')) $('categoryTransparentOverlay').style.display = 'none';
+    if ($('savedGalleryOverlay')) $('savedGalleryOverlay').style.display = 'none';
+    closeBuyPreview();
+    closeInpageDetails();
+
+    iframe.src = '/account.html?mode=customer&direct=1';
+    overlay.style.display = 'flex';
+    if (youBtn) {
+        youBtn.classList.add('you-active');
+    }
+    updateCartBadgeCount();
+}
+
 window.toggleAccountPortal = toggleAccountPortal;
-window.goToCustomerAccount = goToCustomerAccount;
-window.goToSellerPortal = goToSellerPortal;
-window.goToAffiliatePortal = goToAffiliatePortal;
-// ============================================================
+window.closeAccountPortal = closeAccountPortal;
+// ===============================================================
 
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
@@ -395,13 +378,13 @@ return blob.includes(keyClean)||blob.includes(nameClean);
 activeProductList=filtered.length?filtered:[...globalMasterProductsList];
 renderPinterestHomeGrid(activeProductList);
 }
-function toggleCategoryModal(e){if(e)e.stopPropagation();const overlay=$('categoryTransparentOverlay');if(!overlay)return;if(overlay.style.display==='flex')overlay.style.display='none';else{if(!$('categoryMainListView').innerHTML.trim())buildCategoriesAccordion();overlay.style.display='flex';}}
+function toggleCategoryModal(e){if(e)e.stopPropagation();const overlay=$('categoryTransparentOverlay');if(!overlay)return;if(overlay.style.display==='flex')overlay.style.display='none';else{closeAccountPortal();if(!$('categoryMainListView').innerHTML.trim())buildCategoriesAccordion();overlay.style.display='flex';}}
 function switchToGridMode(showSearch=true){$('reelModalOverlay')?.classList.add('hidden-reels');$('appContainer')?.classList.add('active-grid');$('fixedGlobalActionsBar')?.classList.add('clean-hidden');if($('desktopReelNav'))$('desktopReelNav').style.display='none';if(showSearch)$('floatingSearchContainer')?.classList.remove('search-hidden');}
 function setupAutoHideSearchOnScroll(){const hideSearch=()=>{const sb=$('floatingSearchContainer');if(sb&&!sb.classList.contains('search-hidden')){sb.classList.add('search-hidden');sb.classList.remove('manual-open');}};window.addEventListener('scroll',hideSearch,{passive:true});const wrapper=$('reelModalWrapperBody');if(wrapper){wrapper.addEventListener('touchmove',hideSearch,{passive:true});wrapper.addEventListener('wheel',hideSearch,{passive:true});}}
 
-// CLEAN GALLERY FUNCTION (No Gateway Overlap)
+// CLEAN GALLERY FUNCTION
 function openCleanGalleryView(){
-    closeSecureGateway();
+    closeAccountPortal();
     switchToGridMode(true);
     activeProductList=shuffleArray(globalMasterProductsList);
     renderPinterestHomeGrid(activeProductList);
@@ -433,7 +416,7 @@ function handleHomeToggle(){
 if($('fullscreenIframeOverlay')?.style.display==='flex'){$('fullscreenIframeOverlay').style.display='none';$('fullscreenIframeBody').src='';}
 if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
 if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
-closeSecureGateway(); 
+document.getElementById('youActionBtn')?.classList.remove('you-active');
 closeBuyPreview();
 closeInpageDetails();
 $('appContainer')?.classList.remove('active-grid');
@@ -446,7 +429,7 @@ if($('floatingSearchInput'))$('floatingSearchInput').value='';
 activeProductList=shuffleArray(globalMasterProductsList);
 openReelsModal(0);
 }
-function toggleCartPortal(){openFullscreenPortal('/cart.html');}
+function toggleCartPortal(){document.getElementById('youActionBtn')?.classList.remove('you-active');openFullscreenPortal('/cart.html');}
 function openFullscreenPortal(url){$('fullscreenIframeBody').src=url;$('fullscreenIframeOverlay').style.display='flex';updateCartBadgeCount();}
 
 async function loadLiveProducts(){
