@@ -22,12 +22,80 @@
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('SW ok:',reg.scope)).catch(err=>console.log('SW fail:',err));});}
 </script>
 <style>
-:root{--bg-retail:#000000;--card-retail:#08080c;--gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 25%,#b38728 50%,#fbf5b7 75%,#aa771c 100%);--gold-solid:#d4af37;--pink-accent:#ff2a85;--text-white:#ffffff;--text-gray:#a0a0ab;--font-main:'Poppins',sans-serif;--snap-ease:cubic-bezier(0.16,1,0.3,1);}
+:root{--bg-retail:#000000;--card-retail:#08080c;--gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 25%,#b38728 50%,#fbf5b7 75%,#aa771c 100%);--gold-solid:#d4af37;--pink-accent:#ff2a85;--pink-gradient:linear-gradient(135deg,#ff2a85 0%,#ff479b 100%);--text-white:#ffffff;--text-gray:#a0a0ab;--font-main:'Poppins',sans-serif;--snap-ease:cubic-bezier(0.16,1,0.3,1);}
 html,body{width:100%;max-width:100vw;overflow-x:hidden;overflow-y:auto!important;background:var(--bg-retail)!important;color:var(--text-white);font-family:var(--font-main);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;-webkit-overflow-scrolling:touch;scrollbar-width:none;text-rendering:optimizeSpeed;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-wrap:break-word;word-break:break-word;}
 body{margin:0;padding:0 0 58px 0;text-transform:none!important;}
 html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
+
+/* ================= SECURE GATEWAY OVERLAY (NEW) ================= */
+#secureGatewayOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: opacity 0.3s ease;
+}
+.gateway-card {
+    width: 100%;
+    max-width: 400px;
+    background: #06060a;
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 20px;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.05);
+}
+.gateway-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 0 auto 10px auto;
+}
+.gateway-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+.gateway-btn:active {
+    transform: scale(0.97);
+}
+.gateway-btn.gold {
+    background: var(--gold-gradient);
+    color: #000;
+}
+.gateway-btn.pink {
+    background: var(--pink-gradient);
+    color: #fff;
+}
+.gateway-footer-text {
+    font-size: 0.65rem;
+    color: var(--text-gray);
+    font-weight: 600;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
+/* ================================================================ */
+
 #rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.1s linear;pointer-events:none;}
 .loader-logo-box{width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-solid);box-shadow:0 0 15px rgba(212,175,55,0.3);}
 .loader-logo-box img{width:100%;height:100%;object-fit:cover;}
@@ -117,6 +185,32 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </style>
 </head>
 <body id="mainBody">
+
+<!-- ✅ NEW SECURE GATEWAY OVERLAY (As per Screenshot) -->
+<div id="secureGatewayOverlay">
+    <div class="gateway-card">
+        <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
+        
+        <!-- Customer Access -->
+        <button class="gateway-btn gold" onclick="enterCustomerPortal()">
+            <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
+        </button>
+        
+        <!-- Seller Access Link -->
+        <button class="gateway-btn pink" onclick="window.location.href='https://seller.rorraxy.com'">
+            <i class="fa-solid fa-store"></i> SELLER ACCESS
+        </button>
+        
+        <!-- Affiliate Access Link -->
+        <button class="gateway-btn pink" onclick="window.location.href='https://affiliate.rorraxy.com'">
+            <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
+        </button>
+        
+        <div class="gateway-footer-text">Secure Encrypted Gateway</div>
+    </div>
+</div>
+<!-- ======================================================== -->
+
 <div id="rorraxyLoaderOverlay">
 <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" decoding="sync"></div>
 <div class="loader-brand-name">rorraxy</div>
@@ -131,7 +225,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <button class="desktop-nav-circle" onclick="navigateReelStep(1)" title="Next Reel"><i class="fa-solid fa-chevron-down"></i></button>
 </div>
 
-<!-- Right Action Bar (Original exactly as it was, Image changed to GALLERY) -->
+<!-- Right Action Bar (IMAGE changed to GALLERY) -->
 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
 <div class="side-action-item" id="cartDropZone" onclick="toggleCartPortal()" title="Cart" style="padding-top:4px;">
 <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
@@ -148,7 +242,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div class="side-action-item" onclick="openCleanGalleryView()" title="Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">GALLERY</span></div>
 </div>
 
-<!-- Bottom Navigation (Original exactly as it was) -->
+<!-- Bottom Navigation -->
 <nav class="bottom-nav-bar">
 <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
 <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -166,6 +260,15 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 <script src="categories.js"></script>
 <script>
+// ✅ SECURE GATEWAY LOGIC
+function enterCustomerPortal() {
+    const gateway = document.getElementById('secureGatewayOverlay');
+    gateway.style.opacity = '0';
+    setTimeout(() => {
+        gateway.style.display = 'none';
+    }, 300);
+}
+
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
 const REELS_BATCH_SIZE=6;
@@ -202,6 +305,7 @@ if(refParam){
     localStorage.setItem('rorraxy_active_affiliate_ref','rorraxy-store');
 }
 
+// Load products in the background while the gateway is showing
 loadLiveProducts();
 updateCartBadgeCount();
 updateSideActionState();
