@@ -205,17 +205,17 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
         <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
         
         <!-- Customer Access (Directs to account.html) -->
-        <button class="gateway-btn gold" onclick="window.location.href='/account.html'">
+        <button type="button" class="gateway-btn gold" onclick="goToCustomerAccount()">
             <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
         </button>
         
         <!-- Seller Access Link -->
-        <button class="gateway-btn pink" onclick="window.location.href='https://seller.rorraxy.com'">
+        <button type="button" class="gateway-btn pink" onclick="window.location.href='https://seller.rorraxy.com'">
             <i class="fa-solid fa-store"></i> SELLER ACCESS
         </button>
         
         <!-- Affiliate Access Link -->
-        <button class="gateway-btn pink" onclick="window.location.href='https://affiliate.rorraxy.com'">
+        <button type="button" class="gateway-btn pink" onclick="window.location.href='https://affiliate.rorraxy.com'">
             <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
         </button>
         
@@ -250,7 +250,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </div>
 <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search"><i class="fa-solid fa-magnifying-glass action-pure-icon"></i></div>
 <div class="side-action-item save-action-btn" id="sideSaveActionBtn" onclick="handlePinterestInterception(event, 'save')" title="Save"><i class="fa-solid fa-bookmark action-pure-icon"></i></div>
-<div class="side-action-item" onclick="toggleAccountPortal()" title="You"><i class="fa-solid fa-user action-pure-icon"></i><span class="side-count-text">YOU</span></div>
+<div class="side-action-item" id="youActionBtn" onclick="toggleAccountPortal()" title="You"><i class="fa-solid fa-user action-pure-icon"></i><span class="side-count-text">YOU</span></div>
 <div class="side-action-item" onclick="openCleanGalleryView()" title="Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">GALLERY</span></div>
 </div>
 
@@ -276,6 +276,10 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 function closeSecureGateway() {
     document.getElementById('secureGatewayOverlay').style.display = 'none';
 }
+function goToCustomerAccount() {
+    closeSecureGateway();
+    window.location.href = '/account.html';
+}
 function toggleAccountPortal() {
     document.getElementById('secureGatewayOverlay').style.display = 'flex';
 }
@@ -296,7 +300,7 @@ let persistentCustomNote='';
 const preloadedUrls=new Set();
 const $=id=>document.getElementById(id);
 function getSku(product){return String(product&&(product.sku||product.product_code||product.productCode)||'').trim().toUpperCase();}
-function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'"').replace(/</g,'<').replace(/>/g,'>');}
 function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&loader.style.display!=='none'){loader.style.opacity='0';setTimeout(()=>{loader.style.display='none';},100);}}
 function debounce(func,wait){let timeout;return function executedFunction(...args){const later=()=>{clearTimeout(timeout);func(...args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}
 function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url))return;preloadedUrls.add(url);const img=new Image();if(highPriority)img.fetchPriority='high';img.decoding='async';img.src=url;}
@@ -655,7 +659,7 @@ ${sku?`<div class="detail-sku-badge"><i class="fa-solid fa-barcode"></i><span>SK
 $('inpageDetailsOverlay').style.display='flex';
 }
 function adjustDetailQty(amt){currentProductQty=Math.max(1,currentProductQty+amt);if($('detailQtyDisplay'))$('detailQtyDisplay').innerText=currentProductQty;}
-function closeInpageDetails(){const noteInput=$('inpageCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('inpageDetailsOverlay').style.display='none';}
+function closeInpageDetails(){const noteInput=$('inpageCustomNoteInput');if(noteInput&¬eInput.value.trim())persistentCustomNote=noteInput.value.trim();$('inpageDetailsOverlay').style.display='none';}
 function openBuyPreviewModal(product){
 const imgs=extractImages(product);
 selectedVariantImg=imgs[0];
@@ -689,10 +693,10 @@ if(note.trim())persistentCustomNote=note.trim();
 closeBuyPreview();
 const list=activeProductList.length?activeProductList:globalMasterProductsList;
 const prod=list.find(p=>String(p.id||p.product_id)===String(pId))||list[currentReelIndex]||list[0];
-if(prod){openInpageDetailsModal(prod);setTimeout(()=>{const inpageNote=$('inpageCustomNoteInput');if(inpageNote&&note)inpageNote.value=note;},10);}
+if(prod){openInpageDetailsModal(prod);setTimeout(()=>{const inpageNote=$('inpageCustomNoteInput');if(inpageNote&¬e)inpageNote.value=note;},10);}
 }
 function selectPreviewImg(el,url){document.querySelectorAll('.preview-img-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');selectedVariantImg=url;}
-function closeBuyPreview(){const noteInput=$('orderCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('buyPreviewOverlay').style.display='none';}
+function closeBuyPreview(){const noteInput=$('orderCustomNoteInput');if(noteInput&¬eInput.value.trim())persistentCustomNote=noteInput.value.trim();$('buyPreviewOverlay').style.display='none';}
 function playLuxuryChimeSound(){
 try{
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
