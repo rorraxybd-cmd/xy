@@ -280,6 +280,156 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
 .ceo-signature-link { display: inline-block; text-decoration: none; }
 .ceo-signature-link:hover .md-logo-box { transform: scale(1.05); transition: transform 0.2s ease; }
 
+/* ==========================================================================
+   NEW LUXURY PORTAL SECTION (SELLER & AFFILIATE)
+   ========================================================================== */
+.premium-portal-section {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto 24px auto;
+  padding: 10px 14px;
+}
+.portal-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.portal-header h2 {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.portal-header p {
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: none;
+}
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.portal-card {
+  position: relative;
+  background: #07070b;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 18px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+.portal-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 60%);
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  opacity: 0.5;
+}
+.portal-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15);
+}
+.portal-card:hover::before {
+  opacity: 1;
+}
+.portal-icon-wrap {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.portal-icon-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.4);
+  animation: spinSlow 8s linear infinite;
+}
+.portal-icon {
+  font-size: 2rem;
+  color: var(--gold-solid);
+  background: rgba(212, 175, 55, 0.08);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  transition: transform 0.3s ease;
+}
+.portal-card:hover .portal-icon {
+  transform: scale(1.1);
+  background: rgba(212, 175, 55, 0.15);
+}
+.portal-card h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.portal-card p {
+  font-size: 0.72rem;
+  color: var(--text-gray);
+  line-height: 1.5;
+  margin-bottom: 22px;
+  text-transform: none;
+  max-width: 260px;
+}
+.portal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold-gradient);
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 10px 22px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+.portal-card:hover .portal-btn {
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  transform: scale(1.03);
+}
+.portal-btn i {
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+}
+.portal-card:hover .portal-btn i {
+  transform: translateX(4px);
+}
+@keyframes spinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .portal-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
 .ecosystem-directory-wrapper {
   width: 100%;
   max-width: 1080px;
@@ -1249,6 +1399,41 @@ color: #ff2d55 !important;
 <p style="color: var(--text-gray); font-size: 0.7rem; line-height: 1.4; margin: 4px 0 0 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
 </div>
 
+<!-- ============================================== -->
+<!-- NEW LUXURY PORTAL SECTION (SELLER & AFFILIATE) -->
+<!-- ============================================== -->
+<section class="premium-portal-section">
+  <div class="portal-header">
+    <h2 class="gold-gradient-text">JOIN OUR GLOBAL NETWORK</h2>
+    <p>Empower your business or earn with our partner programs.</p>
+  </div>
+  
+  <div class="portal-grid">
+    <!-- Seller Portal Card -->
+    <a href="https://seller.rorraxy.com" class="portal-card">
+      <div class="portal-icon-wrap">
+        <div class="portal-icon-ring"></div>
+        <div class="portal-icon"><i class="fa-solid fa-store"></i></div>
+      </div>
+      <h3>SELLER PORTAL</h3>
+      <p>List your products, manage inventory, and scale your business globally with our seller ecosystem.</p>
+      <span class="portal-btn">ENTER PORTAL <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+
+    <!-- Affiliate Program Card -->
+    <a href="https://affiliate.rorraxy.com" class="portal-card">
+      <div class="portal-icon-wrap">
+        <div class="portal-icon-ring"></div>
+        <div class="portal-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+      </div>
+      <h3>AFFILIATE PROGRAM</h3>
+      <p>Promote our products and earn high commissions. Become a partner and grow your income.</p>
+      <span class="portal-btn">JOIN NOW <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+  </div>
+</section>
+<!-- ============================================== -->
+
 <div class="ecosystem-directory-wrapper">
 
   <div class="ecosystem-category-card full-span">
@@ -1290,26 +1475,6 @@ color: #ff2d55 !important;
       <a href="https://business.rorraxy.com" target="_blank" class="domain-chip-link">business.rorraxy.com</a>
     </div>
     <a href="mailto:official@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> official@rorraxy.com</a>
-  </div>
-
-  <div class="ecosystem-category-card">
-    <div class="ecosystem-category-header"><i class="fa-solid fa-user-tie gold-gradient-icon"></i> SELLER PORTAL</div>
-    <div class="ecosystem-pills-grid">
-      <a href="https://s.rorraxy.com" target="_blank" class="domain-chip-link">s.rorraxy.com</a>
-      <a href="https://seller.rorraxy.com" target="_blank" class="domain-chip-link">seller.rorraxy.com</a>
-      <a href="https://v.rorraxy.com" target="_blank" class="domain-chip-link">v.rorraxy.com</a>
-      <a href="https://ventor.rorraxy.com" target="_blank" class="domain-chip-link">ventor.rorraxy.com</a>
-    </div>
-    <a href="mailto:seller@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> seller@rorraxy.com</a>
-  </div>
-
-  <div class="ecosystem-category-card">
-    <div class="ecosystem-category-header"><i class="fa-solid fa-crown gold-gradient-icon"></i> AFFILIATE PROGRAM</div>
-    <div class="ecosystem-pills-grid">
-      <a href="https://affiliate.rorraxy.com" target="_blank" class="domain-chip-link">affiliate.rorraxy.com</a>
-      <a href="https://f.rorraxy.com" target="_blank" class="domain-chip-link">f.rorraxy.com</a>
-    </div>
-    <a href="mailto:affiliate@rorraxy.com" class="ecosystem-email-badge"><i class="fa-solid fa-envelope gold-gradient-icon"></i> affiliate@rorraxy.com</a>
   </div>
 
   <div class="ecosystem-category-card">
