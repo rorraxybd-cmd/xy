@@ -29,17 +29,21 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
-/* ================= SECURE GATEWAY OVERLAY (NEW) ================= */
+/* ================= SECURE GATEWAY OVERLAY ================= */
 #secureGatewayOverlay {
     position: fixed;
     inset: 0;
-    background: #000000;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
     z-index: 9999999;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
     transition: opacity 0.3s ease;
+}
+#secureGatewayOverlay.active {
+    display: flex;
 }
 .gateway-card {
     width: 100%;
@@ -53,6 +57,17 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
     gap: 14px;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.05);
+    position: relative;
+}
+.gateway-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 .gateway-logo {
     width: 80px;
@@ -139,7 +154,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 @media (min-width:768px){.pinterest-feed-container{column-count:4;column-gap:12px;padding:80px 15px 15px 15px;}}
 .corner-discount-badge{position:absolute;top:8px;left:8px;z-index:45;background:var(--pink-accent);color:#fff;font-size:0.68rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:0.3px;}
 .card-clean-price-badge{position:absolute;bottom:8px;right:8px;z-index:45;font-size:0.92rem;font-weight:800;background:var(--gold-gradient)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;filter:drop-shadow(0px 2px 4px #000);}
-.card-sku-badge{position:absolute;bottom:8px;left:8px;z-index:45;font-size:0.58rem;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(8,8,14,0.94)!important;color:var(--gold-solid)!important;letter-spacing:0.3px;border:1px solid rgba(212,175,55,0.5);max-width:calc(100% - 80px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .reel-modal-overlay{display:flex;position:fixed;inset:0;background:#000;z-index:4000;align-items:center;justify-content:center;}
 .reel-modal-overlay.hidden-reels{display:none!important;}
 .reel-modal-wrapper{position:relative;width:100%;max-width:420px;height:calc(100vh - 54px);height:calc(100dvh - 54px);background:#000;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -151,12 +165,13 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .slide-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.38s var(--snap-ease);will-change:opacity;backface-visibility:hidden;transform:translateZ(0);}
 .slide-layer.active{opacity:1;z-index:2;}
 .slide-layer.previous{opacity:0;z-index:1;}
+
+/* Price overlay updated without SKU */
 .reel-bottom-price-overlay{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:22px;background:rgba(8,8,14,0.94)!important;border:1px solid rgba(212,175,55,0.45);white-space:nowrap;}
 .reel-price-row{display:flex;align-items:center;gap:8px;}
 .reel-center-price-badge{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .reel-center-discount-badge{background:var(--pink-accent);color:#fff;font-size:0.68rem;font-weight:800;padding:2px 7px;border-radius:10px;}
-.reel-sku-text{font-size:0.65rem;font-weight:800;color:var(--gold-solid);letter-spacing:0.4px;line-height:1.2;}
-.reel-sku-text span{color:#fff;letter-spacing:0.6px;}
+
 .overlay-sheet{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:6000;overflow-y:auto;flex-direction:column;align-items:center;justify-content:center;padding:10px;scrollbar-width:none;}
 .overlay-sheet::-webkit-scrollbar{display:none;}
 .buy-preview-modal{width:96%;max-width:460px;background:#0a0a10;border:1.5px solid rgba(212,175,55,0.5);border-radius:16px;padding:14px;margin:auto;display:flex;flex-direction:column;gap:8px;}
@@ -186,22 +201,23 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </head>
 <body id="mainBody">
 
-<!-- ✅ NEW SECURE GATEWAY OVERLAY (As per Screenshot) -->
-<div id="secureGatewayOverlay">
+<!-- SECURE GATEWAY OVERLAY (Used on First Load and YOU menu) -->
+<div id="secureGatewayOverlay" class="active">
     <div class="gateway-card">
+        <button class="gateway-close-btn" onclick="closeSecureGateway()">×</button>
         <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
         
         <!-- Customer Access -->
-        <button class="gateway-btn gold" onclick="enterCustomerPortal()">
+        <button class="gateway-btn gold" onclick="closeSecureGateway()">
             <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
         </button>
         
-        <!-- Seller Access Link -->
+        <!-- Seller Access Link (Direct to Subdomain) -->
         <button class="gateway-btn pink" onclick="window.location.href='https://seller.rorraxy.com'">
             <i class="fa-solid fa-store"></i> SELLER ACCESS
         </button>
         
-        <!-- Affiliate Access Link -->
+        <!-- Affiliate Access Link (Direct to Subdomain) -->
         <button class="gateway-btn pink" onclick="window.location.href='https://affiliate.rorraxy.com'">
             <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
         </button>
@@ -209,7 +225,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
         <div class="gateway-footer-text">Secure Encrypted Gateway</div>
     </div>
 </div>
-<!-- ======================================================== -->
 
 <div id="rorraxyLoaderOverlay">
 <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" decoding="sync"></div>
@@ -225,7 +240,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <button class="desktop-nav-circle" onclick="navigateReelStep(1)" title="Next Reel"><i class="fa-solid fa-chevron-down"></i></button>
 </div>
 
-<!-- Right Action Bar (IMAGE changed to GALLERY) -->
+<!-- Right Action Bar -->
 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
 <div class="side-action-item" id="cartDropZone" onclick="toggleCartPortal()" title="Cart" style="padding-top:4px;">
 <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
@@ -260,13 +275,9 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 <script src="categories.js"></script>
 <script>
-// ✅ SECURE GATEWAY LOGIC
-function enterCustomerPortal() {
-    const gateway = document.getElementById('secureGatewayOverlay');
-    gateway.style.opacity = '0';
-    setTimeout(() => {
-        gateway.style.display = 'none';
-    }, 300);
+// Gateway Logic
+function closeSecureGateway() {
+    document.getElementById('secureGatewayOverlay').classList.remove('active');
 }
 
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
@@ -305,7 +316,6 @@ if(refParam){
     localStorage.setItem('rorraxy_active_affiliate_ref','rorraxy-store');
 }
 
-// Load products in the background while the gateway is showing
 loadLiveProducts();
 updateCartBadgeCount();
 updateSideActionState();
@@ -390,9 +400,14 @@ if($('floatingSearchInput'))$('floatingSearchInput').value='';
 activeProductList=shuffleArray(globalMasterProductsList);
 openReelsModal(0);
 }
-function toggleAccountPortal(){openFullscreenPortal('/account.html');}
+
+// This now opens the Gateway instead of /account.html
+function toggleAccountPortal(){
+    document.getElementById('secureGatewayOverlay').classList.add('active');
+}
 function toggleCartPortal(){openFullscreenPortal('/cart.html');}
 function openFullscreenPortal(url){$('fullscreenIframeBody').src=url;$('fullscreenIframeOverlay').style.display='flex';updateCartBadgeCount();}
+
 async function loadLiveProducts(){
 let rendered=false;
 try{const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(Array.isArray(cached)&&cached.length){globalMasterProductsList=cached;checkInitialProductParam();rendered=true;}}catch(e){}
@@ -430,6 +445,8 @@ switchToGridMode(false);
 activeProductList=globalMasterProductsList.filter(item=>`${item.title||''} ${item.category||''} ${item.description||''}`.toLowerCase().includes(q));
 renderPinterestHomeGrid(activeProductList);
 }
+
+// SKU Removed from Grid Card
 function renderPinterestHomeGrid(products){
 const container=$('appContainer');
 if(!container)return;
@@ -439,7 +456,6 @@ products.forEach((item,index)=>{
 const imgs=extractImages(item);
 const price=item.price?`$${parseFloat(item.price).toFixed(2)}`:'$0.00';
 const disc=parseFloat(item.discount_rate||item.discountRate||0);
-const sku=getSku(item);
 const card=document.createElement('div');
 card.className='product-card';
 card.onclick=e=>{
@@ -454,7 +470,6 @@ openReelsModal(index);
 card.innerHTML=`<div class="product-media-box">
 ${disc>0?`<div class="corner-discount-badge">${disc}% OFF</div>`:''}
 <img src="${imgs[0]}" alt="${item.title||'rorraxy'}" loading="${index<12?'eager':'lazy'}" decoding="async">
-${sku?`<div class="card-sku-badge"><i class="fa-solid fa-barcode" style="font-size:0.52rem;margin-right:2px;"></i>SKU: ${sku}</div>`:''}
 <div class="card-clean-price-badge">${price}</div>
 </div>`;
 const img=card.querySelector('img');
@@ -514,6 +529,7 @@ curImg=nextImg;
 },2500);
 }
 }
+// SKU Removed from Reel Overlay
 function appendReelsBatch(count){
 const wrapper=$('reelModalWrapperBody');
 const list=activeProductList.length?activeProductList:globalMasterProductsList;
@@ -527,7 +543,6 @@ const pVideo=product.video_url||product.youtube_video||'';
 const imgs=extractImages(product);
 const price=`$${parseFloat(product.price||0).toFixed(2)}`;
 const disc=parseFloat(product.discount_rate||product.discountRate||0);
-const sku=getSku(product);
 if(idx===0)preloadImageUrl(imgs[0],true);
 let mediaContent='';
 if(pVideo&&(pVideo.includes('.mp4')||pVideo.includes('.r2.dev')||pVideo.includes('http'))){
@@ -550,7 +565,6 @@ card.innerHTML=`<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx
 <span class="reel-center-price-badge">${price}</span>
 ${disc>0?`<span class="reel-center-discount-badge">${disc}% OFF</span>`:''}
 </div>
-${sku?`<div class="reel-sku-text"><i class="fa-solid fa-barcode" style="font-size:0.55rem;margin-right:2px;"></i>SKU: <span>${sku}</span></div>`:''}
 </div>
 <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">${mediaContent}</div>
 </div>`;
