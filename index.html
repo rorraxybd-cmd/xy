@@ -29,86 +29,6 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
-/* ================= SECURE GATEWAY OVERLAY ================= */
-#secureGatewayOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 6200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 20px 80px 20px;
-    transition: opacity 0.3s ease;
-}
-.gateway-card {
-    width: 100%;
-    max-width: 400px;
-    background: #06060a;
-    border: 1px solid rgba(212,175,55,0.25);
-    border-radius: 20px;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.05);
-    position: relative;
-}
-.gateway-close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: var(--text-gray);
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-.gateway-logo {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin: 0 auto 10px auto;
-}
-.gateway-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: transform 0.2s ease, filter 0.2s ease;
-    text-decoration: none;
-}
-.gateway-btn:active {
-    transform: scale(0.97);
-}
-.gateway-btn.gold {
-    background: var(--gold-gradient);
-    color: #000;
-}
-.gateway-btn.pink {
-    background: var(--pink-gradient);
-    color: #fff;
-}
-.gateway-footer-text {
-    font-size: 0.65rem;
-    color: var(--text-gray);
-    font-weight: 600;
-    margin-top: 10px;
-    letter-spacing: 0.5px;
-}
-<button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
-
 #rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.1s linear;pointer-events:none;}
 .loader-logo-box{width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-solid);box-shadow:0 0 15px rgba(212,175,55,0.3);}
 .loader-logo-box img{width:100%;height:100%;object-fit:cover;}
@@ -140,6 +60,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .action-pure-icon{font-size:1.5rem!important;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.95));}
 .side-count-text{font-size:0.65rem!important;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,1);text-align:center;white-space:nowrap;max-width:46px;letter-spacing:0.2px;}
 .love-action-btn.liked-active .action-pure-icon,.save-action-btn.active .action-pure-icon{color:var(--pink-accent)!important;background:none!important;-webkit-background-clip:initial!important;-webkit-text-fill-color:initial!important;}
+.side-action-item.you-active .action-pure-icon,.side-action-item.you-active .side-count-text{color:var(--pink-accent)!important;background:none!important;-webkit-background-clip:initial!important;-webkit-text-fill-color:initial!important;}
 .cart-pink-badge{position:absolute;top:-6px;left:50%;transform:translateX(-50%);background:var(--pink-accent);color:#fff;font-size:0.6rem;font-weight:800;min-width:18px;height:18px;padding:0 4px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px var(--pink-accent);z-index:10;pointer-events:none;}
 
 /* Bottom Nav Bar - Always Fixed */
@@ -188,7 +109,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .detail-sku-badge i{font-size:0.6rem;flex-shrink:0;}
 .fullscreen-iframe-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:calc(100vh - 54px);height:calc(100dvh - 54px);background:#000;z-index:4500;flex-direction:column;}
 .fullscreen-iframe-body{flex:1;width:100%;border:none;background:#000;}
-.side-action-item.you-active .action-pure-icon,.side-action-item.you-active .side-count-text{color:var(--pink-accent)!important;background:none!important;-webkit-background-clip:initial!important;-webkit-text-fill-color:initial!important;}
 .category-transparent-overlay,.saved-gallery-overlay{z-index:6500!important;}
 .fs-profile-header-box{display:flex;flex-direction:column;align-items:center;margin-bottom:15px;gap:8px;width:100%;}
 .fs-profile-name{font-size:0.95rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -248,7 +168,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 <script src="categories.js"></script>
 <script>
-// ================= CLEAN YOU TOGGLE ACCOUNT LOGIC =================
+// ================= DIRECT ACCOUNT TOGGLE LOGIC ON "YOU" BUTTON =================
 function isAccountPortalOpen() {
     const overlay = document.getElementById('fullscreenIframeOverlay');
     const iframe = document.getElementById('fullscreenIframeBody');
@@ -272,33 +192,38 @@ function closeAccountPortal() {
     }
 }
 
-function toggleAccountPortal() {
+function openAccountPortalDirect() {
     const overlay = document.getElementById('fullscreenIframeOverlay');
     const iframe = document.getElementById('fullscreenIframeBody');
     const youBtn = document.getElementById('youActionBtn');
-    if (!overlay || !iframe) return;
-
-    if (isAccountPortalOpen()) {
-        closeAccountPortal();
-        return;
-    }
 
     if ($('categoryTransparentOverlay')) $('categoryTransparentOverlay').style.display = 'none';
     if ($('savedGalleryOverlay')) $('savedGalleryOverlay').style.display = 'none';
     closeBuyPreview();
     closeInpageDetails();
 
-    iframe.src = '/account.html?mode=customer&direct=1';
-    overlay.style.display = 'flex';
-    if (youBtn) {
-        youBtn.classList.add('you-active');
+    if (overlay && iframe) {
+        iframe.src = '/account.html?mode=customer&direct=1';
+        overlay.style.display = 'flex';
+        if (youBtn) youBtn.classList.add('you-active');
+        updateCartBadgeCount();
+    } else {
+        window.location.assign(new URL('/account.html?mode=customer&direct=1', window.location.origin).href);
     }
-    updateCartBadgeCount();
+}
+
+function toggleAccountPortal() {
+    if (isAccountPortalOpen()) {
+        closeAccountPortal();
+    } else {
+        openAccountPortalDirect();
+    }
 }
 
 window.toggleAccountPortal = toggleAccountPortal;
+window.openAccountPortalDirect = openAccountPortalDirect;
 window.closeAccountPortal = closeAccountPortal;
-// ===============================================================
+// ============================================================================
 
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
