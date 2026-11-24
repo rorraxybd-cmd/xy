@@ -103,47 +103,6 @@
             background: #0a0a0f; color: #ffffff; -webkit-text-fill-color: #ffffff; font-weight: 600; padding: 10px;
         }
 
-        .luxury-center-modal-overlay {
-            display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important;
-            background: rgba(0, 0, 0, 0.85) !important; z-index: 999999 !important; backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); align-items: center; justify-content: center; padding: 16px;
-        }
-        .luxury-center-modal-overlay.active { display: flex !important; }
-        .luxury-center-modal-box {
-            background: #0d0d12; width: 100%; max-width: 450px; border-radius: 24px;
-            padding: 28px 20px; display: flex; flex-direction: column; align-items: center; text-align: center;
-            position: relative; border: 1px solid rgba(212,175,55,0.2); max-height: 90vh; overflow-y: auto;
-            z-index: 1000000; pointer-events: auto !important;
-        }
-        .luxury-modal-close-btn {
-            position: absolute; top: 16px; right: 16px;
-            background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2); color: var(--gold-solid);
-            font-size: 1rem; width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 10;
-        }
-        .luxury-modal-logo-large { width: 75px; height: 75px; object-fit: contain; margin-bottom: 12px; cursor: pointer; }
-        .modal-material-info-text {
-            font-size: 0.68rem; font-weight: 600; color: var(--text-gray) !important; text-align: center;
-            margin-bottom: 16px; line-height: 1.4; text-transform: uppercase; letter-spacing: 2px;
-        }
-        .luxury-modal-title-top {
-            font-size: 1rem; font-weight: 600; background: var(--gold-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px;
-            margin-bottom: 16px; text-transform: uppercase; cursor: pointer;
-        }
-        .luxury-options-fullstack { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
-        .luxury-action-btn-item {
-            background: #121218; color: var(--text-white); padding: 14px 18px; border-radius: 14px; text-decoration: none;
-            display: flex; align-items: center; justify-content: space-between;
-            border: 1px solid rgba(212,175,55,0.12); width: 100%; cursor: pointer; pointer-events: auto !important;
-        }
-        .luxury-action-btn-item .btn-left-part { display: flex; align-items: center; gap: 12px; pointer-events: none; }
-        .luxury-action-btn-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; width: 22px; text-align: center; }
-        .btn-text-stack { display: flex; flex-direction: column; align-items: flex-start; text-align: left; pointer-events: none; }
-        .btn-main-title { font-size: 0.82rem; font-weight: 500; color: var(--text-white); text-transform: uppercase; line-height: 1.2; }
-        .explore-subtxt { font-size: 0.60rem; font-weight: 400; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-        .btn-right-arrow { font-size: 0.75rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; pointer-events: none; }
-
         .feed-container {
             padding: 8px 6px;
             column-count: 2;
@@ -327,47 +286,6 @@
         </div>
     </header>
 
-    <div id="youMenuModalOverlay" class="luxury-center-modal-overlay">
-        <div class="luxury-center-modal-box" onclick="event.stopPropagation()">
-            <button class="luxury-modal-close-btn" onclick="toggleYouMenu()"><i class="fa-solid fa-xmark"></i></button>
-            <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="Logo" class="luxury-modal-logo-large" id="modalLogoLink">
-            <div class="modal-material-info-text">B2B PORTAL</div>
-            <h2 class="luxury-modal-title-top" id="modalUserPortalTitle">USER PORTAL</h2>
-            <div class="luxury-options-fullstack">
-                <div class="luxury-action-btn-item" id="btnMyAccount">
-                    <div class="btn-left-part">
-                        <i class="fa-solid fa-user"></i>
-                        <div class="btn-text-stack">
-                            <span class="btn-main-title">My Account</span>
-                            <span class="explore-subtxt">Dashboard</span>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
-                </div>
-                <div class="luxury-action-btn-item" id="btnSellerPortal">
-                    <div class="btn-left-part">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <div class="btn-text-stack">
-                            <span class="btn-main-title">Seller Portal</span>
-                            <span class="explore-subtxt">Management</span>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
-                </div>
-                <div class="luxury-action-btn-item" id="btnAffiliatePortal">
-                    <div class="btn-left-part">
-                        <i class="fa-solid fa-handshake"></i>
-                        <div class="btn-text-stack">
-                            <span class="btn-main-title">Affiliate Portal</span>
-                            <span class="explore-subtxt">Earn Rewards</span>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-arrow-right btn-right-arrow"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="external-page-overlay" id="categoryPageOverlay">
         <iframe src="/wholesale/category.html" title="Category Page"></iframe>
     </div>
@@ -425,7 +343,7 @@
             <i class="fa-solid fa-earth-americas"></i>
             <span>World</span>
         </a>
-        <button type="button" class="nav-item" onclick="toggleYouMenu()">
+        <button type="button" class="nav-item" onclick="openWholesaleAccount()">
             <i class="fa-solid fa-user"></i>
             <span>You</span>
         </button>
@@ -475,7 +393,6 @@
             return cachedAffiliateId;
         }
 
-        // ✅ আপডেট: শেয়ার লিংকে rate ও platform যুক্ত করা
         function buildProductShareUrl(productId) {
             const affId = getActiveAffiliateId();
             const rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
@@ -499,7 +416,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             initSelectedMode();
             
-            // ✅ আপডেট: পেজ লোডের সময় URL থেকে rate এবং platform ক্যাপচার
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
             const rateParam = urlParams.get('rate') || '3';
@@ -516,22 +432,6 @@
 
             const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
             loadWholesaleProducts(searchQuery);
-
-            document.getElementById('modalLogoLink').addEventListener('click', () => {
-                window.location.href = 'https://rorraxy.com/';
-            });
-            document.getElementById('modalUserPortalTitle').addEventListener('click', () => {
-                window.location.href = '/wholesale/account.html';
-            });
-            document.getElementById('btnMyAccount').addEventListener('click', () => {
-                window.location.href = '/wholesale/account.html';
-            });
-            document.getElementById('btnSellerPortal').addEventListener('click', () => {
-                window.location.href = '/seller/index.html';
-            });
-            document.getElementById('btnAffiliatePortal').addEventListener('click', () => {
-                window.location.href = '/affiliate/index.html';
-            });
 
             document.getElementById('modalSearchInput')?.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') submitModalSearch();
@@ -551,19 +451,16 @@
             }
         }
 
+        function openWholesaleAccount() {
+            closeAllOverlays();
+            window.location.href = '/wholesale/account.html';
+        }
+
         function closeAllOverlays() {
-            document.getElementById('youMenuModalOverlay').classList.remove('active');
             document.getElementById('searchModal').classList.remove('active');
             document.getElementById('categoryPageOverlay').classList.remove('active');
             document.getElementById('cartPageOverlay').classList.remove('active');
             document.getElementById('universalShareModal').classList.remove('active');
-        }
-
-        function toggleYouMenu() {
-            const overlay = document.getElementById('youMenuModalOverlay');
-            const isOpen = overlay.classList.contains('active');
-            closeAllOverlays();
-            if (!isOpen) overlay.classList.add('active');
         }
 
         function toggleCategoryPage() {
@@ -801,7 +698,6 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card';
                 
-                // ✅ আপডেট: প্রোডাক্টে ক্লিক করলে URL-এ rate এবং platform যুক্ত করা
                 cardDiv.onclick = () => {
                     const affId = getActiveAffiliateId();
                     const rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
