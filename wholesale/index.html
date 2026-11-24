@@ -286,6 +286,10 @@
         </div>
     </header>
 
+    <div class="external-page-overlay" id="accountPageOverlay">
+        <iframe id="accountPageIframe" src="" title="Account Page"></iframe>
+    </div>
+
     <div class="external-page-overlay" id="categoryPageOverlay">
         <iframe src="/wholesale/category.html" title="Category Page"></iframe>
     </div>
@@ -343,7 +347,7 @@
             <i class="fa-solid fa-earth-americas"></i>
             <span>World</span>
         </a>
-        <button type="button" class="nav-item" onclick="openWholesaleAccount()">
+        <button type="button" class="nav-item" onclick="toggleAccountPage()">
             <i class="fa-solid fa-user"></i>
             <span>You</span>
         </button>
@@ -451,16 +455,25 @@
             }
         }
 
-        function openWholesaleAccount() {
-            closeAllOverlays();
-            window.location.href = '/wholesale/account.html';
-        }
-
         function closeAllOverlays() {
             document.getElementById('searchModal').classList.remove('active');
+            document.getElementById('accountPageOverlay').classList.remove('active');
             document.getElementById('categoryPageOverlay').classList.remove('active');
             document.getElementById('cartPageOverlay').classList.remove('active');
             document.getElementById('universalShareModal').classList.remove('active');
+        }
+
+        function toggleAccountPage() {
+            const overlay = document.getElementById('accountPageOverlay');
+            const iframe = document.getElementById('accountPageIframe');
+            const isOpen = overlay.classList.contains('active');
+            closeAllOverlays();
+            if (!isOpen) {
+                if (iframe && !iframe.getAttribute('src')) {
+                    iframe.src = '/wholesale/account.html';
+                }
+                overlay.classList.add('active');
+            }
         }
 
         function toggleCategoryPage() {
