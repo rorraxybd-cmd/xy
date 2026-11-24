@@ -35,7 +35,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
     inset: 0;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
-    z-index: 9999999;
+    z-index: 2147483647; /* Highest z-index */
     display: none; /* Hidden by default */
     align-items: center;
     justify-content: center;
@@ -141,6 +141,8 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .side-count-text{font-size:0.65rem!important;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,1);text-align:center;white-space:nowrap;max-width:46px;letter-spacing:0.2px;}
 .love-action-btn.liked-active .action-pure-icon,.save-action-btn.active .action-pure-icon{color:var(--pink-accent)!important;background:none!important;-webkit-background-clip:initial!important;-webkit-text-fill-color:initial!important;}
 .cart-pink-badge{position:absolute;top:-6px;left:50%;transform:translateX(-50%);background:var(--pink-accent);color:#fff;font-size:0.6rem;font-weight:800;min-width:18px;height:18px;padding:0 4px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px var(--pink-accent);z-index:10;pointer-events:none;}
+
+/* Bottom Nav Bar - Always Fixed */
 .bottom-nav-bar{position:fixed;bottom:0;left:0;width:100%;height:54px!important;background:rgba(0,0,0,0.85)!important;border-top:none!important;display:flex;justify-content:space-around;align-items:center;z-index:5000;padding:0 4px;transform:translate3d(0,0,0);}
 @media(min-width:768px){.bottom-nav-bar{justify-content:center;gap:60px;padding:0 20px;}.bottom-nav-item{width:auto!important;min-width:70px;}}
 .bottom-nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:0.6rem;font-weight:700;gap:2px;width:100%;height:100%;}
@@ -196,26 +198,26 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 </head>
 <body id="mainBody">
 
-<!-- SECURE GATEWAY OVERLAY (Hidden by default) -->
-<div id="secureGatewayOverlay">
+<!-- SECURE GATEWAY OVERLAY (Hidden by default, opens only via YOU menu) -->
+<div id="secureGatewayOverlay" onclick="if(event.target===this) closeSecureGateway()">
     <div class="gateway-card">
         <button class="gateway-close-btn" onclick="closeSecureGateway()">×</button>
         <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
         
-        <!-- Customer Access (Redirects to account.html) -->
-        <a href="/account.html" class="gateway-btn gold">
+        <!-- Customer Access (Closes Gateway and shows Feed) -->
+        <button class="gateway-btn gold" onclick="closeSecureGateway()">
             <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
-        </a>
+        </button>
         
         <!-- Seller Access Link -->
-        <a href="https://seller.rorraxy.com" class="gateway-btn pink">
+        <button class="gateway-btn pink" onclick="window.location.href='https://seller.rorraxy.com'">
             <i class="fa-solid fa-store"></i> SELLER ACCESS
-        </a>
+        </button>
         
         <!-- Affiliate Access Link -->
-        <a href="https://affiliate.rorraxy.com" class="gateway-btn pink">
+        <button class="gateway-btn pink" onclick="window.location.href='https://affiliate.rorraxy.com'">
             <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
-        </a>
+        </button>
         
         <div class="gateway-footer-text">Secure Encrypted Gateway</div>
     </div>
@@ -252,7 +254,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div class="side-action-item" onclick="openCleanGalleryView()" title="Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">GALLERY</span></div>
 </div>
 
-<!-- Bottom Navigation -->
+<!-- Bottom Navigation (Fixed Always) -->
 <nav class="bottom-nav-bar">
 <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
 <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -383,6 +385,7 @@ function handleHomeToggle(){
 if($('fullscreenIframeOverlay')?.style.display==='flex'){$('fullscreenIframeOverlay').style.display='none';$('fullscreenIframeBody').src='';}
 if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
 if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
+if($('secureGatewayOverlay'))$('secureGatewayOverlay').style.display='none'; // Close gateway on home click
 closeBuyPreview();
 closeInpageDetails();
 $('appContainer')?.classList.remove('active-grid');
