@@ -204,17 +204,17 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
         <button type="button" class="gateway-close-btn" onclick="closeSecureGateway()">×</button>
         <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="gateway-logo">
         
-        <!-- Customer Access (Directs to account.html) -->
+        <!-- Customer Access (Directs directly to Customer Login/Dashboard view in account.html) -->
         <button type="button" class="gateway-btn gold" onclick="goToCustomerAccount(event)">
             <i class="fa-solid fa-user"></i> CUSTOMER ACCESS
         </button>
         
-        <!-- Seller Access Link -->
+        <!-- Seller Access Link (Subdomain) -->
         <button type="button" class="gateway-btn pink" onclick="goToSellerPortal()">
             <i class="fa-solid fa-store"></i> SELLER ACCESS
         </button>
         
-        <!-- Affiliate Access Link -->
+        <!-- Affiliate Access Link (Subdomain) -->
         <button type="button" class="gateway-btn pink" onclick="goToAffiliatePortal()">
             <i class="fa-solid fa-hand-holding-dollar"></i> AFFILIATE ACCESS
         </button>
@@ -297,7 +297,8 @@ function goToCustomerAccount(e) {
         e.stopPropagation();
     }
     closeSecureGateway();
-    const targetUrl = new URL('/account.html', window.location.origin).href;
+    // Direct parameter so account.html skips duplicate portal screen
+    const targetUrl = new URL('/account.html?mode=customer&direct=1', window.location.origin).href;
     window.location.assign(targetUrl);
 }
 function goToSellerPortal() {
