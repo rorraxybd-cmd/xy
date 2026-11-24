@@ -76,12 +76,6 @@
             margin: 0 auto;
             width: 100%;
         }
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-top: 5px;
-        }
         .portal-btn-gold {
             width: 100%;
             background: var(--gold-gradient);
@@ -102,26 +96,8 @@
             transition: all 0.25s ease;
         }
         .portal-btn-gold:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .portal-btn-pink {
-            width: 100%;
-            background: var(--pink-solid);
-            border: none;
-            border-radius: 14px;
-            padding: 16px;
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
         #verificationSection {
-            display: none;
+            display: flex;
             flex-direction: column;
             gap: 16px;
             text-align: left;
@@ -164,15 +140,6 @@
         }
         .status-msg.error { color: var(--required-red); }
         .status-msg.success { color: #2ecc71; }
-        .back-link {
-            display: inline-block;
-            margin-top: 4px;
-            font-size: 0.65rem;
-            color: var(--text-gray);
-            text-decoration: none;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
         #accountDashboardSection {
             display: none;
             width: 100%;
@@ -378,18 +345,6 @@
         <div class="portal-card">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy logo" class="portal-logo">
 
-            <div id="mainSelectionGroup" class="button-group">
-                <button type="button" id="openCustomerBtn" class="portal-btn-gold">
-                    <i class="fa-solid fa-user-shield"></i> Customer Access
-                </button>
-                <a href="https://rorraxy.com/seller" class="portal-btn-pink">
-                    <i class="fa-solid fa-store"></i> Seller Access
-                </a>
-                <a href="https://rorraxy.com/affiliate" class="portal-btn-pink">
-                    <i class="fa-solid fa-handshake-angle"></i> Affiliate Access
-                </a>
-            </div>
-
             <div id="verificationSection">
                 <h2 class="section-title-centered">CUSTOMER ACCOUNT</h2>
                 <form id="customerAuthForm" style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
@@ -401,7 +356,6 @@
                         CONTINUE TO VERIFY
                     </button>
                     <div id="formStatus" class="status-msg"></div>
-                    <a id="backToPortal" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Portals</a>
                 </form>
             </div>
 
@@ -464,11 +418,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script>
         const API_URL = "/api/customer";
-        const openCustomerBtn = document.getElementById('openCustomerBtn');
-        const mainSelectionGroup = document.getElementById('mainSelectionGroup');
         const verificationSection = document.getElementById('verificationSection');
         const accountDashboardSection = document.getElementById('accountDashboardSection');
-        const backToPortal = document.getElementById('backToPortal');
         const customerPhoneInput = document.querySelector("#customerPhone");
         const verifyBtn = document.getElementById('verifyBtn');
         const formStatus = document.getElementById('formStatus');
@@ -478,19 +429,8 @@
         let customerOrdersList = [];
         let activeMemoOrder = null;
 
-        window.onload = function() {
-            const savedPhone = localStorage.getItem('rorraxy_customer_phone');
-            const savedToken = localStorage.getItem('rorraxy_customer_token');
-            if (savedPhone && savedToken) {
-                showDashboard(savedPhone);
-            }
-        };
-
-        openCustomerBtn.addEventListener('click', () => {
-            mainSelectionGroup.style.display = 'none';
-            verificationSection.style.display = 'flex';
-
-            if (!iti && window.intlTelInput) {
+        function initPhoneInput() {
+            if (!iti && customerPhoneInput && window.intlTelInput) {
                 iti = window.intlTelInput(customerPhoneInput, {
                     initialCountry: "auto",
                     preferredCountries: ["bd", "us", "cn", "gb", "ca", "au", "in", "ae", "sg", "de", "my"],
@@ -503,13 +443,18 @@
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
                 });
             }
-        });
+        }
 
-        backToPortal.addEventListener('click', (e) => {
-            e.preventDefault();
-            verificationSection.style.display = 'none';
-            mainSelectionGroup.style.display = 'flex';
-            formStatus.style.display = 'none';
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedPhone = localStorage.getItem('rorraxy_customer_phone');
+            const savedToken = localStorage.getItem('rorraxy_customer_token');
+            if (savedPhone && savedToken) {
+                showDashboard(savedPhone);
+            } else {
+                verificationSection.style.display = 'flex';
+                accountDashboardSection.style.display = 'none';
+                initPhoneInput();
+            }
         });
 
         function showStatus(message, isError = false) {
@@ -520,6 +465,7 @@
 
         customerAuthForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            initPhoneInput();
             if (!iti || !iti.isValidNumber()) {
                 showStatus('Please enter valid mobile number.', true);
                 return;
@@ -551,7 +497,6 @@
         });
 
         function showDashboard(phone) {
-            mainSelectionGroup.style.display = 'none';
             verificationSection.style.display = 'none';
             accountDashboardSection.style.display = 'flex';
 
