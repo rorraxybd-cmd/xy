@@ -13,6 +13,7 @@
     <script src="/ecosystem-core.js" defer></script>
     <link rel="manifest" href="/manifest.json">
     <script>
+      // Register service worker safely for offline/PWA support
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
@@ -210,31 +211,38 @@
         }
         .video-badge-overlay {
             position: absolute; bottom: 10px; left: 10px;
-            background: rgba(0,0,0,0.65);
-            color: #fff; font-size: 0.52rem; font-weight: 700;
-            padding: 3px 7px; border-radius: 999px; z-index: 6;
-            display: inline-flex; align-items: center; gap: 4px; pointer-events: none;
+            background: rgba(12, 12, 18, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            color: var(--gold-solid);
+            width: 26px; height: 26px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.62rem; z-index: 7; pointer-events: none;
         }
 
-        /* clean frameless price on top-right of product */
+        /* Clean frameless gold gradient price on top-right of product */
         .price-qty-overlay {
             position: absolute; top: 9px; right: 10px;
             display: flex; flex-direction: column; align-items: flex-end;
             z-index: 6;
             pointer-events: none;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.92), 0 0 3px rgba(0, 0, 0, 0.95);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(0, 0, 0, 0.85));
         }
         .price-qty-overlay .price {
             font-size: 0.92rem; font-weight: 800;
-            color: #ffffff;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             line-height: 1.15; letter-spacing: 0.2px;
         }
         .price-qty-overlay .qty {
-            font-size: 0.52rem; font-weight: 600; color: #f0e6c8;
+            font-size: 0.52rem; font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: 0.3px; text-transform: uppercase; white-space: nowrap;
         }
 
-        /* Pinterest-style AI Lens icon button on bottom-right corner */
+        /* Pinterest-style AI Lens icon button on bottom-right corner with gold gradient icon */
         .ai-lens-corner-btn {
             position: absolute;
             bottom: 9px;
@@ -242,22 +250,23 @@
             width: 34px;
             height: 34px;
             border-radius: 11px;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(12, 12, 18, 0.88);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
-            border: none;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.55);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 8;
             padding: 0;
-            transition: transform 0.18s ease, background 0.18s ease;
+            transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
         }
         .ai-lens-corner-btn:hover {
             transform: scale(1.08);
-            background: #ffffff;
+            border-color: var(--gold-solid);
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.32);
         }
         .ai-lens-corner-btn:active {
             transform: scale(0.92);
@@ -268,7 +277,7 @@
             display: block;
         }
 
-        /* bottom nav */
+        /* ---------- bottom nav ---------- */
         nav.bottom-nav {
             position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; background: var(--footer-wholesale) !important;
             display: flex !important; justify-content: space-around !important; align-items: center !important; padding: 8px 4px 10px 4px !important;
@@ -292,7 +301,7 @@
         .cart-badge-circle.empty-badge { display: none !important; }
         .cart-custom-svg { width: 22px; height: 22px; fill: url(#goldGradientSvg); }
 
-        /* modals / overlays */
+        /* ---------- modals & overlays ---------- */
         .floating-search-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -421,7 +430,7 @@
             <button class="close-modal-btn" onclick="toggleSearchModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
             <div class="modal-input-container">
-                <input type="text" id="modalSearchInput" class="modal-input" placeholder="MAHOGANY, GAMARI, LEATHER, RESIN..." autocomplete="off">
+                <input type="text" id="modalSearchInput" class="modal-input" placeholder="WALLET, WATCH, EARRING, BABY, WOOD, RESIN..." autocomplete="off">
                 <div class="search-bottom-actions">
                     <button type="button" class="search-action-item-btn" onclick="startAudioSearch()">
                         <i class="fa-solid fa-microphone"></i>
@@ -473,81 +482,104 @@
 
     <script>
         // ============================================================
-        // 1. GLOBAL CONFIG & SYNONYMS (MAHOGANY, GAMARI, LEATHER, FABRIC, DECOR, RESIN)
+        // 1. GLOBAL CONFIG & SYNONYMS
         // ============================================================
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_wholesale_feed_cache';
         const PREF_STORAGE_KEY = 'rorraxy_user_visual_prefs';
         const FALLBACK_IMG_URL = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
         let cachedAffiliateId = null;
         let __ALL_PRODUCTS = [];
+        let __IS_FILTERED_VIEW = false;
 
+        // Category, sub-category, product-type & material synonym map
         const MATERIAL_SYNONYMS = {
             mahogany: ['mahogany', 'মেহগনি', 'wood', 'wooden', 'timber', 'darkwood', 'furniture', 'handicrafts'],
             gamari:   ['gamari', 'গামারি', 'wood', 'wooden', 'timber', 'warmwood', 'handicrafts'],
-            leather:  ['leather', 'চামড়া', 'চামড়া', 'wallet', 'handbag', 'bag', 'shoes', 'belt', 'grooming', 'accessories'],
-            fabric:   ['fabric', 'cloth', 'কাপড়', 'কাপড়', 'clothing', 'dress', 'wear', 'fashion', 'traditional', 'activewear', 'sets'],
-            decor:    ['decor', 'homedecor', 'home decor', 'হোম ডেকর', 'ডেকর', 'clock', 'lamp', 'coaster', 'bamboo', 'brass', 'crafts', 'gift'],
-            resin:    ['resin', 'রেজিন', 'epoxy', 'wood-resincrafts', 'woodresin', 'art', 'crafts', 'handicrafts']
+            leather:  ['leather', 'চামড়া', 'চামড়া', 'wallet', 'wallets', 'handbag', 'handbags', 'bag', 'bags', 'shoes', 'belt', 'grooming', 'accessories'],
+            wallet:   ['wallet', 'wallets', 'cardholder', 'pouch', 'purse', 'grooming', 'men-grooming', 'boys-bags', 'ওয়লেট', 'ওয়ালেট'],
+            watch:    ['watch', 'watches', 'clock', 'timepiece', 'wristwatch', 'women-watches', 'men-watches', 'girls-watches', 'boys-watches', 'ঘড়ি', 'ঘড়ি'],
+            earring:  ['earring', 'earrings', 'stud', 'studs', 'hoop', 'hoops', 'drop', 'jewelry', 'jewellery', 'women-jewelry', 'girls-jewelry', 'কানের দুল', 'দুল'],
+            baby:     ['baby', 'babies', 'infant', 'toddler', 'newborn', 'mother', 'maternity', 'nursery', 'feeding', 'toys', 'mother-baby-clothing', 'pregnancy-maternity', 'baby-care-feeding', 'nursery-baby-gear', 'eco-baby-toys', 'বেবি', 'শিশু'],
+            fabric:   ['fabric', 'cloth', 'কাপড়', 'কাপড়', 'clothing', 'dress', 'dresses', 'wear', 'fashion', 'traditional', 'activewear', 'sets', 'girls-clothing', 'boys-clothing', 'women-clothing', 'men-clothing'],
+            decor:    ['decor', 'homedecor', 'home decor', 'হোম ডেকর', 'ডেকর', 'clock', 'lamp', 'coaster', 'bamboo', 'brass', 'crafts', 'gift', 'bamboo-brass-decor'],
+            resin:    ['resin', 'রেজিন', 'epoxy', 'wood-resincrafts', 'woodresin', 'art', 'crafts', 'handicrafts', 'wood-resin']
         };
 
+        // Retrieve active affiliate ID from URL query or storage
         function getActiveAffiliateId() {
             if (cachedAffiliateId !== null) return cachedAffiliateId;
-            const urlParams = new URLSearchParams(window.location.search);
-            const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-            if (refFromUrl) {
-                try {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+                if (refFromUrl) {
                     localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
                     sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
-                } catch(e) {}
-                cachedAffiliateId = refFromUrl;
-                return cachedAffiliateId;
-            }
-            let userProfile = {};
-            try {
+                    cachedAffiliateId = refFromUrl;
+                    return cachedAffiliateId;
+                }
+                let userProfile = {};
                 userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account') || 'null')
                            || JSON.parse(localStorage.getItem('user_profile') || 'null') || {};
-            } catch(e) {}
-            cachedAffiliateId = userProfile.affiliate_id || userProfile.id || userProfile.userId
-                || localStorage.getItem('rorraxy_my_affiliate_id')
-                || localStorage.getItem('rorraxy_active_affiliate_ref')
-                || sessionStorage.getItem('rorraxy_active_affiliate_ref')
-                || null;
+                cachedAffiliateId = userProfile.affiliate_id || userProfile.id || userProfile.userId
+                    || localStorage.getItem('rorraxy_my_affiliate_id')
+                    || localStorage.getItem('rorraxy_active_affiliate_ref')
+                    || sessionStorage.getItem('rorraxy_active_affiliate_ref')
+                    || null;
+            } catch (e) {
+                cachedAffiliateId = null;
+            }
             return cachedAffiliateId;
         }
 
         function escapeHtmlAttr(str) {
-            return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
+
         function escapeJsSingle(str) {
-            return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
+            return String(str || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/\n/g, ' ');
         }
 
         // ============================================================
         // 2. SMART AUTO-TAGGER, PREFERENCE MEMORY & SIMILARITY ENGINE
         // ============================================================
         function normalizeText(str) {
-            return String(str || '').toLowerCase()
+            return String(str || '')
+                .toLowerCase()
                 .replace(/[^a-z0-9\u0980-\u09FF]+/g, ' ')
-                .replace(/\s+/g, ' ').trim();
+                .replace(/\s+/g, ' ')
+                .trim();
         }
 
         function getUserPrefs() {
             try {
                 return JSON.parse(localStorage.getItem(PREF_STORAGE_KEY) || '{}') || {};
-            } catch(e) { return {}; }
+            } catch (e) {
+                return {};
+            }
         }
 
         function recordUserPreference(product) {
             if (!product) return;
-            const prefs = getUserPrefs();
-            const tags = extractExpandedTags(product);
-            tags.forEach(t => {
-                if (t.length > 2) prefs[t] = Math.min(25, (prefs[t] || 0) + 1);
-            });
-            try { localStorage.setItem(PREF_STORAGE_KEY, JSON.stringify(prefs)); } catch(e) {}
+            try {
+                const prefs = getUserPrefs();
+                const tags = extractExpandedTags(product);
+                tags.forEach(t => {
+                    if (t.length > 2) prefs[t] = Math.min(25, (prefs[t] || 0) + 1);
+                });
+                localStorage.setItem(PREF_STORAGE_KEY, JSON.stringify(prefs));
+            } catch (e) {}
         }
 
         function extractExpandedTags(p) {
+            if (!p) return [];
             if (Array.isArray(p.__expandedTags)) return p.__expandedTags;
 
             const rawTokens = new Set();
@@ -582,26 +614,6 @@
             return p.__expandedTags;
         }
 
-        function getCardQuickSearchLabel(p) {
-            if (p.quickSearch) return p.quickSearch;
-            const full = normalizeText([p.title, p.subtitle, p.category, ...(Array.isArray(p.tags) ? p.tags : [p.tags || ''])].join(' '));
-            for (const [key, words] of Object.entries(MATERIAL_SYNONYMS)) {
-                if (words.some(w => full.includes(normalizeText(w)))) {
-                    const labels = {
-                        mahogany: 'MAHOGANY WOOD',
-                        gamari: 'GAMARI WOOD',
-                        leather: 'LEATHER ITEMS',
-                        fabric: 'FABRIC & WEAR',
-                        decor: 'HOME DECOR',
-                        resin: 'RESIN CRAFTS'
-                    };
-                    return labels[key] || key.toUpperCase();
-                }
-            }
-            if (p.category) return String(p.category).replace(/[-_]/g, ' ').toUpperCase();
-            return (p.title || 'SIMILAR ITEMS').split(' ').slice(0, 3).join(' ').toUpperCase();
-        }
-
         function computeSimilarityScore(source, target) {
             if (!source || !target) return 0;
             if (String(source.__id) === String(target.__id)) return -1;
@@ -618,14 +630,12 @@
             const tgtCat = normalizeText(target.category || target.subCategory || '');
             if (srcCat && tgtCat && srcCat === tgtCat) score += 12;
 
-            // Visual attribute match (tone, style, shape)
             if (source.visual && target.visual) {
                 if (source.visual.colorTone && source.visual.colorTone === target.visual.colorTone) score += 5;
                 if (source.visual.style && source.visual.style === target.visual.style) score += 5;
                 if (source.visual.shape && source.visual.shape === target.visual.shape) score += 3;
             }
 
-            // Boost new & popular items so attractive/new items appear first
             if (target.is_new || target.isNew || target.new_arrival) score += 5;
             if (target.views) score += Math.min(4, Number(target.views) / 100);
 
@@ -649,12 +659,14 @@
                 .map(x => x.item);
 
             const seen = new Set([String(source.__id), ...scored.map(s => String(s.__id))]);
-            const remaining = prioritizeHomepageFeed(__ALL_PRODUCTS.filter(p => !seen.has(String(p.__id))));
+            const remaining = __ALL_PRODUCTS.filter(p => !seen.has(String(p.__id)));
 
+            // Keep anchor + matched related items strictly first without unintended re-reset
             const finalFeed = [source, ...scored, ...remaining];
 
+            __IS_FILTERED_VIEW = true;
             showFeedFilterBar(`SIMILAR ITEMS (${scored.length})`);
-            renderWholesaleCards(finalFeed, source.__id);
+            renderWholesaleCards(finalFeed, source.__id, false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -673,39 +685,42 @@
         function clearFeedFilter() {
             const bar = document.getElementById('feedFilterBar');
             if (bar) bar.classList.remove('active');
+            __IS_FILTERED_VIEW = false;
             window.__aiVisionMatches = null;
-            renderWholesaleCards(prioritizeHomepageFeed(__ALL_PRODUCTS));
+            renderWholesaleCards(prioritizeHomepageFeed(__ALL_PRODUCTS), null, true);
         }
 
         // ============================================================
         // 4. BOOT & NAVIGATION HELPERS
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            const selector = document.getElementById('userModeSelector');
-            if (selector) selector.value = 'wholesale';
+            try {
+                const selector = document.getElementById('userModeSelector');
+                if (selector) selector.value = 'wholesale';
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-            const rateParam = urlParams.get('rate') || '3';
-            const platformParam = urlParams.get('platform') || 'wholesale';
+                const urlParams = new URLSearchParams(window.location.search);
+                const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+                const rateParam = urlParams.get('rate') || '3';
+                const platformParam = urlParams.get('platform') || 'wholesale';
 
-            if (refParam) {
-                try {
+                if (refParam) {
                     localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
                     localStorage.setItem('rorraxy_active_commission_rate', rateParam);
                     localStorage.setItem('rorraxy_active_platform', platformParam);
-                } catch(e) {}
+                }
+
+                getActiveAffiliateId();
+                updateCartBadgeCount();
+
+                const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
+                loadWholesaleProducts(searchQuery);
+
+                document.getElementById('modalSearchInput')?.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') submitModalSearch();
+                });
+            } catch (err) {
+                console.warn('Init error:', err);
             }
-
-            getActiveAffiliateId();
-            updateCartBadgeCount();
-
-            const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
-            loadWholesaleProducts(searchQuery);
-
-            document.getElementById('modalSearchInput')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') submitModalSearch();
-            });
         });
 
         function switchEcosystemMode(selectedMode) {
@@ -769,6 +784,7 @@
             const query = input.value.trim();
             if (!query) return;
             closeAllOverlays();
+            __IS_FILTERED_VIEW = true;
             loadWholesaleProducts(query);
         }
 
@@ -784,9 +800,10 @@
                 const transcript = event.results[0][0].transcript;
                 searchInput.value = transcript;
                 closeAllOverlays();
+                __IS_FILTERED_VIEW = true;
                 loadWholesaleProducts(transcript);
             };
-            try { recognition.start(); } catch(err) {}
+            try { recognition.start(); } catch (err) {}
         }
 
         // ============================================================
@@ -889,7 +906,8 @@
             const matches = window.__aiVisionMatches || [];
             if (!matches.length) return;
             closeAiVisionModal();
-            renderWholesaleCards(matches);
+            __IS_FILTERED_VIEW = true;
+            renderWholesaleCards(matches, null, false);
             showFeedFilterBar(`AI VISION (${matches.length})`);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -935,6 +953,24 @@
             ];
         }
 
+        function expandSearchTerms(rawQuery) {
+            const normalized = normalizeText(rawQuery);
+            const tokens = normalized.split(' ').filter(Boolean);
+            const expanded = new Set(tokens);
+
+            tokens.forEach(token => {
+                Object.entries(MATERIAL_SYNONYMS).forEach(([groupKey, words]) => {
+                    const normalizedGroup = words.map(w => normalizeText(w));
+                    if (normalizeText(groupKey).includes(token) || normalizedGroup.some(w => w.includes(token) || token.includes(w))) {
+                        expanded.add(normalizeText(groupKey));
+                        normalizedGroup.forEach(w => { if (w) expanded.add(w); });
+                    }
+                });
+            });
+
+            return { tokens, expanded: Array.from(expanded) };
+        }
+
         async function loadWholesaleProducts(searchFilter = null) {
             const feedContainer = document.getElementById('productFeed');
 
@@ -942,12 +978,12 @@
             try {
                 localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products') || '[]') || [];
                 cachedFeed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CACHE_KEY) || '[]') || [];
-            } catch(e) {}
+            } catch (e) {}
 
-            if (!searchFilter && cachedFeed.length > 0) {
+            if (!searchFilter && !__IS_FILTERED_VIEW && cachedFeed.length > 0) {
                 __ALL_PRODUCTS = cachedFeed;
-                renderWholesaleCards(prioritizeHomepageFeed(cachedFeed));
-            } else {
+                renderWholesaleCards(prioritizeHomepageFeed(cachedFeed), null, true);
+            } else if (!__IS_FILTERED_VIEW) {
                 feedContainer.innerHTML = `<div class="feed-status-box">
                     <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
                     <p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">${searchFilter ? 'SEARCHING...' : 'LOADING WHOLESALE PRODUCTS...'}</p></div>`;
@@ -969,6 +1005,7 @@
             const combined = [...localProducts, ...cachedFeed, ...products];
             for (let i = 0; i < combined.length; i++) {
                 const p = combined[i];
+                if (!p || typeof p !== 'object') continue;
                 const pId = p.id || p.product_id || p.product_code || p.title;
                 if (pId) {
                     const key = String(pId);
@@ -985,23 +1022,48 @@
                     || p.is_cj || p.product_code || p.cj_product_id;
             });
 
+            if (wholesaleProducts.length > 0 && !searchFilter) {
+                try { localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(wholesaleProducts)); } catch (e) {}
+            }
+
+            if (__IS_FILTERED_VIEW && !searchFilter) {
+                if (__ALL_PRODUCTS.length === 0) __ALL_PRODUCTS = wholesaleProducts;
+                return;
+            }
+
             __ALL_PRODUCTS = wholesaleProducts;
 
             if (searchFilter) {
-                const queryWords = normalizeText(searchFilter).split(' ').filter(Boolean);
-                wholesaleProducts = wholesaleProducts.filter(item => {
-                    const tags = extractExpandedTags(item);
-                    const full = normalizeText([item.title, item.subtitle, item.category, ...tags].join(' '));
-                    return queryWords.every(qw => full.includes(qw) || tags.some(t => t.includes(qw)));
-                });
-                showFeedFilterBar(`${searchFilter.toUpperCase()} (${wholesaleProducts.length})`);
+                const { tokens, expanded } = expandSearchTerms(searchFilter);
+                const scoredMatches = wholesaleProducts
+                    .map(item => {
+                        const tags = extractExpandedTags(item);
+                        const full = normalizeText([item.title, item.subtitle, item.category, item.subCategory, ...tags].join(' '));
+                        let matchScore = 0;
+
+                        tokens.forEach(tk => {
+                            if (full.includes(tk)) matchScore += 10;
+                            if (tags.some(t => t.includes(tk))) matchScore += 8;
+                        });
+                        expanded.forEach(ex => {
+                            if (full.includes(ex)) matchScore += 4;
+                            if (tags.some(t => t === ex || t.includes(ex))) matchScore += 3;
+                        });
+
+                        return { item, matchScore };
+                    })
+                    .filter(entry => entry.matchScore > 0)
+                    .sort((a, b) => b.matchScore - a.matchScore)
+                    .map(entry => entry.item);
+
+                __IS_FILTERED_VIEW = true;
+                showFeedFilterBar(`${searchFilter.toUpperCase()} (${scoredMatches.length})`);
+                renderWholesaleCards(scoredMatches, null, false);
+                return;
             }
 
             if (wholesaleProducts.length > 0) {
-                if (!searchFilter) {
-                    try { localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(wholesaleProducts)); } catch(e) {}
-                }
-                renderWholesaleCards(prioritizeHomepageFeed(wholesaleProducts));
+                renderWholesaleCards(prioritizeHomepageFeed(wholesaleProducts), null, true);
             } else {
                 feedContainer.innerHTML = `
                     <div class="feed-status-box" style="color: var(--text-gray);">
@@ -1026,7 +1088,7 @@
                         resolvedImageUrl = p.images_json[0];
                     }
                 }
-            } catch(e) {
+            } catch (e) {
                 if (typeof p.images_json === 'string' && p.images_json.trim() !== '') {
                     resolvedImageUrl = p.images_json.split(',')[0].trim();
                 }
@@ -1037,7 +1099,7 @@
                         try {
                             const parsed = JSON.parse(p.image_url);
                             if (Array.isArray(parsed) && parsed.length > 0) resolvedImageUrl = parsed[0];
-                        } catch(e) { resolvedImageUrl = p.image_url; }
+                        } catch (e) { resolvedImageUrl = p.image_url; }
                     } else resolvedImageUrl = p.image_url;
                 } else if (Array.isArray(p.image_url) && p.image_url.length > 0) {
                     resolvedImageUrl = p.image_url[0];
@@ -1050,7 +1112,7 @@
                 && (p.productImage || p.jiImageUrl || p.cjImage)) {
                 resolvedImageUrl = p.productImage || p.jiImageUrl || p.cjImage;
             }
-            return resolvedImageUrl;
+            return resolvedImageUrl || FALLBACK_IMG_URL;
         }
 
         function resolveProductVideo(p) {
@@ -1062,11 +1124,20 @@
         }
 
         // ============================================================
-        // 9. RENDER CARDS (CLEAN MEDIA + FRAMELESS PRICE + CORNER AI ICON)
+        // 9. RENDER CARDS (CLEAN MEDIA + GOLD PRICE + GOLD AI LENS ICON)
         // ============================================================
-        function renderWholesaleCards(wholesaleProducts, anchorProductId = null) {
+        function renderWholesaleCards(wholesaleProducts, anchorProductId = null, allowStagger = true) {
             const feedContainer = document.getElementById('productFeed');
             const fragment = document.createDocumentFragment();
+
+            if (!Array.isArray(wholesaleProducts) || wholesaleProducts.length === 0) {
+                feedContainer.innerHTML = `
+                    <div class="feed-status-box" style="color: var(--text-gray);">
+                        <i class="fa-solid fa-magnifying-glass fa-2x" style="color: var(--gold-solid); margin-bottom: 12px;"></i>
+                        <p style="font-size: 0.8rem; font-weight: 600;">NO MATCHING PRODUCTS FOUND.</p>
+                    </div>`;
+                return;
+            }
 
             wholesaleProducts.forEach((p, idx) => {
                 const pTitle = p.title || 'WHOLESALE ITEM';
@@ -1084,7 +1155,7 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'product-card' + (String(anchorProductId) === productId ? ' is-anchor-card' : '');
                 cardDiv.dataset.productId = productId;
-                cardDiv.style.animationDelay = Math.min(idx * 0.025, 0.4) + 's';
+                cardDiv.style.animationDelay = allowStagger ? Math.min(idx * 0.025, 0.4) + 's' : '0s';
 
                 // Clicking anywhere on the product card opens details page directly
                 cardDiv.onclick = () => goToProduct(productId);
@@ -1107,10 +1178,10 @@
                         ${mediaTagHtml}
                         <button type="button" class="ai-lens-corner-btn" title="Find similar"
                                 onclick="triggerRelatedFeedSearch('${safeIdJs}', event)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="url(#goldGradientSvg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M10.5 3.5a7 7 0 1 0 7 7" />
                                 <line x1="15.8" y1="15.8" x2="20.5" y2="20.5" />
-                                <path d="M18.2 2.2l.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8.8-2.1z" fill="#111111" stroke="none" />
+                                <path d="M18.2 2.2l.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8.8-2.1z" fill="url(#goldGradientSvg)" stroke="none" />
                             </svg>
                         </button>
                     </div>
@@ -1127,7 +1198,7 @@
         // ============================================================
         function updateCartBadgeCount() {
             let cart = [];
-            try { cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || []; } catch(e) {}
+            try { cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || []; } catch (e) {}
             const totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
             const badge = document.getElementById('floatingCartItemCountBadge');
             if (badge) {
