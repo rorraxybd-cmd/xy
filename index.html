@@ -45,12 +45,12 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .product-card.ai-revealed{opacity:1;transform:translate3d(0,0,0) scale(1);}
 .product-card:active{transform:scale(0.97);transition-duration:0.05s;}
 .product-media-box{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#09090f;}
-.product-media-box::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(110deg,#09090f 20%,rgba(212,175,55,0.22) 45%,rgba(252,246,186,0.32) 50%,rgba(212,175,55,0.22) 55%,#09090f 80%);background-size:200% 100%;animation:aiShimmerSweep 0.85s cubic-bezier(0.4,0,0.2,1) infinite;pointer-events:none;}
+.product-media-box::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(110deg,#09090f 20%,rgba(212,175,55,0.24) 45%,rgba(252,246,186,0.34) 50%,rgba(212,175,55,0.24) 55%,#09090f 80%);background-size:200% 100%;animation:aiShimmerSweep 0.8s cubic-bezier(0.4,0,0.2,1) infinite;pointer-events:none;}
 .product-media-box.img-loaded::before{display:none;animation:none;}
 .product-media-box img{width:100%;height:100%;display:block;object-fit:cover;position:relative;z-index:1;background:#09090f;opacity:0;transition:opacity 0.15s ease-out;}
 .product-media-box img.img-ready{opacity:1;}
 
-.reel-shimmer-layer{position:absolute;inset:0;z-index:1;background:linear-gradient(110deg,#06060a 20%,rgba(212,175,55,0.18) 45%,rgba(252,246,186,0.28) 50%,rgba(212,175,55,0.18) 55%,#06060a 80%);background-size:200% 100%;animation:aiShimmerSweep 0.85s cubic-bezier(0.4,0,0.2,1) infinite;pointer-events:none;}
+.reel-shimmer-layer{position:absolute;inset:0;z-index:2;background:linear-gradient(110deg,#08080e 20%,rgba(212,175,55,0.22) 45%,rgba(252,246,186,0.32) 50%,rgba(212,175,55,0.22) 55%,#08080e 80%);background-size:200% 100%;animation:aiShimmerSweep 0.8s cubic-bezier(0.4,0,0.2,1) infinite;pointer-events:none;border-radius:16px;}
 .reel-shimmer-layer.loaded{display:none;animation:none;}
 
 .desktop-reel-nav{position:fixed;right:74px;top:50%;transform:translateY(-50%);z-index:4600;display:flex;flex-direction:column;gap:14px;}
@@ -89,12 +89,12 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .reel-modal-wrapper{position:relative;width:100%;max-width:420px;height:calc(100vh - 54px);height:calc(100dvh - 54px);background:#000;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .reel-modal-wrapper::-webkit-scrollbar{display:none;}
 .reel-card{width:100%;height:calc(100vh - 54px)!important;height:calc(100dvh - 54px)!important;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;position:relative;background:#000;flex-shrink:0;align-items:center;justify-content:center;padding-bottom:18px;contain:layout style paint;transform:translate3d(0,0,0);}
-.reel-media-box{position:relative;width:100%;max-width:390px;aspect-ratio:9/16;max-height:calc(100dvh - 88px);cursor:pointer;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:16px;}
-.reel-primary-video-container{width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;position:relative;z-index:2;}
+.reel-media-box{position:relative;width:100%;max-width:390px;min-height:280px;aspect-ratio:9/16;max-height:calc(100dvh - 88px);cursor:pointer;background:#08080e;border:1px solid rgba(212,175,55,0.22);overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:16px;}
+.reel-primary-video-container{width:100%;height:100%;background:#08080e;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;position:relative;z-index:3;}
 .slide-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.3s var(--snap-ease);will-change:opacity;backface-visibility:hidden;transform:translateZ(0);}
-.slide-layer.active{opacity:1;z-index:3;}
-.slide-layer.previous{opacity:0;z-index:2;}
+.slide-layer.active{opacity:1;z-index:4;}
+.slide-layer.previous{opacity:0;z-index:3;}
 .reel-bottom-price-overlay{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:22px;background:rgba(8,8,14,0.94)!important;border:1px solid rgba(212,175,55,0.45);white-space:nowrap;}
 .reel-price-row{display:flex;align-items:center;gap:8px;}
 .reel-center-price-badge{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -243,7 +243,11 @@ window.closeAccountPortal = closeAccountPortal;
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
 const REELS_BATCH_SIZE=6;
-let globalMasterProductsList=[{id:'101',sku:'ROR-DEMO-01',title:'rorraxy Premium Matte Black Edition',category:'Fashion',price:'49.99',discount_rate:'20',image_url:FALLBACK_LOGO,description:'Luxury matte finish crafted with highest precision.'}];
+const DEFAULT_PRODUCTS=[
+  {id:'101',sku:'ROR-DEMO-01',title:'rorraxy Premium Matte Black Edition',category:'Fashion',price:'49.99',discount_rate:'20',image_url:FALLBACK_LOGO,description:'Luxury matte finish crafted with highest precision.'},
+  {id:'102',sku:'ROR-WOOD-02',title:'rorraxy Handcrafted Teak & Resin Art',category:'Crafts',price:'79.00',discount_rate:'15',image_url:FALLBACK_LOGO,description:'Precision crafted wood and resin piece.'}
+];
+let globalMasterProductsList=[...DEFAULT_PRODUCTS];
 let activeProductList=[];
 let renderedReelsCount=0;
 let currentReelIndex=0;
@@ -260,7 +264,14 @@ function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&load
 function debounce(func,wait){let timeout;return function executedFunction(...args){const later=()=>{clearTimeout(timeout);func(...args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}
 function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url))return;preloadedUrls.add(url);const img=new Image();if(highPriority)img.fetchPriority='high';img.decoding='async';img.src=url;}
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
-function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
+function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed.filter(Boolean);}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
+function normalizeProductsResponse(json){
+  if(Array.isArray(json))return json;
+  if(json&&Array.isArray(json.data))return json.data;
+  if(json&&json.data&&Array.isArray(json.data.products))return json.data.products;
+  if(json&&Array.isArray(json.products))return json.products;
+  return[];
+}
 
 function initRetailApp(){
 hideLoaderFast();
@@ -349,10 +360,10 @@ async function refreshAndShuffleFeed(){
 activeProductList=shuffleArray(globalMasterProductsList);
 openReelsModal(0);
 try{
-const res=await fetch('/api/products');
+const res=await fetch('/api/products',{cache:'no-store'});
 const json=await res.json();
-const list=(json&&json.success&&Array.isArray(json.data))?json.data:(Array.isArray(json)?json:[]);
-if(list.length){globalMasterProductsList=list;localStorage.setItem(CACHE_KEY,JSON.stringify(list));activeProductList=shuffleArray(globalMasterProductsList);openReelsModal(0);}
+const list=normalizeProductsResponse(json);
+if(list.length){globalMasterProductsList=list;try{localStorage.setItem(CACHE_KEY,JSON.stringify(list));}catch(e){}activeProductList=shuffleArray(globalMasterProductsList);openReelsModal(0);}
 }catch(e){}
 }
 function toggleWorldPortal(){window.location.href='https://rorraxy.com/world.html';}
@@ -384,9 +395,11 @@ try{const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(Array.is
 if(!rendered){checkInitialProductParam();}
 try{
 const res=await fetch('/api/products');
+if(res.ok){
 const json=await res.json();
-const list=(json&&json.success&&Array.isArray(json.data))?json.data:(Array.isArray(json)?json:[]);
-if(list.length){globalMasterProductsList=list;localStorage.setItem(CACHE_KEY,JSON.stringify(list));if(!rendered)checkInitialProductParam();}
+const list=normalizeProductsResponse(json);
+if(list.length){globalMasterProductsList=list;try{localStorage.setItem(CACHE_KEY,JSON.stringify(list));}catch(e){}if(!rendered)checkInitialProductParam();}
+}
 }catch(e){}
 }
 function checkInitialProductParam(){
@@ -512,8 +525,8 @@ mediaContent=`<div class="reel-shimmer-layer" id="reelShimmer_${idx}"></div><vid
 const layers=imgs.map((url,i)=>{
 const isFirst=(idx===0&&i===0);
 const isEager=(idx<=2&&i===0);
-const onLoadHandler=i===0?`onload="hideLoaderFast();document.getElementById('reelShimmer_${idx}')?.classList.add('loaded')"`:'';
-return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';document.getElementById('reelShimmer_${idx}')?.classList.add('loaded');" class="slide-layer ${i===0?'active':''}" id="slide_${idx}_${i}" alt="slide" ${isFirst?'fetchpriority="high" decoding="sync"':`loading="${isEager?'eager':'lazy'}" decoding="async"`} ${onLoadHandler}>`;
+const onLoadHandler=i===0?`onload="this.style.opacity='1';hideLoaderFast();document.getElementById('reelShimmer_${idx}')?.classList.add('loaded')"`:`onload="this.style.opacity='1'"`;
+return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';this.style.opacity='1';document.getElementById('reelShimmer_${idx}')?.classList.add('loaded');" class="slide-layer ${i===0?'active':''}" id="slide_${idx}_${i}" alt="slide" ${isFirst?'fetchpriority="high" decoding="sync"':`loading="${isEager?'eager':'lazy'}" decoding="async"`} ${onLoadHandler}>`;
 }).join('');
 mediaContent=`<div style="width:100%;height:100%;position:relative;overflow:hidden;"><div class="reel-shimmer-layer" id="reelShimmer_${idx}"></div>${layers}</div>`;
 }
@@ -822,3 +835,4 @@ else if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
 </script>
 </body>
 </html>
+```[cite: 1]
