@@ -29,30 +29,21 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
-#rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.08s linear;pointer-events:none;}
+#rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.1s linear;pointer-events:none;}
 .loader-logo-box{width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-solid);box-shadow:0 0 15px rgba(212,175,55,0.3);}
 .loader-logo-box img{width:100%;height:100%;object-fit:cover;}
 .loader-brand-name{font-size:1rem;font-weight:800;letter-spacing:3px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 #pullRefreshIndicator{position:fixed;top:-50px;left:50%;transform:translateX(-50%);z-index:7000;background:#0c0c12;border:1px solid var(--gold-solid);color:var(--gold-solid);padding:6px 16px;border-radius:20px;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:8px;transition:top 0.15s ease-out;pointer-events:none;}
 #pullRefreshIndicator.visible{top:18px;}
-
-/* Super Fast AI Shimmer Animation */
-@keyframes aiShimmerSweep{
-  0%{background-position:200% 0;}
-  100%{background-position:-200% 0;}
-}
-.product-card{background:transparent;border-radius:14px;overflow:hidden;display:inline-block;width:100%;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;opacity:0;transform:translate3d(0,6px,0) scale(0.99);transition:opacity 0.14s var(--snap-ease),transform 0.14s var(--snap-ease);contain:layout style paint;backface-visibility:hidden;}
+.product-card{background:transparent;border-radius:14px;overflow:hidden;display:inline-block;width:100%;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;opacity:0;transform:translate3d(0,8px,0) scale(0.985);transition:opacity 0.15s var(--snap-ease),transform 0.15s var(--snap-ease);contain:layout style paint;backface-visibility:hidden;}
 .product-card.ai-revealed{opacity:1;transform:translate3d(0,0,0) scale(1);}
 .product-card:active{transform:scale(0.97);transition-duration:0.05s;}
-.product-media-box{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#09090f;}
-.product-media-box::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(110deg,#09090f 20%,rgba(212,175,55,0.24) 45%,rgba(252,246,186,0.34) 50%,rgba(212,175,55,0.24) 55%,#09090f 80%);background-size:200% 100%;animation:aiShimmerSweep 0.8s cubic-bezier(0.4,0,0.2,1) infinite;pointer-events:none;}
-.product-media-box.img-loaded::before{display:none;animation:none;}
-.product-media-box img{width:100%;height:100%;display:block;object-fit:cover;position:relative;z-index:1;background:#09090f;opacity:0;transition:opacity 0.15s ease-out;}
+.product-media-box{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#0a0a12;}
+.product-media-box::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#0a0a12 0%,#1a1826 50%,#0a0a12 100%);background-size:200% 100%;animation:cardShimmer 0.9s linear infinite;}
+@keyframes cardShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.product-media-box img{width:100%;height:100%;display:block;object-fit:cover;position:relative;z-index:1;background:#0a0a12;opacity:0;transition:opacity 0.16s ease-out;}
 .product-media-box img.img-ready{opacity:1;}
-
-.reel-shimmer-layer{position:absolute;inset:0;z-index:2;background:linear-gradient(110deg,#08080e 20%,rgba(212,175,55,0.22) 45%,rgba(252,246,186,0.32) 50%,rgba(212,175,55,0.22) 55%,#08080e 80%);background-size:200% 100%;animation:aiShimmerSweep 0.8s cubic-bezier(0.4,0,0.2,1) infinite;pointer-events:none;border-radius:16px;}
-.reel-shimmer-layer.loaded{display:none;animation:none;}
-
+.product-media-box.img-loaded::before{display:none;}
 .desktop-reel-nav{position:fixed;right:74px;top:50%;transform:translateY(-50%);z-index:4600;display:flex;flex-direction:column;gap:14px;}
 @media (max-width:768px){.desktop-reel-nav{display:none!important;}}
 .desktop-nav-circle{width:44px;height:44px;border-radius:50%;background:rgba(12,12,18,0.9);border:1px solid rgba(212,175,55,0.4);color:#fcf6ba;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.12s ease;}
@@ -89,12 +80,12 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .reel-modal-wrapper{position:relative;width:100%;max-width:420px;height:calc(100vh - 54px);height:calc(100dvh - 54px);background:#000;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .reel-modal-wrapper::-webkit-scrollbar{display:none;}
 .reel-card{width:100%;height:calc(100vh - 54px)!important;height:calc(100dvh - 54px)!important;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;position:relative;background:#000;flex-shrink:0;align-items:center;justify-content:center;padding-bottom:18px;contain:layout style paint;transform:translate3d(0,0,0);}
-.reel-media-box{position:relative;width:100%;max-width:390px;min-height:280px;aspect-ratio:9/16;max-height:calc(100dvh - 88px);cursor:pointer;background:#08080e;border:1px solid rgba(212,175,55,0.22);overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:16px;}
-.reel-primary-video-container{width:100%;height:100%;background:#08080e;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;position:relative;z-index:3;}
-.slide-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.3s var(--snap-ease);will-change:opacity;backface-visibility:hidden;transform:translateZ(0);}
-.slide-layer.active{opacity:1;z-index:4;}
-.slide-layer.previous{opacity:0;z-index:3;}
+.reel-media-box{position:relative;width:100%;max-width:390px;aspect-ratio:9/16;max-height:calc(100dvh - 88px);cursor:pointer;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:16px;}
+.reel-primary-video-container{width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;}
+.slide-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.38s var(--snap-ease);will-change:opacity;backface-visibility:hidden;transform:translateZ(0);}
+.slide-layer.active{opacity:1;z-index:2;}
+.slide-layer.previous{opacity:0;z-index:1;}
 .reel-bottom-price-overlay{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:22px;background:rgba(8,8,14,0.94)!important;border:1px solid rgba(212,175,55,0.45);white-space:nowrap;}
 .reel-price-row{display:flex;align-items:center;gap:8px;}
 .reel-center-price-badge{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -132,13 +123,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div class="loader-logo-box"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" decoding="sync"></div>
 <div class="loader-brand-name">rorraxy</div>
 </div>
-<script>
-setTimeout(function(){
-  var l=document.getElementById('rorraxyLoaderOverlay');
-  if(l){l.style.opacity='0';l.style.display='none';}
-},50);
-</script>
-
 <div id="pullRefreshIndicator"><i class="fa-solid fa-rotate-right fa-spin"></i> <span>REFRESHING FEED...</span></div>
 <div id="floatingSearchContainer" class="top-floating-search-bar search-hidden">
 <input type="text" id="floatingSearchInput" class="floating-search-input" placeholder="SEARCH PRODUCT...">
@@ -243,11 +227,7 @@ window.closeAccountPortal = closeAccountPortal;
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
 const REELS_BATCH_SIZE=6;
-const DEFAULT_PRODUCTS=[
-  {id:'101',sku:'ROR-DEMO-01',title:'rorraxy Premium Matte Black Edition',category:'Fashion',price:'49.99',discount_rate:'20',image_url:FALLBACK_LOGO,description:'Luxury matte finish crafted with highest precision.'},
-  {id:'102',sku:'ROR-WOOD-02',title:'rorraxy Handcrafted Teak & Resin Art',category:'Crafts',price:'79.00',discount_rate:'15',image_url:FALLBACK_LOGO,description:'Precision crafted wood and resin piece.'}
-];
-let globalMasterProductsList=[...DEFAULT_PRODUCTS];
+let globalMasterProductsList=[{id:'101',sku:'ROR-DEMO-01',title:'rorraxy Premium Matte Black Edition',category:'Fashion',price:'49.99',discount_rate:'20',image_url:FALLBACK_LOGO,description:'Luxury matte finish crafted with highest precision.'}];
 let activeProductList=[];
 let renderedReelsCount=0;
 let currentReelIndex=0;
@@ -260,20 +240,13 @@ const preloadedUrls=new Set();
 const $=id=>document.getElementById(id);
 function getSku(product){return String(product&&(product.sku||product.product_code||product.productCode)||'').trim().toUpperCase();}
 function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'"').replace(/</g,'<').replace(/>/g,'>');}
-function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&loader.style.display!=='none'){loader.style.opacity='0';loader.style.display='none';}}
+function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&loader.style.display!=='none'){loader.style.opacity='0';setTimeout(()=>{loader.style.display='none';},60);}}
 function debounce(func,wait){let timeout;return function executedFunction(...args){const later=()=>{clearTimeout(timeout);func(...args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}
 function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url))return;preloadedUrls.add(url);const img=new Image();if(highPriority)img.fetchPriority='high';img.decoding='async';img.src=url;}
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
-function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed.filter(Boolean);}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
-function normalizeProductsResponse(json){
-  if(Array.isArray(json))return json;
-  if(json&&Array.isArray(json.data))return json.data;
-  if(json&&json.data&&Array.isArray(json.data.products))return json.data.products;
-  if(json&&Array.isArray(json.products))return json.products;
-  return[];
-}
+function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
 
-function initRetailApp(){
+window.addEventListener('DOMContentLoaded',()=>{
 hideLoaderFast();
 const urlParams=new URLSearchParams(window.location.search);
 const refParam=urlParams.get('ref')||urlParams.get('seller_id')||urlParams.get('affiliate');
@@ -295,6 +268,7 @@ setupPullToRefresh();
 setupAutoHideSearchOnScroll();
 setupDesktopNavigation();
 buildCategoriesAccordion();
+setTimeout(hideLoaderFast,60);
 const searchInput=$('floatingSearchInput'),searchBtn=$('floatingSearchBtn');
 if(searchBtn&&searchInput){
 const debouncedSearch=debounce(val=>executeHeaderSearch(val),220);
@@ -302,13 +276,7 @@ searchBtn.addEventListener('click',()=>executeHeaderSearch(searchInput.value));
 searchInput.addEventListener('keypress',e=>{if(e.key==='Enter')executeHeaderSearch(searchInput.value);});
 searchInput.addEventListener('input',e=>debouncedSearch(e.target.value));
 }
-}
-if(document.readyState==='loading'){
-window.addEventListener('DOMContentLoaded',initRetailApp);
-}else{
-initRetailApp();
-}
-
+});
 function buildCategoriesAccordion(){
 const container=$('categoryMainListView');
 if(!container)return;
@@ -360,10 +328,10 @@ async function refreshAndShuffleFeed(){
 activeProductList=shuffleArray(globalMasterProductsList);
 openReelsModal(0);
 try{
-const res=await fetch('/api/products',{cache:'no-store'});
+const res=await fetch('/api/products');
 const json=await res.json();
-const list=normalizeProductsResponse(json);
-if(list.length){globalMasterProductsList=list;try{localStorage.setItem(CACHE_KEY,JSON.stringify(list));}catch(e){}activeProductList=shuffleArray(globalMasterProductsList);openReelsModal(0);}
+const list=(json&&json.success&&Array.isArray(json.data))?json.data:(Array.isArray(json)?json:[]);
+if(list.length){globalMasterProductsList=list;localStorage.setItem(CACHE_KEY,JSON.stringify(list));activeProductList=shuffleArray(globalMasterProductsList);openReelsModal(0);}
 }catch(e){}
 }
 function toggleWorldPortal(){window.location.href='https://rorraxy.com/world.html';}
@@ -392,15 +360,13 @@ function openFullscreenPortal(url){$('fullscreenIframeBody').src=url;$('fullscre
 async function loadLiveProducts(){
 let rendered=false;
 try{const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(Array.isArray(cached)&&cached.length){globalMasterProductsList=cached;checkInitialProductParam();rendered=true;}}catch(e){}
-if(!rendered){checkInitialProductParam();}
 try{
 const res=await fetch('/api/products');
-if(res.ok){
 const json=await res.json();
-const list=normalizeProductsResponse(json);
-if(list.length){globalMasterProductsList=list;try{localStorage.setItem(CACHE_KEY,JSON.stringify(list));}catch(e){}if(!rendered)checkInitialProductParam();}
-}
-}catch(e){}
+const list=(json&&json.success&&Array.isArray(json.data))?json.data:(Array.isArray(json)?json:[]);
+if(list.length){globalMasterProductsList=list;localStorage.setItem(CACHE_KEY,JSON.stringify(list));if(!rendered)checkInitialProductParam();}
+else if(!rendered)checkInitialProductParam();
+}catch(e){if(!rendered)checkInitialProductParam();}
 }
 function checkInitialProductParam(){
 const params=new URLSearchParams(window.location.search);
@@ -438,7 +404,7 @@ const imgs=extractImages(item);
 const price=item.price?`$${parseFloat(item.price).toFixed(2)}`:'$0.00';
 const disc=parseFloat(item.discount_rate||item.discountRate||0);
 const card=document.createElement('div');
-card.className='product-card ai-revealed';
+card.className='product-card';
 card.onclick=e=>{
 e.preventDefault();
 container.classList.remove('active-grid');
@@ -450,7 +416,7 @@ openReelsModal(index);
 };
 card.innerHTML=`<div class="product-media-box">
 ${disc>0?`<div class="corner-discount-badge">${disc}% OFF</div>`:''}
-<img src="${imgs[0]}" alt="${item.title||'rorraxy'}" loading="${index<16?'eager':'lazy'}" decoding="async">
+<img src="${imgs[0]}" alt="${item.title||'rorraxy'}" loading="${index<12?'eager':'lazy'}" decoding="async">
 <div class="card-clean-price-badge">${price}</div>
 </div>`;
 const img=card.querySelector('img');
@@ -462,6 +428,12 @@ frag.appendChild(card);
 });
 container.innerHTML='';
 container.appendChild(frag);
+const cards=container.querySelectorAll('.product-card');
+if('IntersectionObserver' in window){
+const obs=new IntersectionObserver((entries,o)=>{for(let i=0;i<entries.length;i++){const entry=entries[i];if(entry.isIntersecting){entry.target.classList.add('ai-revealed');o.unobserve(entry.target);}}},{rootMargin:'300px 0px',threshold:0});
+cards.forEach(c=>obs.observe(c));
+setTimeout(()=>{cards.forEach(c=>{if(!c.classList.contains('ai-revealed'))c.classList.add('ai-revealed');});},180);
+}else{cards.forEach(c=>c.classList.add('ai-revealed'));}
 updateSideActionState();
 }
 function updateSideActionState(){
@@ -520,15 +492,14 @@ const disc=parseFloat(product.discount_rate||product.discountRate||0);
 if(idx===0)preloadImageUrl(imgs[0],true);
 let mediaContent='';
 if(pVideo&&(pVideo.includes('.mp4')||pVideo.includes('.r2.dev')||pVideo.includes('http'))){
-mediaContent=`<div class="reel-shimmer-layer" id="reelShimmer_${idx}"></div><video src="${pVideo}" poster="${imgs[0]}" ${idx===0?'autoplay preload="auto"':'preload="none"'} muted loop controls playsinline onloadeddata="document.getElementById('reelShimmer_${idx}')?.classList.add('loaded')" style="width:100%;height:100%;object-fit:contain;"></video>`;
+mediaContent=`<video src="${pVideo}" poster="${imgs[0]}" ${idx===0?'autoplay preload="auto"':'preload="none"'} muted loop controls playsinline style="width:100%;height:100%;object-fit:contain;"></video>`;
 }else{
 const layers=imgs.map((url,i)=>{
 const isFirst=(idx===0&&i===0);
 const isEager=(idx<=2&&i===0);
-const onLoadHandler=i===0?`onload="this.style.opacity='1';hideLoaderFast();document.getElementById('reelShimmer_${idx}')?.classList.add('loaded')"`:`onload="this.style.opacity='1'"`;
-return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';this.style.opacity='1';document.getElementById('reelShimmer_${idx}')?.classList.add('loaded');" class="slide-layer ${i===0?'active':''}" id="slide_${idx}_${i}" alt="slide" ${isFirst?'fetchpriority="high" decoding="sync"':`loading="${isEager?'eager':'lazy'}" decoding="async"`} ${onLoadHandler}>`;
+return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" class="slide-layer ${i===0?'active':''}" id="slide_${idx}_${i}" alt="slide" ${isFirst?'fetchpriority="high" decoding="sync" onload="hideLoaderFast()"':`loading="${isEager?'eager':'lazy'}" decoding="async"`}>`;
 }).join('');
-mediaContent=`<div style="width:100%;height:100%;position:relative;overflow:hidden;"><div class="reel-shimmer-layer" id="reelShimmer_${idx}"></div>${layers}</div>`;
+mediaContent=`<div style="width:100%;height:100%;position:relative;overflow:hidden;">${layers}</div>`;
 }
 const card=document.createElement('div');
 card.className='reel-card';
@@ -835,4 +806,4 @@ else if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
 </script>
 </body>
 </html>
-```[cite: 1]
+```[cite: 4]
