@@ -231,7 +231,6 @@ function normalizeText(s){return String(s||'').toLowerCase().replace(/[^a-z0-9\u
 function escapeHtmlAttr(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escapeJsSingle(s){return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
 
-/* Strict product-type detection so watch shows only watches, glasses shows only glasses, etc. */
 const PRODUCT_TYPE_GROUPS={
 watch:['watch','watches','wristwatch','timepiece','smartwatch','ঘড়ি','ঘড়ি'],
 glasses:['glasses','eyeglasses','eyewear','sunglasses','spectacles','goggles','frame','frames','চশমা','সানগ্লাস'],
@@ -335,10 +334,15 @@ for(const[key,info]of Object.entries(CATEGORY_KNOWLEDGE)){if(info.words.length&&
 return null;
 }
 
+function getSubCategoryValue(product){
+if(!product)return'';
+return normalizeText(product.subCategory||product.subcategory||product.category_key||product.cat_key||product.category||'');
+}
+
 function getProductBucketKey(p){
 const types=detectProductTypes(p);
 if(types.length>0)return types[0];
-return findCategoryKey(p)||normalizeText(p.category||p.subCategory||p.title||'general')||'general';
+return findCategoryKey(p)||getSubCategoryValue(p)||'general';
 }
 
 function getTrendingNewScore(p){
@@ -389,9 +393,10 @@ if(String(source.__id)===String(target.__id))return-1;
 
 const srcTypes=detectProductTypes(source);
 const tgtTypes=detectProductTypes(target);
+const srcSub=getSubCategoryValue(source);
+const tgtSub=getSubCategoryValue(target);
 
-/* If source has a specific item type (e.g., watch, glasses, wallet, bag, shoe, bracelet),
-   ONLY allow items that share that exact item type */
+/* Strict type check when product type is known */
 if(srcTypes.length>0){
 const sharesType=srcTypes.some(t=>tgtTypes.includes(t));
 if(!sharesType)return-1;
@@ -399,13 +404,17 @@ if(!sharesType)return-1;
 return-1;
 }
 
-let score=20;
+/* Sub-category / category check */
+let sameSub=false;
+if(srcSub&&tgtSub&&(srcSub===tgtSub||srcSub.includes(tgtSub)||tgtSub.includes(srcSub))){
+sameSub=true;
+}else if(srcTypes.length===0&&srcSub&&tgtSub&&srcSub!==tgtSub){
+return-1;
+}
+
+let score=20+(sameSub?15:0);
 const srcTags=new Set(extractExpandedTags(source)),tgtTags=new Set(extractExpandedTags(target));
-srcTags.forEach(tag=>{if(tgtTags.has(tag))score+=6;});
-const srcCat=normalizeText(source.category||source.subCategory||''),tgtCat=normalizeText(target.category||target.subCategory||'');
-if(srcCat&&tgtCat&&srcCat===tgtCat)score+=12;
-const srcKey=findCategoryKey(source),tgtKey=findCategoryKey(target);
-if(srcKey&&tgtKey){if(srcKey===tgtKey)score+=15;else if(CATEGORY_KNOWLEDGE[srcKey]?.parentId===CATEGORY_KNOWLEDGE[tgtKey]?.parentId)score+=6;}
+srcTags.forEach(tag=>{if(tgtTags.has(tag))score+=5;});
 score+=Math.min(5,getTrendingNewScore(target)/5);
 return score;
 }
@@ -417,23 +426,20 @@ if(!source)return;
 recordUserPreference(source);
 
 const srcTypes=detectProductTypes(source);
+const srcSub=getSubCategoryValue(source);
+
 let listToShow=__ALL_PRODUCTS
 .map(item=>({item,score:computeSimilarityScore(source,item)}))
 .filter(x=>x.score>0)
 .sort((a,b)=>b.score-a.score)
 .map(x=>x.item);
 
-/* If no explicit product type tag was detected, match by category or primary title noun */
-if(srcTypes.length===0&&listToShow.length===0){
-const srcCat=normalizeText(source.category||source.subCategory||'');
-const titleWords=normalizeText(source.title||'').split(' ').filter(w=>w.length>=3);
-const mainNoun=titleWords.length?titleWords[titleWords.length-1]:'';
+/* If neither type nor subCategory matched, filter strictly by matching subCategory or main noun */
+if(listToShow.length===0&&srcSub){
 listToShow=__ALL_PRODUCTS.filter(item=>{
 if(String(item.__id)===String(source.__id))return false;
-const itemCat=normalizeText(item.category||item.subCategory||'');
-if(srcCat&&itemCat&&srcCat===itemCat)return true;
-if(mainNoun&&normalizeText(item.title||'').includes(mainNoun))return true;
-return false;
+const tSub=getSubCategoryValue(item);
+return tSub&&(tSub===srcSub||tSub.includes(srcSub)||srcSub.includes(tSub));
 });
 }
 
@@ -442,11 +448,14 @@ const titleEl=document.getElementById('relatedPopupTitle');
 const gridEl=document.getElementById('relatedPopupGrid');
 if(!modal||!gridEl)return;
 
-const labelText=srcTypes.length>0?srcTypes.join(' / ').toUpperCase():(source.title||'PRODUCTS');
+const labelText=srcTypes.length>0
+?srcTypes.join(' / ').toUpperCase()
+:(srcSub?srcSub.toUpperCase():(source.title||'PRODUCTS'));
+
 titleEl.innerHTML=`<i class="fa-solid fa-magnifying-glass"></i> RELATED: ${escapeHtmlAttr(labelText)}`;
 
 if(listToShow.length===0){
-gridEl.innerHTML=`<div class="related-empty-note">NO OTHER MATCHING ${escapeHtmlAttr(labelText)} PRODUCTS FOUND.</div>`;
+gridEl.innerHTML=`<div class="related-empty-note">NO OTHER ${escapeHtmlAttr(labelText)} PRODUCTS FOUND.</div>`;
 }else{
 gridEl.innerHTML=listToShow.map(item=>{
 const id=String(item.__id||item.id||item.product_id||item.product_code||'');
@@ -741,4 +750,3 @@ if(badge){badge.innerText=totalQty;totalQty>0?badge.classList.remove('empty-badg
 </script>
 </body>
 </html>
-```[cite: 2, 3]
