@@ -78,11 +78,10 @@ body{padding-bottom:75px;}
 .product-media-box img{width:100%;height:auto;display:block;object-fit:contain;background:#050508;}
 .card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a!important;border-top:1px solid rgba(255,255,255,0.05);gap:8px;margin-top:auto;}
 .product-price-tag{font-size:0.80rem;font-weight:700;color:var(--gold-solid);}
-.card-right-icons{display:flex;align-items:center;gap:18px;}
-.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:0.95rem;line-height:1;transition:transform 0.15s ease;}
+.card-right-icons{display:flex;align-items:center;}
+.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:2px 4px!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:0.98rem;line-height:1;transition:transform 0.15s ease;}
 .card-action-icon-btn:active{transform:scale(0.88);}
 .card-action-icon-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
-.ai-lens-star-svg{width:18px;height:18px;display:block;}
 .fixed-bottom-checkout-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(3,3,5,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:5px 12px;display:flex;justify-content:space-around;align-items:center;z-index:999999;border-top:1px solid rgba(212,175,55,0.2);box-shadow:0 -5px 15px rgba(0,0,0,0.8);height:56px;}
 @media(min-width:768px){.fixed-bottom-checkout-bar{justify-content:center;gap:80px;padding:6px 30px;height:60px;}}
 .footer-menu-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;gap:2px;background:transparent!important;border:none!important;padding:4px 12px;white-space:nowrap;}
@@ -109,18 +108,6 @@ body{padding-bottom:75px;}
 </style>
 </head>
 <body>
-<!-- SVG GRADIENT DEFINITION FOR AI LENS + STARS ICON -->
-<svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
-<defs>
-<linearGradient id="rorraxyGoldLensGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#bf953f"/>
-<stop offset="25%" stop-color="#fcf6ba"/>
-<stop offset="50%" stop-color="#b38728"/>
-<stop offset="75%" stop-color="#fbf5b7"/>
-<stop offset="100%" stop-color="#aa771c"/>
-</linearGradient>
-</defs>
-</svg>
 <div class="ecommerce-main-wrapper" id="mainStoreContainer">
 <div class="product-details-clean-section" id="productDetailsViewSection">
 <div class="product-left-col">
@@ -232,7 +219,6 @@ let selectedProductColorImage="";
 let currentBaseUnitPrice=25.00;
 let cachedAffiliateId=null;
 let audioCtxInstance=null;
-const AI_LENS_STAR_SVG=`<svg class="ai-lens-star-svg" viewBox="0 0 24 24" fill="url(#rorraxyGoldLensGrad)" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 2L14.2 4.3L16.5 5L14.2 5.7L13.5 8L12.8 5.7L10.5 5L12.8 4.3L13.5 2Z"/><path d="M19.5 1L20.1 2.9L22 3.5L20.1 4.1L19.5 6L18.9 4.1L17 3.5L18.9 2.9L19.5 1Z"/><path d="M18.5 7.5L19.3 9.7L21.5 10.5L19.3 11.3L18.5 13.5L17.7 11.3L15.5 10.5L17.7 9.7L18.5 7.5Z"/><path d="M10.5 5.5C6.36 5.5 3 8.86 3 13C3 17.14 6.36 20.5 10.5 20.5C12.34 20.5 14.03 19.83 15.34 18.73L19.29 22.68C19.68 23.07 20.32 23.07 20.71 22.68L21.68 21.71C22.07 21.32 22.07 20.68 21.68 20.29L17.73 16.34C18.83 15.03 19.5 13.34 19.5 11.5H17.2C17.2 15.22 14.17 18.2 10.5 18.2C6.83 18.2 3.85 15.22 3.85 11.5C3.85 7.83 6.83 4.85 10.5 4.85V5.5Z"/></svg>`;
 function getActiveAffiliateId(){
 if(cachedAffiliateId!==null)return cachedAffiliateId;
 const urlParams=new URLSearchParams(window.location.search);
@@ -396,7 +382,7 @@ const imageUrl=extractProductPrimaryImage(item);
 const safeTitleAttr=escapeHtmlAttr(title);
 const safeTitleJs=escapeJsSingle(title);
 const safeIdJs=escapeJsSingle(prodId);
-return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')">${AI_LENS_STAR_SVG}</button></div></div></div>`;
+return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" title="Share Product" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')"><i class="fa-solid fa-share-nodes"></i></button></div></div></div>`;
 }
 function renderRelatedProducts(allProducts,currentProd){
 const container=document.getElementById('relatedProductsFeedContainer');
@@ -419,53 +405,6 @@ const rId=String(item.id||item.product_id||item.product_code||'');
 if(rId)seenRelatedIds.add(rId);
 });
 container.innerHTML=relatedList.map(item=>buildProductCardHtml(item)).join('');
-}
-function getTrendingAndNewScore(item){
-let score=0;
-const ts=Date.parse(item.created_at||item.updated_at||item.added_at||'');
-if(!isNaN(ts))score+=ts/1e12;
-const stockNum=parseFloat(item.stock)||0;
-if(stockNum>0)score+=Math.min(stockNum/100,20);
-if(item.trending||item.is_trending||item.featured||item.is_new)score+=15;
-return score;
-}
-async function triggerSimilarProductSearch(event,targetProductId){
-if(event)event.stopPropagation();
-const container=document.getElementById('relatedProductsFeedContainer');
-const wrapperEl=document.getElementById('relatedProductsSectionWrapper');
-try{
-const freshProducts=await fetchCloudflareProductsList();
-if(freshProducts.length>0){allCachedProductsList=freshProducts;}
-}catch(e){}
-const targetProd=allCachedProductsList.find(p=>String(p.id||p.product_id||p.product_code)===String(targetProductId));
-if(!targetProd)return;
-const targetId=String(targetProd.id||targetProd.product_id||targetProd.product_code);
-const targetCat=(targetProd.category||targetProd.cat||'').toLowerCase().trim();
-const titleTokens=(targetProd.title||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>3);
-const candidates=allCachedProductsList.filter(p=>String(p.id||p.product_id||p.product_code)!==targetId);
-let categoryMatches=candidates.filter(item=>{
-const itemCat=(item.category||item.cat||'').toLowerCase().trim();
-if(targetCat&&itemCat&&itemCat===targetCat)return true;
-const itemTitle=(item.title||'').toLowerCase();
-return titleTokens.some(w=>itemTitle.includes(w));
-});
-if(categoryMatches.length===0){categoryMatches=candidates;}
-const unseenFirst=categoryMatches.filter(item=>!seenRelatedIds.has(String(item.id||item.product_id||item.product_code||'')));
-const seenAfter=categoryMatches.filter(item=>seenRelatedIds.has(String(item.id||item.product_id||item.product_code||'')));
-const sortByNewAndTrending=(list)=>[...list].sort((a,b)=>getTrendingAndNewScore(b)-getTrendingAndNewScore(a));
-const orderedPool=[...sortByNewAndTrending(unseenFirst),...sortByNewAndTrending(seenAfter)];
-if(unseenFirst.length===0){
-seenRelatedIds=new Set([targetId]);
-}
-const nextBatch=orderedPool.slice(0,8);
-nextBatch.forEach(item=>{
-const nId=String(item.id||item.product_id||item.product_code||'');
-if(nId)seenRelatedIds.add(nId);
-});
-if(nextBatch.length>0){
-container.innerHTML=nextBatch.map(item=>buildProductCardHtml(item)).join('');
-}
-if(wrapperEl){wrapperEl.scrollIntoView({behavior:'smooth',block:'start'});}
 }
 function escapeHtmlAttr(str){return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escapeJsSingle(str){return String(str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
@@ -715,3 +654,4 @@ if(btn){btn.innerText='COPIED';setTimeout(()=>{btn.innerText='COPY';},1400);}
 </script>
 </body>
 </html>
+```[cite: 1]
