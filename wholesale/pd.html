@@ -78,11 +78,22 @@ body{padding-bottom:75px;}
 .product-media-box img{width:100%;height:auto;display:block;object-fit:contain;background:#050508;}
 .card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a!important;border-top:1px solid rgba(255,255,255,0.05);gap:8px;margin-top:auto;}
 .product-price-tag{font-size:0.80rem;font-weight:700;color:var(--gold-solid);}
-.card-right-icons{display:flex;align-items:center;gap:18px;}
-.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:3px;font-size:0.95rem;line-height:1;transition:transform 0.15s ease;}
+.card-right-icons{display:flex;align-items:center;gap:20px;}
+.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:0.95rem;line-height:1;position:relative;transition:transform 0.15s ease;}
 .card-action-icon-btn:active{transform:scale(0.88);}
 .card-action-icon-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
-.ai-badge-mark{font-size:0.56rem;font-weight:800;letter-spacing:0.2px;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);line-height:1;align-self:flex-start;margin-top:-2px;}
+.ai-search-icon-combo{position:relative;display:inline-flex;align-items:center;justify-content:center;padding-right:6px;}
+.ai-search-icon-combo .ai-sparkle-sub{position:absolute;top:-5px;right:-2px;font-size:0.55rem;}
+/* ==== AI VISUAL SIMILAR RESULTS OVERLAY (CHOKHER SAMNE SOB SIMILAR PRODUCT) ==== */
+.ai-visual-results-overlay{display:none;position:fixed;inset:0;width:100vw;height:100vh;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9999998;flex-direction:column;overflow-y:auto;padding:14px 12px 90px 12px;}
+.ai-visual-results-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+.ai-visual-top-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#08080c;border:1px solid rgba(212,175,55,0.35);border-radius:14px;padding:10px 14px;position:sticky;top:0;z-index:10;}
+.ai-visual-source-box{display:flex;align-items:center;gap:12px;min-width:0;}
+.ai-visual-source-thumb{width:54px;height:54px;border-radius:10px;object-fit:contain;background:#000;border:1px solid rgba(212,175,55,0.45);flex-shrink:0;}
+.ai-visual-source-meta{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.ai-visual-source-badge{font-size:0.68rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);display:flex;align-items:center;gap:5px;}
+.ai-visual-source-title{font-size:0.75rem;font-weight:700;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw;}
+.ai-visual-close-btn{background:transparent;border:none;font-size:1.45rem;line-height:1;cursor:pointer;padding:4px 8px;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
 .fixed-bottom-checkout-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(3,3,5,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:5px 12px;display:flex;justify-content:space-around;align-items:center;z-index:999999;border-top:1px solid rgba(212,175,55,0.2);box-shadow:0 -5px 15px rgba(0,0,0,0.8);height:56px;}
 @media(min-width:768px){.fixed-bottom-checkout-bar{justify-content:center;gap:80px;padding:6px 30px;height:60px;}}
 .footer-menu-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;gap:2px;background:transparent!important;border:none!important;padding:4px 12px;white-space:nowrap;}
@@ -171,6 +182,22 @@ body{padding-bottom:75px;}
 <div class="feed-container" id="relatedProductsFeedContainer">
 <p style="grid-column:1/-1;text-align:center;color:var(--gold-solid);padding:15px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED BULK ITEMS...</p>
 </div>
+</div>
+</div>
+<!-- AI VISUAL SIMILAR RESULTS OVERLAY (CHOKHER SAMNE SOB SIMILAR PRODUCT) -->
+<div class="ai-visual-results-overlay" id="aiVisualResultsOverlay" onclick="if(event.target===this) closeAiVisualResults()">
+<div class="ai-visual-results-inner">
+<div class="ai-visual-top-bar">
+<div class="ai-visual-source-box">
+<img id="aiVisualSourceImg" class="ai-visual-source-thumb" src="" alt="Selected Product">
+<div class="ai-visual-source-meta">
+<span class="ai-visual-source-badge"><i class="fa-solid fa-magnifying-glass"></i> <i class="fa-solid fa-sparkles"></i></span>
+<span class="ai-visual-source-title" id="aiVisualSourceTitle"></span>
+</div>
+</div>
+<button type="button" class="ai-visual-close-btn" onclick="closeAiVisualResults()" title="Close"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div class="feed-container" id="aiVisualResultsGrid"></div>
 </div>
 </div>
 <div class="fixed-bottom-checkout-bar">
@@ -360,20 +387,25 @@ strip.innerHTML='';
 strip.appendChild(fragment);
 updateAppliedUnitPriceDisplay();
 }
-function buildProductCardHtml(item){
+function extractProductPrimaryImage(item){
 const fallbackImg="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
-const prodId=String(item.id||item.product_id||item.product_code||'101');
-const title=item.title||'rorraxy Bulk Item';
-const bulkPrice=item.price_bulk?`$${parseFloat(item.price_bulk).toFixed(2)}`:(item.price?`$${parseFloat(item.price).toFixed(2)}`:'$25.00');
 let imageUrl=fallbackImg;
 try{
 if(item.images_json){const parsed=typeof item.images_json==='string'?JSON.parse(item.images_json):item.images_json;if(Array.isArray(parsed)&&parsed.length>0)imageUrl=parsed[0];}
 else if(item.image_url){imageUrl=typeof item.image_url==='string'&&item.image_url.startsWith('[')?JSON.parse(item.image_url)[0]:item.image_url;}
 }catch(e){imageUrl=item.image_url||fallbackImg;}
+return imageUrl||fallbackImg;
+}
+function buildProductCardHtml(item){
+const fallbackImg="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png";
+const prodId=String(item.id||item.product_id||item.product_code||'101');
+const title=item.title||'rorraxy Bulk Item';
+const bulkPrice=item.price_bulk?`$${parseFloat(item.price_bulk).toFixed(2)}`:(item.price?`$${parseFloat(item.price).toFixed(2)}`:'$25.00');
+const imageUrl=extractProductPrimaryImage(item);
 const safeTitleAttr=escapeHtmlAttr(title);
 const safeTitleJs=escapeJsSingle(title);
 const safeIdJs=escapeJsSingle(prodId);
-return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="AI Search"><i class="fa-solid fa-magnifying-glass"></i><span class="ai-badge-mark">AI</span></button></div></div></div>`;
+return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')"><span class="ai-search-icon-combo"><i class="fa-solid fa-magnifying-glass"></i><i class="fa-solid fa-sparkles ai-sparkle-sub"></i></span></button></div></div></div>`;
 }
 function renderRelatedProducts(allProducts,currentProd){
 const container=document.getElementById('relatedProductsFeedContainer');
@@ -418,8 +450,10 @@ return cat||null;
 }
 function triggerSimilarProductSearch(event,targetProductId){
 if(event)event.stopPropagation();
-const container=document.getElementById('relatedProductsFeedContainer');
-const wrapperEl=document.getElementById('relatedProductsSectionWrapper');
+const overlay=document.getElementById('aiVisualResultsOverlay');
+const grid=document.getElementById('aiVisualResultsGrid');
+const sourceImg=document.getElementById('aiVisualSourceImg');
+const sourceTitle=document.getElementById('aiVisualSourceTitle');
 const targetProd=allCachedProductsList.find(p=>String(p.id||p.product_id||p.product_code)===String(targetProductId));
 if(!targetProd)return;
 const targetId=String(targetProd.id||targetProd.product_id||targetProd.product_code);
@@ -440,9 +474,15 @@ const t=(item.title||'').toLowerCase();
 return words.some(w=>t.includes(w));
 });
 }
-if(matched.length===0){matched=candidates.slice(0,8);}
-container.innerHTML=matched.map(item=>buildProductCardHtml(item)).join('');
-if(wrapperEl){wrapperEl.scrollIntoView({behavior:'smooth',block:'start'});}
+if(matched.length===0){matched=candidates;}
+if(sourceImg)sourceImg.src=extractProductPrimaryImage(targetProd);
+if(sourceTitle)sourceTitle.textContent=targetProd.title||'';
+grid.innerHTML=matched.map(item=>buildProductCardHtml(item)).join('');
+if(overlay){overlay.style.display='flex';overlay.scrollTop=0;}
+}
+function closeAiVisualResults(){
+const overlay=document.getElementById('aiVisualResultsOverlay');
+if(overlay)overlay.style.display='none';
 }
 function escapeHtmlAttr(str){return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escapeJsSingle(str){return String(str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
