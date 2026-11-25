@@ -67,7 +67,7 @@ body{padding-bottom:75px;}
 .custom-note-input{width:100%;background:#040407;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:#ffffff;font-size:0.70rem;outline:none;font-family:var(--font-main);text-transform:uppercase;}
 .action-buttons-flex-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;width:100%;}
 .seller-chat-compact-btn{color:var(--gold-solid);font-size:0.68rem;font-weight:700;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(212,175,55,0.08);border-radius:8px;border:1px solid rgba(212,175,55,0.25);}
-.main-product-share-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:4px;transition:transform 0.15s ease;}
+.main-product-share-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:4px;transition:transform 0.15s ease;}
 .main-product-share-btn:active{transform:scale(0.9);}
 .related-products-wrapper{margin-top:15px;width:100%;display:flex;flex-direction:column;gap:12px;border-top:1px solid rgba(212,175,55,0.15);padding-top:14px;}
 .related-header-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
@@ -80,10 +80,11 @@ body{padding-bottom:75px;}
 .product-media-box{position:relative;width:100%;background:#050508;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .product-media-box img{width:100%;height:auto;display:block;object-fit:contain;background:#050508;}
 .card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a!important;border-top:1px solid rgba(255,255,255,0.05);gap:4px;margin-top:auto;}
-.product-price-tag{font-size:0.80rem;font-weight:600;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
-.card-right-icons{display:flex;align-items:center;gap:10px;}
-.share-icon-only-btn,.ai-search-icon-only-btn{background:none!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;font-size:0.95rem;cursor:pointer;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:2px;transition:transform 0.15s ease;}
-.share-icon-only-btn:active,.ai-search-icon-only-btn:active{transform:scale(0.88);}
+.product-price-tag{font-size:0.80rem;font-weight:700;color:var(--gold-solid);}
+.card-right-icons{display:flex;align-items:center;gap:12px;}
+.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:0.95rem;line-height:1;transition:transform 0.15s ease;}
+.card-action-icon-btn:active{transform:scale(0.88);}
+.card-action-icon-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
 .fixed-bottom-checkout-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(3,3,5,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:5px 12px;display:flex;justify-content:space-around;align-items:center;z-index:999999;border-top:1px solid rgba(212,175,55,0.2);box-shadow:0 -5px 15px rgba(0,0,0,0.8);height:56px;}
 @media(min-width:768px){.fixed-bottom-checkout-bar{justify-content:center;gap:80px;padding:6px 30px;height:60px;}}
 .footer-menu-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;gap:2px;background:transparent!important;border:none!important;padding:4px 12px;white-space:nowrap;}
@@ -105,7 +106,7 @@ body{padding-bottom:75px;}
 .share-link-box{flex:1;min-width:0;background:#040407;border:1px solid rgba(212,175,55,0.3);border-radius:8px;padding:7px 10px;color:var(--gold-solid);font-size:0.68rem;outline:none;text-transform:none!important;}
 /* ==== GRADIENT TEXT FALLBACK ==== */
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
-.current-main-price,.related-section-title,.product-title-restricted,.product-price-tag,.footer-menu-icon,.footer-menu-label,.main-product-share-btn,.share-icon-only-btn,.ai-search-icon-only-btn{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
+.current-main-price,.related-section-title,.product-title-restricted,.product-price-tag,.footer-menu-icon,.footer-menu-label,.main-product-share-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
 }
 </style>
 </head>
@@ -377,7 +378,7 @@ else if(item.image_url){imageUrl=typeof item.image_url==='string'&&item.image_ur
 const safeTitleAttr=escapeHtmlAttr(title);
 const safeTitleJs=escapeJsSingle(title);
 const safeIdJs=escapeJsSingle(prodId);
-return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="share-icon-only-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="ai-search-icon-only-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="Find All Related Products"><i class="fa-solid fa-magnifying-glass"></i></button></div></div></div>`;
+return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="Find All Related Products"><i class="fa-solid fa-magnifying-glass"></i></button></div></div></div>`;
 }
 function renderRelatedProducts(allProducts,currentProd){
 const container=document.getElementById('relatedProductsFeedContainer');
@@ -401,7 +402,6 @@ return false;
 const relatedList=(sameCategoryList.length>0?sameCategoryList:filteredList).slice(0,8);
 container.innerHTML=relatedList.map(item=>buildProductCardHtml(item)).join('');
 }
-// ✅ AI-এর মতো স্মার্ট রিলেটেড প্রোডাক্ট সার্চ ফাংশন
 function triggerSimilarProductSearch(event,targetProductId){
 if(event)event.stopPropagation();
 const container=document.getElementById('relatedProductsFeedContainer');
@@ -413,7 +413,6 @@ if(!targetProd){return;}
 const targetId=String(targetProd.id||targetProd.product_id||targetProd.product_code);
 const targetCat=(targetProd.category||targetProd.cat||'').toLowerCase().trim();
 const targetTitle=(targetProd.title||'').toLowerCase();
-const targetDesc=(targetProd.description||targetProd.desc||'').toLowerCase();
 const stopWords=new Set(['with','from','that','this','bulk','wholesale','item','product','rorraxy','custom','size','color','high','grade','for','and','the']);
 const keywords=Array.from(new Set(
 (targetTitle+' '+targetCat).replace(/[^a-z0-9\s]/gi,' ').split(/\s+/).filter(w=>w.length>2&&!stopWords.has(w))
