@@ -76,12 +76,13 @@ body{padding-bottom:75px;}
 .product-card{background:var(--card-wholesale);border-radius:12px;overflow:hidden;display:inline-block;width:100%;border:1px solid rgba(212,175,55,0.12);position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;content-visibility:auto;}
 .product-media-box{position:relative;width:100%;background:#050508;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .product-media-box img{width:100%;height:auto;display:block;object-fit:contain;background:#050508;}
-.card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a!important;border-top:1px solid rgba(255,255,255,0.05);gap:4px;margin-top:auto;}
+.card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a!important;border-top:1px solid rgba(255,255,255,0.05);gap:8px;margin-top:auto;}
 .product-price-tag{font-size:0.80rem;font-weight:700;color:var(--gold-solid);}
-.card-right-icons{display:flex;align-items:center;gap:12px;}
-.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:0.95rem;line-height:1;transition:transform 0.15s ease;}
+.card-right-icons{display:flex;align-items:center;gap:18px;}
+.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;border-radius:0!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:3px;font-size:0.95rem;line-height:1;transition:transform 0.15s ease;}
 .card-action-icon-btn:active{transform:scale(0.88);}
 .card-action-icon-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
+.ai-badge-mark{font-size:0.56rem;font-weight:800;letter-spacing:0.2px;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);line-height:1;align-self:flex-start;margin-top:-2px;}
 .fixed-bottom-checkout-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(3,3,5,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:5px 12px;display:flex;justify-content:space-around;align-items:center;z-index:999999;border-top:1px solid rgba(212,175,55,0.2);box-shadow:0 -5px 15px rgba(0,0,0,0.8);height:56px;}
 @media(min-width:768px){.fixed-bottom-checkout-bar{justify-content:center;gap:80px;padding:6px 30px;height:60px;}}
 .footer-menu-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;gap:2px;background:transparent!important;border:none!important;padding:4px 12px;white-space:nowrap;}
@@ -372,7 +373,7 @@ else if(item.image_url){imageUrl=typeof item.image_url==='string'&&item.image_ur
 const safeTitleAttr=escapeHtmlAttr(title);
 const safeTitleJs=escapeJsSingle(title);
 const safeIdJs=escapeJsSingle(prodId);
-return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="AI Category Search"><i class="fa-solid fa-wand-magic-sparkles"></i></button></div></div></div>`;
+return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="AI Search"><i class="fa-solid fa-magnifying-glass"></i><span class="ai-badge-mark">AI</span></button></div></div></div>`;
 }
 function renderRelatedProducts(allProducts,currentProd){
 const container=document.getElementById('relatedProductsFeedContainer');
