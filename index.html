@@ -29,18 +29,20 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
-#rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;}
+#rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.1s linear;pointer-events:none;}
 .loader-logo-box{width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-solid);box-shadow:0 0 15px rgba(212,175,55,0.3);}
 .loader-logo-box img{width:100%;height:100%;object-fit:cover;}
 .loader-brand-name{font-size:1rem;font-weight:800;letter-spacing:3px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 #pullRefreshIndicator{position:fixed;top:-50px;left:50%;transform:translateX(-50%);z-index:7000;background:#0c0c12;border:1px solid var(--gold-solid);color:var(--gold-solid);padding:6px 16px;border-radius:20px;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:8px;transition:top 0.15s ease-out;pointer-events:none;}
 #pullRefreshIndicator.visible{top:18px;}
-.product-card{background:transparent;border-radius:14px;overflow:hidden;display:inline-block;width:100%;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;opacity:1;transform:translate3d(0,0,0) scale(1);transition:transform 0.08s ease;contain:layout style paint;backface-visibility:hidden;}
-.product-card:active{transform:scale(0.97);}
+.product-card{background:transparent;border-radius:14px;overflow:hidden;display:inline-block;width:100%;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;opacity:0;transform:translate3d(0,8px,0) scale(0.985);transition:opacity 0.18s var(--snap-ease),transform 0.18s var(--snap-ease);contain:layout style paint;backface-visibility:hidden;}
+.product-card.ai-revealed{opacity:1;transform:translate3d(0,0,0) scale(1);}
+.product-card:active{transform:scale(0.97);transition-duration:0.05s;}
 .product-media-box{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#0a0a12;}
-.product-media-box::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#0a0a12 0%,#1a1826 50%,#0a0a12 100%);background-size:200% 100%;animation:cardShimmer 0.9s linear infinite;}
+.product-media-box::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#0a0a12 0%,#151523 50%,#0a0a12 100%);background-size:200% 100%;animation:cardShimmer 1.2s linear infinite;}
 @keyframes cardShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-.product-media-box img{width:100%;height:100%;display:block;object-fit:cover;position:relative;z-index:1;background:#0a0a12;opacity:1;}
+.product-media-box img{width:100%;height:100%;display:block;object-fit:cover;position:relative;z-index:1;background:#0a0a12;opacity:0;transition:opacity 0.2s ease-out;}
+.product-media-box img.img-ready{opacity:1;}
 .product-media-box.img-loaded::before{display:none;}
 .desktop-reel-nav{position:fixed;right:74px;top:50%;transform:translateY(-50%);z-index:4600;display:flex;flex-direction:column;gap:14px;}
 @media (max-width:768px){.desktop-reel-nav{display:none!important;}}
@@ -62,14 +64,14 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .cart-pink-badge{position:absolute;top:-6px;left:50%;transform:translateX(-50%);background:var(--pink-accent);color:#fff;font-size:0.6rem;font-weight:800;min-width:18px;height:18px;padding:0 4px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px var(--pink-accent);z-index:10;pointer-events:none;}
 
 /* Bottom Nav Bar - Always Fixed */
-.bottom-nav-bar{position:fixed;bottom:0;left:0;width:100%;height:54px!important;background:rgba(0,0,0,0.92)!important;border-top:none!important;display:flex;justify-content:space-around;align-items:center;z-index:5000;padding:0 4px;transform:translate3d(0,0,0);}
+.bottom-nav-bar{position:fixed;bottom:0;left:0;width:100%;height:54px!important;background:rgba(0,0,0,0.85)!important;border-top:none!important;display:flex;justify-content:space-around;align-items:center;z-index:5000;padding:0 4px;transform:translate3d(0,0,0);}
 @media(min-width:768px){.bottom-nav-bar{justify-content:center;gap:60px;padding:0 20px;}.bottom-nav-item{width:auto!important;min-width:70px;}}
 .bottom-nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:0.6rem;font-weight:700;gap:2px;width:100%;height:100%;}
 .bottom-nav-item:active{transform:scale(0.92);}
 .bottom-nav-item i{font-size:1.2rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .bottom-nav-item span{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.6rem;letter-spacing:0.3px;}
-.pinterest-feed-container{padding:72px 8px 15px 8px;column-count:2;column-gap:8px;width:100%;max-width:1200px;margin:0 auto;display:none;position:relative;z-index:3500;}
-.pinterest-feed-container.active-grid{display:block!important;}
+.pinterest-feed-container{padding:72px 8px 15px 8px;column-count:2;column-gap:8px;width:100%;max-width:1200px;margin:0 auto;display:none;}
+.pinterest-feed-container.active-grid{display:block;}
 @media (min-width:768px){.pinterest-feed-container{column-count:4;column-gap:12px;padding:80px 15px 15px 15px;}}
 .corner-discount-badge{position:absolute;top:8px;left:8px;z-index:45;background:var(--pink-accent);color:#fff;font-size:0.68rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:0.3px;}
 .card-clean-price-badge{position:absolute;bottom:8px;right:8px;z-index:45;font-size:0.92rem;font-weight:800;background:var(--gold-gradient)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;filter:drop-shadow(0px 2px 4px #000);}
@@ -145,12 +147,13 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div class="side-action-item" onclick="toggleReelSearchBox()" title="Search"><i class="fa-solid fa-magnifying-glass action-pure-icon"></i></div>
 <div class="side-action-item save-action-btn" id="sideSaveActionBtn" onclick="handlePinterestInterception(event, 'save')" title="Save"><i class="fa-solid fa-bookmark action-pure-icon"></i></div>
 <div class="side-action-item" id="youActionBtn" onclick="event.stopPropagation(); toggleAccountPortal();" title="You"><i class="fa-solid fa-user action-pure-icon"></i><span class="side-count-text">YOU</span></div>
+<div class="side-action-item" onclick="openCleanGalleryView()" title="Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">GALLERY</span></div>
 </div>
 
 <!-- Bottom Navigation -->
 <nav class="bottom-nav-bar">
 <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
-<div id="bottomGalleryBtn" class="bottom-nav-item" onclick="openCleanGalleryView()"><i class="fa-solid fa-image"></i><span>GALLERY</span></div>
+<div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
 <div id="bottomBuyBtn" class="bottom-nav-item" onclick="handleBottomBuy()"><i class="fa-solid fa-cart-shopping"></i><span>ORDER NOW</span></div>
 <div id="bottomDetailsBtn" class="bottom-nav-item" onclick="handleBottomDetails()"><i class="fa-solid fa-circle-info"></i><span>DETAILS</span></div>
 <div id="bottomHomeToggleBtn" class="bottom-nav-item" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>HOME</span></div>
@@ -237,15 +240,14 @@ let persistentCustomNote='';
 const preloadedUrls=new Set();
 const $=id=>document.getElementById(id);
 function getSku(product){return String(product&&(product.sku||product.product_code||product.productCode)||'').trim().toUpperCase();}
-function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'"').replace(/</g,'<').replace(/>/g,'>');}
-function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader){loader.style.opacity='0';loader.style.display='none';loader.style.pointerEvents='none';}}
+function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&loader.style.display!=='none'){loader.style.opacity='0';setTimeout(()=>{loader.style.display='none';},100);}}
 function debounce(func,wait){let timeout;return function executedFunction(...args){const later=()=>{clearTimeout(timeout);func(...args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}
 function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url))return;preloadedUrls.add(url);const img=new Image();if(highPriority)img.fetchPriority='high';img.decoding='async';img.src=url;}
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
-function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed.filter(Boolean);}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
+function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
 
-function bootAppOnce(){
-hideLoaderFast();
+window.addEventListener('DOMContentLoaded',()=>{
 const urlParams=new URLSearchParams(window.location.search);
 const refParam=urlParams.get('ref')||urlParams.get('seller_id')||urlParams.get('affiliate');
 const rateParam=urlParams.get('rate');
@@ -266,22 +268,15 @@ setupPullToRefresh();
 setupAutoHideSearchOnScroll();
 setupDesktopNavigation();
 buildCategoriesAccordion();
+setTimeout(hideLoaderFast,60);
 const searchInput=$('floatingSearchInput'),searchBtn=$('floatingSearchBtn');
-if(searchBtn&&searchInput&&!searchBtn.dataset.bound){
-searchBtn.dataset.bound='1';
+if(searchBtn&&searchInput){
 const debouncedSearch=debounce(val=>executeHeaderSearch(val),220);
 searchBtn.addEventListener('click',()=>executeHeaderSearch(searchInput.value));
 searchInput.addEventListener('keypress',e=>{if(e.key==='Enter')executeHeaderSearch(searchInput.value);});
 searchInput.addEventListener('input',e=>debouncedSearch(e.target.value));
 }
-}
-
-if(document.readyState==='loading'){
-window.addEventListener('DOMContentLoaded',bootAppOnce);
-}else{
-bootAppOnce();
-}
-
+});
 function buildCategoriesAccordion(){
 const container=$('categoryMainListView');
 if(!container)return;
@@ -314,17 +309,10 @@ function setupAutoHideSearchOnScroll(){const hideSearch=()=>{const sb=$('floatin
 
 // CLEAN GALLERY FUNCTION
 function openCleanGalleryView(){
-    hideLoaderFast();
     closeAccountPortal();
-    if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
-    if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
-    closeBuyPreview();
-    closeInpageDetails();
     switchToGridMode(true);
-    const sourceList=globalMasterProductsList.length?globalMasterProductsList:[{id:'101',sku:'ROR-DEMO-01',title:'rorraxy Premium Matte Black Edition',category:'Fashion',price:'49.99',discount_rate:'20',image_url:FALLBACK_LOGO,description:'Luxury matte finish crafted with highest precision.'}];
-    activeProductList=shuffleArray(sourceList);
+    activeProductList=shuffleArray(globalMasterProductsList);
     renderPinterestHomeGrid(activeProductList);
-    window.scrollTo({top:0,behavior:'auto'});
 }
 
 function setupDesktopNavigation(){
@@ -350,7 +338,6 @@ function toggleWorldPortal(){window.location.href='https://rorraxy.com/world.htm
 function handleBottomBuy(){const l=activeProductList.length?activeProductList:globalMasterProductsList;if(l.length)openBuyPreviewModal(l[currentReelIndex]||l[0]);}
 function handleBottomDetails(){const l=activeProductList.length?activeProductList:globalMasterProductsList;if(l.length)openInpageDetailsModal(l[currentReelIndex]||l[0]);}
 function handleHomeToggle(){
-hideLoaderFast();
 if($('fullscreenIframeOverlay')?.style.display==='flex'){$('fullscreenIframeOverlay').style.display='none';$('fullscreenIframeBody').src='';}
 if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
 if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
@@ -373,20 +360,19 @@ function openFullscreenPortal(url){$('fullscreenIframeBody').src=url;$('fullscre
 async function loadLiveProducts(){
 let rendered=false;
 try{const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(Array.isArray(cached)&&cached.length){globalMasterProductsList=cached;checkInitialProductParam();rendered=true;}}catch(e){}
-if(!rendered){checkInitialProductParam();}
 try{
 const res=await fetch('/api/products');
 const json=await res.json();
 const list=(json&&json.success&&Array.isArray(json.data))?json.data:(Array.isArray(json)?json:[]);
 if(list.length){globalMasterProductsList=list;localStorage.setItem(CACHE_KEY,JSON.stringify(list));if(!rendered)checkInitialProductParam();}
-}catch(e){}
+else if(!rendered)checkInitialProductParam();
+}catch(e){if(!rendered)checkInitialProductParam();}
 }
 function checkInitialProductParam(){
-hideLoaderFast();
 const params=new URLSearchParams(window.location.search);
 const targetId=params.get('product')||params.get('id');
 const targetCat=params.get('category');
-if(targetCat){selectSubCategoryItem(targetCat,targetCat);return;}
+if(targetCat){selectSubCategoryItem(targetCat,targetCat);hideLoaderFast();return;}
 if(targetId){
 const targetProd=globalMasterProductsList.find(p=>String(p.id||p.product_id)===String(targetId));
 if(targetProd){
@@ -418,7 +404,7 @@ const imgs=extractImages(item);
 const price=item.price?`$${parseFloat(item.price).toFixed(2)}`:'$0.00';
 const disc=parseFloat(item.discount_rate||item.discountRate||0);
 const card=document.createElement('div');
-card.className='product-card ai-revealed';
+card.className='product-card';
 card.onclick=e=>{
 e.preventDefault();
 container.classList.remove('active-grid');
@@ -430,7 +416,7 @@ openReelsModal(index);
 };
 card.innerHTML=`<div class="product-media-box">
 ${disc>0?`<div class="corner-discount-badge">${disc}% OFF</div>`:''}
-<img src="${imgs[0]}" alt="${item.title||'rorraxy'}" loading="${index<16?'eager':'lazy'}" decoding="async">
+<img src="${imgs[0]}" alt="${item.title||'rorraxy'}" loading="${index<12?'eager':'lazy'}" decoding="async">
 <div class="card-clean-price-badge">${price}</div>
 </div>`;
 const img=card.querySelector('img');
@@ -442,6 +428,12 @@ frag.appendChild(card);
 });
 container.innerHTML='';
 container.appendChild(frag);
+const cards=container.querySelectorAll('.product-card');
+if('IntersectionObserver' in window){
+const obs=new IntersectionObserver((entries,o)=>{for(let i=0;i<entries.length;i++){const entry=entries[i];if(entry.isIntersecting){entry.target.classList.add('ai-revealed');o.unobserve(entry.target);}}},{rootMargin:'300px 0px',threshold:0});
+cards.forEach(c=>obs.observe(c));
+setTimeout(()=>{cards.forEach(c=>{if(!c.classList.contains('ai-revealed'))c.classList.add('ai-revealed');});},400);
+}else{cards.forEach(c=>c.classList.add('ai-revealed'));}
 updateSideActionState();
 }
 function updateSideActionState(){
@@ -528,7 +520,6 @@ wrapper.appendChild(frag);
 renderedReelsCount=endIdx;
 }
 function openReelsModal(startIndex){
-hideLoaderFast();
 const overlay=$('reelModalOverlay'),wrapper=$('reelModalWrapperBody');
 $('appContainer')?.classList.remove('active-grid');
 overlay?.classList.remove('hidden-reels');
@@ -608,7 +599,7 @@ ${sku?`<div class="detail-sku-badge"><i class="fa-solid fa-barcode"></i><span>SK
 $('inpageDetailsOverlay').style.display='flex';
 }
 function adjustDetailQty(amt){currentProductQty=Math.max(1,currentProductQty+amt);if($('detailQtyDisplay'))$('detailQtyDisplay').innerText=currentProductQty;}
-function closeInpageDetails(){const noteInput=$('inpageCustomNoteInput');if(noteInput&¬eInput.value.trim())persistentCustomNote=noteInput.value.trim();$('inpageDetailsOverlay').style.display='none';}
+function closeInpageDetails(){const noteInput=$('inpageCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('inpageDetailsOverlay').style.display='none';}
 function openBuyPreviewModal(product){
 const imgs=extractImages(product);
 selectedVariantImg=imgs[0];
@@ -642,10 +633,10 @@ if(note.trim())persistentCustomNote=note.trim();
 closeBuyPreview();
 const list=activeProductList.length?activeProductList:globalMasterProductsList;
 const prod=list.find(p=>String(p.id||p.product_id)===String(pId))||list[currentReelIndex]||list[0];
-if(prod){openInpageDetailsModal(prod);setTimeout(()=>{const inpageNote=$('inpageCustomNoteInput');if(inpageNote&¬e)inpageNote.value=note;},10);}
+if(prod){openInpageDetailsModal(prod);setTimeout(()=>{const inpageNote=$('inpageCustomNoteInput');if(inpageNote&&note)inpageNote.value=note;},10);}
 }
 function selectPreviewImg(el,url){document.querySelectorAll('.preview-img-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');selectedVariantImg=url;}
-function closeBuyPreview(){const noteInput=$('orderCustomNoteInput');if(noteInput&¬eInput.value.trim())persistentCustomNote=noteInput.value.trim();$('buyPreviewOverlay').style.display='none';}
+function closeBuyPreview(){const noteInput=$('orderCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('buyPreviewOverlay').style.display='none';}
 function playLuxuryChimeSound(){
 try{
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
@@ -812,13 +803,6 @@ const url=`${window.location.origin}/index.html?ref=${encodeURIComponent(ref)}&r
 if(navigator.share)navigator.share({title:'rorraxy product',url}).catch(()=>{});
 else if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
 };
-</script>
-<script>
-(function(){
-  const l=document.getElementById('rorraxyLoaderOverlay');
-  if(l){l.style.opacity='0';l.style.display='none';l.style.pointerEvents='none';}
-  if(typeof bootAppOnce==='function'){bootAppOnce();}
-})();
 </script>
 </body>
 </html>
