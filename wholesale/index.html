@@ -1,1278 +1,722 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>rorraxy · AI wholesale</title>
-    <link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
-    <script src="/ecosystem-core.js" defer></script>
-    <link rel="manifest" href="/manifest.json">
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((reg) => console.log('SW registered:', reg.scope))
-            .catch((err) => console.log('SW error:', err));
-        });
-      }
-    </script>
-    <script src="/popup.js" defer></script>
-    <link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
-    <link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-
-    <style>
-        :root {
-            --bg-wholesale: #0b0b0b;
-            --card-wholesale: #0c0c12;
-            --header-wholesale: rgba(11, 11, 11, 0.95);
-            --footer-wholesale: rgba(6, 6, 8, 0.95);
-            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-            --gold-solid: #d4af37;
-            --pink-love: #ff2a85;
-            --text-white: #ffffff;
-            --text-gray: #a0a0b5;
-            --font-main: 'Poppins', system-ui, -apple-system, sans-serif;
-        }
-        html, body {
-            width: 100%; max-width: 100vw; overflow-x: hidden;
-            background: var(--bg-wholesale) !important;
-            color: var(--text-white); font-family: var(--font-main);
-            min-height: 100vh; font-size: 15px;
-            -webkit-font-smoothing: antialiased;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-        body { padding-top: 42px; padding-bottom: 85px; text-transform: uppercase !important; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        /* ---------- header ---------- */
-        header.app-header {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            background: var(--header-wholesale); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding: 0 0 0 8px; height: 42px;
-            transform: translateZ(0);
-        }
-        .trending-marquee-bar {
-            overflow: hidden; white-space: nowrap; font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-            flex: 1; display: flex; align-items: center; height: 42px; position: relative; background: transparent;
-        }
-        .marquee-container {
-            display: flex; width: max-content;
-            animation: smoothMarquee 22s linear infinite;
-            will-change: transform; backface-visibility: hidden;
-        }
-        .marquee-group { display: flex; align-items: center; gap: 40px; padding-right: 40px; flex-shrink: 0; }
-        .marquee-group span { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-gray); }
-        .txt-gold { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        @keyframes smoothMarquee {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
-        }
-        .mode-selector-wrapper {
-            position: relative; display: flex; align-items: center; height: 42px;
-            background: #050508; padding: 0 10px 0 6px; border-left: 1px solid rgba(212, 175, 55, 0.15);
-            flex-shrink: 0;
-        }
-        .mode-selector-corner {
-            background: transparent; border: none; outline: none;
-            background-image: var(--gold-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-size: 0.72rem; font-weight: 800; padding-right: 14px;
-            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
-            height: 100%; z-index: 1001; appearance: none; -webkit-appearance: none; -moz-appearance: none;
-            font-family: var(--font-main);
-        }
-        .mode-selector-wrapper::after {
-            content: "\f0d7"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-            position: absolute; right: 8px; pointer-events: none;
-            font-size: 0.65rem; color: var(--gold-solid);
-        }
-        .mode-selector-corner option {
-            background: #0a0a0f; color: #ffffff; -webkit-text-fill-color: #ffffff; font-weight: 600; padding: 10px;
-        }
-
-        /* ---------- feed filter bar ---------- */
-        .feed-filter-bar {
-            display: none; align-items: center; justify-content: space-between; gap: 10px;
-            background: rgba(212,175,55,0.12);
-            border: 1px solid rgba(212,175,55,0.35);
-            border-radius: 999px; padding: 7px 14px;
-            margin: 10px auto 4px auto;
-            max-width: 1384px;
-            width: calc(100% - 12px);
-            font-size: 0.62rem; font-weight: 700; color: var(--gold-solid);
-            letter-spacing: 0.4px;
-            animation: fadeSlideIn 0.25s ease both;
-        }
-        .feed-filter-bar.active { display: flex; }
-        .feed-filter-bar span {
-            display: flex; align-items: center; gap: 7px; min-width: 0;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .feed-filter-bar .reset-all-btn {
-            background: var(--gold-gradient); border: none;
-            color: #000; padding: 4px 10px; border-radius: 999px;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
-            font-size: 0.58rem; font-weight: 800; flex-shrink: 0; text-transform: uppercase;
-        }
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ---------- feed ---------- */
-        .feed-container {
-            padding: 8px 6px;
-            column-count: 2;
-            column-gap: 8px;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        @media (min-width: 768px) {
-            .feed-container {
-                column-count: 4;
-                column-gap: 12px;
-                padding: 12px;
-            }
-        }
-        .feed-status-box {
-            column-span: all;
-            width: 100%;
-            text-align: center;
-            padding: 55px 16px;
-            color: var(--gold-solid);
-        }
-
-        .product-card {
-            background: var(--card-wholesale); border-radius: 16px; overflow: hidden;
-            display: inline-block; width: 100%;
-            border: 1px solid rgba(212,175,55,0.20); position: relative; cursor: pointer;
-            margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            transform: translateZ(0);
-            transition: transform 0.18s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.55);
-            animation: cardAppear 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        @keyframes cardAppear {
-            0% { opacity: 0; transform: translateY(12px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        /* Zero-jitter mode for related/AI filter views */
-        .product-card.no-animate {
-            animation: none !important;
-            opacity: 1 !important;
-            transform: none !important;
-        }
-        .product-card:active { transform: scale(0.98); }
-        .product-card:hover {
-            border-color: rgba(212,175,55,0.55);
-            box-shadow: 0 10px 28px rgba(212,175,55,0.14);
-        }
-        .product-card.is-anchor-card {
-            border: 1.5px solid var(--gold-solid);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.22);
-        }
-
-        .product-media-box {
-            position: relative; width: 100%; aspect-ratio: 1 / 1;
-            background: #08080d linear-gradient(90deg, #08080d 0%, #12121c 50%, #08080d 100%);
-            background-size: 200% 100%;
-            animation: skeletonLoading 1.5s infinite;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-        }
-        @keyframes skeletonLoading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        .product-media-box.loaded { animation: none; background: #000000; }
-        .product-media-box img,
-        .product-media-box video {
-            width: 100%; height: 100%; display: block; object-fit: cover; background: transparent;
-            opacity: 0; transition: opacity 0.3s ease-in-out;
-        }
-        .product-media-box img.loaded-img,
-        .product-media-box video.loaded-img { opacity: 1; }
-
-        .new-badge-overlay {
-            position: absolute; top: 8px; left: 8px;
-            background: var(--gold-gradient);
-            color: #000; font-size: 0.52rem; font-weight: 800;
-            padding: 3px 8px; border-radius: 999px; z-index: 6;
-            letter-spacing: 0.4px; pointer-events: none;
-        }
-        .video-badge-overlay {
-            position: absolute; bottom: 10px; left: 10px;
-            background: rgba(12, 12, 18, 0.85);
-            border: 1px solid rgba(212, 175, 55, 0.45);
-            color: var(--gold-solid);
-            width: 26px; height: 26px; border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
-            font-size: 0.62rem; z-index: 7; pointer-events: none;
-        }
-
-        /* ✅ CLEAN, CRYSTAL-CLEAR PRICE PILL (no blur) */
-        .price-qty-overlay {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 1px;
-            z-index: 6;
-            pointer-events: none;
-            background: rgba(8, 8, 12, 0.78);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            padding: 4px 9px;
-            border-radius: 10px;
-            border: 1px solid rgba(212, 175, 55, 0.38);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-            transform: translateZ(0);
-        }
-        .price-qty-overlay .price {
-            font-size: 0.92rem;
-            font-weight: 800;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.15;
-            letter-spacing: 0.2px;
-        }
-        .price-qty-overlay .qty {
-            font-size: 0.52rem;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        /* Pinterest-style AI Lens icon */
-        .ai-lens-corner-btn {
-            position: absolute;
-            bottom: 9px;
-            right: 9px;
-            width: 34px;
-            height: 34px;
-            border-radius: 11px;
-            background: rgba(12, 12, 18, 0.88);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(212, 175, 55, 0.45);
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.55);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 8;
-            padding: 0;
-            transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-        }
-        .ai-lens-corner-btn:hover {
-            transform: scale(1.08);
-            border-color: var(--gold-solid);
-            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.32);
-        }
-        .ai-lens-corner-btn:active { transform: scale(0.92); }
-        .ai-lens-corner-btn svg { width: 19px; height: 19px; display: block; }
-
-        /* ---------- bottom nav ---------- */
-        nav.bottom-nav {
-            position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; background: var(--footer-wholesale) !important;
-            display: flex !important; justify-content: space-around !important; align-items: center !important; padding: 8px 4px 10px 4px !important;
-            z-index: 9999999 !important; backdrop-filter: blur(20px); border-top: 1px solid rgba(212, 175, 55, 0.15) !important;
-            transform: translateZ(0);
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; text-decoration: none;
-            font-size: 0.50rem; font-weight: 600; cursor: pointer; text-align: center; gap: 3px; flex: 1; text-transform: uppercase;
-            background: none; border: none; outline: none;
-        }
-        .nav-item i { font-size: 1.25rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-item span { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 0.50rem; font-weight: 600; }
-
-        .cart-icon-box { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-        .cart-badge-circle {
-            position: absolute; top: -5px; right: -8px; background: var(--pink-love); color: #ffffff !important;
-            font-size: 0.50rem; font-weight: 700; width: 15px; height: 15px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; z-index: 5;
-        }
-        .cart-badge-circle.empty-badge { display: none !important; }
-        .cart-custom-svg { width: 22px; height: 22px; fill: url(#goldGradientSvg); }
-
-        /* ---------- modals & overlays ---------- */
-        .floating-search-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 2000000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; padding: 16px;
-        }
-        .floating-search-modal.active { opacity: 1; visibility: visible; }
-        .floating-search-box {
-            background: rgba(8, 8, 12, 0.96); border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 480px;
-            display: flex; flex-direction: column; gap: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); position: relative;
-        }
-        .close-modal-btn {
-            position: absolute; top: 16px; right: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-gray); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; cursor: pointer;
-        }
-        .modal-title { font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; padding-right: 20px; }
-        .modal-input-container { display: flex; flex-direction: column; gap: 14px; }
-        .modal-input {
-            width: 100%; background: rgba(3, 3, 5, 0.8); border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 14px; padding: 15px 18px; color: var(--text-white); font-size: 0.95rem; outline: none; text-transform: uppercase;
-        }
-        .search-bottom-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
-        .search-action-item-btn {
-            background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 12px; padding: 12px 8px; cursor: pointer; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 6px; width: 100%;
-        }
-        .search-action-item-btn i { font-size: 1.15rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .search-action-item-btn span { font-size: 0.62rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .external-page-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 60px);
-            background: #000; z-index: 1500000; display: none; border: none; outline: none;
-        }
-        .external-page-overlay.active { display: block; }
-        .external-page-overlay iframe { width: 100%; height: 100%; border: none; }
-
-        /* Vision modal */
-        .similar-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-            max-height: 360px; overflow-y: auto; padding: 2px;
-        }
-        .similar-item {
-            background: #0e0e16; border-radius: 10px; overflow: hidden;
-            border: 1px solid rgba(212,175,55,0.15); cursor: pointer;
-            display: flex; flex-direction: column;
-        }
-        .similar-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #12121c; }
-        .similar-item .sim-info { padding: 5px 6px; }
-        .similar-item .sim-title { font-size: 0.5rem; color: #d8d8e0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; font-weight: 600; }
-        .similar-item .sim-price { color: var(--gold-solid); font-weight: 800; font-size: 0.56rem; }
-        .ai-vision-analyzing { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 10px; }
-        .ai-vision-preview { width: 120px; height: 120px; border-radius: 14px; object-fit: cover; border: 2px solid var(--gold-solid); }
-        .ai-vision-pulse { width: 48px; height: 48px; border-radius: 50%; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold-solid); animation: aiSpin 1s linear infinite; }
-        @keyframes aiSpin { to { transform: rotate(360deg); } }
-        .ai-vision-text { font-size: 0.78rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .ai-vision-sub { font-size: 0.55rem; color: var(--text-gray); }
-        .ai-vision-results-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 10px; background: rgba(212,175,55,0.06); border-radius: 12px; border: 1px solid rgba(212,175,55,0.2); }
-        .ai-vision-preview-small { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; border: 1px solid var(--gold-solid); flex-shrink: 0; }
-        .ai-vision-count { font-size: 0.68rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .ai-vision-filter-btn { margin-top: 12px; width: 100%; background: var(--gold-gradient); color: #000; border: none; border-radius: 12px; padding: 12px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .ai-vision-empty { font-size: 0.7rem; color: var(--text-gray); text-align: center; padding: 20px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+<title>rorraxy · AI wholesale</title>
+<link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
+<script src="/ecosystem-core.js" defer></script>
+<link rel="manifest" href="/manifest.json">
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(r=>console.log('SW registered:',r.scope)).catch(e=>console.log('SW error:',e));});}
+</script>
+<script src="/popup.js" defer></script>
+<link rel="icon" type="image/png" sizes="32x32" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
+<link rel="apple-touch-icon" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+<style>
+:root{--bg-wholesale:#0b0b0b;--card-wholesale:#0c0c12;--header-wholesale:rgba(11,11,11,.95);--footer-wholesale:rgba(6,6,8,.95);--gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 25%,#b38728 50%,#fbf5b7 75%,#aa771c 100%);--gold-solid:#d4af37;--pink-love:#ff2a85;--text-white:#fff;--text-gray:#a0a0b5;--font-main:'Poppins',system-ui,-apple-system,sans-serif}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;background:var(--bg-wholesale)!important;color:var(--text-white);font-family:var(--font-main);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+body{padding-top:42px;padding-bottom:85px;text-transform:uppercase!important}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+header.app-header{position:fixed;top:0;left:0;width:100%;z-index:1000;background:var(--header-wholesale);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(212,175,55,.15);padding:0 0 0 8px;height:42px;transform:translateZ(0)}
+.trending-marquee-bar{overflow:hidden;white-space:nowrap;font-size:.72rem;font-weight:600;text-transform:uppercase;flex:1;display:flex;align-items:center;height:42px;position:relative;background:transparent}
+.marquee-container{display:flex;width:max-content;animation:smoothMarquee 22s linear infinite;will-change:transform;backface-visibility:hidden}
+.marquee-group{display:flex;align-items:center;gap:40px;padding-right:40px;flex-shrink:0}
+.marquee-group span{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--text-gray)}
+.txt-gold{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+@keyframes smoothMarquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+.mode-selector-wrapper{position:relative;display:flex;align-items:center;height:42px;background:#050508;padding:0 10px 0 6px;border-left:1px solid rgba(212,175,55,.15);flex-shrink:0}
+.mode-selector-corner{background:transparent;border:none;outline:none;background-image:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:.72rem;font-weight:800;padding-right:14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;height:100%;z-index:1001;appearance:none;-webkit-appearance:none;-moz-appearance:none;font-family:var(--font-main)}
+.mode-selector-wrapper::after{content:"\f0d7";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:8px;pointer-events:none;font-size:.65rem;color:var(--gold-solid)}
+.mode-selector-corner option{background:#0a0a0f;color:#fff;-webkit-text-fill-color:#fff;font-weight:600;padding:10px}
+.feed-filter-bar{display:none;align-items:center;justify-content:space-between;gap:10px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.35);border-radius:999px;padding:7px 14px;margin:10px auto 4px auto;max-width:1384px;width:calc(100% - 12px);font-size:.62rem;font-weight:700;color:var(--gold-solid);letter-spacing:.4px;animation:fadeSlideIn .25s ease both}
+.feed-filter-bar.active{display:flex}
+.feed-filter-bar span{display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed-filter-bar .reset-all-btn{background:var(--gold-gradient);border:none;color:#000;padding:4px 10px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:.58rem;font-weight:800;flex-shrink:0;text-transform:uppercase}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.feed-container{padding:8px 6px;column-count:2;column-gap:8px;width:100%;max-width:1400px;margin:0 auto}
+@media(min-width:768px){.feed-container{column-count:4;column-gap:12px;padding:12px}}
+.feed-status-box{column-span:all;width:100%;text-align:center;padding:55px 16px;color:var(--gold-solid)}
+.product-card{background:var(--card-wholesale);border-radius:16px;overflow:hidden;display:inline-block;width:100%;border:1px solid rgba(212,175,55,.20);position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;page-break-inside:avoid;will-change:transform,opacity;backface-visibility:hidden;transform:translateZ(0);transition:transform .18s ease,box-shadow .25s ease,border-color .25s ease;box-shadow:0 4px 14px rgba(0,0,0,.55);animation:cardAppear .4s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardAppear{0%{opacity:0;transform:translateY(12px) scale(.98)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.product-card.no-animate{animation:none!important;opacity:1!important;transform:none!important}
+.product-card:active{transform:scale(.98)}
+.product-card:hover{border-color:rgba(212,175,55,.55);box-shadow:0 10px 28px rgba(212,175,55,.14)}
+.product-card.is-anchor-card{border:1.5px solid var(--gold-solid);box-shadow:0 0 20px rgba(212,175,55,.22)}
+.product-media-box{position:relative;width:100%;aspect-ratio:1/1;background:#08080d linear-gradient(90deg,#08080d 0%,#12121c 50%,#08080d 100%);background-size:200% 100%;animation:skeletonLoading 1.5s infinite;overflow:hidden;display:flex;align-items:center;justify-content:center}
+@keyframes skeletonLoading{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.product-media-box.loaded{animation:none;background:#000}
+.product-media-box img,.product-media-box video{width:100%;height:100%;display:block;object-fit:cover;background:transparent;opacity:0;transition:opacity .3s ease-in-out}
+.product-media-box img.loaded-img,.product-media-box video.loaded-img{opacity:1}
+.new-badge-overlay{position:absolute;top:8px;left:8px;background:var(--gold-gradient);color:#000;font-size:.52rem;font-weight:800;padding:3px 8px;border-radius:999px;z-index:6;letter-spacing:.4px;pointer-events:none}
+.video-badge-overlay{position:absolute;bottom:10px;left:10px;background:rgba(12,12,18,.85);border:1px solid rgba(212,175,55,.45);color:var(--gold-solid);width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.62rem;z-index:7;pointer-events:none}
+.price-qty-overlay{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;align-items:flex-end;gap:1px;z-index:6;pointer-events:none;background:rgba(8,8,12,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:4px 9px;border-radius:10px;border:1px solid rgba(212,175,55,.38);box-shadow:0 2px 8px rgba(0,0,0,.45);transform:translateZ(0)}
+.price-qty-overlay .price{font-size:.92rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.15;letter-spacing:.2px}
+.price-qty-overlay .qty{font-size:.52rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap}
+.ai-lens-corner-btn,.share-corner-btn{position:absolute;bottom:9px;width:34px;height:34px;border-radius:11px;background:rgba(12,12,18,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(212,175,55,.45);box-shadow:0 3px 12px rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:8;padding:0;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.ai-lens-corner-btn{right:9px}
+.share-corner-btn{right:49px}
+.ai-lens-corner-btn:hover,.share-corner-btn:hover{transform:scale(1.08);border-color:var(--gold-solid);box-shadow:0 4px 14px rgba(212,175,55,.32)}
+.ai-lens-corner-btn:active,.share-corner-btn:active{transform:scale(.92)}
+.ai-lens-corner-btn svg,.share-corner-btn svg{width:19px;height:19px;display:block}
+nav.bottom-nav{position:fixed!important;bottom:0!important;left:0!important;width:100%!important;background:var(--footer-wholesale)!important;display:flex!important;justify-content:space-around!important;align-items:center!important;padding:8px 4px 10px 4px!important;z-index:9999999!important;backdrop-filter:blur(20px);border-top:1px solid rgba(212,175,55,.15)!important;transform:translateZ(0)}
+.nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;font-size:.50rem;font-weight:600;cursor:pointer;text-align:center;gap:3px;flex:1;text-transform:uppercase;background:none;border:none;outline:none}
+.nav-item i{font-size:1.25rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-item span{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:.50rem;font-weight:600}
+.cart-icon-box{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.cart-badge-circle{position:absolute;top:-5px;right:-8px;background:var(--pink-love);color:#fff!important;font-size:.50rem;font-weight:700;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:5}
+.cart-badge-circle.empty-badge{display:none!important}
+.cart-custom-svg{width:22px;height:22px;fill:url(#goldGradientSvg)}
+.floating-search-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:2000000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease;padding:16px}
+.floating-search-modal.active{opacity:1;visibility:visible}
+.floating-search-box{background:rgba(8,8,12,.96);border:1px solid rgba(212,175,55,.3);border-radius:24px;padding:32px 24px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:20px;box-shadow:0 25px 60px rgba(0,0,0,.8);position:relative}
+.close-modal-btn{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text-gray);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer}
+.modal-title{font-size:1.05rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding-right:20px}
+.modal-input-container{display:flex;flex-direction:column;gap:14px}
+.modal-input{width:100%;background:rgba(3,3,5,.8);border:1px solid rgba(212,175,55,.3);border-radius:14px;padding:15px 18px;color:var(--text-white);font-size:.95rem;outline:none;text-transform:uppercase}
+.search-bottom-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%}
+.search-action-item-btn{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%}
+.search-action-item-btn i{font-size:1.15rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.search-action-item-btn span{font-size:.62rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.external-page-overlay{position:fixed;top:0;left:0;width:100vw;height:calc(100vh - 60px);background:#000;z-index:1500000;display:none;border:none;outline:none}
+.external-page-overlay.active{display:block}
+.external-page-overlay iframe{width:100%;height:100%;border:none}
+.similar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:360px;overflow-y:auto;padding:2px}
+.similar-item{background:#0e0e16;border-radius:10px;overflow:hidden;border:1px solid rgba(212,175,55,.15);cursor:pointer;display:flex;flex-direction:column}
+.similar-item img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#12121c}
+.similar-item .sim-info{padding:5px 6px}
+.similar-item .sim-title{font-size:.5rem;color:#d8d8e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;font-weight:600}
+.similar-item .sim-price{color:var(--gold-solid);font-weight:800;font-size:.56rem}
+.ai-vision-analyzing{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 10px}
+.ai-vision-preview{width:120px;height:120px;border-radius:14px;object-fit:cover;border:2px solid var(--gold-solid)}
+.ai-vision-pulse{width:48px;height:48px;border-radius:50%;border:3px solid rgba(212,175,55,.15);border-top-color:var(--gold-solid);animation:aiSpin 1s linear infinite}
+@keyframes aiSpin{to{transform:rotate(360deg)}}
+.ai-vision-text{font-size:.78rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ai-vision-sub{font-size:.55rem;color:var(--text-gray)}
+.ai-vision-results-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px;background:rgba(212,175,55,.06);border-radius:12px;border:1px solid rgba(212,175,55,.2)}
+.ai-vision-preview-small{width:48px;height:48px;border-radius:10px;object-fit:cover;border:1px solid var(--gold-solid);flex-shrink:0}
+.ai-vision-count{font-size:.68rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ai-vision-filter-btn{margin-top:12px;width:100%;background:var(--gold-gradient);color:#000;border:none;border-radius:12px;padding:12px;font-size:.72rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.ai-vision-empty{font-size:.7rem;color:var(--text-gray);text-align:center;padding:20px}
+#rrxToast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728);color:#000;padding:10px 22px;border-radius:999px;font-weight:800;font-size:.72rem;z-index:9999999;box-shadow:0 6px 20px rgba(0,0,0,.6);letter-spacing:.5px;pointer-events:none;opacity:0;transition:opacity .25s ease;white-space:nowrap}
+</style>
 </head>
 <body id="mainBody">
-    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
-      <linearGradient id="goldGradientSvg" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#bf953f" />
-        <stop offset="25%" stop-color="#fcf6ba" />
-        <stop offset="50%" stop-color="#b38728" />
-        <stop offset="75%" stop-color="#fbf5b7" />
-        <stop offset="100%" stop-color="#aa771c" />
-      </linearGradient>
-    </svg>
-
-    <header class="app-header" id="mainHeader">
-        <div class="trending-marquee-bar">
-            <div class="marquee-container">
-                <div class="marquee-group">
-                    <span class="txt-gold"><i class="fa-solid fa-boxes-stacked"></i> BULK B2B SUPPLY</span>
-                    <span class="txt-gold"><i class="fa-solid fa-industry"></i> MANUFACTURER RATES</span>
-                    <span class="txt-gold"><i class="fa-solid fa-handshake"></i> WHOLESALE CATALOG</span>
-                    <span class="txt-gold"><i class="fa-solid fa-shield-halved"></i> VERIFIED FACTORIES</span>
-                </div>
-                <div class="marquee-group">
-                    <span class="txt-gold"><i class="fa-solid fa-boxes-stacked"></i> BULK B2B SUPPLY</span>
-                    <span class="txt-gold"><i class="fa-solid fa-industry"></i> MANUFACTURER RATES</span>
-                    <span class="txt-gold"><i class="fa-solid fa-handshake"></i> WHOLESALE CATALOG</span>
-                    <span class="txt-gold"><i class="fa-solid fa-shield-halved"></i> VERIFIED FACTORIES</span>
-                </div>
-            </div>
-        </div>
-        <div class="mode-selector-wrapper">
-            <select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
-                <option value="retail">RETAIL STORE</option>
-                <option value="wholesale" selected>WHOLESALE</option>
-            </select>
-        </div>
-    </header>
-
-    <input type="file" id="cameraSearchInput" accept="image/*" style="display:none" onchange="processCameraImage(event)">
-
-    <div class="external-page-overlay" id="accountPageOverlay">
-        <iframe id="accountPageIframe" src="" title="Account Page"></iframe>
-    </div>
-    <div class="external-page-overlay" id="cartPageOverlay">
-        <iframe src="/wholesale/cart.html" title="Cart Page"></iframe>
-    </div>
-
-    <div id="feedFilterBar" class="feed-filter-bar"></div>
-
-    <main class="feed-container" id="productFeed">
-        <div class="feed-status-box">
-            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">LOADING WHOLESALE PRODUCTS...</p>
-        </div>
-    </main>
-
-    <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event, 'searchModal')">
-        <div class="floating-search-box">
-            <button class="close-modal-btn" onclick="toggleSearchModal()"><i class="fa-solid fa-xmark"></i></button>
-            <div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
-            <div class="modal-input-container">
-                <input type="text" id="modalSearchInput" class="modal-input" placeholder="WALLET, WATCH, EARRING, BABY, WOOD, RESIN..." autocomplete="off">
-                <div class="search-bottom-actions">
-                    <button type="button" class="search-action-item-btn" onclick="startAudioSearch()">
-                        <i class="fa-solid fa-microphone"></i>
-                        <span>AUDIO</span>
-                    </button>
-                    <button type="button" class="search-action-item-btn" onclick="submitModalSearch()">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>SEARCH</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="floating-search-modal" id="aiVisionModal" onclick="handleOutsideClick(event, 'aiVisionModal')">
-        <div class="floating-search-box" style="max-width: 540px; padding: 24px 20px; max-height: 88vh; overflow-y: auto;">
-            <button class="close-modal-btn" onclick="closeAiVisionModal()"><i class="fa-solid fa-xmark"></i></button>
-            <div class="modal-title" id="aiVisionTitle">AI VISION SEARCH</div>
-            <div id="aiVisionBody" style="margin-top: 6px;"></div>
-        </div>
-    </div>
-
-    <nav class="bottom-nav" id="bottomNav">
-        <a href="https://rorraxy.com/world" class="nav-item">
-            <i class="fa-solid fa-earth-americas"></i>
-            <span>World</span>
-        </a>
-        <button type="button" class="nav-item" onclick="toggleAccountPage()">
-            <i class="fa-solid fa-user"></i>
-            <span>You</span>
-        </button>
-        <button type="button" class="nav-item" onclick="openCameraSearch()" title="Search by image">
-            <i class="fa-solid fa-camera"></i>
-            <span>Camera</span>
-        </button>
-        <button type="button" class="nav-item" onclick="toggleSearchModal()">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <span>Search</span>
-        </button>
-        <button type="button" class="nav-item" onclick="toggleCartPage()">
-            <div class="cart-icon-box">
-                <svg class="cart-custom-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                <span class="cart-badge-circle empty-badge" id="floatingCartItemCountBadge">0</span>
-            </div>
-            <span>Cart</span>
-        </button>
-    </nav>
-
-    <script>
-    /* ============================================================
-       INLINE categories.js DATA
-       ============================================================ */
-    const rorraxyCategoriesData = [
-        { id: "cat-women", title: "WOMEN'S FASHION", icon: "fa-solid fa-person-dress", subCategories: [
-            { name: "CLOTHING", key: "women-clothing", icon: "fa-solid fa-shirt" },
-            { name: "HANDBAGS", key: "women-handbags", icon: "fa-solid fa-bag-shopping" },
-            { name: "SHOES", key: "women-shoes", icon: "fa-solid fa-shoe-prints" },
-            { name: "JEWELRY", key: "women-jewelry", icon: "fa-solid fa-gem" },
-            { name: "WATCHES", key: "women-watches", icon: "fa-solid fa-clock" },
-            { name: "LINGERIE", key: "women-lingerie", icon: "fa-solid fa-heart" },
-            { name: "ACTIVEWEAR", key: "women-activewear", icon: "fa-solid fa-person-running" },
-            { name: "TRADITIONAL", key: "women-traditional", icon: "fa-solid fa-vest" },
-            { name: "CRAFTS & ACCENTS", key: "women-crafts", icon: "fa-solid fa-feather" },
-            { name: "ACCESSORIES", key: "women-accessories", icon: "fa-solid fa-glasses" }
-        ]},
-        { id: "cat-men", title: "MEN'S FASHION", icon: "fa-solid fa-user-tie", subCategories: [
-            { name: "MEN CLOTHING", key: "men-clothing", icon: "fa-solid fa-shirt" },
-            { name: "MEN SHOES", key: "men-shoes", icon: "fa-solid fa-shoe-prints" },
-            { name: "MEN WATCHES", key: "men-watches", icon: "fa-solid fa-clock" },
-            { name: "GROOMING & WALLETS", key: "men-grooming", icon: "fa-solid fa-wallet" },
-            { name: "MEN ACCESSORIES", key: "men-accessories", icon: "fa-solid fa-glasses" }
-        ]},
-        { id: "cat-girls", title: "GIRLS' FASHION", icon: "fa-solid fa-crown", subCategories: [
-            { name: "GIRLS CLOTHING", key: "girls-clothing", icon: "fa-solid fa-child-dress" },
-            { name: "GIRLS SHOES", key: "girls-shoes", icon: "fa-solid fa-shoe-prints" },
-            { name: "GIRLS BAGS", key: "girls-bags", icon: "fa-solid fa-bag-shopping" },
-            { name: "GIRLS JEWELRY", key: "girls-jewelry", icon: "fa-solid fa-gem" },
-            { name: "GIRLS WATCHES", key: "girls-watches", icon: "fa-solid fa-clock" },
-            { name: "HAIR ACCESSORIES", key: "girls-hair-accessories", icon: "fa-solid fa-crown" },
-            { name: "ACTIVEWEAR", key: "girls-activewear", icon: "fa-solid fa-person-running" },
-            { name: "SLEEPWEAR", key: "girls-sleepwear", icon: "fa-solid fa-bed" },
-            { name: "PARTY DRESSES", key: "girls-party-dresses", icon: "fa-solid fa-wand-magic-sparkles" },
-            { name: "GIRLS ACCESSORIES", key: "girls-accessories", icon: "fa-solid fa-glasses" }
-        ]},
-        { id: "cat-boys", title: "BOYS' FASHION", icon: "fa-solid fa-child", subCategories: [
-            { name: "BOYS CLOTHING", key: "boys-clothing", icon: "fa-solid fa-child" },
-            { name: "BOYS SHOES", key: "boys-shoes", icon: "fa-solid fa-shoe-prints" },
-            { name: "BOYS WATCHES", key: "boys-watches", icon: "fa-solid fa-clock" },
-            { name: "BAGS & WALLETS", key: "boys-bags", icon: "fa-solid fa-bag-shopping" },
-            { name: "BOYS ACCESSORIES", key: "boys-accessories", icon: "fa-solid fa-glasses" }
-        ]},
-        { id: "cat-matching", title: "MATCHING SETS", icon: "fa-solid fa-people-arrows", subCategories: [
-            { name: "COUPLE SETS", key: "couple-matchingsets", icon: "fa-solid fa-people-arrows" },
-            { name: "FAMILY SETS", key: "family-matchingsets", icon: "fa-solid fa-people-group" },
-            { name: "MOM & ME SETS", key: "mom-me-sets", icon: "fa-solid fa-child-reaching" },
-            { name: "DAD & ME SETS", key: "dad-me-sets", icon: "fa-solid fa-user-gear" },
-            { name: "SIBLING SETS", key: "sibling-matchingsets", icon: "fa-solid fa-children" },
-            { name: "TEAM SETS", key: "team-matchingsets", icon: "fa-solid fa-users" },
-            { name: "BFF SETS", key: "bff-matchingsets", icon: "fa-solid fa-handshake-angle" },
-            { name: "PET & OWNER SETS", key: "pet-owner-sets", icon: "fa-solid fa-paw" },
-            { name: "HOLIDAY SETS", key: "holiday-matchingsets", icon: "fa-solid fa-holly-berry" },
-            { name: "VALUE BUNDLES", key: "value-bundles", icon: "fa-solid fa-boxes-stacked" }
-        ]},
-        { id: "cat-gifts", title: "LUXURY GIFTS", icon: "fa-solid fa-gift", subCategories: [
-            { name: "CORPORATE GIFTS", key: "corporate-gifts", icon: "fa-solid fa-briefcase" },
-            { name: "LUXURY GIFT ITEMS", key: "luxury-giftitems", icon: "fa-solid fa-gem" },
-            { name: "PREMIUM HANDICRAFTS", key: "premium-handicrafts", icon: "fa-solid fa-hand-holding-heart" },
-            { name: "WOOD & RESIN CRAFTS", key: "wood-resincrafts", icon: "fa-solid fa-tree" },
-            { name: "BAMBOO & BRASS DECOR", key: "bamboo-brass-decor", icon: "fa-solid fa-seedling" },
-            { name: "GIFT SETS & HAMPERS", key: "gift-sets-hampers", icon: "fa-solid fa-gift" }
-        ]},
-        { id: "cat-mother", title: "MOTHER & BABY", icon: "fa-solid fa-baby", subCategories: [
-            { name: "MOTHER & BABY CLOTHING", key: "mother-baby-clothing", icon: "fa-solid fa-shirt" },
-            { name: "PREGNANCY & MATERNITY", key: "pregnancy-maternity", icon: "fa-solid fa-venus" },
-            { name: "BABY CARE & FEEDING", key: "baby-care-feeding", icon: "fa-solid fa-bottle-water" },
-            { name: "NURSERY & BABY GEAR", key: "nursery-baby-gear", icon: "fa-solid fa-bed" },
-            { name: "ECO BABY TOYS", key: "eco-baby-toys", icon: "fa-solid fa-puzzle-piece" },
-            { name: "ACCESSORIES", key: "mother-baby-accessories", icon: "fa-solid fa-glasses" }
-        ]}
-    ];
-
-    // ============================================================
-    // 1. GLOBAL CONFIG & SYNONYMS
-    // ============================================================
-    const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_wholesale_feed_cache';
-    const PREF_STORAGE_KEY = 'rorraxy_user_visual_prefs';
-    const FALLBACK_IMG_URL = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
-    let cachedAffiliateId = null;
-    let __ALL_PRODUCTS = [];
-    let __IS_FILTERED_VIEW = false;
-
-    // Build category knowledge base from categories.js
-    function normalizeText(str) {
-        return String(str || '')
-            .toLowerCase()
-            .replace(/[^a-z0-9\u0980-\u09FF]+/g, ' ')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
-
-    const CATEGORY_KNOWLEDGE = {};
-    rorraxyCategoriesData.forEach(cat => {
-        cat.subCategories.forEach(sub => {
-            const wordSource = [sub.name, sub.key, cat.title].join(' ');
-            const words = Array.from(new Set(
-                normalizeText(wordSource).split(' ').filter(w => w.length >= 3)
-            ));
-            CATEGORY_KNOWLEDGE[sub.key] = {
-                key: sub.key,
-                name: sub.name,
-                parentId: cat.id,
-                parentTitle: cat.title,
-                words: words
-            };
-        });
-    });
-
-    const MATERIAL_SYNONYMS = {
-        mahogany: ['mahogany', 'মেহগনি', 'wood', 'wooden', 'timber', 'darkwood', 'furniture', 'handicrafts'],
-        gamari:   ['gamari', 'গামারি', 'wood', 'wooden', 'timber', 'warmwood', 'handicrafts'],
-        leather:  ['leather', 'চামড়া', 'চামড়া', 'wallet', 'wallets', 'handbag', 'handbags', 'bag', 'bags', 'shoes', 'belt', 'grooming', 'accessories'],
-        wallet:   ['wallet', 'wallets', 'cardholder', 'pouch', 'purse', 'grooming', 'men-grooming', 'boys-bags', 'ওয়লেট', 'ওয়ালেট'],
-        watch:    ['watch', 'watches', 'clock', 'timepiece', 'wristwatch', 'women-watches', 'men-watches', 'girls-watches', 'boys-watches', 'ঘড়ি', 'ঘড়ি'],
-        earring:  ['earring', 'earrings', 'stud', 'studs', 'hoop', 'hoops', 'drop', 'jewelry', 'jewellery', 'women-jewelry', 'girls-jewelry', 'কানের দুল', 'দুল'],
-        baby:     ['baby', 'babies', 'infant', 'toddler', 'newborn', 'mother', 'maternity', 'nursery', 'feeding', 'toys', 'mother-baby-clothing', 'pregnancy-maternity', 'baby-care-feeding', 'nursery-baby-gear', 'eco-baby-toys', 'বেবি', 'শিশু'],
-        fabric:   ['fabric', 'cloth', 'কাপড়', 'কাপড়', 'clothing', 'dress', 'dresses', 'wear', 'fashion', 'traditional', 'activewear', 'sets', 'girls-clothing', 'boys-clothing', 'women-clothing', 'men-clothing'],
-        decor:    ['decor', 'homedecor', 'home decor', 'হোম ডেকর', 'ডেকর', 'clock', 'lamp', 'coaster', 'bamboo', 'brass', 'crafts', 'gift', 'bamboo-brass-decor'],
-        resin:    ['resin', 'রেজিন', 'epoxy', 'wood-resincrafts', 'woodresin', 'art', 'crafts', 'handicrafts', 'wood-resin']
-    };
-
-    // ============================================================
-    // 2. HELPERS
-    // ============================================================
-    function escapeHtmlAttr(str) {
-        return String(str || '')
-            .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-    function escapeJsSingle(str) {
-        return String(str || '')
-            .replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
-    }
-
-    function getActiveAffiliateId() {
-        if (cachedAffiliateId !== null) return cachedAffiliateId;
-        try {
-            const urlParams = new URLSearchParams(window.location.search);
-            const refFromUrl = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-            if (refFromUrl) {
-                localStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
-                sessionStorage.setItem('rorraxy_active_affiliate_ref', refFromUrl);
-                cachedAffiliateId = refFromUrl;
-                return cachedAffiliateId;
-            }
-            let userProfile = {};
-            userProfile = JSON.parse(localStorage.getItem('rorraxy_user_account') || 'null')
-                       || JSON.parse(localStorage.getItem('user_profile') || 'null') || {};
-            cachedAffiliateId = userProfile.affiliate_id || userProfile.id || userProfile.userId
-                || localStorage.getItem('rorraxy_my_affiliate_id')
-                || localStorage.getItem('rorraxy_active_affiliate_ref')
-                || sessionStorage.getItem('rorraxy_active_affiliate_ref')
-                || null;
-        } catch (e) { cachedAffiliateId = null; }
-        return cachedAffiliateId;
-    }
-
-    // ============================================================
-    // 3. PREFERENCE MEMORY
-    // ============================================================
-    function getUserPrefs() {
-        try { return JSON.parse(localStorage.getItem(PREF_STORAGE_KEY) || '{}') || {}; }
-        catch (e) { return {}; }
-    }
-    function recordUserPreference(product) {
-        if (!product) return;
-        try {
-            const prefs = getUserPrefs();
-            extractExpandedTags(product).forEach(t => {
-                if (t.length > 2) prefs[t] = Math.min(25, (prefs[t] || 0) + 1);
-            });
-            localStorage.setItem(PREF_STORAGE_KEY, JSON.stringify(prefs));
-        } catch (e) {}
-    }
-
-    function extractExpandedTags(p) {
-        if (!p) return [];
-        if (Array.isArray(p.__expandedTags)) return p.__expandedTags;
-        const rawTokens = new Set();
-        const addWords = (val) => {
-            normalizeText(val).split(' ').forEach(w => { if (w.length > 1) rawTokens.add(w); });
-        };
-        if (p.tags) {
-            if (Array.isArray(p.tags)) p.tags.forEach(t => addWords(t));
-            else if (typeof p.tags === 'string') p.tags.split(/[,|]/).forEach(t => addWords(t));
-        }
-        addWords(p.title); addWords(p.subtitle); addWords(p.category);
-        addWords(p.subCategory || p.subcategory || p.tag);
-        addWords(p.description);
-        if (p.visual?.colorTone) addWords(p.visual.colorTone);
-        if (p.visual?.style) addWords(p.visual.style);
-        if (p.visual?.shape) addWords(p.visual.shape);
-
-        const fullText = Array.from(rawTokens).join(' ');
-        Object.entries(MATERIAL_SYNONYMS).forEach(([groupKey, words]) => {
-            if (words.some(w => fullText.includes(normalizeText(w)))) {
-                rawTokens.add(groupKey);
-                words.forEach(w => rawTokens.add(normalizeText(w)));
-            }
-        });
-        p.__expandedTags = Array.from(rawTokens);
-        return p.__expandedTags;
-    }
-
-    // ============================================================
-    // 4. CATEGORY HELPERS
-    // ============================================================
-    function findCategoryKey(product) {
-        if (!product) return null;
-        const candidates = [product.category, product.subCategory, product.subcategory,
-                            product.tag, product.category_key, product.cat_key]
-            .filter(Boolean).map(normalizeText);
-        for (const key of Object.keys(CATEGORY_KNOWLEDGE)) {
-            if (candidates.includes(normalizeText(key))) return key;
-        }
-        // Fallback: word-based inference
-        const allText = normalizeText([
-            product.title, product.subtitle, product.description,
-            product.category, product.subCategory
-        ].filter(Boolean).join(' '));
-        for (const [key, info] of Object.entries(CATEGORY_KNOWLEDGE)) {
-            if (info.words.length && info.words.every(w => allText.includes(w))) return key;
-        }
-        return null;
-    }
-
-    // ============================================================
-    // 5. COLOR / VISUAL HELPERS (image-derived matching)
-    // ============================================================
-    function inferColorTone(text) {
-        const t = normalizeText(text);
-        if (/\bgold(en)?\b/.test(t) || /\bgolden\b/.test(t)) return 'gold';
-        if (/\bblack\b|\bdark\b|\bebony\b/.test(t)) return 'black';
-        if (/\bwhite\b|\bcream\b|\bivory\b/.test(t)) return 'white';
-        if (/\bred\b|\bcrimson\b|\bmaroon\b/.test(t)) return 'red';
-        if (/\bblue\b|\bnavy\b/.test(t)) return 'blue';
-        if (/\bgreen\b|\bemerald\b/.test(t)) return 'green';
-        if (/\bsilver\b|\bgrey\b|\bgray\b/.test(t)) return 'silver';
-        if (/\bbrown\b|\btan\b|\bbeige\b|\bwood(en)?\b|\bmahogany\b|\bgamari\b/.test(t)) return 'brown';
-        if (/\bpink\b|\brose\b/.test(t)) return 'pink';
-        return null;
-    }
-
-    function inferProductColorTone(p) {
-        if (p.visual && p.visual.colorTone) return normalizeText(p.visual.colorTone);
-        const text = [p.title, p.description, p.subtitle,
-                     ...(p.__expandedTags || extractExpandedTags(p))].join(' ');
-        return inferColorTone(text);
-    }
-
-    function rgbToTone(r, g, b) {
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        const brightness = (r + g + b) / 3;
-        const sat = max === 0 ? 0 : (max - min) / max;
-
-        if (sat < 0.12) {
-            if (brightness < 55) return 'black';
-            if (brightness > 210) return 'white';
-            return 'silver';
-        }
-        let hue;
-        const delta = max - min || 1;
-        if (max === r) hue = ((g - b) / delta) % 6;
-        else if (max === g) hue = (b - r) / delta + 2;
-        else hue = (r - g) / delta + 4;
-        hue = hue * 60;
-        if (hue < 0) hue += 360;
-
-        if (brightness < 70 && hue > 20 && hue < 60) return 'brown';
-        if (hue < 15 || hue >= 345) return 'red';
-        if (hue < 45) return brightness > 140 ? 'gold' : 'brown';
-        if (hue < 70) return 'gold';
-        if (hue < 170) return 'green';
-        if (hue < 260) return 'blue';
-        return 'pink';
-    }
-
-    function colorToneGroup(tone) {
-        const groups = {
-            gold: 'warm', brown: 'warm', red: 'warm', pink: 'warm',
-            blue: 'cool', green: 'cool', silver: 'cool',
-            black: 'neutral', white: 'neutral'
-        };
-        return groups[tone] || 'neutral';
-    }
-
-    // Extract dominant color from uploaded image via canvas
-    function extractColorProfile(dataUrl) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                try {
-                    const canvas = document.createElement('canvas');
-                    const size = 48;
-                    canvas.width = size; canvas.height = size;
-                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-                    ctx.drawImage(img, 0, 0, size, size);
-                    const data = ctx.getImageData(0, 0, size, size).data;
-                    let rSum = 0, gSum = 0, bSum = 0, count = 0;
-                    for (let i = 0; i < data.length; i += 4) {
-                        if (data[i + 3] < 128) continue;
-                        rSum += data[i]; gSum += data[i + 1]; bSum += data[i + 2];
-                        count++;
-                    }
-                    if (count === 0) { resolve(null); return; }
-                    const r = rSum / count, g = gSum / count, b = bSum / count;
-                    resolve({
-                        r, g, b,
-                        brightness: (r + g + b) / 3,
-                        tone: rgbToTone(r, g, b)
-                    });
-                } catch (e) { resolve(null); }
-            };
-            img.onerror = () => resolve(null);
-            img.src = dataUrl;
-        });
-    }
-
-    // ============================================================
-    // 6. SIMILARITY ENGINE (uses categories.js + color + tags)
-    // ============================================================
-    function computeSimilarityScore(source, target) {
-        if (!source || !target) return 0;
-        if (String(source.__id) === String(target.__id)) return -1;
-
-        let score = 0;
-        const srcTags = new Set(extractExpandedTags(source));
-        const tgtTags = new Set(extractExpandedTags(target));
-        srcTags.forEach(tag => { if (tgtTags.has(tag)) score += 6; });
-
-        const srcCat = normalizeText(source.category || source.subCategory || '');
-        const tgtCat = normalizeText(target.category || target.subCategory || '');
-        if (srcCat && tgtCat && srcCat === tgtCat) score += 12;
-
-        // ✅ Category knowledge boost
-        const srcKey = findCategoryKey(source);
-        const tgtKey = findCategoryKey(target);
-        if (srcKey && tgtKey) {
-            if (srcKey === tgtKey) score += 20;
-            else if (CATEGORY_KNOWLEDGE[srcKey]?.parentId === CATEGORY_KNOWLEDGE[tgtKey]?.parentId) score += 10;
-        }
-
-        if (source.visual && target.visual) {
-            if (source.visual.colorTone && source.visual.colorTone === target.visual.colorTone) score += 5;
-            if (source.visual.style && source.visual.style === target.visual.style) score += 5;
-            if (source.visual.shape && source.visual.shape === target.visual.shape) score += 3;
-        }
-
-        // Color tone match
-        const srcTone = inferProductColorTone(source);
-        const tgtTone = inferProductColorTone(target);
-        if (srcTone && tgtTone) {
-            if (srcTone === tgtTone) score += 8;
-            else if (colorToneGroup(srcTone) === colorToneGroup(tgtTone)) score += 3;
-        }
-
-        if (target.is_new || target.isNew || target.new_arrival) score += 5;
-        if (target.views) score += Math.min(4, Number(target.views) / 100);
-        return score;
-    }
-
-    // ============================================================
-    // 7. ZERO-JITTER RELATED SEARCH
-    // ============================================================
-    function triggerRelatedFeedSearch(productId, event) {
-        if (event) event.stopPropagation();
-        const source = __ALL_PRODUCTS.find(p => String(p.__id) === String(productId));
-        if (!source) return;
-
-        recordUserPreference(source);
-
-        const scored = __ALL_PRODUCTS
-            .map(item => ({ item, score: computeSimilarityScore(source, item) }))
-            .filter(x => x.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .map(x => x.item);
-
-        const seen = new Set([String(source.__id), ...scored.map(s => String(s.__id))]);
-        const remaining = __ALL_PRODUCTS.filter(p => !seen.has(String(p.__id)));
-        const finalFeed = [source, ...scored, ...remaining];
-
-        __IS_FILTERED_VIEW = true;
-        showFeedFilterBar(`SIMILAR ITEMS (${scored.length})`);
-
-        // ✅ allowStagger = false → adds no-animate class → ZERO jitter
-        renderWholesaleCards(finalFeed, source.__id, false);
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function showFeedFilterBar(text) {
-        const bar = document.getElementById('feedFilterBar');
-        if (!bar) return;
-        bar.innerHTML = `
-            <span><i class="fa-solid fa-wand-magic-sparkles"></i> ${escapeHtmlAttr(text)}</span>
-            <button type="button" class="reset-all-btn" onclick="clearFeedFilter()">
-                <i class="fa-solid fa-rotate-left"></i> ALL ITEMS
-            </button>
-        `;
-        bar.classList.add('active');
-    }
-
-    function clearFeedFilter() {
-        const bar = document.getElementById('feedFilterBar');
-        if (bar) bar.classList.remove('active');
-        __IS_FILTERED_VIEW = false;
-        window.__aiVisionMatches = null;
-        renderWholesaleCards(prioritizeHomepageFeed(__ALL_PRODUCTS), null, true);
-    }
-
-    // ============================================================
-    // 8. BOOT
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', () => {
-        try {
-            const selector = document.getElementById('userModeSelector');
-            if (selector) selector.value = 'wholesale';
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
-            const rateParam = urlParams.get('rate') || '3';
-            const platformParam = urlParams.get('platform') || 'wholesale';
-
-            if (refParam) {
-                localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
-                localStorage.setItem('rorraxy_active_commission_rate', rateParam);
-                localStorage.setItem('rorraxy_active_platform', platformParam);
-            }
-
-            getActiveAffiliateId();
-            updateCartBadgeCount();
-
-            const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
-            loadWholesaleProducts(searchQuery);
-
-            document.getElementById('modalSearchInput')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') submitModalSearch();
-            });
-        } catch (err) { console.warn('Init error:', err); }
-    });
-
-    function switchEcosystemMode(selectedMode) {
-        if (selectedMode === 'retail') window.location.href = '/';
-        else window.location.href = '/wholesale/';
-    }
-
-    function goToProduct(productId) {
-        if (!productId) return;
-        const affId = getActiveAffiliateId();
-        const rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
-        const platform = localStorage.getItem('rorraxy_active_platform') || 'wholesale';
-        let url = `/wholesale/pd.html?id=${encodeURIComponent(productId)}`;
-        if (affId) url += `&ref=${encodeURIComponent(affId)}&rate=${rate}&platform=${platform}`;
-        location.href = url;
-    }
-
-    // ============================================================
-    // 9. OVERLAYS & MODALS
-    // ============================================================
-    function closeAllOverlays() {
-        ['searchModal', 'accountPageOverlay', 'cartPageOverlay', 'aiVisionModal']
-            .forEach(id => document.getElementById(id)?.classList.remove('active'));
-    }
-    function toggleAccountPage() {
-        const overlay = document.getElementById('accountPageOverlay');
-        const iframe = document.getElementById('accountPageIframe');
-        const isOpen = overlay.classList.contains('active');
-        closeAllOverlays();
-        if (!isOpen) {
-            if (iframe && !iframe.getAttribute('src')) iframe.src = '/wholesale/account.html';
-            overlay.classList.add('active');
-        }
-    }
-    function toggleSearchModal() {
-        const overlay = document.getElementById('searchModal');
-        const isOpen = overlay.classList.contains('active');
-        closeAllOverlays();
-        if (!isOpen) {
-            overlay.classList.add('active');
-            setTimeout(() => document.getElementById('modalSearchInput')?.focus(), 80);
-        }
-    }
-    function toggleCartPage() {
-        const overlay = document.getElementById('cartPageOverlay');
-        const isOpen = overlay.classList.contains('active');
-        closeAllOverlays();
-        if (!isOpen) overlay.classList.add('active');
-    }
-    function handleOutsideClick(event, overlayId) {
-        if (event.target === document.getElementById(overlayId)) closeAllOverlays();
-    }
-    function submitModalSearch() {
-        const input = document.getElementById('modalSearchInput');
-        if (!input) return;
-        const query = input.value.trim();
-        if (!query) return;
-        closeAllOverlays();
-        __IS_FILTERED_VIEW = true;
-        loadWholesaleProducts(query);
-    }
-    function startAudioSearch() {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) return;
-        const searchInput = document.getElementById('modalSearchInput');
-        searchInput.value = '';
-        searchInput.placeholder = 'LISTENING...';
-        const recognition = new SR();
-        recognition.lang = 'en-US';
-        recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript;
-            searchInput.value = transcript;
-            closeAllOverlays();
-            __IS_FILTERED_VIEW = true;
-            loadWholesaleProducts(transcript);
-        };
-        try { recognition.start(); } catch (err) {}
-    }
-
-    // ============================================================
-    // 10. CAMERA / AI VISION SEARCH (REAL image-based matching)
-    // ============================================================
-    function openCameraSearch() {
-        closeAllOverlays();
-        document.getElementById('cameraSearchInput')?.click();
-    }
-
-    function processCameraImage(event) {
-        const file = event.target.files && event.target.files[0];
-        if (!file) return;
-        event.target.value = '';
-
-        const modal = document.getElementById('aiVisionModal');
-        const body = document.getElementById('aiVisionBody');
-        const title = document.getElementById('aiVisionTitle');
-        title.innerText = 'AI VISION SEARCH';
-
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            const previewUrl = e.target.result;
-            body.innerHTML = `
-                <div class="ai-vision-analyzing">
-                    <img class="ai-vision-preview" src="${previewUrl}" alt="Query image">
-                    <div class="ai-vision-pulse"></div>
-                    <div class="ai-vision-text">ANALYZING IMAGE...</div>
-                    <div class="ai-vision-sub">Scanning color, tone &amp; material</div>
-                </div>
-            `;
-            modal.classList.add('active');
-
-            const startTime = Date.now();
-            let matches = [];
-            try {
-                matches = await simulateVisualMatch(file, previewUrl);
-            } catch (err) {
-                console.warn('Vision match error:', err);
-                matches = prioritizeHomepageFeed(__ALL_PRODUCTS).slice(0, 12);
-            }
-            // Minimum 900ms "analyzing" for UX
-            const elapsed = Date.now() - startTime;
-            if (elapsed < 900) await new Promise(r => setTimeout(r, 900 - elapsed));
-
-            showAiVisionResults(matches, previewUrl);
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // ✅ Real image-based matcher: color tone + filename hints + category
-    async function simulateVisualMatch(file, previewUrl) {
-        const profile = await extractColorProfile(previewUrl);
-
-        const filenameWords = normalizeText(String(file.name || '').replace(/\.(jpg|jpeg|png|webp|gif|heic|bmp)$/i, ''))
-            .split(' ')
-            .filter(w => w.length > 2 && !/^\d+$/.test(w));
-
-        const filenameCat = filenameWords.length
-            ? findCategoryFromText(filenameWords.join(' '))
-            : null;
-
-        const scored = __ALL_PRODUCTS.map(p => {
-            let score = 0;
-
-            // Color-derived match (strong signal — genuinely image-based)
-            if (profile && profile.tone) {
-                const pTone = inferProductColorTone(p);
-                if (pTone) {
-                    if (pTone === profile.tone) score += 50;
-                    else if (colorToneGroup(pTone) === colorToneGroup(profile.tone)) score += 22;
-                }
-            }
-
-            // Filename keyword (weak signal — user-described content)
-            if (filenameWords.length > 0) {
-                const tags = extractExpandedTags(p);
-                filenameWords.forEach(w => {
-                    if (tags.some(t => t.includes(w) || w.includes(t))) score += 15;
-                });
-            }
-
-            // Category inference from filename
-            if (filenameCat) {
-                const pCatKey = findCategoryKey(p);
-                if (pCatKey && CATEGORY_KNOWLEDGE[pCatKey]
-                    && CATEGORY_KNOWLEDGE[pCatKey].parentId === filenameCat.parentId) {
-                    score += 15;
-                }
-            }
-
-            // Freshness + popularity tiebreaker
-            if (p.is_new || p.isNew || p.new_arrival) score += 3;
-            if (p.views) score += Math.min(3, Number(p.views) / 200);
-
-            return { p, score };
-        });
-
-        let matches = scored.filter(x => x.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .map(x => x.p);
-
-        if (matches.length === 0) {
-            matches = prioritizeHomepageFeed(__ALL_PRODUCTS).slice(0, 12);
-        }
-        return matches.slice(0, 24);
-    }
-
-    function findCategoryFromText(text) {
-        const t = normalizeText(text);
-        for (const [key, info] of Object.entries(CATEGORY_KNOWLEDGE)) {
-            if (info.words.some(w => w.length >= 3 && t.includes(w))) return info;
-        }
-        return null;
-    }
-
-    function showAiVisionResults(matches, previewSrc) {
-        const title = document.getElementById('aiVisionTitle');
-        const body = document.getElementById('aiVisionBody');
-        title.innerText = 'AI VISION RESULTS';
-
-        if (!matches || matches.length === 0) {
-            body.innerHTML = `<div class="ai-vision-empty">No visual matches found.</div>`;
-            return;
-        }
-
-        const gridHtml = matches.slice(0, 12).map(m => {
-            const mId = String(m.__id || m.id || m.product_id || m.product_code || '');
-            const mTitle = m.title || 'ITEM';
-            const mImg = resolveProductImage(m);
-            const mPrice = m.price_bulk || m.price_min_whole || m.price || 0;
-            return `
-                <div class="similar-item" onclick="goToProduct('${escapeJsSingle(mId)}')">
-                    <img src="${escapeHtmlAttr(mImg)}" alt="${escapeHtmlAttr(mTitle)}" loading="lazy"
-                         onerror="this.src='${FALLBACK_IMG_URL}'">
-                    <div class="sim-info">
-                        <div class="sim-title">${escapeHtmlAttr(mTitle)}</div>
-                        <div class="sim-price">$${(parseFloat(mPrice) || 0).toFixed(2)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        body.innerHTML = `
-            <div class="ai-vision-results-header">
-                <img class="ai-vision-preview-small" src="${previewSrc}" alt="Query image">
-                <div class="ai-vision-count">${matches.length} VISUAL MATCHES FOUND</div>
-            </div>
-            <div class="similar-grid">${gridHtml}</div>
-            <button type="button" class="ai-vision-filter-btn" onclick="filterFeedFromVision()">
-                <i class="fa-solid fa-filter"></i> SHOW IN MAIN FEED
-            </button>
-        `;
-        window.__aiVisionMatches = matches;
-    }
-
-    function filterFeedFromVision() {
-        const matches = window.__aiVisionMatches || [];
-        if (!matches.length) return;
-        closeAiVisionModal();
-        __IS_FILTERED_VIEW = true;
-        renderWholesaleCards(matches, null, false); // no-animate → zero jitter
-        showFeedFilterBar(`AI VISION (${matches.length})`);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function closeAiVisionModal() {
-        document.getElementById('aiVisionModal')?.classList.remove('active');
-    }
-
-    // ============================================================
-    // 11. FEED PRIORITY & LOADING
-    // ============================================================
-    function seededShuffle(array, seed) {
-        let m = array.length;
-        const arr = [...array];
-        while (m) {
-            const x = Math.sin(seed++) * 10000;
-            const r = x - Math.floor(x);
-            const i = Math.floor(r * m--);
-            const t = arr[m]; arr[m] = arr[i]; arr[i] = t;
-        }
-        return arr;
-    }
-
-    function prioritizeHomepageFeed(list) {
-        if (!Array.isArray(list) || list.length === 0) return [];
-        const prefs = getUserPrefs();
-        const isNew = p => Boolean(p.is_new || p.isNew || p.new_arrival || p.isNewArrival);
-        const prefScore = p => extractExpandedTags(p).reduce((sum, t) => sum + (prefs[t] || 0), 0);
-
-        const sorted = [...list].sort((a, b) => {
-            const nA = isNew(a) ? 1 : 0;
-            const nB = isNew(b) ? 1 : 0;
-            if (nA !== nB) return nB - nA;
-            return prefScore(b) - prefScore(a);
-        });
-
-        const sessionSeed = Math.floor(Date.now() / 15000);
-        const newOnes = sorted.filter(isNew);
-        const rest = sorted.filter(p => !isNew(p));
-        return [
-            ...seededShuffle(newOnes, sessionSeed + 1),
-            ...seededShuffle(rest, sessionSeed + 2)
-        ];
-    }
-
-    function expandSearchTerms(rawQuery) {
-        const normalized = normalizeText(rawQuery);
-        const tokens = normalized.split(' ').filter(Boolean);
-        const expanded = new Set(tokens);
-        tokens.forEach(token => {
-            Object.entries(MATERIAL_SYNONYMS).forEach(([groupKey, words]) => {
-                const normalizedGroup = words.map(w => normalizeText(w));
-                if (normalizeText(groupKey).includes(token) || normalizedGroup.some(w => w.includes(token) || token.includes(w))) {
-                    expanded.add(normalizeText(groupKey));
-                    normalizedGroup.forEach(w => { if (w) expanded.add(w); });
-                }
-            });
-        });
-        return { tokens, expanded: Array.from(expanded) };
-    }
-
-    async function loadWholesaleProducts(searchFilter = null) {
-        const feedContainer = document.getElementById('productFeed');
-
-        let localProducts = [], cachedFeed = [];
-        try {
-            localProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products') || '[]') || [];
-            cachedFeed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CACHE_KEY) || '[]') || [];
-        } catch (e) {}
-
-        if (!searchFilter && !__IS_FILTERED_VIEW && cachedFeed.length > 0) {
-            __ALL_PRODUCTS = cachedFeed;
-            renderWholesaleCards(prioritizeHomepageFeed(cachedFeed), null, true);
-        } else if (!__IS_FILTERED_VIEW) {
-            feedContainer.innerHTML = `<div class="feed-status-box">
-                <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-                <p style="margin-top: 10px; font-size: 0.75rem; letter-spacing: 1px;">${searchFilter ? 'SEARCHING...' : 'LOADING WHOLESALE PRODUCTS...'}</p></div>`;
-        }
-
-        let products = [];
-        try {
-            const response = await fetch('/api/products?t=' + Date.now(), { cache: 'no-store' });
-            if (response.ok) {
-                const result = await response.json();
-                const rawData = result.data || result.results || result;
-                if (Array.isArray(rawData)) products = rawData;
-            }
-        } catch (err) { console.warn('API Fetch Warning:', err); }
-
-        const mergedMap = new Map();
-        const combined = [...localProducts, ...cachedFeed, ...products];
-        for (let i = 0; i < combined.length; i++) {
-            const p = combined[i];
-            if (!p || typeof p !== 'object') continue;
-            const pId = p.id || p.product_id || p.product_code || p.title;
-            if (pId) {
-                const key = String(pId);
-                p.__id = key;
-                if (!mergedMap.has(key)) mergedMap.set(key, p);
-            }
-        }
-
-        const allProducts = Array.from(mergedMap.values());
-        let wholesaleProducts = allProducts.filter(p => {
-            const mode = String
+<svg style="width:0;height:0;position:absolute" aria-hidden="true" focusable="false">
+<linearGradient id="goldGradientSvg" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#bf953f"/><stop offset="25%" stop-color="#fcf6ba"/><stop offset="50%" stop-color="#b38728"/><stop offset="75%" stop-color="#fbf5b7"/><stop offset="100%" stop-color="#aa771c"/>
+</linearGradient>
+</svg>
+<header class="app-header" id="mainHeader">
+<div class="trending-marquee-bar">
+<div class="marquee-container">
+<div class="marquee-group">
+<span class="txt-gold"><i class="fa-solid fa-boxes-stacked"></i> BULK B2B SUPPLY</span>
+<span class="txt-gold"><i class="fa-solid fa-industry"></i> MANUFACTURER RATES</span>
+<span class="txt-gold"><i class="fa-solid fa-handshake"></i> WHOLESALE CATALOG</span>
+<span class="txt-gold"><i class="fa-solid fa-shield-halved"></i> VERIFIED FACTORIES</span>
+</div>
+<div class="marquee-group">
+<span class="txt-gold"><i class="fa-solid fa-boxes-stacked"></i> BULK B2B SUPPLY</span>
+<span class="txt-gold"><i class="fa-solid fa-industry"></i> MANUFACTURER RATES</span>
+<span class="txt-gold"><i class="fa-solid fa-handshake"></i> WHOLESALE CATALOG</span>
+<span class="txt-gold"><i class="fa-solid fa-shield-halved"></i> VERIFIED FACTORIES</span>
+</div>
+</div>
+</div>
+<div class="mode-selector-wrapper">
+<select class="mode-selector-corner" id="userModeSelector" onchange="switchEcosystemMode(this.value)">
+<option value="retail">RETAIL STORE</option>
+<option value="wholesale" selected>WHOLESALE</option>
+</select>
+</div>
+</header>
+<input type="file" id="cameraSearchInput" accept="image/*" style="display:none" onchange="processCameraImage(event)">
+<div class="external-page-overlay" id="accountPageOverlay"><iframe id="accountPageIframe" src="" title="Account Page"></iframe></div>
+<div class="external-page-overlay" id="cartPageOverlay"><iframe src="/wholesale/cart.html" title="Cart Page"></iframe></div>
+<div id="feedFilterBar" class="feed-filter-bar"></div>
+<main class="feed-container" id="productFeed">
+<div class="feed-status-box"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><p style="margin-top:10px;font-size:.75rem;letter-spacing:1px;">LOADING WHOLESALE PRODUCTS...</p></div>
+</main>
+<div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event,'searchModal')">
+<div class="floating-search-box">
+<button class="close-modal-btn" onclick="toggleSearchModal()"><i class="fa-solid fa-xmark"></i></button>
+<div class="modal-title">SEARCH WHOLESALE PRODUCTS</div>
+<div class="modal-input-container">
+<input type="text" id="modalSearchInput" class="modal-input" placeholder="WALLET, WATCH, EARRING, BABY, WOOD, RESIN..." autocomplete="off">
+<div class="search-bottom-actions">
+<button type="button" class="search-action-item-btn" onclick="startAudioSearch()"><i class="fa-solid fa-microphone"></i><span>AUDIO</span></button>
+<button type="button" class="search-action-item-btn" onclick="submitModalSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="floating-search-modal" id="aiVisionModal" onclick="handleOutsideClick(event,'aiVisionModal')">
+<div class="floating-search-box" style="max-width:540px;padding:24px 20px;max-height:88vh;overflow-y:auto">
+<button class="close-modal-btn" onclick="closeAiVisionModal()"><i class="fa-solid fa-xmark"></i></button>
+<div class="modal-title" id="aiVisionTitle">AI VISION SEARCH</div>
+<div id="aiVisionBody" style="margin-top:6px"></div>
+</div>
+</div>
+<nav class="bottom-nav" id="bottomNav">
+<a href="https://rorraxy.com/world" class="nav-item"><i class="fa-solid fa-earth-americas"></i><span>World</span></a>
+<button type="button" class="nav-item" onclick="toggleAccountPage()"><i class="fa-solid fa-user"></i><span>You</span></button>
+<button type="button" class="nav-item" onclick="openCameraSearch()" title="Search by image"><i class="fa-solid fa-camera"></i><span>Camera</span></button>
+<button type="button" class="nav-item" onclick="toggleSearchModal()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
+<button type="button" class="nav-item" onclick="toggleCartPage()">
+<div class="cart-icon-box">
+<svg class="cart-custom-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+<span class="cart-badge-circle empty-badge" id="floatingCartItemCountBadge">0</span>
+</div>
+<span>Cart</span>
+</button>
+</nav>
+<script>
+/* ===== INLINE categories.js ===== */
+const rorraxyCategoriesData=[
+{id:"cat-women",title:"WOMEN'S FASHION",icon:"fa-solid fa-person-dress",subCategories:[
+{name:"CLOTHING",key:"women-clothing",icon:"fa-solid fa-shirt"},{name:"HANDBAGS",key:"women-handbags",icon:"fa-solid fa-bag-shopping"},{name:"SHOES",key:"women-shoes",icon:"fa-solid fa-shoe-prints"},{name:"JEWELRY",key:"women-jewelry",icon:"fa-solid fa-gem"},{name:"WATCHES",key:"women-watches",icon:"fa-solid fa-clock"},{name:"LINGERIE",key:"women-lingerie",icon:"fa-solid fa-heart"},{name:"ACTIVEWEAR",key:"women-activewear",icon:"fa-solid fa-person-running"},{name:"TRADITIONAL",key:"women-traditional",icon:"fa-solid fa-vest"},{name:"CRAFTS & ACCENTS",key:"women-crafts",icon:"fa-solid fa-feather"},{name:"ACCESSORIES",key:"women-accessories",icon:"fa-solid fa-glasses"}]},
+{id:"cat-men",title:"MEN'S FASHION",icon:"fa-solid fa-user-tie",subCategories:[
+{name:"MEN CLOTHING",key:"men-clothing",icon:"fa-solid fa-shirt"},{name:"MEN SHOES",key:"men-shoes",icon:"fa-solid fa-shoe-prints"},{name:"MEN WATCHES",key:"men-watches",icon:"fa-solid fa-clock"},{name:"GROOMING & WALLETS",key:"men-grooming",icon:"fa-solid fa-wallet"},{name:"MEN ACCESSORIES",key:"men-accessories",icon:"fa-solid fa-glasses"}]},
+{id:"cat-girls",title:"GIRLS' FASHION",icon:"fa-solid fa-crown",subCategories:[
+{name:"GIRLS CLOTHING",key:"girls-clothing",icon:"fa-solid fa-child-dress"},{name:"GIRLS SHOES",key:"girls-shoes",icon:"fa-solid fa-shoe-prints"},{name:"GIRLS BAGS",key:"girls-bags",icon:"fa-solid fa-bag-shopping"},{name:"GIRLS JEWELRY",key:"girls-jewelry",icon:"fa-solid fa-gem"},{name:"GIRLS WATCHES",key:"girls-watches",icon:"fa-solid fa-clock"},{name:"HAIR ACCESSORIES",key:"girls-hair-accessories",icon:"fa-solid fa-crown"},{name:"ACTIVEWEAR",key:"girls-activewear",icon:"fa-solid fa-person-running"},{name:"SLEEPWEAR",key:"girls-sleepwear",icon:"fa-solid fa-bed"},{name:"PARTY DRESSES",key:"girls-party-dresses",icon:"fa-solid fa-wand-magic-sparkles"},{name:"GIRLS ACCESSORIES",key:"girls-accessories",icon:"fa-solid fa-glasses"}]},
+{id:"cat-boys",title:"BOYS' FASHION",icon:"fa-solid fa-child",subCategories:[
+{name:"BOYS CLOTHING",key:"boys-clothing",icon:"fa-solid fa-child"},{name:"BOYS SHOES",key:"boys-shoes",icon:"fa-solid fa-shoe-prints"},{name:"BOYS WATCHES",key:"boys-watches",icon:"fa-solid fa-clock"},{name:"BAGS & WALLETS",key:"boys-bags",icon:"fa-solid fa-bag-shopping"},{name:"BOYS ACCESSORIES",key:"boys-accessories",icon:"fa-solid fa-glasses"}]},
+{id:"cat-matching",title:"MATCHING SETS",icon:"fa-solid fa-people-arrows",subCategories:[
+{name:"COUPLE SETS",key:"couple-matchingsets",icon:"fa-solid fa-people-arrows"},{name:"FAMILY SETS",key:"family-matchingsets",icon:"fa-solid fa-people-group"},{name:"MOM & ME SETS",key:"mom-me-sets",icon:"fa-solid fa-child-reaching"},{name:"DAD & ME SETS",key:"dad-me-sets",icon:"fa-solid fa-user-gear"},{name:"SIBLING SETS",key:"sibling-matchingsets",icon:"fa-solid fa-children"},{name:"TEAM SETS",key:"team-matchingsets",icon:"fa-solid fa-users"},{name:"BFF SETS",key:"bff-matchingsets",icon:"fa-solid fa-handshake-angle"},{name:"PET & OWNER SETS",key:"pet-owner-sets",icon:"fa-solid fa-paw"},{name:"HOLIDAY SETS",key:"holiday-matchingsets",icon:"fa-solid fa-holly-berry"},{name:"VALUE BUNDLES",key:"value-bundles",icon:"fa-solid fa-boxes-stacked"}]},
+{id:"cat-gifts",title:"LUXURY GIFTS",icon:"fa-solid fa-gift",subCategories:[
+{name:"CORPORATE GIFTS",key:"corporate-gifts",icon:"fa-solid fa-briefcase"},{name:"LUXURY GIFT ITEMS",key:"luxury-giftitems",icon:"fa-solid fa-gem"},{name:"PREMIUM HANDICRAFTS",key:"premium-handicrafts",icon:"fa-solid fa-hand-holding-heart"},{name:"WOOD & RESIN CRAFTS",key:"wood-resincrafts",icon:"fa-solid fa-tree"},{name:"BAMBOO & BRASS DECOR",key:"bamboo-brass-decor",icon:"fa-solid fa-seedling"},{name:"GIFT SETS & HAMPERS",key:"gift-sets-hampers",icon:"fa-solid fa-gift"}]},
+{id:"cat-mother",title:"MOTHER & BABY",icon:"fa-solid fa-baby",subCategories:[
+{name:"MOTHER & BABY CLOTHING",key:"mother-baby-clothing",icon:"fa-solid fa-shirt"},{name:"PREGNANCY & MATERNITY",key:"pregnancy-maternity",icon:"fa-solid fa-venus"},{name:"BABY CARE & FEEDING",key:"baby-care-feeding",icon:"fa-solid fa-bottle-water"},{name:"NURSERY & BABY GEAR",key:"nursery-baby-gear",icon:"fa-solid fa-bed"},{name:"ECO BABY TOYS",key:"eco-baby-toys",icon:"fa-solid fa-puzzle-piece"},{name:"ACCESSORIES",key:"mother-baby-accessories",icon:"fa-solid fa-glasses"}]}];
+
+/* ===== CONFIG ===== */
+const LOCAL_STORAGE_CACHE_KEY='rorraxy_wholesale_feed_cache';
+const PREF_STORAGE_KEY='rorraxy_user_visual_prefs';
+const FALLBACK_IMG_URL='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
+let cachedAffiliateId=null,__ALL_PRODUCTS=[],__IS_FILTERED_VIEW=false;
+
+/* ===== HELPERS ===== */
+function normalizeText(s){return String(s||'').toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g,' ').replace(/\s+/g,' ').trim();}
+function escapeHtmlAttr(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escapeJsSingle(s){return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
+
+/* ===== CATEGORY KNOWLEDGE ===== */
+const CATEGORY_KNOWLEDGE={};
+rorraxyCategoriesData.forEach(cat=>{cat.subCategories.forEach(sub=>{
+const words=Array.from(new Set(normalizeText([sub.name,sub.key,cat.title].join(' ')).split(' ').filter(w=>w.length>=3)));
+CATEGORY_KNOWLEDGE[sub.key]={key:sub.key,name:sub.name,parentId:cat.id,parentTitle:cat.title,words:words};
+});});
+
+const MATERIAL_SYNONYMS={
+mahogany:['mahogany','মেহগনি','wood','wooden','timber','darkwood','furniture','handicrafts'],
+gamari:['gamari','গামারি','wood','wooden','timber','warmwood','handicrafts'],
+leather:['leather','চামড়া','চামড়া','wallet','wallets','handbag','handbags','bag','bags','shoes','belt','grooming','accessories'],
+wallet:['wallet','wallets','cardholder','pouch','purse','grooming','men-grooming','boys-bags','ওয়লেট','ওয়ালেট'],
+watch:['watch','watches','clock','timepiece','wristwatch','women-watches','men-watches','girls-watches','boys-watches','ঘড়ি','ঘড়ি'],
+earring:['earring','earrings','stud','studs','hoop','hoops','drop','jewelry','jewellery','women-jewelry','girls-jewelry','কানের দুল','দুল'],
+baby:['baby','babies','infant','toddler','newborn','mother','maternity','nursery','feeding','toys','mother-baby-clothing','pregnancy-maternity','baby-care-feeding','nursery-baby-gear','eco-baby-toys','বেবি','শিশু'],
+fabric:['fabric','cloth','কাপড়','কাপড়','clothing','dress','dresses','wear','fashion','traditional','activewear','sets','girls-clothing','boys-clothing','women-clothing','men-clothing'],
+decor:['decor','homedecor','home decor','হোম ডেকর','ডেকর','clock','lamp','coaster','bamboo','brass','crafts','gift','bamboo-brass-decor'],
+resin:['resin','রেজিন','epoxy','wood-resincrafts','woodresin','art','crafts','handicrafts','wood-resin']
+};
+
+/* ===== AFFILIATE ===== */
+function getActiveAffiliateId(){
+if(cachedAffiliateId!==null)return cachedAffiliateId;
+try{
+const up=new URLSearchParams(window.location.search);
+const refFromUrl=up.get('ref')||up.get('aff')||up.get('affiliate');
+if(refFromUrl){localStorage.setItem('rorraxy_active_affiliate_ref',refFromUrl);sessionStorage.setItem('rorraxy_active_affiliate_ref',refFromUrl);cachedAffiliateId=refFromUrl;return cachedAffiliateId;}
+let userProfile=JSON.parse(localStorage.getItem('rorraxy_user_account')||'null')||JSON.parse(localStorage.getItem('user_profile')||'null')||{};
+cachedAffiliateId=userProfile.affiliate_id||userProfile.id||userProfile.userId||localStorage.getItem('rorraxy_my_affiliate_id')||localStorage.getItem('rorraxy_active_affiliate_ref')||sessionStorage.getItem('rorraxy_active_affiliate_ref')||null;
+}catch(e){cachedAffiliateId=null;}
+return cachedAffiliateId;
+}
+
+/* ===== PREFS ===== */
+function getUserPrefs(){try{return JSON.parse(localStorage.getItem(PREF_STORAGE_KEY)||'{}')||{};}catch(e){return{};}}
+function recordUserPreference(product){
+if(!product)return;
+try{
+const prefs=getUserPrefs();
+extractExpandedTags(product).forEach(t=>{if(t.length>2)prefs[t]=Math.min(25,(prefs[t]||0)+1);});
+localStorage.setItem(PREF_STORAGE_KEY,JSON.stringify(prefs));
+}catch(e){}
+}
+
+function extractExpandedTags(p){
+if(!p)return[];
+if(Array.isArray(p.__expandedTags))return p.__expandedTags;
+const rawTokens=new Set();
+const addWords=v=>{normalizeText(v).split(' ').forEach(w=>{if(w.length>1)rawTokens.add(w);});};
+if(p.tags){if(Array.isArray(p.tags))p.tags.forEach(t=>addWords(t));else if(typeof p.tags==='string')p.tags.split(/[,|]/).forEach(t=>addWords(t));}
+addWords(p.title);addWords(p.subtitle);addWords(p.category);
+addWords(p.subCategory||p.subcategory||p.tag);addWords(p.description);
+if(p.visual?.colorTone)addWords(p.visual.colorTone);
+if(p.visual?.style)addWords(p.visual.style);
+if(p.visual?.shape)addWords(p.visual.shape);
+const fullText=Array.from(rawTokens).join(' ');
+Object.entries(MATERIAL_SYNONYMS).forEach(([gk,words])=>{
+if(words.some(w=>fullText.includes(normalizeText(w)))){rawTokens.add(gk);words.forEach(w=>rawTokens.add(normalizeText(w)));}
+});
+p.__expandedTags=Array.from(rawTokens);
+return p.__expandedTags;
+}
+
+function findCategoryKey(product){
+if(!product)return null;
+const candidates=[product.category,product.subCategory,product.subcategory,product.tag,product.category_key,product.cat_key].filter(Boolean).map(normalizeText);
+for(const key of Object.keys(CATEGORY_KNOWLEDGE)){if(candidates.includes(normalizeText(key)))return key;}
+const allText=normalizeText([product.title,product.subtitle,product.description,product.category,product.subCategory].filter(Boolean).join(' '));
+for(const[key,info]of Object.entries(CATEGORY_KNOWLEDGE)){if(info.words.length&&info.words.every(w=>allText.includes(w)))return key;}
+return null;
+}
+
+function inferColorTone(text){
+const t=normalizeText(text);
+if(/\bgold(en)?\b/.test(t))return'gold';
+if(/\bblack\b|\bdark\b|\bebony\b/.test(t))return'black';
+if(/\bwhite\b|\bcream\b|\bivory\b/.test(t))return'white';
+if(/\bred\b|\bcrimson\b|\bmaroon\b/.test(t))return'red';
+if(/\bblue\b|\bnavy\b/.test(t))return'blue';
+if(/\bgreen\b|\bemerald\b/.test(t))return'green';
+if(/\bsilver\b|\bgrey\b|\bgray\b/.test(t))return'silver';
+if(/\bbrown\b|\btan\b|\bbeige\b|\bwood(en)?\b|\bmahogany\b|\bgamari\b/.test(t))return'brown';
+if(/\bpink\b|\brose\b/.test(t))return'pink';
+return null;
+}
+function inferProductColorTone(p){
+if(p.visual&&p.visual.colorTone)return normalizeText(p.visual.colorTone);
+const text=[p.title,p.description,p.subtitle,...(p.__expandedTags||extractExpandedTags(p))].join(' ');
+return inferColorTone(text);
+}
+function rgbToTone(r,g,b){
+const max=Math.max(r,g,b),min=Math.min(r,g,b);
+const brightness=(r+g+b)/3;
+const sat=max===0?0:(max-min)/max;
+if(sat<.12){if(brightness<55)return'black';if(brightness>210)return'white';return'silver';}
+let hue;const delta=max-min||1;
+if(max===r)hue=((g-b)/delta)%6;else if(max===g)hue=(b-r)/delta+2;else hue=(r-g)/delta+4;
+hue=hue*60;if(hue<0)hue+=360;
+if(brightness<70&&hue>20&&hue<60)return'brown';
+if(hue<15||hue>=345)return'red';
+if(hue<45)return brightness>140?'gold':'brown';
+if(hue<70)return'gold';
+if(hue<170)return'green';
+if(hue<260)return'blue';
+return'pink';
+}
+function colorToneGroup(t){
+const g={gold:'warm',brown:'warm',red:'warm',pink:'warm',blue:'cool',green:'cool',silver:'cool',black:'neutral',white:'neutral'};
+return g[t]||'neutral';
+}
+function extractColorProfile(dataUrl){
+return new Promise(resolve=>{
+const img=new Image();
+img.onload=()=>{
+try{
+const canvas=document.createElement('canvas');const size=48;
+canvas.width=size;canvas.height=size;
+const ctx=canvas.getContext('2d',{willReadFrequently:true});
+ctx.drawImage(img,0,0,size,size);
+const data=ctx.getImageData(0,0,size,size).data;
+let rS=0,gS=0,bS=0,count=0;
+for(let i=0;i<data.length;i+=4){if(data[i+3]<128)continue;rS+=data[i];gS+=data[i+1];bS+=data[i+2];count++;}
+if(count===0){resolve(null);return;}
+const r=rS/count,g=gS/count,b=bS/count;
+resolve({r,g,b,brightness:(r+g+b)/3,tone:rgbToTone(r,g,b)});
+}catch(e){resolve(null);}
+};
+img.onerror=()=>resolve(null);
+img.src=dataUrl;
+});
+}
+
+/* ===== SIMILARITY ===== */
+function computeSimilarityScore(source,target){
+if(!source||!target)return 0;
+if(String(source.__id)===String(target.__id))return-1;
+let score=0;
+const srcTags=new Set(extractExpandedTags(source)),tgtTags=new Set(extractExpandedTags(target));
+srcTags.forEach(tag=>{if(tgtTags.has(tag))score+=6;});
+const srcCat=normalizeText(source.category||source.subCategory||''),tgtCat=normalizeText(target.category||target.subCategory||'');
+if(srcCat&&tgtCat&&srcCat===tgtCat)score+=12;
+const srcKey=findCategoryKey(source),tgtKey=findCategoryKey(target);
+if(srcKey&&tgtKey){if(srcKey===tgtKey)score+=20;else if(CATEGORY_KNOWLEDGE[srcKey]?.parentId===CATEGORY_KNOWLEDGE[tgtKey]?.parentId)score+=10;}
+if(source.visual&&target.visual){
+if(source.visual.colorTone&&source.visual.colorTone===target.visual.colorTone)score+=5;
+if(source.visual.style&&source.visual.style===target.visual.style)score+=5;
+if(source.visual.shape&&source.visual.shape===target.visual.shape)score+=3;
+}
+const srcTone=inferProductColorTone(source),tgtTone=inferProductColorTone(target);
+if(srcTone&&tgtTone){if(srcTone===tgtTone)score+=8;else if(colorToneGroup(srcTone)===colorToneGroup(tgtTone))score+=3;}
+if(target.is_new||target.isNew||target.new_arrival)score+=5;
+if(target.views)score+=Math.min(4,Number(target.views)/100);
+return score;
+}
+
+/* ===== RELATED SEARCH ===== */
+function triggerRelatedFeedSearch(productId,event){
+if(event)event.stopPropagation();
+const source=__ALL_PRODUCTS.find(p=>String(p.__id)===String(productId));
+if(!source)return;
+recordUserPreference(source);
+const scored=__ALL_PRODUCTS.map(item=>({item,score:computeSimilarityScore(source,item)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).map(x=>x.item);
+const seen=new Set([String(source.__id),...scored.map(s=>String(s.__id))]);
+const remaining=__ALL_PRODUCTS.filter(p=>!seen.has(String(p.__id)));
+const finalFeed=[source,...scored,...remaining];
+__IS_FILTERED_VIEW=true;
+showFeedFilterBar(`SIMILAR ITEMS (${scored.length})`);
+renderWholesaleCards(finalFeed,source.__id,false);
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function showFeedFilterBar(text){
+const bar=document.getElementById('feedFilterBar');if(!bar)return;
+bar.innerHTML=`<span><i class="fa-solid fa-wand-magic-sparkles"></i> ${escapeHtmlAttr(text)}</span><button type="button" class="reset-all-btn" onclick="clearFeedFilter()"><i class="fa-solid fa-rotate-left"></i> ALL ITEMS</button>`;
+bar.classList.add('active');
+}
+function clearFeedFilter(){
+const bar=document.getElementById('feedFilterBar');if(bar)bar.classList.remove('active');
+__IS_FILTERED_VIEW=false;window.__aiVisionMatches=null;
+renderWholesaleCards(prioritizeHomepageFeed(__ALL_PRODUCTS),null,true);
+}
+
+/* ===== BOOT ===== */
+document.addEventListener('DOMContentLoaded',()=>{
+try{
+const selector=document.getElementById('userModeSelector');if(selector)selector.value='wholesale';
+const up=new URLSearchParams(window.location.search);
+const refParam=up.get('ref')||up.get('aff')||up.get('affiliate');
+const rateParam=up.get('rate')||'3';
+const platformParam=up.get('platform')||'wholesale';
+if(refParam){localStorage.setItem('rorraxy_active_affiliate_ref',refParam);localStorage.setItem('rorraxy_active_commission_rate',rateParam);localStorage.setItem('rorraxy_active_platform',platformParam);}
+getActiveAffiliateId();updateCartBadgeCount();
+const searchQuery=up.get('search')||up.get('q')||up.get('category');
+loadWholesaleProducts(searchQuery);
+document.getElementById('modalSearchInput')?.addEventListener('keypress',function(e){if(e.key==='Enter')submitModalSearch();});
+}catch(err){console.warn('Init error:',err);}
+});
+
+function switchEcosystemMode(m){if(m==='retail')window.location.href='/';else window.location.href='/wholesale/';}
+
+function buildProductUrl(productId){
+const affId=getActiveAffiliateId();
+const rate=localStorage.getItem('rorraxy_active_commission_rate')||'3';
+const platform=localStorage.getItem('rorraxy_active_platform')||'wholesale';
+let url=`${window.location.origin}/wholesale/pd.html?id=${encodeURIComponent(productId)}`;
+if(affId)url+=`&ref=${encodeURIComponent(affId)}&rate=${rate}&platform=${platform}`;
+return url;
+}
+function goToProduct(productId){if(!productId)return;location.href=buildProductUrl(productId);}
+
+/* ===== SHARE ===== */
+async function shareProduct(productId,event){
+if(event)event.stopPropagation();
+const p=__ALL_PRODUCTS.find(x=>String(x.__id)===String(productId));
+if(!p)return;
+const title=p.title||'Check out this product';
+const price=p.price_bulk||p.price_min_whole||p.price||0;
+const url=buildProductUrl(productId);
+const text=`Check out: ${title} — $${parseFloat(price).toFixed(2)}`;
+const shareData={title:title,text:text,url:url};
+if(navigator.share){
+try{await navigator.share(shareData);}catch(err){if(err&&err.name!=='AbortError')console.warn('Share error:',err);}
+}else if(navigator.clipboard&&navigator.clipboard.writeText){
+try{await navigator.clipboard.writeText(`${text}\n${url}`);showToast('LINK COPIED TO CLIPBOARD');}
+catch(err){window.prompt('Copy link:',url);}
+}else{window.prompt('Copy link:',url);}
+}
+function showToast(msg){
+let t=document.getElementById('rrxToast');
+if(!t){t=document.createElement('div');t.id='rrxToast';document.body.appendChild(t);}
+t.textContent=msg;
+requestAnimationFrame(()=>{t.style.opacity='1';});
+clearTimeout(t.__tid);
+t.__tid=setTimeout(()=>{t.style.opacity='0';},1800);
+}
+
+/* ===== OVERLAYS ===== */
+function closeAllOverlays(){['searchModal','accountPageOverlay','cartPageOverlay','aiVisionModal'].forEach(id=>document.getElementById(id)?.classList.remove('active'));}
+function toggleAccountPage(){
+const overlay=document.getElementById('accountPageOverlay');const iframe=document.getElementById('accountPageIframe');
+const isOpen=overlay.classList.contains('active');closeAllOverlays();
+if(!isOpen){if(iframe&&!iframe.getAttribute('src'))iframe.src='/wholesale/account.html';overlay.classList.add('active');}
+}
+function toggleSearchModal(){
+const overlay=document.getElementById('searchModal');const isOpen=overlay.classList.contains('active');closeAllOverlays();
+if(!isOpen){overlay.classList.add('active');setTimeout(()=>document.getElementById('modalSearchInput')?.focus(),80);}
+}
+function toggleCartPage(){
+const overlay=document.getElementById('cartPageOverlay');const isOpen=overlay.classList.contains('active');closeAllOverlays();
+if(!isOpen)overlay.classList.add('active');
+}
+function handleOutsideClick(event,id){if(event.target===document.getElementById(id))closeAllOverlays();}
+function submitModalSearch(){
+const input=document.getElementById('modalSearchInput');if(!input)return;
+const q=input.value.trim();if(!q)return;
+closeAllOverlays();__IS_FILTERED_VIEW=true;loadWholesaleProducts(q);
+}
+function startAudioSearch(){
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
+const si=document.getElementById('modalSearchInput');si.value='';si.placeholder='LISTENING...';
+const rec=new SR();rec.lang='en-US';
+rec.onresult=function(e){const t=e.results[0][0].transcript;si.value=t;closeAllOverlays();__IS_FILTERED_VIEW=true;loadWholesaleProducts(t);};
+try{rec.start();}catch(err){}
+}
+
+/* ===== CAMERA / AI VISION ===== */
+function openCameraSearch(){closeAllOverlays();document.getElementById('cameraSearchInput')?.click();}
+function processCameraImage(event){
+const file=event.target.files&&event.target.files[0];if(!file)return;
+event.target.value='';
+const modal=document.getElementById('aiVisionModal'),body=document.getElementById('aiVisionBody'),title=document.getElementById('aiVisionTitle');
+title.innerText='AI VISION SEARCH';
+const reader=new FileReader();
+reader.onload=async e=>{
+const previewUrl=e.target.result;
+body.innerHTML=`<div class="ai-vision-analyzing"><img class="ai-vision-preview" src="${previewUrl}" alt="Query image"><div class="ai-vision-pulse"></div><div class="ai-vision-text">ANALYZING IMAGE...</div><div class="ai-vision-sub">Scanning color, tone &amp; material</div></div>`;
+modal.classList.add('active');
+const startTime=Date.now();
+let matches=[];
+try{matches=await simulateVisualMatch(file,previewUrl);}catch(err){console.warn('Vision match error:',err);matches=prioritizeHomepageFeed(__ALL_PRODUCTS).slice(0,12);}
+const elapsed=Date.now()-startTime;
+if(elapsed<900)await new Promise(r=>setTimeout(r,900-elapsed));
+showAiVisionResults(matches,previewUrl);
+};
+reader.readAsDataURL(file);
+}
+async function simulateVisualMatch(file,previewUrl){
+const profile=await extractColorProfile(previewUrl);
+const filenameWords=normalizeText(String(file.name||'').replace(/\.(jpg|jpeg|png|webp|gif|heic|bmp)$/i,'')).split(' ').filter(w=>w.length>2&&!/^\d+$/.test(w));
+const filenameCat=filenameWords.length?findCategoryFromText(filenameWords.join(' ')):null;
+const scored=__ALL_PRODUCTS.map(p=>{
+let score=0;
+if(profile&&profile.tone){
+const pTone=inferProductColorTone(p);
+if(pTone){if(pTone===profile.tone)score+=50;else if(colorToneGroup(pTone)===colorToneGroup(profile.tone))score+=22;}
+}
+if(filenameWords.length>0){
+const tags=extractExpandedTags(p);
+filenameWords.forEach(w=>{if(tags.some(t=>t.includes(w)||w.includes(t)))score+=15;});
+}
+if(filenameCat){
+const pCatKey=findCategoryKey(p);
+if(pCatKey&&CATEGORY_KNOWLEDGE[pCatKey]&&CATEGORY_KNOWLEDGE[pCatKey].parentId===filenameCat.parentId)score+=15;
+}
+if(p.is_new||p.isNew||p.new_arrival)score+=3;
+if(p.views)score+=Math.min(3,Number(p.views)/200);
+return{p,score};
+});
+let matches=scored.filter(x=>x.score>0).sort((a,b)=>b.score-a.score).map(x=>x.p);
+if(matches.length===0)matches=prioritizeHomepageFeed(__ALL_PRODUCTS).slice(0,12);
+return matches.slice(0,24);
+}
+function findCategoryFromText(text){
+const t=normalizeText(text);
+for(const[key,info]of Object.entries(CATEGORY_KNOWLEDGE)){if(info.words.some(w=>w.length>=3&&t.includes(w)))return info;}
+return null;
+}
+function showAiVisionResults(matches,previewSrc){
+const title=document.getElementById('aiVisionTitle'),body=document.getElementById('aiVisionBody');
+title.innerText='AI VISION RESULTS';
+if(!matches||matches.length===0){body.innerHTML=`<div class="ai-vision-empty">No visual matches found.</div>`;return;}
+const gridHtml=matches.slice(0,12).map(m=>{
+const mId=String(m.__id||m.id||m.product_id||m.product_code||'');
+const mTitle=m.title||'ITEM';
+const mImg=resolveProductImage(m);
+const mPrice=m.price_bulk||m.price_min_whole||m.price||0;
+return `<div class="similar-item" onclick="goToProduct('${escapeJsSingle(mId)}')"><img src="${escapeHtmlAttr(mImg)}" alt="${escapeHtmlAttr(mTitle)}" loading="lazy" onerror="this.src='${FALLBACK_IMG_URL}'"><div class="sim-info"><div class="sim-title">${escapeHtmlAttr(mTitle)}</div><div class="sim-price">$${(parseFloat(mPrice)||0).toFixed(2)}</div></div></div>`;
+}).join('');
+body.innerHTML=`<div class="ai-vision-results-header"><img class="ai-vision-preview-small" src="${previewSrc}" alt="Query image"><div class="ai-vision-count">${matches.length} VISUAL MATCHES FOUND</div></div><div class="similar-grid">${gridHtml}</div><button type="button" class="ai-vision-filter-btn" onclick="filterFeedFromVision()"><i class="fa-solid fa-filter"></i> SHOW IN MAIN FEED</button>`;
+window.__aiVisionMatches=matches;
+}
+function filterFeedFromVision(){
+const matches=window.__aiVisionMatches||[];if(!matches.length)return;
+closeAiVisionModal();__IS_FILTERED_VIEW=true;
+renderWholesaleCards(matches,null,false);
+showFeedFilterBar(`AI VISION (${matches.length})`);
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeAiVisionModal(){document.getElementById('aiVisionModal')?.classList.remove('active');}
+
+/* ===== FEED PRIORITY ===== */
+function seededShuffle(array,seed){
+let m=array.length;const arr=[...array];
+while(m){const x=Math.sin(seed++)*10000;const r=x-Math.floor(x);const i=Math.floor(r*m--);const t=arr[m];arr[m]=arr[i];arr[i]=t;}
+return arr;
+}
+function prioritizeHomepageFeed(list){
+if(!Array.isArray(list)||list.length===0)return[];
+const prefs=getUserPrefs();
+const isNew=p=>Boolean(p.is_new||p.isNew||p.new_arrival||p.isNewArrival);
+const prefScore=p=>extractExpandedTags(p).reduce((sum,t)=>sum+(prefs[t]||0),0);
+const sorted=[...list].sort((a,b)=>{
+const nA=isNew(a)?1:0,nB=isNew(b)?1:0;
+if(nA!==nB)return nB-nA;
+return prefScore(b)-prefScore(a);
+});
+const sessionSeed=Math.floor(Date.now()/15000);
+const newOnes=sorted.filter(isNew),rest=sorted.filter(p=>!isNew(p));
+return[...seededShuffle(newOnes,sessionSeed+1),...seededShuffle(rest,sessionSeed+2)];
+}
+function expandSearchTerms(rawQuery){
+const normalized=normalizeText(rawQuery);
+const tokens=normalized.split(' ').filter(Boolean);
+const expanded=new Set(tokens);
+tokens.forEach(token=>{
+Object.entries(MATERIAL_SYNONYMS).forEach(([gk,words])=>{
+const ng=words.map(w=>normalizeText(w));
+if(normalizeText(gk).includes(token)||ng.some(w=>w.includes(token)||token.includes(w))){expanded.add(normalizeText(gk));ng.forEach(w=>{if(w)expanded.add(w);});}
+});
+});
+return{tokens,expanded:Array.from(expanded)};
+}
+
+/* ===== LOAD PRODUCTS ===== */
+async function loadWholesaleProducts(searchFilter=null){
+const feedContainer=document.getElementById('productFeed');
+let localProducts=[],cachedFeed=[];
+try{localProducts=JSON.parse(localStorage.getItem('rorraxy_seller_products')||'[]')||[];cachedFeed=JSON.parse(localStorage.getItem(LOCAL_STORAGE_CACHE_KEY)||'[]')||[];}catch(e){}
+if(!searchFilter&&!__IS_FILTERED_VIEW&&cachedFeed.length>0){
+__ALL_PRODUCTS=cachedFeed;
+renderWholesaleCards(prioritizeHomepageFeed(cachedFeed),null,true);
+}else if(!__IS_FILTERED_VIEW){
+feedContainer.innerHTML=`<div class="feed-status-box"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><p style="margin-top:10px;font-size:.75rem;letter-spacing:1px;">${searchFilter?'SEARCHING...':'LOADING WHOLESALE PRODUCTS...'}</p></div>`;
+}
+let products=[];
+try{
+const response=await fetch('/api/products?t='+Date.now(),{cache:'no-store'});
+if(response.ok){const result=await response.json();const rawData=result.data||result.results||result;if(Array.isArray(rawData))products=rawData;}
+}catch(err){console.warn('API Fetch Warning:',err);}
+const mergedMap=new Map();
+const combined=[...localProducts,...cachedFeed,...products];
+for(let i=0;i<combined.length;i++){
+const p=combined[i];if(!p||typeof p!=='object')continue;
+const pId=p.id||p.product_id||p.product_code||p.title;
+if(pId){const key=String(pId);p.__id=key;if(!mergedMap.has(key))mergedMap.set(key,p);}
+}
+const allProducts=Array.from(mergedMap.values());
+let wholesaleProducts=allProducts.filter(p=>{
+const mode=String(p.upload_mode||p.mode||'').toLowerCase().trim();
+return mode==='wholesale'||mode==='both'||mode===''||mode==='null'||mode==='undefined'||p.is_cj||p.product_code||p.cj_product_id;
+});
+if(wholesaleProducts.length>0&&!searchFilter){try{localStorage.setItem(LOCAL_STORAGE_CACHE_KEY,JSON.stringify(wholesaleProducts));}catch(e){}}
+if(__IS_FILTERED_VIEW&&!searchFilter){if(__ALL_PRODUCTS.length===0)__ALL_PRODUCTS=wholesaleProducts;return;}
+__ALL_PRODUCTS=wholesaleProducts;
+if(searchFilter){
+const{tokens,expanded}=expandSearchTerms(searchFilter);
+const scoredMatches=wholesaleProducts.map(item=>{
+const tags=extractExpandedTags(item);
+const full=normalizeText([item.title,item.subtitle,item.category,item.subCategory,...tags].join(' '));
+let ms=0;
+tokens.forEach(tk=>{if(full.includes(tk))ms+=10;if(tags.some(t=>t.includes(tk)))ms+=8;});
+expanded.forEach(ex=>{if(full.includes(ex))ms+=4;if(tags.some(t=>t===ex||t.includes(ex)))ms+=3;});
+return{item,matchScore:ms};
+}).filter(x=>x.matchScore>0).sort((a,b)=>b.matchScore-a.matchScore).map(x=>x.item);
+__IS_FILTERED_VIEW=true;
+showFeedFilterBar(`${searchFilter.toUpperCase()} (${scoredMatches.length})`);
+renderWholesaleCards(scoredMatches,null,false);
+return;
+}
+if(wholesaleProducts.length>0){
+renderWholesaleCards(prioritizeHomepageFeed(wholesaleProducts),null,true);
+}else{
+feedContainer.innerHTML=`<div class="feed-status-box" style="color:var(--text-gray);"><i class="fa-solid fa-boxes-stacked fa-2x" style="color:var(--gold-solid);margin-bottom:12px;"></i><p style="font-size:.8rem;font-weight:600;">NO WHOLESALE PRODUCTS FOUND.</p></div>`;
+}
+}
+
+/* ===== MEDIA RESOLVERS ===== */
+function resolveProductImage(p){
+let url=FALLBACK_IMG_URL;
+try{
+if(p.images_json){
+if(typeof p.images_json==='string'){const parsed=JSON.parse(p.images_json);if(Array.isArray(parsed)&&parsed.length>0)url=parsed[0];else if(typeof parsed==='string')url=parsed;}
+else if(Array.isArray(p.images_json)&&p.images_json.length>0)url=p.images_json[0];
+}
+}catch(e){if(typeof p.images_json==='string'&&p.images_json.trim()!=='')url=p.images_json.split(',')[0].trim();}
+if((!url||url.includes('rorraxy logo')||url===FALLBACK_IMG_URL)&&p.image_url){
+if(typeof p.image_url==='string'){
+if(p.image_url.startsWith('[')){try{const parsed=JSON.parse(p.image_url);if(Array.isArray(parsed)&&parsed.length>0)url=parsed[0];}catch(e){url=p.image_url;}}
+else url=p.image_url;
+}else if(Array.isArray(p.image_url)&&p.image_url.length>0)url=p.image_url[0];
+}
+if((!url||url.includes('mr masudar logo'))&&p.imageUrl)url=p.imageUrl;
+if((!url||url.includes('mr masudar logo'))&&(p.productImage||p.jiImageUrl||p.cjImage))url=p.productImage||p.jiImageUrl||p.cjImage;
+return url||FALLBACK_IMG_URL;
+}
+function resolveProductVideo(p){
+const c=p.video_url||p.videoUrl||p.video||p.productVideo||'';
+if(typeof c==='string'&&c.trim().startsWith('http'))return c.trim();
+return'';
+}
+
+/* ===== RENDER CARDS (with SHARE + AI LENS) ===== */
+function renderWholesaleCards(wholesaleProducts,anchorProductId=null,allowStagger=true){
+const feedContainer=document.getElementById('productFeed');
+const fragment=document.createDocumentFragment();
+if(!Array.isArray(wholesaleProducts)||wholesaleProducts.length===0){
+feedContainer.innerHTML=`<div class="feed-status-box" style="color:var(--text-gray);"><i class="fa-solid fa-magnifying-glass fa-2x" style="color:var(--gold-solid);margin-bottom:12px;"></i><p style="font-size:.8rem;font-weight:600;">NO MATCHING PRODUCTS FOUND.</p></div>`;
+return;
+}
+wholesaleProducts.forEach((p,idx)=>{
+const pTitle=p.title||'WHOLESALE ITEM';
+const bulkPrice=p.price_bulk||p.price_min_whole||p.price||0;
+const moqCount=p.moq||1;
+const resolvedImageUrl=resolveProductImage(p);
+const resolvedVideoUrl=resolveProductVideo(p);
+const productId=String(p.__id||p.id||p.product_id||p.product_code||('p_'+idx));
+p.__id=productId;
+const isNew=Boolean(p.is_new||p.isNew||p.new_arrival);
+const safeTitleAttr=escapeHtmlAttr(pTitle);
+const safeIdJs=escapeJsSingle(productId);
+const cardDiv=document.createElement('div');
+cardDiv.className='product-card'+(!allowStagger?' no-animate':'')+(String(anchorProductId)===productId?' is-anchor-card':'');
+cardDiv.dataset.productId=productId;
+if(allowStagger)cardDiv.style.animationDelay=Math.min(idx*.025,.4)+'s';
+cardDiv.onclick=()=>goToProduct(productId);
+const mediaTagHtml=resolvedVideoUrl
+?`<video src="${escapeHtmlAttr(resolvedVideoUrl)}" poster="${escapeHtmlAttr(resolvedImageUrl)}" autoplay muted loop playsinline preload="metadata" onloadeddata="this.classList.add('loaded-img');this.parentElement.classList.add('loaded');"></video><span class="video-badge-overlay"><i class="fa-solid fa-play"></i></span>`
+:`<img src="${escapeHtmlAttr(resolvedImageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onload="this.classList.add('loaded-img');this.parentElement.classList.add('loaded');" onerror="this.src='${FALLBACK_IMG_URL}';this.classList.add('loaded-img');this.parentElement.classList.add('loaded');">`;
+cardDiv.innerHTML=`
+<div class="product-media-box">
+${isNew?`<span class="new-badge-overlay">NEW</span>`:''}
+<div class="price-qty-overlay"><span class="price">$${(parseFloat(bulkPrice)||0).toFixed(2)}</span><span class="qty">MIN ${escapeHtmlAttr(moqCount)} PCS</span></div>
+${mediaTagHtml}
+<button type="button" class="share-corner-btn" title="Share product" onclick="shareProduct('${safeIdJs}',event)">
+<svg viewBox="0 0 24 24" fill="none" stroke="url(#goldGradientSvg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+</svg>
+</button>
+<button type="button" class="ai-lens-corner-btn" title="Find similar" onclick="triggerRelatedFeedSearch('${safeIdJs}',event)">
+<svg viewBox="0 0 24 24" fill="none" stroke="url(#goldGradientSvg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M10.5 3.5a7 7 0 1 0 7 7"/><line x1="15.8" y1="15.8" x2="20.5" y2="20.5"/>
+<path d="M18.2 2.2l.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8.8-2.1z" fill="url(#goldGradientSvg)" stroke="none"/>
+</svg>
+</button>
+</div>`;
+fragment.appendChild(cardDiv);
+});
+feedContainer.innerHTML='';
+feedContainer.appendChild(fragment);
+}
+
+/* ===== CART BADGE ===== */
+function updateCartBadgeCount(){
+let cart=[];
+try{cart=JSON.parse(localStorage.getItem('rorraxy_cart')||'[]')||[];}catch(e){}
+const totalQty=cart.reduce((sum,item)=>sum+(parseInt(item.qty,10)||0),0);
+const badge=document.getElementById('floatingCartItemCountBadge');
+if(badge){badge.innerText=totalQty;totalQty>0?badge.classList.remove('empty-badge'):badge.classList.add('empty-badge');}
+}
+</script>
+</body>
+</html>
