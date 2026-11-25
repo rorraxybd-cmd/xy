@@ -45,28 +45,44 @@ header.app-header{position:fixed;top:0;left:0;width:100%;z-index:1000;background
 .feed-filter-bar .reset-all-btn{background:var(--gold-gradient);border:none;color:#000;padding:4px 10px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:.58rem;font-weight:800;flex-shrink:0;text-transform:uppercase}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
+/* Pinterest-style borderless feed with AI shimmer reveal */
 .feed-container{padding:8px 6px;column-count:2;column-gap:8px;width:100%;max-width:1400px;margin:0 auto}
 @media(min-width:768px){.feed-container{column-count:4;column-gap:12px;padding:12px}}
 .feed-status-box{column-span:all;width:100%;text-align:center;padding:55px 16px;color:var(--gold-solid)}
 
-.product-card{background:var(--card-wholesale);border-radius:12px;overflow:hidden;display:inline-block;width:100%;border:none;box-shadow:none;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;page-break-inside:avoid;transition:transform .16s ease}
+.product-card{background:var(--card-wholesale);border-radius:12px;overflow:hidden;display:inline-block;width:100%;border:none;box-shadow:none;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;page-break-inside:avoid;opacity:0;transform:translateY(14px) scale(.985);animation:aiCardReveal .52s cubic-bezier(.22,1,.36,1) forwards;transition:transform .18s ease}
 @media(min-width:768px){.product-card{margin-bottom:12px}}
 .product-card:active{transform:scale(.985)}
 
-.product-media-box{position:relative;width:100%;background:#050508;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.product-media-box img,.product-media-box video{width:100%;height:auto;display:block;object-fit:cover;background:#050508}
+@keyframes aiCardReveal{
+0%{opacity:0;transform:translateY(14px) scale(.985);filter:brightness(1.35)}
+60%{opacity:1;filter:brightness(1.12)}
+100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1)}
+}
+
+.product-media-box{position:relative;width:100%;min-height:175px;background:#07070c;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.product-media-box::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,rgba(212,175,55,.14) 45%,rgba(252,246,186,.22) 50%,rgba(212,175,55,.14) 55%,transparent 80%);transform:translateX(-100%);animation:aiShimmerSweep 1.6s cubic-bezier(.4,0,.2,1) infinite;pointer-events:none;z-index:2;transition:opacity .35s ease}
+.product-media-box.media-ready{min-height:0;background:#050508}
+.product-media-box.media-ready::after{opacity:0;animation:none}
+
+@keyframes aiShimmerSweep{
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
+}
+
+.product-media-box img,.product-media-box video{width:100%;height:auto;display:block;object-fit:cover;background:#050508;opacity:0;transition:opacity .45s ease,filter .45s ease;filter:blur(4px)}
+.product-media-box img.media-loaded,.product-media-box video.media-loaded{opacity:1;filter:blur(0)}
 
 .card-footer-actions{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#06060a;gap:8px}
 .product-price-tag{font-size:.82rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);white-space:nowrap}
-.card-right-icons{display:flex;align-items:center;gap:12px}
+.card-right-icons{display:flex;align-items:center}
 
-.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;padding:6px!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.12rem;line-height:1;transition:transform .15s ease}
-@media(min-width:768px){.card-action-icon-btn{font-size:1.18rem;padding:7px!important}}
+.card-action-icon-btn{background:transparent!important;border:none!important;box-shadow:none!important;outline:none!important;padding:6px 8px!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.15rem;line-height:1;transition:transform .15s ease}
+@media(min-width:768px){.card-action-icon-btn{font-size:1.22rem;padding:7px 9px!important}}
 .card-action-icon-btn:active{transform:scale(.88)}
 .card-action-icon-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid)}
-.related-search-svg{width:21px;height:21px;display:block}
-@media(min-width:768px){.related-search-svg{width:23px;height:23px}}
 
+/* Bottom Navigation: World, You, Home, Search, Cart */
 nav.bottom-nav{position:fixed!important;bottom:0!important;left:0!important;width:100%!important;background:var(--footer-wholesale)!important;display:flex!important;justify-content:space-around!important;align-items:center!important;padding:7px 4px 9px 4px!important;z-index:9999999!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(212,175,55,.15)!important;transform:translateZ(0)}
 .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;font-size:.54rem;font-weight:600;cursor:pointer;text-align:center;gap:3px;flex:1;text-transform:uppercase;background:none;border:none;outline:none}
 .nav-item i{font-size:1.2rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid)}
@@ -76,6 +92,7 @@ nav.bottom-nav{position:fixed!important;bottom:0!important;left:0!important;widt
 .cart-badge-circle.empty-badge{display:none!important}
 .cart-custom-svg{width:21px;height:21px;fill:url(#goldGradientSvg)}
 
+/* Clean Search Modal */
 .floating-search-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:2000000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .18s ease,visibility .18s ease;padding:16px}
 .floating-search-modal.active{opacity:1;visibility:visible}
 .floating-search-box{background:#09090f;border:none;box-shadow:none;border-radius:16px;padding:20px 18px;width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px;position:relative}
@@ -85,19 +102,7 @@ nav.bottom-nav{position:fixed!important;bottom:0!important;left:0!important;widt
 .clean-search-input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--text-white);font-size:.88rem;font-weight:500;font-family:var(--font-main);text-transform:uppercase}
 .clean-search-submit-btn{background:var(--gold-gradient);color:#000;border:none;border-radius:9px;padding:9px 14px;font-size:.74rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
 
-.related-popup-box{background:#07070c;border:none;box-shadow:none;border-radius:16px;padding:16px 12px;width:100%;max-width:1100px;max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px;position:relative}
-.related-popup-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px}
-.related-popup-title{font-size:.86rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);display:flex;align-items:center;gap:8px}
-.related-popup-close{background:transparent;border:none;color:var(--gold-solid);font-size:1.25rem;cursor:pointer;padding:4px 8px;line-height:1}
-.related-pinterest-grid{column-count:2;column-gap:8px;width:100%}
-@media(min-width:768px){.related-pinterest-grid{column-count:4;column-gap:12px}}
-.related-pin-card{background:#0b0b12;border:none;box-shadow:none;border-radius:12px;overflow:hidden;display:inline-block;width:100%;margin-bottom:8px;break-inside:avoid;cursor:pointer}
-@media(min-width:768px){.related-pin-card{margin-bottom:12px}}
-.related-pin-card img{width:100%;height:auto;display:block;object-fit:cover;background:#050508}
-.related-pin-footer{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;background:#06060a}
-.related-pin-price{font-size:.78rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid)}
-.related-empty-note{column-span:all;text-align:center;padding:28px 12px;color:var(--text-gray);font-size:.78rem;font-weight:600}
-
+/* Universal Share Modal */
 .universal-share-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
 .share-target-btn{background:#040407;border:none;border-radius:10px;padding:12px 6px;color:#ffffff;font-size:.66rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:transform .15s ease}
 .share-target-btn:hover{background:var(--gold-gradient);color:#000000}
@@ -166,17 +171,6 @@ nav.bottom-nav{position:fixed!important;bottom:0!important;left:0!important;widt
 </div>
 </div>
 
-<!-- Related Products Popup Modal -->
-<div class="floating-search-modal" id="relatedPopupModal" onclick="handleOutsideClick(event,'relatedPopupModal')">
-<div class="related-popup-box">
-<div class="related-popup-header">
-<div class="related-popup-title" id="relatedPopupTitle"><i class="fa-solid fa-magnifying-glass"></i> RELATED PRODUCTS</div>
-<button type="button" class="related-popup-close" onclick="closeAllOverlays()">×</button>
-</div>
-<div class="related-pinterest-grid" id="relatedPopupGrid"></div>
-</div>
-</div>
-
 <!-- Universal Share Modal -->
 <div class="floating-search-modal" id="universalShareModal" onclick="handleOutsideClick(event,'universalShareModal')">
 <div class="floating-search-box" style="max-width:390px">
@@ -231,42 +225,6 @@ function normalizeText(s){return String(s||'').toLowerCase().replace(/[^a-z0-9\u
 function escapeHtmlAttr(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escapeJsSingle(s){return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
 
-const PRODUCT_TYPE_GROUPS={
-watch:['watch','watches','wristwatch','timepiece','smartwatch','ঘড়ি','ঘড়ি'],
-glasses:['glasses','eyeglasses','eyewear','sunglasses','spectacles','goggles','frame','frames','চশমা','সানগ্লাস'],
-wallet:['wallet','wallets','cardholder','pouch','purse','ওয়লেট','ওয়ালেট','মানিব্যাগ'],
-bag:['bag','bags','handbag','handbags','backpack','tote','crossbody','clutch','ব্যাগ'],
-shoe:['shoe','shoes','sneaker','sneakers','sandal','sandals','boot','boots','slipper','slippers','heel','heels','জুতা'],
-bracelet:['bracelet','bracelets','bangle','bangles','wristband','beads','ব্রেসলেট'],
-earring:['earring','earrings','stud','studs','hoop','hoops','কানের দুল','দুল'],
-necklace:['necklace','necklaces','pendant','chain','locket','নেকলেস','হার'],
-ring:['ring','rings','আংটি'],
-toy:['toy','toys','rattle','teether','plush','doll','puzzle','খেলনা'],
-clock:['clock','clocks','wall clock','table clock'],
-lamp:['lamp','lamps','light','lights','lantern'],
-resin:['resin','epoxy','রেজিন'],
-wood:['wood','wooden','timber','mahogany','gamari','bamboo','কাঠ','মেহগনি','গামারি']
-};
-
-function detectProductTypes(product){
-if(!product)return[];
-if(Array.isArray(product.__productTypes))return product.__productTypes;
-const rawText=normalizeText([product.title,product.subtitle,product.category,product.subCategory,product.subcategory,product.tag].filter(Boolean).join(' '));
-const tokens=new Set(rawText.split(' ').filter(Boolean));
-const matchedTypes=[];
-for(const[typeKey,keywords]of Object.entries(PRODUCT_TYPE_GROUPS)){
-const hit=keywords.some(kw=>{
-const nkw=normalizeText(kw);
-if(!nkw)return false;
-if(nkw.includes(' '))return rawText.includes(nkw);
-return Array.from(tokens).some(tk=>tk===nkw||tk===nkw+'s'||tk===nkw+'es'||(nkw.length>=4&&tk.startsWith(nkw)));
-});
-if(hit)matchedTypes.push(typeKey);
-}
-product.__productTypes=matchedTypes;
-return matchedTypes;
-}
-
 const CATEGORY_KNOWLEDGE={};
 rorraxyCategoriesData.forEach(cat=>{cat.subCategories.forEach(sub=>{
 const words=Array.from(new Set(normalizeText([sub.name,sub.key,cat.title].join(' ')).split(' ').filter(w=>w.length>=3)));
@@ -300,14 +258,6 @@ return cachedAffiliateId;
 }
 
 function getUserPrefs(){try{return JSON.parse(localStorage.getItem(PREF_STORAGE_KEY)||'{}')||{};}catch(e){return{};}}
-function recordUserPreference(product){
-if(!product)return;
-try{
-const prefs=getUserPrefs();
-extractExpandedTags(product).forEach(t=>{if(t.length>2)prefs[t]=Math.min(25,(prefs[t]||0)+1);});
-localStorage.setItem(PREF_STORAGE_KEY,JSON.stringify(prefs));
-}catch(e){}
-}
 
 function extractExpandedTags(p){
 if(!p)return[];
@@ -334,15 +284,8 @@ for(const[key,info]of Object.entries(CATEGORY_KNOWLEDGE)){if(info.words.length&&
 return null;
 }
 
-function getSubCategoryValue(product){
-if(!product)return'';
-return normalizeText(product.subCategory||product.subcategory||product.category_key||product.cat_key||product.category||'');
-}
-
 function getProductBucketKey(p){
-const types=detectProductTypes(p);
-if(types.length>0)return types[0];
-return findCategoryKey(p)||getSubCategoryValue(p)||'general';
+return findCategoryKey(p)||normalizeText(p.subCategory||p.subcategory||p.category||p.title||'general')||'general';
 }
 
 function getTrendingNewScore(p){
@@ -387,95 +330,6 @@ leftovers.sort((a,b)=>rankItem(b)-rankItem(a));
 return [...diverseFirst,...leftovers];
 }
 
-function computeSimilarityScore(source,target){
-if(!source||!target)return 0;
-if(String(source.__id)===String(target.__id))return-1;
-
-const srcTypes=detectProductTypes(source);
-const tgtTypes=detectProductTypes(target);
-const srcSub=getSubCategoryValue(source);
-const tgtSub=getSubCategoryValue(target);
-
-/* Strict type check when product type is known */
-if(srcTypes.length>0){
-const sharesType=srcTypes.some(t=>tgtTypes.includes(t));
-if(!sharesType)return-1;
-}else if(tgtTypes.length>0){
-return-1;
-}
-
-/* Sub-category / category check */
-let sameSub=false;
-if(srcSub&&tgtSub&&(srcSub===tgtSub||srcSub.includes(tgtSub)||tgtSub.includes(srcSub))){
-sameSub=true;
-}else if(srcTypes.length===0&&srcSub&&tgtSub&&srcSub!==tgtSub){
-return-1;
-}
-
-let score=20+(sameSub?15:0);
-const srcTags=new Set(extractExpandedTags(source)),tgtTags=new Set(extractExpandedTags(target));
-srcTags.forEach(tag=>{if(tgtTags.has(tag))score+=5;});
-score+=Math.min(5,getTrendingNewScore(target)/5);
-return score;
-}
-
-function triggerRelatedFeedSearch(productId,event){
-if(event)event.stopPropagation();
-const source=__ALL_PRODUCTS.find(p=>String(p.__id)===String(productId));
-if(!source)return;
-recordUserPreference(source);
-
-const srcTypes=detectProductTypes(source);
-const srcSub=getSubCategoryValue(source);
-
-let listToShow=__ALL_PRODUCTS
-.map(item=>({item,score:computeSimilarityScore(source,item)}))
-.filter(x=>x.score>0)
-.sort((a,b)=>b.score-a.score)
-.map(x=>x.item);
-
-/* If neither type nor subCategory matched, filter strictly by matching subCategory or main noun */
-if(listToShow.length===0&&srcSub){
-listToShow=__ALL_PRODUCTS.filter(item=>{
-if(String(item.__id)===String(source.__id))return false;
-const tSub=getSubCategoryValue(item);
-return tSub&&(tSub===srcSub||tSub.includes(srcSub)||srcSub.includes(tSub));
-});
-}
-
-const modal=document.getElementById('relatedPopupModal');
-const titleEl=document.getElementById('relatedPopupTitle');
-const gridEl=document.getElementById('relatedPopupGrid');
-if(!modal||!gridEl)return;
-
-const labelText=srcTypes.length>0
-?srcTypes.join(' / ').toUpperCase()
-:(srcSub?srcSub.toUpperCase():(source.title||'PRODUCTS'));
-
-titleEl.innerHTML=`<i class="fa-solid fa-magnifying-glass"></i> RELATED: ${escapeHtmlAttr(labelText)}`;
-
-if(listToShow.length===0){
-gridEl.innerHTML=`<div class="related-empty-note">NO OTHER ${escapeHtmlAttr(labelText)} PRODUCTS FOUND.</div>`;
-}else{
-gridEl.innerHTML=listToShow.map(item=>{
-const id=String(item.__id||item.id||item.product_id||item.product_code||'');
-const title=item.title||'WHOLESALE ITEM';
-const price=item.price_bulk||item.price_min_whole||item.price||0;
-const img=resolveProductImage(item);
-return `<div class="related-pin-card" onclick="goToProduct('${escapeJsSingle(id)}')">
-<img src="${escapeHtmlAttr(img)}" alt="${escapeHtmlAttr(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMG_URL}'">
-<div class="related-pin-footer">
-<span class="related-pin-price">$${(parseFloat(price)||0).toFixed(2)}</span>
-<button type="button" class="card-action-icon-btn" title="Share" onclick="shareProduct('${escapeJsSingle(id)}',event)"><i class="fa-solid fa-share-nodes"></i></button>
-</div>
-</div>`;
-}).join('');
-}
-
-closeAllOverlays();
-modal.classList.add('active');
-}
-
 function goHomeFeed(){
 closeAllOverlays();
 clearFeedFilter();
@@ -484,13 +338,13 @@ window.scrollTo({top:0,behavior:'smooth'});
 
 function showFeedFilterBar(text){
 const bar=document.getElementById('feedFilterBar');if(!bar)return;
-bar.innerHTML=`<span><i class="fa-solid fa-wand-magic-sparkles"></i> ${escapeHtmlAttr(text)}</span><button type="button" class="reset-all-btn" onclick="clearFeedFilter()"><i class="fa-solid fa-rotate-left"></i> ALL ITEMS</button>`;
+bar.innerHTML=`<span><i class="fa-solid fa-magnifying-glass"></i> ${escapeHtmlAttr(text)}</span><button type="button" class="reset-all-btn" onclick="clearFeedFilter()"><i class="fa-solid fa-rotate-left"></i> ALL ITEMS</button>`;
 bar.classList.add('active');
 }
 function clearFeedFilter(){
 const bar=document.getElementById('feedFilterBar');if(bar)bar.classList.remove('active');
 __IS_FILTERED_VIEW=false;
-renderWholesaleCards(prioritizeHomepageFeed(__ALL_PRODUCTS),true);
+renderWholesaleCards(prioritizeHomepageFeed(__ALL_PRODUCTS));
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -587,7 +441,7 @@ clearTimeout(t.__tid);
 t.__tid=setTimeout(()=>{t.style.opacity='0';},1800);
 }
 
-function closeAllOverlays(){['searchModal','relatedPopupModal','universalShareModal','accountPageOverlay','cartPageOverlay'].forEach(id=>document.getElementById(id)?.classList.remove('active'));}
+function closeAllOverlays(){['searchModal','universalShareModal','accountPageOverlay','cartPageOverlay'].forEach(id=>document.getElementById(id)?.classList.remove('active'));}
 function toggleAccountPage(){
 const overlay=document.getElementById('accountPageOverlay');const iframe=document.getElementById('accountPageIframe');
 const isOpen=overlay.classList.contains('active');closeAllOverlays();
@@ -627,7 +481,7 @@ let localProducts=[],cachedFeed=[];
 try{localProducts=JSON.parse(localStorage.getItem('rorraxy_seller_products')||'[]')||[];cachedFeed=JSON.parse(localStorage.getItem(LOCAL_STORAGE_CACHE_KEY)||'[]')||[];}catch(e){}
 if(!searchFilter&&!__IS_FILTERED_VIEW&&cachedFeed.length>0){
 __ALL_PRODUCTS=cachedFeed;
-renderWholesaleCards(prioritizeHomepageFeed(cachedFeed),true);
+renderWholesaleCards(prioritizeHomepageFeed(cachedFeed));
 }else if(!__IS_FILTERED_VIEW){
 feedContainer.innerHTML=`<div class="feed-status-box"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><p style="margin-top:10px;font-size:.75rem;letter-spacing:1px;">${searchFilter?'SEARCHING...':'LOADING WHOLESALE PRODUCTS...'}</p></div>`;
 }
@@ -663,11 +517,11 @@ return{item,matchScore:ms};
 }).filter(x=>x.matchScore>0).sort((a,b)=>b.matchScore-a.matchScore).map(x=>x.item);
 __IS_FILTERED_VIEW=true;
 showFeedFilterBar(`${searchFilter.toUpperCase()} (${scoredMatches.length})`);
-renderWholesaleCards(scoredMatches,false);
+renderWholesaleCards(scoredMatches);
 return;
 }
 if(wholesaleProducts.length>0){
-renderWholesaleCards(prioritizeHomepageFeed(wholesaleProducts),true);
+renderWholesaleCards(prioritizeHomepageFeed(wholesaleProducts));
 }else{
 feedContainer.innerHTML=`<div class="feed-status-box" style="color:var(--text-gray);"><i class="fa-solid fa-boxes-stacked fa-2x" style="color:var(--gold-solid);margin-bottom:12px;"></i><p style="font-size:.8rem;font-weight:600;">NO WHOLESALE PRODUCTS FOUND.</p></div>`;
 }
@@ -697,7 +551,13 @@ if(typeof c==='string'&&c.trim().startsWith('http'))return c.trim();
 return'';
 }
 
-function renderWholesaleCards(wholesaleProducts,allowStagger=true){
+function markMediaReady(el){
+if(!el)return;
+el.classList.add('media-loaded');
+if(el.parentElement)el.parentElement.classList.add('media-ready');
+}
+
+function renderWholesaleCards(wholesaleProducts){
 const feedContainer=document.getElementById('productFeed');
 const fragment=document.createDocumentFragment();
 if(!Array.isArray(wholesaleProducts)||wholesaleProducts.length===0){
@@ -715,10 +575,13 @@ const safeTitleAttr=escapeHtmlAttr(pTitle);
 const safeIdJs=escapeJsSingle(productId);
 const cardDiv=document.createElement('div');
 cardDiv.className='product-card';
+cardDiv.style.animationDelay=Math.min(idx*0.035,0.65)+'s';
 cardDiv.onclick=()=>goToProduct(productId);
+
 const mediaTagHtml=resolvedVideoUrl
-?`<video src="${escapeHtmlAttr(resolvedVideoUrl)}" poster="${escapeHtmlAttr(resolvedImageUrl)}" autoplay muted loop playsinline preload="metadata"></video>`
-:`<img src="${escapeHtmlAttr(resolvedImageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMG_URL}'">`;
+?`<video src="${escapeHtmlAttr(resolvedVideoUrl)}" poster="${escapeHtmlAttr(resolvedImageUrl)}" autoplay muted loop playsinline preload="metadata" onloadeddata="markMediaReady(this)" onerror="markMediaReady(this)"></video>`
+:`<img src="${escapeHtmlAttr(resolvedImageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onload="markMediaReady(this)" onerror="this.src='${FALLBACK_IMG_URL}';markMediaReady(this);">`;
+
 cardDiv.innerHTML=`
 <div class="product-media-box">${mediaTagHtml}</div>
 <div class="card-footer-actions" onclick="event.stopPropagation()">
@@ -727,17 +590,17 @@ cardDiv.innerHTML=`
 <button type="button" class="card-action-icon-btn" title="Share product" onclick="shareProduct('${safeIdJs}',event)">
 <i class="fa-solid fa-share-nodes"></i>
 </button>
-<button type="button" class="card-action-icon-btn" title="Related products" onclick="triggerRelatedFeedSearch('${safeIdJs}',event)">
-<svg class="related-search-svg" viewBox="0 0 24 24" fill="none" stroke="url(#goldGradientSvg)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
-</svg>
-</button>
 </div>
 </div>`;
 fragment.appendChild(cardDiv);
 });
 feedContainer.innerHTML='';
 feedContainer.appendChild(fragment);
+
+/* Ensure cached images already complete also trigger smooth reveal */
+feedContainer.querySelectorAll('img,video').forEach(media=>{
+if(media.complete&&media.naturalWidth>0)markMediaReady(media);
+});
 }
 
 function updateCartBadgeCount(){
