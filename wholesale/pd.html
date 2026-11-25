@@ -70,10 +70,7 @@ body{padding-bottom:75px;}
 .main-product-share-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:4px;transition:transform 0.15s ease;}
 .main-product-share-btn:active{transform:scale(0.9);}
 .related-products-wrapper{margin-top:15px;width:100%;display:flex;flex-direction:column;gap:12px;border-top:1px solid rgba(212,175,55,0.15);padding-top:14px;}
-.related-header-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
 .related-section-title{font-size:0.85rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);letter-spacing:0.8px;}
-.reset-related-btn{background:none;border:1px solid rgba(212,175,55,0.4);color:var(--gold-solid);font-size:0.62rem;font-weight:700;padding:3px 9px;border-radius:6px;cursor:pointer;display:none;align-items:center;gap:4px;}
-.reset-related-btn:hover{background:var(--gold-gradient);color:#000;border-color:transparent;}
 .feed-container{padding:2px 0;column-count:2;column-gap:8px;width:100%;}
 @media (min-width: 768px){.feed-container{column-count:4;column-gap:12px;}}
 .product-card{background:var(--card-wholesale);border-radius:12px;overflow:hidden;display:inline-block;width:100%;border:1px solid rgba(212,175,55,0.12);position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;content-visibility:auto;}
@@ -169,10 +166,7 @@ body{padding-bottom:75px;}
 </div>
 </div>
 <div class="related-products-wrapper" id="relatedProductsSectionWrapper">
-<div class="related-header-bar">
 <h3 class="related-section-title" id="relatedSectionHeading"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS</h3>
-<button type="button" class="reset-related-btn" id="resetRelatedSearchBtn" onclick="resetRelatedProductsView()"><i class="fa-solid fa-rotate-left"></i> ALL RELATED</button>
-</div>
 <div class="feed-container" id="relatedProductsFeedContainer">
 <p style="grid-column:1/-1;text-align:center;color:var(--gold-solid);padding:15px;"><i class="fa-solid fa-circle-notch fa-spin"></i> LOADING RELATED BULK ITEMS...</p>
 </div>
@@ -378,14 +372,12 @@ else if(item.image_url){imageUrl=typeof item.image_url==='string'&&item.image_ur
 const safeTitleAttr=escapeHtmlAttr(title);
 const safeTitleJs=escapeJsSingle(title);
 const safeIdJs=escapeJsSingle(prodId);
-return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="Find All Related Products"><i class="fa-solid fa-magnifying-glass"></i></button></div></div></div>`;
+return `<div class="product-card" onclick="navigateToProduct('${safeIdJs}')"><div class="product-media-box"><img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${fallbackImg}'"></div><div class="card-footer-actions" onclick="event.stopPropagation()"><span class="product-price-tag">${bulkPrice}</span><div class="card-right-icons"><button type="button" class="card-action-icon-btn" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')" title="Share"><i class="fa-solid fa-share-nodes"></i></button><button type="button" class="card-action-icon-btn" onclick="triggerSimilarProductSearch(event, '${safeIdJs}')" title="AI Category Search"><i class="fa-solid fa-wand-magic-sparkles"></i></button></div></div></div>`;
 }
 function renderRelatedProducts(allProducts,currentProd){
 const container=document.getElementById('relatedProductsFeedContainer');
 const headingEl=document.getElementById('relatedSectionHeading');
-const resetBtn=document.getElementById('resetRelatedSearchBtn');
 if(headingEl)headingEl.innerHTML=`<i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS`;
-if(resetBtn)resetBtn.style.display='none';
 if(!allProducts||allProducts.length<=1){container.innerHTML=`<p style="grid-column:1/-1;text-align:center;color:var(--text-gray);font-size:0.78rem;">NO RELATED WHOLESALE PRODUCTS FOUND.</p>`;return;}
 const currentId=currentProd?String(currentProd.id||currentProd.product_id||currentProd.product_code):'';
 const currentCat=currentProd?(currentProd.category||currentProd.cat||'').toLowerCase().trim():'';
@@ -402,55 +394,54 @@ return false;
 const relatedList=(sameCategoryList.length>0?sameCategoryList:filteredList).slice(0,8);
 container.innerHTML=relatedList.map(item=>buildProductCardHtml(item)).join('');
 }
+function detectProductType(prod){
+const cat=(prod.category||prod.cat||'').toLowerCase().trim();
+const title=(prod.title||'').toLowerCase();
+const text=`${cat} ${title}`;
+const types=[
+{key:'watch',words:['watch','watches','clock','timepiece']},
+{key:'bracelet',words:['bracelet','bracelets','bangle','bangles','cuff','wristband']},
+{key:'necklace',words:['necklace','necklaces','pendant','chain','choker']},
+{key:'earring',words:['earring','earrings','stud','hoop']},
+{key:'ring',words:['ring','rings']},
+{key:'toy',words:['toy','toys','puzzle','puzzles','block','blocks','educational','baby']},
+{key:'shoe',words:['shoe','shoes','sneaker','sneakers','sandal','sandals','boot','boots']},
+{key:'bag',words:['bag','bags','backpack','purse','tote']},
+{key:'lamp',words:['lamp','lamps','light','lights','lantern']},
+{key:'wood',words:['wooden','wood','gamari','teak','mahogany','decor','art','wall']}
+];
+for(const t of types){
+if(t.words.some(w=>text.includes(w)))return t.key;
+}
+return cat||null;
+}
 function triggerSimilarProductSearch(event,targetProductId){
 if(event)event.stopPropagation();
 const container=document.getElementById('relatedProductsFeedContainer');
-const headingEl=document.getElementById('relatedSectionHeading');
-const resetBtn=document.getElementById('resetRelatedSearchBtn');
 const wrapperEl=document.getElementById('relatedProductsSectionWrapper');
 const targetProd=allCachedProductsList.find(p=>String(p.id||p.product_id||p.product_code)===String(targetProductId));
-if(!targetProd){return;}
+if(!targetProd)return;
 const targetId=String(targetProd.id||targetProd.product_id||targetProd.product_code);
 const targetCat=(targetProd.category||targetProd.cat||'').toLowerCase().trim();
-const targetTitle=(targetProd.title||'').toLowerCase();
-const stopWords=new Set(['with','from','that','this','bulk','wholesale','item','product','rorraxy','custom','size','color','high','grade','for','and','the']);
-const keywords=Array.from(new Set(
-(targetTitle+' '+targetCat).replace(/[^a-z0-9\s]/gi,' ').split(/\s+/).filter(w=>w.length>2&&!stopWords.has(w))
-));
-const scoredMatches=allCachedProductsList
-.filter(p=>String(p.id||p.product_id||p.product_code)!==targetId)
-.map(item=>{
-let score=0;
+const targetType=detectProductType(targetProd);
+const candidates=allCachedProductsList.filter(p=>String(p.id||p.product_id||p.product_code)!==targetId);
+let matched=candidates.filter(item=>{
 const itemCat=(item.category||item.cat||'').toLowerCase().trim();
-const itemTitle=(item.title||'').toLowerCase();
-const itemDesc=(item.description||item.desc||'').toLowerCase();
-if(targetCat&&itemCat&&itemCat===targetCat)score+=10;
-keywords.forEach(kw=>{
-if(itemTitle.includes(kw))score+=4;
-else if(itemCat.includes(kw))score+=3;
-else if(itemDesc.includes(kw))score+=1;
+const itemType=detectProductType(item);
+if(targetCat&&itemCat&&itemCat===targetCat)return true;
+if(targetType&&itemType&&itemType===targetType)return true;
+return false;
 });
-return {item,score};
-})
-.filter(entry=>entry.score>0)
-.sort((a,b)=>b.score-a.score)
-.map(entry=>entry.item);
-
-const finalResults=scoredMatches.length>0?scoredMatches:allCachedProductsList.filter(p=>String(p.id||p.product_id||p.product_code)!==targetId);
-if(headingEl){
-const shortName=(targetProd.title||'SELECTED ITEM').substring(0,26);
-headingEl.innerHTML=`<i class="fa-solid fa-magnifying-glass"></i> SIMILAR TO: ${escapeHtmlAttr(shortName)} (${finalResults.length})`;
+if(matched.length===0){
+const words=(targetProd.title||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>3&&!['wooden','wood','pair','pcs','bulk','wholesale','item'].includes(w));
+matched=candidates.filter(item=>{
+const t=(item.title||'').toLowerCase();
+return words.some(w=>t.includes(w));
+});
 }
-if(resetBtn)resetBtn.style.display='inline-flex';
-if(finalResults.length===0){
-container.innerHTML=`<p style="grid-column:1/-1;text-align:center;color:var(--text-gray);font-size:0.78rem;">NO SIMILAR PRODUCTS FOUND.</p>`;
-}else{
-container.innerHTML=finalResults.map(item=>buildProductCardHtml(item)).join('');
-}
+if(matched.length===0){matched=candidates.slice(0,8);}
+container.innerHTML=matched.map(item=>buildProductCardHtml(item)).join('');
 if(wrapperEl){wrapperEl.scrollIntoView({behavior:'smooth',block:'start'});}
-}
-function resetRelatedProductsView(){
-renderRelatedProducts(allCachedProductsList,currentActiveProduct);
 }
 function escapeHtmlAttr(str){return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escapeJsSingle(str){return String(str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
@@ -653,17 +644,16 @@ async function triggerAutoShare(event,productId,productTitle){
 if(event)event.stopPropagation();
 const btnEl=event&&event.currentTarget?event.currentTarget:null;
 const shareUrl=generateAffiliateUrl(productId);
-const shareText=`${productTitle} - rorraxy Wholesale`;
 if(typeof navigator.share==='function'){
 try{
-await navigator.share({title:productTitle,text:shareText,url:shareUrl});
+await navigator.share({url:shareUrl});
 showShareFeedback(btnEl);
 return;
 }catch(err){if(err&&err.name==='AbortError')return;}
 }
 await copyTextToClipboard(shareUrl);
 showShareFeedback(btnEl);
-openUniversalShareModal(productTitle,shareText,shareUrl);
+openUniversalShareModal(productTitle,shareUrl,shareUrl);
 }
 function openUniversalShareModal(title,text,url){
 const modal=document.getElementById('universalShareModal');
@@ -673,7 +663,7 @@ const copyBtn=document.getElementById('shareModalCopyBtn');
 if(copyBtn)copyBtn.innerText='COPY';
 if(urlInput)urlInput.value=url;
 const encUrl=encodeURIComponent(url);
-const encText=encodeURIComponent(`${text}\n${url}`);
+const encText=encodeURIComponent(url);
 const encTitle=encodeURIComponent(title);
 const targets=[
 {name:'WHATSAPP',icon:'fa-brands fa-whatsapp',href:`https://wa.me/?text=${encText}`},
