@@ -9,25 +9,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#030305">
 <style>
 :root {
---bg-retail: #000000;
---card-retail: #07070b;
+--bg-retail: #030305;
+--card-retail: linear-gradient(145deg, rgba(16, 16, 26, 0.92) 0%, rgba(7, 7, 13, 0.96) 100%);
 --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+--gold-shimmer: linear-gradient(110deg, #bf953f 15%, #fcf6ba 35%, #ffffff 50%, #fcf6ba 65%, #aa771c 85%);
+--pink-gradient: linear-gradient(135deg, #ff2a85 0%, #ff6aa8 50%, #d91668 100%);
 --gold-solid: #d4af37;
 --gold-light: #fcf6ba;
 --pink-love: #ff2a85;
 --text-white: #ffffff;
---text-gray: #a0a0ab;
+--text-gray: #a8a8b8;
 --font-main: 'Poppins', sans-serif;
+}
+
+/* ================= গ্লোবাল সফট ও বর্ডারহীন লাক্সারি রিসেট ================= */
+*, *:before, *:after {
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+border: none !important;
 }
 
 html, body {
 width: 100vw;
 max-width: 100vw;
 overflow-x: hidden !important;
-background: var(--bg-retail) !important;
+background: radial-gradient(circle at 50% 10%, #10101c 0%, #030305 65%) !important;
 color: var(--text-white);
 font-family: var(--font-main);
 min-height: 100vh;
@@ -35,19 +44,13 @@ font-size: 14px;
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 scroll-behavior: smooth;
-box-sizing: border-box;
 margin: 0;
 padding: 0;
 }
 
 body {
-padding: 0 0 70px 0;
+padding: 0 0 85px 0;
 text-transform: uppercase;
-}
-
-*, *:before, *:after {
-box-sizing: inherit;
--webkit-tap-highlight-color: transparent;
 }
 
 .main-container {
@@ -58,31 +61,74 @@ overflow-x: hidden;
 position: relative;
 }
 
+/* ================= প্রিমিয়াম শিমার (Shimmer) অ্যানিমেশন ================= */
+@keyframes textShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes surfaceShimmer {
+  0% { transform: translateX(-130%) skewX(-22deg); }
+  100% { transform: translateX(230%) skewX(-22deg); }
+}
+
 .gold-gradient-text {
-background: var(--gold-gradient);
+background: var(--gold-shimmer);
+background-size: 200% auto;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: textShimmer 3.8s linear infinite;
+}
+
+.pink-gradient-text {
+background: var(--pink-gradient);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 }
+
+/* লোগো ও আইকনের জন্য পরিষ্কার, স্পষ্ট গোল্ডেন লুক */
 .gold-gradient-icon {
-background: var(--gold-gradient);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+color: #f3d27a !important;
+-webkit-text-fill-color: #f3d27a !important;
+filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.35));
 display: inline-block;
 }
 
+/* পিঙ্ক কালার শুধুমাত্র বিশেষ হাইলাইট বা অ্যাকশন বোতামের জন্য সীমাবদ্ধ */
+.pink-glow-icon {
+color: var(--pink-love) !important;
+-webkit-text-fill-color: var(--pink-love) !important;
+filter: drop-shadow(0 0 8px rgba(255, 42, 133, 0.45));
+display: inline-block;
+}
+
+.visual-center-icon {
+position: relative;
+z-index: 2;
+font-size: 1.55rem;
+}
+
+.md-logo-icon {
+position: relative;
+z-index: 2;
+font-size: 1.45rem;
+}
+
+/* ================= সার্চ মডাল (সফট গ্লাসমরফিজম) ================= */
 .search-modal-overlay {
 position: fixed;
 top: 0; left: 0; width: 100vw; height: 100vh;
-background: rgba(0, 0, 0, 0.95);
-backdrop-filter: blur(10px);
+background: rgba(3, 3, 5, 0.88);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
 display: flex;
 align-items: flex-start;
 justify-content: center;
-padding-top: 80px;
+padding-top: 90px;
 z-index: 3000;
 opacity: 0;
 pointer-events: none;
-transition: opacity 0.2s ease;
+transition: opacity 0.25s ease;
 }
 .search-modal-overlay.active {
 opacity: 1;
@@ -92,22 +138,21 @@ pointer-events: auto;
 width: 90%;
 max-width: 500px;
 background: var(--card-retail);
-border: 1px solid rgba(212, 175, 55, 0.3);
-border-radius: 16px;
-padding: 20px;
+border-radius: 22px;
+padding: 24px;
+box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 42, 133, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.06);
 }
 .search-input-group {
 display: flex;
 align-items: center;
-gap: 10px;
-background: rgba(255,255,255,0.05);
-border: 1px solid rgba(212, 175, 55, 0.2);
-border-radius: 12px;
-padding: 10px 14px;
+gap: 12px;
+background: rgba(3, 3, 6, 0.85);
+border-radius: 14px;
+padding: 13px 16px;
+box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.85);
 }
 .search-input-group input {
 background: transparent;
-border: none;
 outline: none;
 color: #fff;
 font-size: 0.85rem;
@@ -116,28 +161,32 @@ font-family: var(--font-main);
 text-transform: uppercase;
 }
 
+/* ================= হিরো সেকশন ================= */
 .hero {
 text-align: center;
-padding: 20px 10px 10px 10px;
+padding: 28px 14px 16px 14px;
 display: flex;
 flex-direction: column;
 align-items: center;
 width: 100%;
 }
 .hero-logo-img {
-width: 75px;
-height: 75px;
+width: 82px;
+height: 82px;
 object-fit: contain;
-animation: floatLogo 3.5s ease-in-out infinite;
+animation: floatLogo 3.8s ease-in-out infinite;
+filter: drop-shadow(0 0 18px rgba(212, 175, 55, 0.28));
 }
 .hero-title-text {
-font-size: clamp(0.9rem, 3.5vw, 1.35rem);
+font-size: clamp(0.95rem, 3.5vw, 1.45rem);
 font-weight: 900;
-letter-spacing: 0.8px;
-background: var(--gold-gradient);
+letter-spacing: 1.2px;
+background: var(--gold-shimmer);
+background-size: 200% auto;
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
-margin-top: 10px;
+animation: textShimmer 3.5s linear infinite;
+margin-top: 12px;
 text-align: center;
 white-space: nowrap;
 width: 100%;
@@ -145,89 +194,131 @@ overflow: hidden;
 text-overflow: ellipsis;
 }
 @keyframes floatLogo {
-0%, 100% { transform: translateY(0px) scale(1); }
-50% { transform: translateY(-4px) scale(1.02); }
+0%, 100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.25)); }
+50% { transform: translateY(-5px) scale(1.03); filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.35)); }
 }
 
-.ecosystem-hub { width: 100%; padding: 10px; max-width: 1100px; margin: 0 auto; }
-.hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; align-items: stretch; }
+/* ================= ইকোসিস্টেম হাব কার্ড (সফট ও শিমার) ================= */
+.ecosystem-hub { width: 100%; padding: 8px 14px; max-width: 1100px; margin: 0 auto; }
+.hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; width: 100%; align-items: stretch; }
 .hub-card {
 background: var(--card-retail);
-border-radius: 16px;
-padding: 20px 10px;
+border-radius: 22px;
+padding: 24px 14px;
 text-align: center;
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: space-between;
 position: relative;
-border: 1px solid rgba(212, 175, 55, 0.12);
 overflow: hidden;
 text-decoration: none;
 color: inherit;
-transition: transform 0.2s ease, border-color 0.2s ease;
+box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
-.hub-card:hover { transform: translateY(-3px); border-color: rgba(212, 175, 55, 0.35); }
+.hub-card::after {
+content: '';
+position: absolute;
+top: 0; left: 0; width: 45%; height: 100%;
+background: linear-gradient(90deg, transparent, rgba(252, 246, 186, 0.05), transparent);
+transform: translateX(-130%) skewX(-22deg);
+animation: surfaceShimmer 5.5s infinite ease-in-out;
+pointer-events: none;
+}
+.hub-card:hover { 
+transform: translateY(-4px); 
+box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85), 0 0 24px rgba(212, 175, 55, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.09); 
+}
 .hub-card h3 {
-font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; min-height: 32px; display: flex; align-items: center; justify-content: center; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; width: 100%; margin: 0;
+font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; min-height: 32px; display: flex; align-items: center; justify-content: center; background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 4s linear infinite; text-align: center; width: 100%; margin: 0;
 }
-.sub-slogan-text { font-size: 0.65rem; font-weight: 700; color: var(--text-gray); letter-spacing: 1px; margin: 4px 0 6px 0; text-align: center; }
-.visual-container { position: relative; width: 75px; height: 75px; margin: 10px 0; display: flex; align-items: center; justify-content: center; }
-.solution-visual { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 60%, rgba(212, 175, 55, 0.5)); animation: spin 2s linear infinite; }
-.fashion-video-visual { position: absolute; width: 100%; height: 100%; border: 2.5px dashed rgba(212, 175, 55, 0.7); border-radius: 50%; animation: fashionSpin 3s linear infinite; }
-.retail-visual { position: absolute; width: 100%; height: 100%; border: 2.5px solid rgba(212, 175, 55, 0.5); border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%; animation: morphShape 1.8s ease-in-out infinite; }
+.sub-slogan-text { font-size: 0.66rem; font-weight: 700; color: var(--gold-solid); letter-spacing: 1.2px; margin: 4px 0 8px 0; text-align: center; opacity: 0.9; }
+.visual-container { position: relative; width: 78px; height: 78px; margin: 10px 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(212, 175, 55, 0.04); box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6); }
+.solution-visual { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 55%, rgba(252, 246, 186, 0.35), rgba(212, 175, 55, 0.55)); animation: spin 2.6s linear infinite; }
+.fashion-video-visual { position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 0 16px rgba(212, 175, 55, 0.3), 0 0 12px rgba(212, 175, 55, 0.2); animation: fashionSpin 3.4s linear infinite; }
+.retail-visual { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(252, 246, 186, 0.14) 0%, rgba(212, 175, 55, 0.12) 70%, transparent 100%); border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%; animation: morphShape 2.4s ease-in-out infinite; }
 .creator-visual-wrapper { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-.creator-visual-box { position: absolute; width: 55px; height: 55px; border: 2px solid rgba(212, 175, 55, 0.6); border-radius: 12px; animation: creatorPulseBox 1.6s ease-in-out infinite; }
-.creator-visual-ring { position: absolute; width: 70px; height: 70px; border-top: 3px solid var(--gold-solid); border-bottom: 3px solid rgba(212, 175, 55, 0.3); border-left: 3px solid transparent; border-right: 3px solid transparent; border-radius: 50%; animation: creatorRingRotate 1.2s ease-in-out infinite alternate; }
+.creator-visual-box { position: absolute; width: 54px; height: 54px; background: rgba(212, 175, 55, 0.12); border-radius: 14px; box-shadow: 0 0 15px rgba(212, 175, 55, 0.22); animation: creatorPulseBox 2.2s ease-in-out infinite; }
+.creator-visual-ring { position: absolute; width: 72px; height: 72px; border-radius: 50%; box-shadow: 0 -2px 10px rgba(252, 246, 186, 0.4), 0 2px 10px rgba(212, 175, 55, 0.45); animation: creatorRingRotate 1.8s ease-in-out infinite alternate; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes fashionSpin { 0% { transform: rotate(0deg) scale(0.96); } 50% { transform: rotate(180deg) scale(1.04); } 100% { transform: rotate(360deg) scale(0.96); } }
 @keyframes morphShape { 0%, 100% { border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%; transform: rotate(0deg); } 50% { border-radius: 65% 35% 35% 65% / 65% 65% 35% 35%; transform: rotate(180deg); } }
-@keyframes creatorPulseBox { 0%, 100% { transform: rotate(45deg) scale(0.85); opacity: 0.6; } 50% { transform: rotate(225deg) scale(1.08); opacity: 1; } }
-@keyframes creatorRingRotate { 0% { transform: rotate(0deg) scale(0.9); } 100% { transform: rotate(180deg) scale(1.12); } }
+@keyframes creatorPulseBox { 0%, 100% { transform: rotate(45deg) scale(0.88); opacity: 0.65; } 50% { transform: rotate(225deg) scale(1.06); opacity: 1; } }
+@keyframes creatorRingRotate { 0% { transform: rotate(0deg) scale(0.92); } 100% { transform: rotate(180deg) scale(1.1); } }
 
 .btn {
-display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--gold-gradient); color: #000000; font-weight: 700; font-size: 0.68rem; padding: 7px 16px; border-radius: 20px; margin-top: 4px; letter-spacing: 0.5px; pointer-events: none;
+display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--gold-gradient); color: #050508; font-weight: 800; font-size: 0.7rem; padding: 8px 18px; border-radius: 24px; margin-top: 6px; letter-spacing: 0.6px; pointer-events: none; box-shadow: 0 6px 18px rgba(212, 175, 55, 0.25); position: relative; overflow: hidden;
+}
+.btn::after {
+content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+transform: translateX(-130%) skewX(-25deg);
+animation: surfaceShimmer 3s infinite ease-in-out;
 }
 
-.logo-row { text-align: center; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; background: var(--card-retail); margin-bottom: 15px; }
-.brand-logo-text { font-size: 1.15rem; font-weight: 800; letter-spacing: 1.5px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: lowercase !important; text-align: center; }
-.animated-divider-line { width: 100%; max-width: 280px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-solid), transparent); animation: lightPulse 2s ease-in-out infinite; margin: 2px auto 6px auto; }
-@keyframes lightPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
-.trending-marquee-bar { overflow: hidden; white-space: nowrap; font-size: 0.68rem; font-weight: 600; width: 100%; }
-.marquee-container { display: flex; width: max-content; animation: wheelInfiniteScroll 15s linear infinite; }
+/* ================= মার্কি ও লোগো রো ================= */
+.logo-row { text-align: center; padding: 20px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; background: var(--card-retail); margin: 16px 0; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6); }
+.brand-logo-text { font-size: 1.2rem; font-weight: 800; letter-spacing: 1.8px; background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 3.5s linear infinite; text-transform: lowercase !important; text-align: center; }
+.animated-divider-line { width: 100%; max-width: 300px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--gold-solid), var(--gold-light), var(--gold-solid), transparent); animation: lightPulse 2.5s ease-in-out infinite; margin: 2px auto 6px auto; }
+@keyframes lightPulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.95; } }
+.trending-marquee-bar { overflow: hidden; white-space: nowrap; font-size: 0.7rem; font-weight: 600; width: 100%; }
+.marquee-container { display: flex; width: max-content; animation: wheelInfiniteScroll 16s linear infinite; }
 .marquee-group { display: flex; align-items: center; gap: 25px; padding-right: 25px; flex-shrink: 0; }
 @keyframes wheelInfiniteScroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
-.managing-director-card { background: var(--card-retail); padding: 20px 14px; margin-bottom: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
-.md-badge-subtitle { font-size: 0.72rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.md-logo-box { position: relative; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.05); border-radius: 50%; margin: 0 auto 6px auto; }
-.md-luxury-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border-top: 2px solid var(--gold-solid); border-right: 2px solid transparent; border-bottom: 2px solid rgba(212, 175, 55, 0.1); border-left: 2px solid transparent; animation: luxurySpin 2.5s linear infinite; }
+/* ================= ম্যানেজিং ডিরেক্টর কার্ড ================= */
+.managing-director-card { background: var(--card-retail); padding: 26px 16px; margin-bottom: 18px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7); position: relative; overflow: hidden; }
+.md-badge-subtitle { font-size: 0.74rem; font-weight: 800; color: var(--gold-light); letter-spacing: 1.2px; }
+.md-logo-box { position: relative; width: 62px; height: 62px; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.07); border-radius: 50%; margin: 0 auto 6px auto; box-shadow: 0 0 20px rgba(212, 175, 55, 0.18), inset 0 2px 8px rgba(0, 0, 0, 0.5); }
+.md-luxury-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 -2px 8px var(--gold-light), 0 2px 8px var(--gold-solid); animation: luxurySpin 3s linear infinite; }
 @keyframes luxurySpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.md-title { font-size: 1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-.md-btn-link { width: 100%; max-width: 440px; padding: 11px 18px; background: var(--gold-gradient); border-radius: 12px; color: #000000; text-decoration: none; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 0.82rem; }
+.md-title { font-size: 1.08rem; font-weight: 800; background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 3.5s linear infinite; margin: 0; }
+.md-btn-link { width: 100%; max-width: 440px; padding: 13px 20px; background: var(--gold-gradient); border-radius: 14px; color: #050508; text-decoration: none; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 0.84rem; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25); position: relative; overflow: hidden; transition: transform 0.2s ease; }
+.md-btn-link::after { content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent); transform: translateX(-130%) skewX(-25deg); animation: surfaceShimmer 3.2s infinite ease-in-out; }
+.md-btn-link:hover { transform: translateY(-2px); }
 
+/* ================= লিগ্যাল পলিসি সেন্টার (প্রফেশনাল সফট কার্ড + শিমার) ================= */
 .policy-center-section {
   background: var(--card-retail);
-  padding: 18px 14px;
-  margin-bottom: 15px;
-  width: 100%;
-  border-top: 1px solid rgba(212, 175, 55, 0.15);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  padding: 28px 18px;
+  margin: 0 auto 20px auto;
+  max-width: 960px;
+  border-radius: 24px;
+  width: calc(100% - 28px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.72), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+.policy-center-section::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 42%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(252, 246, 186, 0.04), transparent);
+  transform: translateX(-130%) skewX(-22deg);
+  animation: surfaceShimmer 6s infinite ease-in-out;
+  pointer-events: none;
 }
 .policy-center-title {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 900;
-  background: var(--gold-gradient);
+  background: var(--gold-shimmer);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: textShimmer 3.8s linear infinite;
   text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: 1px;
+  margin-bottom: 18px;
+  letter-spacing: 1.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 .policy-links-grid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
   max-width: 820px;
   margin: 0 auto;
@@ -236,35 +327,52 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  border-radius: 10px;
-  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 16px;
+  padding: 14px 18px;
   text-decoration: none;
-  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all 0.25s ease;
 }
 .policy-link-item:hover {
   background: rgba(212, 175, 55, 0.08);
-  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55), 0 0 18px rgba(212, 175, 55, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   transform: translateY(-2px);
 }
 .policy-link-name {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
   color: var(--text-white);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
-.policy-view-btn {
-  font-size: 0.65rem;
-  font-weight: 800;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.policy-icon-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.1);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  font-size: 0.85rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.policy-view-btn {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.policy-link-item:hover .policy-view-btn {
+  background: var(--gold-gradient);
+  color: #050508;
 }
 .policy-view-btn i {
   animation: viewArrowBounce 1.2s infinite ease-in-out;
@@ -274,33 +382,35 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   50% { transform: translateX(4px); }
 }
 
-.about-section { background: #000000; padding: 24px 14px; margin-bottom: 10px; width: 100%; }
-.ceo-signature-box { text-align: center; background: #07070b; border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 14px; padding: 18px 14px; margin: 0 auto 20px auto; max-width: 820px; }
-.ceo-signature-box h3 { font-size: 0.88rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 4px; }
+/* ================= অ্যাবাউট ও সিইও সিগনেচার ================= */
+.about-section { background: transparent; padding: 24px 14px; margin-bottom: 10px; width: 100%; }
+.ceo-signature-box { text-align: center; background: var(--card-retail); border-radius: 22px; padding: 24px 18px; margin: 0 auto 24px auto; max-width: 820px; box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; }
+.ceo-signature-box::after { content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%; background: linear-gradient(90deg, transparent, rgba(252, 246, 186, 0.04), transparent); transform: translateX(-130%) skewX(-22deg); animation: surfaceShimmer 6s infinite ease-in-out; pointer-events: none; }
+.ceo-signature-box h3 { font-size: 0.95rem; background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 3.5s linear infinite; margin-top: 6px; }
 .ceo-signature-link { display: inline-block; text-decoration: none; }
-.ceo-signature-link:hover .md-logo-box { transform: scale(1.05); transition: transform 0.2s ease; }
+.ceo-signature-link:hover .md-logo-box { transform: scale(1.06); transition: transform 0.25s ease; }
 
 /* ==========================================================================
-   NEW LUXURY PORTAL SECTION (SELLER & AFFILIATE)
+   LUXURY PORTAL SECTION (SELLER & AFFILIATE) - পরিষ্কার লোগো ও গোল্ডেন লাক্সারি
    ========================================================================== */
 .premium-portal-section {
   width: 100%;
   max-width: 1080px;
-  margin: 0 auto 24px auto;
-  padding: 10px 14px;
+  margin: 0 auto 28px auto;
+  padding: 12px 14px;
 }
 .portal-header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 .portal-header h2 {
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-size: clamp(1.25rem, 3.2vw, 1.85rem);
   font-weight: 900;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
 }
 .portal-header p {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: var(--text-gray);
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -309,110 +419,132 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
 .portal-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 18px;
 }
 .portal-card {
   position: relative;
-  background: #07070b;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 18px;
-  padding: 30px 20px;
+  background: var(--card-retail);
+  border-radius: 24px;
+  padding: 34px 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   text-decoration: none;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.06);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1;
 }
 .portal-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 60%);
+  background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.14), rgba(252, 246, 186, 0.05) 45%, transparent 75%);
   z-index: -1;
-  transition: opacity 0.3s ease;
-  opacity: 0.5;
+  transition: opacity 0.35s ease;
+  opacity: 0.65;
+}
+.portal-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 45%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  transform: translateX(-130%) skewX(-22deg);
+  animation: surfaceShimmer 5s infinite ease-in-out;
+  pointer-events: none;
 }
 .portal-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(212, 175, 55, 0.6);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.9), 0 0 28px rgba(212, 175, 55, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 .portal-card:hover::before {
   opacity: 1;
 }
 .portal-icon-wrap {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 76px;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 .portal-icon-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px dashed rgba(212, 175, 55, 0.4);
-  animation: spinSlow 8s linear infinite;
+  box-shadow: 0 -2px 12px rgba(252, 246, 186, 0.45), 0 2px 12px rgba(212, 175, 55, 0.45);
+  animation: spinSlow 7s linear infinite;
 }
 .portal-icon {
-  font-size: 2rem;
-  color: var(--gold-solid);
-  background: rgba(212, 175, 55, 0.08);
-  width: 56px;
-  height: 56px;
+  font-size: 1.95rem;
+  color: #f6dc8b;
+  -webkit-text-fill-color: #f6dc8b;
+  background: rgba(212, 175, 55, 0.1);
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  transition: transform 0.3s ease;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.55), 0 0 16px rgba(212, 175, 55, 0.2);
+  transition: transform 0.35s ease, background 0.35s ease;
 }
 .portal-card:hover .portal-icon {
   transform: scale(1.1);
-  background: rgba(212, 175, 55, 0.15);
+  background: rgba(212, 175, 55, 0.18);
 }
 .portal-card h3 {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  background: var(--gold-gradient);
+  background: var(--gold-shimmer);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: textShimmer 3.5s linear infinite;
   margin-bottom: 10px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 }
 .portal-card p {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   color: var(--text-gray);
-  line-height: 1.5;
-  margin-bottom: 22px;
+  line-height: 1.6;
+  margin-bottom: 24px;
   text-transform: none;
-  max-width: 260px;
+  max-width: 280px;
 }
 .portal-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: var(--gold-gradient);
-  color: #000;
-  font-size: 0.75rem;
+  color: #050508;
+  font-size: 0.76rem;
   font-weight: 800;
-  padding: 10px 22px;
+  padding: 11px 24px;
   border-radius: 30px;
   text-transform: uppercase;
+  letter-spacing: 0.6px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.28);
+  position: relative;
+  overflow: hidden;
+}
+.portal-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 45%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-130%) skewX(-25deg);
+  animation: surfaceShimmer 3s infinite ease-in-out;
 }
 .portal-card:hover .portal-btn {
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-  transform: scale(1.03);
+  box-shadow: 0 8px 26px rgba(212, 175, 55, 0.45);
+  transform: scale(1.04);
 }
 .portal-btn i {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   transition: transform 0.3s ease;
 }
 .portal-card:hover .portal-btn i {
@@ -426,42 +558,44 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
 @media (max-width: 768px) {
   .portal-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 16px;
   }
 }
 
+/* ================= ইকোসিস্টেম ডিরেক্টরি কার্ড (বর্ডারহীন সফট) ================= */
 .ecosystem-directory-wrapper {
   width: 100%;
   max-width: 1080px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 24px auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 @media (max-width: 768px) {
   .ecosystem-directory-wrapper {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
 }
 
 .ecosystem-category-card {
-  background: #07070b;
-  border: 1px solid rgba(212, 175, 55, 0.16);
-  border-radius: 14px;
-  padding: 16px 14px;
+  background: var(--card-retail);
+  border-radius: 20px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   text-align: center;
-  gap: 10px;
-  transition: border-color 0.2s ease;
+  gap: 12px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .ecosystem-category-card:hover {
-  border-color: rgba(212, 175, 55, 0.42);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.8), 0 0 22px rgba(212, 175, 55, 0.1);
 }
 
 .ecosystem-category-card.full-span {
@@ -473,13 +607,14 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 800;
-  background: var(--gold-gradient);
+  background: var(--gold-shimmer);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 1.1px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  animation: textShimmer 4s linear infinite;
+  letter-spacing: 1.2px;
   padding-bottom: 6px;
   width: 100%;
 }
@@ -489,38 +624,39 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 }
 
 .domain-chip-link {
   display: inline-flex;
   align-items: center;
-  padding: 5px 10px;
-  border-radius: 8px;
-  background: rgba(212, 175, 55, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.16);
-  font-size: 0.69rem;
+  padding: 7px 13px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.72rem;
   font-weight: 600;
   color: #fcf6ba;
   text-decoration: none;
   text-transform: lowercase !important;
-  letter-spacing: 0.3px;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  letter-spacing: 0.4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
 }
 
 .domain-chip-link:hover {
-  background: rgba(212, 175, 55, 0.14);
-  border-color: var(--pink-love);
-  transform: translateY(-1px);
+  background: rgba(212, 175, 55, 0.16);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.22);
+  transform: translateY(-2px);
 }
 
 .ecosystem-email-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.68rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: var(--text-gray);
   text-decoration: none;
   text-transform: lowercase !important;
@@ -530,63 +666,59 @@ display: inline-flex; align-items: center; justify-content: center; gap: 6px; ba
 }
 
 .ecosystem-email-badge:hover {
-  color: #fcf6ba;
+  color: var(--gold-light);
 }
 
+/* ================= সোশ্যাল আইকন ================= */
 .social-icons-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 14px;
-  margin-top: 16px;
+  margin-top: 18px;
   width: 100%;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding: 6px 0;
 }
 .social-icon-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #07070b;
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  background: var(--card-retail);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   text-decoration: none;
   flex-shrink: 0;
 }
 .social-icon-link:hover {
-  transform: scale(1.12);
-  border-color: var(--pink-love);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.35);
 }
 .social-icon-link svg {
-  width: 18px;
-  height: 18px;
-  fill: url(#goldGradientDef);
+  width: 19px;
+  height: 19px;
+  fill: #f6dc8b;
 }
 
-.core-arch-banner { text-align: center; padding: 14px 8px; margin: 8px 0 0 0; background: #000000; width: 100%; border-top: 1px solid rgba(212, 175, 55, 0.14); }
-.core-arch-title { font-size: 0.76rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: lowercase !important; letter-spacing: 0.6px; }
+.core-arch-banner { text-align: center; padding: 18px 10px; margin: 10px 0 0 0; background: transparent; width: 100%; }
+.core-arch-title { font-size: 0.8rem; font-weight: 800; background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 4s linear infinite; text-transform: lowercase !important; letter-spacing: 0.8px; }
 
+/* ================= ম্যাপ ও নেটওয়ার্ক শোকেস সেকশন ================= */
 .network-showcase-band {
   width: 100%;
-  background: #000000;
+  background: transparent;
   padding: 46px 16px;
-  border-top: 1px solid rgba(212, 175, 55, 0.14);
   position: relative;
   overflow: hidden;
   contain: layout style;
 }
 
-.network-showcase-band.bd-band {
-  border-top: 1px solid rgba(255, 42, 133, 0.16);
-}
-
 .network-showcase-band.channels-band {
-  border-top: 1px solid rgba(212, 175, 55, 0.18);
-  padding: 50px 14px 62px 14px;
+  padding: 50px 14px 66px 14px;
 }
 
 .network-inner-grid {
@@ -639,52 +771,45 @@ svg.geo-map-svg {
 .net-route-gold {
   fill: none;
   stroke: var(--gold-solid);
-  stroke-width: 1.25;
+  stroke-width: 1.3;
   stroke-linecap: round;
   stroke-dasharray: 4 5;
-  opacity: 0.62;
+  opacity: 0.65;
   animation: routeDashGold 22s linear infinite;
 }
 
 .net-route-pink {
   fill: none;
   stroke: var(--pink-love);
-  stroke-width: 1.4;
+  stroke-width: 1.5;
   stroke-linecap: round;
   stroke-dasharray: 4 6;
-  opacity: 0.78;
+  opacity: 0.82;
   animation: routeDashPink 18s linear infinite;
 }
 
-@keyframes routeDashGold {
-  to { stroke-dashoffset: -240; }
-}
-
-@keyframes routeDashPink {
-  to { stroke-dashoffset: 240; }
-}
+@keyframes routeDashGold { to { stroke-dashoffset: -240; } }
+@keyframes routeDashPink { to { stroke-dashoffset: 240; } }
 
 .node-ripple {
   fill: none;
   stroke: var(--pink-love);
-  stroke-width: 1.1;
+  stroke-width: 1.2;
   transform-box: fill-box;
   transform-origin: center;
   animation: nodeRippleAnim 3s ease-out infinite;
 }
 
-.node-ripple.gold-ring {
-  stroke: var(--gold-solid);
-}
+.node-ripple.gold-ring { stroke: var(--gold-solid); }
 
 @keyframes nodeRippleAnim {
-  0% { transform: scale(0.7); opacity: 0.75; }
+  0% { transform: scale(0.7); opacity: 0.8; }
   100% { transform: scale(2.6); opacity: 0; }
 }
 
 .node-core {
   fill: var(--pink-love);
-  stroke: #000000;
+  stroke: #030305;
   stroke-width: 1.4;
 }
 
@@ -695,16 +820,16 @@ svg.geo-map-svg {
 }
 
 .map-badge-rect {
-  fill: #07070b;
-  stroke: rgba(212, 175, 55, 0.42);
-  stroke-width: 1;
-  rx: 5;
-  ry: 5;
+  fill: #0b0b14;
+  stroke: rgba(212, 175, 55, 0.28);
+  stroke-width: 0.8;
+  rx: 6;
+  ry: 6;
 }
 
 .map-badge-rect.hub-rect {
-  stroke: var(--pink-love);
-  stroke-width: 1.2;
+  stroke: rgba(255, 42, 133, 0.6);
+  stroke-width: 1;
 }
 
 .map-badge-txt {
@@ -717,9 +842,7 @@ svg.geo-map-svg {
   dominant-baseline: central;
 }
 
-.map-badge-txt.gold-label {
-  fill: #fcf6ba;
-}
+.map-badge-txt.gold-label { fill: #fcf6ba; }
 
 .geo-content-col {
   display: flex;
@@ -729,43 +852,42 @@ svg.geo-map-svg {
 }
 
 @media (max-width: 900px) {
-  .geo-content-col {
-    align-items: center;
-  }
+  .geo-content-col { align-items: center; }
 }
 
 .geo-tag-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
-  border: 1px solid rgba(212, 175, 55, 0.32);
+  padding: 7px 16px;
   border-radius: 999px;
-  background: #07070c;
-  font-size: 0.68rem;
+  background: var(--card-retail);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 1.4px;
-  color: var(--gold-solid);
+  color: var(--gold-light);
 }
 
 .geo-pulse-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--pink-love);
-  animation: pulseDotLive 1.8s infinite alternate;
+  box-shadow: 0 0 10px var(--pink-love);
+  animation: pulseDotLive 1.6s infinite alternate;
 }
 
 @keyframes pulseDotLive {
-  from { opacity: 0.45; }
-  to { opacity: 1; }
+  from { opacity: 0.5; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.15); }
 }
 
 .geo-main-heading {
   font-size: clamp(1.6rem, 3.2vw, 2.5rem);
   font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: 0.4px;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
   color: var(--text-white);
   margin: 0;
 }
@@ -774,7 +896,7 @@ svg.geo-map-svg {
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--text-gray);
-  line-height: 1.72;
+  line-height: 1.75;
   letter-spacing: 0.6px;
   max-width: 490px;
   margin: 0;
@@ -788,100 +910,101 @@ svg.geo-map-svg {
 }
 
 @media (max-width: 900px) {
-  .geo-pillars-list {
-    justify-content: center;
-  }
+  .geo-pillars-list { justify-content: center; }
 }
 
 .geo-pillar-chip {
-  background: #08080e;
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  border-radius: 8px;
-  padding: 6px 11px;
-  font-size: 0.64rem;
+  background: rgba(255, 42, 133, 0.08);
+  border-radius: 10px;
+  padding: 7px 13px;
+  font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.8px;
   color: #fcf6ba;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .geo-metrics-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
   width: 100%;
   max-width: 490px;
   margin-top: 2px;
 }
 
 .geo-metric-card {
-  background: #07070c;
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  border-radius: 12px;
-  padding: 13px 8px;
+  background: var(--card-retail);
+  border-radius: 16px;
+  padding: 15px 10px;
   text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .geo-metric-val {
-  font-size: 1.12rem;
+  font-size: 1.18rem;
   font-weight: 800;
-  background: var(--gold-gradient);
+  background: var(--gold-shimmer);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: textShimmer 3.5s linear infinite;
 }
 
 .geo-metric-lbl {
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: var(--text-gray);
   letter-spacing: 0.9px;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 .geo-action-btn {
-  margin-top: 6px;
+  margin-top: 8px;
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 24px;
-  border-radius: 12px;
-  border: 1px solid rgba(212, 175, 55, 0.42);
-  background: #0a0a10;
+  padding: 15px 26px;
+  border-radius: 16px;
+  background: var(--card-retail);
   color: var(--text-white);
   font-family: var(--font-main);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.76rem;
+  font-weight: 800;
   letter-spacing: 1.3px;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75), 0 0 20px rgba(212, 175, 55, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.07);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .geo-action-btn:hover {
-  transform: translateY(-2px);
-  border-color: var(--pink-love);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.85), 0 0 28px rgba(212, 175, 55, 0.28);
 }
 
 .geo-btn-arrow {
-  color: var(--pink-love);
-  font-size: 0.92rem;
+  color: var(--gold-light);
+  font-size: 0.96rem;
 }
 
+/* ================= কানেক্টেড চ্যানেলস সেকশন ================= */
 .channels-header {
   text-align: center;
   max-width: 760px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 22px auto;
 }
 
 .channels-main-title {
   font-size: clamp(1.35rem, 3.2vw, 2.2rem);
   font-weight: 800;
-  line-height: 1.22;
+  line-height: 1.24;
   letter-spacing: 0.8px;
-  margin: 8px 0 6px 0;
+  margin: 10px 0 8px 0;
 }
 
 .channels-sub-desc {
-  font-size: clamp(0.72rem, 1.4vw, 0.86rem);
+  font-size: clamp(0.75rem, 1.4vw, 0.88rem);
   color: var(--text-gray);
   font-weight: 400;
   text-transform: none;
@@ -896,9 +1019,7 @@ svg.geo-map-svg {
 }
 
 @media (max-width: 768px) {
-  .channels-canvas-box {
-    aspect-ratio: 1140 / 690;
-  }
+  .channels-canvas-box { aspect-ratio: 1140 / 690; }
 }
 
 svg.channels-network-svg {
@@ -910,7 +1031,7 @@ svg.channels-network-svg {
 
 .spoke-track {
   fill: none;
-  stroke: rgba(212, 175, 55, 0.22);
+  stroke: rgba(212, 175, 55, 0.2);
   stroke-width: 1.25;
   stroke-linecap: round;
 }
@@ -921,32 +1042,27 @@ svg.channels-network-svg {
   stroke-width: 1.45;
   stroke-linecap: round;
   stroke-dasharray: 5 7;
-  opacity: 0.75;
+  opacity: 0.78;
   animation: dashMoveGold 22s linear infinite;
 }
 
 .spoke-dash-pink {
   fill: none;
   stroke: var(--pink-love);
-  stroke-width: 1.45;
+  stroke-width: 1.5;
   stroke-linecap: round;
   stroke-dasharray: 4 8;
-  opacity: 0.78;
+  opacity: 0.82;
   animation: dashMovePink 18s linear infinite;
 }
 
-@keyframes dashMoveGold {
-  to { stroke-dashoffset: -240; }
-}
-
-@keyframes dashMovePink {
-  to { stroke-dashoffset: 240; }
-}
+@keyframes dashMoveGold { to { stroke-dashoffset: -240; } }
+@keyframes dashMovePink { to { stroke-dashoffset: 240; } }
 
 .center-ring-pulse {
   fill: none;
   stroke: var(--pink-love);
-  stroke-width: 1.2;
+  stroke-width: 1.3;
   transform-box: fill-box;
   transform-origin: center;
   animation: hubRingExpand 3.4s ease-out infinite;
@@ -958,21 +1074,21 @@ svg.channels-network-svg {
 }
 
 @keyframes hubRingExpand {
-  0% { transform: scale(0.9); opacity: 0.65; }
-  100% { transform: scale(1.55); opacity: 0; }
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 
 .logo-node-title {
-  fill: #e8e8f0;
+  fill: #f0f0f8;
   font-family: 'Poppins', sans-serif;
   font-size: 12.5px;
   font-weight: 600;
   text-anchor: middle;
-  letter-spacing: 0.25px;
+  letter-spacing: 0.3px;
 }
 
 .logo-node-sub {
-  fill: #8c8c9c;
+  fill: #9494a6;
   font-family: 'Poppins', sans-serif;
   font-size: 9.5px;
   font-weight: 500;
@@ -989,26 +1105,36 @@ svg.channels-network-svg {
   text-anchor: middle;
 }
 
+/* ================= ফিক্সড বটম নেভিগেশন (গ্লাসমরফিজম + পিঙ্ক অ্যাক্টিভ স্টেট) ================= */
 .bottom-nav-bar {
-position: fixed; bottom: 0; left: 0; width: 100%; max-width: 100vw; background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 2000; box-sizing: border-box;
+position: fixed; bottom: 0; left: 0; width: 100%; max-width: 100vw; background: rgba(6, 6, 11, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; align-items: center; padding: 12px 4px calc(12px + env(safe-area-inset-bottom, 0px)) 4px; z-index: 2000; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.85);
 }
 .bottom-nav-item {
-display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-gray); font-size: 0.62rem; font-weight: 600; flex: 1; text-align: center;
+display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-gray); font-size: 0.62rem; font-weight: 700; flex: 1; text-align: center; transition: transform 0.2s ease;
 }
-.bottom-nav-item i { font-size: 1.15rem; margin-bottom: 2px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.bottom-nav-item span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; width: 100%; }
+.bottom-nav-item i { font-size: 1.2rem; margin-bottom: 3px; background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 4s linear infinite; }
+.bottom-nav-item span { background: var(--gold-shimmer); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 4s linear infinite; width: 100%; }
 
-.index-section-content { display: none; animation: fadeIn 0.25s ease-in-out; }
+.bottom-nav-item.active i, .bottom-nav-item.active span,
+.bottom-nav-item:hover i, .bottom-nav-item:hover span {
+background: var(--pink-gradient) !important;
+-webkit-background-clip: text !important;
+-webkit-text-fill-color: transparent !important;
+animation: none;
+}
+
+.index-section-content { display: none; animation: fadeIn 0.3s ease-in-out; }
 .index-section-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+/* ================= শর্টস ও ভিডিও ফিড ================= */
 .video-feed-wrapper {
 width: 100%;
-height: calc(100vh - 70px);
+height: calc(100vh - 72px);
 display: flex;
 align-items: center;
 justify-content: center;
-background: #000;
+background: #030305;
 position: relative;
 overflow: hidden;
 }
@@ -1016,7 +1142,7 @@ overflow: hidden;
 .video-display-area {
 width: 100%;
 height: 100%;
-background: #000;
+background: #030305;
 overflow: hidden;
 position: relative;
 transition: all 0.25s ease;
@@ -1026,26 +1152,10 @@ justify-content: center;
 touch-action: pan-y;
 }
 
-.video-display-area.shorts-mode {
-max-width: 420px;
-height: 100%;
-margin: 0 auto;
-}
-
-.video-display-area.long-mode {
-max-width: 100% !important;
-width: 100vw !important;
-height: 100% !important;
-}
-
-.video-display-area video {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-.video-display-area.long-mode video {
-object-fit: contain !important;
-}
+.video-display-area.shorts-mode { max-width: 420px; height: 100%; margin: 0 auto; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
+.video-display-area.long-mode { max-width: 100% !important; width: 100vw !important; height: 100% !important; }
+.video-display-area video { width: 100%; height: 100%; object-fit: cover; }
+.video-display-area.long-mode video { object-fit: contain !important; }
 
 .video-overlay-actions {
 position: absolute;
@@ -1059,34 +1169,39 @@ z-index: 100;
 }
 
 .video-action-icon-btn {
-background: transparent;
-border: none;
+background: rgba(10, 10, 18, 0.55);
+backdrop-filter: blur(8px);
+width: 44px;
+height: 44px;
+border-radius: 50%;
 outline: none;
-font-size: 1.55rem;
+font-size: 1.35rem;
 cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
-filter: drop-shadow(0 3px 6px rgba(0,0,0,0.9));
-transition: transform 0.2s ease;
+box-shadow: 0 6px 18px rgba(0,0,0,0.75);
+transition: transform 0.2s ease, background 0.2s ease;
 padding: 0;
 }
 
-.video-action-icon-btn:hover { transform: scale(1.2); }
+.video-action-icon-btn:hover { transform: scale(1.15); background: rgba(255, 42, 133, 0.2); }
 
 .video-action-icon-btn.liked i {
 background: none !important;
 -webkit-background-clip: unset !important;
--webkit-text-fill-color: #ff2d55 !important;
-color: #ff2d55 !important;
+-webkit-text-fill-color: var(--pink-love) !important;
+color: var(--pink-love) !important;
+filter: drop-shadow(0 0 10px rgba(255, 42, 133, 0.8));
 }
 
+/* ================= পলিসি মডাল (সফট ও বর্ডারহীন) ================= */
 .policy-modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(3, 3, 5, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1094,7 +1209,7 @@ color: #ff2d55 !important;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
-  padding: 15px;
+  padding: 16px;
 }
 .policy-modal-overlay.active {
   opacity: 1;
@@ -1104,38 +1219,35 @@ color: #ff2d55 !important;
   width: 100%;
   max-width: 900px;
   height: 88vh;
-  background: #000000;
-  border: 2px solid transparent;
-  background-image: linear-gradient(#000000, #000000), var(--gold-gradient);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  border-radius: 20px;
+  background: #08080e;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(212, 175, 55, 0.12);
 }
 .policy-floating-close-btn {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(11, 11, 16, 0.9);
-  border: 1px solid rgba(212, 175, 55, 0.5);
+  top: 16px;
+  right: 16px;
+  background: rgba(18, 18, 28, 0.92);
   color: var(--text-white);
   font-size: 1rem;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 5000;
-  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+  transition: all 0.25s ease;
 }
 .policy-floating-close-btn:hover {
-  background: var(--gold-gradient);
-  color: #000000;
+  background: var(--pink-gradient);
+  color: #ffffff;
   transform: scale(1.1);
 }
 .policy-modal-body {
@@ -1143,104 +1255,105 @@ color: #ff2d55 !important;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #000000;
+  background: #08080e;
 }
 .policy-modal-body iframe {
   width: 100%;
   height: 100%;
-  border: none;
-  background: #000000;
+  background: #08080e;
 }
 
-/* ==== SHARE MODAL ==== */
+/* ================= শেয়ার মডাল (সফট, পিঙ্ক ও শিমার) ================= */
 .share-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(3, 3, 5, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 99999;
     align-items: center;
     justify-content: center;
-    padding: 15px;
+    padding: 16px;
 }
 .share-modal-overlay.active { display: flex; }
 .share-modal-box {
-    background: #0f0f18;
-    border-radius: 16px;
+    background: var(--card-retail);
+    border-radius: 22px;
     width: 100%;
-    max-width: 400px;
-    padding: 20px;
+    max-width: 410px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.9);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    gap: 16px;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.95), 0 0 25px rgba(255, 42, 133, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.06);
 }
 .share-modal-title {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     font-weight: 800;
-    background: var(--gold-gradient);
+    background: var(--gold-shimmer);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: textShimmer 3.5s linear infinite;
     text-align: center;
     text-transform: uppercase;
 }
 .universal-share-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 10px;
 }
 .share-target-btn {
-    background: #06060a;
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    border-radius: 10px;
-    padding: 10px 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
+    padding: 12px 6px;
     color: #ffffff;
-    font-size: 0.62rem;
+    font-size: 0.64rem;
     font-weight: 700;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.25s ease;
 }
 .share-target-btn:hover {
-    background: var(--gold-gradient);
-    color: #000000;
-    border-color: transparent;
+    background: var(--pink-gradient);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 42, 133, 0.35);
 }
-.share-target-btn i { font-size: 1.1rem; }
+.share-target-btn i { font-size: 1.15rem; }
 .share-link-copy-row {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     margin-top: 4px;
 }
 .share-link-box {
     flex: 1;
     min-width: 0;
-    background: #050508;
-    border: 1px solid rgba(212,175,55,0.3);
-    border-radius: 8px;
-    padding: 8px 10px;
-    color: var(--gold-solid);
-    font-size: 0.65rem;
+    background: rgba(3, 3, 6, 0.85);
+    border-radius: 12px;
+    padding: 11px 12px;
+    color: var(--gold-light);
+    font-size: 0.7rem;
     outline: none;
     text-transform: none;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.85);
 }
 .copy-btn {
     background: var(--gold-gradient);
-    color: #000;
-    border: none;
-    padding: 0 14px;
-    border-radius: 8px;
+    color: #050508;
+    padding: 0 16px;
+    border-radius: 12px;
     font-weight: 800;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
 }
 </style>
 </head>
@@ -1264,8 +1377,8 @@ color: #ff2d55 !important;
 <i class="fa-solid fa-magnifying-glass gold-gradient-icon"></i>
 <input type="text" placeholder="Search business problems or ecosystem..." id="ecosystemSearchInput">
 </div>
-<div style="text-align: right; margin-top: 10px;">
-<button onclick="toggleSearchModal()" style="background: transparent; border: none; color: var(--text-gray); font-size: 0.7rem; cursor: pointer; font-weight: 700;">CLOSE [X]</button>
+<div style="text-align: right; margin-top: 12px;">
+<button onclick="toggleSearchModal()" style="background: rgba(212,175,55,0.14); color: var(--gold-light); padding: 6px 14px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: 800;">CLOSE [X]</button>
 </div>
 </div>
 </div>
@@ -1340,14 +1453,14 @@ color: #ff2d55 !important;
 <div class="trending-marquee-bar">
 <div class="marquee-container">
 <div class="marquee-group">
-<span class="gold-gradient-text"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Enterprise Solutions</span><span style="color:var(--gold-solid); opacity:0.5;">|</span>
-<span style="color:#fff;">All-In-One Global Ecosystem</span><span style="color:var(--gold-solid); opacity:0.5;">|</span>
-<span class="gold-gradient-text"><i class="fa-solid fa-crown gold-gradient-icon"></i> Global E-Commerce & Services</span><span style="color:var(--gold-solid); opacity:0.5;">|</span>
+<span class="gold-gradient-text"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Enterprise Solutions</span><span style="color:var(--gold-solid); opacity:0.6;">•</span>
+<span style="color:#fff;">All-In-One Global Ecosystem</span><span style="color:var(--gold-solid); opacity:0.6;">•</span>
+<span class="gold-gradient-text"><i class="fa-solid fa-crown gold-gradient-icon"></i> Global E-Commerce & Services</span><span style="color:var(--gold-solid); opacity:0.6;">•</span>
 </div>
 <div class="marquee-group" aria-hidden="true">
-<span class="gold-gradient-text"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Enterprise Solutions</span><span style="color:var(--gold-solid); opacity:0.5;">|</span>
-<span style="color:#fff;">All-In-One Global Ecosystem</span><span style="color:var(--gold-solid); opacity:0.5;">|</span>
-<span class="gold-gradient-text"><i class="fa-solid fa-crown gold-gradient-icon"></i> Global E-Commerce & Services</span><span style="color:var(--gold-solid); opacity:0.5;">|</span>
+<span class="gold-gradient-text"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Enterprise Solutions</span><span style="color:var(--gold-solid); opacity:0.6;">•</span>
+<span style="color:#fff;">All-In-One Global Ecosystem</span><span style="color:var(--gold-solid); opacity:0.6;">•</span>
+<span class="gold-gradient-text"><i class="fa-solid fa-crown gold-gradient-icon"></i> Global E-Commerce & Services</span><span style="color:var(--gold-solid); opacity:0.6;">•</span>
 </div>
 </div>
 </div>
@@ -1357,23 +1470,38 @@ color: #ff2d55 !important;
 <div class="policy-center-title"><i class="fa-solid fa-shield-halved gold-gradient-icon"></i> LEGAL & POLICY CENTER</div>
 <div class="policy-links-grid">
   <a href="#" onclick="openPolicyModal('retail.html'); return false;" class="policy-link-item">
-    <span class="policy-link-name"><i class="fa-solid fa-cart-shopping gold-gradient-icon"></i> Retail Customer Policy</span>
+    <span class="policy-link-name">
+      <span class="policy-icon-badge"><i class="fa-solid fa-cart-shopping gold-gradient-icon"></i></span>
+      <span>Retail Customer Policy</span>
+    </span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
   <a href="#" onclick="openPolicyModal('wholesale.html'); return false;" class="policy-link-item">
-    <span class="policy-link-name"><i class="fa-solid fa-box-archive gold-gradient-icon"></i> Wholesale & B2B Terms</span>
+    <span class="policy-link-name">
+      <span class="policy-icon-badge"><i class="fa-solid fa-box-archive gold-gradient-icon"></i></span>
+      <span>Wholesale & B2B Terms</span>
+    </span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
   <a href="#" onclick="openPolicyModal('seller.html'); return false;" class="policy-link-item">
-    <span class="policy-link-name"><i class="fa-solid fa-file-pen gold-gradient-icon"></i> Seller Merchant Terms</span>
+    <span class="policy-link-name">
+      <span class="policy-icon-badge"><i class="fa-solid fa-file-pen gold-gradient-icon"></i></span>
+      <span>Seller Merchant Terms</span>
+    </span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
   <a href="#" onclick="openPolicyModal('solutions.html'); return false;" class="policy-link-item">
-    <span class="policy-link-name"><i class="fa-solid fa-bolt gold-gradient-icon"></i> Business Solutions T&C</span>
+    <span class="policy-link-name">
+      <span class="policy-icon-badge"><i class="fa-solid fa-bolt gold-gradient-icon"></i></span>
+      <span>Business Solutions T&C</span>
+    </span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
   <a href="#" onclick="openPolicyModal('payment.html'); return false;" class="policy-link-item">
-    <span class="policy-link-name"><i class="fa-solid fa-credit-card gold-gradient-icon"></i> Payment, Security & Refund Policy</span>
+    <span class="policy-link-name">
+      <span class="policy-icon-badge"><i class="fa-solid fa-credit-card gold-gradient-icon"></i></span>
+      <span>Payment, Security & Refund Policy</span>
+    </span>
     <span class="policy-view-btn">View <i class="fa-solid fa-arrow-right-long"></i></span>
   </a>
 </div>
@@ -1383,8 +1511,8 @@ color: #ff2d55 !important;
 <div class="md-badge-subtitle">B2B & B2C • 200 COUNTRIES</div>
 <div class="md-logo-box"><div class="md-luxury-ring"></div><i class="fa-solid fa-user-tie md-logo-icon gold-gradient-icon"></i></div>
 <h2 class="md-title">MANAGING DIRECTOR</h2>
-<div style="font-size: 0.72rem; font-weight: 600; color: var(--text-gray); text-transform: lowercase;"><a href="mailto:director@rorraxy.com" class="gold-gradient-text" style="text-decoration:none;">director@rorraxy.com</a></div>
-<a href="/bs/managing.html" target="_self" class="md-btn-link"><span><i class="fa-solid fa-user-check"></i> JOIN</span><i class="fa-solid fa-arrow-right-long" style="color:#000000;"></i></a>
+<div style="font-size: 0.75rem; font-weight: 600; color: var(--text-gray); text-transform: lowercase;"><a href="mailto:director@rorraxy.com" class="gold-gradient-text" style="text-decoration:none;">director@rorraxy.com</a></div>
+<a href="/bs/managing.html" target="_self" class="md-btn-link"><span><i class="fa-solid fa-user-check"></i> JOIN</span><i class="fa-solid fa-arrow-right-long" style="color:#050508;"></i></a>
 </section>
 
 <section class="about-section">
@@ -1392,15 +1520,15 @@ color: #ff2d55 !important;
   <a href="https://www.linkedin.com/in/mrmasudar/" target="_blank" class="ceo-signature-link" title="Founder & CEO LinkedIn Profile">
     <div class="md-logo-box">
       <div class="md-luxury-ring"></div>
-      <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: url(#goldGradientDef); position: relative; z-index: 2;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #f3d27a; position: relative; z-index: 2;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
     </div>
     <h3 style="margin-top: 6px;">Founder & CEO: Mr Masudar</h3>
   </a>
-<p style="color: var(--text-gray); font-size: 0.7rem; line-height: 1.4; margin: 4px 0 0 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
+<p style="color: var(--text-gray); font-size: 0.74rem; line-height: 1.5; margin: 6px 0 0 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
 </div>
 
 <!-- ============================================== -->
-<!-- NEW LUXURY PORTAL SECTION (SELLER & AFFILIATE) -->
+<!-- LUXURY PORTAL SECTION (SELLER & AFFILIATE)     -->
 <!-- ============================================== -->
 <section class="premium-portal-section">
   <div class="portal-header">
@@ -1688,24 +1816,24 @@ color: #ff2d55 !important;
 <!-- Share Modal -->
 <div id="worldShareModal" class="share-modal-overlay" onclick="if(event.target===this) closeWorldShareModal()">
     <div class="share-modal-box">
-        <div class="share-modal-title"><i class="fa-solid fa-share-nodes"></i> SHARE BUSINESS LINK</div>
+        <div class="share-modal-title"><i class="fa-solid fa-share-nodes gold-gradient-icon"></i> SHARE BUSINESS LINK</div>
         <div id="worldShareTargetGrid" class="universal-share-grid"></div>
         <div class="share-link-copy-row">
             <input type="text" id="worldShareUrlInput" class="share-link-box" readonly>
             <button type="button" id="worldShareCopyBtn" onclick="copyWorldShareLink()" class="copy-btn">COPY</button>
         </div>
-        <button type="button" onclick="closeWorldShareModal()" style="background:#181824; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:800; font-size:0.75rem; cursor:pointer;">CLOSE</button>
+        <button type="button" onclick="closeWorldShareModal()" style="background:rgba(255,255,255,0.06); color:#fff; padding:12px; border-radius:12px; font-weight:800; font-size:0.75rem; cursor:pointer;">CLOSE</button>
     </div>
 </div>
 
 </div>
 
 <nav class="bottom-nav-bar">
-<a href="#" onclick="switchSection('world'); return false;" class="bottom-nav-item"><i class="fa-solid fa-globe"></i><span>World</span></a>
+<a href="#" onclick="switchSection('world'); return false;" class="bottom-nav-item active" id="nav-world"><i class="fa-solid fa-globe"></i><span>World</span></a>
 <a href="/wholesale/index.html" target="_self" class="bottom-nav-item"><i class="fa-solid fa-boxes-stacked"></i><span>Wholesale</span></a>
 <a href="/bs/index.html" target="_self" class="bottom-nav-item"><i class="fa-solid fa-building-shield"></i><span>Business Solutions</span></a>
 <a href="https://rorraxy.com/" target="_self" class="bottom-nav-item"><i class="fa-solid fa-bag-shopping"></i><span>Retail</span></a>
-<a href="#" onclick="switchSection('videos'); loadShortsFeed(); return false;" class="bottom-nav-item"><i class="fa-solid fa-clapperboard"></i><span>Shorts</span></a>
+<a href="#" onclick="switchSection('videos'); loadShortsFeed(); return false;" class="bottom-nav-item" id="nav-videos"><i class="fa-solid fa-clapperboard"></i><span>Shorts</span></a>
 </nav>
 
 <script src="/ecosystem-core.js"></script>
@@ -1718,10 +1846,17 @@ function switchSection(sectionId) {
   document.querySelectorAll('.index-section-content').forEach(el => {
     el.classList.remove('active');
   });
+  document.querySelectorAll('.bottom-nav-item').forEach(el => {
+    el.classList.remove('active');
+  });
   const target = document.getElementById('section-' + sectionId);
+  const navTarget = document.getElementById('nav-' + sectionId);
   if (target) {
     target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  if (navTarget) {
+    navTarget.classList.add('active');
   }
 }
 
@@ -1736,7 +1871,7 @@ function openPolicyModal(filename) {
   iframe.style.width = '100%';
   iframe.style.height = '100%';
   iframe.style.border = 'none';
-  iframe.style.background = '#000000';
+  iframe.style.background = '#08080e';
   modalBody.appendChild(iframe);
 }
 
@@ -1827,7 +1962,6 @@ function toggleLike() {
   btn.classList.toggle('liked');
 }
 
-// ✅ Update: Add worldShareModal functionality
 function shareAffiliateVideo() {
     const affId = localStorage.getItem('rorraxy_active_affiliate_ref') || localStorage.getItem('rorraxy_affiliate_id') || 'mrmasudar';
     const shareUrl = `${window.location.origin}/bs/index.html?ref=${encodeURIComponent(affId)}&rate=20&platform=business`;
@@ -1920,7 +2054,11 @@ async function triggerNativeWorldShare(event, url, title) {
         } catch (e) {}
     } else {
         await copyTextToClipboard(url);
-        alert("Link copied to clipboard!");
+        const btn = document.getElementById('worldShareCopyBtn');
+        if (btn) {
+            btn.innerText = 'COPIED';
+            setTimeout(() => { btn.innerText = 'COPY'; }, 1400);
+        }
     }
 }
 
@@ -2195,20 +2333,20 @@ function toggleVideoAspect() {
   if (spokesGroup && packetsGroup && logosGroup) {
     const cx = 570, cy = 300;
     const channelNodes = [
-      { name: "Retail", sub: "rorraxy.com", x: 135, y: 105, pinkFlow: true, markType: "svg", svgContent: `<path d="M-11 -6 L11 -6 L13 12 L-13 12 Z" fill="none" stroke="#fcf6ba" stroke-width="2.1" stroke-linejoin="round"/><path d="M-5 -6 A5 5 0 0 1 5 -6" fill="none" stroke="#ff2a85" stroke-width="2"/>` },
-      { name: "Messenger", sub: "Auto Inbox", x: 135, y: 300, pinkFlow: true, markType: "fa", icon: "\uf39f", color: "#ff2a85" },
+      { name: "Retail", sub: "rorraxy.com", x: 135, y: 105, pinkFlow: false, markType: "svg", svgContent: `<path d="M-11 -6 L11 -6 L13 12 L-13 12 Z" fill="none" stroke="#fcf6ba" stroke-width="2.1" stroke-linejoin="round"/><path d="M-5 -6 A5 5 0 0 1 5 -6" fill="none" stroke="#d4af37" stroke-width="2"/>` },
+      { name: "Messenger", sub: "Auto Inbox", x: 135, y: 300, pinkFlow: false, markType: "fa", icon: "\uf39f", color: "#f6dc8b" },
       { name: "WhatsApp", sub: "Direct Desk", x: 135, y: 495, pinkFlow: false, markType: "fa", icon: "\uf232", color: "#fcf6ba" },
-      { name: "Wholesale", sub: "Bulk Supply", x: 340, y: 165, pinkFlow: false, markType: "svg", svgContent: `<rect x="-12" y="-10" width="10" height="10" rx="2" fill="none" stroke="#d4af37" stroke-width="2"/><rect x="2" y="-10" width="10" height="10" rx="2" fill="none" stroke="#fcf6ba" stroke-width="2"/><rect x="-5" y="2" width="10" height="10" rx="2" fill="none" stroke="#ff2a85" stroke-width="2"/>` },
-      { name: "Live Chat", sub: "chat.rorraxy.com", x: 340, y: 300, pinkFlow: true, markType: "svg", svgContent: `<rect x="-13" y="-10" width="26" height="17" rx="5" fill="none" stroke="#fcf6ba" stroke-width="2"/><path d="M-5 7 L-9 13 L1 7" fill="none" stroke="#ff2a85" stroke-width="2" stroke-linejoin="round"/><circle cx="-5" cy="-1.5" r="1.6" fill="#fcf6ba"/><circle cx="0" cy="-1.5" r="1.6" fill="#ff2a85"/><circle cx="5" cy="-1.5" r="1.6" fill="#fcf6ba"/>` },
-      { name: "Affiliate", sub: "Partner Links", x: 340, y: 445, pinkFlow: false, markType: "svg", svgContent: `<circle cx="-7" cy="0" r="5" fill="none" stroke="#fcf6ba" stroke-width="2"/><circle cx="7" cy="0" r="5" fill="none" stroke="#ff2a85" stroke-width="2"/><line x1="-2" y1="0" x2="2" y2="0" stroke="#d4af37" stroke-width="2"/>` },
-      { name: "Meta", sub: "Social Suite", x: 570, y: 105, pinkFlow: true, markType: "fa", icon: "\uf082", color: "#ff2a85" },
-      { name: "VAT & Ledger", sub: "End-to-End", x: 570, y: 495, pinkFlow: true, markType: "svg", svgContent: `<path d="M-11 8 L-4 -2 L3 4 L12 -8" fill="none" stroke="#fcf6ba" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="-8" r="2.6" fill="#ff2a85"/>` },
-      { name: "Business Sys", sub: "Problem Solving", x: 800, y: 165, pinkFlow: false, markType: "svg", svgContent: `<circle cx="0" cy="0" r="6" fill="none" stroke="#fcf6ba" stroke-width="2.2"/><circle cx="0" cy="0" r="11" fill="none" stroke="#ff2a85" stroke-width="1.6" stroke-dasharray="4 4"/>` },
-      { name: "Telegram", sub: "Instant Alerts", x: 800, y: 300, pinkFlow: true, markType: "fa", icon: "\uf2c6", color: "#fcf6ba" },
-      { name: "Seller Portal", sub: "Vendor Hub", x: 800, y: 445, pinkFlow: false, markType: "svg", svgContent: `<circle cx="0" cy="-5" r="5.5" fill="none" stroke="#fcf6ba" stroke-width="2"/><path d="M-11 11 C-11 5, 11 5, 11 11" fill="none" stroke="#ff2a85" stroke-width="2" stroke-linecap="round"/>` },
+      { name: "Wholesale", sub: "Bulk Supply", x: 340, y: 165, pinkFlow: false, markType: "svg", svgContent: `<rect x="-12" y="-10" width="10" height="10" rx="2" fill="none" stroke="#d4af37" stroke-width="2"/><rect x="2" y="-10" width="10" height="10" rx="2" fill="none" stroke="#fcf6ba" stroke-width="2"/><rect x="-5" y="2" width="10" height="10" rx="2" fill="none" stroke="#f6dc8b" stroke-width="2"/>` },
+      { name: "Live Chat", sub: "chat.rorraxy.com", x: 340, y: 300, pinkFlow: false, markType: "svg", svgContent: `<rect x="-13" y="-10" width="26" height="17" rx="5" fill="none" stroke="#fcf6ba" stroke-width="2"/><path d="M-5 7 L-9 13 L1 7" fill="none" stroke="#d4af37" stroke-width="2" stroke-linejoin="round"/><circle cx="-5" cy="-1.5" r="1.6" fill="#fcf6ba"/><circle cx="0" cy="-1.5" r="1.6" fill="#f6dc8b"/><circle cx="5" cy="-1.5" r="1.6" fill="#fcf6ba"/>` },
+      { name: "Affiliate", sub: "Partner Links", x: 340, y: 445, pinkFlow: false, markType: "svg", svgContent: `<circle cx="-7" cy="0" r="5" fill="none" stroke="#fcf6ba" stroke-width="2"/><circle cx="7" cy="0" r="5" fill="none" stroke="#d4af37" stroke-width="2"/><line x1="-2" y1="0" x2="2" y2="0" stroke="#f6dc8b" stroke-width="2"/>` },
+      { name: "Meta", sub: "Social Suite", x: 570, y: 105, pinkFlow: false, markType: "fa", icon: "\uf082", color: "#f6dc8b" },
+      { name: "VAT & Ledger", sub: "End-to-End", x: 570, y: 495, pinkFlow: false, markType: "svg", svgContent: `<path d="M-11 8 L-4 -2 L3 4 L12 -8" fill="none" stroke="#fcf6ba" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="-8" r="2.6" fill="#f6dc8b"/>` },
+      { name: "Business Sys", sub: "Problem Solving", x: 800, y: 165, pinkFlow: false, markType: "svg", svgContent: `<circle cx="0" cy="0" r="6" fill="none" stroke="#fcf6ba" stroke-width="2.2"/><circle cx="0" cy="0" r="11" fill="none" stroke="#d4af37" stroke-width="1.6" stroke-dasharray="4 4"/>` },
+      { name: "Telegram", sub: "Instant Alerts", x: 800, y: 300, pinkFlow: false, markType: "fa", icon: "\uf2c6", color: "#fcf6ba" },
+      { name: "Seller Portal", sub: "Vendor Hub", x: 800, y: 445, pinkFlow: false, markType: "svg", svgContent: `<circle cx="0" cy="-5" r="5.5" fill="none" stroke="#fcf6ba" stroke-width="2"/><path d="M-11 11 C-11 5, 11 5, 11 11" fill="none" stroke="#d4af37" stroke-width="2" stroke-linecap="round"/>` },
       { name: "Google Ads", sub: "Global Reach", x: 1005, y: 105, pinkFlow: false, markType: "fa", icon: "\uf1a0", color: "#fcf6ba" },
-      { name: "YouTube", sub: "Video & Shorts", x: 1005, y: 300, pinkFlow: true, markType: "fa", icon: "\uf167", color: "#ff2a85" },
-      { name: "Pinterest", sub: "Visual Ideas", x: 1005, y: 495, pinkFlow: true, markType: "fa", icon: "\uf0d2", color: "#fcf6ba" }
+      { name: "YouTube", sub: "Video & Shorts", x: 1005, y: 300, pinkFlow: false, markType: "fa", icon: "\uf167", color: "#f6dc8b" },
+      { name: "Pinterest", sub: "Visual Ideas", x: 1005, y: 495, pinkFlow: false, markType: "fa", icon: "\uf0d2", color: "#fcf6ba" }
     ];
 
     const sFrag = document.createDocumentFragment();
