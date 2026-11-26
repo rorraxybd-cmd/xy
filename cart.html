@@ -15,11 +15,11 @@
 <style>
 :root {
   --bg-retail: #050508;
-  --glass-bg: rgba(18, 18, 28, 0.72);
-  --glass-bg-elevated: rgba(26, 26, 40, 0.85);
-  --glass-input: rgba(10, 10, 16, 0.82);
+  --glass-bg: rgba(18, 18, 28, 0.74);
+  --glass-bg-elevated: rgba(26, 26, 40, 0.88);
+  --glass-input: rgba(10, 10, 16, 0.85);
   --royal-gold: #e5c158;
-  --royal-gold-light: #fff0b3;
+  --royal-gold-light: #fff3c4;
   --royal-gold-deep: #b88c24;
   --signature-pink: #ff2a85;
   --signature-pink-soft: rgba(255, 42, 133, 0.14);
@@ -45,8 +45,8 @@ html, body {
   max-width: 100%;
   background: var(--bg-retail) !important;
   background-image: 
-    radial-gradient(circle at 12% 8%, rgba(255, 42, 133, 0.07) 0%, transparent 42%),
-    radial-gradient(circle at 88% 18%, rgba(229, 193, 88, 0.08) 0%, transparent 45%) !important;
+    radial-gradient(circle at 12% 6%, rgba(255, 42, 133, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 88% 16%, rgba(229, 193, 88, 0.09) 0%, transparent 44%) !important;
   background-attachment: fixed !important;
   color: var(--text-white);
   font-family: var(--font-main);
@@ -56,10 +56,17 @@ html, body {
   min-height: 100vh;
 }
 
-/* Subtle Golden Gradient Shimmer Animation */
-@keyframes luxuryShimmer {
-  0% { transform: translateX(-140%) skewX(-20deg); }
-  100% { transform: translateX(260%) skewX(-20deg); }
+/* Smooth Golden & Pink Shimmer Animations */
+@keyframes goldenSurfaceSweep {
+  0% { transform: translateX(-160%) skewX(-22deg); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateX(320%) skewX(-22deg); opacity: 0; }
+}
+
+@keyframes pinkButtonShimmer {
+  0% { transform: translateX(-160%) skewX(-24deg); }
+  55%, 100% { transform: translateX(340%) skewX(-24deg); }
 }
 
 .shimmer-surface {
@@ -72,17 +79,17 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 38%;
+  width: 40%;
   height: 100%;
   background: linear-gradient(
     90deg,
     rgba(212, 175, 55, 0) 0%,
-    rgba(229, 193, 88, 0.05) 30%,
-    rgba(255, 242, 178, 0.11) 50%,
-    rgba(212, 175, 55, 0.05) 70%,
+    rgba(229, 193, 88, 0.04) 28%,
+    rgba(255, 242, 178, 0.09) 50%,
+    rgba(212, 175, 55, 0.04) 72%,
     rgba(212, 175, 55, 0) 100%
   );
-  animation: luxuryShimmer 6s infinite ease-in-out;
+  animation: goldenSurfaceSweep 7.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
@@ -91,70 +98,69 @@ html, body {
   max-width: 1120px;
   width: 100%;
   margin: 0 auto;
-  padding: 26px 16px 125px 16px;
+  padding: 14px 14px 104px 14px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 14px;
 }
 
-/* Header & Logo */
+/* Header - Logo Removed, Clean Cart & Checkout Title */
 .brand-header-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   text-align: center;
   width: 100%;
-}
-
-.cart-brand-logo {
-  width: 120px;
-  height: auto;
-  object-fit: contain;
-  margin: 0 auto;
-  display: block;
+  padding-top: 2px;
 }
 
 .page-main-title {
-  font-size: 1.08rem;
-  letter-spacing: 2px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 2.2px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: none !important;
+  background: rgba(255, 42, 133, 0.09);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-/* Soft Glassmorphic Cards - Clean Professional Finish */
+/* Borderless Soft Glassmorphic Cards */
 .address-form-section,
 .summary-card-box,
 .cart-items-box {
   display: flex;
   flex-direction: column;
   background: var(--glass-bg);
-  backdrop-filter: blur(18px) saturate(135%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
-  border-radius: 24px;
-  padding: 22px 20px;
-  gap: 16px;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-radius: 22px;
+  padding: 18px 16px;
+  gap: 14px;
   border: none !important;
   box-shadow: 
-    0 14px 36px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    0 14px 36px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   width: 100%;
 }
 
 .section-center-header {
   text-align: center;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
   width: 100%;
 }
 
 .section-center-header h2 {
-  font-size: 0.98rem;
+  font-size: 0.9rem;
   font-weight: 800;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.4px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 /* Cart Items Header & Scroll Area */
@@ -163,37 +169,38 @@ html, body {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
 
 .cart-items-header-title {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 1.1px;
   color: var(--royal-gold-light);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .cart-count-pill {
-  background: rgba(255, 42, 133, 0.14);
-  color: #ff7eb3;
-  font-size: 0.76rem;
+  background: rgba(255, 42, 133, 0.16);
+  color: var(--signature-pink);
+  border: none !important;
+  font-size: 0.72rem;
   font-weight: 800;
-  padding: 5px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 }
 
 .cart-items-scroll-area {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 11px;
   width: 100%;
-  max-height: 430px;
+  max-height: 360px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .cart-items-scroll-area.expanded-all {
@@ -201,11 +208,11 @@ html, body {
 }
 
 .cart-items-scroll-area::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 .cart-items-scroll-area::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   border-radius: 10px;
 }
 
@@ -220,12 +227,12 @@ html, body {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 11px;
+  padding: 10px;
   border-radius: 14px;
-  border: none;
+  border: none !important;
   background: rgba(229, 193, 88, 0.1);
   color: var(--royal-gold-light);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.6px;
   cursor: pointer;
@@ -236,28 +243,60 @@ html, body {
   background: rgba(229, 193, 88, 0.18);
 }
 
-/* Individual Cart Item Card */
+/* Individual Cart Item Card - Borderless Soft & Corner Delete */
 .cart-row-item {
+  position: relative;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  background: rgba(24, 24, 36, 0.72);
-  padding: 15px;
+  background: rgba(24, 24, 38, 0.78);
+  padding: 12px;
   border-radius: 18px;
-  gap: 14px;
+  gap: 11px;
   width: 100%;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Corner Delete Button */
+.btn-corner-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none !important;
+  background: rgba(255, 42, 133, 0.16);
+  color: var(--signature-pink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.74rem;
+  z-index: 5;
+  transition: all 0.2s ease;
+}
+
+.btn-corner-remove:hover {
+  background: var(--signature-pink);
+  color: #ffffff;
+  transform: scale(1.06);
+}
+
+.btn-corner-remove:active {
+  transform: scale(0.92);
 }
 
 .cart-img-wrapper {
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
   border-radius: 14px;
   background: #0d0d14;
   flex-shrink: 0;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  border: none !important;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
 }
 
 .cart-img {
@@ -273,150 +312,74 @@ html, body {
   height: 100%;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(229, 193, 88, 0.14), rgba(255, 42, 133, 0.14));
+  background: linear-gradient(135deg, rgba(229, 193, 88, 0.15), rgba(255, 42, 133, 0.15));
   color: var(--royal-gold);
-  font-size: 1.45rem;
+  font-size: 1.35rem;
 }
 
-.cart-item-info {
+/* Right Content Body Beside Image */
+.cart-item-body {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   gap: 8px;
+  padding-right: 22px;
 }
 
-.cart-item-title {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1.4;
-  margin-bottom: 4px;
-}
-
-.cart-item-sku {
-  font-size: 0.75rem;
-  color: var(--royal-gold);
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 6px;
-}
-
-.custom-note-block {
+/* Top Row: Details Trigger on Left + Quantity Stepper on Right */
+.cart-top-controls-row {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.custom-note-label {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #ff7eb3;
-  letter-spacing: 0.5px;
-  display: inline-flex;
   align-items: center;
-  gap: 5px;
-}
-
-.custom-note-value {
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: rgba(255, 42, 133, 0.1);
-  border-left: 3px solid var(--signature-pink);
-  padding: 6px 10px;
-  border-radius: 0 10px 10px 0;
-  line-height: 1.4;
-  white-space: pre-wrap;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
 }
 
 .details-toggle-btn {
-  align-self: flex-start;
-  background: rgba(229, 193, 88, 0.12);
-  border: none;
+  background: rgba(229, 193, 88, 0.13);
+  border: none !important;
   color: var(--royal-gold-light);
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 999px;
-  font-size: 0.74rem;
+  font-size: 0.71rem;
   font-weight: 700;
+  letter-spacing: 0.4px;
   cursor: pointer;
-  margin-top: 2px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   transition: background 0.2s ease;
+  white-space: nowrap;
 }
 
 .details-toggle-btn:hover {
   background: rgba(229, 193, 88, 0.22);
 }
 
-.product-extended-details {
-  display: none;
-  font-size: 0.84rem;
-  color: var(--text-silver);
-  margin-top: 4px;
-  line-height: 1.5;
-  background: rgba(10, 10, 16, 0.75);
-  padding: 10px 12px;
-  border-radius: 12px;
-  border-left: 3px solid var(--royal-gold);
-}
-
-/* Luxury Quantity Stepper Controls & Item Prices */
-.cart-item-actions-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.item-price-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.item-usd-price {
-  font-size: 0.96rem;
-  font-weight: 800;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.item-bdt-price {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-silver);
-}
-
+/* Compact Borderless Quantity Stepper */
 .qty-stepper-pill {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(12, 12, 20, 0.9);
-  border: 1px solid rgba(229, 193, 88, 0.26);
+  background: rgba(11, 11, 18, 0.92);
+  border: none !important;
   border-radius: 999px;
-  padding: 3px;
-  gap: 4px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  padding: 2px;
+  gap: 3px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.65);
+  flex-shrink: 0;
 }
 
 .qty-circle-btn {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: none !important;
   background: var(--gold-gradient);
   color: #09090d !important;
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 800;
   line-height: 1;
   display: inline-flex;
@@ -437,55 +400,185 @@ html, body {
 }
 
 .qty-value-text {
-  min-width: 26px;
+  min-width: 22px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.84rem;
   font-weight: 800;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
 }
 
-.btn-qty-remove {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none !important;
-  background: rgba(255, 59, 92, 0.12);
-  color: var(--danger-red);
+/* Custom Note Compact Block */
+.custom-note-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.custom-note-label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--signature-pink);
+  letter-spacing: 0.4px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  gap: 4px;
+}
+
+.custom-note-value {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 42, 133, 0.11);
+  border-left: 2.5px solid var(--signature-pink);
+  padding: 4px 8px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+/* Expandable Product Details */
+.product-extended-details {
+  display: none;
+  font-size: 0.8rem;
+  color: var(--text-silver);
+  line-height: 1.45;
+  background: rgba(10, 10, 16, 0.82);
+  padding: 8px 10px;
+  border-radius: 10px;
+  border-left: 2.5px solid var(--royal-gold);
+}
+
+.cart-item-title {
   font-size: 0.86rem;
-  transition: background 0.2s ease, transform 0.15s ease;
-  flex-shrink: 0;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+  margin-bottom: 3px;
 }
 
-.btn-qty-remove:hover {
-  background: rgba(255, 59, 92, 0.24);
+.cart-item-sku {
+  font-size: 0.71rem;
+  color: var(--royal-gold);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
-.btn-qty-remove:active {
-  transform: scale(0.92);
+/* Single Line Price Row: BD Flag + Local Price Left, USD Price Right */
+.item-single-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 6px;
+  margin-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-right: -22px;
+  width: calc(100% + 22px);
 }
 
-/* Luxury Form Inputs */
+.item-bdt-price {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--signature-pink);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.item-usd-price {
+  font-size: 0.88rem;
+  font-weight: 800;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* Compact Summary Box (Total Payable + Clean Unit Count Underneath without Icon) */
+.summary-card-box.compact-summary {
+  padding: 15px 18px;
+  gap: 0;
+}
+
+.summary-compact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+}
+
+.summary-left-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.summary-payable-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--royal-gold-light);
+}
+
+.summary-qty-sub-badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--royal-gold);
+  background: rgba(229, 193, 88, 0.12);
+  border: none !important;
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  letter-spacing: 0.4px;
+}
+
+.total-dual-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.total-usd-main {
+  font-size: 1.18rem;
+  font-weight: 800;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.total-bdt-sub {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--signature-pink);
+}
+
+/* Borderless Soft Luxury Form Inputs with Subtle Placeholders */
 .luxury-form-grid {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 13px;
   width: 100%;
 }
 
 .luxury-field-wrap {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   width: 100%;
 }
 
 .luxury-form-label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--royal-gold-light) !important;
   font-weight: 700;
   letter-spacing: 0.6px;
@@ -495,32 +588,32 @@ html, body {
 .luxury-form-input {
   background: var(--glass-input) !important;
   border: none !important;
-  padding: 14px 16px !important;
-  border-radius: 16px !important;
+  padding: 13px 15px !important;
+  border-radius: 15px !important;
   color: #ffffff !important;
-  font-size: 0.98rem !important;
+  font-size: 0.95rem !important;
   font-family: var(--font-main) !important;
   width: 100% !important;
   outline: none !important;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
   transition: box-shadow 0.25s ease, background 0.25s ease;
 }
 
 .luxury-form-input::placeholder {
-  color: rgba(255, 255, 255, 0.22) !important;
+  color: rgba(212, 212, 226, 0.18) !important;
   font-weight: 400 !important;
 }
 
 .luxury-form-input:focus {
-  background: rgba(16, 16, 26, 0.95) !important;
-  box-shadow: 0 0 0 2px rgba(229, 193, 88, 0.35), inset 0 2px 5px rgba(0, 0, 0, 0.5) !important;
+  background: rgba(16, 16, 26, 0.96) !important;
+  box-shadow: 0 0 0 2px rgba(229, 193, 88, 0.32), inset 0 2px 5px rgba(0, 0, 0, 0.5) !important;
 }
 
 .luxury-form-input.input-error {
-  box-shadow: 0 0 0 2px rgba(255, 59, 92, 0.75) !important;
+  box-shadow: 0 0 0 2px rgba(255, 42, 133, 0.75) !important;
 }
 
-/* Intl-Tel-Input Luxury Styling - Proper Placeholder Alignment */
+/* Intl-Tel-Input Luxury Styling - No Extra Vertical Line */
 .iti {
   width: 100% !important;
   display: block;
@@ -532,18 +625,18 @@ html, body {
 }
 
 .iti__selected-flag {
-  background-color: rgba(255, 255, 255, 0.04) !important;
-  border-radius: 16px 0 0 16px !important;
-  border-right: 1px solid rgba(229, 193, 88, 0.16) !important;
-  padding: 0 12px 0 14px !important;
-  min-width: 96px !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 15px 0 0 15px !important;
+  border: none !important;
+  padding: 0 10px 0 13px !important;
+  min-width: 92px !important;
   justify-content: center !important;
 }
 
 .iti input[type="tel"],
 #chkPhone.luxury-form-input {
-  padding-left: 112px !important;
-  padding-right: 16px !important;
+  padding-left: 104px !important;
+  padding-right: 15px !important;
   width: 100% !important;
   color: #ffffff !important;
   text-align: left !important;
@@ -551,23 +644,22 @@ html, body {
 
 .iti input[type="tel"]::placeholder,
 #chkPhone.luxury-form-input::placeholder {
-  color: rgba(255, 255, 255, 0.22) !important;
+  color: rgba(212, 212, 226, 0.18) !important;
   font-weight: 400 !important;
   opacity: 1 !important;
-  letter-spacing: 0.2px;
 }
 
 .iti__country-list {
-  background: rgba(16, 16, 26, 0.96) !important;
+  background: rgba(16, 16, 26, 0.98) !important;
   backdrop-filter: blur(20px) !important;
   border: none !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.88) !important;
   color: #ffffff !important;
   max-height: 250px !important;
-  width: 300px !important;
+  width: 295px !important;
   z-index: 99999 !important;
   border-radius: 16px !important;
-  font-size: 0.9rem !important;
+  font-size: 0.88rem !important;
 }
 
 .iti__country {
@@ -581,15 +673,15 @@ html, body {
 .iti__selected-dial-code {
   color: var(--royal-gold-light) !important;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   margin-left: 6px !important;
 }
 
 .save-address-checkbox-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.86rem;
+  gap: 9px;
+  font-size: 0.82rem;
   color: var(--text-silver);
   font-weight: 600;
   cursor: pointer;
@@ -597,20 +689,29 @@ html, body {
 }
 
 .save-address-checkbox-row input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   accent-color: var(--signature-pink);
   cursor: pointer;
   flex-shrink: 0;
 }
 
-/* Summary Box */
+/* Step 2 Payment Section */
+#step2PaymentSection {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-silver);
   gap: 12px;
@@ -623,64 +724,34 @@ html, body {
   width: 100%;
 }
 
-.total-dual-box {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 3px;
-}
-
-.total-usd-main {
-  font-size: 1.24rem;
-  font-weight: 800;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.total-bdt-sub {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #ff7eb3;
-}
-
-/* Step 2 Payment Section */
-#step2PaymentSection {
-  display: none;
-  flex-direction: column;
-  gap: 18px;
-  max-width: 720px;
-  margin: 0 auto;
-  width: 100%;
-}
-
 .payment-accordion-group {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
 }
 
 .payment-method-item {
-  background: rgba(24, 24, 36, 0.72);
+  background: rgba(24, 24, 36, 0.76);
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
   width: 100%;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border: none !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: all 0.25s ease;
 }
 
 .payment-method-item.active {
-  background: rgba(34, 30, 48, 0.92);
+  background: rgba(34, 30, 48, 0.94);
   box-shadow: 0 0 0 2px rgba(229, 193, 88, 0.45), 0 10px 26px rgba(0, 0, 0, 0.45);
 }
 
 .payment-method-header {
-  padding: 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 11px;
   width: 100%;
 }
 
@@ -688,19 +759,19 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 800;
   color: #fff;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .badge-global-gold {
   background: var(--gold-gradient);
   color: #09090d;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  padding: 5px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
   cursor: pointer;
   flex-shrink: 0;
@@ -709,16 +780,16 @@ html, body {
 .badge-local-bd {
   background: var(--luxury-accent-gradient);
   color: #fff;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  padding: 5px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
   flex-shrink: 0;
 }
 
 .payout-icons-row {
   display: flex;
-  gap: 10px;
+  gap: 9px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -728,17 +799,17 @@ html, body {
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 10px;
-  height: 38px;
-  min-width: 60px;
+  height: 36px;
+  min-width: 58px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
 }
 
 .brand-payout-card img {
-  height: 22px;
+  height: 20px;
   width: auto;
-  max-width: 52px;
+  max-width: 50px;
   object-fit: contain;
 }
 
@@ -760,14 +831,15 @@ html, body {
 
 .modal-content-box {
   background: #12121c;
+  border: none !important;
   border-radius: 22px;
   width: 100%;
   max-width: 460px;
-  padding: 22px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .currency-grid {
@@ -780,29 +852,31 @@ html, body {
 
 .currency-tag {
   background: rgba(255, 255, 255, 0.05);
-  padding: 10px 8px;
+  padding: 9px 8px;
   border-radius: 10px;
   text-align: center;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #fff;
 }
 
-/* Fixed Bottom Bar & Buttons */
+/* Fixed Bottom Bar & Golden Gradient Button with Crisp Pink Shimmer */
 .single-fixed-checkout-wrapper {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 99999;
-  background: rgba(8, 8, 14, 0.92);
-  backdrop-filter: blur(16px);
-  padding: 12px 16px;
+  background: rgba(7, 7, 12, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: none !important;
+  padding: 11px 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.78);
   width: 100%;
 }
 
@@ -812,24 +886,30 @@ html, body {
   justify-content: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.08);
+  border: none !important;
   color: #ffffff;
-  border: none;
   padding: 12px 16px;
   border-radius: 999px;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   font-family: var(--font-main);
+  transition: background 0.2s ease;
 }
 
+.btn-back-step:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Golden Gradient Button with Crisp Signature Pink Shimmer */
 .btn-action-main {
   position: relative;
   overflow: hidden;
   background: var(--gold-gradient);
   color: #09090d;
   font-weight: 800;
-  font-size: 0.86rem;
-  padding: 12px 24px;
+  font-size: 0.85rem;
+  padding: 13px 26px;
   border-radius: 999px;
   border: none !important;
   display: inline-flex;
@@ -839,37 +919,47 @@ html, body {
   cursor: pointer;
   letter-spacing: 0.8px;
   width: auto;
-  min-width: 220px;
-  max-width: 280px;
+  min-width: 225px;
+  max-width: 290px;
   font-family: var(--font-main);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.28);
-  transition: transform 0.18s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
+  transition: transform 0.18s ease, box-shadow 0.2s ease;
+  -webkit-font-smoothing: antialiased;
 }
 
+.btn-action-main span,
+.btn-action-main i {
+  position: relative;
+  z-index: 2;
+}
+
+/* Crisp Signature Pink Shimmer Sweep */
 .btn-action-main::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 42%;
+  width: 38%;
   height: 100%;
+  z-index: 1;
   background: linear-gradient(
     90deg,
-    rgba(212, 175, 55, 0) 0%,
-    rgba(255, 242, 178, 0.55) 45%,
-    rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 242, 178, 0.55) 55%,
-    rgba(212, 175, 55, 0) 100%
+    rgba(255, 42, 133, 0) 0%,
+    rgba(255, 42, 133, 0.28) 38%,
+    rgba(255, 42, 133, 0.46) 50%,
+    rgba(255, 42, 133, 0.28) 62%,
+    rgba(255, 42, 133, 0) 100%
   );
-  animation: luxuryShimmer 4s infinite ease-in-out;
+  animation: pinkButtonShimmer 4.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
 }
 
 .btn-action-main:hover {
-  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.45);
+  box-shadow: 0 10px 28px rgba(255, 42, 133, 0.32), 0 6px 20px rgba(212, 175, 55, 0.35);
 }
 
 .btn-action-main:active {
-  transform: scale(0.98);
+  transform: scale(0.975);
 }
 
 .gold-gradient-text {
@@ -881,61 +971,26 @@ html, body {
 
 #toastBox {
   position: fixed;
-  bottom: 88px;
+  bottom: 82px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(22, 22, 34, 0.96);
   backdrop-filter: blur(12px);
+  border: none !important;
   color: #ffffff;
-  padding: 12px 20px;
+  padding: 11px 18px;
   border-radius: 14px;
   z-index: 9999999;
   display: none;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 700;
   width: 90%;
   max-width: 360px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Mobile Responsive Adjustments */
-@media (max-width: 640px) {
-  .cart-row-item {
-    flex-wrap: wrap;
-    padding: 14px;
-  }
-
-  .cart-item-actions-col {
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  .item-price-stack {
-    align-items: flex-start;
-  }
-
-  .luxury-form-input {
-    font-size: 0.96rem !important;
-    padding: 14px 14px !important;
-  }
-
-  .iti__selected-flag {
-    min-width: 92px !important;
-    padding: 0 10px 0 12px !important;
-  }
-
-  .iti input[type="tel"],
-  #chkPhone.luxury-form-input {
-    padding-left: 106px !important;
-  }
-}
-
-/* Desktop Two-Column Split when Screen is Wide so 5-7+ Products + Form are Effortless */
+/* Desktop Two-Column Split when Screen is Wide */
 @media (min-width: 900px) {
   .desktop-split-layout {
     flex-direction: row !important;
@@ -978,17 +1033,19 @@ html, body {
 </div>
 
 <div class="checkout-container">
-  <!-- Header -->
+  <!-- Clean Header (Logo Removed for Maximum Space) -->
   <div class="brand-header-wrap">
-    <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy" class="cart-brand-logo">
-    <h2 class="gold-gradient-text page-main-title"><i class="fa-solid fa-bag-shopping" style="color:var(--signature-pink);"></i> CART & CHECKOUT</h2>
+    <div class="page-main-title">
+      <i class="fa-solid fa-bag-shopping" style="color:var(--signature-pink);font-size:0.82rem;"></i>
+      <span class="gold-gradient-text">CART & CHECKOUT</span>
+    </div>
   </div>
 
   <!-- Step 1: Cart Review + Shipping Form -->
-  <div id="step1CartSection" class="desktop-split-layout" style="display:flex;flex-direction:column;gap:20px;width:100%;">
+  <div id="step1CartSection" class="desktop-split-layout" style="display:flex;flex-direction:column;gap:16px;width:100%;">
     
-    <!-- Left Column: Cart Products & Summary -->
-    <div class="desktop-left-col" style="display:flex;flex-direction:column;gap:18px;width:100%;">
+    <!-- Left Column: Cart Products & Compact Summary -->
+    <div class="desktop-left-col" style="display:flex;flex-direction:column;gap:14px;width:100%;">
       <div class="cart-items-box shimmer-surface">
         <div class="cart-items-header">
           <span class="cart-items-header-title"><i class="fa-solid fa-gem" style="color:var(--signature-pink);"></i> SELECTED ITEMS</span>
@@ -1000,15 +1057,13 @@ html, body {
         </button>
       </div>
 
-      <!-- Dual Currency Summary Box -->
-      <div class="summary-card-box shimmer-surface">
-        <div class="summary-row">
-          <span>TOTAL QUANTITY</span>
-          <span id="cartTotalQty" style="font-weight:800;color:var(--royal-gold-light);font-size:0.96rem;">0 UNITS</span>
-        </div>
-        <div class="summary-divider"></div>
-        <div class="summary-row" style="align-items:flex-start;">
-          <span style="padding-top:4px;">TOTAL PAYABLE</span>
+      <!-- Compact Dual Currency Summary Box -->
+      <div class="summary-card-box compact-summary shimmer-surface">
+        <div class="summary-compact-row">
+          <div class="summary-left-labels">
+            <span class="summary-payable-label">TOTAL PAYABLE</span>
+            <span id="cartTotalQty" class="summary-qty-sub-badge">0 UNITS</span>
+          </div>
           <div class="total-dual-box">
             <span id="cartTotalVal" class="total-usd-main">$0.00 USD</span>
             <span id="cartLocalVal" class="total-bdt-sub">🇧🇩 BDT 0.00</span>
@@ -1018,7 +1073,7 @@ html, body {
     </div>
 
     <!-- Right Column: Shipping Address Form -->
-    <div class="desktop-right-col" style="display:flex;flex-direction:column;gap:18px;width:100%;">
+    <div class="desktop-right-col" style="display:flex;flex-direction:column;gap:16px;width:100%;">
       <div id="addressFormSection" class="address-form-section shimmer-surface">
         <div class="section-center-header">
           <h2 class="gold-gradient-text"><i class="fa-solid fa-location-dot" style="color:var(--signature-pink);"></i> SHIPPING DETAILS</h2>
@@ -1083,7 +1138,7 @@ html, body {
               <span><i class="fa-solid fa-hand-holding-dollar" style="color:var(--royal-gold);margin-right:8px;"></i> CASH ON DELIVERY (COD)</span>
               <span class="badge-global-gold">PAY ON RECEIPT</span>
             </div>
-            <div style="font-size:0.84rem;color:var(--text-silver);line-height:1.45;">
+            <div style="font-size:0.82rem;color:var(--text-silver);line-height:1.45;">
               Pay securely in cash upon receiving your luxury package at your doorstep.
             </div>
           </div>
@@ -1094,19 +1149,19 @@ html, body {
     <div class="summary-card-box shimmer-surface">
       <div class="summary-row">
         <span>SUBTOTAL (USD)</span>
-        <span id="summarySubtotal" style="font-weight:800;color:#fff;font-size:0.98rem;">$0.00 USD</span>
+        <span id="summarySubtotal" style="font-weight:800;color:#fff;font-size:0.95rem;">$0.00 USD</span>
       </div>
       <div class="summary-row">
         <span>LOCAL EQUIVALENT (BDT)</span>
-        <span id="summaryBdtSubtotal" style="font-weight:800;color:#ff7eb3;font-size:0.95rem;">৳ 0.00 BDT</span>
+        <span id="summaryBdtSubtotal" style="font-weight:800;color:var(--signature-pink);font-size:0.92rem;">🇧🇩 BDT 0.00</span>
       </div>
       <div class="summary-row">
         <span>EXPRESS SHIPPING</span>
-        <span style="color:#34d399;font-weight:800;font-size:0.92rem;">COMPLIMENTARY (FREE)</span>
+        <span style="color:#34d399;font-weight:800;font-size:0.88rem;">COMPLIMENTARY (FREE)</span>
       </div>
       <div class="summary-divider"></div>
       <div class="summary-row" style="align-items:flex-start;">
-        <span style="font-size:0.95rem;font-weight:800;color:var(--royal-gold-light);padding-top:4px;">FINAL PAYABLE</span>
+        <span style="font-size:0.92rem;font-weight:800;color:var(--royal-gold-light);padding-top:4px;">FINAL PAYABLE</span>
         <div class="total-dual-box">
           <span id="summaryTotalUsdMain" class="total-usd-main">$0.00 USD</span>
           <span id="summaryTotalDisplay" class="total-bdt-sub">🇧🇩 BDT 0.00</span>
@@ -1119,10 +1174,10 @@ html, body {
 <!-- Fixed Bottom Action Bar -->
 <div class="single-fixed-checkout-wrapper">
   <button type="button" id="backToStep1Btn" class="btn-back-step" onclick="goToStep(1)">
-    <i class="fa-solid fa-arrow-left"></i> BACK
+    <i class="fa-solid fa-arrow-left"></i> <span>BACK</span>
   </button>
   <button type="button" id="mainCheckoutBtn" class="btn-action-main">
-    PROCEED TO PAYMENT <i class="fa-solid fa-arrow-right" style="color:#09090d;"></i>
+    <span>PROCEED TO PAYMENT</span> <i class="fa-solid fa-arrow-right" style="color:#09090d;"></i>
   </button>
 </div>
 
@@ -1279,13 +1334,13 @@ function renderCartList() {
 
   if (cart.length === 0) {
     container.innerHTML = `
-      <div style="color:var(--text-silver);text-align:center;font-size:0.95rem;padding:28px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;">
-        <i class="fa-solid fa-bag-shopping" style="font-size:2rem;color:var(--royal-gold);opacity:0.7;"></i>
+      <div style="color:var(--text-silver);text-align:center;font-size:0.9rem;padding:24px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <i class="fa-solid fa-bag-shopping" style="font-size:1.85rem;color:var(--royal-gold);opacity:0.7;"></i>
         <span>Your shopping cart is currently empty.</span>
       </div>`;
     totalValEl.innerText = "$0.00 USD";
-    localValEl.innerText = `🇧🇩 BDT 0.00`;
-    totalQtyEl.innerText = "0 UNITS";
+    localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} 0.00`;
+    totalQtyEl.innerText = `0 UNITS`;
     updateSummaryTotals(0);
     return;
   }
@@ -1295,7 +1350,7 @@ function renderCartList() {
     let priceNum = parseFloat((item.price || "0").toString().replace(/[^0-9.]/g, '')) || 0;
     let qtyNum = parseInt(item.qty, 10) || 1;
     let itemTotalUsd = priceNum * qtyNum;
-    let itemTotalBdt = itemTotalUsd * currentExchangeRate;
+    let itemTotalLocal = itemTotalUsd * currentExchangeRate;
 
     totalAmt += itemTotalUsd;
     totalQty += qtyNum;
@@ -1327,7 +1382,7 @@ function renderCartList() {
     if (safeCombinedNote) {
       customNoteHtml = `
         <div class="custom-note-block">
-          <span class="custom-note-label"><i class="fa-solid fa-pen-nib"></i> CUSTOM NOTE & SIZE</span>
+          <span class="custom-note-label"><i class="fa-solid fa-pen-nib"></i> NOTE / SIZE</span>
           <div class="custom-note-value">${safeCombinedNote}</div>
         </div>`;
     }
@@ -1339,37 +1394,43 @@ function renderCartList() {
 
     html += `
     <div class="cart-row-item">
+      <!-- Corner Delete Button -->
+      <button type="button" class="btn-corner-remove btn-qty-remove" data-index="${index}" title="Remove item" aria-label="Remove item">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Left Image -->
       <div class="cart-img-wrapper">
         ${imgMarkup}
       </div>
 
-      <div class="cart-item-info">
-        ${customNoteHtml}
-        <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})">
-          <i class="fa-solid fa-circle-info"></i> DETAILS
-        </button>
-        <div id="prodDetails-${index}" class="product-extended-details">
-          <div class="cart-item-title">${itemTitleText}</div>
-          ${skuHtml}
-          <div>${escapeHtml(itemDescText)}</div>
-        </div>
-      </div>
+      <!-- Right Body -->
+      <div class="cart-item-body">
+        <!-- Row 1: Details Button (Left) + Quantity Stepper (Right) -->
+        <div class="cart-top-controls-row">
+          <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})">
+            <i class="fa-solid fa-circle-info"></i> DETAILS
+          </button>
 
-      <div class="cart-item-actions-col">
-        <div class="item-price-stack">
-          <span class="item-usd-price">$${itemTotalUsd.toFixed(2)} USD</span>
-          <span class="item-bdt-price">৳ ${itemTotalBdt.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })} BDT</span>
-        </div>
-
-        <div style="display:flex;align-items:center;gap:8px;">
           <div class="qty-stepper-pill">
             <button type="button" class="qty-circle-btn btn-qty-minus" data-index="${index}" aria-label="Decrease quantity">−</button>
             <span class="qty-value-text">${qtyNum}</span>
             <button type="button" class="qty-circle-btn btn-qty-plus" data-index="${index}" aria-label="Increase quantity">+</button>
           </div>
-          <button type="button" class="btn-qty-remove" data-index="${index}" title="Remove item" aria-label="Remove item">
-            <i class="fa-solid fa-trash-can"></i>
-          </button>
+        </div>
+
+        ${customNoteHtml}
+
+        <div id="prodDetails-${index}" class="product-extended-details">
+          <div class="cart-item-title">${itemTitleText}</div>
+          ${skuHtml}
+          <div>${escapeHtml(itemDescText)}</div>
+        </div>
+
+        <!-- Row 2: Single Line Price (BD Flag + Local Price Left, USD Price Far Right) -->
+        <div class="item-single-price-row">
+          <span class="item-bdt-price">${currentCountryFlag} ${currentCurrencyCode} ${itemTotalLocal.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
+          <span class="item-usd-price">$${itemTotalUsd.toFixed(2)} USD</span>
         </div>
       </div>
     </div>`;
@@ -1521,13 +1582,13 @@ function goToStep(stepNumber) {
     step1.classList.add('desktop-split-layout');
     step2.style.display = 'none';
     backBtn.style.display = 'none';
-    mainBtn.innerHTML = 'PROCEED TO PAYMENT <i class="fa-solid fa-arrow-right" style="color:#09090d;"></i>';
+    mainBtn.innerHTML = '<span>PROCEED TO PAYMENT</span> <i class="fa-solid fa-arrow-right" style="color:#09090d;"></i>';
   } else if (stepNumber === 2) {
     step1.style.display = 'none';
     step1.classList.remove('desktop-split-layout');
     step2.style.display = 'flex';
     backBtn.style.display = 'inline-flex';
-    mainBtn.innerHTML = '<i class="fa-solid fa-lock"></i> CONFIRM ORDER';
+    mainBtn.innerHTML = '<i class="fa-solid fa-lock" style="color:#09090d;"></i> <span>CONFIRM ORDER</span>';
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
