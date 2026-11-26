@@ -48,20 +48,20 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 #pullRefreshIndicator{position:fixed;top:-50px;left:50%;transform:translateX(-50%);z-index:7000;background:#0c0c12;border:1px solid var(--gold-solid);color:var(--gold-solid);padding:6px 16px;border-radius:20px;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:8px;transition:top 0.15s ease-out;pointer-events:none;}
 #pullRefreshIndicator.visible{top:18px;}
 
-/* ======= CLEAN GALLERY & SIMILAR PRODUCT CARDS ======= */
+/* ======= CLEAN GALLERY GRID & CARDS ======= */
 .pinterest-feed-container{
   padding:74px 10px 24px 10px;
   display:none;
-  grid-template-columns:repeat(2, 1fr);
+  grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:10px;
   width:100%;
   max-width:1280px;
   margin:0 auto;
 }
 .pinterest-feed-container.active-grid{display:grid;}
-@media (min-width:640px){.pinterest-feed-container{grid-template-columns:repeat(3, 1fr);gap:14px;padding:82px 16px 24px 16px;}}
-@media (min-width:960px){.pinterest-feed-container{grid-template-columns:repeat(4, 1fr);gap:16px;padding:86px 20px 28px 20px;}}
-@media (min-width:1200px){.pinterest-feed-container{grid-template-columns:repeat(5, 1fr);}}
+@media (min-width:640px){.pinterest-feed-container{grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;padding:82px 16px 24px 16px;}}
+@media (min-width:960px){.pinterest-feed-container{grid-template-columns:repeat(4, minmax(0, 1fr));gap:16px;padding:86px 20px 28px 20px;}}
+@media (min-width:1200px){.pinterest-feed-container{grid-template-columns:repeat(5, minmax(0, 1fr));}}
 
 .product-card{
   background:var(--card-retail);
@@ -134,7 +134,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   flex-shrink:0;
 }
 
-/* Continuous Luxury Shimmer Sweep Across Price Strip */
 .card-bottom-price-strip::after{
   content:'';
   position:absolute;
@@ -230,66 +229,162 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .reel-card{width:100%;height:calc(100vh - 54px)!important;height:calc(100dvh - 54px)!important;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;position:relative;background:#000;flex-shrink:0;align-items:center;justify-content:center;padding-bottom:18px;contain:layout style paint;transform:translate3d(0,0,0);}
 .reel-media-box{position:relative;width:100%;max-width:390px;aspect-ratio:9/16;max-height:calc(100dvh - 88px);cursor:pointer;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:16px;}
 .reel-primary-video-container{width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;}
-.slide-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.38s var(--snap-ease),transform 3.8s ease-out;will-change:opacity,transform;backface-visibility:hidden;transform:translateZ(0) scale(1);}
-.slide-layer.active{opacity:1;z-index:2;transform:translateZ(0) scale(1.04);}
-.slide-layer.zoom-fit{object-fit:cover;transform:translateZ(0) scale(1.08);}
-.slide-layer.zoom-fit.active{transform:translateZ(0) scale(1.15);}
-.slide-layer.previous{opacity:0;z-index:1;}
 
-/* ======= CLEAN ICON-ONLY SIMILAR BUTTON (Right Side Above GALLERY, No Box/Pill Shape) ======= */
-.reel-similar-btn {
-    position: absolute;
-    bottom: 84px;
-    right: 64px;
-    z-index: 65;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 4px 6px;
-    cursor: pointer;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    white-space: nowrap;
-    transition: transform 0.14s ease;
+/* Reel Loading Shimmer Animation before image/video renders */
+.reel-primary-video-container::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(110deg,#06060a 15%,#141422 38%,#241e12 50%,#141422 62%,#06060a 85%);
+  background-size:240% 100%;
+  animation:reelInitialShimmer 1.35s linear infinite;
+  pointer-events:none;
 }
-@media (max-width: 440px) {
-    .reel-similar-btn {
-        right: 58px;
-        bottom: 82px;
-    }
-}
-.reel-similar-btn:hover { transform: scale(1.08); }
-.reel-similar-btn:active { transform: scale(0.88); }
-.reel-similar-btn .sim-pure-icon {
-    font-size: 1.65rem !important;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.98));
-    line-height: 1;
-}
-.reel-similar-btn .sim-label {
-    font-family: var(--font-main);
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 1), 0 0 8px rgba(0, 0, 0, 0.9);
-    line-height: 1;
+.reel-primary-video-container.media-ready::before{display:none;}
+@keyframes reelInitialShimmer{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
 }
 
-/* ======= REEL PRICE OVERLAY ======= */
-.reel-bottom-price-overlay{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 18px;border-radius:24px;background:rgba(8,8,14,0.95)!important;border:1.5px solid rgba(212,175,55,0.6);box-shadow:0 4px 15px rgba(0,0,0,0.8);white-space:nowrap;overflow:hidden;}
-.reel-bottom-price-overlay::after{content:'';position:absolute;top:0;left:-120%;width:65%;height:100%;background:linear-gradient(90deg,transparent,rgba(252,246,186,0.22),transparent);transform:skewX(-20deg);animation:priceShimmerSweep 2.6s infinite ease-in-out;pointer-events:none;}
-.reel-price-row{display:flex;align-items:center;gap:10px;}
-.reel-center-price-badge{font-size:1.12rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.reel-center-bdt-badge{font-size:0.95rem;font-weight:800;color:var(--pink-accent);letter-spacing:0.2px;}
-.reel-center-discount-badge{background:var(--pink-accent);color:#fff;font-size:0.68rem;font-weight:800;padding:2px 8px;border-radius:10px;}
+.reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;position:relative;z-index:2;}
+
+/* Smooth, Fast, Uncropped Slideshow with Subtle Gentle Zoom Motion */
+.slide-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  opacity:0;
+  z-index:2;
+  transition:opacity 0.28s cubic-bezier(0.22,1,0.36,1),transform 1.85s cubic-bezier(0.25,0.46,0.45,0.94);
+  will-change:opacity,transform;
+  backface-visibility:hidden;
+  transform:translateZ(0) scale(1);
+}
+.slide-layer.active{
+  opacity:1;
+  z-index:3;
+  transform:translateZ(0) scale(1.06);
+}
+.slide-layer.previous{
+  opacity:0;
+  z-index:2;
+  transform:translateZ(0) scale(1.08);
+}
+
+/* ======= BOTTOM CONTROL DOCK: PRICE (LEFT) + AI SIMILAR (RIGHT) ======= */
+.reel-bottom-dock{
+  position:absolute;
+  bottom:20px;
+  left:12px;
+  right:58px;
+  z-index:65;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  pointer-events:none;
+}
+@media (min-width:440px){
+  .reel-bottom-dock{left:14px;right:14px;}
+}
+
+/* Soft Borderless Luxury AI Visual Search Similar Button (Right Side) */
+.reel-similar-btn{
+  pointer-events:auto;
+  position:relative;
+  overflow:hidden;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 15px;
+  border-radius:26px;
+  background:linear-gradient(135deg,rgba(22,20,30,0.88) 0%,rgba(34,27,16,0.92) 100%);
+  border:none;
+  box-shadow:0 6px 20px rgba(0,0,0,0.65),inset 0 1px 0 rgba(252,246,186,0.16);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  cursor:pointer;
+  flex-shrink:0;
+  margin-left:auto;
+  transition:transform 0.14s ease,box-shadow 0.2s ease,background 0.2s ease;
+  animation:similarCuePulse 2.4s infinite ease-in-out;
+}
+.reel-similar-btn:hover{
+  background:linear-gradient(135deg,rgba(30,27,40,0.94) 0%,rgba(44,35,20,0.96) 100%);
+  box-shadow:0 8px 24px rgba(0,0,0,0.75),inset 0 1px 0 rgba(252,246,186,0.28);
+}
+.reel-similar-btn:active{transform:scale(0.91);}
+
+.reel-similar-btn::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-130%;
+  width:75%;
+  height:100%;
+  background:linear-gradient(90deg,transparent 0%,rgba(252,246,186,0.1) 30%,rgba(252,246,186,0.38) 50%,rgba(255,42,133,0.15) 70%,transparent 100%);
+  transform:skewX(-22deg);
+  animation:priceShimmerSweep 2.4s infinite ease-in-out;
+  pointer-events:none;
+}
+
+@keyframes similarCuePulse{
+  0%,100%{transform:translateY(0);box-shadow:0 6px 18px rgba(0,0,0,0.62),inset 0 1px 0 rgba(252,246,186,0.14);}
+  50%{transform:translateY(-1.5px);box-shadow:0 8px 22px rgba(0,0,0,0.72),inset 0 1px 0 rgba(252,246,186,0.26);}
+}
+
+.reel-similar-btn .ai-sim-svg{
+  width:19px;
+  height:19px;
+  flex-shrink:0;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,0.85));
+}
+.reel-similar-btn .sim-label{
+  font-family:var(--font-main);
+  font-size:0.72rem;
+  font-weight:800;
+  letter-spacing:0.5px;
+  background:linear-gradient(90deg,#bf953f 0%,#fcf6ba 45%,#ffffff 65%,#d4af37 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:goldTextSparkle 2.8s linear infinite;
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* ======= SOFT BORDERLESS REEL PRICE OVERLAY (LEFT SIDE) ======= */
+.reel-bottom-price-overlay{
+  pointer-events:auto;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 15px;
+  border-radius:26px;
+  background:rgba(12,12,18,0.86)!important;
+  border:none!important;
+  box-shadow:0 6px 20px rgba(0,0,0,0.65),inset 0 1px 0 rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  white-space:nowrap;
+  overflow:hidden;
+}
+.reel-bottom-price-overlay::after{content:'';position:absolute;top:0;left:-120%;width:65%;height:100%;background:linear-gradient(90deg,transparent,rgba(252,246,186,0.2),transparent);transform:skewX(-20deg);animation:priceShimmerSweep 2.6s infinite ease-in-out;pointer-events:none;}
+.reel-price-row{display:flex;align-items:center;gap:7px;}
+.reel-center-price-badge{font-size:1.02rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.reel-center-bdt-badge{font-size:0.88rem;font-weight:800;color:var(--pink-accent);letter-spacing:0.2px;}
+.reel-center-discount-badge{background:var(--pink-accent);color:#fff;font-size:0.64rem;font-weight:800;padding:2px 6px;border-radius:10px;}
+@media (max-width:380px){
+  .reel-similar-btn{padding:8px 11px;gap:5px;}
+  .reel-similar-btn .sim-label{font-size:0.66rem;}
+  .reel-bottom-price-overlay{padding:7px 11px;}
+  .reel-center-price-badge{font-size:0.94rem;}
+  .reel-center-bdt-badge{font-size:0.82rem;}
+}
 
 /* ======= OVERLAYS & MODALS ======= */
 .overlay-sheet{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.84);z-index:6000;overflow-y:auto;flex-direction:column;align-items:center;justify-content:center;padding:10px;scrollbar-width:none;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
@@ -315,24 +410,26 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .fs-profile-header-box{display:flex;flex-direction:column;align-items:center;margin-bottom:15px;gap:8px;width:100%;}
 .fs-profile-name{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.5px;}
 
-/* ======= SIMILAR MODAL (GALLERY-GRADE 2-COL MOBILE / 4-COL PC & INFINITE SCROLL) ======= */
+/* ======= SIMILAR MODAL (CLEAN 2-COLUMN MOBILE & MULTI-COLUMN PC GALLERY) ======= */
 #similarOverlay{z-index:6800!important;padding:8px;}
 .similar-modal-content{
   width:98%;
-  max-width:1160px;
+  max-width:1100px;
   height:88vh;
-  height:88dvh;
-  max-height:88dvh;
+  max-height:88vh;
   background:#07070c;
   border:1.5px solid rgba(212,175,55,0.65);
   border-radius:16px;
   padding:14px;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:12px;
   overflow:hidden;
   margin:auto;
-  box-shadow:0 18px 50px rgba(0,0,0,0.95);
+  box-shadow:0 18px 45px rgba(0,0,0,0.95);
+}
+@media (min-width:768px){
+  .similar-modal-content{padding:18px;gap:14px;}
 }
 .similar-header{
   display:flex;
@@ -343,86 +440,105 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   border-bottom:1px solid rgba(212,175,55,0.22);
   padding-bottom:10px;
 }
-.similar-title-wrap{display:flex;align-items:center;gap:9px;min-width:0;}
+.similar-title-wrap{display:flex;align-items:center;gap:8px;min-width:0;}
 .similar-title-icon{
-  width:32px;
-  height:32px;
-  border-radius:10px;
-  background:rgba(212,175,55,0.12);
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:rgba(212,175,55,0.14);
   border:1px solid rgba(212,175,55,0.45);
   display:flex;
   align-items:center;
   justify-content:center;
-  color:var(--gold-solid);
+  color:#fcf6ba;
   font-size:0.85rem;
   flex-shrink:0;
 }
-.similar-title{margin:0;font-size:0.98rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.6px;line-height:1.15;}
+.similar-title{margin:0;font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.5px;line-height:1.2;}
 .similar-sub{font-size:0.7rem;color:var(--text-gray);font-weight:600;letter-spacing:0.3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .similar-close{
-  background:rgba(255,42,133,0.14);
-  border:1px solid rgba(255,42,133,0.35);
+  background:rgba(255,42,133,0.16);
+  border:1px solid rgba(255,42,133,0.4);
   color:var(--pink-accent);
-  width:34px;
-  height:34px;
-  font-size:1.25rem;
+  font-size:1.3rem;
   cursor:pointer;
   line-height:1;
+  width:34px;
+  height:34px;
   border-radius:10px;
-  font-weight:700;
+  font-weight:800;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
   transition:transform 0.12s ease,background 0.15s ease;
 }
-.similar-close:hover{background:rgba(255,42,133,0.26);}
+.similar-close:hover{background:rgba(255,42,133,0.28);}
 .similar-close:active{transform:scale(0.9);}
 
 /* Responsive 2-column Mobile & Multi-column PC Grid */
 .similar-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: max-content;
   gap: 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  flex: 1;
-  padding: 2px 2px 12px 2px;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 2px 2px 16px 2px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  align-items: start;
   align-content: start;
 }
 .similar-grid::-webkit-scrollbar{display:none;}
-@media (min-width: 640px) { .similar-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
-@media (min-width: 920px) { .similar-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
+@media (min-width: 640px) { .similar-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } }
+@media (min-width: 920px) { .similar-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; } }
 
-/* Prevent Card Squishing inside Similar Grid */
+/* Full Unclipped Square Cards inside Similar Grid */
 .similar-grid .product-card {
   width: 100%;
-  height: auto;
-  min-height: 0;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
   margin-bottom: 0;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  break-inside: avoid;
 }
 .similar-grid .product-media-box {
-  width: 100%;
-  aspect-ratio: 1/1;
-  height: auto;
-  flex-shrink: 0;
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 100% !important;
+  aspect-ratio: 1 / 1;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+.similar-grid .product-media-box img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 .similar-grid .card-bottom-price-strip {
-  height: 28px;
-  min-height: 28px;
-  max-height: 28px;
+  position: relative !important;
+  width: 100% !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
   padding: 0 6px;
+  flex-shrink: 0 !important;
 }
-.similar-grid .card-bottom-price-strip .price-usd { font-size: 0.74rem; }
-.similar-grid .card-bottom-price-strip .price-bdt { font-size: 0.7rem; }
-.similar-grid .corner-discount-badge { font-size: 0.6rem; padding: 2px 6px; }
+.similar-grid .card-bottom-price-strip .price-usd { font-size: 0.75rem; }
+.similar-grid .card-bottom-price-strip .price-bdt { font-size: 0.71rem; }
+.similar-grid .corner-discount-badge { font-size: 0.6rem; padding: 2px 6px; z-index: 12; }
 
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
-  .loader-brand-name,.bottom-nav-item i,.bottom-nav-item span,.action-pure-icon,.reel-center-price-badge,.fs-profile-name,.card-bottom-price-strip .price-usd,.reel-similar-btn .sim-pure-icon{background:none!important;-webkit-text-fill-color:initial!important;color:var(--gold-solid)!important;}
+  .loader-brand-name,.bottom-nav-item i,.bottom-nav-item span,.action-pure-icon,.reel-center-price-badge,.fs-profile-name,.card-bottom-price-strip .price-usd,.reel-similar-btn .sim-label{background:none!important;-webkit-text-fill-color:initial!important;color:var(--gold-solid)!important;}
 }
 </style>
 </head>
@@ -584,15 +700,10 @@ function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,
 function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&loader.style.display!=='none'){loader.style.opacity='0';setTimeout(()=>{loader.style.display='none';},100);}}
 function debounce(func,wait){let timeout;return function executedFunction(...args){const later=()=>{clearTimeout(timeout);func(...args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}
 function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url))return;preloadedUrls.add(url);const img=new Image();if(highPriority)img.fetchPriority='high';img.decoding='async';img.src=url;}
-function applySmartReelZoom(imgEl){
-  if(!imgEl || !imgEl.naturalWidth || !imgEl.naturalHeight) return;
-  const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
-  /* রিলসের 9:16 অনুপাতের তুলনায় ছবি চওড়া বা ছোট হলে হালকা জুম করে ফুল-স্ক্রিন ফিল দেবে */
-  if(ratio >= 0.72){
-    imgEl.classList.add('zoom-fit');
-  } else {
-    imgEl.classList.remove('zoom-fit');
-  }
+function markReelMediaReady(el){
+  if(!el) return;
+  const box = el.closest('.reel-primary-video-container');
+  if(box) box.classList.add('media-ready');
 }
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
 function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
@@ -922,9 +1033,9 @@ activeSlideTimer=setInterval(()=>{
 const nextImg=(curImg+1)%imgs.length;
 const currEl=$(`slide_${idx}_${curImg}`);
 const nextEl=$(`slide_${idx}_${nextImg}`);
-if(currEl&&nextEl){currEl.classList.remove('active');currEl.classList.add('previous');nextEl.classList.remove('previous');nextEl.classList.add('active');setTimeout(()=>currEl.classList.remove('previous'),380);}
+if(currEl&&nextEl){currEl.classList.remove('active');currEl.classList.add('previous');nextEl.classList.remove('previous');nextEl.classList.add('active');setTimeout(()=>currEl.classList.remove('previous'),280);}
 curImg=nextImg;
-},2500);
+},1850);
 }
 }
 
@@ -934,6 +1045,21 @@ const list=activeProductList.length?activeProductList:globalMasterProductsList;
 if(!wrapper||renderedReelsCount>=list.length)return;
 const endIdx=Math.min(renderedReelsCount+count,list.length);
 const frag=document.createDocumentFragment();
+const aiSearchIconSvg=`<svg class="ai-sim-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aiGoldGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#bf953f"/>
+      <stop offset="35%" stop-color="#fcf6ba"/>
+      <stop offset="70%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#aa771c"/>
+    </linearGradient>
+  </defs>
+  <circle cx="10.5" cy="10.5" r="6.5" stroke="url(#aiGoldGrad)" stroke-width="2.1"/>
+  <path d="M15.5 15.5L20.5 20.5" stroke="url(#aiGoldGrad)" stroke-width="2.3" stroke-linecap="round"/>
+  <path d="M10.5 6.8L11.3 9.2L13.7 10L11.3 10.8L10.5 13.2L9.7 10.8L7.3 10L9.7 9.2L10.5 6.8Z" fill="#fcf6ba"/>
+  <path d="M18.5 3.2L19 4.7L20.5 5.2L19 5.7L18.5 7.2L18 5.7L16.5 5.2L18 4.7L18.5 3.2Z" fill="#ff2a85"/>
+  <path d="M20.8 8.5L21.1 9.4L22 9.7L21.1 10L20.8 10.9L20.5 10L19.6 9.7L20.5 9.4L20.8 8.5Z" fill="#fcf6ba"/>
+</svg>`;
 for(let idx=renderedReelsCount;idx<endIdx;idx++){
 const product=list[idx];
 const pId=String(product.id||product.product_id||'101');
@@ -945,12 +1071,12 @@ const disc=parseFloat(product.discount_rate||product.discountRate||0);
 if(idx===0)preloadImageUrl(imgs[0],true);
 let mediaContent='';
 if(pVideo&&(pVideo.includes('.mp4')||pVideo.includes('.r2.dev')||pVideo.includes('http'))){
-mediaContent=`<video src="${pVideo}" poster="${imgs[0]}" ${idx===0?'autoplay preload="auto"':'preload="none"'} muted loop controls playsinline style="width:100%;height:100%;object-fit:contain;"></video>`;
+mediaContent=`<video src="${pVideo}" poster="${imgs[0]}" ${idx===0?'autoplay preload="auto"':'preload="none"'} onloadeddata="markReelMediaReady(this)" muted loop controls playsinline style="width:100%;height:100%;object-fit:contain;"></video>`;
 }else{
 const layers=imgs.map((url,i)=>{
 const isFirst=(idx===0&&i===0);
 const isEager=(idx<=2&&i===0);
-return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';" onload="applySmartReelZoom(this);${isFirst?'hideLoaderFast();':''}" class="slide-layer ${i===0?'active':''}" id="slide_${idx}_${i}" alt="slide" ${isFirst?'fetchpriority="high" decoding="sync"':`loading="${isEager?'eager':'lazy'}" decoding="async"`}>`;
+return `<img src="${url}" onerror="this.onerror=null;this.src='${FALLBACK_LOGO}';markReelMediaReady(this);" onload="markReelMediaReady(this);${isFirst?'hideLoaderFast();':''}" class="slide-layer ${i===0?'active':''}" id="slide_${idx}_${i}" alt="slide" ${isFirst?'fetchpriority="high" decoding="sync"':`loading="${isEager?'eager':'lazy'}" decoding="async"`}>`;
 }).join('');
 mediaContent=`<div style="width:100%;height:100%;position:relative;overflow:hidden;">${layers}</div>`;
 }
@@ -959,16 +1085,18 @@ card.className='reel-card';
 card.dataset.index=idx;
 card.dataset.productId=pId;
 card.innerHTML=`<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
-<button class="reel-similar-btn" onclick="event.stopPropagation();openSimilarModal(${idx})" title="Similar Products">
-  <i class="fa-solid fa-layer-group sim-pure-icon"></i>
-  <span class="sim-label">SIMILAR</span>
-</button>
-<div class="reel-bottom-price-overlay">
-<div class="reel-price-row">
-<span class="reel-center-price-badge">${price}</span>
-<span class="reel-center-bdt-badge">${bdt}</span>
-${disc>0?`<span class="reel-center-discount-badge">${disc}% OFF</span>`:''}
-</div>
+<div class="reel-bottom-dock">
+  <div class="reel-bottom-price-overlay">
+    <div class="reel-price-row">
+      <span class="reel-center-price-badge">${price}</span>
+      <span class="reel-center-bdt-badge">${bdt}</span>
+      ${disc>0?`<span class="reel-center-discount-badge">${disc}% OFF</span>`:''}
+    </div>
+  </div>
+  <button class="reel-similar-btn" onclick="event.stopPropagation();openSimilarModal(${idx})" title="Find Similar Products">
+    ${aiSearchIconSvg}
+    <span class="sim-label">SIMILAR</span>
+  </button>
 </div>
 <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">${mediaContent}</div>
 </div>`;
