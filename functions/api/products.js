@@ -22,6 +22,30 @@ export async function onRequest(context) {
     return json({ success: false, error: "Database binding not found" }, 500);
   }
 
+  // ==== BDT Currency Rate (env.BDT_RATE or default 120) ====
+  const BDT_RATE = parseFloat(env.BDT_RATE || "120");
+
+  // Enrich each product with calculated BDT prices (fallback if column absent)
+  function enrichWithBdt(row) {
+    if (!row || typeof row !== "object") return row;
+    const usdPrice = parseFloat(row.price) || 0;
+    const usdMarket = parseFloat(row.market_price) || 0;
+    const bdtPrice =
+      row.price_bdt != null && row.price_bdt !== ""
+        ? Math.round(parseFloat(row.price_bdt))
+        : Math.round(usdPrice * BDT_RATE);
+    const bdtMarket =
+      row.market_price_bdt != null && row.market_price_bdt !== ""
+        ? Math.round(parseFloat(row.market_price_bdt))
+        : Math.round(usdMarket * BDT_RATE);
+    return {
+      ...row,
+      price_bdt: bdtPrice,
+      market_price_bdt: bdtMarket,
+      bdt_rate: BDT_RATE,
+    };
+  }
+
   try {
     const url = new URL(request.url);
 
@@ -72,7 +96,8 @@ export async function onRequest(context) {
 
       query += " ORDER BY created_at DESC";
       const { results } = await db.prepare(query).bind(...params).all();
-      return json({ success: true, data: results || [] });
+      const data = (results || []).map(enrichWithBdt);
+      return json({ success: true, data, bdt_rate: BDT_RATE });
     }
 
     // ========== POST (Create) ==========
@@ -88,7 +113,6 @@ export async function onRequest(context) {
 
       const cleanSku = String(body.sku).trim().toUpperCase();
 
-      // Duplicate SKU check — friendly error
       const existing = await db
         .prepare("SELECT id FROM products WHERE UPPER(TRIM(sku)) = ?")
         .bind(cleanSku)
@@ -151,6 +175,8 @@ export async function onRequest(context) {
         message: "Product uploaded successfully!",
         id: result.meta?.last_row_id ?? null,
         sku: cleanSku,
+        price_bdt: Math.round((parseFloat(body.price) || 0) * BDT_RATE),
+        bdt_rate: BDT_RATE,
       });
     }
 
@@ -164,7 +190,6 @@ export async function onRequest(context) {
         return json({ success: false, error: "Product ID / SKU is required." }, 400);
       }
 
-      // Find the record first (id / product_code / sku — যেকোনোটা দিয়ে)
       const target = await db
         .prepare(
           "SELECT id, sku FROM products WHERE id = ? OR product_code = ? OR UPPER(TRIM(sku)) = UPPER(TRIM(?)) LIMIT 1"
@@ -176,7 +201,6 @@ export async function onRequest(context) {
         return json({ success: false, error: "Product not found." }, 404);
       }
 
-      // SKU uniqueness check (excluding self)
       if (body.sku) {
         const newSku = String(body.sku).trim().toUpperCase();
         const dup = await db
