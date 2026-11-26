@@ -109,18 +109,43 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .slide-layer.active{opacity:1;z-index:2;}
 .slide-layer.previous{opacity:0;z-index:1;}
 
-/* ======= NEW BOTTOM ACTIONS & SIMILAR BUTTON ======= */
-.reel-bottom-actions{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;align-items:center;gap:12px;pointer-events:none;width:90%;max-width:320px;}
-.reel-similar-btn{pointer-events:auto;background:var(--gold-gradient);border:none;color:#000;font-family:var(--font-main);font-size:0.75rem;font-weight:800;letter-spacing:0.5px;padding:8px 18px;border-radius:30px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:transform 0.1s ease,box-shadow 0.2s ease;box-shadow:0 0 15px rgba(212,175,55,0.6);animation:goldPulse 2s infinite alternate;}
-.reel-similar-btn:active{transform:scale(0.92);}
-.reel-similar-btn i{color:#000;font-size:0.8rem;}
-@keyframes goldPulse {
-  0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
-  100% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.9), 0 0 10px rgba(255, 42, 133, 0.4); }
+/* ======= SIMILAR BUTTON (Bottom Right Corner) ======= */
+.reel-similar-btn {
+    position: absolute;
+    bottom: 95px; /* ঠিক প্রাইস ওভারলের উপরে */
+    right: 15px;
+    z-index: 60;
+    background: var(--gold-gradient);
+    border: 1.5px solid #fcf6ba;
+    color: #000;
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease;
+    animation: goldShinePulse 2.5s infinite alternate;
+}
+.reel-similar-btn:active { transform: scale(0.9); }
+.reel-similar-btn i { color: #000; font-size: 0.8rem; }
+
+@keyframes goldShinePulse {
+    0% {
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 5px rgba(255, 42, 133, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(212, 175, 55, 1), 0 0 15px rgba(255, 42, 133, 0.6);
+    }
 }
 
-.reel-bottom-price-overlay{pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 20px;border-radius:24px;background:rgba(8,8,14,0.95)!important;border:1.5px solid rgba(212,175,55,0.6);box-shadow:0 4px 15px rgba(0,0,0,0.8);white-space:nowrap;}
-.reel-price-row{display:flex;align-items:center;gap:8px;}
+/* ======= REEL PRICE OVERLAY ======= */
+.reel-bottom-price-overlay{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 20px;border-radius:24px;background:rgba(8,8,14,0.95)!important;border:1.5px solid rgba(212,175,55,0.6);box-shadow:0 4px 15px rgba(0,0,0,0.8);white-space:nowrap;}
+.reel-price-row{display:flex;align-items:center;gap:10px;}
 .reel-center-price-badge{font-size:1.15rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .reel-center-bdt-badge{font-size:0.95rem;font-weight:800;color:var(--pink-accent);letter-spacing:0.2px;}
 .reel-center-discount-badge{background:var(--pink-accent);color:#fff;font-size:0.7rem;font-weight:800;padding:2px 8px;border-radius:10px;}
@@ -149,18 +174,48 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .fs-profile-header-box{display:flex;flex-direction:column;align-items:center;margin-bottom:15px;gap:8px;width:100%;}
 .fs-profile-name{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.5px;}
 
-/* ======= SIMILAR MODAL (NEW RESPONSIVE GRID) ======= */
+/* ======= SIMILAR MODAL GRID FIX ======= */
 #similarOverlay{z-index:6800!important;}
-.similar-modal-content{width:96%;max-width:1000px;height:88vh;max-height:88vh;background:#08080e;border:1.5px solid var(--gold-solid);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;margin:auto;box-shadow:0 15px 40px rgba(0,0,0,0.9);}
+.similar-modal-content{width:96%;max-width:1000px;height:85vh;max-height:85vh;background:#08080e;border:1.5px solid var(--gold-solid);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;margin:auto;box-shadow:0 15px 40px rgba(0,0,0,0.9);}
 .similar-header{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;border-bottom:1px solid rgba(212,175,55,0.2);padding-bottom:10px;}
-.similar-title{margin:0;font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.6px;}
-.similar-sub{font-size:0.7rem;color:var(--text-gray);font-weight:600;letter-spacing:0.3px;margin-top:2px;}
+.similar-title{margin:0;font-size:1.1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.6px;}
+.similar-sub{font-size:0.75rem;color:var(--text-gray);font-weight:600;letter-spacing:0.3px;margin-top:2px;}
 .similar-close{background:rgba(255,42,133,0.15);border:1px solid rgba(255,42,133,0.3);color:var(--pink-accent);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px 10px;border-radius:8px;font-weight:700;transition:transform 0.1s;}
 .similar-close:active{transform:scale(0.9);}
-.similar-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:10px;overflow-y:auto;flex:1;padding:2px 4px 2px 0;scrollbar-width:none;}
+
+/* Fix for similar modal grid layout (Square cards) */
+.similar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    overflow-y: auto;
+    flex: 1;
+    padding: 2px 4px 2px 0;
+    scrollbar-width: none;
+    align-content: start;
+}
 .similar-grid::-webkit-scrollbar{display:none;}
 @media (min-width: 600px) { .similar-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
 @media (min-width: 900px) { .similar-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
+
+.similar-grid .product-card {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+.similar-grid .product-media-box {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+}
+.similar-grid .card-clean-price-badge {
+    padding: 4px 8px;
+}
+.similar-grid .card-clean-price-badge .price-usd { font-size: 0.9rem; }
+.similar-grid .card-clean-price-badge .price-bdt { font-size: 0.7rem; }
+.similar-grid .corner-discount-badge { font-size: 0.65rem; padding: 2px 6px; }
 
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
   .loader-brand-name,.bottom-nav-item i,.bottom-nav-item span,.action-pure-icon,.reel-center-price-badge,.fs-profile-name,.card-clean-price-badge .price-usd{background:none!important;-webkit-text-fill-color:initial!important;color:var(--gold-solid)!important;}
@@ -622,15 +677,14 @@ const card=document.createElement('div');
 card.className='reel-card';
 card.dataset.index=idx;
 card.dataset.productId=pId;
+// SIMILAR button moved to bottom right corner
 card.innerHTML=`<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
-<div class="reel-bottom-actions">
 <button class="reel-similar-btn" onclick="event.stopPropagation();openSimilarModal(${idx})" title="Similar Products"><i class="fa-solid fa-layer-group"></i> SIMILAR</button>
 <div class="reel-bottom-price-overlay">
 <div class="reel-price-row">
 <span class="reel-center-price-badge">${price}</span>
 <span class="reel-center-bdt-badge">${bdt}</span>
 ${disc>0?`<span class="reel-center-discount-badge">${disc}% OFF</span>`:''}
-</div>
 </div>
 </div>
 <div class="reel-primary-video-container" id="primaryMediaBox_${idx}">${mediaContent}</div>
