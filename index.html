@@ -22,7 +22,18 @@
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('SW ok:',reg.scope)).catch(err=>console.log('SW fail:',err));});}
 </script>
 <style>
-:root{--bg-retail:#000000;--card-retail:#08080c;--gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 25%,#b38728 50%,#fbf5b7 75%,#aa771c 100%);--gold-solid:#d4af37;--pink-accent:#ff2a85;--pink-gradient:linear-gradient(135deg,#ff2a85 0%,#ff479b 100%);--text-white:#ffffff;--text-gray:#a0a0ab;--font-main:'Poppins',sans-serif;--snap-ease:cubic-bezier(0.16,1,0.3,1);}
+:root{
+  --bg-retail:#000000;
+  --card-retail:#08080c;
+  --gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 25%,#b38728 50%,#fbf5b7 75%,#aa771c 100%);
+  --gold-solid:#d4af37;
+  --pink-accent:#ff2a85;
+  --pink-gradient:linear-gradient(135deg,#ff2a85 0%,#ff479b 100%);
+  --text-white:#ffffff;
+  --text-gray:#a0a0ab;
+  --font-main:'Poppins',sans-serif;
+  --snap-ease:cubic-bezier(0.16,1,0.3,1);
+}
 html,body{width:100%;max-width:100vw;overflow-x:hidden;overflow-y:auto!important;background:var(--bg-retail)!important;color:var(--text-white);font-family:var(--font-main);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;-webkit-overflow-scrolling:touch;scrollbar-width:none;text-rendering:optimizeSpeed;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-wrap:break-word;word-break:break-word;}
 body{margin:0;padding:0 0 58px 0;text-transform:none!important;}
 html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
@@ -35,6 +46,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .loader-brand-name{font-size:1rem;font-weight:800;letter-spacing:3px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 #pullRefreshIndicator{position:fixed;top:-50px;left:50%;transform:translateX(-50%);z-index:7000;background:#0c0c12;border:1px solid var(--gold-solid);color:var(--gold-solid);padding:6px 16px;border-radius:20px;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:8px;transition:top 0.15s ease-out;pointer-events:none;}
 #pullRefreshIndicator.visible{top:18px;}
+
 .product-card{background:transparent;border-radius:14px;overflow:hidden;display:inline-block;width:100%;position:relative;cursor:pointer;margin-bottom:8px;break-inside:avoid;opacity:0;transform:translate3d(0,8px,0) scale(0.985);transition:opacity 0.18s var(--snap-ease),transform 0.18s var(--snap-ease);contain:layout style paint;backface-visibility:hidden;}
 .product-card.ai-revealed{opacity:1;transform:translate3d(0,0,0) scale(1);}
 .product-card:active{transform:scale(0.97);transition-duration:0.05s;}
@@ -44,6 +56,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .product-media-box img{width:100%;height:100%;display:block;object-fit:cover;position:relative;z-index:1;background:#0a0a12;opacity:0;transition:opacity 0.2s ease-out;}
 .product-media-box img.img-ready{opacity:1;}
 .product-media-box.img-loaded::before{display:none;}
+
 .desktop-reel-nav{position:fixed;right:74px;top:50%;transform:translateY(-50%);z-index:4600;display:flex;flex-direction:column;gap:14px;}
 @media (max-width:768px){.desktop-reel-nav{display:none!important;}}
 .desktop-nav-circle{width:44px;height:44px;border-radius:50%;background:rgba(12,12,18,0.9);border:1px solid rgba(212,175,55,0.4);color:#fcf6ba;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.12s ease;}
@@ -63,7 +76,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .side-action-item.you-active .action-pure-icon,.side-action-item.you-active .side-count-text{color:var(--pink-accent)!important;background:none!important;-webkit-background-clip:initial!important;-webkit-text-fill-color:initial!important;}
 .cart-pink-badge{position:absolute;top:-6px;left:50%;transform:translateX(-50%);background:var(--pink-accent);color:#fff;font-size:0.6rem;font-weight:800;min-width:18px;height:18px;padding:0 4px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px var(--pink-accent);z-index:10;pointer-events:none;}
 
-/* Bottom Nav Bar - Always Fixed */
 .bottom-nav-bar{position:fixed;bottom:0;left:0;width:100%;height:54px!important;background:rgba(0,0,0,0.85)!important;border-top:none!important;display:flex;justify-content:space-around;align-items:center;z-index:5000;padding:0 4px;transform:translate3d(0,0,0);}
 @media(min-width:768px){.bottom-nav-bar{justify-content:center;gap:60px;padding:0 20px;}.bottom-nav-item{width:auto!important;min-width:70px;}}
 .bottom-nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:0.6rem;font-weight:700;gap:2px;width:100%;height:100%;}
@@ -74,7 +86,12 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .pinterest-feed-container.active-grid{display:block;}
 @media (min-width:768px){.pinterest-feed-container{column-count:4;column-gap:12px;padding:80px 15px 15px 15px;}}
 .corner-discount-badge{position:absolute;top:8px;left:8px;z-index:45;background:var(--pink-accent);color:#fff;font-size:0.68rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:0.3px;}
-.card-clean-price-badge{position:absolute;bottom:8px;right:8px;z-index:45;font-size:0.92rem;font-weight:800;background:var(--gold-gradient)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;filter:drop-shadow(0px 2px 4px #000);}
+
+/* Dual-currency price badge (stacked) */
+.card-clean-price-badge{position:absolute;bottom:8px;right:8px;z-index:45;display:flex;flex-direction:column;align-items:flex-end;gap:1px;filter:drop-shadow(0px 2px 4px #000);}
+.card-clean-price-badge .price-usd{font-size:0.92rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;}
+.card-clean-price-badge .price-bdt{font-size:0.6rem;font-weight:700;color:#fff;letter-spacing:0.2px;line-height:1.1;text-shadow:0 1px 3px rgba(0,0,0,1);}
+
 .reel-modal-overlay{display:flex;position:fixed;inset:0;background:#000;z-index:4000;align-items:center;justify-content:center;}
 .reel-modal-overlay.hidden-reels{display:none!important;}
 .reel-modal-wrapper{position:relative;width:100%;max-width:420px;height:calc(100vh - 54px);height:calc(100dvh - 54px);background:#000;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -86,10 +103,17 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .slide-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.38s var(--snap-ease);will-change:opacity;backface-visibility:hidden;transform:translateZ(0);}
 .slide-layer.active{opacity:1;z-index:2;}
 .slide-layer.previous{opacity:0;z-index:1;}
+
+/* Similar button on reel */
+.reel-similar-btn{position:absolute;top:12px;right:12px;z-index:60;background:rgba(8,8,14,0.92);border:1px solid rgba(212,175,55,0.55);color:var(--gold-solid);font-family:var(--font-main);font-size:0.68rem;font-weight:800;letter-spacing:0.4px;padding:6px 12px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:transform 0.1s ease;}
+.reel-similar-btn:active{transform:scale(0.92);}
+
 .reel-bottom-price-overlay{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:22px;background:rgba(8,8,14,0.94)!important;border:1px solid rgba(212,175,55,0.45);white-space:nowrap;}
 .reel-price-row{display:flex;align-items:center;gap:8px;}
 .reel-center-price-badge{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.reel-center-bdt-badge{font-size:0.72rem;font-weight:800;color:#fff;letter-spacing:0.2px;}
 .reel-center-discount-badge{background:var(--pink-accent);color:#fff;font-size:0.68rem;font-weight:800;padding:2px 7px;border-radius:10px;}
+
 .overlay-sheet{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:6000;overflow-y:auto;flex-direction:column;align-items:center;justify-content:center;padding:10px;scrollbar-width:none;}
 .overlay-sheet::-webkit-scrollbar{display:none;}
 .buy-preview-modal{width:96%;max-width:460px;background:#0a0a10;border:1.5px solid rgba(212,175,55,0.5);border-radius:16px;padding:14px;margin:auto;display:flex;flex-direction:column;gap:8px;}
@@ -112,8 +136,21 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .category-transparent-overlay,.saved-gallery-overlay{z-index:6500!important;}
 .fs-profile-header-box{display:flex;flex-direction:column;align-items:center;margin-bottom:15px;gap:8px;width:100%;}
 .fs-profile-name{font-size:0.95rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* Similar modal */
+#similarOverlay{z-index:6800!important;}
+.similar-modal-content{width:96%;max-width:960px;height:88vh;max-height:88vh;background:#08080e;border:1.5px solid var(--gold-solid);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;overflow:hidden;margin:auto;}
+.similar-header{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;}
+.similar-title{margin:0;font-size:0.9rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.5px;}
+.similar-sub{font-size:0.62rem;color:var(--text-gray);font-weight:600;letter-spacing:0.3px;}
+.similar-close{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;line-height:1;padding:0 4px;}
+.similar-grid{column-count:2;column-gap:8px;overflow-y:auto;flex:1;padding:2px 4px 2px 0;scrollbar-width:none;}
+.similar-grid::-webkit-scrollbar{display:none;}
+@media (min-width:600px){.similar-grid{column-count:3;column-gap:10px;}}
+@media (min-width:960px){.similar-grid{column-count:4;}}
+
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
-  .loader-brand-name,.bottom-nav-item i,.bottom-nav-item span,.action-pure-icon,.card-clean-price-badge,.reel-center-price-badge,.fs-profile-name,.gold-title-gradient{background:none!important;-webkit-text-fill-color:initial!important;color:var(--gold-solid)!important;}
+  .loader-brand-name,.bottom-nav-item i,.bottom-nav-item span,.action-pure-icon,.reel-center-price-badge,.fs-profile-name,.gold-title-gradient,.card-clean-price-badge .price-usd{background:none!important;-webkit-text-fill-color:initial!important;color:var(--gold-solid)!important;}
 }
 </style>
 </head>
@@ -133,7 +170,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <button class="desktop-nav-circle" onclick="navigateReelStep(1)" title="Next Reel"><i class="fa-solid fa-chevron-down"></i></button>
 </div>
 
-<!-- Right Action Bar -->
 <div id="fixedGlobalActionsBar" class="right-vertical-actions">
 <div class="side-action-item" id="cartDropZone" onclick="toggleCartPortal()" title="Cart" style="padding-top:4px;">
 <i class="fa-solid fa-cart-shopping action-pure-icon" id="cartTargetIcon"></i>
@@ -150,7 +186,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div class="side-action-item" onclick="openCleanGalleryView()" title="Gallery"><i class="fa-solid fa-image action-pure-icon"></i><span class="side-count-text">GALLERY</span></div>
 </div>
 
-<!-- Bottom Navigation -->
 <nav class="bottom-nav-bar">
 <div id="bottomWorldBtn" class="bottom-nav-item" onclick="toggleWorldPortal()"><i class="fa-solid fa-globe"></i><span>WORLD</span></div>
 <div id="bottomCategoryBtn" class="bottom-nav-item" onclick="toggleCategoryModal(event)"><i class="fa-solid fa-list-check"></i><span>CATEGORY</span></div>
@@ -164,11 +199,48 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 <div id="buyPreviewOverlay" class="overlay-sheet" onclick="if(event.target===this) closeBuyPreview()"><div class="buy-preview-modal" id="buyPreviewModalContent"></div></div>
 <div id="inpageDetailsOverlay" class="overlay-sheet" onclick="if(event.target===this) closeInpageDetails()"><div class="inpage-details-modal" id="inpageDetailsModalContent"></div></div>
 <div id="categoryTransparentOverlay" class="category-transparent-overlay" onclick="if(event.target===this) this.style.display='none'"><div class="seller-fullscreen-container"><div class="category-fullscreen-view" id="categoryMainListView"></div></div></div>
+
+<!-- Similar Products Overlay -->
+<div id="similarOverlay" class="overlay-sheet" onclick="if(event.target===this) closeSimilarModal()">
+<div class="similar-modal-content">
+<div class="similar-header">
+<div style="display:flex;flex-direction:column;gap:2px;">
+<h3 class="similar-title">SIMILAR PRODUCTS</h3>
+<span class="similar-sub" id="similarSubText">RELATED ITEMS IN SAME CATEGORY</span>
+</div>
+<button class="similar-close" onclick="closeSimilarModal()">×</button>
+</div>
+<div id="similarGrid" class="similar-grid"></div>
+</div>
+</div>
+
 <main id="appContainer" class="pinterest-feed-container"></main>
 <div id="reelModalOverlay" class="reel-modal-overlay"><div class="reel-modal-wrapper" id="reelModalWrapperBody"></div></div>
 <script src="categories.js"></script>
 <script>
-// ================= DIRECT ACCOUNT TOGGLE LOGIC ON "YOU" BUTTON =================
+/* ===================== CURRENCY HELPERS ===================== */
+const USD_TO_BDT_RATE = 120; // 1 USD = 120 BDT (override by server bdt_rate if present)
+function fmtUSD(val){ const p = parseFloat(val)||0; return `$${p.toFixed(2)}`; }
+function getBdtFromProduct(product){
+  if (!product) return 0;
+  if (product.price_bdt != null && !isNaN(parseFloat(product.price_bdt))) return Math.round(parseFloat(product.price_bdt));
+  return Math.round((parseFloat(product.price)||0) * USD_TO_BDT_RATE);
+}
+function getMarketBdtFromProduct(product){
+  if (!product) return 0;
+  if (product.market_price_bdt != null && !isNaN(parseFloat(product.market_price_bdt))) return Math.round(parseFloat(product.market_price_bdt));
+  return Math.round((parseFloat(product.market_price)||0) * USD_TO_BDT_RATE);
+}
+function fmtBDTFromUSD(val){ const bdt = Math.round((parseFloat(val)||0) * USD_TO_BDT_RATE); return `৳${bdt.toLocaleString('en-US')}`; }
+function fmtBDTFromNum(num){ return `৳${Math.round(num||0).toLocaleString('en-US')}`; }
+function priceBadgeHtml(product){
+  const usd = fmtUSD(product.price||0);
+  const bdt = fmtBDTFromNum(getBdtFromProduct(product));
+  return `<span class="price-usd">${usd}</span><span class="price-bdt">${bdt}</span>`;
+}
+/* ============================================================ */
+
+/* ===================== ACCOUNT PORTAL ===================== */
 function isAccountPortalOpen() {
     const overlay = document.getElementById('fullscreenIframeOverlay');
     const iframe = document.getElementById('fullscreenIframeBody');
@@ -176,32 +248,22 @@ function isAccountPortalOpen() {
     const currentSrc = iframe.getAttribute('src') || '';
     return overlay.style.display === 'flex' && currentSrc.includes('account.html');
 }
-
 function closeAccountPortal() {
     const overlay = document.getElementById('fullscreenIframeOverlay');
     const iframe = document.getElementById('fullscreenIframeBody');
     const youBtn = document.getElementById('youActionBtn');
-    if (overlay) {
-        overlay.style.display = 'none';
-    }
-    if (iframe) {
-        iframe.src = '';
-    }
-    if (youBtn) {
-        youBtn.classList.remove('you-active');
-    }
+    if (overlay) overlay.style.display = 'none';
+    if (iframe) iframe.src = '';
+    if (youBtn) youBtn.classList.remove('you-active');
 }
-
 function openAccountPortalDirect() {
     const overlay = document.getElementById('fullscreenIframeOverlay');
     const iframe = document.getElementById('fullscreenIframeBody');
     const youBtn = document.getElementById('youActionBtn');
-
     if ($('categoryTransparentOverlay')) $('categoryTransparentOverlay').style.display = 'none';
     if ($('savedGalleryOverlay')) $('savedGalleryOverlay').style.display = 'none';
     closeBuyPreview();
     closeInpageDetails();
-
     if (overlay && iframe) {
         iframe.src = '/account.html?mode=customer&direct=1';
         overlay.style.display = 'flex';
@@ -211,23 +273,20 @@ function openAccountPortalDirect() {
         window.location.assign(new URL('/account.html?mode=customer&direct=1', window.location.origin).href);
     }
 }
-
 function toggleAccountPortal() {
-    if (isAccountPortalOpen()) {
-        closeAccountPortal();
-    } else {
-        openAccountPortalDirect();
-    }
+    if (isAccountPortalOpen()) closeAccountPortal();
+    else openAccountPortalDirect();
 }
-
 window.toggleAccountPortal = toggleAccountPortal;
 window.openAccountPortalDirect = openAccountPortalDirect;
 window.closeAccountPortal = closeAccountPortal;
-// ============================================================================
+/* ========================================================== */
 
 const FALLBACK_LOGO='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 const CACHE_KEY='rorraxy_retail_feed_cache';
 const REELS_BATCH_SIZE=6;
+const GRID_CHUNK_SIZE=16;
+
 let globalMasterProductsList=[{id:'101',sku:'ROR-DEMO-01',title:'rorraxy Premium Matte Black Edition',category:'Fashion',price:'49.99',discount_rate:'20',image_url:FALLBACK_LOGO,description:'Luxury matte finish crafted with highest precision.'}];
 let activeProductList=[];
 let renderedReelsCount=0;
@@ -239,6 +298,13 @@ let currentProductQty=1;
 let persistentCustomNote='';
 const preloadedUrls=new Set();
 const $=id=>document.getElementById(id);
+
+// Gallery progressive rendering state
+let gridSourceList=[];
+let gridRenderedCount=0;
+let gridActiveContainer=null;
+let gridRenderingActive=false;
+
 function getSku(product){return String(product&&(product.sku||product.product_code||product.productCode)||'').trim().toUpperCase();}
 function escapeSku(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function hideLoaderFast(){const loader=$('rorraxyLoaderOverlay');if(loader&&loader.style.display!=='none'){loader.style.opacity='0';setTimeout(()=>{loader.style.display='none';},100);}}
@@ -247,6 +313,7 @@ function preloadImageUrl(url,highPriority=false){if(!url||preloadedUrls.has(url)
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
 function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
 
+/* ===================== BOOT ===================== */
 window.addEventListener('DOMContentLoaded',()=>{
 const urlParams=new URLSearchParams(window.location.search);
 const refParam=urlParams.get('ref')||urlParams.get('seller_id')||urlParams.get('affiliate');
@@ -267,6 +334,7 @@ updateSideActionState();
 setupPullToRefresh();
 setupAutoHideSearchOnScroll();
 setupDesktopNavigation();
+setupInfiniteGridScroll();
 buildCategoriesAccordion();
 setTimeout(hideLoaderFast,60);
 const searchInput=$('floatingSearchInput'),searchBtn=$('floatingSearchBtn');
@@ -277,6 +345,19 @@ searchInput.addEventListener('keypress',e=>{if(e.key==='Enter')executeHeaderSear
 searchInput.addEventListener('input',e=>debouncedSearch(e.target.value));
 }
 });
+
+/* ===================== INFINITE GRID SCROLL ===================== */
+function setupInfiniteGridScroll(){
+window.addEventListener('scroll',()=>{
+if(!gridActiveContainer||!gridActiveContainer.classList.contains('active-grid'))return;
+if(!gridRenderingActive)return;
+const scrollBottom=window.innerHeight+window.scrollY;
+const docHeight=document.documentElement.scrollHeight;
+if(docHeight-scrollBottom<900){appendGridChunk();}
+},{passive:true});
+}
+
+/* ===================== CATEGORY ===================== */
 function buildCategoriesAccordion(){
 const container=$('categoryMainListView');
 if(!container)return;
@@ -307,7 +388,6 @@ function toggleCategoryModal(e){if(e)e.stopPropagation();const overlay=$('catego
 function switchToGridMode(showSearch=true){$('reelModalOverlay')?.classList.add('hidden-reels');$('appContainer')?.classList.add('active-grid');$('fixedGlobalActionsBar')?.classList.add('clean-hidden');if($('desktopReelNav'))$('desktopReelNav').style.display='none';if(showSearch)$('floatingSearchContainer')?.classList.remove('search-hidden');}
 function setupAutoHideSearchOnScroll(){const hideSearch=()=>{const sb=$('floatingSearchContainer');if(sb&&!sb.classList.contains('search-hidden')){sb.classList.add('search-hidden');sb.classList.remove('manual-open');}};window.addEventListener('scroll',hideSearch,{passive:true});const wrapper=$('reelModalWrapperBody');if(wrapper){wrapper.addEventListener('touchmove',hideSearch,{passive:true});wrapper.addEventListener('wheel',hideSearch,{passive:true});}}
 
-// CLEAN GALLERY FUNCTION
 function openCleanGalleryView(){
     closeAccountPortal();
     switchToGridMode(true);
@@ -315,6 +395,7 @@ function openCleanGalleryView(){
     renderPinterestHomeGrid(activeProductList);
 }
 
+/* ===================== DESKTOP NAV & PULL ===================== */
 function setupDesktopNavigation(){
 const wrapper=$('reelModalWrapperBody');
 if(!wrapper)return;
@@ -334,6 +415,8 @@ const list=(json&&json.success&&Array.isArray(json.data))?json.data:(Array.isArr
 if(list.length){globalMasterProductsList=list;localStorage.setItem(CACHE_KEY,JSON.stringify(list));activeProductList=shuffleArray(globalMasterProductsList);openReelsModal(0);}
 }catch(e){}
 }
+
+/* ===================== BOTTOM NAV / HOME ===================== */
 function toggleWorldPortal(){window.location.href='https://rorraxy.com/world.html';}
 function handleBottomBuy(){const l=activeProductList.length?activeProductList:globalMasterProductsList;if(l.length)openBuyPreviewModal(l[currentReelIndex]||l[0]);}
 function handleBottomDetails(){const l=activeProductList.length?activeProductList:globalMasterProductsList;if(l.length)openInpageDetailsModal(l[currentReelIndex]||l[0]);}
@@ -341,6 +424,7 @@ function handleHomeToggle(){
 if($('fullscreenIframeOverlay')?.style.display==='flex'){$('fullscreenIframeOverlay').style.display='none';$('fullscreenIframeBody').src='';}
 if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
 if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
+if($('similarOverlay'))$('similarOverlay').style.display='none';
 document.getElementById('youActionBtn')?.classList.remove('you-active');
 closeBuyPreview();
 closeInpageDetails();
@@ -357,6 +441,7 @@ openReelsModal(0);
 function toggleCartPortal(){document.getElementById('youActionBtn')?.classList.remove('you-active');openFullscreenPortal('/cart.html');}
 function openFullscreenPortal(url){$('fullscreenIframeBody').src=url;$('fullscreenIframeOverlay').style.display='flex';updateCartBadgeCount();}
 
+/* ===================== LOAD PRODUCTS ===================== */
 async function loadLiveProducts(){
 let rendered=false;
 try{const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(Array.isArray(cached)&&cached.length){globalMasterProductsList=cached;checkInitialProductParam();rendered=true;}}catch(e){}
@@ -394,30 +479,36 @@ switchToGridMode(false);
 activeProductList=globalMasterProductsList.filter(item=>`${item.title||''} ${item.category||''} ${item.description||''}`.toLowerCase().includes(q));
 renderPinterestHomeGrid(activeProductList);
 }
+
+/* ===================== PROGRESSIVE GRID RENDER ===================== */
 function renderPinterestHomeGrid(products){
 const container=$('appContainer');
 if(!container)return;
 container.className='pinterest-feed-container active-grid';
+container.innerHTML='';
+gridSourceList=Array.isArray(products)?products:[];
+gridRenderedCount=0;
+gridActiveContainer=container;
+gridRenderingActive=true;
+appendGridChunk();
+}
+
+function appendGridChunk(){
+if(!gridActiveContainer||!gridRenderingActive)return;
+if(gridRenderedCount>=gridSourceList.length){gridRenderingActive=false;return;}
+const end=Math.min(gridRenderedCount+GRID_CHUNK_SIZE,gridSourceList.length);
 const frag=document.createDocumentFragment();
-products.forEach((item,index)=>{
+for(let i=gridRenderedCount;i<end;i++){
+const item=gridSourceList[i];
 const imgs=extractImages(item);
-const price=item.price?`$${parseFloat(item.price).toFixed(2)}`:'$0.00';
 const disc=parseFloat(item.discount_rate||item.discountRate||0);
 const card=document.createElement('div');
 card.className='product-card';
-card.onclick=e=>{
-e.preventDefault();
-container.classList.remove('active-grid');
-$('fixedGlobalActionsBar')?.classList.remove('clean-hidden');
-if($('desktopReelNav'))$('desktopReelNav').style.display='flex';
-const sb=$('floatingSearchContainer');
-if(sb){sb.classList.add('search-hidden');sb.classList.remove('manual-open');}
-openReelsModal(index);
-};
+card.dataset.gridIndex=i;
 card.innerHTML=`<div class="product-media-box">
 ${disc>0?`<div class="corner-discount-badge">${disc}% OFF</div>`:''}
-<img src="${imgs[0]}" alt="${item.title||'rorraxy'}" loading="${index<12?'eager':'lazy'}" decoding="async">
-<div class="card-clean-price-badge">${price}</div>
+<img src="${imgs[0]}" alt="${(item.title||'rorraxy').replace(/"/g,'&quot;')}" loading="${i<8?'eager':'lazy'}" decoding="async">
+<div class="card-clean-price-badge">${priceBadgeHtml(item)}</div>
 </div>`;
 const img=card.querySelector('img');
 const mediaBox=card.querySelector('.product-media-box');
@@ -425,17 +516,43 @@ const onReady=()=>{img.classList.add('img-ready');mediaBox.classList.add('img-lo
 if(img.complete&&img.naturalWidth)onReady();
 else{img.addEventListener('load',onReady,{once:true});img.addEventListener('error',()=>{img.onerror=null;img.src=FALLBACK_LOGO;onReady();},{once:true});}
 frag.appendChild(card);
-});
-container.innerHTML='';
-container.appendChild(frag);
-const cards=container.querySelectorAll('.product-card');
+}
+gridActiveContainer.appendChild(frag);
+gridRenderedCount=end;
+
+const newCards=gridActiveContainer.querySelectorAll('.product-card:not(.ai-revealed)');
 if('IntersectionObserver' in window){
-const obs=new IntersectionObserver((entries,o)=>{for(let i=0;i<entries.length;i++){const entry=entries[i];if(entry.isIntersecting){entry.target.classList.add('ai-revealed');o.unobserve(entry.target);}}},{rootMargin:'300px 0px',threshold:0});
-cards.forEach(c=>obs.observe(c));
-setTimeout(()=>{cards.forEach(c=>{if(!c.classList.contains('ai-revealed'))c.classList.add('ai-revealed');});},400);
-}else{cards.forEach(c=>c.classList.add('ai-revealed'));}
+const obs=new IntersectionObserver((entries,o)=>{for(let j=0;j<entries.length;j++){const entry=entries[j];if(entry.isIntersecting){entry.target.classList.add('ai-revealed');o.unobserve(entry.target);}}},{rootMargin:'300px 0px',threshold:0});
+newCards.forEach(c=>obs.observe(c));
+setTimeout(()=>{newCards.forEach(c=>{if(!c.classList.contains('ai-revealed'))c.classList.add('ai-revealed');});},400);
+}else{newCards.forEach(c=>c.classList.add('ai-revealed'));}
+
+gridActiveContainer.querySelectorAll('.product-card').forEach(card=>{
+if(card.dataset.bound==='1')return;
+card.dataset.bound='1';
+card.addEventListener('click',e=>{
+e.preventDefault();
+const gridIdx=Number(card.dataset.gridIndex);
+const item=gridSourceList[gridIdx];
+if(!item)return;
+const targetId=String(item.id||item.product_id);
+$('appContainer')?.classList.remove('active-grid');
+$('fixedGlobalActionsBar')?.classList.remove('clean-hidden');
+if($('desktopReelNav'))$('desktopReelNav').style.display='flex';
+const sb=$('floatingSearchContainer');
+if(sb){sb.classList.add('search-hidden');sb.classList.remove('manual-open');}
+const cat=(item.category||'').toLowerCase();
+const related=globalMasterProductsList.filter(p=>String(p.id||p.product_id)!==targetId&&(p.category||'').toLowerCase()===cat);
+const others=globalMasterProductsList.filter(p=>String(p.id||p.product_id)!==targetId&&(p.category||'').toLowerCase()!==cat);
+activeProductList=[item,...shuffleArray(related),...shuffleArray(others)];
+openReelsModal(0);
+});
+});
+
 updateSideActionState();
 }
+/* ========================================================== */
+
 function updateSideActionState(){
 const list=activeProductList.length?activeProductList:globalMasterProductsList;
 const prod=list[currentReelIndex]||list[0]||{};
@@ -451,6 +568,8 @@ updateCartBadgeCount();
 }
 function toggleReelSearchBox(){const sb=$('floatingSearchContainer');if(!sb)return;if(sb.classList.contains('search-hidden')){sb.classList.remove('search-hidden');sb.classList.add('manual-open');setTimeout(()=>$('floatingSearchInput')?.focus(),20);}else{sb.classList.add('search-hidden');sb.classList.remove('manual-open');}}
 function handlePinterestInterception(e,type){if(e)e.stopPropagation();const list=activeProductList.length?activeProductList:globalMasterProductsList;const prod=list[currentReelIndex]||list[0]||{};const id=prod.id||prod.product_id||'101';if(type==='like')toggleReelLove(id);else if(type==='save')handleDualSaveAction(id);else if(type==='share')openNativeShare(id);}
+
+/* ===================== REEL ACTIVATION ===================== */
 function activateReelAtIndex(idx){
 currentReelIndex=idx;
 updateSideActionState();
@@ -476,6 +595,8 @@ curImg=nextImg;
 },2500);
 }
 }
+
+/* ===================== REEL BATCH RENDER ===================== */
 function appendReelsBatch(count){
 const wrapper=$('reelModalWrapperBody');
 const list=activeProductList.length?activeProductList:globalMasterProductsList;
@@ -487,7 +608,8 @@ const product=list[idx];
 const pId=String(product.id||product.product_id||'101');
 const pVideo=product.video_url||product.youtube_video||'';
 const imgs=extractImages(product);
-const price=`$${parseFloat(product.price||0).toFixed(2)}`;
+const price=fmtUSD(product.price||0);
+const bdt=fmtBDTFromNum(getBdtFromProduct(product));
 const disc=parseFloat(product.discount_rate||product.discountRate||0);
 if(idx===0)preloadImageUrl(imgs[0],true);
 let mediaContent='';
@@ -506,9 +628,11 @@ card.className='reel-card';
 card.dataset.index=idx;
 card.dataset.productId=pId;
 card.innerHTML=`<div class="reel-media-box" onclick="openBuyPreviewByIndex(${idx})">
+<button class="reel-similar-btn" onclick="event.stopPropagation();openSimilarModal(${idx})" title="Similar Products"><i class="fa-solid fa-layer-group"></i> SIMILAR</button>
 <div class="reel-bottom-price-overlay">
 <div class="reel-price-row">
 <span class="reel-center-price-badge">${price}</span>
+<span class="reel-center-bdt-badge">${bdt}</span>
 ${disc>0?`<span class="reel-center-discount-badge">${disc}% OFF</span>`:''}
 </div>
 </div>
@@ -519,8 +643,11 @@ frag.appendChild(card);
 wrapper.appendChild(frag);
 renderedReelsCount=endIdx;
 }
+
+/* ===================== OPEN REELS MODAL ===================== */
 function openReelsModal(startIndex){
 const overlay=$('reelModalOverlay'),wrapper=$('reelModalWrapperBody');
+gridRenderingActive=false;
 $('appContainer')?.classList.remove('active-grid');
 overlay?.classList.remove('hidden-reels');
 let list=activeProductList.length?activeProductList:globalMasterProductsList;
@@ -555,10 +682,90 @@ if(idx>=0&&idx<list.length&&idx!==currentReelIndex){activateReelAtIndex(idx);}
 };
 }
 function openBuyPreviewByIndex(index){const list=activeProductList.length?activeProductList:globalMasterProductsList;if(list[index])openBuyPreviewModal(list[index]);}
+
+/* ===================== SIMILAR PRODUCTS MODAL ===================== */
+function openSimilarModal(index){
+const list=activeProductList.length?activeProductList:globalMasterProductsList;
+const current=list[index]||list[0];
+if(!current)return;
+const cat=(current.category||'').toLowerCase().trim();
+const currentId=String(current.id||current.product_id);
+let related=globalMasterProductsList.filter(p=>{
+if(String(p.id||p.product_id)===currentId)return false;
+return (p.category||'').toLowerCase().trim()===cat;
+});
+if(!related.length){
+related=globalMasterProductsList.filter(p=>String(p.id||p.product_id)!==currentId);
+}
+related=shuffleArray(related).slice(0,48);
+
+const sub=$('similarSubText');
+if(sub)sub.textContent=cat?`${(current.category||'RELATED').toUpperCase()} • ${related.length} ITEMS`:`${related.length} RELATED ITEMS`;
+
+const grid=$('similarGrid');
+if(!grid)return;
+if(!related.length){
+grid.innerHTML=`<div style="text-align:center;color:#a0a0ab;padding:40px 12px;font-size:0.85rem;column-span:all;">NO SIMILAR PRODUCTS FOUND</div>`;
+$('similarOverlay').style.display='flex';
+return;
+}
+grid.innerHTML=related.map((item,i)=>{
+const imgs=extractImages(item);
+const disc=parseFloat(item.discount_rate||item.discountRate||0);
+const pid=String(item.id||item.product_id);
+return `<div class="product-card similar-card" data-similar-id="${pid}">
+<div class="product-media-box">
+${disc>0?`<div class="corner-discount-badge">${disc}% OFF</div>`:''}
+<img src="${imgs[0]}" alt="${(item.title||'rorraxy').replace(/"/g,'&quot;')}" loading="${i<6?'eager':'lazy'}" decoding="async">
+<div class="card-clean-price-badge">${priceBadgeHtml(item)}</div>
+</div>
+</div>`;
+}).join('');
+
+grid.querySelectorAll('.similar-card').forEach(card=>{
+card.addEventListener('click',()=>{
+const pid=card.dataset.similarId;
+openProductFromSimilar(pid);
+});
+setTimeout(()=>card.classList.add('ai-revealed'),30);
+});
+
+setTimeout(()=>{
+grid.querySelectorAll('img').forEach(img=>{
+if(img.complete&&img.naturalWidth)img.classList.add('img-ready');
+else img.addEventListener('load',()=>img.classList.add('img-ready'),{once:true});
+});
+},100);
+
+$('similarOverlay').style.display='flex';
+}
+function closeSimilarModal(){
+const o=$('similarOverlay');
+if(o)o.style.display='none';
+}
+function openProductFromSimilar(pid){
+closeSimilarModal();
+const target=globalMasterProductsList.find(p=>String(p.id||p.product_id)===String(pid));
+if(!target)return;
+const targetId=String(target.id||target.product_id);
+const cat=(target.category||'').toLowerCase();
+const related=globalMasterProductsList.filter(p=>String(p.id||p.product_id)!==targetId&&(p.category||'').toLowerCase()===cat);
+const others=globalMasterProductsList.filter(p=>String(p.id||p.product_id)!==targetId&&(p.category||'').toLowerCase()!==cat);
+activeProductList=[target,...shuffleArray(related),...shuffleArray(others)];
+gridRenderingActive=false;
+$('appContainer')?.classList.remove('active-grid');
+$('fixedGlobalActionsBar')?.classList.remove('clean-hidden');
+if($('desktopReelNav'))$('desktopReelNav').style.display='flex';
+openReelsModal(0);
+}
+/* ============================================================== */
+
+/* ===================== DETAILS MODAL ===================== */
 function openInpageDetailsModal(product){
 if(!product)return;
 const title=(product.title||'rorraxy luxury product').toLowerCase();
 const priceNum=parseFloat(product.price||0);
+const bdtNum=getBdtFromProduct(product);
 const disc=parseFloat(product.discount_rate||product.discountRate||0);
 const sku=getSku(product);
 currentProductQty=1;
@@ -570,8 +777,8 @@ $('inpageDetailsModalContent').innerHTML=`
 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
 <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
 <div style="display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;">
-<span style="font-size:1.2rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">$${priceNum.toFixed(2)}</span>
-<span style="font-size:0.68rem;color:var(--text-gray);text-decoration:line-through;font-weight:600;">$${(priceNum*1.35).toFixed(2)}</span>
+<span style="font-size:1.2rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">${fmtUSD(priceNum)}</span>
+<span style="font-size:0.78rem;font-weight:800;color:#fff;letter-spacing:0.2px;line-height:1;">${fmtBDTFromNum(bdtNum)}</span>
 ${disc>0?`<span style="background:var(--pink-accent);color:#fff;font-size:0.58rem;font-weight:800;padding:1px 5px;border-radius:3px;line-height:1.4;">${disc}%</span>`:''}
 </div>
 <div style="display:flex;gap:8px;font-size:0.62rem;font-weight:600;margin-top:1px;flex-wrap:wrap;">
@@ -600,6 +807,8 @@ $('inpageDetailsOverlay').style.display='flex';
 }
 function adjustDetailQty(amt){currentProductQty=Math.max(1,currentProductQty+amt);if($('detailQtyDisplay'))$('detailQtyDisplay').innerText=currentProductQty;}
 function closeInpageDetails(){const noteInput=$('inpageCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('inpageDetailsOverlay').style.display='none';}
+
+/* ===================== BUY PREVIEW MODAL ===================== */
 function openBuyPreviewModal(product){
 const imgs=extractImages(product);
 selectedVariantImg=imgs[0];
@@ -608,6 +817,8 @@ const pId=product.id||product.product_id||'101';
 const titleEsc=(product.title||'item').toLowerCase().replace(/'/g,"\\'");
 const sku=getSku(product);
 const skuEsc=escapeSku(sku);
+const priceNum=parseFloat(product.price||0);
+const bdtNum=getBdtFromProduct(product);
 let initialNote='';
 const detailsNoteInput=$('inpageCustomNoteInput');
 if(detailsNoteInput&&detailsNoteInput.value.trim()){initialNote=detailsNoteInput.value.trim();}
@@ -617,6 +828,10 @@ $('buyPreviewModalContent').innerHTML=`
 <span style="font-size:0.78rem;font-weight:800;letter-spacing:0.4px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">SELECT VARIANT</span>
 <button onclick="closeBuyPreview()" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;line-height:1;padding:0;">×</button>
 </div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+<span style="font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${fmtUSD(priceNum)}</span>
+<span style="font-size:0.85rem;font-weight:800;color:#fff;">${fmtBDTFromNum(bdtNum)}</span>
+</div>
 ${sku?`<div class="sku-preview-badge"><i class="fa-solid fa-barcode"></i><span>SKU: <strong style="color:var(--gold-solid);">${sku}</strong></span></div>`:''}
 <div class="preview-horizontal-scroll">${imgsHtml}</div>
 <div style="display:flex;flex-direction:column;gap:3px;">
@@ -624,7 +839,7 @@ ${sku?`<div class="sku-preview-badge"><i class="fa-solid fa-barcode"></i><span>S
 <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%;background:#040407;border:1px solid rgba(212,175,55,0.3);border-radius:8px;padding:8px 10px;color:#fff;font-size:0.72rem;outline:none;resize:none;font-family:var(--font-main);line-height:1.35;">${initialNote}</textarea>
 </div>
 <button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.55);color:#fcf6ba;padding:8px;border-radius:8px;font-weight:700;font-size:0.76rem;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
-<button onclick="confirmAddToCart(event,'${pId}','${titleEsc}',${parseFloat(product.price||0)},'${product.seller_id||'rorraxy-store'}','${skuEsc}')" style="background:var(--pink-accent);border:none;color:#fff;padding:11px;border-radius:8px;font-weight:800;font-size:0.86rem;cursor:pointer;width:100%;box-shadow:0 4px 15px rgba(255,42,133,0.4);">CONFIRM & ADD TO CART</button>`;
+<button onclick="confirmAddToCart(event,'${pId}','${titleEsc}',${priceNum},'${product.seller_id||'rorraxy-store'}','${skuEsc}')" style="background:var(--pink-accent);border:none;color:#fff;padding:11px;border-radius:8px;font-weight:800;font-size:0.86rem;cursor:pointer;width:100%;box-shadow:0 4px 15px rgba(255,42,133,0.4);">CONFIRM & ADD TO CART</button>`;
 $('buyPreviewOverlay').style.display='flex';
 }
 function openDetailsFromOrderModal(pId){
@@ -637,6 +852,8 @@ if(prod){openInpageDetailsModal(prod);setTimeout(()=>{const inpageNote=$('inpage
 }
 function selectPreviewImg(el,url){document.querySelectorAll('.preview-img-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');selectedVariantImg=url;}
 function closeBuyPreview(){const noteInput=$('orderCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('buyPreviewOverlay').style.display='none';}
+
+/* ===================== CART / COIN ANIMATION ===================== */
 function playLuxuryChimeSound(){
 try{
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
@@ -690,7 +907,7 @@ requestAnimationFrame(step);
 function confirmAddToCart(e,pId,title,price,sellerId,sku){
 const cart=JSON.parse(localStorage.getItem('rorraxy_cart')||'[]');
 const ref=localStorage.getItem('rorraxy_active_affiliate_ref')||'rorraxy-store';
-const rate=localStorage.getItem('rorraxy_active_commission_rate')||'13'; 
+const rate=localStorage.getItem('rorraxy_active_commission_rate')||'13';
 const platform=localStorage.getItem('rorraxy_active_platform')||'retail';
 
 let note='';
@@ -705,6 +922,7 @@ if(existing){
     existing.qty+=currentProductQty;
     if(skuValue&&!existing.sku)existing.sku=skuValue;
 }else{
+    const bdtPriceNum = getBdtFromProduct({price:price});
     cart.push({
         productId:pId,
         sellerId:sellerId||'rorraxy-store',
@@ -713,7 +931,10 @@ if(existing){
         affiliateId:ref,
         commissionRate:parseFloat(rate),
         platform:platform,
-        title,price:`$${parseFloat(price).toFixed(2)}`,
+        title,
+        price:`$${parseFloat(price).toFixed(2)}`,
+        price_bdt: bdtPriceNum,
+        bdt_rate: USD_TO_BDT_RATE,
         qty:currentProductQty,
         img:selectedVariantImg,
         note
@@ -729,6 +950,8 @@ const cart=JSON.parse(localStorage.getItem('rorraxy_cart')||'[]');
 const total=cart.reduce((s,i)=>s+(parseInt(i.qty)||0),0);
 if($('sideCartBadgeCount'))$('sideCartBadgeCount').innerText=total;
 }
+
+/* ===================== LIKE / SAVE / SHARE ===================== */
 function getDynamicEngagement(id){
 const key=`rorraxy_retail_likes_${id}`;
 const stored=localStorage.getItem(key);
@@ -803,6 +1026,35 @@ const url=`${window.location.origin}/index.html?ref=${encodeURIComponent(ref)}&r
 if(navigator.share)navigator.share({title:'rorraxy product',url}).catch(()=>{});
 else if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
 };
+
+/* ===================== GLOBAL EXPORTS ===================== */
+window.openSimilarModal=openSimilarModal;
+window.closeSimilarModal=closeSimilarModal;
+window.openProductFromSimilar=openProductFromSimilar;
+window.openBuyPreviewByIndex=openBuyPreviewByIndex;
+window.openBuyPreviewModal=openBuyPreviewModal;
+window.closeBuyPreview=closeBuyPreview;
+window.openInpageDetailsModal=openInpageDetailsModal;
+window.closeInpageDetails=closeInpageDetails;
+window.adjustDetailQty=adjustDetailQty;
+window.selectPreviewImg=selectPreviewImg;
+window.openDetailsFromOrderModal=openDetailsFromOrderModal;
+window.confirmAddToCart=confirmAddToCart;
+window.toggleCartPortal=toggleCartPortal;
+window.openCleanGalleryView=openCleanGalleryView;
+window.handleHomeToggle=handleHomeToggle;
+window.handleBottomBuy=handleBottomBuy;
+window.handleBottomDetails=handleBottomDetails;
+window.toggleCategoryModal=toggleCategoryModal;
+window.toggleWorldPortal=toggleWorldPortal;
+window.toggleAccordionBox=toggleAccordionBox;
+window.selectSubCategoryItem=selectSubCategoryItem;
+window.navigateReelStep=navigateReelStep;
+window.toggleReelSearchBox=toggleReelSearchBox;
+window.handlePinterestInterception=handlePinterestInterception;
+window.toggleAccountPortal=toggleAccountPortal;
+window.openAccountPortalDirect=openAccountPortalDirect;
+window.closeAccountPortal=closeAccountPortal;
 </script>
 </body>
 </html>
