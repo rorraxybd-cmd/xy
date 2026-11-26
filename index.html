@@ -38,7 +38,7 @@ html,body{width:100%;max-width:100vw;overflow-x:hidden;overflow-y:auto!important
 body{margin:0;padding:0 0 58px 0;text-transform:none!important;}
 html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
+button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.preview-img-item,.variant-check-badge{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 
 /* ======= LOADER & PULL REFRESH ======= */
 #rorraxyLoaderOverlay{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity 0.1s linear;pointer-events:none;}
@@ -83,7 +83,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .product-card:hover{border-color:rgba(212,175,55,0.55);}
 .product-card:active{transform:scale(0.97);transition-duration:0.06s;}
 
-/* 100% Clean Product Photo Box (No Price Overlay on Photo) */
 .product-media-box{
   position:relative;
   width:100%;
@@ -230,7 +229,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .reel-media-box{position:relative;width:100%;max-width:390px;aspect-ratio:9/16;max-height:calc(100dvh - 88px);cursor:pointer;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:16px;}
 .reel-primary-video-container{width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
 
-/* Reel Loading Shimmer Animation before image/video renders */
 .reel-primary-video-container::before{
   content:'';
   position:absolute;
@@ -249,7 +247,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 
 .reel-primary-video-container video{width:100%;height:100%;object-fit:contain;display:block;background:#000;position:relative;z-index:2;}
 
-/* Smooth, Fast, Uncropped Slideshow with Subtle Gentle Zoom Motion */
 .slide-layer{
   position:absolute;
   inset:0;
@@ -291,7 +288,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   .reel-bottom-dock{left:14px;right:14px;}
 }
 
-/* Soft Borderless Luxury AI Visual Search Similar Button (Right Side) */
 .reel-similar-btn{
   pointer-events:auto;
   position:relative;
@@ -356,7 +352,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   white-space:nowrap;
 }
 
-/* ======= SOFT BORDERLESS REEL PRICE OVERLAY (LEFT SIDE) ======= */
 .reel-bottom-price-overlay{
   pointer-events:auto;
   position:relative;
@@ -386,20 +381,199 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   .reel-center-bdt-badge{font-size:0.82rem;}
 }
 
-/* ======= OVERLAYS & MODALS ======= */
-.overlay-sheet{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.84);z-index:6000;overflow-y:auto;flex-direction:column;align-items:center;justify-content:center;padding:10px;scrollbar-width:none;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+/* ======= OVERLAYS & MULTI-VARIANT SELECT MODAL ======= */
+.overlay-sheet{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.86);z-index:6000;overflow-y:auto;flex-direction:column;align-items:center;justify-content:center;padding:10px;scrollbar-width:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
 .overlay-sheet::-webkit-scrollbar{display:none;}
-.buy-preview-modal{width:96%;max-width:460px;background:#0a0a10;border:1.5px solid rgba(212,175,55,0.5);border-radius:16px;padding:16px;margin:auto;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
-.preview-horizontal-scroll{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px 2px;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.buy-preview-modal{width:96%;max-width:460px;background:#0a0a10;border:1.5px solid rgba(212,175,55,0.55);border-radius:16px;padding:16px;margin:auto;display:flex;flex-direction:column;gap:11px;box-shadow:0 16px 42px rgba(0,0,0,0.92);animation:modalPopIn 0.2s var(--snap-ease);}
+@keyframes modalPopIn{0%{opacity:0;transform:scale(0.95) translateY(8px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+
+/* Variety Grid / Scrollable Gallery inside Order Modal */
+.preview-horizontal-scroll{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:9px;
+  max-height:245px;
+  overflow-y:auto;
+  padding:4px 2px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+@media (min-width:420px){
+  .preview-horizontal-scroll{grid-template-columns:repeat(4, minmax(0, 1fr));}
+}
 .preview-horizontal-scroll::-webkit-scrollbar{display:none;}
-.preview-img-item{flex:0 0 100px;width:100px;height:100px;border-radius:12px;overflow:hidden;border:2px solid rgba(255,255,255,0.12);cursor:pointer;scroll-snap-align:start;background:#000;transition:transform 0.12s ease,border-color 0.12s ease;}
-.preview-img-item.selected{border-color:var(--pink-accent);transform:scale(1.03);}
-.preview-img-item img{width:100%;height:100%;object-fit:cover;}
+
+.preview-img-item{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:12px;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,0.14);
+  cursor:pointer;
+  background:#050508;
+  transition:transform 0.16s var(--snap-ease),border-color 0.18s ease,box-shadow 0.18s ease;
+}
+.preview-img-item:active{transform:scale(0.94);}
+.preview-img-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform 0.25s ease,filter 0.2s ease;
+}
+.preview-img-item.selected{
+  border-color:var(--pink-accent);
+  box-shadow:0 0 14px rgba(255,42,133,0.45),inset 0 0 0 1px rgba(255,42,133,0.4);
+  transform:translateY(-1px);
+}
+.preview-img-item.selected img{
+  transform:scale(1.04);
+}
+.preview-img-item.focused-preview:not(.selected){
+  border-color:rgba(212,175,55,0.65);
+}
+
+/* Variant Number Pill (Top-Left) */
+.variant-index-pill{
+  position:absolute;
+  top:5px;
+  left:5px;
+  z-index:4;
+  background:rgba(8,8,14,0.82);
+  border:1px solid rgba(212,175,55,0.35);
+  color:#fcf6ba;
+  font-size:0.6rem;
+  font-weight:800;
+  padding:1px 5px;
+  border-radius:6px;
+  line-height:1.2;
+  pointer-events:none;
+}
+
+/* Bottom-Right Corner Checkmark Tick Badge */
+.variant-check-badge{
+  position:absolute;
+  bottom:6px;
+  right:6px;
+  z-index:5;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:rgba(10,10,16,0.82);
+  border:1.8px solid rgba(255,255,255,0.48);
+  color:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.72rem;
+  box-shadow:0 2px 8px rgba(0,0,0,0.75);
+  transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.preview-img-item:hover .variant-check-badge{
+  border-color:rgba(255,42,133,0.85);
+  transform:scale(1.08);
+}
+.preview-img-item.selected .variant-check-badge{
+  background:var(--pink-gradient);
+  border-color:#ffffff;
+  color:#ffffff;
+  transform:scale(1.1);
+  box-shadow:0 0 12px rgba(255,42,133,0.85);
+}
+.variant-check-badge i{
+  transform:scale(0.5);
+  opacity:0;
+  transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1),opacity 0.15s ease;
+}
+.preview-img-item.selected .variant-check-badge i{
+  transform:scale(1);
+  opacity:1;
+}
+
+/* Selected Count & Live Total Strip inside Order Modal */
+.variant-selection-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:7px 11px;
+  background:linear-gradient(90deg,rgba(255,42,133,0.12) 0%,rgba(212,175,55,0.12) 100%);
+  border:1px solid rgba(255,42,133,0.35);
+  border-radius:10px;
+  font-size:0.74rem;
+  font-weight:700;
+}
+.variant-count-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#fff;
+}
+.variant-count-pill span.num-badge{
+  background:var(--pink-accent);
+  color:#fff;
+  font-weight:800;
+  padding:1px 7px;
+  border-radius:12px;
+  font-size:0.72rem;
+  box-shadow:0 0 8px rgba(255,42,133,0.5);
+}
+.variant-select-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.variant-mini-btn{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(212,175,55,0.35);
+  color:#fcf6ba;
+  font-size:0.65rem;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:background 0.15s ease,transform 0.1s ease;
+}
+.variant-mini-btn:active{transform:scale(0.93);}
+.variant-mini-btn:hover{background:rgba(212,175,55,0.2);}
+
+/* Shimmering Confirm Order Button */
+.confirm-order-shimmer-btn{
+  position:relative;
+  overflow:hidden;
+  background:var(--pink-gradient);
+  border:none;
+  color:#fff;
+  padding:13px 14px;
+  border-radius:10px;
+  font-weight:800;
+  font-size:0.88rem;
+  letter-spacing:0.4px;
+  cursor:pointer;
+  width:100%;
+  box-shadow:0 4px 18px rgba(255,42,133,0.48);
+  transition:transform 0.12s ease,opacity 0.2s ease;
+}
+.confirm-order-shimmer-btn:active{transform:scale(0.97);}
+.confirm-order-shimmer-btn::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:65%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.32),transparent);
+  transform:skewX(-22deg);
+  animation:priceShimmerSweep 2.4s infinite ease-in-out;
+  pointer-events:none;
+}
+
 .sku-preview-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);border-radius:8px;font-size:0.72rem;font-weight:800;color:var(--gold-solid);letter-spacing:0.4px;overflow:hidden;}
 .sku-preview-badge span{color:#fff;letter-spacing:0.6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .sku-preview-badge i{font-size:0.68rem;flex-shrink:0;}
 .flying-gold-coin{position:fixed;z-index:9999999;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffffff 0%,#fcf6ba 25%,#bf953f 65%,#8a5d0f 100%);border:2px solid #fff;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:16px;color:#4d3300;box-shadow:0 0 18px rgba(212,175,55,0.95);will-change:left,top,transform,opacity;}
-.inpage-details-modal{width:94%;max-width:440px;max-height:85vh;background:#08080e;border:1.5px solid var(--gold-solid);border-radius:14px;padding:16px;margin:auto;display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
+.inpage-details-modal{width:94%;max-width:440px;max-height:85vh;background:#08080e;border:1.5px solid var(--gold-solid);border-radius:14px;padding:16px;margin:auto;display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none;box-shadow:0 10px 30px rgba(0,0,0,0.8);animation:modalPopIn 0.2s var(--snap-ease);}
 .inpage-details-modal::-webkit-scrollbar{display:none;}
 .detail-sku-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.45);border-radius:7px;font-size:0.7rem;font-weight:800;color:var(--gold-solid);letter-spacing:0.4px;max-width:100%;overflow:hidden;}
 .detail-sku-badge span{color:#fff;letter-spacing:0.6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -427,6 +601,7 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   overflow:hidden;
   margin:auto;
   box-shadow:0 18px 45px rgba(0,0,0,0.95);
+  animation:modalPopIn 0.2s var(--snap-ease);
 }
 @media (min-width:768px){
   .similar-modal-content{padding:18px;gap:14px;}
@@ -476,7 +651,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 .similar-close:hover{background:rgba(255,42,133,0.28);}
 .similar-close:active{transform:scale(0.9);}
 
-/* Responsive 2-column Mobile & Multi-column PC Grid */
 .similar-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -496,7 +670,6 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
 @media (min-width: 640px) { .similar-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } }
 @media (min-width: 920px) { .similar-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; } }
 
-/* Full Unclipped Square Cards inside Similar Grid */
 .similar-grid .product-card {
   width: 100%;
   height: auto !important;
@@ -678,6 +851,8 @@ let renderedReelsCount=0;
 let currentReelIndex=0;
 let activeSlideTimer=null;
 let selectedVariantImg='';
+let selectedVariantsList=[]; // Multi-selected variant URLs
+let currentModalProduct=null; // Currently open product in Order Modal
 let lastSaveClickTime=0;
 let currentProductQty=1;
 let persistentCustomNote='';
@@ -706,7 +881,35 @@ function markReelMediaReady(el){
   if(box) box.classList.add('media-ready');
 }
 function shuffleArray(arr){const copy=[...arr];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
-function extractImages(product){try{if(product.images_json){const parsed=typeof product.images_json==='string'?JSON.parse(product.images_json):product.images_json;if(Array.isArray(parsed)&&parsed.length)return parsed;}if(product.image_url)return[product.image_url];}catch(e){}return[FALLBACK_LOGO];}
+function extractImages(product){
+  if(!product)return[FALLBACK_LOGO];
+  const rawList=[];
+  const pushValid=(val)=>{
+    if(!val)return;
+    if(Array.isArray(val)){val.forEach(pushValid);return;}
+    if(typeof val==='object'){
+      const u=val.url||val.image_url||val.src||val.image||'';
+      if(u)pushValid(u);
+      return;
+    }
+    const s=String(val).trim();
+    if(!s)return;
+    if(s.startsWith('[')||s.startsWith('{')){
+      try{pushValid(JSON.parse(s));return;}catch(e){}
+    }
+    if(s.includes(',')&&!s.startsWith('data:')){
+      s.split(',').forEach(part=>{const clean=part.trim();if(clean&&!rawList.includes(clean))rawList.push(clean);});
+      return;
+    }
+    if(!rawList.includes(s))rawList.push(s);
+  };
+  pushValid(product.images_json);
+  pushValid(product.variant_images);
+  pushValid(product.gallery);
+  pushValid(product.images);
+  pushValid(product.image_url);
+  return rawList.length?rawList:[FALLBACK_LOGO];
+}
 
 /* Helper to build a single clean product card DOM element */
 function createCleanProductCard(item, index, onClickHandler) {
@@ -802,7 +1005,6 @@ searchInput.addEventListener('input',e=>debouncedSearch(e.target.value));
 }
 });
 
-/* Infinite Scroll for Main Gallery (Auto-cycles trending products endlessly) */
 function setupInfiniteGridScroll(){
 window.addEventListener('scroll',()=>{
 if(!gridActiveContainer||!gridActiveContainer.classList.contains('active-grid'))return;
@@ -818,7 +1020,6 @@ if(docHeight-scrollBottom<1000){
 },{passive:true});
 }
 
-/* Infinite Scroll for Similar Products Modal */
 function setupSimilarInfiniteScroll(){
 const grid=$('similarGrid');
 if(!grid)return;
@@ -954,7 +1155,7 @@ activeProductList=globalMasterProductsList.filter(item=>`${item.title||''} ${ite
 renderPinterestHomeGrid(activeProductList);
 }
 
-/* ======= GALLERY GRID RENDERER (16 CHUNKS + INFINITE LAZY LOAD) ======= */
+/* ======= GALLERY GRID RENDERER ======= */
 function renderPinterestHomeGrid(products){
 const container=$('appContainer');
 if(!container)return;
@@ -1144,7 +1345,7 @@ if(idx>=0&&idx<list.length&&idx!==currentReelIndex){activateReelAtIndex(idx);}
 }
 function openBuyPreviewByIndex(index){const list=activeProductList.length?activeProductList:globalMasterProductsList;if(list[index])openBuyPreviewModal(list[index]);}
 
-/* ======= SIMILAR MODAL (SMART RELATED MATCHING + 16-ITEM INFINITE LAZY GRID) ======= */
+/* ======= SIMILAR MODAL ======= */
 function openSimilarModal(index){
 const list=activeProductList.length?activeProductList:globalMasterProductsList;
 const current=list[index]||list[0];
@@ -1155,7 +1356,6 @@ const subCat=(current.subcategory||current.sub_category||'').toLowerCase().trim(
 const titleWords=(current.title||'').toLowerCase().split(/\s+/).filter(w=>w.length>3);
 const currentId=String(current.id||current.product_id);
 
-/* Priority 1: Exact Category / Subcategory / Keyword match */
 const exactMatches = globalMasterProductsList.filter(p=>{
   if(String(p.id||p.product_id)===currentId) return false;
   const pCat=(p.category||'').toLowerCase().trim();
@@ -1166,7 +1366,6 @@ const exactMatches = globalMasterProductsList.filter(p=>{
   return titleWords.some(w=>pTitle.includes(w));
 });
 
-/* Priority 2: Other trending products so infinite scroll never runs empty */
 const exactIds = new Set(exactMatches.map(p=>String(p.id||p.product_id)));
 const trendingOthers = globalMasterProductsList.filter(p=>{
   const pid=String(p.id||p.product_id);
@@ -1290,39 +1489,149 @@ $('inpageDetailsOverlay').style.display='flex';
 function adjustDetailQty(amt){currentProductQty=Math.max(1,currentProductQty+amt);if($('detailQtyDisplay'))$('detailQtyDisplay').innerText=currentProductQty;}
 function closeInpageDetails(){const noteInput=$('inpageCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('inpageDetailsOverlay').style.display='none';}
 
+/* ======= MULTI-SELECT VARIANT PREVIEW MODAL ======= */
 function openBuyPreviewModal(product){
+if(!product)return;
+currentModalProduct=product;
 const imgs=extractImages(product);
 selectedVariantImg=imgs[0];
-const imgsHtml=imgs.map((img,i)=>`<div class="preview-img-item ${i===0?'selected':''}" onclick="selectPreviewImg(this,'${img}')"><img src="${img}" loading="lazy"></div>`).join('');
+selectedVariantsList=[imgs[0]]; // Default 1st item pre-selected
+
+const imgsHtml=imgs.map((img,i)=>{
+  const safeUrl=String(img).replace(/'/g,"\\'");
+  const isSelected=i===0;
+  return `<div class="preview-img-item ${isSelected?'selected':''}" data-url="${safeUrl}" data-idx="${i}" onclick="toggleVariantSelection(this,'${safeUrl}',${i})">
+    <span class="variant-index-pill">#${i+1}</span>
+    <img src="${img}" loading="lazy" alt="Variant ${i+1}">
+    <div class="variant-check-badge" title="Select / Deselect Variant"><i class="fa-solid fa-check"></i></div>
+  </div>`;
+}).join('');
+
 const pId=product.id||product.product_id||'101';
 const titleEsc=(product.title||'item').toLowerCase().replace(/'/g,"\\'");
 const sku=getSku(product);
 const skuEsc=escapeSku(sku);
 const priceNum=parseFloat(product.price||0);
 const bdtNum=getBdtFromProduct(product);
+
 let initialNote='';
 const detailsNoteInput=$('inpageCustomNoteInput');
 if(detailsNoteInput&&detailsNoteInput.value.trim()){initialNote=detailsNoteInput.value.trim();}
 else if(persistentCustomNote){initialNote=persistentCustomNote;}
+
 $('buyPreviewModalContent').innerHTML=`
 <div style="display:flex;justify-content:space-between;align-items:center;">
-<span style="font-size:0.85rem;font-weight:800;letter-spacing:0.4px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">SELECT VARIANT</span>
-<button onclick="closeBuyPreview()" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;line-height:1;padding:0;">×</button>
+  <div style="display:flex;flex-direction:column;gap:2px;">
+    <span style="font-size:0.86rem;font-weight:800;letter-spacing:0.4px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">SELECT VARIETIES (${imgs.length})</span>
+    <span style="font-size:0.65rem;color:var(--text-gray);font-weight:600;">TAP TICK TO SELECT ONE OR MULTIPLE ITEMS</span>
+  </div>
+  <button onclick="closeBuyPreview()" style="background:rgba(255,42,133,0.15);border:1px solid rgba(255,42,133,0.4);color:var(--pink-accent);width:30px;height:30px;border-radius:8px;font-size:1.25rem;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;">×</button>
 </div>
-<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-<span style="font-size:1.15rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${fmtUSD(priceNum)}</span>
-<span style="font-size:1rem;font-weight:800;color:var(--pink-accent);">${fmtBDTFromNum(bdtNum)}</span>
+
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="modalLiveUsdTotal" style="font-size:1.15rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${fmtUSD(priceNum)}</span>
+    <span id="modalLiveBdtTotal" style="font-size:1rem;font-weight:800;color:var(--pink-accent);">${fmtBDTFromNum(bdtNum)}</span>
+  </div>
+  ${sku?`<div class="sku-preview-badge" style="padding:4px 8px;font-size:0.66rem;"><i class="fa-solid fa-barcode"></i><span>SKU: <strong style="color:var(--gold-solid);">${sku}</strong></span></div>`:''}
 </div>
-${sku?`<div class="sku-preview-badge"><i class="fa-solid fa-barcode"></i><span>SKU: <strong style="color:var(--gold-solid);">${sku}</strong></span></div>`:''}
-<div class="preview-horizontal-scroll">${imgsHtml}</div>
+
+<div class="variant-selection-bar">
+  <div class="variant-count-pill">
+    <span class="num-badge" id="selectedVariantCountBadge">1</span>
+    <span id="selectedVariantLabelText">SELECTED</span>
+  </div>
+  <div class="variant-select-actions">
+    ${imgs.length>1?`<button type="button" class="variant-mini-btn" onclick="selectAllVariants()">SELECT ALL</button>
+    <button type="button" class="variant-mini-btn" onclick="clearAllVariants()">CLEAR</button>`:''}
+  </div>
+</div>
+
+<div class="preview-horizontal-scroll" id="variantScrollGrid">${imgsHtml}</div>
+
 <div style="display:flex;flex-direction:column;gap:4px;">
-<label style="font-size:0.7rem;font-weight:700;color:var(--gold-solid);letter-spacing:0.3px;">CUSTOM SIZE / NOTE</label>
-<textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%;background:#040407;border:1px solid rgba(212,175,55,0.3);border-radius:8px;padding:8px 10px;color:#fff;font-size:0.78rem;outline:none;resize:none;font-family:var(--font-main);line-height:1.4;">${initialNote}</textarea>
+  <label style="font-size:0.7rem;font-weight:700;color:var(--gold-solid);letter-spacing:0.3px;">CUSTOM SIZE / NOTE</label>
+  <textarea id="orderCustomNoteInput" rows="2" placeholder="ENTER SIZE, COLOR OR SPECIAL NOTE..." style="width:100%;background:#040407;border:1px solid rgba(212,175,55,0.3);border-radius:8px;padding:8px 10px;color:#fff;font-size:0.78rem;outline:none;resize:none;font-family:var(--font-main);line-height:1.4;">${initialNote}</textarea>
 </div>
-<button onclick="openDetailsFromOrderModal('${pId}')" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.55);color:#fcf6ba;padding:10px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
-<button onclick="confirmAddToCart(event,'${pId}','${titleEsc}',${priceNum},'${product.seller_id||'rorraxy-store'}','${skuEsc}')" style="background:var(--pink-accent);border:none;color:#fff;padding:12px;border-radius:8px;font-weight:800;font-size:0.9rem;cursor:pointer;width:100%;box-shadow:0 4px 15px rgba(255,42,133,0.4);">CONFIRM & ADD TO CART</button>`;
+
+<div style="display:flex;gap:8px;width:100%;">
+  <button onclick="openDetailsFromOrderModal('${pId}')" style="flex:0 0 auto;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.55);color:#fcf6ba;padding:12px 14px;border-radius:10px;font-weight:700;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;"><i class="fa-solid fa-circle-info"></i> DETAILS</button>
+  <button id="confirmOrderBtn" class="confirm-order-shimmer-btn" style="flex:1;" onclick="confirmAddToCart(event,'${pId}','${titleEsc}',${priceNum},'${product.seller_id||'rorraxy-store'}','${skuEsc}')">ADD 1 VARIANT TO CART</button>
+</div>`;
+
 $('buyPreviewOverlay').style.display='flex';
+updateVariantSelectionUI();
 }
+
+function toggleVariantSelection(el, url, idx){
+if(!el)return;
+const existingIdx=selectedVariantsList.indexOf(url);
+if(existingIdx>-1){
+  selectedVariantsList.splice(existingIdx,1);
+  el.classList.remove('selected');
+}else{
+  selectedVariantsList.push(url);
+  el.classList.add('selected');
+  selectedVariantImg=url;
+}
+document.querySelectorAll('.preview-img-item').forEach(i=>i.classList.remove('focused-preview'));
+el.classList.add('focused-preview');
+updateVariantSelectionUI();
+}
+
+function selectAllVariants(){
+if(!currentModalProduct)return;
+const imgs=extractImages(currentModalProduct);
+selectedVariantsList=[...imgs];
+if(imgs.length)selectedVariantImg=imgs[0];
+document.querySelectorAll('#variantScrollGrid .preview-img-item').forEach(item=>{
+  item.classList.add('selected');
+});
+updateVariantSelectionUI();
+}
+
+function clearAllVariants(){
+selectedVariantsList=[];
+document.querySelectorAll('#variantScrollGrid .preview-img-item').forEach(item=>{
+  item.classList.remove('selected');
+});
+updateVariantSelectionUI();
+}
+
+function updateVariantSelectionUI(){
+const count=selectedVariantsList.length;
+const badge=$('selectedVariantCountBadge');
+const label=$('selectedVariantLabelText');
+const btn=$('confirmOrderBtn');
+const usdEl=$('modalLiveUsdTotal');
+const bdtEl=$('modalLiveBdtTotal');
+
+if(badge)badge.innerText=count;
+if(label)label.innerText=count===1?'ITEM SELECTED':'ITEMS SELECTED';
+
+if(currentModalProduct){
+  const unitUsd=parseFloat(currentModalProduct.price||0);
+  const unitBdt=getBdtFromProduct(currentModalProduct);
+  const activeCount=count>0?count:1;
+  const totalItems=activeCount*currentProductQty;
+  if(usdEl)usdEl.innerText=fmtUSD(unitUsd*totalItems);
+  if(bdtEl)bdtEl.innerText=fmtBDTFromNum(unitBdt*totalItems);
+}
+
+if(btn){
+  if(count===0){
+    btn.innerText='SELECT AT LEAST 1 VARIANT';
+    btn.style.opacity='0.6';
+  }else if(count===1){
+    btn.innerText='ADD 1 VARIANT TO CART';
+    btn.style.opacity='1';
+  }else{
+    btn.innerText=`ADD ${count} VARIANTS TO CART`;
+    btn.style.opacity='1';
+  }
+}
+}
+
 function openDetailsFromOrderModal(pId){
 const note=$('orderCustomNoteInput')?.value||'';
 if(note.trim())persistentCustomNote=note.trim();
@@ -1331,7 +1640,7 @@ const list=activeProductList.length?activeProductList:globalMasterProductsList;
 const prod=list.find(p=>String(p.id||p.product_id)===String(pId))||list[currentReelIndex]||list[0];
 if(prod){openInpageDetailsModal(prod);setTimeout(()=>{const inpageNote=$('inpageCustomNoteInput');if(inpageNote&&note)inpageNote.value=note;},10);}
 }
-function selectPreviewImg(el,url){document.querySelectorAll('.preview-img-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');selectedVariantImg=url;}
+function selectPreviewImg(el,url){toggleVariantSelection(el,url,0);}
 function closeBuyPreview(){const noteInput=$('orderCustomNoteInput');if(noteInput&&noteInput.value.trim())persistentCustomNote=noteInput.value.trim();$('buyPreviewOverlay').style.display='none';}
 
 function playLuxuryChimeSound(){
@@ -1385,6 +1694,17 @@ requestAnimationFrame(step);
 }
 
 function confirmAddToCart(e,pId,title,price,sellerId,sku){
+if(!selectedVariantsList.length){
+  const grid=$('variantScrollGrid');
+  if(grid){
+    grid.style.transition='transform 0.08s ease';
+    grid.style.transform='translateX(-5px)';
+    setTimeout(()=>{grid.style.transform='translateX(5px)';},80);
+    setTimeout(()=>{grid.style.transform='translateX(0)';},160);
+  }
+  return;
+}
+
 const cart=JSON.parse(localStorage.getItem('rorraxy_cart')||'[]');
 const ref=localStorage.getItem('rorraxy_active_affiliate_ref')||'rorraxy-store';
 const rate=localStorage.getItem('rorraxy_active_commission_rate')||'13';
@@ -1397,29 +1717,36 @@ else{const detailsNote=$('inpageCustomNoteInput');if(detailsNote&&detailsNote.va
 if(note)persistentCustomNote=note;
 
 const skuValue=String(sku||'').trim().toUpperCase();
-const existing=cart.find(i=>String(i.productId)===String(pId)&&i.img===selectedVariantImg&&(i.note||'')===note);
-if(existing){
+const allImgs=currentModalProduct?extractImages(currentModalProduct):[];
+const bdtPriceNum=getBdtFromProduct({price:price});
+
+selectedVariantsList.forEach(variantUrl=>{
+  const vIdx=allImgs.indexOf(variantUrl);
+  const variantLabel=allImgs.length>1&&vIdx>-1?`${title} [V${vIdx+1}]`:title;
+  const existing=cart.find(i=>String(i.productId)===String(pId)&&i.img===variantUrl&&(i.note||'')===note);
+  if(existing){
     existing.qty+=currentProductQty;
     if(skuValue&&!existing.sku)existing.sku=skuValue;
-}else{
-    const bdtPriceNum = getBdtFromProduct({price:price});
+  }else{
     cart.push({
-        productId:pId,
-        sellerId:sellerId||'rorraxy-store',
-        sku:skuValue,
-        affiliateRef:ref,
-        affiliateId:ref,
-        commissionRate:parseFloat(rate),
-        platform:platform,
-        title,
-        price:`$${parseFloat(price).toFixed(2)}`,
-        price_bdt: bdtPriceNum,
-        bdt_rate: USD_TO_BDT_RATE,
-        qty:currentProductQty,
-        img:selectedVariantImg,
-        note
+      productId:pId,
+      sellerId:sellerId||'rorraxy-store',
+      sku:skuValue,
+      affiliateRef:ref,
+      affiliateId:ref,
+      commissionRate:parseFloat(rate),
+      platform:platform,
+      title:variantLabel,
+      price:`$${parseFloat(price).toFixed(2)}`,
+      price_bdt:bdtPriceNum,
+      bdt_rate:USD_TO_BDT_RATE,
+      qty:currentProductQty,
+      img:variantUrl,
+      note
     });
-}
+  }
+});
+
 localStorage.setItem('rorraxy_cart',JSON.stringify(cart));
 updateCartBadgeCount();
 triggerCoinDropAnimation(e);
@@ -1516,6 +1843,9 @@ window.openInpageDetailsModal=openInpageDetailsModal;
 window.closeInpageDetails=closeInpageDetails;
 window.adjustDetailQty=adjustDetailQty;
 window.selectPreviewImg=selectPreviewImg;
+window.toggleVariantSelection=toggleVariantSelection;
+window.selectAllVariants=selectAllVariants;
+window.clearAllVariants=clearAllVariants;
 window.openDetailsFromOrderModal=openDetailsFromOrderModal;
 window.confirmAddToCart=confirmAddToCart;
 window.toggleCartPortal=toggleCartPortal;
