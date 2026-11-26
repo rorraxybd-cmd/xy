@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Customer Account & Secure Dashboard - rorraxy</title>
+    <title>rorraxy - Customer Account & Dashboard</title>
     <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -15,326 +15,701 @@
 
     <style>
         :root {
-            --bg-retail: #000000;
-            --card-retail: #050508;
-            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-            --pink-solid: linear-gradient(135deg, #ff2a85 0%, #ff479b 100%);
+            --bg-retail: #050508;
+            --glass-bg: rgba(18, 18, 28, 0.75);
+            --glass-card-inner: rgba(26, 26, 40, 0.72);
+            --glass-input: rgba(10, 10, 16, 0.85);
+            --royal-gold: #e5c158;
+            --royal-gold-light: #fff0b3;
+            --signature-pink: #ff2a85;
+            --signature-pink-soft: rgba(255, 42, 133, 0.14);
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #fff2b2 35%, #e5c158 65%, #b38728 100%);
+            --luxury-accent-gradient: linear-gradient(135deg, #e5c158 0%, #ff2a85 100%);
             --text-white: #ffffff;
-            --text-gray: #8e8e99;
+            --text-silver: #d4d4e2;
+            --text-muted: #9898b0;
             --font-main: 'Plus Jakarta Sans', 'Poppins', sans-serif;
-            --required-red: #ff4d4d;
-            --accent-green: #00e676;
+            --required-red: #ff3b5c;
+            --accent-green: #34d399;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; overflow-x: hidden; background: var(--bg-retail) !important; color: var(--text-white); font-family: var(--font-main); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
-        body { display: flex; align-items: center; justify-content: center; padding: 20px 12px; text-transform: uppercase; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box !important;
+            -webkit-tap-highlight-color: transparent;
+            word-break: break-word;
+        }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden !important;
+            background: var(--bg-retail) !important;
+            background-image:
+                radial-gradient(circle at 14% 10%, rgba(255, 42, 133, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 86% 20%, rgba(229, 193, 88, 0.09) 0%, transparent 48%) !important;
+            background-attachment: fixed !important;
+            color: var(--text-white);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px 44px 16px;
+        }
+
         #confetti-canvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
             z-index: 99999;
         }
+
+        /* Subtle Golden Gradient Shimmer Effect */
+        @keyframes luxuryShimmer {
+            0% { transform: translateX(-140%) skewX(-20deg); }
+            100% { transform: translateX(260%) skewX(-20deg); }
+        }
+
+        .shimmer-surface {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer-surface::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 38%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(212, 175, 55, 0) 0%,
+                rgba(229, 193, 88, 0.05) 30%,
+                rgba(255, 242, 178, 0.11) 50%,
+                rgba(212, 175, 55, 0.05) 70%,
+                rgba(212, 175, 55, 0) 100%
+            );
+            animation: luxuryShimmer 6.5s infinite ease-in-out;
+            pointer-events: none;
+        }
+
         .portal-wrapper {
             width: 100%;
-            max-width: 440px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .portal-card {
-            background: var(--card-retail);
-            border: 1px solid rgba(255, 42, 133, 0.15);
-            border-radius: 24px;
-            width: 100%;
-            padding: 32px 20px;
+            max-width: 680px;
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
+
+        .portal-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border: none !important;
+            border-radius: 26px;
+            width: 100%;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            text-align: center;
+            box-shadow:
+                0 18px 46px rgba(0, 0, 0, 0.6),
+                inset 0 1px 1px rgba(255, 255, 255, 0.09);
+        }
+
         .portal-logo {
-            width: 110px;
+            width: 120px;
             height: auto;
-            max-height: 110px;
             object-fit: contain;
             margin: 0 auto;
-            background: transparent !important;
-            filter: none !important;
-            box-shadow: none !important;
+            display: block;
         }
+
         .section-title-centered {
             font-size: 1.15rem;
             font-weight: 800;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.8px;
             text-align: center;
             margin: 0 auto;
             width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
+
+        .section-subtitle-muted {
+            font-size: 0.88rem;
+            color: var(--text-silver);
+            margin-top: 4px;
+            line-height: 1.45;
+        }
+
+        /* Primary Gold Button with Shimmer */
         .portal-btn-gold {
+            position: relative;
+            overflow: hidden;
             width: 100%;
             background: var(--gold-gradient);
-            border: none;
-            border-radius: 14px;
-            padding: 16px;
-            color: #030305;
+            border: none !important;
+            border-radius: 999px;
+            padding: 15px 24px;
+            color: #09090d;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.94rem;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all 0.25s ease;
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+            transition: transform 0.18s ease, box-shadow 0.2s ease, filter 0.2s ease;
         }
-        .portal-btn-gold:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        .portal-btn-gold::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 242, 178, 0.45),
+                rgba(255, 255, 255, 0.6),
+                rgba(255, 242, 178, 0.45),
+                transparent
+            );
+            animation: luxuryShimmer 4.5s infinite ease-in-out;
+        }
+
+        .portal-btn-gold:hover {
+            filter: brightness(1.06);
+            box-shadow: 0 10px 28px rgba(212, 175, 55, 0.42);
+        }
+
+        .portal-btn-gold:active {
+            transform: scale(0.98);
+        }
+
+        /* Verification Section */
         #verificationSection {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
             text-align: left;
+            max-width: 440px;
+            margin: 0 auto;
+            width: 100%;
         }
+
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
+
         .form-group label {
-            font-size: 0.65rem;
+            font-size: 0.82rem;
             font-weight: 700;
-            color: var(--text-gray);
-            letter-spacing: 0.8px;
+            color: var(--royal-gold-light);
+            letter-spacing: 0.6px;
         }
-        .iti { width: 100%; display: block; text-transform: none; }
-        .iti__selected-flag { background-color: #000000 !important; border-radius: 14px 0 0 14px; }
-        .iti__country-list { background-color: #0f0f14 !important; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-transform: none; max-height: 200px; }
-        .iti__country:hover { background-color: #ff2a85 !important; }
+
+        /* Proper Phone Input & Placeholder Alignment */
+        .iti {
+            width: 100% !important;
+            display: block;
+            position: relative;
+        }
+
+        .iti__flag-container {
+            padding: 0 !important;
+        }
+
+        .iti__selected-flag {
+            background-color: rgba(255, 255, 255, 0.04) !important;
+            border-radius: 16px 0 0 16px !important;
+            border-right: 1px solid rgba(229, 193, 88, 0.16) !important;
+            padding: 0 12px 0 14px !important;
+            min-width: 96px !important;
+            justify-content: center !important;
+        }
+
+        .iti__country-list {
+            background: rgba(16, 16, 26, 0.96) !important;
+            backdrop-filter: blur(20px) !important;
+            color: #fff !important;
+            border: none !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+            border-radius: 16px !important;
+            max-height: 240px !important;
+            width: 300px !important;
+            font-size: 0.9rem !important;
+            z-index: 99999 !important;
+        }
+
+        .iti__country {
+            padding: 10px 12px;
+        }
+
+        .iti__country:hover, .iti__country.iti__highlight {
+            background-color: rgba(255, 42, 133, 0.2) !important;
+        }
+
+        .iti__selected-dial-code {
+            color: var(--royal-gold-light) !important;
+            font-weight: 700;
+            font-size: 0.92rem;
+            margin-left: 6px !important;
+        }
+
         .form-control {
-            width: 100%;
-            background: #000000;
-            border: none;
-            border-radius: 14px;
-            padding: 14px 16px;
-            color: var(--text-white);
+            width: 100% !important;
+            background: var(--glass-input) !important;
+            border: none !important;
+            border-radius: 16px !important;
+            padding: 14px 16px !important;
+            color: var(--text-white) !important;
             font-weight: 600;
-            font-size: 0.88rem;
-            outline: none;
-            font-family: var(--font-main);
-            text-transform: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+            font-size: 0.98rem !important;
+            outline: none !important;
+            font-family: var(--font-main) !important;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+            transition: box-shadow 0.25s ease, background 0.25s ease;
         }
-        .iti input.form-control { padding-left: 90px !important; }
+
+        .form-control:focus {
+            background: rgba(16, 16, 26, 0.95) !important;
+            box-shadow: 0 0 0 2px rgba(229, 193, 88, 0.35), inset 0 2px 5px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .iti input.form-control,
+        #customerPhone.form-control {
+            padding-left: 112px !important;
+            padding-right: 16px !important;
+            text-align: left !important;
+        }
+
+        .iti input.form-control::placeholder,
+        #customerPhone.form-control::placeholder {
+            color: rgba(255, 255, 255, 0.38) !important;
+            opacity: 1 !important;
+        }
+
         .status-msg {
-            font-size: 0.72rem;
-            text-transform: none;
+            font-size: 0.86rem;
+            font-weight: 600;
             display: none;
             text-align: center;
+            padding: 10px 14px;
+            border-radius: 12px;
         }
-        .status-msg.error { color: var(--required-red); }
-        .status-msg.success { color: #2ecc71; }
+
+        .status-msg.error {
+            color: #ff7eb3;
+            background: rgba(255, 42, 133, 0.14);
+        }
+
+        .status-msg.success {
+            color: var(--accent-green);
+            background: rgba(52, 211, 153, 0.14);
+        }
+
+        /* Account Dashboard Section */
         #accountDashboardSection {
             display: none;
             width: 100%;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
             text-align: left;
         }
+
         .user-welcome-box {
-            background: rgba(255, 42, 133, 0.05);
-            border: 1px solid rgba(255, 42, 133, 0.2);
-            border-radius: 16px;
-            padding: 12px 16px;
+            background: rgba(26, 24, 38, 0.78);
+            border: none !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 16px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
         }
+
+        .verified-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            color: #ff7eb3;
+            letter-spacing: 0.6px;
+            margin-bottom: 3px;
+        }
+
         .user-phone-title {
-            font-size: 0.8rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: #fff;
+            letter-spacing: 0.4px;
         }
+
         .logout-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-gray);
-            border-radius: 20px;
-            padding: 4px 10px;
-            font-size: 0.6rem;
+            background: rgba(255, 42, 133, 0.14);
+            border: none !important;
+            color: #ff7eb3;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s ease, transform 0.15s ease;
         }
+
+        .logout-btn:hover {
+            background: rgba(255, 42, 133, 0.25);
+        }
+
+        .logout-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Search Box */
         .search-tracking-box {
             width: 100%;
-            background: #000000;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            padding: 4px 4px 4px 12px;
+            background: var(--glass-input);
+            border: none !important;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 6px 6px 6px 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
+
         .search-input-field {
             flex: 1;
             background: transparent;
             border: none;
             color: #fff;
-            font-size: 0.72rem;
+            font-size: 0.92rem;
+            font-weight: 600;
             outline: none;
             font-family: var(--font-main);
-            text-transform: uppercase;
+            min-width: 0;
         }
-        .search-input-field::placeholder { color: #555566; text-transform: none; }
+
+        .search-input-field::placeholder {
+            color: rgba(255, 255, 255, 0.38);
+        }
+
         .search-submit-btn {
             background: var(--gold-gradient);
             border: none;
-            color: #000;
+            color: #09090d;
             font-weight: 800;
-            font-size: 0.68rem;
-            padding: 8px 12px;
-            border-radius: 8px;
+            font-size: 0.84rem;
+            padding: 10px 16px;
+            border-radius: 12px;
             cursor: pointer;
-        }
-        .dashboard-subtitle {
-            font-size: 0.72rem;
-            font-weight: 800;
-            color: var(--text-gray);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            flex-shrink: 0;
+            transition: filter 0.2s ease;
         }
+
+        .search-submit-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        .dashboard-subtitle {
+            font-size: 0.86rem;
+            font-weight: 800;
+            color: var(--royal-gold-light);
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding-top: 2px;
+        }
+
+        /* Order History Cards */
         .order-history-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            max-height: 400px;
+            gap: 14px;
+            max-height: 460px;
             overflow-y: auto;
-            padding-right: 2px;
+            padding-right: 4px;
         }
+
+        .order-history-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .order-history-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .order-history-list::-webkit-scrollbar-thumb {
+            background: rgba(229, 193, 88, 0.35);
+            border-radius: 10px;
+        }
+
         .order-card-item {
-            background: #000000;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 14px 16px;
+            background: var(--glass-card-inner);
+            border: none !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            border-radius: 18px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
+            transition: transform 0.2s ease;
         }
+
         .order-card-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            gap: 10px;
         }
-        .order-id-txt { font-size: 0.75rem; font-weight: 800; color: #fff; }
-        .order-date-txt { font-size: 0.6rem; color: var(--text-gray); }
-        .order-status-badge {
-            font-size: 0.58rem;
+
+        .order-id-txt {
+            font-size: 0.96rem;
             font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 8px;
-            background: rgba(0, 230, 118, 0.1);
+            color: #fff;
+            letter-spacing: 0.4px;
+        }
+
+        .order-date-txt {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .order-status-badge {
+            font-size: 0.74rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: rgba(52, 211, 153, 0.14);
             color: var(--accent-green);
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
+
         .order-items-preview {
-            font-size: 0.68rem;
-            color: var(--text-gray);
-            line-height: 1.4;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 6px;
+            font-size: 0.88rem;
+            color: var(--text-silver);
+            line-height: 1.5;
+            background: rgba(12, 12, 20, 0.55);
+            padding: 10px 12px;
+            border-radius: 12px;
+            border-left: 3px solid var(--signature-pink);
         }
-        .order-items-preview strong { color: #fff; }
+
+        .order-items-preview strong {
+            color: var(--royal-gold-light);
+            font-weight: 700;
+        }
+
         .order-card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 2px;
+            gap: 12px;
+            padding-top: 4px;
+            flex-wrap: wrap;
         }
-        .order-total-price { font-size: 0.8rem; font-weight: 900; color: #d4af37; }
-        .view-memo-btn {
-            background: transparent;
-            border: 1px solid #d4af37;
-            color: #d4af37;
-            padding: 5px 10px;
-            border-radius: 8px;
-            font-size: 0.62rem;
+
+        .order-price-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .order-total-price {
+            font-size: 1.05rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .order-total-bdt {
+            font-size: 0.82rem;
             font-weight: 700;
-            cursor: pointer;
+            color: #ff7eb3;
         }
-        .view-memo-btn:hover { background: #d4af37; color: #000; }
+
+        .view-memo-btn {
+            background: rgba(229, 193, 88, 0.14);
+            border: none !important;
+            color: var(--royal-gold-light);
+            padding: 9px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .view-memo-btn:hover {
+            background: var(--gold-gradient);
+            color: #09090d;
+        }
+
+        /* Memo Modal */
         .memo-modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
             z-index: 99999;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 18px;
         }
+
         .memo-modal-content {
             background: #ffffff;
-            color: #000000;
-            border-radius: 16px;
-            max-width: 380px;
+            color: #09090d;
+            border-radius: 20px;
+            max-width: 420px;
             width: 100%;
-            padding: 24px;
+            padding: 26px 22px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             position: relative;
             text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
         }
+
         .close-modal-btn {
             position: absolute;
-            top: 12px; right: 14px;
-            color: #000;
-            font-size: 1.1rem;
+            top: 14px;
+            right: 16px;
+            color: #09090d;
+            font-size: 1.25rem;
             cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.06);
         }
+
         .simple-memo-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.72rem;
-            color: #000;
+            font-size: 0.84rem;
+            color: #09090d;
         }
+
         .simple-memo-table th, .simple-memo-table td {
-            padding: 6px 4px;
-            border-bottom: 1px solid #ddd;
+            padding: 8px 4px;
+            border-bottom: 1px solid #e5e7eb;
             text-align: left;
-            color: #000;
+            color: #09090d;
             font-weight: 600;
         }
-        .simple-memo-table th { font-weight: 800; }
+
+        .simple-memo-table th {
+            font-weight: 800;
+            color: #374151;
+        }
+
         .small-download-btn {
-            background: #000000;
+            background: #09090d;
             color: #ffffff;
             border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.68rem;
-            font-weight: 700;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: 0.6px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             align-self: center;
             margin-top: 6px;
+            width: 100%;
         }
-        .small-download-btn:active { opacity: 0.8; }
+
+        .small-download-btn:active {
+            opacity: 0.85;
+        }
+
         .portal-footer-text {
-            font-size: 0.62rem;
-            color: var(--text-gray);
+            font-size: 0.78rem;
+            color: var(--text-muted);
             margin-top: 2px;
-            text-transform: none;
             text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 640px) {
+            .portal-card {
+                padding: 26px 16px;
+                border-radius: 22px;
+            }
+
+            .iti__selected-flag {
+                min-width: 92px !important;
+                padding: 0 10px 0 12px !important;
+            }
+
+            .iti input.form-control,
+            #customerPhone.form-control {
+                padding-left: 106px !important;
+            }
         }
     </style>
 </head>
@@ -342,75 +717,92 @@
     <canvas id="confetti-canvas"></canvas>
 
     <div class="portal-wrapper">
-        <div class="portal-card">
+        <div class="portal-card shimmer-surface">
             <img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" alt="rorraxy logo" class="portal-logo">
 
+            <!-- Verification View -->
             <div id="verificationSection">
-                <h2 class="section-title-centered">CUSTOMER ACCOUNT</h2>
-                <form id="customerAuthForm" style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+                <div style="text-align:center;">
+                    <h2 class="section-title-centered"><i class="fa-solid fa-crown" style="color:var(--signature-pink);"></i> CUSTOMER ACCOUNT</h2>
+                    <p class="section-subtitle-muted">Access your orders, tracking details & digital invoices</p>
+                </div>
+
+                <form id="customerAuthForm" style="display: flex; flex-direction: column; gap: 16px; margin-top: 4px;">
                     <div class="form-group">
-                        <label>MOBILE NUMBER <span style="color:var(--required-red)">*</span></label>
-                        <input type="tel" class="form-control" id="customerPhone" placeholder="Enter phone number" required autocomplete="tel">
+                        <label>WHATSAPP / MOBILE NUMBER <span style="color:var(--signature-pink)">*</span></label>
+                        <input type="tel" class="form-control" id="customerPhone" placeholder="Enter mobile number" required autocomplete="tel">
                     </div>
-                    <button type="submit" class="portal-btn-gold" id="verifyBtn" style="padding: 14px;">
-                        CONTINUE TO VERIFY
+                    <button type="submit" class="portal-btn-gold" id="verifyBtn">
+                        CONTINUE TO ACCOUNT <i class="fa-solid fa-arrow-right"></i>
                     </button>
                     <div id="formStatus" class="status-msg"></div>
                 </form>
             </div>
 
+            <!-- Dashboard View -->
             <div id="accountDashboardSection">
                 <div class="user-welcome-box">
                     <div>
-                        <span style="font-size:0.5rem; color:var(--text-gray);">VERIFIED ACCOUNT</span>
+                        <div class="verified-pill"><i class="fa-solid fa-circle-check"></i> VERIFIED MEMBER</div>
                         <div class="user-phone-title" id="userPhoneDisplay">01XXXXXXXXX</div>
                     </div>
-                    <button class="logout-btn" onclick="logoutCustomer()"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</button>
+                    <button type="button" class="logout-btn" onclick="logoutCustomer()">
+                        <i class="fa-solid fa-right-from-bracket"></i> LOGOUT
+                    </button>
                 </div>
 
                 <div class="search-tracking-box">
-                    <input type="text" id="orderSearchInput" class="search-input-field" placeholder="SEARCH MASTER / SUB ORDER ID">
-                    <button type="button" onclick="searchCustomerOrders()" class="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" id="orderSearchInput" class="search-input-field" placeholder="Search Master or Sub Order ID...">
+                    <button type="button" onclick="searchCustomerOrders()" class="search-submit-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i> SEARCH
+                    </button>
                 </div>
 
                 <div class="dashboard-subtitle">
-                    <i class="fa-solid fa-box" style="color:#d4af37;"></i> RECENT ORDERS & CHECKOUTS
+                    <span><i class="fa-solid fa-box-open" style="color:var(--signature-pink);margin-right:6px;"></i> RECENT ORDERS & INVOICES</span>
+                    <span id="orderCountBadge" style="font-size:0.76rem;color:var(--text-muted);">0 ORDERS</span>
                 </div>
 
                 <div class="order-history-list" id="orderHistoryContainer"></div>
             </div>
 
-            <p class="portal-footer-text">Secure Encrypted Gateway</p>
+            <p class="portal-footer-text">
+                <i class="fa-solid fa-shield-halved" style="color:var(--royal-gold);"></i> Secure Encrypted Customer Gateway
+            </p>
         </div>
     </div>
 
+    <!-- Digital Invoice Modal -->
     <div class="memo-modal-overlay" id="memoModalOverlay">
         <div class="memo-modal-content">
             <i class="fa-solid fa-xmark close-modal-btn" onclick="closeMemoModal()"></i>
-            <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:6px;">
-                <h3 style="font-size:0.85rem; font-weight:900; color:#000;">RORRAXY RETAIL MEMO</h3>
-                <p style="font-size:0.55rem; color:#555;" id="modalOrderDate">Date: N/A</p>
+            <div style="text-align:center; border-bottom:1.5px solid #09090d; padding-bottom:10px;">
+                <h3 style="font-size:1rem; font-weight:900; color:#09090d; letter-spacing:1px;">RORRAXY RETAIL INVOICE</h3>
+                <p style="font-size:0.76rem; color:#4b5563; margin-top:2px;" id="modalOrderDate">Date: N/A</p>
             </div>
-            <div style="font-size:0.7rem; color:#000;">
-                <strong>ORDER ID:</strong> <span id="modalOrderId" style="font-weight:700;">#RRX-000</span><br>
+            <div style="font-size:0.84rem; color:#09090d; line-height:1.6;">
+                <strong>ORDER ID:</strong> <span id="modalOrderId" style="font-weight:800;">#RRX-000</span><br>
                 <strong>CUSTOMER PHONE:</strong> <span id="modalCustomerPhone" style="font-weight:700;">N/A</span>
             </div>
             <table class="simple-memo-table">
                 <thead>
                     <tr>
-                        <th>PRODUCT NAME</th>
+                        <th>PRODUCT</th>
                         <th style="text-align:center;">QTY</th>
                         <th style="text-align:right;">PRICE</th>
                     </tr>
                 </thead>
                 <tbody id="modalItemsBody"></tbody>
             </table>
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:900; color:#000; border-top:1px solid #000; padding-top:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; font-size:0.9rem; font-weight:900; color:#09090d; border-top:1.5px solid #09090d; padding-top:10px;">
                 <span>TOTAL PAYABLE:</span>
-                <span id="modalTotalAmount">$0.00</span>
+                <div style="text-align:right;">
+                    <div id="modalTotalAmount">$0.00 USD</div>
+                    <div id="modalTotalBdtAmount" style="font-size:0.78rem; color:#4b5563; font-weight:700;">৳ 0.00 BDT</div>
+                </div>
             </div>
             <button type="button" onclick="downloadMemoPDF()" class="small-download-btn">
-                <i class="fa-solid fa-download"></i> DOWNLOAD PDF
+                <i class="fa-solid fa-download"></i> DOWNLOAD PDF INVOICE
             </button>
         </div>
     </div>
@@ -428,11 +820,16 @@
         let iti = null;
         let customerOrdersList = [];
         let activeMemoOrder = null;
+        let currentExchangeRate = 120;
+        let currentCurrencyCode = "BDT";
+        let currentCountryFlag = "🇧🇩";
 
         function initPhoneInput() {
             if (!iti && customerPhoneInput && window.intlTelInput) {
                 iti = window.intlTelInput(customerPhoneInput, {
                     initialCountry: "auto",
+                    separateDialCode: true,
+                    autoPlaceholder: "off",
                     preferredCountries: ["bd", "us", "cn", "gb", "ca", "au", "in", "ae", "sg", "de", "my"],
                     geoIpLookup: function(callback) {
                         fetch("https://ipapi.co/json")
@@ -445,7 +842,29 @@
             }
         }
 
+        function detectRealtimeExchangeRate() {
+            fetch('https://ipapi.co/json/')
+                .then(res => res.json())
+                .then(data => {
+                    const countryCode = data.country_code || 'BD';
+                    currentCurrencyCode = data.currency || 'BDT';
+                    const codePoints = countryCode.toUpperCase().split('').map(c => 127397 + c.charCodeAt());
+                    currentCountryFlag = String.fromCodePoint(...codePoints);
+                    fetch('https://open.er-api.com/v6/latest/USD')
+                        .then(res => res.json())
+                        .then(rateData => {
+                            if (rateData && rateData.rates && rateData.rates[currentCurrencyCode]) {
+                                currentExchangeRate = rateData.rates[currentCurrencyCode];
+                            }
+                            if (customerOrdersList.length > 0) renderOrdersList(customerOrdersList);
+                        })
+                        .catch(() => {});
+                })
+                .catch(() => {});
+        }
+
         window.addEventListener('DOMContentLoaded', function() {
+            detectRealtimeExchangeRate();
             const savedPhone = localStorage.getItem('rorraxy_customer_phone');
             const savedToken = localStorage.getItem('rorraxy_customer_token');
             if (savedPhone && savedToken) {
@@ -454,6 +873,20 @@
                 verificationSection.style.display = 'flex';
                 accountDashboardSection.style.display = 'none';
                 initPhoneInput();
+            }
+
+            if (customerPhoneInput) {
+                customerPhoneInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                    formStatus.style.display = 'none';
+                });
+            }
+
+            const searchInput = document.getElementById('orderSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') searchCustomerOrders();
+                });
             }
         });
 
@@ -467,13 +900,13 @@
             e.preventDefault();
             initPhoneInput();
             if (!iti || !iti.isValidNumber()) {
-                showStatus('Please enter valid mobile number.', true);
+                showStatus('Please enter a valid complete mobile number.', true);
                 return;
             }
 
             const fullPhoneNumber = iti.getNumber();
             verifyBtn.disabled = true;
-            verifyBtn.innerText = "VERIFYING...";
+            verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> VERIFYING...';
 
             try {
                 await fetch(`${API_URL}?action=send-otp`, {
@@ -499,7 +932,6 @@
         function showDashboard(phone) {
             verificationSection.style.display = 'none';
             accountDashboardSection.style.display = 'flex';
-
             document.getElementById('userPhoneDisplay').innerText = phone;
             loadCustomerOrders(phone);
         }
@@ -512,7 +944,7 @@
                 try {
                     const parsed = JSON.parse(lastOrderRaw);
                     customerOrdersList.push(parsed);
-                } catch(e) {}
+                } catch (e) {}
             }
 
             if (customerOrdersList.length === 0) {
@@ -536,8 +968,17 @@
 
         function renderOrdersList(orders) {
             const container = document.getElementById('orderHistoryContainer');
+            const badge = document.getElementById('orderCountBadge');
+            if (badge) {
+                badge.innerText = `${orders.length} ${orders.length === 1 ? 'ORDER' : 'ORDERS'}`;
+            }
+
             if (orders.length === 0) {
-                container.innerHTML = `<div style="font-size:0.7rem; color:var(--text-gray); text-align:center; padding:15px;">NO CHECKOUT ORDERS FOUND</div>`;
+                container.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-silver); text-align:center; padding:26px 14px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-box-open" style="font-size:1.8rem; color:var(--royal-gold); opacity:0.7;"></i>
+                        <span>No matching checkout orders found.</span>
+                    </div>`;
                 return;
             }
 
@@ -545,15 +986,17 @@
             orders.forEach((ord, index) => {
                 const orderId = ord.master_order_id || ord.id || ('#RRX-' + (100000 + index));
                 const date = ord.created_at ? new Date(ord.created_at).toLocaleDateString() : '2026-11-07';
-                const status = ord.status || 'SUCCESS';
-                const itemsStr = ord.items ? ord.items.map(i => `${i.title} (x${i.qty || 1})`).join(', ') : 'Product Item';
+                const status = ord.order_status || ord.status || 'CONFIRMED';
+                const itemsStr = ord.items ? ord.items.map(i => `${i.title} (×${i.qty || 1})`).join(', ') : 'Product Item';
+                const usdVal = parseFloat(ord.total_amount || 0);
+                const bdtVal = usdVal * currentExchangeRate;
 
                 html += `
                     <div class="order-card-item">
                         <div class="order-card-header">
                             <div>
                                 <div class="order-id-txt">${orderId}</div>
-                                <div class="order-date-txt">${date}</div>
+                                <div class="order-date-txt"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i> ${date}</div>
                             </div>
                             <span class="order-status-badge">${status}</span>
                         </div>
@@ -561,8 +1004,13 @@
                             <strong>ITEMS:</strong> ${itemsStr}
                         </div>
                         <div class="order-card-footer">
-                            <span class="order-total-price">$${ord.total_amount || '0.00'}</span>
-                            <button type="button" class="view-memo-btn" onclick="openMemoModal(${index})">VIEW MEMO</button>
+                            <div class="order-price-stack">
+                                <span class="order-total-price">$${usdVal.toFixed(2)} USD</span>
+                                <span class="order-total-bdt">${currentCountryFlag} ${currentCurrencyCode} ${bdtVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            </div>
+                            <button type="button" class="view-memo-btn" onclick="openMemoModal(${index})">
+                                <i class="fa-solid fa-file-invoice"></i> VIEW INVOICE
+                            </button>
                         </div>
                     </div>
                 `;
@@ -581,7 +1029,8 @@
             const filtered = customerOrdersList.filter(o =>
                 (o.master_order_id && o.master_order_id.toUpperCase().includes(q)) ||
                 (o.sub_order_id && o.sub_order_id.toUpperCase().includes(q)) ||
-                (o.id && String(o.id).includes(q))
+                (o.order_id && o.order_id.toUpperCase().includes(q)) ||
+                (o.id && String(o.id).toUpperCase().includes(q))
             );
 
             renderOrdersList(filtered);
@@ -592,18 +1041,23 @@
             if (!ord) return;
             activeMemoOrder = ord;
 
+            const usdVal = parseFloat(ord.total_amount || 0);
+            const bdtVal = usdVal * currentExchangeRate;
+
             document.getElementById('modalOrderId').innerText = ord.master_order_id || '#RRX-000';
-            document.getElementById('modalOrderDate').innerText = 'Date: ' + (ord.created_at || '2026');
+            document.getElementById('modalOrderDate').innerText = 'Date: ' + (ord.created_at ? new Date(ord.created_at).toLocaleDateString() : '2026');
             document.getElementById('modalCustomerPhone').innerText = ord.customer_phone || localStorage.getItem('rorraxy_customer_phone') || 'N/A';
-            document.getElementById('modalTotalAmount').innerText = '$' + (ord.total_amount || '0.00');
+            document.getElementById('modalTotalAmount').innerText = `$${usdVal.toFixed(2)} USD`;
+            document.getElementById('modalTotalBdtAmount').innerText = `${currentCountryFlag} ${currentCurrencyCode} ${bdtVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
             let itemsHtml = '';
             (ord.items || []).forEach(i => {
+                const itemPrice = parseFloat(i.price || 0);
                 itemsHtml += `
                     <tr>
                         <td>${i.title}</td>
                         <td style="text-align:center;">${i.qty || 1}</td>
-                        <td style="text-align:right;">$${i.price}</td>
+                        <td style="text-align:right;">$${itemPrice.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -620,7 +1074,7 @@
             const element = document.querySelector('.memo-modal-content');
             const options = {
                 margin: 8,
-                filename: `memo-${activeMemoOrder ? activeMemoOrder.master_order_id : 'order'}.pdf`,
+                filename: `invoice-${activeMemoOrder ? activeMemoOrder.master_order_id : 'order'}.pdf`,
                 image: { type: 'jpeg', quality: 1.0 },
                 html2canvas: { scale: 2, backgroundColor: '#ffffff' },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
