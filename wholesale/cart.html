@@ -7,464 +7,1163 @@
 <script src="/ecosystem-core.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
 <style>
-:root{--bg-retail:#000000;--gold-gradient:linear-gradient(135deg,#dfb75c 0%,#fef3c7 25%,#c59b27 50%,#fef3c7 75%,#b38728 100%);--green-gradient:linear-gradient(135deg,#00b09b,#96c93d);--gold-solid:#d4af37;--danger-red:#ff3b30;--text-white:#ffffff;--text-gray:#c0c0d0;--font-main:'Poppins','Plus Jakarta Sans',sans-serif;--card-bg:#0b0b10;--input-bg:#14141d;}
-*{box-sizing:border-box!important;margin:0;padding:0;-webkit-tap-highlight-color:transparent;word-break:break-word;}
-html,body{width:100%;max-width:100%;background:var(--bg-retail)!important;color:var(--text-white);font-family:var(--font-main);font-size:14px;text-transform:uppercase!important;-webkit-font-smoothing:antialiased;overflow-x:hidden!important;min-height:100vh;}
-.checkout-container{max-width:760px;width:100%;margin:0 auto;padding:20px 12px 110px 12px;display:flex;flex-direction:column;gap:16px;}
-.cart-brand-logo{width:105px;height:auto;object-fit:contain;margin:0 auto;display:block;filter:none!important;}
-.address-form-section,.summary-card-box{display:flex;background:var(--card-bg);border-radius:16px;padding:16px 14px;flex-direction:column;gap:12px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.4);width:100%;}
-.section-center-header{text-align:center;padding-bottom:2px;width:100%;}
-.section-center-header h2{font-size:0.82rem;font-weight:800;letter-spacing:1px;display:inline-flex;align-items:center;gap:6px;color:#fff;max-width:100%;text-overflow:ellipsis;}
-.luxury-form-label{font-size:0.62rem;color:#ffffff!important;font-weight:700;letter-spacing:0.5px;display:block;margin-bottom:4px;}
-.luxury-form-input{background:var(--input-bg)!important;border:none!important;padding:11px 12px!important;border-radius:9px!important;color:#ffffff!important;font-size:0.82rem!important;font-family:var(--font-main)!important;width:100%!important;outline:none!important;box-shadow:inset 0 1px 3px rgba(0,0,0,0.3);}
-.luxury-form-input:focus{box-shadow:0 0 10px rgba(212,175,55,0.2),inset 0 1px 3px rgba(0,0,0,0.3)!important;background:#181824!important;}
-.luxury-form-input.input-error{box-shadow:0 0 8px rgba(255,59,48,0.6)!important;}
-.iti{width:100%!important;display:block;}
-.iti__selected-flag{background-color:rgba(255,255,255,0.05)!important;border-radius:9px 0 0 9px!important;border-right:none!important;}
-.iti input[type="tel"]{padding-left:88px!important;width:100%!important;color:#ffffff!important;}
-.iti__country-list{background-color:#0b0b10!important;border:none!important;box-shadow:0 8px 25px rgba(0,0,0,0.8)!important;color:#ffffff!important;text-transform:none!important;max-height:220px!important;width:280px!important;z-index:99999!important;border-radius:9px;}
-.iti__country{padding:9px 10px;}
-.iti__country:hover{background-color:rgba(212,175,55,0.15)!important;}
-.iti__selected-dial-code{color:#ffffff!important;font-weight:700;}
-.save-address-checkbox-row{display:flex;align-items:center;gap:8px;font-size:0.68rem;color:var(--text-white);font-weight:600;cursor:pointer;margin-top:4px;}
-.save-address-checkbox-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--gold-solid);cursor:pointer;flex-shrink:0;}
-.cart-items-box{background:var(--card-bg);border-radius:16px;padding:14px;width:100%;display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
-.cart-row-item{display:flex;align-items:center;justify-content:space-between;background:#12121a;padding:10px;border-radius:10px;gap:8px;width:100%;}
-.cart-img{width:50px;height:50px;object-fit:cover;border-radius:8px;background:#000;flex-shrink:0;}
-.custom-note-chip{display:inline-block;background:rgba(212,175,55,0.12);color:var(--gold-solid);font-size:0.55rem;font-weight:700;padding:2px 7px;border-radius:5px;border:1px solid rgba(212,175,55,0.3);margin-top:3px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.moq-warning{background:rgba(255,59,48,0.1);border:1px solid rgba(255,59,48,0.35);color:#ff7b72;font-size:0.55rem;font-weight:700;padding:3px 7px;border-radius:5px;margin-top:3px;display:inline-block;}
-.tier-badge{display:inline-block;background:rgba(0,230,118,0.12);color:#00e676;font-size:0.52rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);margin-left:4px;}
-.details-toggle-btn{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold-solid);padding:3px 6px;border-radius:6px;font-size:0.52rem;font-weight:700;cursor:pointer;margin-top:3px;display:inline-block;}
-.product-extended-details{display:none;font-size:0.6rem;color:var(--text-gray);text-transform:none!important;margin-top:4px;line-height:1.4;background:#0b0b10;padding:8px;border-radius:6px;border-left:2px solid var(--gold-solid);}
-.summary-row{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:0.74rem;font-weight:600;color:var(--text-gray);gap:10px;}
-#step2PaymentSection{display:none;flex-direction:column;gap:14px;animation:fadeIn 0.3s ease-in-out;width:100%;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.payment-accordion-group{display:flex;flex-direction:column;gap:12px;width:100%;}
-.payment-method-item{background:rgba(18,18,26,0.85);border-radius:14px;overflow:hidden;cursor:pointer;width:100%;box-shadow:0 4px 15px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);transition:all 0.25s ease;}
-.payment-method-item.active{border-color:var(--gold-solid);background:rgba(24,24,36,0.98);box-shadow:0 0 18px rgba(212,175,55,0.25);}
-.payment-method-header{padding:14px 16px;display:flex;flex-direction:column;gap:10px;width:100%;}
-.payment-method-title{display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;font-weight:800;color:#fff;gap:8px;}
-.badge-global-gold{background:var(--gold-gradient);color:#000;font-size:0.58rem;font-weight:900;padding:4px 10px;border-radius:6px;cursor:pointer;flex-shrink:0;}
-.badge-local-bd{background:linear-gradient(135deg,#0052d4,#4364f7);color:#fff;font-size:0.58rem;font-weight:900;padding:4px 10px;border-radius:6px;flex-shrink:0;}
-.payout-icons-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px;width:100%;}
-.brand-payout-card{display:inline-flex;align-items:center;justify-content:center;background:#ffffff;padding:4px 10px;border-radius:8px;height:34px;min-width:54px;box-shadow:0 2px 6px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);transition:transform 0.2s ease;}
-.brand-payout-card:hover{transform:scale(1.04);}
-.brand-payout-card img{height:20px;width:auto;max-width:48px;object-fit:contain;}
-#currenciesModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999999;display:none;align-items:center;justify-content:center;padding:15px;}
-.modal-content-box{background:#0f0f18;border-radius:16px;width:100%;max-width:440px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 35px rgba(0,0,0,0.9);}
-.currency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:260px;overflow-y:auto;padding-right:4px;}
-.currency-tag{background:#181824;padding:8px;border-radius:6px;text-align:center;font-size:0.7rem;font-weight:700;color:#fff;}
-.single-fixed-checkout-wrapper{position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.96);backdrop-filter:blur(10px);padding:12px 16px;display:flex;justify-content:center;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.6);width:100%;}
-.btn-action-main{background:var(--gold-gradient);color:#000000;font-weight:800;font-size:0.84rem;padding:13px 20px;border-radius:24px;border:none!important;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;letter-spacing:0.8px;width:100%;max-width:420px;font-family:var(--font-main);box-shadow:0 4px 18px rgba(212,175,55,0.3);text-align:center;}
-.btn-action-main:active{transform:scale(0.98);}
-.gold-gradient-text{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;}
-.gold-gradient-price{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
-#toastBox{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);background:#181824;color:#ffffff;padding:9px 16px;border-radius:8px;z-index:9999999;display:none;font-size:0.72rem;font-weight:700;text-transform:none!important;width:90%;max-width:320px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.8);}
-.qty-btn-mini{background:var(--gold-gradient);border:none;color:#000;font-weight:800;width:20px;height:20px;border-radius:50%;cursor:pointer;}
-.wholesale-hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.4);color:#00e676;padding:4px 12px;border-radius:20px;font-size:0.6rem;font-weight:800;letter-spacing:0.5px;}
+:root {
+  --bg-retail: #030305;
+  --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+  --gold-shimmer: linear-gradient(110deg, #bf953f 15%, #fcf6ba 40%, #fffbe6 50%, #fcf6ba 60%, #aa771c 85%);
+  --pink-love: #ff2a85;
+  --gold-solid: #d4af37;
+  --gold-light: #fcf6ba;
+  --danger-red: #ff3b30;
+  --text-white: #ffffff;
+  --text-gray: #b0b0c2;
+  --font-main: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+  --font-luxury: 'Cinzel', 'Poppins', serif;
+  --card-bg: linear-gradient(145deg, rgba(16, 16, 26, 0.95) 0%, rgba(8, 8, 14, 0.98) 100%);
+  --input-bg: #12121b;
+}
+
+* {
+  box-sizing: border-box !important;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  word-break: break-word;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  background: radial-gradient(circle at 50% 0%, #121220 0%, #030305 70%) !important;
+  color: var(--text-white);
+  font-family: var(--font-main);
+  font-size: 14px;
+  text-transform: uppercase !important;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden !important;
+  min-height: 100vh;
+}
+
+@keyframes textShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes popupScaleIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 22px rgba(37, 211, 102, 0.3), 0 0 40px rgba(212, 175, 55, 0.15); transform: scale(1); }
+  50% { box-shadow: 0 0 38px rgba(37, 211, 102, 0.55), 0 0 55px rgba(212, 175, 55, 0.3); transform: scale(1.04); }
+}
+
+@keyframes btnSweep {
+  0% { left: -100%; }
+  50% { left: 120%; }
+  100% { left: 120%; }
+}
+
+.checkout-container {
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 14px 100px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Luxury Header */
+.luxury-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  width: 100%;
+  padding: 8px 12px 4px 12px;
+}
+
+.luxury-main-title {
+  font-size: clamp(1.05rem, 3.5vw, 1.35rem);
+  font-weight: 900;
+  letter-spacing: 1.6px;
+  background: var(--gold-shimmer);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 5s linear infinite;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.luxury-main-title i {
+  color: var(--pink-love);
+  -webkit-text-fill-color: var(--pink-love);
+  filter: drop-shadow(0 0 6px rgba(255, 42, 133, 0.45));
+}
+
+.wholesale-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--gold-light);
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.wholesale-hero-badge i {
+  color: #00e676;
+}
+
+/* Cards & Boxes */
+.address-form-section, .summary-card-box, .cart-items-box {
+  display: flex;
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 20px 18px;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  width: 100%;
+}
+
+.cart-items-box {
+  max-height: 440px;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.section-center-header {
+  text-align: center;
+  padding-bottom: 8px;
+  width: 100%;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  margin-bottom: 4px;
+}
+
+.section-center-header h2 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.luxury-form-label {
+  font-size: 0.66rem;
+  color: var(--gold-light) !important;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.luxury-form-input {
+  background: #101018 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 13px 15px !important;
+  border-radius: 14px !important;
+  color: #b8b8cc !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  font-family: var(--font-main) !important;
+  width: 100% !important;
+  outline: none !important;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.luxury-form-input::placeholder {
+  color: #63637a !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+}
+
+/* Deep Crisp White when typing or filled */
+.luxury-form-input:focus,
+.luxury-form-input.has-value {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  background: #181826 !important;
+  border-color: rgba(252, 246, 186, 0.65) !important;
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.22), inset 0 1px 4px rgba(255, 255, 255, 0.08) !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.luxury-form-input.input-error {
+  border-color: var(--danger-red) !important;
+  box-shadow: 0 0 12px rgba(255, 59, 48, 0.45) !important;
+}
+
+.iti { width: 100% !important; display: block; }
+.iti__selected-flag { background-color: rgba(255, 255, 255, 0.05) !important; border-radius: 14px 0 0 14px !important; border-right: 1px solid rgba(255, 255, 255, 0.08) !important; }
+.iti input[type="tel"] { padding-left: 92px !important; width: 100% !important; }
+.iti__country-list { background-color: #0d0d16 !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; box-shadow: 0 14px 35px rgba(0, 0, 0, 0.92) !important; color: #ffffff !important; text-transform: none !important; max-height: 220px !important; width: 280px !important; z-index: 99999 !important; border-radius: 14px; }
+.iti__country { padding: 9px 12px; }
+.iti__country:hover { background-color: rgba(212, 175, 55, 0.16) !important; }
+.iti__selected-dial-code { color: #ffffff !important; font-weight: 800; }
+
+.save-address-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.72rem;
+  color: #d0d0e0;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  padding: 6px 4px;
+}
+
+.save-address-checkbox-row input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--gold-solid);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Cart Item Row */
+.cart-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(20, 20, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 14px;
+  gap: 10px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.cart-row-item:hover {
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.cart-img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #000;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  flex-shrink: 0;
+}
+
+.custom-note-chip {
+  display: inline-block;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-light);
+  font-size: 0.56rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  margin-top: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moq-warning {
+  background: rgba(255, 59, 48, 0.12);
+  border: 1px solid rgba(255, 59, 48, 0.35);
+  color: #ff7b72;
+  font-size: 0.56rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.tier-badge {
+  display: inline-block;
+  background: rgba(0, 230, 118, 0.12);
+  color: #00e676;
+  font-size: 0.54rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  margin-left: 5px;
+}
+
+.details-toggle-btn {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--gold-light);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.54rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.product-extended-details {
+  display: none;
+  font-size: 0.62rem;
+  color: var(--text-gray);
+  text-transform: none !important;
+  margin-top: 6px;
+  line-height: 1.45;
+  background: #0a0a10;
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 2px solid var(--gold-solid);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  gap: 10px;
+}
+
+.qty-btn-mini {
+  background: var(--gold-gradient);
+  border: none;
+  color: #000;
+  font-weight: 900;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sleek, Compact & Refined Fixed Bottom Checkout Button */
+.single-fixed-checkout-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(5, 5, 10, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
+  padding: 11px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.85);
+  width: 100%;
+}
+
+.btn-action-main {
+  position: relative;
+  overflow: hidden;
+  background: var(--gold-gradient);
+  color: #050508;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 11px 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  letter-spacing: 1.1px;
+  width: auto;
+  min-width: 245px;
+  max-width: 310px;
+  font-family: var(--font-main);
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.32);
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-action-main::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-22deg);
+  animation: btnSweep 3.5s infinite ease-in-out;
+}
+
+.btn-action-main:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(212, 175, 55, 0.48);
+}
+
+.btn-action-main:active {
+  transform: scale(0.97);
+}
+
+.gold-gradient-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.gold-gradient-price {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+/* ================= LUXURY FLOATING REPRESENTATIVE POPUP (PURE ENGLISH, PREMIUM FONTS & SHIMMER) ================= */
+.rep-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 2, 5, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 99999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.rep-popup-overlay.active {
+  display: flex;
+}
+
+.rep-popup-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(155deg, #131322 0%, #07070d 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.48);
+  border-radius: 30px;
+  padding: clamp(26px, 5vw, 40px) clamp(20px, 4.5vw, 34px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 28px 75px rgba(0, 0, 0, 0.96), 0 0 50px rgba(212, 175, 55, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  animation: popupScaleIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.rep-popup-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.rep-whatsapp-badge {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.2), rgba(18, 140, 126, 0.28));
+  border: 1.5px solid rgba(37, 211, 102, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.35rem;
+  color: #25D366;
+  animation: pulseGlow 2.4s infinite ease-in-out;
+  margin-bottom: 2px;
+}
+
+.rep-order-id-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.14);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 6px 16px;
+  border-radius: 999px;
+  letter-spacing: 1.2px;
+  animation: fadeSlideUp 0.5s ease both;
+}
+
+.rep-popup-heading {
+  font-family: var(--font-luxury);
+  font-size: clamp(1.2rem, 3.8vw, 1.58rem);
+  font-weight: 900;
+  letter-spacing: 1px;
+  background: var(--gold-shimmer);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 3.8s linear infinite, fadeSlideUp 0.55s ease both;
+  line-height: 1.3;
+  text-transform: uppercase !important;
+}
+
+.rep-popup-message-primary {
+  font-family: var(--font-main);
+  font-size: clamp(0.88rem, 2.5vw, 0.98rem);
+  font-weight: 500;
+  color: #f4f4fa;
+  line-height: 1.65;
+  text-transform: none !important;
+  max-width: 450px;
+  animation: fadeSlideUp 0.65s ease both;
+}
+
+.rep-popup-message-primary strong {
+  background: linear-gradient(90deg, #25D366, #86efac, #25D366);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 3s linear infinite;
+  font-weight: 800;
+}
+
+.rep-contact-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: rgba(37, 211, 102, 0.12);
+  border: 1px solid rgba(37, 211, 102, 0.4);
+  color: #4ade80;
+  padding: 10px 20px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: none !important;
+  width: 100%;
+  max-width: 380px;
+  animation: fadeSlideUp 0.72s ease both;
+}
+
+.rep-account-btn {
+  position: relative;
+  overflow: hidden;
+  margin-top: 6px;
+  width: 100%;
+  max-width: 340px;
+  padding: 13px 24px;
+  border-radius: 999px;
+  background: var(--gold-gradient);
+  color: #050508;
+  font-family: var(--font-main);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  animation: fadeSlideUp 0.8s ease both;
+}
+
+.rep-account-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: skewX(-22deg);
+  animation: btnSweep 3.2s infinite ease-in-out;
+}
+
+.rep-account-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.55);
+}
+
+#toastBox {
+  position: fixed;
+  bottom: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #181824;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 12px;
+  z-index: 9999999;
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: none !important;
+  width: 90%;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.85);
+}
 </style>
 </head>
 <body>
+
 <div id="toastBox"></div>
-<div id="currenciesModal">
-<div class="modal-content-box">
-<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;">
-<h3 class="gold-gradient-text" style="font-size:0.85rem;"><i class="fa-solid fa-globe"></i> SUPPORTED CURRENCIES (150+)</h3>
-<button type="button" onclick="closeCurrenciesModal()" style="background:none;border:none;color:#ff3b30;font-size:1rem;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+
+<!-- LARGE LUXURY FLOATING POPUP ON CHECKOUT (PURE ENGLISH WITH SHIMMER & ANIMATIONS) -->
+<div id="representativePopupModal" class="rep-popup-overlay">
+  <div class="rep-popup-card">
+    <div class="rep-whatsapp-badge">
+      <i class="fa-brands fa-whatsapp"></i>
+    </div>
+    <div class="rep-order-id-tag" id="popupMasterOrderId">ORDER REF: RRX-WHL-000000</div>
+    <h2 class="rep-popup-heading">WHOLESALE ORDER REQUEST RECEIVED</h2>
+    <p class="rep-popup-message-primary">
+      Thank you for choosing rorraxy Wholesale. Our dedicated trade representative will reach out to you shortly via <strong>WhatsApp</strong> on your registered number to confirm your commercial invoice, bulk discounts, and priority dispatch schedule.
+    </p>
+    <div class="rep-contact-pill" id="popupCustomerPhoneDisplay">
+      <i class="fa-brands fa-whatsapp"></i> <span>WhatsApp Contact: --</span>
+    </div>
+    <button type="button" id="goAccountAfterOrderBtn" class="rep-account-btn" onclick="redirectToAccountPage()">
+      <i class="fa-solid fa-user-check"></i> CONTINUE TO MY ACCOUNT
+    </button>
+  </div>
 </div>
-<div style="font-size:0.68rem;color:var(--text-gray);text-transform:none!important;line-height:1.4;">Our global gateway automatically accepts over 150+ international currencies with real-time conversion rates:</div>
-<div class="currency-grid">
-<div class="currency-tag">USD ($)</div><div class="currency-tag">EUR (€)</div><div class="currency-tag">GBP (£)</div>
-<div class="currency-tag">CAD ($)</div><div class="currency-tag">AUD ($)</div><div class="currency-tag">SGD ($)</div>
-<div class="currency-tag">AED (د.إ)</div><div class="currency-tag">SAR (ر.س)</div><div class="currency-tag">INR (₹)</div>
-<div class="currency-tag">MYR (RM)</div><div class="currency-tag">+ 140 MORE</div>
-</div>
-<button type="button" onclick="closeCurrenciesModal()" style="background:var(--gold-gradient);color:#000;border:none;padding:10px;border-radius:8px;font-weight:800;font-size:0.75rem;cursor:pointer;margin-top:4px;">CLOSE WINDOW</button>
-</div>
-</div>
+
 <div class="checkout-container">
-<div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:100%;">
-<img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png" class="cart-brand-logo">
-<h2 class="gold-gradient-text" style="font-size:0.85rem;letter-spacing:1.2px;"><i class="fa-solid fa-boxes-stacked"></i> WHOLESALE BULK ORDER</h2>
-<div class="wholesale-hero-badge"><i class="fa-solid fa-truck-fast"></i> B2B BULK PRICING APPLIED</div>
+  <!-- Clean Luxury Header -->
+  <div class="luxury-page-header">
+    <h1 class="luxury-main-title"><i class="fa-solid fa-boxes-stacked"></i> WHOLESALE BULK ORDER</h1>
+    <div class="wholesale-hero-badge"><i class="fa-solid fa-truck-fast"></i> B2B BULK PRICING APPLIED</div>
+  </div>
+
+  <!-- Cart Items & Shipping Form -->
+  <div id="step1CartSection" style="display:flex;flex-direction:column;gap:16px;width:100%;">
+    <div id="cartItemsListContainer" class="cart-items-box"></div>
+
+    <div class="summary-card-box">
+      <div class="summary-row">
+        <span style="font-weight:700;color:var(--text-gray);">TOTAL QUANTITY:</span>
+        <span id="cartTotalQty" style="font-weight:800;color:var(--gold-solid);">0 UNITS</span>
+      </div>
+      <div class="summary-row">
+        <span style="font-weight:700;color:var(--text-gray);">BULK SAVINGS:</span>
+        <span id="cartSavingsVal" style="font-weight:800;color:#00e676;">$0.00</span>
+      </div>
+      <div style="height:1px;background:rgba(212,175,55,0.15);margin:2px 0;width:100%;"></div>
+      <div class="summary-row">
+        <span style="font-weight:800;color:var(--gold-light);">TOTAL AMOUNT:</span>
+        <div style="text-align:right;">
+          <span id="cartTotalVal" class="gold-gradient-price" style="font-size:1.08rem;">$0.00</span>
+          <span id="cartLocalVal" style="font-size:0.68rem;color:var(--text-gray);font-weight:600;margin-left:6px;">--</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="addressFormSection" class="address-form-section">
+      <div class="section-center-header">
+        <h2 class="gold-gradient-text"><i class="fa-solid fa-location-dot" style="color:var(--pink-love);"></i> SHIPPING &amp; CONTACT DETAILS</h2>
+      </div>
+      <form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex;flex-direction:column;gap:14px;width:100%;">
+        <div class="form-group" style="display:flex;flex-direction:column;width:100%;">
+          <label class="luxury-form-label"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
+          <input type="tel" id="chkPhone" class="luxury-form-input" placeholder="Enter WhatsApp mobile number">
+        </div>
+        <div style="display:flex;flex-direction:column;width:100%;">
+          <label class="luxury-form-label"><i class="fa-solid fa-building-user" style="color:var(--gold-solid);"></i> BUSINESS / CONTACT NAME <span style="color:var(--danger-red);">*</span></label>
+          <input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN">
+        </div>
+        <div style="display:flex;flex-direction:column;width:100%;">
+          <label class="luxury-form-label"><i class="fa-solid fa-warehouse" style="color:var(--gold-solid);"></i> SHIPPING / WAREHOUSE ADDRESS <span style="color:var(--danger-red);">*</span></label>
+          <textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="2" style="resize:none;"></textarea>
+        </div>
+        <label class="save-address-checkbox-row">
+          <input type="checkbox" id="saveAddressCheckbox" checked> Save my details for faster future wholesale orders
+        </label>
+      </form>
+    </div>
+  </div>
 </div>
-<div id="step1CartSection" style="display:flex;flex-direction:column;gap:14px;width:100%;">
-<div id="cartItemsListContainer" class="cart-items-box"></div>
-<div class="summary-card-box">
-<div class="summary-row"><span style="font-weight:700;color:var(--text-gray);">TOTAL QUANTITY:</span><span id="cartTotalQty" style="font-weight:800;color:var(--gold-solid);">0 UNITS</span></div>
-<div style="height:1px;background:rgba(255,255,255,0.06);margin:2px 0;width:100%;"></div>
-<div class="summary-row"><span style="font-weight:700;color:var(--text-gray);">TOTAL AMOUNT:</span><div style="text-align:right;"><span id="cartTotalVal" class="gold-gradient-price" style="font-size:1rem;">$0.00</span><span id="cartLocalVal" style="font-size:0.64rem;color:var(--text-gray);font-weight:600;margin-left:5px;">--</span></div></div>
+
+<!-- Sleek, Compact Fixed Bottom Checkout Trigger -->
+<div class="single-fixed-checkout-wrapper">
+  <button type="button" id="mainCheckoutBtn" class="btn-action-main">
+    PROCEED TO CHECKOUT <i class="fa-solid fa-arrow-right" style="color:#050508;"></i>
+  </button>
 </div>
-<div id="addressFormSection" class="address-form-section">
-<div class="section-center-header"><h2 class="gold-gradient-text"><i class="fa-solid fa-location-dot" style="color:var(--gold-solid);"></i> SHIPPING ADDRESS</h2></div>
-<form id="shippingCheckoutForm" onsubmit="event.preventDefault();" style="display:flex;flex-direction:column;gap:10px;width:100%;">
-<div class="form-group" style="display:flex;flex-direction:column;gap:6px;width:100%;">
-<label class="luxury-form-label">WHATSAPP / MOBILE NUMBER <span style="color:var(--danger-red);">*</span></label>
-<input type="tel" id="chkPhone" class="luxury-form-input" placeholder="Enter mobile number">
-</div>
-<div style="display:flex;flex-direction:column;width:100%;"><label class="luxury-form-label">BUSINESS / CONTACT NAME <span style="color:var(--danger-red);">*</span></label><input type="text" id="chkFullName" class="luxury-form-input" placeholder="e.g. MD MASUDAR RAHMAN"></div>
-<div style="display:flex;flex-direction:column;width:100%;"><label class="luxury-form-label">SHIPPING / WAREHOUSE ADDRESS <span style="color:var(--danger-red);">*</span></label><textarea id="chkAddress" class="luxury-form-input" placeholder="House/Road/Street, City, Postal Code" rows="2" style="resize:none;"></textarea></div>
-<label class="save-address-checkbox-row"><input type="checkbox" id="saveAddressCheckbox" checked> Save my info for easy future purchases</label>
-</form>
-</div>
-</div>
-<div id="step2PaymentSection">
-<div class="address-form-section">
-<div class="section-center-header"><h2 class="gold-gradient-text"><i class="fa-solid fa-shield-halved" style="color:var(--gold-solid);"></i> SELECT PAYMENT METHOD</h2></div>
-<div class="payment-accordion-group">
-<div class="payment-method-item active" id="method-intl" onclick="selectPaymentMethod('International Cards', 'method-intl')">
-<div class="payment-method-header">
-<div class="payment-method-title"><span><i class="fa-solid fa-globe" style="color:var(--gold-solid);margin-right:6px;"></i> INTERNATIONAL CARDS</span><span class="badge-global-gold" onclick="event.stopPropagation(); openCurrenciesModal();">150+ CURRENCIES <i class="fa-solid fa-circle-info"></i></span></div>
-<div class="payout-icons-row">
-<div class="brand-payout-card" title="VISA"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/1547549.webp" alt="Visa"></div>
-<div class="brand-payout-card" title="MasterCard"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/mastercard-svgrepo-com.svg" alt="MasterCard"></div>
-<div class="brand-payout-card" title="American Express"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/american-express.svg" alt="Amex"></div>
-</div>
-</div>
-</div>
-<div class="payment-method-item" id="method-bd" onclick="selectPaymentMethod('Bangladesh Cards', 'method-bd')">
-<div class="payment-method-header">
-<div class="payment-method-title"><span><i class="fa-solid fa-building-columns" style="color:#3b82f6;margin-right:6px;"></i> BANGLADESH CARDS & MOBILE BANKING</span><span class="badge-local-bd">BDT PAYMENT</span></div>
-<div class="payout-icons-row">
-<div class="brand-payout-card" title="bKash"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/bKash%20Icon%20Vector.svg%20.png" alt="bKash"></div>
-<div class="brand-payout-card" title="Nagad"><img src="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/idNpcxg37S_1794380383524.png" alt="Nagad"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="summary-card-box">
-<div class="summary-row"><span>SUBTOTAL:</span><span id="summarySubtotal" style="font-weight:800;color:#fff;">$0.00 USD</span></div>
-<div class="summary-row"><span>BULK SAVINGS:</span><span id="summarySavings" style="color:#00e676;font-weight:800;">$0.00</span></div>
-<div class="summary-row"><span>SHIPPING:</span><span style="color:#00e676;font-weight:800;">FREE</span></div>
-<div style="height:1px;background:rgba(255,255,255,0.06);margin:3px 0;width:100%;"></div>
-<div class="summary-row" style="align-items:center;"><span style="font-size:0.78rem;font-weight:800;color:var(--gold-solid);">TOTAL PAYABLE:</span><span id="summaryTotalDisplay" class="gold-gradient-price" style="font-size:0.92rem;text-align:right;">$0.00 USD</span></div>
-</div>
-</div>
-</div>
-<div class="single-fixed-checkout-wrapper"><button type="button" id="mainCheckoutBtn" class="btn-action-main">PROCESS BULK ORDER <i class="fa-solid fa-arrow-right" style="color:#000;"></i></button></div>
+
 <script>
-const API_BASE_URL='';
-const ORDER_MODE='wholesale';
-let iti,currentStep=1,currentExchangeRate=120,currentCurrencyCode="BDT",currentCountryFlag="🇧🇩";
-window.selectedPaymentType="International Cards";
-window.addEventListener('DOMContentLoaded',()=>{
-renderCartList();
-initIntlPhoneInput();
-detectUserLocationAndRealtimeCurrency();
-loadSavedAddressToForm();
-document.getElementById('mainCheckoutBtn').addEventListener('click',handleMainActionButton);
-const phoneInput=document.getElementById('chkPhone');
-phoneInput.addEventListener('input',(e)=>{e.target.value=e.target.value.replace(/\D/g,'');clearError('chkPhone');});
-['chkFullName','chkAddress'].forEach(id=>{document.getElementById(id).addEventListener('input',()=>clearError(id));});
+const API_BASE_URL = '';
+const ORDER_MODE = 'wholesale';
+let iti, currentExchangeRate = 120, currentCurrencyCode = "BDT", currentCountryFlag = "🇧🇩";
+let isSubmittingOrder = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderCartList();
+  initIntlPhoneInput();
+  detectUserLocationAndRealtimeCurrency();
+  loadSavedAddressToForm();
+  document.getElementById('mainCheckoutBtn').addEventListener('click', handleDirectCheckoutSubmission);
+
+  const phoneInput = document.getElementById('chkPhone');
+  phoneInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '');
+    clearError('chkPhone');
+    syncInputActiveState(phoneInput);
+  });
+
+  ['chkFullName', 'chkAddress'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      clearError(id);
+      syncInputActiveState(el);
+    });
+  });
 });
-function openCurrenciesModal(){document.getElementById('currenciesModal').style.display='flex';}
-function closeCurrenciesModal(){document.getElementById('currenciesModal').style.display='none';}
-function clearError(fieldId){document.getElementById(fieldId).classList.remove('input-error');}
-function initIntlPhoneInput(){
-const phoneInput=document.querySelector("#chkPhone");
-iti=window.intlTelInput(phoneInput,{initialCountry:"auto",separateDialCode:true,autoPlaceholder:"off",geoIpLookup:function(success,failure){fetch('https://ipapi.co/json/').then(res=>res.json()).then(data=>success(data.country_code)).catch(()=>success('bd'));}});
+
+// Ensures any input with text stays deep crisp white
+function syncInputActiveState(el) {
+  if (!el) return;
+  if (el.value && el.value.trim().length > 0) {
+    el.classList.add('has-value');
+  } else {
+    el.classList.remove('has-value');
+  }
 }
-function loadSavedAddressToForm(){
-let saved=JSON.parse(localStorage.getItem('rorraxy_saved_addresses'))||[];
-if(saved.length>0){let latest=saved[0];if(latest.phone)document.getElementById('chkPhone').value=latest.phone;if(latest.fullName)document.getElementById('chkFullName').value=latest.fullName;if(latest.address)document.getElementById('chkAddress').value=latest.address;}
+
+function clearError(fieldId) {
+  document.getElementById(fieldId).classList.remove('input-error');
 }
-function detectUserLocationAndRealtimeCurrency(){
-fetch('https://ipapi.co/json/').then(res=>res.json()).then(data=>{
-const countryCode=data.country_code||'BD';
-currentCurrencyCode=data.currency||'BDT';
-currentCountryFlag=getFlagEmoji(countryCode);
-fetch('https://open.er-api.com/v6/latest/USD').then(res=>res.json()).then(rateData=>{
-if(rateData&&rateData.rates&&rateData.rates[currentCurrencyCode]){currentExchangeRate=rateData.rates[currentCurrencyCode];}
-renderCartList();
-}).catch(()=>renderCartList());
-}).catch(()=>renderCartList());
+
+function initIntlPhoneInput() {
+  const phoneInput = document.querySelector("#chkPhone");
+  iti = window.intlTelInput(phoneInput, {
+    initialCountry: "auto",
+    separateDialCode: true,
+    autoPlaceholder: "off",
+    geoIpLookup: function(success, failure) {
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => success(data.country_code))
+        .catch(() => success('bd'));
+    }
+  });
 }
-function getFlagEmoji(countryCode){const codePoints=countryCode.toUpperCase().split('').map(char=>127397+char.charCodeAt());return String.fromCodePoint(...codePoints);}
-function generateUniqueId(prefix){return prefix+'-'+Math.floor(100000+Math.random()*900000);}
-function escapeHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+function loadSavedAddressToForm() {
+  let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
+  if (saved.length > 0) {
+    let latest = saved[0];
+    const phoneEl = document.getElementById('chkPhone');
+    const nameEl = document.getElementById('chkFullName');
+    const addrEl = document.getElementById('chkAddress');
+
+    if (latest.phone) {
+      phoneEl.value = latest.phone;
+      syncInputActiveState(phoneEl);
+    }
+    if (latest.fullName) {
+      nameEl.value = latest.fullName;
+      syncInputActiveState(nameEl);
+    }
+    if (latest.address) {
+      addrEl.value = latest.address;
+      syncInputActiveState(addrEl);
+    }
+  }
+}
+
+function detectUserLocationAndRealtimeCurrency() {
+  fetch('https://ipapi.co/json/')
+    .then(res => res.json())
+    .then(data => {
+      const countryCode = data.country_code || 'BD';
+      currentCurrencyCode = data.currency || 'BDT';
+      currentCountryFlag = getFlagEmoji(countryCode);
+      fetch('https://open.er-api.com/v6/latest/USD')
+        .then(res => res.json())
+        .then(rateData => {
+          if (rateData && rateData.rates && rateData.rates[currentCurrencyCode]) {
+            currentExchangeRate = rateData.rates[currentCurrencyCode];
+          }
+          renderCartList();
+        })
+        .catch(() => renderCartList());
+    })
+    .catch(() => renderCartList());
+}
+
+function getFlagEmoji(countryCode) {
+  const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt());
+  return String.fromCodePoint(...codePoints);
+}
+
+function generateUniqueId(prefix) {
+  return prefix + '-' + Math.floor(100000 + Math.random() * 900000);
+}
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ==== TIER PRICING HELPER ====
-function getTierPrice(item,qty){
-const sample=parseFloat(item.price_sample||0);
-const whole=parseFloat(item.price_min_whole||0);
-const bulk=parseFloat(item.price_bulk||0);
-const retail=parseFloat((item.price||"0").toString().replace('$',''))||0;
-const bulkMinQty=parseInt(item.bulk_min_qty||50);
-const wholeMinQty=parseInt(item.whole_min_qty||10);
-if(bulk>0&&qty>=bulkMinQty)return{price:bulk,tier:'BULK',savings:retail-bulk};
-if(whole>0&&qty>=wholeMinQty)return{price:whole,tier:'WHOLESALE',savings:retail-whole};
-if(sample>0)return{price:sample,tier:'SAMPLE',savings:retail-sample};
-return{price:retail,tier:'RETAIL',savings:0};
+function getTierPrice(item, qty) {
+  const sample = parseFloat(item.price_sample || 0);
+  const whole = parseFloat(item.price_min_whole || 0);
+  const bulk = parseFloat(item.price_bulk || 0);
+  const retail = parseFloat((item.price || "0").toString().replace('$', '')) || 0;
+  const bulkMinQty = parseInt(item.bulk_min_qty || 50);
+  const wholeMinQty = parseInt(item.whole_min_qty || 10);
+  if (bulk > 0 && qty >= bulkMinQty) return { price: bulk, tier: 'BULK', savings: retail - bulk };
+  if (whole > 0 && qty >= wholeMinQty) return { price: whole, tier: 'WHOLESALE', savings: retail - whole };
+  if (sample > 0) return { price: sample, tier: 'SAMPLE', savings: retail - sample };
+  return { price: retail, tier: 'RETAIL', savings: 0 };
 }
-function renderCartList(){
-let cartKey='rorraxy_wholesale_cart';
-let cart=JSON.parse(localStorage.getItem(cartKey))||JSON.parse(localStorage.getItem('rorraxy_cart'))||[];
-let container=document.getElementById('cartItemsListContainer');
-let totalValEl=document.getElementById('cartTotalVal');
-let localValEl=document.getElementById('cartLocalVal');
-let totalQtyEl=document.getElementById('cartTotalQty');
-if(cart.length===0){
-container.innerHTML='<div style="color:var(--text-gray);text-align:center;font-size:0.72rem;padding:15px;">YOUR WHOLESALE CART IS EMPTY.</div>';
-totalValEl.innerText="$0.00";
-localValEl.innerText=`${currentCountryFlag} ${currentCurrencyCode} 0.00`;
-totalQtyEl.innerText="0 UNITS";
-updateSummaryTotals(0,0);
-return;
-}
-let html='',totalAmt=0,totalQty=0,totalSavings=0;
-let updatedCart=cart.map((item,index)=>{
-const moq=parseInt(item.moq||item.MOQ||1);
-if(item.qty<moq)item.qty=moq;
-const tierInfo=getTierPrice(item,item.qty);
-const priceNum=tierInfo.price;
-const itemTotal=priceNum*item.qty;
-totalAmt+=itemTotal;
-totalQty+=item.qty;
-totalSavings+=(tierInfo.savings*item.qty);
-if(!item.orderId)item.orderId=generateUniqueId('ORD');
-if(!item.trackingId)item.trackingId=generateUniqueId('TRK');
-let itemImgUrl=item.img||item.image_url||item.imageUrl||'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp';
-let itemTitleText=item.title||item.product_title||'Product Item';
-let itemDescText=item.description||item.desc||'High quality global product item with secure warranty.';
-const skuRaw=(item.sku||item.product_code||item.productCode||'').toString().trim();
-const safeSku=escapeHtml(skuRaw);
-let skuHtml=safeSku?`<div style="font-size:0.54rem;color:var(--gold-solid);font-weight:800;letter-spacing:0.3px;margin-top:2px;text-transform:none!important;"><i class="fa-solid fa-barcode" style="font-size:0.5rem;margin-right:2px;"></i>SKU: ${safeSku}</div>`:'';
-let moqWarning=item.qty<moq?`<div class="moq-warning"><i class="fa-solid fa-triangle-exclamation"></i> MOQ: ${moq} পিস ন্যূনতম</div>`:'';
-let tierBadge=`<span class="tier-badge"><i class="fa-solid fa-tag"></i> ${tierInfo.tier}</span>`;
-let customNote=item.size||item.note||item.custom_note||'';
-let noteChip=customNote?`<div class="custom-note-chip" title="${escapeHtml(customNote)}"><i class="fa-solid fa-pen-to-square"></i> NOTE: ${escapeHtml(customNote)}</div>`:'';
-html+=`<div class="cart-row-item">
-<img src="${escapeHtml(itemImgUrl)}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
-<div style="flex:1;text-align:left;min-width:0;overflow:hidden;">
-<div style="font-size:0.7rem;font-weight:700;color:#ffffff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(itemTitleText)}${tierBadge}</div>
-${skuHtml}
-${noteChip}
-${moqWarning}
-<button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})"><i class="fa-solid fa-circle-info"></i> BULK DETAILS</button>
-<div id="prodDetails-${index}" class="product-extended-details">
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">CURRENT TIER:</strong> ${escapeHtml(tierInfo.tier)} ($${priceNum.toFixed(2)}/pc)</div>
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">MOQ:</strong> ${moq} UNITS</div>
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">SAMPLE PRICE:</strong> $${parseFloat(item.price_sample||0).toFixed(2)}</div>
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">WHOLESALE (≥${parseInt(item.whole_min_qty||10)}):</strong> $${parseFloat(item.price_min_whole||0).toFixed(2)}</div>
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">BULK (≥${parseInt(item.bulk_min_qty||50)}):</strong> $${parseFloat(item.price_bulk||0).toFixed(2)}</div>
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">QUANTITY:</strong> ${item.qty} PCS</div>
-<div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">ITEM TOTAL:</strong> $${itemTotal.toFixed(2)}</div>
-${tierInfo.savings>0?`<div style="margin-bottom:4px;color:#00e676;"><strong>BULK SAVINGS:</strong> $${(tierInfo.savings*item.qty).toFixed(2)}</div>`:''}
-<div style="border-top:1px solid rgba(212,175,55,0.2);padding-top:6px;margin-top:6px;"><strong style="color:var(--gold-solid);">DESCRIPTION:</strong><br>${escapeHtml(itemDescText)}</div>
-</div>
-</div>
-<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
-<button class="btn-qty-minus qty-btn-mini" data-index="${index}" ${item.qty<=moq?'disabled style="opacity:0.3;"':''}>-</button>
-<span style="font-size:0.7rem;font-weight:700;color:#ffffff;width:24px;text-align:center;">${item.qty}</span>
-<button class="btn-qty-plus qty-btn-mini" data-index="${index}">+</button>
-</div>
-<div class="gold-gradient-price" style="font-size:0.75rem;flex-shrink:0;min-width:52px;text-align:right;">$${itemTotal.toFixed(2)}</div>
-<button class="btn-qty-remove" data-index="${index}" style="background:none;border:none;color:#ff3b30;cursor:pointer;font-size:0.78rem;padding:2px;flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button>
-</div>`;
-return item;
-});
-localStorage.setItem(cartKey,JSON.stringify(updatedCart));
-container.innerHTML=html;
-totalValEl.innerText=`$${totalAmt.toFixed(2)}`;
-let convertedVal=totalAmt*currentExchangeRate;
-localValEl.innerText=`${currentCountryFlag} ${currentCurrencyCode} ${convertedVal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-totalQtyEl.innerText=`${totalQty} UNITS`;
-updateSummaryTotals(totalAmt,totalSavings);
-document.querySelectorAll('.btn-qty-minus').forEach(btn=>btn.addEventListener('click',(e)=>changeQty(e.currentTarget.dataset.index,-1)));
-document.querySelectorAll('.btn-qty-plus').forEach(btn=>btn.addEventListener('click',(e)=>changeQty(e.currentTarget.dataset.index,1)));
-document.querySelectorAll('.btn-qty-remove').forEach(btn=>btn.addEventListener('click',(e)=>removeCartItem(e.currentTarget.dataset.index)));
-}
-function toggleProductDetails(index){let box=document.getElementById(`prodDetails-${index}`);box.style.display=(box.style.display==='block')?'none':'block';}
-function updateSummaryTotals(totalAmt,totalSavings=0){
-let bdtVal=totalAmt*currentExchangeRate;
-let formattedText=`$${totalAmt.toFixed(2)} USD (${currentCurrencyCode} ${bdtVal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})})`;
-document.getElementById('summarySubtotal').innerText=`$${totalAmt.toFixed(2)} USD`;
-document.getElementById('summarySavings').innerText=`- $${totalSavings.toFixed(2)}`;
-document.getElementById('summaryTotalDisplay').innerText=formattedText;
-}
-function changeQty(index,val){
-let cartKey='rorraxy_wholesale_cart';
-let cart=JSON.parse(localStorage.getItem(cartKey))||JSON.parse(localStorage.getItem('rorraxy_cart'))||[];
-const moq=parseInt(cart[index].moq||cart[index].MOQ||1);
-cart[index].qty+=val;
-if(cart[index].qty<moq)cart[index].qty=moq;
-localStorage.setItem(cartKey,JSON.stringify(cart));
-renderCartList();
-}
-function removeCartItem(index){
-let cartKey='rorraxy_wholesale_cart';
-let cart=JSON.parse(localStorage.getItem(cartKey))||JSON.parse(localStorage.getItem('rorraxy_cart'))||[];
-cart.splice(index,1);
-localStorage.setItem(cartKey,JSON.stringify(cart));
-renderCartList();
-}
-function handleMainActionButton(){
-if(currentStep===1)validateAndProceedToNextStep();
-else if(currentStep===2)finalizeAndConfirmOrderToCloudflare();
-}
-function validateAndProceedToNextStep(){
-let cartKey='rorraxy_wholesale_cart';
-let cart=JSON.parse(localStorage.getItem(cartKey))||JSON.parse(localStorage.getItem('rorraxy_cart'))||[];
-if(cart.length===0){showToast("Your wholesale cart is empty!",true);return;}
-for(const item of cart){const moq=parseInt(item.moq||item.MOQ||1);if(item.qty<moq){showToast(`"${item.title||'Item'}" এর MOQ ${moq} পিস`,true);return;}}
-const phoneEl=document.getElementById('chkPhone');
-const nameEl=document.getElementById('chkFullName');
-const addressEl=document.getElementById('chkAddress');
-const phone=phoneEl.value.trim();
-const name=nameEl.value.trim();
-const address=addressEl.value.trim();
-let hasError=false;
-if(!phone||(iti&&!iti.isValidNumber())){phoneEl.classList.add('input-error');hasError=true;showToast("Please enter a VALID COMPLETE phone number!",true);}
-if(!name){nameEl.classList.add('input-error');hasError=true;}
-if(!address){addressEl.classList.add('input-error');hasError=true;}
-if(hasError){
-if(!phone||(iti&&!iti.isValidNumber()))phoneEl.focus();
-else if(!name)nameEl.focus();
-else if(!address)addressEl.focus();
-}else{
-saveAddressToLocalStorage();
-goToStep(2);
-}
-}
-function saveAddressToLocalStorage(){
-let fullPhoneNumber=iti?iti.getNumber():document.getElementById('chkPhone').value;
-let cartKey='rorraxy_wholesale_cart';
-let cart=JSON.parse(localStorage.getItem(cartKey))||JSON.parse(localStorage.getItem('rorraxy_cart'))||[];
-let checkoutPayload={customer:{fullName:document.getElementById('chkFullName').value,phone:fullPhoneNumber,address:document.getElementById('chkAddress').value},items:cart,mode:ORDER_MODE,timestamp:new Date().toISOString()};
-if(document.getElementById('saveAddressCheckbox').checked){
-let saved=JSON.parse(localStorage.getItem('rorraxy_saved_addresses'))||[];
-let existIndex=saved.findIndex(a=>a.phone===fullPhoneNumber);
-if(existIndex>=0){saved[existIndex]=checkoutPayload.customer;}else{saved.unshift(checkoutPayload.customer);}
-localStorage.setItem('rorraxy_saved_addresses',JSON.stringify(saved));
-}
-localStorage.setItem('rorraxy_current_checkout',JSON.stringify(checkoutPayload));
-localStorage.setItem('rorraxy_customer_phone',fullPhoneNumber);
-localStorage.setItem('rorraxy_customer_token','verified_token_'+Date.now());
-}
-function goToStep(stepNumber){
-currentStep=stepNumber;
-const step1=document.getElementById('step1CartSection');
-const step2=document.getElementById('step2PaymentSection');
-const mainBtn=document.getElementById('mainCheckoutBtn');
-if(stepNumber===1){step1.style.display='flex';step2.style.display='none';mainBtn.innerHTML='PROCESS BULK ORDER <i class="fa-solid fa-arrow-right" style="color:#000;"></i>';}
-else if(stepNumber===2){step1.style.display='none';step2.style.display='flex';mainBtn.innerHTML='<i class="fa-solid fa-lock"></i> CONFIRM BULK ORDER';}
-window.scrollTo({top:0,behavior:'smooth'});
-}
-function selectPaymentMethod(method,elementId){
-window.selectedPaymentType=method;
-document.querySelectorAll('.payment-method-item').forEach(item=>{item.classList.remove('active');});
-document.getElementById(elementId).classList.add('active');
-}
-async function finalizeAndConfirmOrderToCloudflare(){
-let checkoutData=localStorage.getItem('rorraxy_current_checkout');
-if(!checkoutData){showToast("Checkout session expired!",true);goToStep(1);return;}
-let orderPayload=JSON.parse(checkoutData);
-let totalAmountVal=0,totalSavingsVal=0,totalQtyVal=0;
-let masterOrderId='RRX-WHL-'+Math.floor(100000+Math.random()*900000);
-let singleOrderId=(orderPayload.items.length===1&&orderPayload.items[0].orderId)?orderPayload.items[0].orderId:generateUniqueId('ORD');
 
-// ✅ Update: Process Affiliate, Rate, and Platform
-const structuredItems=orderPayload.items.map(it=>{
-const moq=parseInt(it.moq||it.MOQ||1);
-const tierInfo=getTierPrice(it,it.qty);
-const priceNum=tierInfo.price;
-const qtyNum=parseInt(it.qty)||moq;
-const lineTotal=priceNum*qtyNum;
-totalAmountVal+=lineTotal;
-totalSavingsVal+=tierInfo.savings*qtyNum;
-totalQtyVal+=qtyNum;
-const customNote=(it.note||it.custom_note||it.customNote||it.size||'').toString().trim();
-const skuValue=String(it.sku||it.product_code||it.productCode||'').trim().toUpperCase();
+function renderCartList() {
+  let cartKey = 'rorraxy_wholesale_cart';
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let container = document.getElementById('cartItemsListContainer');
+  let totalValEl = document.getElementById('cartTotalVal');
+  let localValEl = document.getElementById('cartLocalVal');
+  let totalQtyEl = document.getElementById('cartTotalQty');
+  let savingsEl = document.getElementById('cartSavingsVal');
 
-const affRef=it.affiliateRef||it.affiliateId||localStorage.getItem('rorraxy_active_affiliate_ref')||'rorraxy-store';
-const commRate=parseFloat(it.commissionRate||localStorage.getItem('rorraxy_active_commission_rate')||3);
-const plat=it.platform||localStorage.getItem('rorraxy_active_platform')||'wholesale';
+  if (cart.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-gray);text-align:center;font-size:0.74rem;padding:18px;">YOUR WHOLESALE CART IS EMPTY.</div>';
+    totalValEl.innerText = "$0.00";
+    localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} 0.00`;
+    totalQtyEl.innerText = "0 UNITS";
+    if (savingsEl) savingsEl.innerText = "$0.00";
+    return;
+  }
 
-return{
-product_id:String(it.productId||it.product_id||''),
-sku:skuValue,
-title:it.title||it.product_title||'',
-qty:qtyNum,
-moq:moq,
-price:priceNum,
-price_display:`$${priceNum.toFixed(2)}`,
-line_total:lineTotal,
-tier_applied:tierInfo.tier,
-bulk_savings:tierInfo.savings*qtyNum,
-image:it.img||it.image_url||'',
-size:(it.size||'').toString().trim()||'BULK',
-custom_note:customNote,
-custom_note_uppercase:customNote?customNote.toUpperCase():'',
-seller_id:it.sellerId||'rorraxy-store',
-affiliate_ref:affRef,
-commission_rate:commRate,
-platform:plat,
-order_id:it.orderId||singleOrderId,
-tracking_id:it.trackingId||''
-};
-});
+  let html = '', totalAmt = 0, totalQty = 0, totalSavings = 0;
+  let updatedCart = cart.map((item, index) => {
+    const moq = parseInt(item.moq || item.MOQ || 1);
+    if (item.qty < moq) item.qty = moq;
+    const tierInfo = getTierPrice(item, item.qty);
+    const priceNum = tierInfo.price;
+    const itemTotal = priceNum * item.qty;
+    totalAmt += itemTotal;
+    totalQty += item.qty;
+    totalSavings += (tierInfo.savings * item.qty);
 
-// ✅ Extract Top-Level Affiliate Data
-const firstAffItem=structuredItems.find(i=>i.affiliate_ref!=='rorraxy-store')||structuredItems[0];
-const topLevelAffRef=firstAffItem?firstAffItem.affiliate_ref:null;
-const topLevelRate=firstAffItem?firstAffItem.commission_rate:0;
-const topLevelPlatform=firstAffItem?firstAffItem.platform:'wholesale';
+    if (!item.orderId) item.orderId = generateUniqueId('ORD');
+    if (!item.trackingId) item.trackingId = generateUniqueId('TRK');
 
-let cloudflareDbPayload={
-master_order_id:masterOrderId,
-order_id:singleOrderId,
-customer_name:orderPayload.customer.fullName,
-customer_phone:orderPayload.customer.phone,
-shipping_address:orderPayload.customer.address,
-customer_country:"Bangladesh",
-payment_method:window.selectedPaymentType||"International Cards",
-payment_status:"Paid",
-transaction_id:"TRX-"+Math.floor(10000000+Math.random()*90000000),
-total_amount:totalAmountVal,
-total_savings:totalSavingsVal,
-currency:"USD",
-order_status:"Pending",
-order_mode:ORDER_MODE,
-created_at:new Date().toISOString(),
-items:structuredItems,
-items_count:structuredItems.length,
-total_quantity:totalQtyVal,
-has_custom_notes:structuredItems.some(i=>i.custom_note.length>0),
-has_skus:structuredItems.some(i=>i.sku.length>0),
-is_wholesale:true,
-// ✅ Top-level affiliate info
-affiliate_ref:topLevelAffRef,
-commission_rate:topLevelRate,
-platform:topLevelPlatform,
-has_affiliate:!!(topLevelAffRef&&topLevelAffRef!=='rorraxy-store')
-};
-let customerAuthSyncPayload={phone:orderPayload.customer.phone,customer_name:orderPayload.customer.fullName,shipping_address:orderPayload.customer.address,master_order_id:masterOrderId,order_id:singleOrderId,updated_at:new Date().toISOString()};
-showToast("Submitting bulk order and syncing account data...");
-try{
-await Promise.all([
-fetch(`${API_BASE_URL}/api/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cloudflareDbPayload)}),
-fetch(`${API_BASE_URL}/api/customer-auth-sync`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(customerAuthSyncPayload)}).catch(()=>{})
-]);
-}catch(err){console.warn("Cloudflare API sync notice:",err);}
-localStorage.setItem('rorraxy_last_order',JSON.stringify(cloudflareDbPayload));
-localStorage.removeItem('rorraxy_current_checkout');
-localStorage.removeItem('rorraxy_wholesale_cart');
-localStorage.removeItem('rorraxy_cart');
-showToast("Bulk Order Confirmed Successfully!");
-setTimeout(()=>{window.location.href=`/account.html`;},800);
+    let itemImgUrl = item.img || item.image_url || item.imageUrl || 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp';
+    let itemTitleText = item.title || item.product_title || 'Product Item';
+    let itemDescText = item.description || item.desc || 'High quality global product item with secure warranty.';
+    const skuRaw = (item.sku || item.product_code || item.productCode || '').toString().trim();
+    const safeSku = escapeHtml(skuRaw);
+    let skuHtml = safeSku ? `<div style="font-size:0.55rem;color:var(--gold-solid);font-weight:800;letter-spacing:0.3px;margin-top:2px;text-transform:none!important;"><i class="fa-solid fa-barcode" style="font-size:0.52rem;margin-right:2px;"></i>SKU: ${safeSku}</div>` : '';
+    let moqWarning = item.qty < moq ? `<div class="moq-warning"><i class="fa-solid fa-triangle-exclamation"></i> MINIMUM ORDER: ${moq} UNITS</div>` : '';
+    let tierBadge = `<span class="tier-badge"><i class="fa-solid fa-tag"></i> ${tierInfo.tier}</span>`;
+    let customNote = item.size || item.note || item.custom_note || '';
+    let noteChip = customNote ? `<div class="custom-note-chip" title="${escapeHtml(customNote)}"><i class="fa-solid fa-pen-to-square"></i> NOTE: ${escapeHtml(customNote)}</div>` : '';
+
+    html += `<div class="cart-row-item">
+      <img src="${escapeHtml(itemImgUrl)}" class="cart-img" onerror="this.src='https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/Multi-pocket%20Skinny%20Pants%20(10).webp'">
+      <div style="flex:1;text-align:left;min-width:0;overflow:hidden;">
+        <div style="font-size:0.72rem;font-weight:700;color:#ffffff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(itemTitleText)}${tierBadge}</div>
+        ${skuHtml}
+        ${noteChip}
+        ${moqWarning}
+        <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index})"><i class="fa-solid fa-circle-info"></i> BULK DETAILS</button>
+        <div id="prodDetails-${index}" class="product-extended-details">
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">CURRENT TIER:</strong> ${escapeHtml(tierInfo.tier)} ($${priceNum.toFixed(2)}/pc)</div>
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">MOQ:</strong> ${moq} UNITS</div>
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">SAMPLE PRICE:</strong> $${parseFloat(item.price_sample || 0).toFixed(2)}</div>
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">WHOLESALE (≥${parseInt(item.whole_min_qty || 10)}):</strong> $${parseFloat(item.price_min_whole || 0).toFixed(2)}</div>
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">BULK (≥${parseInt(item.bulk_min_qty || 50)}):</strong> $${parseFloat(item.price_bulk || 0).toFixed(2)}</div>
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">QUANTITY:</strong> ${item.qty} PCS</div>
+          <div style="margin-bottom:4px;"><strong style="color:var(--gold-solid);">ITEM TOTAL:</strong> $${itemTotal.toFixed(2)}</div>
+          ${tierInfo.savings > 0 ? `<div style="margin-bottom:4px;color:#00e676;"><strong>BULK SAVINGS:</strong> $${(tierInfo.savings * item.qty).toFixed(2)}</div>` : ''}
+          <div style="border-top:1px solid rgba(212,175,55,0.2);padding-top:6px;margin-top:6px;"><strong style="color:var(--gold-solid);">DESCRIPTION:</strong><br>${escapeHtml(itemDescText)}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+        <button class="btn-qty-minus qty-btn-mini" data-index="${index}" ${item.qty <= moq ? 'disabled style="opacity:0.3;"' : ''}>-</button>
+        <span style="font-size:0.72rem;font-weight:700;color:#ffffff;width:24px;text-align:center;">${item.qty}</span>
+        <button class="btn-qty-plus qty-btn-mini" data-index="${index}">+</button>
+      </div>
+      <div class="gold-gradient-price" style="font-size:0.78rem;flex-shrink:0;min-width:54px;text-align:right;">$${itemTotal.toFixed(2)}</div>
+      <button class="btn-qty-remove" data-index="${index}" style="background:none;border:none;color:#ff3b30;cursor:pointer;font-size:0.8rem;padding:2px;flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button>
+    </div>`;
+    return item;
+  });
+
+  localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+  container.innerHTML = html;
+  totalValEl.innerText = `$${totalAmt.toFixed(2)}`;
+  let convertedVal = totalAmt * currentExchangeRate;
+  localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} ${convertedVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  totalQtyEl.innerText = `${totalQty} UNITS`;
+  if (savingsEl) savingsEl.innerText = `- $${Math.max(0, totalSavings).toFixed(2)}`;
+
+  document.querySelectorAll('.btn-qty-minus').forEach(btn => btn.addEventListener('click', (e) => changeQty(e.currentTarget.dataset.index, -1)));
+  document.querySelectorAll('.btn-qty-plus').forEach(btn => btn.addEventListener('click', (e) => changeQty(e.currentTarget.dataset.index, 1)));
+  document.querySelectorAll('.btn-qty-remove').forEach(btn => btn.addEventListener('click', (e) => removeCartItem(e.currentTarget.dataset.index)));
 }
-function showToast(msg,isErr=false){
-let toast=document.getElementById('toastBox');
-toast.innerText=msg;
-toast.style.color=isErr?'#ff4d4d':'#ffffff';
-toast.style.display='block';
-setTimeout(()=>{toast.style.display='none';},3200);
+
+function toggleProductDetails(index) {
+  let box = document.getElementById(`prodDetails-${index}`);
+  box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+}
+
+function changeQty(index, val) {
+  let cartKey = 'rorraxy_wholesale_cart';
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  const moq = parseInt(cart[index].moq || cart[index].MOQ || 1);
+  cart[index].qty += val;
+  if (cart[index].qty < moq) cart[index].qty = moq;
+  localStorage.setItem(cartKey, JSON.stringify(cart));
+  renderCartList();
+}
+
+function removeCartItem(index) {
+  let cartKey = 'rorraxy_wholesale_cart';
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  cart.splice(index, 1);
+  localStorage.setItem(cartKey, JSON.stringify(cart));
+  renderCartList();
+}
+
+async function handleDirectCheckoutSubmission() {
+  if (isSubmittingOrder) return;
+
+  let cartKey = 'rorraxy_wholesale_cart';
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  if (cart.length === 0) {
+    showToast("Your wholesale cart is empty!", true);
+    return;
+  }
+
+  for (const item of cart) {
+    const moq = parseInt(item.moq || item.MOQ || 1);
+    if (item.qty < moq) {
+      showToast(`Minimum order quantity for "${item.title || 'Item'}" is ${moq} units.`, true);
+      return;
+    }
+  }
+
+  const phoneEl = document.getElementById('chkPhone');
+  const nameEl = document.getElementById('chkFullName');
+  const addressEl = document.getElementById('chkAddress');
+  const phone = phoneEl.value.trim();
+  const name = nameEl.value.trim();
+  const address = addressEl.value.trim();
+  let hasError = false;
+
+  if (!phone || (iti && !iti.isValidNumber())) {
+    phoneEl.classList.add('input-error');
+    hasError = true;
+    showToast("Please enter a valid complete WhatsApp mobile number!", true);
+  }
+  if (!name) {
+    nameEl.classList.add('input-error');
+    hasError = true;
+  }
+  if (!address) {
+    addressEl.classList.add('input-error');
+    hasError = true;
+  }
+
+  if (hasError) {
+    if (!phone || (iti && !iti.isValidNumber())) phoneEl.focus();
+    else if (!name) nameEl.focus();
+    else if (!address) addressEl.focus();
+    return;
+  }
+
+  isSubmittingOrder = true;
+  const mainBtn = document.getElementById('mainCheckoutBtn');
+  mainBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SUBMITTING...';
+
+  let fullPhoneNumber = iti ? iti.getNumber() : phone;
+  let customerObj = {
+    fullName: name,
+    phone: fullPhoneNumber,
+    address: address
+  };
+
+  if (document.getElementById('saveAddressCheckbox').checked) {
+    let saved = JSON.parse(localStorage.getItem('rorraxy_saved_addresses')) || [];
+    let existIndex = saved.findIndex(a => a.phone === fullPhoneNumber);
+    if (existIndex >= 0) {
+      saved[existIndex] = customerObj;
+    } else {
+      saved.unshift(customerObj);
+    }
+    localStorage.setItem('rorraxy_saved_addresses', JSON.stringify(saved));
+  }
+
+  localStorage.setItem('rorraxy_customer_phone', fullPhoneNumber);
+  localStorage.setItem('rorraxy_customer_token', 'verified_token_' + Date.now());
+
+  let totalAmountVal = 0, totalSavingsVal = 0, totalQtyVal = 0;
+  let masterOrderId = 'RRX-WHL-' + Math.floor(100000 + Math.random() * 900000);
+  let singleOrderId = (cart.length === 1 && cart[0].orderId) ? cart[0].orderId : generateUniqueId('ORD');
+
+  const structuredItems = cart.map(it => {
+    const moq = parseInt(it.moq || it.MOQ || 1);
+    const tierInfo = getTierPrice(it, it.qty);
+    const priceNum = tierInfo.price;
+    const qtyNum = parseInt(it.qty) || moq;
+    const lineTotal = priceNum * qtyNum;
+    totalAmountVal += lineTotal;
+    totalSavingsVal += tierInfo.savings * qtyNum;
+    totalQtyVal += qtyNum;
+    const customNote = (it.note || it.custom_note || it.customNote || it.size || '').toString().trim();
+    const skuValue = String(it.sku || it.product_code || it.productCode || '').trim().toUpperCase();
+
+    const affRef = it.affiliateRef || it.affiliateId || localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
+    const commRate = parseFloat(it.commissionRate || localStorage.getItem('rorraxy_active_commission_rate') || 3);
+    const plat = it.platform || localStorage.getItem('rorraxy_active_platform') || 'wholesale';
+
+    return {
+      product_id: String(it.productId || it.product_id || ''),
+      sku: skuValue,
+      title: it.title || it.product_title || '',
+      qty: qtyNum,
+      moq: moq,
+      price: priceNum,
+      price_display: `$${priceNum.toFixed(2)}`,
+      line_total: lineTotal,
+      tier_applied: tierInfo.tier,
+      bulk_savings: tierInfo.savings * qtyNum,
+      image: it.img || it.image_url || '',
+      size: (it.size || '').toString().trim() || 'BULK',
+      custom_note: customNote,
+      custom_note_uppercase: customNote ? customNote.toUpperCase() : '',
+      seller_id: it.sellerId || 'rorraxy-store',
+      affiliate_ref: affRef,
+      commission_rate: commRate,
+      platform: plat,
+      order_id: it.orderId || singleOrderId,
+      tracking_id: it.trackingId || ''
+    };
+  });
+
+  const firstAffItem = structuredItems.find(i => i.affiliate_ref !== 'rorraxy-store') || structuredItems[0];
+  const topLevelAffRef = firstAffItem ? firstAffItem.affiliate_ref : null;
+  const topLevelRate = firstAffItem ? firstAffItem.commission_rate : 0;
+  const topLevelPlatform = firstAffItem ? firstAffItem.platform : 'wholesale';
+
+  let cloudflareDbPayload = {
+    master_order_id: masterOrderId,
+    order_id: singleOrderId,
+    customer_name: customerObj.fullName,
+    customer_phone: customerObj.phone,
+    shipping_address: customerObj.address,
+    customer_country: "Bangladesh",
+    payment_method: "WhatsApp Representative Settlement",
+    payment_status: "Pending Representative Contact",
+    transaction_id: "WHL-" + Math.floor(10000000 + Math.random() * 90000000),
+    total_amount: totalAmountVal,
+    total_savings: totalSavingsVal,
+    currency: "USD",
+    order_status: "Pending",
+    order_mode: ORDER_MODE,
+    created_at: new Date().toISOString(),
+    items: structuredItems,
+    items_count: structuredItems.length,
+    total_quantity: totalQtyVal,
+    has_custom_notes: structuredItems.some(i => i.custom_note.length > 0),
+    has_skus: structuredItems.some(i => i.sku.length > 0),
+    is_wholesale: true,
+    affiliate_ref: topLevelAffRef,
+    commission_rate: topLevelRate,
+    platform: topLevelPlatform,
+    has_affiliate: !!(topLevelAffRef && topLevelAffRef !== 'rorraxy-store')
+  };
+
+  let customerAuthSyncPayload = {
+    phone: customerObj.phone,
+    customer_name: customerObj.fullName,
+    shipping_address: customerObj.address,
+    master_order_id: masterOrderId,
+    order_id: singleOrderId,
+    updated_at: new Date().toISOString()
+  };
+
+  try {
+    await Promise.all([
+      fetch(`${API_BASE_URL}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cloudflareDbPayload)
+      }),
+      fetch(`${API_BASE_URL}/api/customer-auth-sync`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(customerAuthSyncPayload)
+      }).catch(() => {})
+    ]);
+  } catch (err) {
+    console.warn("Cloudflare API sync notice:", err);
+  }
+
+  localStorage.setItem('rorraxy_last_order', JSON.stringify(cloudflareDbPayload));
+  localStorage.removeItem('rorraxy_current_checkout');
+  localStorage.removeItem('rorraxy_wholesale_cart');
+  localStorage.removeItem('rorraxy_cart');
+
+  // Show Floating Representative Popup
+  document.getElementById('popupMasterOrderId').innerText = `ORDER REF: ${masterOrderId}`;
+  document.getElementById('popupCustomerPhoneDisplay').innerHTML = `<i class="fa-brands fa-whatsapp"></i> <span>WhatsApp: ${escapeHtml(fullPhoneNumber)}</span>`;
+  document.getElementById('representativePopupModal').classList.add('active');
+
+  mainBtn.innerHTML = 'ORDER SUBMITTED <i class="fa-solid fa-check"></i>';
+  isSubmittingOrder = false;
+}
+
+function redirectToAccountPage() {
+  window.location.href = 'account.html';
+}
+
+function showToast(msg, isErr = false) {
+  let toast = document.getElementById('toastBox');
+  toast.innerText = msg;
+  toast.style.color = isErr ? '#ff4d4d' : '#ffffff';
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 3200);
 }
 </script>
 </body>
