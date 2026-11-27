@@ -76,6 +76,16 @@ html, body {
   100% { left: 120%; }
 }
 
+@keyframes cardGoldShimmer {
+  0% { transform: translateX(-140%) skewX(-22deg); }
+  45%, 100% { transform: translateX(260%) skewX(-22deg); }
+}
+
+@keyframes topBorderFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
 .checkout-container {
   max-width: 780px;
   width: 100%;
@@ -138,15 +148,58 @@ html, body {
 
 /* Cards & Boxes */
 .address-form-section, .summary-card-box, .cart-items-box {
+  position: relative;
+  overflow: hidden;
   display: flex;
   background: var(--card-bg);
   border-radius: 22px;
   padding: 20px 18px;
   flex-direction: column;
   gap: 14px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(252, 246, 186, 0.14);
   width: 100%;
+}
+
+/* Top Golden Shimmer Accent Bar on Cards */
+.address-form-section::before,
+.summary-card-box::before,
+.cart-items-box::before,
+.rep-popup-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #bf953f 25%, #fcf6ba 50%, #aa771c 75%, transparent 100%);
+  background-size: 200% 100%;
+  animation: topBorderFlow 4s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Diagonal Golden Gradient Shimmer Sweep Across Cards */
+.address-form-section::after,
+.summary-card-box::after,
+.cart-items-box::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.04) 30%,
+    rgba(252, 246, 186, 0.11) 50%,
+    rgba(212, 175, 55, 0.04) 70%,
+    transparent 100%
+  );
+  animation: cardGoldShimmer 6.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .cart-items-box {
@@ -411,18 +464,6 @@ html, body {
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.btn-action-main::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 55%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  transform: skewX(-22deg);
-  animation: btnSweep 3.5s infinite ease-in-out;
-}
-
 .btn-action-main:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 26px rgba(212, 175, 55, 0.48);
@@ -485,11 +526,19 @@ html, body {
 .rep-popup-card::before {
   content: "";
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08), transparent 60%);
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.05) 30%,
+    rgba(252, 246, 186, 0.14) 50%,
+    rgba(212, 175, 55, 0.05) 70%,
+    transparent 100%
+  );
+  animation: cardGoldShimmer 5.5s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -595,18 +644,6 @@ html, body {
   box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
   transition: transform 0.22s ease, box-shadow 0.22s ease;
   animation: fadeSlideUp 0.8s ease both;
-}
-
-.rep-account-btn::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 55%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  transform: skewX(-22deg);
-  animation: btnSweep 3.2s infinite ease-in-out;
 }
 
 .rep-account-btn:hover {
