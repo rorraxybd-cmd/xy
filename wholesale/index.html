@@ -200,18 +200,16 @@
            SINGLE-LINE 3-TIER CRISP PRICE & QUANTITY FOOTER BAR
            ========================================================= */
         .card-footer-actions {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: center;
             padding: 7px 6px;
             background: linear-gradient(180deg, #0b0b12 0%, #06060a 100%) !important;
             border-top: 1px solid rgba(212, 175, 55, 0.15);
-            gap: 4px;
             white-space: nowrap; overflow: hidden;
             position: relative; z-index: 2;
         }
         @media (min-width: 768px) {
             .card-footer-actions {
                 padding: 8px 10px;
-                gap: 6px;
             }
         }
         .card-footer-actions::after {
@@ -232,12 +230,12 @@
             z-index: 1;
         }
 
-        /* 3-Tier Clean Single Line Container (No Boxes/Shapes for Maximum Clarity) */
+        /* Full-Width 3-Tier Single Line Container (Auto-scales for large numbers like $1000.00) */
         .wholesale-tiers-line {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
-            flex: 1;
+            width: 100%;
             min-width: 0;
             gap: 2px;
             position: relative;
@@ -246,7 +244,7 @@
         }
         @media (min-width: 768px) {
             .wholesale-tiers-line {
-                gap: 5px;
+                gap: 6px;
             }
         }
 
@@ -255,24 +253,26 @@
             align-items: baseline;
             line-height: 1;
             white-space: nowrap;
+            min-width: 0;
         }
 
         .tier-sep {
             color: rgba(212, 175, 55, 0.28);
-            font-size: 0.72rem;
+            font-size: clamp(0.65rem, 2.6vw, 0.85rem);
             font-weight: 600;
             line-height: 1;
             user-select: none;
+            flex-shrink: 0;
         }
 
         .tier-q {
-            font-size: 0.72rem;
+            font-size: clamp(0.64rem, 2.6vw, 0.84rem);
             font-weight: 700;
             color: #c6c6dc;
             margin-right: 1px;
         }
         .tier-p {
-            font-size: 0.86rem;
+            font-size: clamp(0.76rem, 3.2vw, 1.02rem);
             font-weight: 800;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
@@ -280,33 +280,11 @@
             -webkit-text-fill-color: transparent;
         }
 
-        @media (min-width: 380px) {
-            .tier-q { font-size: 0.78rem; }
-            .tier-p { font-size: 0.94rem; }
-            .tier-sep { font-size: 0.78rem; }
-        }
         @media (min-width: 768px) {
-            .tier-q { font-size: 0.88rem; margin-right: 2px; }
-            .tier-p { font-size: 1.06rem; }
+            .tier-q { font-size: 0.90rem; margin-right: 2px; }
+            .tier-p { font-size: 1.08rem; }
             .tier-sep { font-size: 0.88rem; }
         }
-
-        .share-icon-btn {
-            border: none; cursor: pointer;
-            font-size: 0.84rem;
-            background-color: transparent;
-            background-image: var(--gold-gradient);
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            padding: 2px 2px 2px 3px; display: inline-flex; align-items: center; justify-content: center;
-            flex-shrink: 0; transition: transform 0.15s var(--luxury-ease);
-            position: relative; z-index: 2;
-        }
-        @media (min-width: 768px) {
-            .share-icon-btn { font-size: 1.0rem; padding: 3px 4px; }
-        }
-        .share-icon-btn:hover { transform: scale(1.15); }
-        .share-icon-btn:active { transform: scale(0.92); }
 
         /* =========================================================
            BOTTOM 5 MENUS - STATIC GOLDEN GRADIENT
@@ -634,12 +612,11 @@
         }
 
         /**
-         * Formats price concisely to keep all 3 tiers cleanly on a single line.
-         * Whole dollar amounts drop ".00" (e.g., $20), fractional amounts show 2 decimals (e.g., $18.50).
+         * Always displays 2 decimal places (e.g., $20.00, $1000.00) cleanly on a single line.
          */
         function formatCompactTierPrice(val) {
             const num = parseFloat(val) || 0;
-            return Number.isInteger(num) ? `$${num}` : `$${num.toFixed(2)}`;
+            return `$${num.toFixed(2)}`;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -969,12 +946,12 @@
                     location.href = url;
                 };
 
-                // Single-line ultra-clear 3-tier quantity & price text (no extra box shapes)
+                // Full-width single-line 3-tier quantity & price (2 decimal places, no share button)
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <img src="${escapeHtmlAttr(resolvedImageUrl)}" alt="${safeTitleAttr}" loading="${isEager ? 'eager' : 'lazy'}" ${isEager ? 'fetchpriority="high"' : ''} decoding="async">
                     </div>
-                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                    <div class="card-footer-actions">
                         <div class="wholesale-tiers-line" title="Qty ${moqQty}: ${formatCompactTierPrice(basePrice)} | Qty 100: ${formatCompactTierPrice(tier100Price)} | Qty 300: ${formatCompactTierPrice(tier300Price)}">
                             <span class="tier-item"><span class="tier-q">${moqQty}:</span><span class="tier-p">${formatCompactTierPrice(basePrice)}</span></span>
                             <span class="tier-sep">|</span>
@@ -982,9 +959,6 @@
                             <span class="tier-sep">|</span>
                             <span class="tier-item"><span class="tier-q">300:</span><span class="tier-p">${formatCompactTierPrice(tier300Price)}</span></span>
                         </div>
-                        <button type="button" class="share-icon-btn" onclick="shareProduct(event, '${safeTitleJs}', '${safeIdJs}')" title="Share &amp; Earn">
-                            <i class="fa-solid fa-share-nodes"></i>
-                        </button>
                     </div>
                 `;
 
