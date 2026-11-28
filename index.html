@@ -723,6 +723,63 @@ button,.product-card,.side-action-item,.bottom-nav-item,.desktop-nav-circle,.pre
   height:auto!important;
   max-height:none!important;
   overflow:visible!important;
+  gap:10px!important;
+}
+#categoryTransparentOverlay .cat-top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:4px;
+  width:100%;
+  padding:4px 2px;
+}
+#categoryTransparentOverlay .cat-back-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,0.08);
+  border:none;
+  color:#fcf6ba;
+  font-family:var(--font-main);
+  font-size:0.72rem;
+  font-weight:700;
+  padding:6px 12px;
+  border-radius:16px;
+  cursor:pointer;
+  transition:background 0.15s ease,transform 0.1s ease;
+}
+#categoryTransparentOverlay .cat-back-pill:hover{
+  background:rgba(212,175,55,0.2);
+}
+#categoryTransparentOverlay .cat-back-pill:active{
+  transform:scale(0.94);
+}
+#categoryTransparentOverlay .accordion-category-box{
+  background:rgba(16,16,24,0.9)!important;
+  border:none!important;
+  border-radius:14px!important;
+  box-shadow:0 6px 20px rgba(0,0,0,0.55)!important;
+  margin-bottom:2px!important;
+  transition:opacity 0.2s ease,transform 0.2s ease;
+}
+#categoryTransparentOverlay.focused-mode .accordion-category-box:not(.active){
+  display:none!important;
+}
+#categoryTransparentOverlay .accordion-header{
+  padding:13px 15px!important;
+}
+#categoryTransparentOverlay .accordion-header:hover{
+  background:rgba(255,255,255,0.04)!important;
+}
+#categoryTransparentOverlay .sub-cat-item{
+  background:rgba(255,255,255,0.05)!important;
+  border:none!important;
+  border-radius:10px!important;
+  padding:10px 11px!important;
+  box-shadow:0 3px 10px rgba(0,0,0,0.35)!important;
+}
+#categoryTransparentOverlay .sub-cat-item:hover{
+  background:rgba(212,175,55,0.14)!important;
 }
 .fs-profile-header-box{display:flex;flex-direction:column;align-items:center;margin-bottom:15px;gap:8px;width:100%;}
 .fs-profile-name{font-size:1rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.5px;}
@@ -1161,13 +1218,40 @@ const container=$('categoryMainListView');
 if(!container)return;
 const list=(typeof rorraxyCategoriesData!=='undefined'&&Array.isArray(rorraxyCategoriesData))?rorraxyCategoriesData:[];
 if(!list.length){container.innerHTML=`<div style="color:#fff;text-align:center;padding:20px;">CATEGORIES LOADING...</div>`;return;}
-let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;width:100%;"><span style="font-size:0.9rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">ALL CATEGORIES</span><button onclick="document.getElementById('categoryTransparentOverlay').style.display='none';updateBottomNavActiveState();" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;line-height:1;">×</button></div>`;
+let html=`<div class="cat-top-bar">
+<button type="button" id="catOverlayBackBtn" class="cat-back-pill" onclick="handleCategoryBackAction()"><i class="fa-solid fa-arrow-left"></i><span>HOME</span></button>
+<span style="font-size:0.88rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">CATEGORIES</span>
+<button type="button" onclick="handleHomeToggle()" style="background:rgba(255,255,255,0.08);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:1.25rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">×</button>
+</div>`;
 list.forEach((cat,idx)=>{
 const subs=(cat.subCategories||[]).map(sub=>`<div class="sub-cat-item" onclick="selectSubCategoryItem('${sub.key}','${sub.name.replace(/'/g,"\\'")}')"><i class="${sub.icon||'fa-solid fa-tag'}"></i><span class="sub-cat-name">${sub.name}</span></div>`).join('');
 html+=`<div class="accordion-category-box ${idx===0?'active':''}" id="catBox_${cat.id}"><div class="accordion-header" onclick="toggleAccordionBox('catBox_${cat.id}')"><div class="accordion-title-wrap"><i class="${cat.icon} cat-main-icon"></i><span class="accordion-main-title">${cat.title}</span></div><i class="fa-solid fa-chevron-down accordion-arrow"></i></div><div class="accordion-content"><div class="sub-categories-grid">${subs}</div></div></div>`;
 });
-html+=`<div class="shimmer-back-home-wrap" style="margin-top:12px;"><button type="button" class="shimmer-back-home-btn" onclick="handleHomeToggle()"><i class="fa-solid fa-arrow-left"></i><span>BACK TO HOME</span></button></div>`;
+html+=`<div class="shimmer-back-home-wrap" style="margin-top:10px;"><button type="button" class="shimmer-back-home-btn" onclick="handleHomeToggle()"><i class="fa-solid fa-house"></i><span>GO TO HOME</span></button></div>`;
 container.innerHTML=html;
+syncCategoryBackButton();
+}
+function syncCategoryBackButton(){
+const overlay=$('categoryTransparentOverlay');
+const backBtn=$('catOverlayBackBtn');
+const hasActive=!!document.querySelector('#categoryTransparentOverlay .accordion-category-box.active');
+if(overlay)overlay.classList.toggle('focused-mode',hasActive);
+if(backBtn){
+  backBtn.innerHTML=hasActive
+    ? `<i class="fa-solid fa-arrow-left"></i><span>ALL CATEGORIES</span>`
+    : `<i class="fa-solid fa-arrow-left"></i><span>HOME</span>`;
+}
+}
+function handleCategoryBackAction(){
+const activeBox=document.querySelector('#categoryTransparentOverlay .accordion-category-box.active');
+if(activeBox){
+  activeBox.classList.remove('active');
+  syncCategoryBackButton();
+  const overlay=$('categoryTransparentOverlay');
+  if(overlay)overlay.scrollTo({top:0,behavior:'smooth'});
+}else{
+  handleHomeToggle();
+}
 }
 function toggleAccordionBox(boxId){
   const target=$(boxId);
@@ -1176,18 +1260,20 @@ function toggleAccordionBox(boxId){
   document.querySelectorAll('.accordion-category-box').forEach(b=>b.classList.remove('active'));
   if(!wasActive){
     target.classList.add('active');
+    syncCategoryBackButton();
     const overlay=$('categoryTransparentOverlay');
     if(overlay){
       requestAnimationFrame(()=>{
-        const boxTop=target.offsetTop;
-        overlay.scrollTo({top:Math.max(0,boxTop-14),behavior:'smooth'});
+        overlay.scrollTo({top:0,behavior:'smooth'});
       });
     }
+  }else{
+    syncCategoryBackButton();
   }
 }
 function selectSubCategoryItem(subKey,subName){
 const overlay=$('categoryTransparentOverlay');
-if(overlay)overlay.style.display='none';
+if(overlay){overlay.classList.remove('focused-mode');overlay.style.display='none';}
 switchToGridMode(true);
 const keyClean=subKey.toLowerCase().replace(/-/g,' ');
 const nameClean=subName.toLowerCase();
@@ -1203,6 +1289,7 @@ function toggleCategoryModal(e){
   const overlay=$('categoryTransparentOverlay');
   if(!overlay)return;
   if(overlay.style.display==='flex'){
+    overlay.classList.remove('focused-mode');
     overlay.style.display='none';
     updateBottomNavActiveState();
   }else{
@@ -1212,6 +1299,9 @@ function toggleCategoryModal(e){
     closeSimilarModal();
     if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
     if(!$('categoryMainListView').innerHTML.trim())buildCategoriesAccordion();
+    overlay.classList.remove('focused-mode');
+    document.querySelectorAll('.accordion-category-box').forEach(b=>b.classList.remove('active'));
+    syncCategoryBackButton();
     overlay.style.display='flex';
     overlay.scrollTop=0;
     updateBottomNavActiveState();
@@ -1306,7 +1396,7 @@ function handleBottomDetails(){
 
 function handleHomeToggle(){
 if($('fullscreenIframeOverlay')?.style.display==='flex'){$('fullscreenIframeOverlay').style.display='none';$('fullscreenIframeBody').src='';}
-if($('categoryTransparentOverlay'))$('categoryTransparentOverlay').style.display='none';
+if($('categoryTransparentOverlay')){$('categoryTransparentOverlay').classList.remove('focused-mode');$('categoryTransparentOverlay').style.display='none';}
 if($('savedGalleryOverlay'))$('savedGalleryOverlay').style.display='none';
 if($('similarOverlay'))$('similarOverlay').style.display='none';
 similarRenderingActive=false;
@@ -2127,6 +2217,7 @@ window.handleBottomDetails=handleBottomDetails;
 window.toggleCategoryModal=toggleCategoryModal;
 window.toggleWorldPortal=toggleWorldPortal;
 window.toggleAccordionBox=toggleAccordionBox;
+window.handleCategoryBackAction=handleCategoryBackAction;
 window.selectSubCategoryItem=selectSubCategoryItem;
 window.navigateReelStep=navigateReelStep;
 window.toggleReelSearchBox=toggleReelSearchBox;
