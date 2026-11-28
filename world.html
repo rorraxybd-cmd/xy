@@ -58,13 +58,11 @@ body {
   position: relative;
 }
 
-/* Soft & Luxury Card/Button Surface Shimmer Only */
 @keyframes surfaceShimmer {
   0% { transform: translateX(-140%) skewX(-22deg); }
   100% { transform: translateX(260%) skewX(-22deg); }
 }
 
-/* Crisp, Razor-Sharp Golden Gradient Text (No Blur, No Text Animation) */
 .gold-gradient-text {
   background: var(--gold-gradient);
   -webkit-background-clip: text;
@@ -76,7 +74,6 @@ body {
   filter: none !important;
 }
 
-/* Crisp Golden Gradient Icons (No Drop Shadow Blur) */
 .gold-icon {
   background: var(--gold-gradient);
   -webkit-background-clip: text;
@@ -96,8 +93,7 @@ body {
 /* ================= SEARCH MODAL ================= */
 .search-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(3,3,5,0.88);
@@ -112,12 +108,7 @@ body {
   pointer-events: none;
   transition: opacity 0.2s ease;
 }
-
-.search-modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+.search-modal-overlay.active { opacity: 1; pointer-events: auto; }
 .search-modal-box {
   width: 90%;
   max-width: 500px;
@@ -126,7 +117,6 @@ body {
   padding: 20px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 25px rgba(212,175,55,0.14), inset 0 1px 1px rgba(255,255,255,0.06);
 }
-
 .search-input-group {
   display: flex;
   align-items: center;
@@ -136,7 +126,6 @@ body {
   padding: 12px 16px;
   box-shadow: inset 0 3px 8px rgba(0,0,0,0.85);
 }
-
 .search-input-group input {
   background: transparent;
   outline: none;
@@ -156,14 +145,12 @@ body {
   align-items: center;
   width: 100%;
 }
-
 .hero-logo-img {
   width: 74px;
   height: 74px;
   object-fit: contain;
   filter: drop-shadow(0 0 16px rgba(212,175,55,0.28));
 }
-
 .hero-title-text {
   font-size: clamp(0.95rem, 3.5vw, 1.4rem);
   font-weight: 900;
@@ -187,7 +174,6 @@ body {
   max-width: 1100px;
   margin: 0 auto;
 }
-
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -195,7 +181,6 @@ body {
   width: 100%;
   align-items: stretch;
 }
-
 .hub-card {
   background: var(--card-retail);
   border-radius: 20px;
@@ -212,7 +197,6 @@ body {
   box-shadow: 0 12px 30px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.05);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .hub-card::after {
   content: '';
   position: absolute;
@@ -225,12 +209,10 @@ body {
   animation: surfaceShimmer 7.5s infinite ease-in-out;
   pointer-events: none;
 }
-
 .hub-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 38px rgba(0,0,0,0.85), 0 0 22px rgba(212,175,55,0.16);
 }
-
 .hub-card h3 {
   font-size: 0.85rem;
   font-weight: 800;
@@ -248,7 +230,6 @@ body {
   width: 100%;
   margin: 0;
 }
-
 .sub-slogan-text {
   font-size: 0.64rem;
   font-weight: 600;
@@ -257,7 +238,6 @@ body {
   margin: 2px 0 6px 0;
   text-align: center;
 }
-
 .visual-container {
   position: relative;
   width: 74px;
@@ -270,7 +250,6 @@ body {
   background: rgba(212,175,55,0.05);
   box-shadow: inset 0 2px 10px rgba(0,0,0,0.65);
 }
-
 .solution-visual {
   position: absolute;
   width: 100%;
@@ -279,7 +258,6 @@ body {
   background: conic-gradient(from 0deg, transparent 55%, rgba(255,246,194,0.32), rgba(212,175,55,0.5));
   animation: spin 4s linear infinite;
 }
-
 .fashion-video-visual {
   position: absolute;
   width: 100%;
@@ -288,7 +266,6 @@ body {
   box-shadow: inset 0 0 14px rgba(212,175,55,0.28), 0 0 10px rgba(212,175,55,0.18);
   animation: fashionSpin 4.5s linear infinite;
 }
-
 .retail-visual {
   position: absolute;
   width: 100%;
@@ -297,7 +274,6 @@ body {
   border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%;
   animation: morphShape 4s ease-in-out infinite;
 }
-
 .creator-visual-wrapper {
   position: absolute;
   width: 100%;
@@ -306,7 +282,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-
 .creator-visual-box {
   position: absolute;
   width: 52px;
@@ -316,7 +291,6 @@ body {
   box-shadow: 0 0 14px rgba(212,175,55,0.2);
   animation: creatorPulseBox 3.5s ease-in-out infinite;
 }
-
 .creator-visual-ring {
   position: absolute;
   width: 68px;
@@ -350,7 +324,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-
 .btn::after {
   content: '';
   position: absolute;
@@ -376,7 +349,6 @@ body {
   margin: 10px 0;
   box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
-
 .brand-logo-text {
   font-size: 1.18rem;
   font-weight: 800;
@@ -388,7 +360,6 @@ body {
   text-transform: lowercase !important;
   text-align: center;
 }
-
 .animated-divider-line {
   width: 100%;
   max-width: 260px;
@@ -397,7 +368,6 @@ body {
   background: linear-gradient(90deg, transparent, var(--gold-solid), var(--gold-light), var(--gold-solid), transparent);
   margin: 2px auto;
 }
-
 .trending-marquee-bar {
   overflow: hidden;
   white-space: nowrap;
@@ -405,13 +375,11 @@ body {
   font-weight: 600;
   width: 100%;
 }
-
 .marquee-container {
   display: flex;
   width: max-content;
   animation: wheelInfiniteScroll 22s linear infinite;
 }
-
 .marquee-group {
   display: flex;
   align-items: center;
@@ -419,7 +387,6 @@ body {
   padding-right: 22px;
   flex-shrink: 0;
 }
-
 @keyframes wheelInfiniteScroll {
   0% { transform: translate3d(0,0,0); }
   100% { transform: translate3d(-50%,0,0); }
@@ -437,7 +404,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-
 .policy-center-title {
   font-size: 0.88rem;
   font-weight: 900;
@@ -453,7 +419,6 @@ body {
   justify-content: center;
   gap: 8px;
 }
-
 .policy-links-grid {
   display: flex;
   flex-direction: column;
@@ -462,7 +427,6 @@ body {
   max-width: 820px;
   margin: 0 auto;
 }
-
 .policy-link-item {
   display: flex;
   align-items: center;
@@ -474,13 +438,11 @@ body {
   box-shadow: 0 4px 14px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
   transition: all 0.2s ease;
 }
-
 .policy-link-item:hover {
   background: rgba(212,175,55,0.08);
   box-shadow: 0 8px 20px rgba(0,0,0,0.55), 0 0 15px rgba(212,175,55,0.12);
   transform: translateY(-1px);
 }
-
 .policy-link-name {
   font-size: 0.74rem;
   font-weight: 700;
@@ -489,7 +451,6 @@ body {
   align-items: center;
   gap: 10px;
 }
-
 .policy-icon-badge {
   width: 30px;
   height: 30px;
@@ -501,7 +462,6 @@ body {
   font-size: 0.85rem;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
 }
-
 .policy-view-btn {
   font-size: 0.66rem;
   font-weight: 800;
@@ -514,7 +474,6 @@ body {
   gap: 5px;
   transition: background 0.2s ease, color 0.2s ease;
 }
-
 .policy-link-item:hover .policy-view-btn {
   background: var(--gold-gradient);
   color: #050508;
@@ -527,7 +486,6 @@ body {
   margin-bottom: 4px;
   width: 100%;
 }
-
 .ceo-signature-box {
   text-align: center;
   background: var(--card-retail);
@@ -540,7 +498,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-
 .md-logo-box {
   position: relative;
   width: 54px;
@@ -553,7 +510,6 @@ body {
   margin: 0 auto 4px auto;
   box-shadow: 0 0 16px rgba(212,175,55,0.16), inset 0 2px 6px rgba(0,0,0,0.5);
 }
-
 .md-luxury-ring {
   position: absolute;
   width: 100%;
@@ -562,12 +518,10 @@ body {
   box-shadow: 0 -2px 8px var(--gold-light), 0 2px 8px var(--gold-solid);
   animation: luxurySpin 4s linear infinite;
 }
-
 @keyframes luxurySpin {
   0% { transform: rotate(0); }
   100% { transform: rotate(360deg); }
 }
-
 .ceo-signature-box h3 {
   font-size: 0.94rem;
   font-weight: 800;
@@ -577,15 +531,87 @@ body {
   -webkit-text-fill-color: transparent;
   margin: 4px 0 0 0;
 }
-
 .ceo-signature-link {
   display: inline-block;
   text-decoration: none;
 }
-
 .ceo-signature-link:hover .md-logo-box {
   transform: scale(1.05);
   transition: transform 0.2s ease;
+}
+
+/* ================= GLOBAL EXPORT FLAGS SHOWCASE ================= */
+.export-countries-box {
+  text-align: center;
+  background: var(--card-retail);
+  border-radius: 20px;
+  padding: 16px 14px;
+  margin: 0 auto 14px auto;
+  max-width: 960px;
+  width: calc(100% - 28px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.75), inset 0 1px 1px rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+}
+.export-countries-title {
+  font-size: 0.88rem;
+  font-weight: 900;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.export-countries-sub {
+  font-size: 0.68rem;
+  color: var(--text-white);
+  opacity: 0.88;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+  line-height: 1.45;
+}
+.export-flags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 8px;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.export-flag-item {
+  font-size: 1.15rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 22px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.03);
+  transition: transform 0.2s ease, background 0.2s ease;
+  cursor: default;
+  user-select: none;
+}
+.export-flag-item:hover {
+  transform: scale(1.28);
+  background: rgba(212,175,55,0.16);
+}
+@media (max-width: 600px) {
+  .export-flags-wrap {
+    gap: 5px 6px;
+  }
+  .export-flag-item {
+    font-size: 1.02rem;
+    width: 23px;
+    height: 19px;
+  }
 }
 
 /* ================= PREMIUM PORTAL ================= */
@@ -595,19 +621,16 @@ body {
   margin: 0 auto 10px auto;
   padding: 4px 0;
 }
-
 .portal-header {
   text-align: center;
   margin-bottom: 12px;
 }
-
 .portal-header h2 {
   font-size: clamp(1.15rem, 3vw, 1.65rem);
   font-weight: 900;
   letter-spacing: 1px;
   margin: 0 0 4px 0;
 }
-
 .portal-header p {
   font-size: 0.74rem;
   color: var(--text-white);
@@ -616,13 +639,11 @@ body {
   text-transform: none;
   margin: 0;
 }
-
 .portal-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
-
 .portal-card {
   position: relative;
   background: var(--card-retail);
@@ -638,7 +659,6 @@ body {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   z-index: 1;
 }
-
 .portal-card::after {
   content: '';
   position: absolute;
@@ -651,12 +671,10 @@ body {
   animation: surfaceShimmer 7s infinite ease-in-out;
   pointer-events: none;
 }
-
 .portal-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 18px 42px rgba(0,0,0,0.9), 0 0 22px rgba(212,175,55,0.16);
 }
-
 .portal-icon-wrap {
   position: relative;
   width: 64px;
@@ -666,7 +684,6 @@ body {
   justify-content: center;
   margin-bottom: 10px;
 }
-
 .portal-icon-ring {
   position: absolute;
   inset: 0;
@@ -674,7 +691,6 @@ body {
   box-shadow: 0 -2px 10px rgba(255,246,194,0.38), 0 2px 10px rgba(212,175,55,0.38);
   animation: spin 7s linear infinite;
 }
-
 .portal-icon {
   font-size: 1.65rem;
   background: rgba(212,175,55,0.07);
@@ -687,11 +703,7 @@ body {
   box-shadow: inset 0 2px 8px rgba(0,0,0,0.55);
   transition: transform 0.25s ease;
 }
-
-.portal-card:hover .portal-icon {
-  transform: scale(1.08);
-}
-
+.portal-card:hover .portal-icon { transform: scale(1.08); }
 .portal-card h3 {
   font-size: 0.96rem;
   font-weight: 800;
@@ -702,7 +714,6 @@ body {
   margin: 0 0 6px 0;
   letter-spacing: 0.6px;
 }
-
 .portal-card p {
   font-size: 0.72rem;
   color: var(--text-white);
@@ -711,7 +722,6 @@ body {
   text-transform: none;
   max-width: 280px;
 }
-
 .portal-btn {
   display: inline-flex;
   align-items: center;
@@ -729,7 +739,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-
 .portal-btn::after {
   content: '';
   position: absolute;
@@ -741,12 +750,8 @@ body {
   transform: translateX(-140%) skewX(-25deg);
   animation: surfaceShimmer 4.5s infinite ease-in-out;
 }
-
 @media (max-width: 768px) {
-  .portal-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
+  .portal-grid { grid-template-columns: 1fr; gap: 10px; }
 }
 
 /* ================= ECOSYSTEM DIRECTORY ================= */
@@ -758,14 +763,9 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
-
 @media (max-width: 768px) {
-  .ecosystem-directory-wrapper {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
+  .ecosystem-directory-wrapper { grid-template-columns: 1fr; gap: 8px; }
 }
-
 .ecosystem-category-card {
   background: var(--card-retail);
   border-radius: 18px;
@@ -778,11 +778,7 @@ body {
   gap: 8px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.05);
 }
-
-.ecosystem-category-card.full-span {
-  grid-column: 1 / -1;
-}
-
+.ecosystem-category-card.full-span { grid-column: 1 / -1; }
 .ecosystem-category-header {
   display: inline-flex;
   align-items: center;
@@ -797,7 +793,6 @@ body {
   letter-spacing: 1px;
   width: 100%;
 }
-
 .ecosystem-pills-grid {
   display: flex;
   flex-wrap: wrap;
@@ -806,7 +801,6 @@ body {
   gap: 6px;
   width: 100%;
 }
-
 .domain-chip-link {
   display: inline-flex;
   align-items: center;
@@ -821,19 +815,16 @@ body {
   box-shadow: 0 3px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
   transition: transform 0.2s ease, background 0.2s ease;
 }
-
 .domain-chip-link span {
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .domain-chip-link:hover {
   background: rgba(212,175,55,0.16);
   transform: translateY(-1px);
 }
-
 .ecosystem-email-badge {
   display: inline-flex;
   align-items: center;
@@ -846,12 +837,9 @@ body {
   letter-spacing: 0.3px;
   transition: color 0.2s ease;
 }
+.ecosystem-email-badge:hover { color: var(--gold-light); }
 
-.ecosystem-email-badge:hover {
-  color: var(--gold-light);
-}
-
-/* ================= SOCIAL ECOSYSTEM (MAIN & WHOLESALE — GOLDEN GRADIENT SVG ICONS) ================= */
+/* ================= SOCIAL ECOSYSTEM ================= */
 .social-ecosystem-section {
   width: 100%;
   max-width: 1080px;
@@ -861,7 +849,6 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
-
 .social-group-card {
   display: flex;
   flex-direction: column;
@@ -876,7 +863,6 @@ body {
   overflow: hidden;
   text-align: center;
 }
-
 .social-group-card::after {
   content: '';
   position: absolute;
@@ -889,7 +875,6 @@ body {
   animation: surfaceShimmer 8s infinite ease-in-out;
   pointer-events: none;
 }
-
 .social-group-title {
   font-size: 0.72rem;
   font-weight: 900;
@@ -903,7 +888,6 @@ body {
   padding-bottom: 4px;
   width: 100%;
 }
-
 .social-group-title::after {
   content: '';
   position: absolute;
@@ -914,7 +898,6 @@ body {
   background: linear-gradient(90deg, transparent, var(--gold-solid), transparent);
   transform: translateX(-50%);
 }
-
 .social-icons-wrap {
   display: flex;
   align-items: center;
@@ -926,7 +909,6 @@ body {
   z-index: 1;
   padding: 4px 2px;
 }
-
 .social-icon-btn {
   display: inline-flex;
   align-items: center;
@@ -938,37 +920,18 @@ body {
   text-decoration: none;
   flex-shrink: 0;
 }
-
-.social-icon-btn:hover {
-  transform: translateY(-2px) scale(1.15);
-}
-
+.social-icon-btn:hover { transform: translateY(-2px) scale(1.15); }
 .social-icon-btn svg {
   width: 18px;
   height: 18px;
   fill: url(#goldGradientDef);
 }
-
 @media (max-width: 768px) {
-  .social-ecosystem-section {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  .social-group-card {
-    padding: 10px 8px;
-    gap: 6px;
-  }
-  .social-icons-wrap {
-    gap: 14px;
-  }
-  .social-icon-btn {
-    width: 24px;
-    height: 24px;
-  }
-  .social-icon-btn svg {
-    width: 17px;
-    height: 17px;
-  }
+  .social-ecosystem-section { grid-template-columns: 1fr; gap: 8px; }
+  .social-group-card { padding: 10px 8px; gap: 6px; }
+  .social-icons-wrap { gap: 14px; }
+  .social-icon-btn { width: 24px; height: 24px; }
+  .social-icon-btn svg { width: 17px; height: 17px; }
 }
 
 /* ================= CORE ARCH BANNER ================= */
@@ -979,7 +942,6 @@ body {
   background: transparent;
   width: 100%;
 }
-
 .core-arch-title {
   font-size: 0.8rem;
   font-weight: 800;
@@ -1000,11 +962,7 @@ body {
   overflow: hidden;
   contain: layout style;
 }
-
-.network-showcase-band.channels-band {
-  padding: 20px 14px 26px 14px;
-}
-
+.network-showcase-band.channels-band { padding: 20px 14px 26px 14px; }
 .network-inner-grid {
   width: 100%;
   max-width: 1200px;
@@ -1014,15 +972,9 @@ body {
   align-items: center;
   gap: 24px;
 }
-
 @media (max-width: 900px) {
-  .network-inner-grid {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 18px;
-  }
+  .network-inner-grid { grid-template-columns: 1fr; text-align: center; gap: 18px; }
 }
-
 .map-frame-world {
   position: relative;
   width: 100%;
@@ -1033,7 +985,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-
 .map-frame-bd {
   position: relative;
   width: 100%;
@@ -1044,14 +995,12 @@ body {
   align-items: center;
   justify-content: center;
 }
-
 svg.geo-map-svg {
   width: 100%;
   height: 100%;
   overflow: visible;
   display: block;
 }
-
 .net-route-gold {
   fill: none;
   stroke: var(--gold-solid);
@@ -1061,7 +1010,6 @@ svg.geo-map-svg {
   opacity: 0.65;
   animation: routeDashGold 22s linear infinite;
 }
-
 .net-route-bright {
   fill: none;
   stroke: var(--gold-light);
@@ -1071,10 +1019,8 @@ svg.geo-map-svg {
   opacity: 0.85;
   animation: routeDashBright 18s linear infinite;
 }
-
 @keyframes routeDashGold { to { stroke-dashoffset: -240; } }
 @keyframes routeDashBright { to { stroke-dashoffset: 240; } }
-
 .node-ripple {
   fill: none;
   stroke: var(--gold-light);
@@ -1083,28 +1029,21 @@ svg.geo-map-svg {
   transform-origin: center;
   animation: nodeRippleAnim 3s ease-out infinite;
 }
-
-.node-ripple.gold-ring {
-  stroke: var(--gold-solid);
-}
-
+.node-ripple.gold-ring { stroke: var(--gold-solid); }
 @keyframes nodeRippleAnim {
   0% { transform: scale(0.7); opacity: 0.8; }
   100% { transform: scale(2.6); opacity: 0; }
 }
-
 .node-core {
   fill: var(--gold-solid);
   stroke: #030305;
   stroke-width: 1.4;
 }
-
 .node-core.hub-gold {
   fill: var(--gold-light);
   stroke: var(--gold-deep);
   stroke-width: 1.8;
 }
-
 .map-badge-rect {
   fill: #0b0b14;
   stroke: rgba(212,175,55,0.32);
@@ -1112,12 +1051,10 @@ svg.geo-map-svg {
   rx: 6;
   ry: 6;
 }
-
 .map-badge-rect.hub-rect {
   stroke: rgba(255,246,194,0.7);
   stroke-width: 1;
 }
-
 .map-badge-txt {
   fill: #ffffff;
   font-family: 'Poppins', sans-serif;
@@ -1127,24 +1064,14 @@ svg.geo-map-svg {
   text-anchor: middle;
   dominant-baseline: central;
 }
-
-.map-badge-txt.gold-label {
-  fill: #fff6c2;
-}
-
+.map-badge-txt.gold-label { fill: #fff6c2; }
 .geo-content-col {
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: flex-start;
 }
-
-@media (max-width: 900px) {
-  .geo-content-col {
-    align-items: center;
-  }
-}
-
+@media (max-width: 900px) { .geo-content-col { align-items: center; } }
 .geo-tag-pill {
   display: inline-flex;
   align-items: center;
@@ -1157,7 +1084,6 @@ svg.geo-map-svg {
   font-weight: 700;
   letter-spacing: 1.2px;
 }
-
 .geo-pulse-dot {
   width: 7px;
   height: 7px;
@@ -1165,7 +1091,6 @@ svg.geo-map-svg {
   background: var(--gold-gradient);
   box-shadow: 0 0 8px var(--gold-solid);
 }
-
 .geo-main-heading {
   font-size: clamp(1.5rem, 3vw, 2.3rem);
   font-weight: 800;
@@ -1174,7 +1099,6 @@ svg.geo-map-svg {
   color: var(--text-white);
   margin: 0;
 }
-
 .geo-description {
   font-size: 0.74rem;
   font-weight: 500;
@@ -1184,20 +1108,13 @@ svg.geo-map-svg {
   max-width: 490px;
   margin: 0;
 }
-
 .geo-pillars-list {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   justify-content: flex-start;
 }
-
-@media (max-width: 900px) {
-  .geo-pillars-list {
-    justify-content: center;
-  }
-}
-
+@media (max-width: 900px) { .geo-pillars-list { justify-content: center; } }
 .geo-pillar-chip {
   background: rgba(212,175,55,0.08);
   border-radius: 9px;
@@ -1207,7 +1124,6 @@ svg.geo-map-svg {
   letter-spacing: 0.7px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
-
 .geo-metrics-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1216,7 +1132,6 @@ svg.geo-map-svg {
   max-width: 490px;
   margin-top: 2px;
 }
-
 .geo-metric-card {
   background: var(--card-retail);
   border-radius: 14px;
@@ -1224,7 +1139,6 @@ svg.geo-map-svg {
   text-align: center;
   box-shadow: 0 8px 20px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.05);
 }
-
 .geo-metric-val {
   font-size: 1.1rem;
   font-weight: 800;
@@ -1233,7 +1147,6 @@ svg.geo-map-svg {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .geo-metric-lbl {
   font-size: 0.58rem;
   font-weight: 600;
@@ -1241,7 +1154,6 @@ svg.geo-map-svg {
   letter-spacing: 0.8px;
   margin-top: 2px;
 }
-
 .geo-action-btn {
   margin-top: 4px;
   display: inline-flex;
@@ -1260,16 +1172,11 @@ svg.geo-map-svg {
   box-shadow: 0 10px 25px rgba(0,0,0,0.75), 0 0 18px rgba(212,175,55,0.14), inset 0 1px 1px rgba(255,255,255,0.07);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .geo-action-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(0,0,0,0.85), 0 0 24px rgba(212,175,55,0.24);
 }
-
-.geo-btn-arrow {
-  color: var(--gold-light);
-  font-size: 0.94rem;
-}
+.geo-btn-arrow { color: var(--gold-light); font-size: 0.94rem; }
 
 /* ================= CHANNELS ================= */
 .channels-header {
@@ -1277,7 +1184,6 @@ svg.geo-map-svg {
   max-width: 760px;
   margin: 0 auto 14px auto;
 }
-
 .channels-main-title {
   font-size: clamp(1.3rem, 3vw, 2.05rem);
   font-weight: 800;
@@ -1286,7 +1192,6 @@ svg.geo-map-svg {
   margin: 8px 0 6px 0;
   color: var(--text-white);
 }
-
 .channels-sub-desc {
   font-size: clamp(0.72rem, 1.4vw, 0.84rem);
   color: var(--text-white);
@@ -1294,7 +1199,6 @@ svg.geo-map-svg {
   text-transform: none;
   margin: 0;
 }
-
 .channels-canvas-box {
   width: 100%;
   max-width: 1140px;
@@ -1302,27 +1206,19 @@ svg.geo-map-svg {
   margin: 0 auto;
   position: relative;
 }
-
-@media (max-width: 768px) {
-  .channels-canvas-box {
-    aspect-ratio: 1140/690;
-  }
-}
-
+@media (max-width: 768px) { .channels-canvas-box { aspect-ratio: 1140/690; } }
 svg.channels-network-svg {
   width: 100%;
   height: 100%;
   display: block;
   overflow: visible;
 }
-
 .spoke-track {
   fill: none;
   stroke: rgba(212,175,55,0.2);
   stroke-width: 1.25;
   stroke-linecap: round;
 }
-
 .spoke-dash-gold {
   fill: none;
   stroke: url(#goldGradientDef);
@@ -1332,11 +1228,7 @@ svg.channels-network-svg {
   opacity: 0.85;
   animation: dashMoveGold 22s linear infinite;
 }
-
-@keyframes dashMoveGold {
-  to { stroke-dashoffset: -240; }
-}
-
+@keyframes dashMoveGold { to { stroke-dashoffset: -240; } }
 .center-ring-pulse {
   fill: none;
   stroke: var(--gold-light);
@@ -1345,17 +1237,14 @@ svg.channels-network-svg {
   transform-origin: center;
   animation: hubRingExpand 3.4s ease-out infinite;
 }
-
 .center-ring-pulse.gold-ring {
   stroke: var(--gold-solid);
   animation-delay: 1.7s;
 }
-
 @keyframes hubRingExpand {
   0% { transform: scale(0.9); opacity: 0.7; }
   100% { transform: scale(1.6); opacity: 0; }
 }
-
 .logo-node-title {
   fill: #ffffff;
   font-family: 'Poppins', sans-serif;
@@ -1364,7 +1253,6 @@ svg.channels-network-svg {
   text-anchor: middle;
   letter-spacing: 0.3px;
 }
-
 .logo-node-sub {
   fill: #fff6c2;
   font-family: 'Poppins', sans-serif;
@@ -1373,7 +1261,6 @@ svg.channels-network-svg {
   text-anchor: middle;
   letter-spacing: 0.4px;
 }
-
 .center-brand-lower {
   fill: #ffffff;
   font-family: 'Poppins', sans-serif;
@@ -1383,7 +1270,7 @@ svg.channels-network-svg {
   text-anchor: middle;
 }
 
-/* ================= BOTTOM NAV (CRISP GOLDEN GRADIENT, NO BLUR) ================= */
+/* ================= BOTTOM NAV ================= */
 .bottom-nav-bar {
   position: fixed;
   bottom: 0;
@@ -1398,7 +1285,6 @@ svg.channels-network-svg {
   z-index: 2000;
   box-shadow: 0 -6px 20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(212,175,55,0.22);
 }
-
 .bottom-nav-item {
   display: flex;
   flex-direction: column;
@@ -1409,7 +1295,6 @@ svg.channels-network-svg {
   text-align: center;
   gap: 3px;
 }
-
 .bottom-nav-item i {
   font-size: 1.25rem;
   line-height: 1;
@@ -1421,7 +1306,6 @@ svg.channels-network-svg {
   text-shadow: none !important;
   filter: none !important;
 }
-
 .bottom-nav-item span {
   font-size: 0.64rem;
   font-weight: 800;
@@ -1436,14 +1320,8 @@ svg.channels-network-svg {
   text-shadow: none !important;
   filter: none !important;
 }
-
-.index-section-content {
-  display: none;
-}
-
-.index-section-content.active {
-  display: block;
-}
+.index-section-content { display: none; }
+.index-section-content.active { display: block; }
 
 /* ================= VIDEO FEED ================= */
 .video-feed-wrapper {
@@ -1456,7 +1334,6 @@ svg.channels-network-svg {
   position: relative;
   overflow: hidden;
 }
-
 .video-display-area {
   width: 100%;
   height: 100%;
@@ -1469,7 +1346,6 @@ svg.channels-network-svg {
   justify-content: center;
   touch-action: pan-y;
 }
-
 .video-display-area.shorts-mode {
   max-width: 420px;
   height: 100%;
@@ -1477,23 +1353,17 @@ svg.channels-network-svg {
   border-radius: 20px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
-
 .video-display-area.long-mode {
   max-width: 100% !important;
   width: 100vw !important;
   height: 100% !important;
 }
-
 .video-display-area video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-.video-display-area.long-mode video {
-  object-fit: contain !important;
-}
-
+.video-display-area.long-mode video { object-fit: contain !important; }
 .video-overlay-actions {
   position: absolute;
   right: 16px;
@@ -1504,7 +1374,6 @@ svg.channels-network-svg {
   gap: 18px;
   z-index: 100;
 }
-
 .video-action-icon-btn {
   background: rgba(10,10,18,0.75);
   width: 42px;
@@ -1520,21 +1389,16 @@ svg.channels-network-svg {
   transition: transform 0.2s ease, background 0.2s ease;
   padding: 0;
 }
-
 .video-action-icon-btn:hover {
   transform: scale(1.1);
   background: rgba(212,175,55,0.2);
 }
-
-.video-action-icon-btn.liked i {
-  transform: scale(1.15);
-}
+.video-action-icon-btn.liked i { transform: scale(1.15); }
 
 /* ================= POLICY MODAL ================= */
 .policy-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(3,3,5,0.9);
@@ -1549,12 +1413,7 @@ svg.channels-network-svg {
   transition: opacity 0.25s ease;
   padding: 16px;
 }
-
-.policy-modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+.policy-modal-overlay.active { opacity: 1; pointer-events: auto; }
 .policy-modal-box {
   width: 100%;
   max-width: 900px;
@@ -1567,7 +1426,6 @@ svg.channels-network-svg {
   position: relative;
   box-shadow: 0 25px 60px rgba(0,0,0,0.95), 0 0 25px rgba(212,175,55,0.14);
 }
-
 .policy-floating-close-btn {
   position: absolute;
   top: 14px;
@@ -1586,13 +1444,11 @@ svg.channels-network-svg {
   box-shadow: 0 6px 18px rgba(0,0,0,0.7);
   transition: all 0.2s ease;
 }
-
 .policy-floating-close-btn:hover {
   background: var(--gold-gradient);
   color: #050508;
   transform: scale(1.08);
 }
-
 .policy-modal-body {
   flex: 1;
   width: 100%;
@@ -1600,7 +1456,6 @@ svg.channels-network-svg {
   overflow: hidden;
   background: #08080e;
 }
-
 .policy-modal-body iframe {
   width: 100%;
   height: 100%;
@@ -1620,11 +1475,7 @@ svg.channels-network-svg {
   justify-content: center;
   padding: 16px;
 }
-
-.share-modal-overlay.active {
-  display: flex;
-}
-
+.share-modal-overlay.active { display: flex; }
 .share-modal-box {
   background: var(--card-retail);
   border-radius: 20px;
@@ -1636,7 +1487,6 @@ svg.channels-network-svg {
   gap: 14px;
   box-shadow: 0 20px 55px rgba(0,0,0,0.95), 0 0 25px rgba(212,175,55,0.15), inset 0 1px 1px rgba(255,255,255,0.06);
 }
-
 .share-modal-title {
   font-size: 0.94rem;
   font-weight: 800;
@@ -1647,13 +1497,11 @@ svg.channels-network-svg {
   text-align: center;
   text-transform: uppercase;
 }
-
 .universal-share-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
-
 .share-target-btn {
   background: rgba(255,255,255,0.03);
   border-radius: 12px;
@@ -1671,13 +1519,11 @@ svg.channels-network-svg {
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   transition: all 0.2s ease;
 }
-
 .share-target-btn:hover {
   background: var(--gold-gradient);
   color: #050508;
   transform: translateY(-2px);
 }
-
 .share-target-btn i {
   font-size: 1.1rem;
   background: var(--gold-gradient);
@@ -1685,19 +1531,16 @@ svg.channels-network-svg {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .share-target-btn:hover i {
   background: none;
   -webkit-text-fill-color: #050508;
   color: #050508;
 }
-
 .share-link-copy-row {
   display: flex;
   gap: 8px;
   margin-top: 2px;
 }
-
 .share-link-box {
   flex: 1;
   min-width: 0;
@@ -1710,7 +1553,6 @@ svg.channels-network-svg {
   text-transform: none;
   box-shadow: inset 0 2px 6px rgba(0,0,0,0.85);
 }
-
 .copy-btn {
   background: var(--gold-gradient);
   color: #050508;
@@ -1835,7 +1677,7 @@ svg.channels-network-svg {
     </div>
 
     <section class="about-section">
-      <!-- LUXURY PORTAL SECTION (SELLER & AFFILIATE) -->
+      <!-- LUXURY PORTAL SECTION -->
       <section class="premium-portal-section">
         <div class="portal-header">
           <h2 class="gold-gradient-text">JOIN OUR GLOBAL NETWORK</h2>
@@ -1914,58 +1756,31 @@ svg.channels-network-svg {
         </div>
       </div>
 
-      <!-- ===== SOCIAL ECOSYSTEM — MAIN & WHOLESALE (GOLDEN GRADIENT ICONS) ===== -->
+      <!-- SOCIAL ECOSYSTEM -->
       <div class="social-ecosystem-section">
-
-        <!-- 1. MAIN -->
         <div class="social-group-card">
           <div class="social-group-title">MAIN</div>
           <div class="social-icons-wrap">
-            <a href="https://www.youtube.com/@rorraxy" target="_blank" class="social-icon-btn" title="YouTube Main">
-              <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
-            <a href="https://web.facebook.com/rorraxy/" target="_blank" class="social-icon-btn" title="Facebook Main">
-              <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </a>
-            <a href="https://www.instagram.com/rorraxy/" target="_blank" class="social-icon-btn" title="Instagram Main">
-              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="https://www.tiktok.com/@rorraxy" target="_blank" class="social-icon-btn" title="TikTok Main">
-              <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.5.18-1.92 1.12-3.7 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.25 1.07-.17 1.61.32 1.64 1.74 2.98 3.41 3.14 1.35.13 2.74-.41 3.58-1.5 1.01-1.31 1.14-3.08 1.14-4.73V.02z"/></svg>
-            </a>
-            <a href="https://www.pinterest.com/rorraxy/" target="_blank" class="social-icon-btn" title="Pinterest Main">
-              <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345-.09.375-.291 1.199-.331 1.363-.053.225-.172.271-.399.165-1.493-.695-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.223 7.462-1.214 0-2.35-.63-2.74-1.379l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
-            </a>
-            <a href="https://x.com/rorraxy" target="_blank" class="social-icon-btn" title="X Main">
-              <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/company/rorraxy/home/" target="_blank" class="social-icon-btn" title="LinkedIn Main">
-              <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
+            <a href="https://www.youtube.com/@rorraxy" target="_blank" class="social-icon-btn" title="YouTube Main"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="https://web.facebook.com/rorraxy/" target="_blank" class="social-icon-btn" title="Facebook Main"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+            <a href="https://www.instagram.com/rorraxy/" target="_blank" class="social-icon-btn" title="Instagram Main"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            <a href="https://www.tiktok.com/@rorraxy" target="_blank" class="social-icon-btn" title="TikTok Main"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.5.18-1.92 1.12-3.7 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.25 1.07-.17 1.61.32 1.64 1.74 2.98 3.41 3.14 1.35.13 2.74-.41 3.58-1.5 1.01-1.31 1.14-3.08 1.14-4.73V.02z"/></svg></a>
+            <a href="https://www.pinterest.com/rorraxy/" target="_blank" class="social-icon-btn" title="Pinterest Main"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345-.09.375-.291 1.199-.331 1.363-.053.225-.172.271-.399.165-1.493-.695-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.223 7.462-1.214 0-2.35-.63-2.74-1.379l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg></a>
+            <a href="https://x.com/rorraxy" target="_blank" class="social-icon-btn" title="X Main"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="https://www.linkedin.com/company/rorraxy/home/" target="_blank" class="social-icon-btn" title="LinkedIn Main"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
           </div>
         </div>
 
-        <!-- 2. WHOLESALE -->
         <div class="social-group-card">
           <div class="social-group-title">WHOLESALE</div>
           <div class="social-icons-wrap">
-            <a href="https://web.facebook.com/rorraxyb2b/" target="_blank" class="social-icon-btn" title="Wholesale Facebook">
-              <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </a>
-            <a href="https://www.instagram.com/rorraxyb2b/" target="_blank" class="social-icon-btn" title="Wholesale Instagram">
-              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@rorraxyB2B" target="_blank" class="social-icon-btn" title="Wholesale YouTube">
-              <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
-            <a href="https://www.tiktok.com/@rorraxyfashion" target="_blank" class="social-icon-btn" title="Wholesale TikTok">
-              <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.5.18-1.92 1.12-3.7 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.25 1.07-.17 1.61.32 1.64 1.74 2.98 3.41 3.14 1.35.13 2.74-.41 3.58-1.5 1.01-1.31 1.14-3.08 1.14-4.73V.02z"/></svg>
-            </a>
+            <a href="https://web.facebook.com/rorraxyb2b/" target="_blank" class="social-icon-btn" title="Wholesale Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+            <a href="https://www.instagram.com/rorraxyb2b/" target="_blank" class="social-icon-btn" title="Wholesale Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            <a href="https://www.youtube.com/@rorraxyB2B" target="_blank" class="social-icon-btn" title="Wholesale YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="https://www.tiktok.com/@rorraxyfashion" target="_blank" class="social-icon-btn" title="Wholesale TikTok"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.5.18-1.92 1.12-3.7 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.25 1.07-.17 1.61.32 1.64 1.74 2.98 3.41 3.14 1.35.13 2.74-.41 3.58-1.5 1.01-1.31 1.14-3.08 1.14-4.73V.02z"/></svg></a>
           </div>
         </div>
-
       </div>
-      <!-- ===== END SOCIAL ECOSYSTEM ===== -->
     </section>
 
     <div class="core-arch-banner">
@@ -2107,6 +1922,14 @@ svg.channels-network-svg {
       </a>
       <p style="color: var(--text-white); font-size: 0.72rem; line-height: 1.45; margin: 4px 0 0 0;">Leading financial-accounting enterprise solutions and sustainable global digital architecture.</p>
     </div>
+
+    <!-- GLOBAL EXPORT COUNTRIES (FLAGS SHOWCASE AT THE VERY BOTTOM) -->
+    <section class="export-countries-box" aria-label="Global Export Countries">
+      <div class="export-countries-title"><i class="fa-solid fa-earth-americas gold-icon"></i> GLOBAL EXPORT DESTINATIONS</div>
+      <p class="export-countries-sub">Exporting premium wholesale &amp; retail products across 192 countries in Asia, Europe, Americas, Africa &amp; Oceania.</p>
+      <div id="exportFlagsContainer" class="export-flags-wrap"></div>
+    </section>
+
   </div>
 
   <!-- SECTION 2: SHORTS & VIDEO FEED VIEW -->
@@ -2139,7 +1962,7 @@ svg.channels-network-svg {
 
 </div>
 
-<!-- BOTTOM 5 MENUS: RAZOR-SHARP GOLDEN GRADIENT, NO BLUR, NO ANIMATION -->
+<!-- BOTTOM 5 MENUS -->
 <nav class="bottom-nav-bar">
   <a href="#" onclick="switchSection('world'); return false;" class="bottom-nav-item active" id="nav-world">
     <i class="fa-solid fa-globe"></i>
@@ -2238,16 +2061,11 @@ window.addEventListener('wheel', (e) => {
 let touchStartY = 0;
 const videoArea = document.getElementById('videoDisplayArea');
 if (videoArea) {
-  videoArea.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
+  videoArea.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
   videoArea.addEventListener('touchend', (e) => {
-    let touchEndY = e.changedTouches[0].clientY;
-    let diff = touchStartY - touchEndY;
+    let diff = touchStartY - e.changedTouches[0].clientY;
     if (Math.abs(diff) > 40) {
-      if (diff > 0) currentIndex = (currentIndex + 1) % currentShortsList.length;
-      else currentIndex = (currentIndex - 1 + currentShortsList.length) % currentShortsList.length;
+      currentIndex = diff > 0 ? (currentIndex + 1) % currentShortsList.length : (currentIndex - 1 + currentShortsList.length) % currentShortsList.length;
       playCurrentVideo();
     }
   }, { passive: true });
@@ -2305,10 +2123,7 @@ function closeWorldShareModal() {
 
 async function copyTextToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (e) {}
+    try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
   }
   try {
     const ta = document.createElement('textarea');
@@ -2321,9 +2136,7 @@ async function copyTextToClipboard(text) {
     const ok = document.execCommand('copy');
     document.body.removeChild(ta);
     return ok;
-  } catch (e) {
-    return false;
-  }
+  } catch (e) { return false; }
 }
 
 async function copyWorldShareLink() {
@@ -2341,17 +2154,11 @@ async function copyWorldShareLink() {
 async function triggerNativeWorldShare(event, url, title) {
   if (event) event.preventDefault();
   if (navigator.share) {
-    try {
-      await navigator.share({ title: title, url: url });
-      closeWorldShareModal();
-    } catch (e) {}
+    try { await navigator.share({ title: title, url: url }); closeWorldShareModal(); } catch (e) {}
   } else {
     await copyTextToClipboard(url);
     const btn = document.getElementById('worldShareCopyBtn');
-    if (btn) {
-      btn.innerText = 'COPIED';
-      setTimeout(() => { btn.innerText = 'COPY'; }, 1400);
-    }
+    if (btn) { btn.innerText = 'COPIED'; setTimeout(() => { btn.innerText = 'COPY'; }, 1400); }
   }
 }
 
@@ -2373,17 +2180,47 @@ function toggleVideoAspect() {
   }
 }
 
-/* ===== Visual Maps & Connected Channels (100% Golden Gradient & White) ===== */
+/* ===== Render All 192 Export Country Flags Compactly ===== */
+(function renderExportFlags() {
+  const container = document.getElementById('exportFlagsContainer');
+  if (!container) return;
+  const countries = [
+    ["🇦🇫","Afghanistan"],["🇦🇲","Armenia"],["🇦🇿","Azerbaijan"],["🇧🇭","Bahrain"],["🇧🇩","Bangladesh"],["🇧🇹","Bhutan"],["🇧🇳","Brunei"],["🇰🇭","Cambodia"],["🇨🇳","China"],["🇨🇾","Cyprus"],
+    ["🇬🇪","Georgia"],["🇮🇳","India"],["🇮🇩","Indonesia"],["🇮🇷","Iran"],["🇮🇶","Iraq"],["🇮🇱","Israel"],["🇯🇵","Japan"],["🇯🇴","Jordan"],["🇰🇿","Kazakhstan"],["🇰🇼","Kuwait"],
+    ["🇰🇬","Kyrgyzstan"],["🇱🇦","Laos"],["🇱🇧","Lebanon"],["🇲🇾","Malaysia"],["🇲🇻","Maldives"],["🇲🇳","Mongolia"],["🇲🇲","Myanmar"],["🇳🇵","Nepal"],["🇰🇵","North Korea"],["🇴🇲","Oman"],
+    ["🇵🇰","Pakistan"],["🇵🇸","Palestine"],["🇵🇭","Philippines"],["🇶🇦","Qatar"],["🇸🇦","Saudi Arabia"],["🇸🇬","Singapore"],["🇰🇷","South Korea"],["🇱🇰","Sri Lanka"],["🇸🇾","Syria"],["🇹🇼","Taiwan"],
+    ["🇹🇯","Tajikistan"],["🇹🇭","Thailand"],["🇹🇱","Timor-Leste"],["🇹🇷","Turkey"],["🇹🇲","Turkmenistan"],["🇦🇪","United Arab Emirates"],["🇺🇿","Uzbekistan"],["🇻🇳","Vietnam"],["🇾🇪","Yemen"],
+    ["🇦🇱","Albania"],["🇦🇩","Andorra"],["🇦🇹","Austria"],["🇧🇾","Belarus"],["🇧🇪","Belgium"],["🇧🇦","Bosnia & Herzegovina"],["🇧🇬","Bulgaria"],["🇭🇷","Croatia"],["🇨🇿","Czech Republic"],["🇩🇰","Denmark"],
+    ["🇪🇪","Estonia"],["🇫🇮","Finland"],["🇫🇷","France"],["🇩🇪","Germany"],["🇬🇷","Greece"],["🇭🇺","Hungary"],["🇮🇸","Iceland"],["🇮🇪","Ireland"],["🇮🇹","Italy"],["🇱🇻","Latvia"],
+    ["🇱🇹","Lithuania"],["🇱🇺","Luxembourg"],["🇲🇹","Malta"],["🇲🇩","Moldova"],["🇲🇨","Monaco"],["🇲🇪","Montenegro"],["🇳🇱","Netherlands"],["🇲🇰","North Macedonia"],["🇳🇴","Norway"],["🇵🇱","Poland"],
+    ["🇵🇹","Portugal"],["🇷🇴","Romania"],["🇷🇺","Russia"],["🇸🇲","San Marino"],["🇷🇸","Serbia"],["🇸🇰","Slovakia"],["🇸🇮","Slovenia"],["🇪🇸","Spain"],["🇸🇪","Sweden"],["🇨🇭","Switzerland"],
+    ["🇺🇦","Ukraine"],["🇬🇧","United Kingdom"],["🇻🇦","Vatican City"],
+    ["🇦🇬","Antigua & Barbuda"],["🇧🇸","Bahamas"],["🇧🇧","Barbados"],["🇧🇿","Belize"],["🇨🇦","Canada"],["🇨🇷","Costa Rica"],["🇨🇺","Cuba"],["🇩🇲","Dominica"],["🇩🇴","Dominican Republic"],["🇸🇻","El Salvador"],
+    ["🇬🇩","Grenada"],["🇬🇹","Guatemala"],["🇭🇹","Haiti"],["🇭🇳","Honduras"],["🇯🇲","Jamaica"],["🇲🇽","Mexico"],["🇳🇮","Nicaragua"],["🇵🇦","Panama"],["🇰🇳","Saint Kitts & Nevis"],["🇱🇨","Saint Lucia"],
+    ["🇻🇨","St. Vincent & Grenadines"],["🇹🇹","Trinidad & Tobago"],["🇺🇸","United States"],
+    ["🇦🇷","Argentina"],["🇧🇴","Bolivia"],["🇧🇷","Brazil"],["🇨🇱","Chile"],["🇨🇴","Colombia"],["🇪🇨","Ecuador"],["🇬🇾","Guyana"],["🇵🇾","Paraguay"],["🇵🇪","Peru"],["🇸🇷","Suriname"],
+    ["🇺🇾","Uruguay"],["🇻🇪","Venezuela"],
+    ["🇩🇿","Algeria"],["🇦🇴","Angola"],["🇧🇯","Benin"],["🇧🇼","Botswana"],["🇧🇫","Burkina Faso"],["🇧🇮","Burundi"],["🇨🇲","Cameroon"],["🇨🇻","Cape Verde"],["🇨🇫","Central African Republic"],["🇹🇩","Chad"],
+    ["🇰🇲","Comoros"],["🇨🇬","Congo"],["🇩🇯","Djibouti"],["🇪🇬","Egypt"],["🇬🇶","Equatorial Guinea"],["🇪🇷","Eritrea"],["🇸🇿","Eswatini"],["🇪🇹","Ethiopia"],["🇬🇦","Gabon"],["🇬🇲","Gambia"],
+    ["🇬🇭","Ghana"],["🇬🇳","Guinea"],["🇨🇮","Ivory Coast"],["🇰🇪","Kenya"],["🇱🇸","Lesotho"],["🇱🇷","Liberia"],["🇱🇾","Libya"],["🇲🇬","Madagascar"],["🇲🇼","Malawi"],["🇲🇱","Mali"],
+    ["🇲🇷","Mauritania"],["🇲🇺","Mauritius"],["🇲🇦","Morocco"],["🇲🇿","Mozambique"],["🇳🇦","Namibia"],["🇳🇪","Niger"],["🇳🇬","Nigeria"],["🇷🇼","Rwanda"],["🇸🇳","Senegal"],["🇸🇨","Seychelles"],
+    ["🇸🇱","Sierra Leone"],["🇸🇴","Somalia"],["🇿🇦","South Africa"],["🇸🇸","South Sudan"],["🇸🇩","Sudan"],["🇹🇿","Tanzania"],["🇹🇬","Togo"],["🇹🇳","Tunisia"],["🇺🇬","Uganda"],["🇿🇲","Zambia"],
+    ["🇿🇼","Zimbabwe"],
+    ["🇦🇺","Australia"],["🇫🇯","Fiji"],["🇰🇮","Kiribati"],["🇲🇭","Marshall Islands"],["🇫🇲","Micronesia"],["🇳🇷","Nauru"],["🇳🇿","New Zealand"],["🇵🇼","Palau"],["🇵🇬","Papua New Guinea"],["🇼🇸","Samoa"],
+    ["🇸🇧","Solomon Islands"],["🇹🇴","Tonga"],["🇹🇻","Tuvalu"],["🇻🇺","Vanuatu"]
+  ];
+  container.innerHTML = countries.map(c => `<span class="export-flag-item" title="Export to ${c[1]}">${c[0]}</span>`).join('');
+})();
+
+/* ===== Visual Maps & Connected Channels ===== */
 (function initAllVisuals() {
   const svgNS = "http://www.w3.org/2000/svg";
 
   function pointInPolygon(px, py, poly) {
     let inside = false;
     for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      const xi = poly[i][0], yi = poly[i][1];
-      const xj = poly[j][0], yj = poly[j][1];
-      const intersect = ((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi);
-      if (intersect) inside = !inside;
+      const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) inside = !inside;
     }
     return inside;
   }
@@ -2401,10 +2238,7 @@ function toggleVideoAspect() {
       for (let y = bounds.minY; y <= bounds.maxY; y += step) {
         let hit = false;
         for (let p = 0; p < polygons.length; p++) {
-          if (pointInPolygon(x, y, polygons[p])) {
-            hit = true;
-            break;
-          }
+          if (pointInPolygon(x, y, polygons[p])) { hit = true; break; }
         }
         if (hit) {
           const hash = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
@@ -2539,14 +2373,11 @@ function toggleVideoAspect() {
     edges: bdEdges
   });
 
-  // Channels spokes with Golden Gradient Icons
   const spokesGroup = document.getElementById("spokesGroup");
   const packetsGroup = document.getElementById("packetsGroup");
   const logosGroup = document.getElementById("logosGroup");
   if (spokesGroup && packetsGroup && logosGroup) {
-    const cx = 570, cy = 300;
-    const goldUrl = "url(#goldGradientDef)";
-    const goldLightHex = "#fff6c2";
+    const cx = 570, cy = 300, goldUrl = "url(#goldGradientDef)", goldLightHex = "#fff6c2";
     const channelNodes = [
       { name:"Retail", sub:"rorraxy.com", x:135, y:105, markType:"svg", svgContent:`<path d="M-11 -6 L11 -6 L13 12 L-13 12 Z" fill="none" stroke="${goldUrl}" stroke-width="2.1" stroke-linejoin="round"/><path d="M-5 -6 A5 5 0 0 1 5 -6" fill="none" stroke="${goldLightHex}" stroke-width="2"/>` },
       { name:"Messenger", sub:"Auto Inbox", x:135, y:300, markType:"fa", icon:"\uf39f", color:goldUrl },
@@ -2569,9 +2400,7 @@ function toggleVideoAspect() {
     const lFrag = document.createDocumentFragment();
     channelNodes.forEach((node, idx) => {
       const dx = cx - node.x, dy = cy - node.y;
-      const c1x = node.x + dx * 0.45, c1y = node.y;
-      const c2x = cx - dx * 0.45, c2y = cy;
-      const d = `M ${node.x} ${node.y} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${cx} ${cy}`;
+      const d = `M ${node.x} ${node.y} C ${(node.x + dx * 0.45).toFixed(1)} ${node.y}, ${(cx - dx * 0.45).toFixed(1)} ${cy}, ${cx} ${cy}`;
       sFrag.appendChild(createSvgEl("path", { d, class: "spoke-track" }));
       sFrag.appendChild(createSvgEl("path", { d, class: "spoke-dash-gold" }));
       const dot = createSvgEl("circle", { r: "2.4", fill: "#fff6c2" });
