@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>rorraxy - Cart & Checkout</title>
+<title>rorraxy - Retail Cart & Checkout</title>
 <script src="/ecosystem-core.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1171,7 +1171,7 @@ html, body {
   </div>
 </div>
 
-<!-- Fixed Bottom Action Bar -->
+<!-- Fixed Bottom Bar -->
 <div class="single-fixed-checkout-wrapper">
   <button type="button" id="backToStep1Btn" class="btn-back-step" onclick="goToStep(1)">
     <i class="fa-solid fa-arrow-left"></i> <span>BACK</span>
@@ -1183,8 +1183,22 @@ html, body {
 
 <script>
 const API_BASE_URL = '';
+const RETAIL_CART_KEY = 'rorraxy_cart';
 let iti, currentStep = 1, currentExchangeRate = 120, currentCurrencyCode = "BDT", currentCountryFlag = "🇧🇩", isCartExpanded = false;
 window.selectedPaymentType = "International Cards";
+
+// Helper: Strictly get only retail items from retail cart
+function getRetailCartItems() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(RETAIL_CART_KEY)) || [];
+    return raw.filter(item => {
+      const plat = (item.platform || item.mode || 'retail').toString().toLowerCase().trim();
+      return plat !== 'wholesale' && !item.isWholesale;
+    });
+  } catch (e) {
+    return [];
+  }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   renderCartList();
@@ -1312,8 +1326,7 @@ function toggleExpandAllCartItems() {
 }
 
 function renderCartList() {
-  let cartKey = 'rorraxy_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  let cart = getRetailCartItems();
   let container = document.getElementById('cartItemsListContainer');
   let totalValEl = document.getElementById('cartTotalVal');
   let localValEl = document.getElementById('cartLocalVal');
@@ -1336,7 +1349,7 @@ function renderCartList() {
     container.innerHTML = `
       <div style="color:var(--text-silver);text-align:center;font-size:0.9rem;padding:24px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;">
         <i class="fa-solid fa-bag-shopping" style="font-size:1.85rem;color:var(--royal-gold);opacity:0.7;"></i>
-        <span>Your shopping cart is currently empty.</span>
+        <span>Your retail shopping cart is currently empty.</span>
       </div>`;
     totalValEl.innerText = "$0.00 USD";
     localValEl.innerText = `${currentCountryFlag} ${currentCurrencyCode} 0.00`;
@@ -1355,6 +1368,7 @@ function renderCartList() {
     totalAmt += itemTotalUsd;
     totalQty += qtyNum;
 
+    item.platform = 'retail';
     if (!item.orderId) item.orderId = generateUniqueId('ORD');
     if (!item.trackingId) item.trackingId = generateUniqueId('TRK');
 
@@ -1438,7 +1452,7 @@ function renderCartList() {
     return item;
   });
 
-  localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+  localStorage.setItem(RETAIL_CART_KEY, JSON.stringify(updatedCart));
   container.innerHTML = html;
 
   let convertedVal = totalAmt * currentExchangeRate;
@@ -1471,8 +1485,7 @@ function updateSummaryTotals(totalAmt) {
 
 function changeQty(index, val) {
   const idx = parseInt(index, 10);
-  let cartKey = 'rorraxy_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  let cart = getRetailCartItems();
   if (isNaN(idx) || !cart[idx]) return;
   const currentQty = parseInt(cart[idx].qty, 10) || 1;
   const nextQty = currentQty + val;
@@ -1481,17 +1494,16 @@ function changeQty(index, val) {
     return;
   }
   cart[idx].qty = nextQty;
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  localStorage.setItem(RETAIL_CART_KEY, JSON.stringify(cart));
   renderCartList();
 }
 
 function removeCartItem(index) {
   const idx = parseInt(index, 10);
-  let cartKey = 'rorraxy_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  let cart = getRetailCartItems();
   if (isNaN(idx) || !cart[idx]) return;
   cart.splice(idx, 1);
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  localStorage.setItem(RETAIL_CART_KEY, JSON.stringify(cart));
   renderCartList();
 }
 
@@ -1501,10 +1513,9 @@ function handleMainActionButton() {
 }
 
 function validateAndProceedToNextStep() {
-  let cartKey = 'rorraxy_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  let cart = getRetailCartItems();
   if (cart.length === 0) {
-    showToast("Your cart is empty!", true);
+    showToast("Your retail cart is empty!", true);
     return;
   }
   const phoneEl = document.getElementById('chkPhone');
@@ -1543,8 +1554,7 @@ function validateAndProceedToNextStep() {
 
 function saveAddressToLocalStorage() {
   let fullPhoneNumber = iti ? iti.getNumber() : document.getElementById('chkPhone').value;
-  let cartKey = 'rorraxy_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  let cart = getRetailCartItems();
   let checkoutPayload = {
     customer: {
       fullName: document.getElementById('chkFullName').value,
@@ -1625,7 +1635,6 @@ async function finalizeAndConfirmOrderToCloudflare() {
     const skuValue = String(it.sku || it.product_code || it.productCode || '').trim().toUpperCase();
     const affRef = it.affiliateRef || it.affiliateId || localStorage.getItem('rorraxy_active_affiliate_ref') || 'rorraxy-store';
     const commRate = parseFloat(it.commissionRate || localStorage.getItem('rorraxy_active_commission_rate') || 13);
-    const plat = it.platform || localStorage.getItem('rorraxy_active_platform') || 'retail';
 
     return {
       product_id: String(it.productId || it.product_id || ''),
@@ -1641,7 +1650,7 @@ async function finalizeAndConfirmOrderToCloudflare() {
       seller_id: it.sellerId || 'rorraxy-store',
       affiliate_ref: affRef,
       commission_rate: commRate,
-      platform: plat,
+      platform: 'retail',
       order_id: it.orderId || singleOrderId,
       tracking_id: it.trackingId || ''
     };
@@ -1650,7 +1659,6 @@ async function finalizeAndConfirmOrderToCloudflare() {
   const firstAffItem = structuredItems.find(i => i.affiliate_ref !== 'rorraxy-store') || structuredItems[0];
   const topLevelAffRef = firstAffItem ? firstAffItem.affiliate_ref : null;
   const topLevelRate = firstAffItem ? firstAffItem.commission_rate : 0;
-  const topLevelPlatform = firstAffItem ? firstAffItem.platform : 'retail';
 
   let cloudflareDbPayload = {
     master_order_id: masterOrderId,
@@ -1673,7 +1681,7 @@ async function finalizeAndConfirmOrderToCloudflare() {
     has_skus: structuredItems.some(i => i.sku.length > 0),
     affiliate_ref: topLevelAffRef,
     commission_rate: topLevelRate,
-    platform: topLevelPlatform,
+    platform: 'retail',
     has_affiliate: !!(topLevelAffRef && topLevelAffRef !== 'rorraxy-store')
   };
 
@@ -1706,7 +1714,7 @@ async function finalizeAndConfirmOrderToCloudflare() {
 
   localStorage.setItem('rorraxy_last_order', JSON.stringify(cloudflareDbPayload));
   localStorage.removeItem('rorraxy_current_checkout');
-  localStorage.removeItem('rorraxy_cart');
+  localStorage.removeItem(RETAIL_CART_KEY);
   showToast("Order Confirmed Successfully!");
   setTimeout(() => {
     window.location.href = `/account.html`;
