@@ -1009,9 +1009,41 @@ function resolveCartItemImage(item) {
   return url || FALLBACK_CART_IMG;
 }
 
+// Strictly verifies whether a cart item belongs to Wholesale (excludes Retail items)
+function isStrictWholesaleItem(item) {
+  if (!item || typeof item !== 'object') return false;
+  if (item.platform === 'retail' || item.is_wholesale === false || item.order_mode === 'retail') {
+    return false;
+  }
+  return Boolean(
+    item.is_wholesale === true ||
+    item.platform === 'wholesale' ||
+    item.order_mode === 'wholesale' ||
+    (item.moq !== undefined && item.moq !== null && item.moq !== '') ||
+    (item.MOQ !== undefined && item.MOQ !== null && item.MOQ !== '') ||
+    parseFloat(item.price_bulk || 0) > 0 ||
+    parseFloat(item.price_min_whole || 0) > 0 ||
+    parseFloat(item.price_sample || 0) > 0
+  );
+}
+
+function getCleanWholesaleCart() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+    if (!Array.isArray(raw)) return [];
+    const filtered = raw.filter(isStrictWholesaleItem);
+    if (filtered.length !== raw.length) {
+      localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(filtered));
+    }
+    return filtered;
+  } catch (e) {
+    return [];
+  }
+}
+
 // Isolated Wholesale Direct Checkout Sync (Never pulls retail cart items)
 function syncDirectBulkCheckoutPayload() {
-  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  let cart = getCleanWholesaleCart();
   let directBulk = null;
   try {
     directBulk = JSON.parse(localStorage.getItem('rorraxy_current_checkout') || 'null');
@@ -1022,41 +1054,43 @@ function syncDirectBulkCheckoutPayload() {
       ? directBulk
       : (Array.isArray(directBulk.items) ? directBulk.items : [directBulk]);
 
-    const isWholesalePayload = Array.isArray(directBulk)
-      ? directBulk.some(i => i && (i.is_wholesale || i.platform === 'wholesale' || i.moq || i.price_bulk || i.price_min_whole))
-      : !!(directBulk.is_wholesale || directBulk.platform === 'wholesale' || directBulk.moq || directBulk.price_bulk || directBulk.price_min_whole);
+    const wholesaleIncoming = incomingItems.filter(isStrictWholesaleItem);
 
-    if (!isWholesalePayload) return;
+    if (wholesaleIncoming.length > 0) {
+      let updated = false;
+      wholesaleIncoming.forEach(inc => {
+        if (!inc || (!inc.title && !inc.product_title && !inc.id && !inc.productId && !inc.product_id)) return;
+        const incId = String(inc.productId || inc.product_id || inc.id || inc.sku || inc.title || '');
+        const incNote = String(inc.note || inc.custom_note || inc.customNote || inc.size || '').trim();
+        const incQty = Math.max(parseInt(inc.qty || inc.quantity || inc.moq || 1, 10) || 1, parseInt(inc.moq || 1, 10) || 1);
 
-    let updated = false;
-    incomingItems.forEach(inc => {
-      if (!inc || (!inc.title && !inc.product_title && !inc.id && !inc.productId && !inc.product_id)) return;
-      const incId = String(inc.productId || inc.product_id || inc.id || inc.sku || inc.title || '');
-      const incNote = String(inc.note || inc.custom_note || inc.customNote || inc.size || '').trim();
-      const incQty = Math.max(parseInt(inc.qty || inc.quantity || inc.moq || 1, 10) || 1, parseInt(inc.moq || 1, 10) || 1);
+        const existingIdx = cart.findIndex(c => {
+          const cId = String(c.productId || c.product_id || c.id || c.sku || c.title || '');
+          const cNote = String(c.note || c.custom_note || c.customNote || c.size || '').trim();
+          return cId === incId && cNote === incNote;
+        });
 
-      const existingIdx = cart.findIndex(c => {
-        const cId = String(c.productId || c.product_id || c.id || c.sku || c.title || '');
-        const cNote = String(c.note || c.custom_note || c.customNote || c.size || '').trim();
-        return cId === incId && cNote === incNote;
+        if (existingIdx >= 0) {
+          cart[existingIdx].qty = incQty;
+          cart[existingIdx].is_wholesale = true;
+          cart[existingIdx].platform = 'wholesale';
+          if (incNote) cart[existingIdx].note = incNote;
+        } else {
+          cart.unshift({
+            ...inc,
+            is_wholesale: true,
+            platform: 'wholesale',
+            qty: incQty,
+            moq: parseInt(inc.moq || inc.MOQ || 1, 10) || 1
+          });
+        }
+        updated = true;
       });
 
-      if (existingIdx >= 0) {
-        cart[existingIdx].qty = incQty;
-        if (incNote) cart[existingIdx].note = incNote;
-      } else {
-        cart.unshift({
-          ...inc,
-          qty: incQty,
-          moq: parseInt(inc.moq || inc.MOQ || 1, 10) || 1
-        });
+      if (updated) {
+        localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
+        localStorage.removeItem('rorraxy_current_checkout');
       }
-      updated = true;
-    });
-
-    if (updated) {
-      localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
-      localStorage.removeItem('rorraxy_current_checkout');
     }
   }
 }
@@ -1077,7 +1111,7 @@ function getTierPrice(item, qty) {
 }
 
 function renderCartList() {
-  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  let cart = getCleanWholesaleCart();
   let container = document.getElementById('cartItemsListContainer');
   let totalValEl = document.getElementById('cartTotalVal');
   let localValEl = document.getElementById('cartLocalVal');
@@ -1209,7 +1243,7 @@ function toggleProductDetails(index, btnEl) {
 }
 
 function setDirectQty(index, rawVal) {
-  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  let cart = getCleanWholesaleCart();
   if (!cart[index]) return;
   const moq = parseInt(cart[index].moq || cart[index].MOQ || 1);
   let parsed = parseInt(rawVal, 10);
@@ -1223,7 +1257,7 @@ function setDirectQty(index, rawVal) {
 }
 
 function changeQty(index, val) {
-  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  let cart = getCleanWholesaleCart();
   if (!cart[index]) return;
   const moq = parseInt(cart[index].moq || cart[index].MOQ || 1);
   cart[index].qty += val;
@@ -1233,7 +1267,7 @@ function changeQty(index, val) {
 }
 
 function removeCartItem(index) {
-  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  let cart = getCleanWholesaleCart();
   cart.splice(index, 1);
   localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
   renderCartList();
@@ -1242,7 +1276,7 @@ function removeCartItem(index) {
 async function handleDirectCheckoutSubmission() {
   if (isSubmittingOrder) return;
 
-  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  let cart = getCleanWholesaleCart();
   if (cart.length === 0) {
     showToast("Your wholesale cart is empty!", true);
     return;
