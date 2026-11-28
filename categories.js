@@ -99,5 +99,22 @@ const rorraxyCategoriesData = [
             { name: "ECO BABY TOYS", key: "eco-baby-toys", icon: "fa-solid fa-puzzle-piece" },
             { name: "ACCESSORIES", key: "mother-baby-accessories", icon: "fa-solid fa-glasses" }
         ]
+    },
+    {
+        id: "cat-decor",
+        title: "DECOR & ACCENTS",
+        icon: "fa-solid fa-wand-magic-sparkles",
+        subCategories: [
+            { name: "MINI FIGURINES & SHOWPIECES", key: "mini-figurines-showpieces", icon: "fa-solid fa-chess-knight" },
+            { name: "TABLETOP & DESK ACCENTS", key: "tabletop-desk-accents", icon: "fa-solid fa-cube" },
+            { name: "CANDLES & AROMA HOLDERS", key: "candles-aroma-holders", icon: "fa-solid fa-fire-flame-curved" },
+            { name: "MINI VASES & PLANTERS", key: "mini-vases-planters", icon: "fa-solid fa-seedling" },
+            { name: "WALL ART & MINI FRAMES", key: "wall-art-frames", icon: "fa-solid fa-image" },
+            { name: "AMBIENT & MINI LED LAMPS", key: "ambient-led-lamps", icon: "fa-solid fa-lightbulb" },
+            { name: "TRINKET & ORGANIZER TRAYS", key: "trinket-jewelry-trays", icon: "fa-solid fa-box-open" },
+            { name: "ARTIFICIAL FLORALS & PLANTS", key: "floral-botanical-decor", icon: "fa-solid fa-spa" },
+            { name: "CRYSTAL & CERAMIC MINIATURES", key: "crystal-ceramic-crafts", icon: "fa-solid fa-gem" },
+            { name: "EVENT & FESTIVE ACCENTS", key: "event-festive-decor", icon: "fa-solid fa-star" }
+        ]
     }
 ];
