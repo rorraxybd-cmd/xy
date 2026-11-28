@@ -512,6 +512,7 @@
 
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_wholesale_feed_cache';
+        const WHOLESALE_CART_KEY = 'rorraxy_wholesale_cart'; // শুধুমাত্র হোলসেল কার্টের জন্য আলাদা কী
         const FALLBACK_IMG_URL = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
         const $ = id => document.getElementById(id);
         let cachedAffiliateId = null;
@@ -597,6 +598,15 @@
             updateCartBadgeCount();
             setupInfiniteScroll();
 
+            // অন্য ট্যাব বা আইফ্রেম থেকে কার্ট আপডেট হলে রিয়েল-টাইমে ব্যাজ আপডেট করার জন্য
+            window.addEventListener('storage', (e) => {
+                if (e.key === WHOLESALE_CART_KEY) {
+                    updateCartBadgeCount();
+                }
+            });
+            window.addEventListener('focus', updateCartBadgeCount);
+            window.addEventListener('pageshow', updateCartBadgeCount);
+
             const searchQuery = urlParams.get('search') || urlParams.get('q') || urlParams.get('category');
             loadWholesaleProducts(searchQuery);
 
@@ -622,6 +632,7 @@
             $('categoryPageOverlay')?.classList.remove('active');
             $('cartPageOverlay')?.classList.remove('active');
             $('universalShareModal')?.classList.remove('active');
+            updateCartBadgeCount(); // ওভারলে বন্ধ হওয়ার সময় ব্যাজ রিফ্রেশ
         }
 
         function toggleAccountPage() {
@@ -662,7 +673,8 @@
             const isOpen = overlay.classList.contains('active');
             closeAllOverlays();
             if (!isOpen) {
-                if (iframe && !iframe.getAttribute('src')) iframe.src = '/wholesale/cart.html';
+                // কার্ট পেজ খোলার সময় প্রতিবার ফ্রেশ হোলসেল কার্ট ডেটা লোড নিশ্চিত করা
+                if (iframe) iframe.src = '/wholesale/cart.html?t=' + Date.now();
                 overlay.classList.add('active');
             }
         }
@@ -1053,12 +1065,13 @@
             }
         }
 
+        // শুধুমাত্র হোলসেল কার্ট (rorraxy_wholesale_cart) থেকে প্রোডাক্টের সংখ্যা গণনা করবে
         function updateCartBadgeCount() {
             let cart = [];
             try {
-                cart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || [];
+                cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY) || '[]') || [];
             } catch(e) { cart = []; }
-            const totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
+            const totalQty = cart.reduce((sum, item) => sum + (parseInt(item.qty || item.quantity, 10) || 0), 0);
             const badge = $('floatingCartItemCountBadge');
             if (badge) {
                 badge.innerText = totalQty;
