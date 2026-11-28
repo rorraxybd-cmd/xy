@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev" crossorigin>
 <script src="/ecosystem-core.js" defer></script>
 <link rel="icon" type="image/png" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 <style>
@@ -26,6 +26,7 @@
   --text-white: #ffffff;
   --text-gray: #a0a0b8;
   --font-main: 'Poppins', sans-serif;
+  --font-price: 'Barlow Condensed', system-ui, -apple-system, sans-serif;
   --luxury-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -112,7 +113,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 280px;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
   contain: layout style;
 }
@@ -121,6 +122,46 @@ body {
   .media-viewport {
     min-height: 440px;
   }
+}
+
+/* Prominent Top-Right Floating Share Button on Main Product */
+.top-floating-share-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 25;
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 35%, #b38728 70%, #fbf5b7 100%);
+  color: #050508 !important;
+  -webkit-text-fill-color: #050508 !important;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 15px;
+  font-family: var(--font-main);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), 0 0 14px rgba(212, 175, 55, 0.45);
+  transition: transform 0.16s var(--luxury-ease), box-shadow 0.16s ease;
+}
+
+.top-floating-share-btn i {
+  font-size: 0.88rem;
+  color: #050508 !important;
+  -webkit-text-fill-color: #050508 !important;
+}
+
+.top-floating-share-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 18px rgba(252, 246, 186, 0.65);
+}
+
+.top-floating-share-btn:active {
+  transform: scale(0.95);
 }
 
 .main-media-element {
@@ -199,7 +240,7 @@ body {
 .product-info-section-box {
   background: var(--card-wholesale);
   border-radius: 16px;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.14);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
   position: relative;
   overflow: hidden;
@@ -512,42 +553,33 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 2px;
+  margin-top: 4px;
   width: 100%;
 }
 
 .seller-chat-compact-btn {
   color: var(--gold-solid);
-  font-size: 0.68rem;
+  font-size: 0.70rem;
   font-weight: 700;
-  padding: 7px 13px;
+  padding: 9px 14px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(212, 175, 55, 0.08);
-  border-radius: 9px;
-  border: none;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
 }
 
+/* Clear & Prominent Secondary Share Button inside Product Details */
 .main-product-share-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  color: var(--gold-solid);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  transition: transform 0.15s ease;
+  display: none;
 }
 
-.main-product-share-btn:active {
-  transform: scale(0.9);
-}
-
+/* =========================================================
+   RELATED PRODUCTS GRID (MATCHING index.html 3-TIER FOOTER)
+   ========================================================= */
 .related-products-wrapper {
   margin-top: 12px;
   width: 100%;
@@ -555,6 +587,7 @@ body {
   flex-direction: column;
   gap: 12px;
   padding-top: 12px;
+  border-top: 1px solid rgba(212, 175, 55, 0.12);
 }
 
 .related-section-title {
@@ -588,7 +621,7 @@ body {
   overflow: hidden;
   display: inline-block;
   width: 100%;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   position: relative;
   cursor: pointer;
   margin-bottom: 9px;
@@ -597,7 +630,7 @@ body {
   contain: paint;
   backface-visibility: hidden;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
-  transition: transform 0.2s var(--luxury-ease), box-shadow 0.2s ease;
+  transition: transform 0.2s var(--luxury-ease), box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 @media (min-width: 768px) {
@@ -607,6 +640,7 @@ body {
 }
 
 .product-card:hover {
+  border-color: rgba(212, 175, 55, 0.45);
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.75);
   transform: translate3d(0, -2px, 0);
 }
@@ -634,17 +668,24 @@ body {
   background: transparent;
 }
 
+/* Single-line 3-tier price & quantity bar identical to index.html */
 .card-footer-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 8px 10px;
+  justify-content: center;
+  padding: 7px 6px;
   background: linear-gradient(180deg, #0b0b12 0%, #06060a 100%) !important;
-  border: none;
-  gap: 6px;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
   white-space: nowrap;
   overflow: hidden;
   position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .card-footer-actions {
+    padding: 8px 10px;
+  }
 }
 
 .card-footer-actions::after {
@@ -662,75 +703,61 @@ body {
   z-index: 1;
 }
 
-.wholesale-info-inline {
+.wholesale-tiers-line {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow: hidden;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  gap: 2px;
   position: relative;
   z-index: 2;
+  font-family: var(--font-price);
 }
 
-.product-price-tag {
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--gold-solid);
+@media (min-width: 768px) {
+  .wholesale-tiers-line {
+    gap: 6px;
+  }
 }
 
-.moq-tag {
-  font-size: 0.56rem;
-  color: #d0d0e2;
-  font-weight: 700;
-  background: rgba(212, 175, 55, 0.08);
-  border: none;
-  padding: 2px 6px;
-  border-radius: 5px;
-}
-
-.card-right-icons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  position: relative;
-  z-index: 2;
-}
-
-.card-quick-add-btn {
-  background: rgba(212, 175, 55, 0.14);
-  border: none;
-  color: var(--gold-light);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 0.60rem;
-  font-weight: 800;
-  cursor: pointer;
+.tier-item {
   display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.card-quick-add-btn:active {
-  transform: scale(0.9);
-}
-
-.card-action-icon-btn {
-  background: transparent !important;
-  border: none !important;
-  padding: 2px 4px !important;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.98rem;
+  align-items: baseline;
   line-height: 1;
+  white-space: nowrap;
+  min-width: 0;
 }
 
-.card-action-icon-btn i {
+.tier-sep {
+  color: rgba(212, 175, 55, 0.28);
+  font-size: clamp(0.65rem, 2.6vw, 0.85rem);
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.tier-q {
+  font-size: clamp(0.64rem, 2.6vw, 0.84rem);
+  font-weight: 700;
+  color: #c6c6dc;
+  margin-right: 1px;
+}
+
+.tier-p {
+  font-size: clamp(0.76rem, 3.2vw, 1.02rem);
+  font-weight: 800;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: var(--gold-solid);
+}
+
+@media (min-width: 768px) {
+  .tier-q { font-size: 0.90rem; margin-right: 2px; }
+  .tier-p { font-size: 1.08rem; }
+  .tier-sep { font-size: 0.88rem; }
 }
 
 .fixed-bottom-checkout-bar {
@@ -874,7 +901,7 @@ body {
   left: 50%;
   transform: translate3d(-50%, -20px, 0);
   background: #11111a;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.35);
   color: #fcf6ba;
   padding: 9px 18px;
   border-radius: 999px;
@@ -922,7 +949,7 @@ body {
 
 .share-target-btn {
   background: #08080e;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 10px;
   padding: 10px 6px;
   color: #ffffff;
@@ -957,7 +984,7 @@ body {
   flex: 1;
   min-width: 0;
   background: #08080e;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 8px;
   padding: 7px 10px;
   color: var(--gold-solid);
@@ -970,10 +997,9 @@ body {
   .current-main-price,
   .related-section-title,
   .product-title-restricted,
-  .product-price-tag,
+  .tier-p,
   .footer-menu-icon,
-  .footer-menu-label,
-  .main-product-share-btn i {
+  .footer-menu-label {
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     background-clip: text;
@@ -990,7 +1016,14 @@ body {
   <div class="product-details-clean-section" id="productDetailsViewSection">
     <div class="product-left-col">
       <div class="media-viewport" id="mediaViewportContainer">
-        <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%230a0a10'/%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
+        <!-- Prominent Top-Right Share Button -->
+        <button type="button" class="top-floating-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product">
+          <i class="fa-solid fa-share-nodes"></i>
+          <span>SHARE</span>
+        </button>
+        <div id="mediaInnerStage" style="width:100%;display:flex;align-items:center;justify-content:center;">
+          <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%230a0a10'/%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
+        </div>
       </div>
       <div class="thumbnail-slider-wrapper">
         <div class="thumbnail-strip" id="productThumbnailsStrip"></div>
@@ -1041,14 +1074,13 @@ body {
         </div>
         <div class="action-buttons-flex-row">
           <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()"><i class="fa-solid fa-headset"></i> <span>SELLER</span></button>
-          <button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="related-products-wrapper" id="relatedProductsSectionWrapper">
-    <h3 class="related-section-title" id="relatedSectionHeading"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS (TAP TO SELECT OR + ADD)</h3>
+    <h3 class="related-section-title" id="relatedSectionHeading"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS</h3>
     <div class="feed-container" id="relatedProductsFeedContainer"></div>
   </div>
 </div>
@@ -1080,9 +1112,9 @@ body {
 </div>
 
 <div id="universalShareModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:9999999;align-items:center;justify-content:center;padding:12px;" onclick="if(event.target===this) closeShareModal()">
-  <div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.25);">
+  <div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.28);">
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
-      <span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
+      <span style="font-size:0.75rem;font-weight:800;color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
       <button type="button" onclick="closeShareModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
     </div>
     <div id="shareTargetGrid" class="universal-share-grid"></div>
@@ -1108,6 +1140,11 @@ let currentBaseUnitPrice = 25.00;
 let cachedAffiliateId = null;
 let audioCtxInstance = null;
 let pdToastTimer = null;
+
+function formatCompactTierPrice(val) {
+  const num = parseFloat(val) || 0;
+  return `$${num.toFixed(2)}`;
+}
 
 function showPdToast(msg) {
   const el = document.getElementById('pdQuickToast');
@@ -1170,7 +1207,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (reqId) {
     fetchWholesaleProductDetails(reqId);
   } else {
-    renderFallbackProductDetails('101');
+    fetchWholesaleProductDetails('101');
   }
 });
 
@@ -1179,80 +1216,127 @@ async function fetchCloudflareProductsList() {
   if (!response.ok) throw new Error('Network error');
   const result = await response.json();
   if (result && result.success && Array.isArray(result.data)) return result.data;
+  if (result && Array.isArray(result.results)) return result.results;
   if (Array.isArray(result)) return result;
   return [];
 }
 
-async function fetchWholesaleProductDetails(productId) {
-  try {
-    let localProducts = [];
-    let cachedFeed = [];
-    try {
-      localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products') || '[]') || [];
-      cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache') || '[]') || [];
-    } catch (e) {}
-
-    const combinedLocal = [...localProducts, ...cachedFeed];
-    allCachedProductsList = combinedLocal;
-
-    const foundItem = combinedLocal.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
-    if (foundItem) {
-      renderProductDetails(foundItem);
-      renderRelatedProducts(combinedLocal, foundItem);
+function getFallbackCatalogProducts() {
+  return [
+    {
+      id: '101',
+      sku: 'ROR-BLK-101',
+      title: 'RORRAXY WHOLESALE BULK LUXURY ITEM',
+      price: 25.00,
+      price_100: 20.00,
+      price_300: 18.00,
+      moq: 1,
+      stock: 1500,
+      category: 'Wholesale',
+      description: 'High-grade bulk wholesale manufacturing supply meeting international commercial standards.',
+      image_url: FALLBACK_IMG_URL
+    },
+    {
+      id: '102',
+      sku: 'ROR-BLK-102',
+      title: 'RORRAXY PREMIUM B2B EXPORT COLLECTION',
+      price: 32.00,
+      price_100: 26.50,
+      price_300: 22.00,
+      moq: 1,
+      stock: 2400,
+      category: 'Wholesale',
+      description: 'Factory direct export quality bulk goods with custom packaging and logo options.',
+      image_url: FALLBACK_IMG_URL
+    },
+    {
+      id: '103',
+      sku: 'ROR-BLK-103',
+      title: 'RORRAXY COMMERCIAL SERIES EDITION',
+      price: 18.50,
+      price_100: 15.00,
+      price_300: 12.80,
+      moq: 1,
+      stock: 3200,
+      category: 'Wholesale',
+      description: 'High demand wholesale inventory ready for immediate international dispatch.',
+      image_url: FALLBACK_IMG_URL
+    },
+    {
+      id: '104',
+      sku: 'ROR-BLK-104',
+      title: 'RORRAXY MASTER FACTORY SUPPLY PRO',
+      price: 45.00,
+      price_100: 38.00,
+      price_300: 33.50,
+      moq: 1,
+      stock: 980,
+      category: 'Wholesale',
+      description: 'Heavy-duty commercial manufacturing batch verified for global B2B buyers.',
+      image_url: FALLBACK_IMG_URL
     }
+  ];
+}
 
+async function fetchWholesaleProductDetails(productId) {
+  let localProducts = [];
+  let sellerProducts = [];
+  let cachedFeed = [];
+  try {
+    localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products') || '[]') || [];
+    sellerProducts = JSON.parse(localStorage.getItem('rorraxy_seller_products') || '[]') || [];
+    cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache') || '[]') || [];
+  } catch (e) {}
+
+  const combinedLocal = [...localProducts, ...sellerProducts, ...cachedFeed];
+  const initialPool = combinedLocal.length > 0 ? combinedLocal : getFallbackCatalogProducts();
+  allCachedProductsList = initialPool;
+
+  const foundItem = initialPool.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
+  if (foundItem) {
+    renderProductDetails(foundItem);
+    renderRelatedProducts(initialPool, foundItem);
+  }
+
+  try {
     const products = await fetchCloudflareProductsList();
     const mergedMap = new Map();
 
-    for (let i = 0; i < combinedLocal.length; i++) {
-      const p = combinedLocal[i];
-      const pId = p.id || p.product_id || p.product_code || p.title;
-      if (pId) mergedMap.set(String(pId), p);
-    }
-    for (let i = 0; i < products.length; i++) {
-      const p = products[i];
+    const allCombined = [...combinedLocal, ...products];
+    for (let i = 0; i < allCombined.length; i++) {
+      const p = allCombined[i];
+      if (!p) continue;
       const pId = p.id || p.product_id || p.product_code || p.title;
       if (pId) mergedMap.set(String(pId), p);
     }
 
-    const allProducts = Array.from(mergedMap.values());
+    let allProducts = Array.from(mergedMap.values());
+    if (allProducts.length === 0) {
+      allProducts = getFallbackCatalogProducts();
+    }
     allCachedProductsList = allProducts;
 
-    if (allProducts.length > 0) {
-      const matchedProduct = allProducts.find(
-        p => String(p.id) === String(productId) ||
-             String(p.product_id) === String(productId) ||
-             String(p.product_code) === String(productId)
-      );
-      if (matchedProduct) {
-        if (!foundItem) renderProductDetails(matchedProduct);
-        renderRelatedProducts(allProducts, matchedProduct);
-        return;
-      }
+    const matchedProduct = allProducts.find(
+      p => String(p.id) === String(productId) ||
+           String(p.product_id) === String(productId) ||
+           String(p.product_code) === String(productId)
+    ) || allProducts[0];
+
+    if (matchedProduct) {
+      renderProductDetails(matchedProduct);
+      renderRelatedProducts(allProducts, matchedProduct);
     }
-
-    if (!foundItem) renderFallbackProductDetails(productId);
   } catch (err) {
-    if (!currentActiveProduct) renderFallbackProductDetails(productId);
+    if (!currentActiveProduct) {
+      const fallbackList = getFallbackCatalogProducts();
+      allCachedProductsList = fallbackList;
+      const fallbackProd = fallbackList.find(p => String(p.id) === String(productId)) || fallbackList[0];
+      renderProductDetails(fallbackProd);
+      renderRelatedProducts(fallbackList, fallbackProd);
+    } else {
+      renderRelatedProducts(allCachedProductsList, currentActiveProduct);
+    }
   }
-}
-
-function renderFallbackProductDetails(productId) {
-  const sampleProduct = {
-    id: productId,
-    sku: 'ROR-SAMPLE-' + String(productId).substring(0, 4).toUpperCase(),
-    title: 'RORRAXY WHOLESALE BULK LUXURY ITEM',
-    price: 25.00,
-    price_100: 20.00,
-    price_300: 18.00,
-    stock: 1500,
-    category: 'Shoes',
-    description: 'High-grade bulk wholesale manufacturing supply meeting international commercial standards.',
-    image_url: FALLBACK_IMG_URL
-  };
-  allCachedProductsList = [sampleProduct];
-  renderProductDetails(sampleProduct);
-  renderRelatedProducts([sampleProduct], sampleProduct);
 }
 
 function cleanDescriptionText(text) {
@@ -1377,14 +1461,20 @@ function extractProductPrimaryImage(item) {
   return imageUrl || FALLBACK_IMG_URL;
 }
 
+/**
+ * Builds related product card with exact same single-line 3-tier price & quantity bar as index.html
+ */
 function buildProductCardHtml(item, idx = 0) {
   const prodId = String(item.id || item.product_id || item.product_code || '101');
   const title = item.title || 'rorraxy Bulk Item';
-  const rawPrice = parseFloat(item.price_bulk || item.price_min_whole || item.price || 25.00) || 25.00;
-  const moq = parseInt(item.moq || item.MOQ || 1, 10) || 1;
+
+  const basePrice = parseFloat(item.price_bulk || item.price_min_whole || item.price || item.wholesale_price) || 25.00;
+  const tier100Price = parseFloat(item.price_100) || (basePrice * 0.80);
+  const tier300Price = parseFloat(item.price_300) || (basePrice * 0.72);
+  const moqQty = parseInt(item.moq || item.MOQ || 1, 10) || 1;
+
   const imageUrl = extractProductPrimaryImage(item);
   const safeTitleAttr = escapeHtmlAttr(title);
-  const safeTitleJs = escapeJsSingle(title);
   const safeIdJs = escapeJsSingle(prodId);
   const organicDelays = [0.1, 1.35, 0.65, 2.05, 0.35, 1.75, 0.95, 2.4];
   const delaySec = organicDelays[idx % organicDelays.length];
@@ -1393,14 +1483,13 @@ function buildProductCardHtml(item, idx = 0) {
     <div class="product-media-box">
       <img src="${escapeHtmlAttr(imageUrl)}" alt="${safeTitleAttr}" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMG_URL}'">
     </div>
-    <div class="card-footer-actions" style="--footer-shimmer-delay:${delaySec}s;" onclick="event.stopPropagation()">
-      <div class="wholesale-info-inline">
-        <span class="product-price-tag">$${rawPrice.toFixed(2)}</span>
-        <span class="moq-tag">Min ${moq} Pcs</span>
-      </div>
-      <div class="card-right-icons">
-        <button type="button" class="card-quick-add-btn" title="Add Directly to Cart" onclick="quickAddRelatedToCart(event, '${safeIdJs}')">+ CART</button>
-        <button type="button" class="card-action-icon-btn" title="Share Product" onclick="triggerAutoShare(event, '${safeIdJs}', '${safeTitleJs}')"><i class="fa-solid fa-share-nodes"></i></button>
+    <div class="card-footer-actions" style="--footer-shimmer-delay:${delaySec}s;">
+      <div class="wholesale-tiers-line" title="Qty ${moqQty}: ${formatCompactTierPrice(basePrice)} | Qty 100: ${formatCompactTierPrice(tier100Price)} | Qty 300: ${formatCompactTierPrice(tier300Price)}">
+        <span class="tier-item"><span class="tier-q">${moqQty}:</span><span class="tier-p">${formatCompactTierPrice(basePrice)}</span></span>
+        <span class="tier-sep">|</span>
+        <span class="tier-item"><span class="tier-q">100:</span><span class="tier-p">${formatCompactTierPrice(tier100Price)}</span></span>
+        <span class="tier-sep">|</span>
+        <span class="tier-item"><span class="tier-q">300:</span><span class="tier-p">${formatCompactTierPrice(tier300Price)}</span></span>
       </div>
     </div>
   </div>`;
@@ -1418,35 +1507,19 @@ function selectRelatedProductInline(productId) {
   }
 }
 
-function quickAddRelatedToCart(event, productId) {
-  if (event) event.stopPropagation();
-  const prod = allCachedProductsList.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
-  if (!prod) return;
-  const imgUrl = extractProductPrimaryImage(prod);
-  const moq = parseInt(prod.moq || prod.MOQ || 1, 10) || 1;
-  const unitPrice = parseFloat(prod.price_bulk || prod.price_min_whole || prod.price || 25.00) || 25.00;
-
-  addProductToWholesaleCart({
-    product: prod,
-    chosenImg: imgUrl,
-    chosenNote: 'STANDARD BULK',
-    qty: moq,
-    unitPrice: unitPrice
-  });
-
-  triggerCoinDropAnimation(event);
-  showPdToast(`ADDED ${prod.title || 'ITEM'} TO WHOLESALE CART`);
-}
-
 function renderRelatedProducts(allProducts, currentProd) {
   const container = document.getElementById('relatedProductsFeedContainer');
-  if (!allProducts || allProducts.length <= 1) {
-    container.innerHTML = `<p style="column-span:all;text-align:center;color:var(--text-gray);font-size:0.78rem;">NO RELATED WHOLESALE PRODUCTS FOUND.</p>`;
-    return;
-  }
+  if (!container) return;
+
+  let pool = Array.isArray(allProducts) && allProducts.length > 0 ? [...allProducts] : getFallbackCatalogProducts();
   const currentId = currentProd ? String(currentProd.id || currentProd.product_id || currentProd.product_code) : '';
-  const filteredList = allProducts.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
-  const relatedList = filteredList.slice(0, 12);
+
+  let filteredList = pool.filter(p => String(p.id || p.product_id || p.product_code) !== currentId);
+  if (filteredList.length === 0) {
+    filteredList = getFallbackCatalogProducts().filter(p => String(p.id) !== currentId);
+  }
+
+  const relatedList = filteredList.slice(0, 16);
   container.innerHTML = relatedList.map((item, idx) => buildProductCardHtml(item, idx)).join('');
 }
 
@@ -1470,13 +1543,13 @@ function navigateToProduct(productId) {
 }
 
 function updateMainViewport(mediaObj) {
-  const viewport = document.getElementById('mediaViewportContainer');
-  if (!mediaObj || !mediaObj.url) return;
+  const stage = document.getElementById('mediaInnerStage');
+  if (!stage || !mediaObj || !mediaObj.url) return;
   const safeUrl = escapeHtmlAttr(mediaObj.url);
   if (mediaObj.type === 'video') {
-    viewport.innerHTML = `<video src="${safeUrl}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
+    stage.innerHTML = `<video src="${safeUrl}" class="main-media-element" controls autoplay muted loop playsinline></video>`;
   } else {
-    viewport.innerHTML = `<img id="mainDisplayMediaElement" src="${safeUrl}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='${FALLBACK_IMG_URL}'">`;
+    stage.innerHTML = `<img id="mainDisplayMediaElement" src="${safeUrl}" class="main-media-element" alt="Product View" decoding="async" onerror="this.src='${FALLBACK_IMG_URL}'">`;
   }
 }
 
@@ -1800,7 +1873,7 @@ async function copyTextToClipboard(text) {
 function showShareFeedback(btnEl) {
   if (!btnEl) return;
   const orig = btnEl.innerHTML;
-  btnEl.innerHTML = `<i class="fa-solid fa-check"></i>`;
+  btnEl.innerHTML = `<i class="fa-solid fa-check"></i> <span>COPIED</span>`;
   setTimeout(() => { btnEl.innerHTML = orig; }, 1400);
 }
 
@@ -1810,7 +1883,7 @@ async function triggerAutoShare(event, productId, productTitle) {
   const shareUrl = generateAffiliateUrl(productId);
   if (typeof navigator.share === 'function') {
     try {
-      await navigator.share({ url: shareUrl });
+      await navigator.share({ title: productTitle, url: shareUrl });
       showShareFeedback(btnEl);
       return;
     } catch (err) {
