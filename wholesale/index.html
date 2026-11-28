@@ -59,7 +59,7 @@
         button, a, select, .product-card { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
 
         /* =========================================================
-           LUXURY SHIMMER ONLY FOR PRICE / MOQ / SHARE FOOTER BAR
+           LUXURY SHIMMER ONLY FOR PRICE / SHARE FOOTER BAR
            ========================================================= */
         @keyframes luxuryFooterSweep {
             0% { transform: translate3d(-120%, 0, 0) skewX(-22deg); }
@@ -77,7 +77,7 @@
         }
 
         /* =========================================================
-           CLEAN STATIC LUXURY HEADER (NO SHIMMER, NO TOP/BOTTOM LINE)
+           CLEAN STATIC LUXURY HEADER
            ========================================================= */
         header.app-header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
@@ -103,7 +103,6 @@
         }
         .marquee-group { display: flex; align-items: center; gap: 36px; padding-right: 36px; flex-shrink: 0; }
         .marquee-group span { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; letter-spacing: 0.6px; }
-        /* Clean Static Golden Gradient Text (No Shimmer) */
         .txt-gold {
             background: var(--gold-gradient);
             -webkit-background-clip: text; background-clip: text;
@@ -181,7 +180,6 @@
         }
         .product-card:active { transform: scale(0.97); transition-duration: 0.08s; }
 
-        /* Clean Image Container - NO shimmer on image box */
         .product-media-box {
             position: relative; width: 100%; aspect-ratio: 1 / 1;
             background: #0c0c14;
@@ -198,16 +196,23 @@
         .product-card:hover .product-media-box img.loaded-img { transform: scale(1.04); }
 
         /* =========================================================
-           EXCLUSIVE LUXURY SHIMMER ONLY ON PRICE / MOQ / SHARE LINE
+           SINGLE-LINE 3-TIER COMPACT PRICE & QUANTITY FOOTER BAR
            ========================================================= */
         .card-footer-actions {
-            display: flex; align-items: center; justify-content: space-between; padding: 8px 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 6px 6px;
             background: linear-gradient(180deg, #0b0b12 0%, #06060a 100%) !important;
-            border-top: 1px solid rgba(212, 175, 55, 0.15); gap: 6px;
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            gap: 3px;
             white-space: nowrap; overflow: hidden;
             position: relative; z-index: 2;
         }
-        /* Soft Luxury Golden Shimmer Sweep ONLY across this bottom bar */
+        @media (min-width: 768px) {
+            .card-footer-actions {
+                padding: 8px 9px;
+                gap: 6px;
+            }
+        }
         .card-footer-actions::after {
             content: "";
             position: absolute; top: 0; left: 0; width: 45%; height: 100%;
@@ -226,36 +231,88 @@
             z-index: 1;
         }
 
-        .wholesale-info-inline { display: flex; align-items: center; gap: 6px; overflow: hidden; position: relative; z-index: 2; }
-        .product-price-tag {
-            font-size: 0.84rem; font-weight: 800;
+        /* 3-Tier Single Line Container */
+        .wholesale-tiers-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+            min-width: 0;
+            gap: 2px;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .wholesale-tiers-line {
+                gap: 5px;
+            }
+        }
+
+        .tier-pill {
+            display: inline-flex;
+            align-items: baseline;
+            justify-content: center;
+            background: rgba(212, 175, 55, 0.07);
+            border: 1px solid rgba(212, 175, 55, 0.16);
+            border-radius: 4px;
+            padding: 2px 3px;
+            line-height: 1;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+        @media (min-width: 768px) {
+            .tier-pill {
+                padding: 3px 5px;
+                border-radius: 5px;
+            }
+        }
+
+        .tier-q {
+            font-size: 0.48rem;
+            font-weight: 700;
+            color: #b4b4cc;
+            margin-right: 1px;
+            letter-spacing: -0.2px;
+        }
+        .tier-p {
+            font-size: 0.56rem;
+            font-weight: 800;
             background: var(--gold-gradient);
-            -webkit-background-clip: text; background-clip: text;
+            -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.3px;
         }
-        .moq-tag {
-            font-size: 0.58rem; color: #d0d0e2; font-weight: 700; text-transform: uppercase;
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.22);
-            padding: 1px 6px;
-            border-radius: 5px;
+
+        @media (min-width: 390px) {
+            .tier-q { font-size: 0.52rem; }
+            .tier-p { font-size: 0.61rem; }
         }
+        @media (min-width: 768px) {
+            .tier-q { font-size: 0.60rem; margin-right: 2px; letter-spacing: 0; }
+            .tier-p { font-size: 0.72rem; letter-spacing: 0; }
+        }
+
         .share-icon-btn {
             border: none; cursor: pointer;
-            font-size: 1.05rem;
+            font-size: 0.85rem;
             background-color: transparent;
             background-image: var(--gold-gradient);
             -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent;
-            padding: 4px; display: inline-flex; align-items: center; justify-content: center;
+            padding: 2px 3px; display: inline-flex; align-items: center; justify-content: center;
             flex-shrink: 0; transition: transform 0.15s var(--luxury-ease);
             position: relative; z-index: 2;
+        }
+        @media (min-width: 768px) {
+            .share-icon-btn { font-size: 1.0rem; padding: 3px 4px; }
         }
         .share-icon-btn:hover { transform: scale(1.15); }
         .share-icon-btn:active { transform: scale(0.92); }
 
         /* =========================================================
-           BOTTOM 5 MENUS - STATIC GOLDEN GRADIENT (NO SHIMMER/ANIMATION)
+           BOTTOM 5 MENUS - STATIC GOLDEN GRADIENT
            ========================================================= */
         nav.bottom-nav {
             position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; height: 60px !important;
@@ -294,7 +351,7 @@
         .cart-custom-svg { width: 21px; height: 21px; fill: url(#goldGradientSvg); }
 
         /* =========================================================
-           CLEAN MODALS (NO ANIMATED TOP BARS OR TEXT SHIMMERS)
+           CLEAN MODALS
            ========================================================= */
         .floating-search-modal {
             position: fixed; inset: 0; width: 100%; height: 100%;
@@ -388,7 +445,7 @@
         #fastToastMsg.show { opacity: 1; transform: translate3d(-50%, 0, 0); }
 
         @supports not ((-webkit-background-clip:text) or (background-clip:text)) {
-            .txt-gold, .mode-selector-corner, .product-price-tag, .share-icon-btn, .nav-item i, .modal-title, .search-action-item-btn i, .search-action-item-btn span {
+            .txt-gold, .mode-selector-corner, .tier-p, .share-icon-btn, .nav-item i, .modal-title, .search-action-item-btn i, .search-action-item-btn span {
                 background: none !important; -webkit-text-fill-color: initial !important; color: var(--gold-solid) !important;
             }
         }
@@ -512,7 +569,7 @@
 
     <script>
         const LOCAL_STORAGE_CACHE_KEY = 'rorraxy_wholesale_feed_cache';
-        const WHOLESALE_CART_KEY = 'rorraxy_wholesale_cart'; // শুধুমাত্র হোলসেল কার্টের জন্য আলাদা কী
+        const WHOLESALE_CART_KEY = 'rorraxy_wholesale_cart';
         const FALLBACK_IMG_URL = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
         const $ = id => document.getElementById(id);
         let cachedAffiliateId = null;
@@ -579,6 +636,15 @@
             return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
         }
 
+        /**
+         * Formats price concisely to keep all 3 tiers cleanly on a single line.
+         * Whole dollar amounts drop ".00" (e.g., $20), fractional amounts show 2 decimals (e.g., $18.50).
+         */
+        function formatCompactTierPrice(val) {
+            const num = parseFloat(val) || 0;
+            return Number.isInteger(num) ? `$${num}` : `$${num.toFixed(2)}`;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const selector = $('userModeSelector');
             if (selector) selector.value = 'wholesale';
@@ -598,7 +664,6 @@
             updateCartBadgeCount();
             setupInfiniteScroll();
 
-            // অন্য ট্যাব বা আইফ্রেম থেকে কার্ট আপডেট হলে রিয়েল-টাইমে ব্যাজ আপডেট করার জন্য
             window.addEventListener('storage', (e) => {
                 if (e.key === WHOLESALE_CART_KEY) {
                     updateCartBadgeCount();
@@ -632,7 +697,7 @@
             $('categoryPageOverlay')?.classList.remove('active');
             $('cartPageOverlay')?.classList.remove('active');
             $('universalShareModal')?.classList.remove('active');
-            updateCartBadgeCount(); // ওভারলে বন্ধ হওয়ার সময় ব্যাজ রিফ্রেশ
+            updateCartBadgeCount();
         }
 
         function toggleAccountPage() {
@@ -673,7 +738,6 @@
             const isOpen = overlay.classList.contains('active');
             closeAllOverlays();
             if (!isOpen) {
-                // কার্ট পেজ খোলার সময় প্রতিবার ফ্রেশ হোলসেল কার্ট ডেটা লোড নিশ্চিত করা
                 if (iframe) iframe.src = '/wholesale/cart.html?t=' + Date.now();
                 overlay.classList.add('active');
             }
@@ -798,7 +862,6 @@
                 cachedFeed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CACHE_KEY) || '[]') || [];
             } catch(e) {}
 
-            // Instant Cache Paint (<5ms)
             if (cachedFeed.length > 0) {
                 let initialList = getReverseOppositeWholesaleProducts(cachedFeed);
                 if (searchFilter) {
@@ -807,11 +870,9 @@
                 }
                 if (initialList.length > 0) startBatchRender(initialList);
             } else {
-                // Clean, subtle gold spinner without giant shimmer blocks
                 feedContainer.innerHTML = `<div style="column-span: all; text-align: center; padding: 60px 0; color: var(--gold-solid);"><i class="fa-solid fa-circle-notch fa-spin fa-xl"></i></div>`;
             }
 
-            // Fast Background Live Sync
             let products = [];
             try {
                 const response = await fetch('/api/products?t=' + Date.now(), { cache: 'no-store' });
@@ -847,7 +908,6 @@
 
             if (wholesaleProducts.length > 0) {
                 const nextList = getReverseOppositeWholesaleProducts(wholesaleProducts);
-                // Avoid re-rendering if identical count and already rendered from cache
                 if (renderedCount === 0 || searchFilter || nextList.length !== activeFilteredList.length) {
                     masterWholesaleProducts = nextList;
                     startBatchRender(masterWholesaleProducts);
@@ -879,14 +939,18 @@
             const rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
             const platform = localStorage.getItem('rorraxy_active_platform') || 'wholesale';
 
-            // Staggered organic timing patterns so footer shimmer never moves uniformly in a row
             const organicDelays = [0.1, 1.35, 0.65, 2.05, 0.35, 1.75, 0.95, 2.4];
 
             for (let idx = renderedCount; idx < endIdx; idx++) {
                 const p = activeFilteredList[idx];
                 const pTitle = p.title || 'WHOLESALE ITEM';
-                const bulkPrice = p.price_bulk || p.price_min_whole || p.price || 0;
-                const moqCount = p.moq || 1;
+
+                // Calculate the 3 wholesale tiers matching pd.html logic
+                const basePrice = parseFloat(p.price_bulk || p.price_min_whole || p.price || p.wholesale_price) || 25.00;
+                const tier100Price = parseFloat(p.price_100) || (basePrice * 0.80);
+                const tier300Price = parseFloat(p.price_300) || (basePrice * 0.72);
+                const moqQty = parseInt(p.moq || p.MOQ || 1, 10) || 1;
+
                 const resolvedImageUrl = resolveProductImage(p);
                 const productId = String(p.id || p.product_id || p.product_code || '');
 
@@ -908,14 +972,16 @@
                     location.href = url;
                 };
 
+                // Single-line ultra-compact 3-tier quantity & price pills
                 cardDiv.innerHTML = `
                     <div class="product-media-box">
                         <img src="${escapeHtmlAttr(resolvedImageUrl)}" alt="${safeTitleAttr}" loading="${isEager ? 'eager' : 'lazy'}" ${isEager ? 'fetchpriority="high"' : ''} decoding="async">
                     </div>
                     <div class="card-footer-actions" onclick="event.stopPropagation()">
-                        <div class="wholesale-info-inline">
-                            <span class="product-price-tag">$${(parseFloat(bulkPrice) || 0).toFixed(2)}</span>
-                            <span class="moq-tag">Min ${escapeHtmlAttr(moqCount)} Pcs</span>
+                        <div class="wholesale-tiers-line" title="Qty ${moqQty}: ${formatCompactTierPrice(basePrice)} | Qty 100: ${formatCompactTierPrice(tier100Price)} | Qty 300: ${formatCompactTierPrice(tier300Price)}">
+                            <span class="tier-pill"><span class="tier-q">${moqQty}:</span><span class="tier-p">${formatCompactTierPrice(basePrice)}</span></span>
+                            <span class="tier-pill"><span class="tier-q">100:</span><span class="tier-p">${formatCompactTierPrice(tier100Price)}</span></span>
+                            <span class="tier-pill"><span class="tier-q">300:</span><span class="tier-p">${formatCompactTierPrice(tier300Price)}</span></span>
                         </div>
                         <button type="button" class="share-icon-btn" onclick="shareProduct(event, '${safeTitleJs}', '${safeIdJs}')" title="Share &amp; Earn">
                             <i class="fa-solid fa-share-nodes"></i>
@@ -1065,7 +1131,6 @@
             }
         }
 
-        // শুধুমাত্র হোলসেল কার্ট (rorraxy_wholesale_cart) থেকে প্রোডাক্টের সংখ্যা গণনা করবে
         function updateCartBadgeCount() {
             let cart = [];
             try {
