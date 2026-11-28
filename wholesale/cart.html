@@ -74,7 +74,7 @@ html, body {
   gap: 14px;
 }
 
-/* Clean Luxury Header (No Pink Icon, No Text Shimmer) */
+/* Clean Luxury Header */
 .luxury-page-header {
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@ html, body {
   color: #00e676;
 }
 
-/* Ultra-Soft Borderless Luxury Sections (No White Borders) */
+/* Ultra-Soft Borderless Luxury Sections */
 .address-form-section, .summary-card-box, .cart-items-box {
   position: relative;
   overflow: hidden;
@@ -126,7 +126,7 @@ html, body {
   width: 100%;
 }
 
-/* Soft Shimmer ONLY on Summary Box (Not on Text) */
+/* Soft Shimmer ONLY on Summary Box */
 .summary-card-box::after {
   content: "";
   position: absolute;
@@ -172,9 +172,7 @@ html, body {
   font-weight: 800;
 }
 
-/* =========================================================
-   PRO CLEAN WHOLESALE CART ITEM CARD (SUPPORTS MANY VARIETIES)
-   ========================================================= */
+/* Wholesale Cart Item Card */
 .cart-row-item {
   display: flex;
   flex-direction: column;
@@ -198,7 +196,6 @@ html, body {
   width: 100%;
 }
 
-/* Crisp Product Image */
 .cart-img {
   width: 76px;
   height: 76px;
@@ -217,7 +214,6 @@ html, body {
   }
 }
 
-/* Right Side Content Aligned Strictly to Image Height */
 .cart-item-right-col {
   flex: 1;
   min-width: 0;
@@ -234,7 +230,6 @@ html, body {
   }
 }
 
-/* TOP ROW: Title + Price & Delete Button */
 .cart-top-bar {
   display: flex;
   align-items: flex-start;
@@ -291,7 +286,6 @@ html, body {
   background: rgba(255, 69, 58, 0.25);
 }
 
-/* LINE 1 (Inside Image Height): Note + Editable Quantity Control */
 .cart-mid-line {
   display: flex;
   align-items: center;
@@ -367,7 +361,6 @@ html, body {
   margin: 0;
 }
 
-/* LINE 2 (Inside Image Height): SKU/Tier + Clear Details Button */
 .cart-bottom-line {
   display: flex;
   align-items: center;
@@ -420,7 +413,6 @@ html, body {
   background: rgba(212, 175, 55, 0.24);
 }
 
-/* Expandable Full Details Panel */
 .product-extended-details {
   display: none;
   font-size: 0.66rem;
@@ -480,7 +472,7 @@ html, body {
   font-weight: 800;
 }
 
-/* Shipping Form (No White Borders) */
+/* Shipping Form */
 .section-center-header {
   text-align: center;
   padding-bottom: 8px;
@@ -570,7 +562,7 @@ html, body {
   flex-shrink: 0;
 }
 
-/* Fixed Bottom Checkout Button with Subtle Shimmer Sweep */
+/* Fixed Bottom Bar with Back Button + Checkout Button */
 .single-fixed-checkout-wrapper {
   position: fixed;
   bottom: 0;
@@ -581,11 +573,40 @@ html, body {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid rgba(212, 175, 55, 0.12);
-  padding: 10px 16px;
+  padding: 10px 14px;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   width: 100%;
+}
+
+.btn-back-wholesale {
+  background: #14141e;
+  color: var(--gold-light);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-family: var(--font-main);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-back-wholesale:hover {
+  background: #1c1c29;
+}
+
+.btn-back-wholesale:active {
+  transform: scale(0.95);
 }
 
 .btn-action-main {
@@ -595,7 +616,7 @@ html, body {
   color: #050508;
   font-weight: 800;
   font-size: 0.78rem;
-  padding: 12px 28px;
+  padding: 12px 24px;
   border-radius: 999px;
   border: none !important;
   display: inline-flex;
@@ -605,8 +626,8 @@ html, body {
   cursor: pointer;
   letter-spacing: 1px;
   width: auto;
-  min-width: 245px;
-  max-width: 310px;
+  min-width: 210px;
+  max-width: 290px;
   font-family: var(--font-main);
   box-shadow: 0 5px 20px rgba(212, 175, 55, 0.28);
   transition: transform 0.15s ease;
@@ -628,7 +649,7 @@ html, body {
   transform: scale(0.97);
 }
 
-/* Clean Representative Popup (No White Border) */
+/* Representative Popup */
 .rep-popup-overlay {
   position: fixed;
   inset: 0;
@@ -795,7 +816,7 @@ html, body {
 </div>
 
 <div class="checkout-container">
-  <!-- Clean Header (Pink Icon Removed) -->
+  <!-- Clean Header -->
   <div class="luxury-page-header">
     <h1 class="luxury-main-title">WHOLESALE BULK ORDER</h1>
     <div class="wholesale-hero-badge"><i class="fa-solid fa-truck-fast"></i> B2B BULK PRICING APPLIED</div>
@@ -805,7 +826,7 @@ html, body {
   <div id="step1CartSection" style="display:flex;flex-direction:column;gap:14px;width:100%;">
     <div id="cartItemsListContainer" class="cart-items-box"></div>
 
-    <!-- Clean Summary Box: Only Total Quantity & Total Amount -->
+    <!-- Clean Summary Box -->
     <div class="summary-card-box">
       <div class="summary-row">
         <span style="font-weight:700;color:var(--text-gray);">TOTAL QUANTITY:</span>
@@ -846,8 +867,11 @@ html, body {
   </div>
 </div>
 
-<!-- Fixed Bottom Checkout Trigger -->
+<!-- Fixed Bottom Back to Wholesale Home & Checkout Trigger -->
 <div class="single-fixed-checkout-wrapper">
+  <button type="button" class="btn-back-wholesale" onclick="window.location.href='index.html'" title="Back to rorraxy Wholesale Home">
+    <i class="fa-solid fa-arrow-left"></i> BACK
+  </button>
   <button type="button" id="mainCheckoutBtn" class="btn-action-main">
     PROCEED TO CHECKOUT <i class="fa-solid fa-arrow-right" style="color:#050508;"></i>
   </button>
@@ -856,6 +880,7 @@ html, body {
 <script>
 const API_BASE_URL = '';
 const ORDER_MODE = 'wholesale';
+const WHOLESALE_CART_KEY = 'rorraxy_wholesale_cart';
 const FALLBACK_CART_IMG = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
 let iti, currentExchangeRate = 120, currentCurrencyCode = "BDT", currentCountryFlag = "🇧🇩";
 let isSubmittingOrder = false;
@@ -984,10 +1009,9 @@ function resolveCartItemImage(item) {
   return url || FALLBACK_CART_IMG;
 }
 
-// Automatically syncs direct bulk orders into the cart with exact ordered quantities
+// Isolated Wholesale Direct Checkout Sync (Never pulls retail cart items)
 function syncDirectBulkCheckoutPayload() {
-  const cartKey = 'rorraxy_wholesale_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
   let directBulk = null;
   try {
     directBulk = JSON.parse(localStorage.getItem('rorraxy_current_checkout') || 'null');
@@ -997,6 +1021,12 @@ function syncDirectBulkCheckoutPayload() {
     const incomingItems = Array.isArray(directBulk)
       ? directBulk
       : (Array.isArray(directBulk.items) ? directBulk.items : [directBulk]);
+
+    const isWholesalePayload = Array.isArray(directBulk)
+      ? directBulk.some(i => i && (i.is_wholesale || i.platform === 'wholesale' || i.moq || i.price_bulk || i.price_min_whole))
+      : !!(directBulk.is_wholesale || directBulk.platform === 'wholesale' || directBulk.moq || directBulk.price_bulk || directBulk.price_min_whole);
+
+    if (!isWholesalePayload) return;
 
     let updated = false;
     incomingItems.forEach(inc => {
@@ -1025,13 +1055,13 @@ function syncDirectBulkCheckoutPayload() {
     });
 
     if (updated) {
-      localStorage.setItem(cartKey, JSON.stringify(cart));
+      localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
       localStorage.removeItem('rorraxy_current_checkout');
     }
   }
 }
 
-// ==== TIER PRICING HELPER ====
+// Tier Pricing Helper
 function getTierPrice(item, qty) {
   const sample = parseFloat(item.price_sample || 0);
   const whole = parseFloat(item.price_min_whole || 0);
@@ -1047,8 +1077,7 @@ function getTierPrice(item, qty) {
 }
 
 function renderCartList() {
-  let cartKey = 'rorraxy_wholesale_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
   let container = document.getElementById('cartItemsListContainer');
   let totalValEl = document.getElementById('cartTotalVal');
   let localValEl = document.getElementById('cartLocalVal');
@@ -1104,7 +1133,6 @@ function renderCartList() {
         <img src="${escapeHtml(itemImgUrl)}" class="cart-img" alt="${escapeHtml(itemTitleText)}" onerror="this.onerror=null;this.src='${FALLBACK_CART_IMG}'">
         
         <div class="cart-item-right-col">
-          <!-- TOP ROW: Title + Price & Delete Option -->
           <div class="cart-top-bar">
             <div class="cart-item-title">${escapeHtml(itemTitleText)}</div>
             <div class="cart-price-delete-group">
@@ -1115,7 +1143,6 @@ function renderCartList() {
             </div>
           </div>
 
-          <!-- LINE 1: Note + Editable Quantity Controls Side by Side -->
           <div class="cart-mid-line">
             ${noteLineHtml}
             <div class="qty-stepper-inline">
@@ -1125,7 +1152,6 @@ function renderCartList() {
             </div>
           </div>
 
-          <!-- LINE 2: Tier/SKU + Clear Details Button -->
           <div class="cart-bottom-line">
             ${metaLineHtml}
             <button type="button" class="details-toggle-btn" onclick="toggleProductDetails(${index}, this)">
@@ -1135,7 +1161,6 @@ function renderCartList() {
         </div>
       </div>
 
-      <!-- COMPLETE PRODUCT DETAILS DROPDOWN -->
       <div id="prodDetails-${index}" class="product-extended-details">
         <div class="details-grid">
           <div class="detail-kv"><strong>PRODUCT:</strong> ${escapeHtml(itemTitleText)}</div>
@@ -1157,7 +1182,7 @@ function renderCartList() {
     return item;
   });
 
-  localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+  localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(updatedCart));
   container.innerHTML = html;
   totalValEl.innerText = `$${totalAmt.toFixed(2)}`;
   let convertedVal = totalAmt * currentExchangeRate;
@@ -1184,8 +1209,7 @@ function toggleProductDetails(index, btnEl) {
 }
 
 function setDirectQty(index, rawVal) {
-  let cartKey = 'rorraxy_wholesale_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
   if (!cart[index]) return;
   const moq = parseInt(cart[index].moq || cart[index].MOQ || 1);
   let parsed = parseInt(rawVal, 10);
@@ -1194,33 +1218,31 @@ function setDirectQty(index, rawVal) {
     showToast(`Minimum order quantity is ${moq} units.`, true);
   }
   cart[index].qty = parsed;
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
   renderCartList();
 }
 
 function changeQty(index, val) {
-  let cartKey = 'rorraxy_wholesale_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
+  if (!cart[index]) return;
   const moq = parseInt(cart[index].moq || cart[index].MOQ || 1);
   cart[index].qty += val;
   if (cart[index].qty < moq) cart[index].qty = moq;
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
   renderCartList();
 }
 
 function removeCartItem(index) {
-  let cartKey = 'rorraxy_wholesale_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
   cart.splice(index, 1);
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  localStorage.setItem(WHOLESALE_CART_KEY, JSON.stringify(cart));
   renderCartList();
 }
 
 async function handleDirectCheckoutSubmission() {
   if (isSubmittingOrder) return;
 
-  let cartKey = 'rorraxy_wholesale_cart';
-  let cart = JSON.parse(localStorage.getItem(cartKey)) || JSON.parse(localStorage.getItem('rorraxy_cart')) || [];
+  let cart = JSON.parse(localStorage.getItem(WHOLESALE_CART_KEY)) || [];
   if (cart.length === 0) {
     showToast("Your wholesale cart is empty!", true);
     return;
@@ -1323,7 +1345,7 @@ async function handleDirectCheckoutSubmission() {
       size: (it.size || '').toString().trim() || 'BULK',
       custom_note: customNote,
       custom_note_uppercase: customNote ? customNote.toUpperCase() : '',
-      seller_id: it.sellerId || 'rorraxy-store',
+      seller_id: it.seller_id || 'rorraxy-store',
       affiliate_ref: affRef,
       commission_rate: commRate,
       platform: plat,
@@ -1393,8 +1415,7 @@ async function handleDirectCheckoutSubmission() {
 
   localStorage.setItem('rorraxy_last_order', JSON.stringify(cloudflareDbPayload));
   localStorage.removeItem('rorraxy_current_checkout');
-  localStorage.removeItem('rorraxy_wholesale_cart');
-  localStorage.removeItem('rorraxy_cart');
+  localStorage.removeItem(WHOLESALE_CART_KEY);
 
   document.getElementById('popupMasterOrderId').innerText = `ORDER REF: ${masterOrderId}`;
   document.getElementById('popupCustomerPhoneDisplay').innerHTML = `<i class="fa-brands fa-whatsapp"></i> <span>WhatsApp: ${escapeHtml(fullPhoneNumber)}</span>`;
