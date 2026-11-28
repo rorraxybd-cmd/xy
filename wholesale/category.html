@@ -16,14 +16,17 @@
     <style>
         :root {
             --bg-wholesale: #000000;
-            --card-wholesale: #0c0c12;
+            --card-wholesale: #0b0b10;
+            --card-active: #101017;
+            --sub-card-bg: #12121a;
+            --sub-card-hover: #181822;
             --header-wholesale: rgba(0, 0, 0, 0.9);
             --footer-wholesale: rgba(4, 4, 6, 0.95);
             --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
             --gold-solid: #d4af37;
             --pink-love: #ff2a85;
             --text-white: #ffffff;
-            --text-gray: #a0a0b5;
+            --text-gray: #9a9ab0;
             --font-main: 'Poppins', sans-serif;
         }
         html, body {
@@ -38,63 +41,126 @@
         body { padding-top: 15px; padding-bottom: 25px; text-transform: uppercase !important; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        .category-fullscreen-view { padding: 12px 14px; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+        /* Main Category List Container */
+        .category-fullscreen-view { 
+            padding: 12px 14px; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+
+        /* Soft, Borderless Professional Accordion Box */
         .accordion-category-box {
-            background: var(--card-wholesale); border-radius: 14px; overflow: hidden;
-            transition: all 0.3s ease; border: 1px solid rgba(212, 175, 55, 0.15);
+            background: var(--card-wholesale); 
+            border-radius: 14px; 
+            overflow: hidden;
+            transition: background-color 0.25s ease;
+            border: none;
         }
         .accordion-category-box.active {
-            background: #101018; border-color: rgba(212, 175, 55, 0.35);
-            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.08);
+            background: var(--card-active);
         }
+
         .accordion-header {
-            padding: 18px 20px; display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; user-select: none; background: rgba(255,255,255,0.01); transition: background 0.2s ease;
+            padding: 18px 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            cursor: pointer; 
+            user-select: none; 
+            background: transparent; 
+            transition: background-color 0.2s ease;
         }
-        .accordion-header:hover { background: rgba(212, 175, 55, 0.03); }
+        .accordion-header:hover { 
+            background: rgba(255, 255, 255, 0.02); 
+        }
+
         .accordion-title-wrap { display: flex; align-items: center; gap: 14px; }
         .accordion-icon-box { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .accordion-icon-box i { font-size: 1.35rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .accordion-texts { display: flex; flex-direction: column; gap: 2px; }
+        
+        .accordion-texts { display: flex; flex-direction: column; gap: 3px; }
         .accordion-main-title {
             font-size: 0.92rem; font-weight: 700; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px;
         }
         .accordion-sub-hint { font-size: 0.60rem; color: var(--text-gray); font-weight: 500; letter-spacing: 0.3px; }
-        .accordion-arrow { font-size: 0.9rem; color: var(--gold-solid); transition: transform 0.3s ease; flex-shrink: 0; }
+        
+        .accordion-arrow { font-size: 0.85rem; color: var(--gold-solid); transition: transform 0.25s ease; flex-shrink: 0; opacity: 0.85; }
         .accordion-category-box.active .accordion-arrow { transform: rotate(180deg); }
+
+        /* Accordion Expandable Content (Clean & Borderless) */
         .accordion-content {
-            max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
-            background: #06060a; padding: 0 16px;
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: #08080c; 
+            padding: 0 16px;
         }
         .accordion-category-box.active .accordion-content {
-            max-height: 1400px; transition: max-height 0.4s ease-in-out;
-            padding: 14px 16px 18px 16px; border-top: 1px solid rgba(212, 175, 55, 0.08);
+            max-height: 1600px; 
+            padding: 14px 16px 18px 16px; 
+            border-top: none;
         }
+
         .sub-categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         @media (min-width: 768px) { .sub-categories-grid { grid-template-columns: repeat(4, 1fr); } }
-        .sub-cat-item {
-            background: #0f0f17; border-radius: 10px; padding: 12px 10px;
-            display: flex; align-items: center; gap: 10px; cursor: pointer;
-            transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.03);
-        }
-        .sub-cat-item:hover { background: #161622; border-color: rgba(212, 175, 55, 0.2); transform: translateY(-2px); }
-        .sub-cat-item i { font-size: 1.1rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
-        .sub-cat-name { font-size: 0.68rem; color: var(--text-white); font-weight: 600; }
 
+        /* Soft Sub-Category Cards without Borders or Heavy Hover Jumps */
+        .sub-cat-item {
+            background: var(--sub-card-bg); 
+            border-radius: 10px; 
+            padding: 13px 12px;
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            cursor: pointer;
+            transition: background-color 0.2s ease; 
+            border: none;
+        }
+        .sub-cat-item:hover { 
+            background: var(--sub-card-hover); 
+        }
+        .sub-cat-item i { 
+            font-size: 1.05rem; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            flex-shrink: 0; 
+        }
+        .sub-cat-name { 
+            font-size: 0.68rem; 
+            color: var(--text-white); 
+            font-weight: 600; 
+            letter-spacing: 0.3px;
+        }
+
+        /* Dynamic Product Feed Section */
         .dynamic-product-section { display: none; margin-top: 15px; padding: 10px 0; }
         .dynamic-product-section.active { display: block; }
-        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
-        .section-title-result { font-size: 0.85rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
+        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 0 4px; }
+        .section-title-result { font-size: 0.85rem; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.8px; }
+        
         .back-to-cat-btn {
-            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3);
-            color: var(--gold-solid); padding: 6px 14px; border-radius: 8px; font-size: 0.65rem;
-            cursor: pointer; font-weight: 600; text-transform: uppercase;
+            background: #14141d; 
+            border: none;
+            color: var(--gold-solid); 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            font-size: 0.65rem;
+            cursor: pointer; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            transition: background-color 0.2s ease;
         }
+        .back-to-cat-btn:hover { background: #1c1c28; }
+
         .feed-container {
             padding: 4px 0;
             column-count: 2;
-            column-gap: 8px;
+            column-gap: 10px;
             width: 100%;
             max-width: 1400px;
             margin: 0 auto;
@@ -105,19 +171,26 @@
                 column-gap: 12px;
             }
         }
+
         .product-card {
-            background: var(--card-wholesale); border-radius: 12px; overflow: hidden;
-            display: inline-block; width: 100%;
-            border: 1px solid rgba(212,175,55,0.15); position: relative; cursor: pointer;
-            margin-bottom: 8px; break-inside: avoid; page-break-inside: avoid;
-            transition: transform 0.2s ease;
+            background: var(--card-wholesale); 
+            border-radius: 12px; 
+            overflow: hidden;
+            display: inline-block; 
+            width: 100%;
+            border: none; 
+            position: relative; 
+            cursor: pointer;
+            margin-bottom: 10px; 
+            break-inside: avoid; 
+            page-break-inside: avoid;
         }
-        .product-card:active { transform: scale(0.98); }
-        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #050508; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .product-media-box { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #07070b; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .product-media-box img { width: 100%; height: 100%; display: block; object-fit: cover; background: transparent; }
+        
         .card-footer-actions {
-            display: flex; align-items: center; justify-content: space-between; padding: 8px 10px;
-            background: #06060a !important; border-top: 1px solid rgba(255,255,255,0.05); gap: 6px; margin-top: 0;
+            display: flex; align-items: center; justify-content: space-between; padding: 9px 10px;
+            background: #09090e !important; border: none; gap: 6px; margin-top: 0;
             white-space: nowrap; overflow: hidden;
         }
         .wholesale-info-inline { display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
@@ -125,39 +198,39 @@
         .moq-tag { font-size: 0.60rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
         .share-icon-btn {
             background: none; border: none; cursor: pointer;
-            font-size: 1.15rem; background: var(--gold-gradient);
+            font-size: 1.1rem; background: var(--gold-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             padding: 4px; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; transition: transform 0.15s ease;
+            flex-shrink: 0;
         }
-        .share-icon-btn:active { transform: scale(1.2); }
 
+        /* Clean Floating Search Modal */
         .floating-search-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             z-index: 20000; display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; padding: 16px;
         }
         .floating-search-modal.active { opacity: 1; visibility: visible; }
         .floating-search-box {
-            background: rgba(8, 8, 12, 0.95); border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 480px;
-            display: flex; flex-direction: column; gap: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); position: relative;
+            background: #0c0c12; border: none;
+            border-radius: 20px; padding: 30px 24px; width: 100%; max-width: 480px;
+            display: flex; flex-direction: column; gap: 20px; position: relative;
         }
         .close-modal-btn {
-            position: absolute; top: 16px; right: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            position: absolute; top: 16px; right: 18px; background: rgba(255,255,255,0.05); border: none;
             color: var(--text-gray); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 1rem; cursor: pointer;
         }
-        .modal-title { font-size: 1.1rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+        .modal-title { font-size: 1.05rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
         .modal-input-container { display: flex; flex-direction: column; gap: 14px; }
         .modal-input {
-            width: 100%; background: rgba(3, 3, 5, 0.8); border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 14px; padding: 15px 18px; color: var(--text-white); font-size: 0.95rem; outline: none; text-transform: uppercase;
+            width: 100%; background: #060609; border: none;
+            border-radius: 12px; padding: 15px 18px; color: var(--text-white); font-size: 0.90rem; outline: none; text-transform: uppercase;
         }
         .search-bottom-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
         .search-action-item-btn {
-            background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.25);
+            background: #14141d; border: none;
             border-radius: 12px; padding: 12px 8px; cursor: pointer; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 6px; width: 100%;
         }
@@ -177,13 +250,14 @@
     </svg>
 
     <main class="category-fullscreen-view" id="categoryMainListView">
+        <!-- 1. WOMEN'S FASHION -->
         <div class="accordion-category-box" id="cat-women">
             <div class="accordion-header" onclick="toggleAccordion('cat-women')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-person-dress"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">WOMEN'S FASHION</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">CLOTHING, HANDBAGS, SHOES, JEWELRY & ACCESSORIES</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -204,13 +278,14 @@
             </div>
         </div>
 
+        <!-- 2. MEN'S FASHION -->
         <div class="accordion-category-box" id="cat-men">
             <div class="accordion-header" onclick="toggleAccordion('cat-men')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-shirt"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">MEN'S FASHION</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">APPAREL, FOOTWEAR, WATCHES, GROOMING & WALLETS</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -226,13 +301,14 @@
             </div>
         </div>
 
+        <!-- 3. GIRLS' FASHION -->
         <div class="accordion-category-box" id="cat-girls">
             <div class="accordion-header" onclick="toggleAccordion('cat-girls')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-child-dress"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">GIRLS' FASHION</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">DRESSES, SHOES, BAGS, HAIR ACCESSORIES & JEWELRY</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -253,13 +329,14 @@
             </div>
         </div>
 
+        <!-- 4. BOYS' FASHION -->
         <div class="accordion-category-box" id="cat-boys">
             <div class="accordion-header" onclick="toggleAccordion('cat-boys')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-child"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">BOYS' FASHION</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">CLOTHING, FOOTWEAR, WATCHES, BAGS & ACCESSORIES</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -275,13 +352,14 @@
             </div>
         </div>
 
+        <!-- 5. MATCHING SETS -->
         <div class="accordion-category-box" id="cat-matching">
             <div class="accordion-header" onclick="toggleAccordion('cat-matching')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-people-group"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">MATCHING SETS</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">COUPLE, FAMILY, MOM & ME, SIBLING & VALUE BUNDLES</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -302,13 +380,14 @@
             </div>
         </div>
 
+        <!-- 6. LUXURY GIFTS -->
         <div class="accordion-category-box" id="cat-gifts">
             <div class="accordion-header" onclick="toggleAccordion('cat-gifts')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-gift"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">LUXURY GIFTS</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">CORPORATE GIFTS, HANDICRAFTS, HAMPERS & KEEPSAKES</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -325,13 +404,14 @@
             </div>
         </div>
 
+        <!-- 7. MOTHER & BABY -->
         <div class="accordion-category-box" id="cat-mother">
             <div class="accordion-header" onclick="toggleAccordion('cat-mother')">
                 <div class="accordion-title-wrap">
                     <div class="accordion-icon-box"><i class="fa-solid fa-baby"></i></div>
                     <div class="accordion-texts">
                         <span class="accordion-main-title">MOTHER & BABY</span>
-                        <span class="accordion-sub-hint">CLICK TO VIEW SUB-CATEGORIES</span>
+                        <span class="accordion-sub-hint">MATERNITY, BABY CARE, NURSERY GEAR & ECO TOYS</span>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-down accordion-arrow"></i>
@@ -347,8 +427,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- 8. DECOR & ACCENTS (NEW CATEGORY FOR SMALL DECORATIVE ITEMS) -->
+        <div class="accordion-category-box" id="cat-decor">
+            <div class="accordion-header" onclick="toggleAccordion('cat-decor')">
+                <div class="accordion-title-wrap">
+                    <div class="accordion-icon-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="accordion-texts">
+                        <span class="accordion-main-title">DECOR & ACCENTS</span>
+                        <span class="accordion-sub-hint">MINI FIGURINES, TABLETOP ACCENTS, CANDLES, VASES & LIGHTS</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="accordion-content">
+                <div class="sub-categories-grid">
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mini-figurines-showpieces')"><i class="fa-solid fa-chess-knight"></i><span class="sub-cat-name">MINI FIGURINES & SHOWPIECES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('tabletop-desk-accents')"><i class="fa-solid fa-cube"></i><span class="sub-cat-name">TABLETOP & DESK ACCENTS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('candles-aroma-holders')"><i class="fa-solid fa-fire-flame-curved"></i><span class="sub-cat-name">CANDLES & AROMA HOLDERS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('mini-vases-planters')"><i class="fa-solid fa-seedling"></i><span class="sub-cat-name">MINI VASES & PLANTERS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('wall-art-frames')"><i class="fa-solid fa-image"></i><span class="sub-cat-name">WALL ART & MINI FRAMES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('ambient-led-lamps')"><i class="fa-solid fa-lightbulb"></i><span class="sub-cat-name">AMBIENT & MINI LED LAMPS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('trinket-jewelry-trays')"><i class="fa-solid fa-box-open"></i><span class="sub-cat-name">TRINKET & ORGANIZER TRAYS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('floral-botanical-decor')"><i class="fa-solid fa-spa"></i><span class="sub-cat-name">ARTIFICIAL FLORALS & PLANTS</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('crystal-ceramic-crafts')"><i class="fa-solid fa-gem"></i><span class="sub-cat-name">CRYSTAL & CERAMIC MINIATURES</span></div>
+                    <div class="sub-cat-item" onclick="fetchAndDisplayProducts('event-festive-decor')"><i class="fa-solid fa-star"></i><span class="sub-cat-name">EVENT & FESTIVE ACCENTS</span></div>
+                </div>
+            </div>
+        </div>
     </main>
 
+    <!-- Dynamic Wholesale Product Feed -->
     <div class="category-fullscreen-view dynamic-product-section" id="dynamicProductSection">
         <div class="section-header-row">
             <span class="section-title-result" id="resultCategoryTitle">WHOLESALE PRODUCTS</span>
@@ -357,6 +466,7 @@
         <div class="feed-container" id="categoryProductFeed"></div>
     </div>
 
+    <!-- Floating Search Modal -->
     <div class="floating-search-modal" id="searchModal" onclick="handleOutsideClick(event)">
         <div class="floating-search-box" id="searchBoxContainer">
             <button class="close-modal-btn" onclick="closeSearchModal()"><i class="fa-solid fa-xmark"></i></button>
@@ -405,7 +515,7 @@
             return userProfile.affiliate_id || userProfile.id || userProfile.userId || localStorage.getItem('rorraxy_my_affiliate_id') || localStorage.getItem('rorraxy_active_affiliate_ref') || sessionStorage.getItem('rorraxy_active_affiliate_ref') || null;
         }
 
-        // ✅ আপডেট: পেজ লোডের সময় rate এবং platform ক্যাপচার
+        // Capture affiliate ref, rate, and platform on page load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
@@ -413,21 +523,26 @@
             const platformParam = urlParams.get('platform') || 'wholesale';
 
             if (refParam) {
-                localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
-                localStorage.setItem('rorraxy_active_commission_rate', rateParam);
-                localStorage.setItem('rorraxy_active_platform', platformParam);
+                try {
+                    localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
+                    localStorage.setItem('rorraxy_active_commission_rate', rateParam);
+                    localStorage.setItem('rorraxy_active_platform', platformParam);
+                } catch(e) {}
             }
 
             getActiveAffiliateId();
         });
 
+        // Smooth Accordion Toggle
         function toggleAccordion(boxId) {
             const targetBox = document.getElementById(boxId);
+            if (!targetBox) return;
             const isOpen = targetBox.classList.contains('active');
             document.querySelectorAll('.accordion-category-box').forEach(box => box.classList.remove('active'));
             if (!isOpen) targetBox.classList.add('active');
         }
 
+        // Fetch and Display Filtered Wholesale Products
         async function fetchAndDisplayProducts(queryKey) {
             document.getElementById('categoryMainListView').style.display = 'none';
             const dynamicSection = document.getElementById('dynamicProductSection');
@@ -447,8 +562,13 @@
                     products = result;
                 }
 
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
-                let cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache')) || [];
+                let localProducts = [];
+                let cachedFeed = [];
+                try {
+                    localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
+                    cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache')) || [];
+                } catch(e) {}
+
                 let mergedMap = new Map();
                 [...localProducts, ...cachedFeed, ...products].forEach(p => {
                     let pId = p.id || p.product_id || p.product_code || p.title;
@@ -469,7 +589,11 @@
                 }
             } catch (err) {
                 console.error('Error fetching wholesale products:', err);
-                let localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
+                let localProducts = [];
+                try {
+                    localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products')) || [];
+                } catch(e) {}
+                
                 if(localProducts.length > 0) {
                     renderWholesaleFeed(localProducts);
                 } else {
@@ -517,7 +641,6 @@
             }).join('');
         }
 
-        // ✅ আপডেট: প্রোডাক্টে ক্লিক করলে rate এবং platform পাঠানো
         function openProductDetails(productId) {
             let affId = getActiveAffiliateId();
             let rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
@@ -562,11 +685,12 @@
         });
 
         function startAudioSearch() {
+            const searchInput = document.getElementById('modalSearchInput');
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("আপনার ব্রাউজারে ভয়েস রিকগনিশন সমর্থিত নয়।");
+                searchInput.value = "";
+                searchInput.placeholder = "VOICE NOT SUPPORTED IN BROWSER";
                 return;
             }
-            const searchInput = document.getElementById('modalSearchInput');
             searchInput.value = "";
             searchInput.placeholder = "LISTENING...";
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -587,7 +711,6 @@
             fetchAndDisplayProducts("search");
         }
 
-        // ✅ আপডেট: শেয়ার লিংকে rate এবং platform যুক্ত করা
         async function shareProduct(event, title, productId) {
             if(event) event.stopPropagation();
 
