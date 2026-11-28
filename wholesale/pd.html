@@ -7,7 +7,7 @@
 <link rel="dns-prefetch" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev">
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev" crossorigin>
 <script src="/ecosystem-core.js" defer></script>
@@ -16,193 +16,970 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 <style>
-:root{
-  --bg-wholesale:#050508;
-  --card-wholesale:#0d0d14;
-  --gold-gradient:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#b38728 60%,#fbf5b7 85%,#aa771c 100%);
-  --gold-solid:#d4af37;
-  --gold-light:#fcf6ba;
-  --pink-accent:#ff2a85;
-  --text-white:#ffffff;
-  --text-gray:#a0a0b8;
-  --font-main:'Poppins',sans-serif;
-  --luxury-ease:cubic-bezier(0.22, 1, 0.36, 1);
+:root {
+  --bg-wholesale: #050508;
+  --card-wholesale: #0d0d14;
+  --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #b38728 60%, #fbf5b7 85%, #aa771c 100%);
+  --gold-solid: #d4af37;
+  --gold-light: #fcf6ba;
+  --pink-accent: #ff2a85;
+  --text-white: #ffffff;
+  --text-gray: #a0a0b8;
+  --font-main: 'Poppins', sans-serif;
+  --luxury-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
-*{box-sizing:border-box!important;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;max-width:100%;background:var(--bg-wholesale)!important;color:var(--text-white);font-family:var(--font-main);font-size:14px;text-transform:uppercase!important;-webkit-font-smoothing:antialiased;overflow-x:hidden!important;position:relative;scroll-behavior:smooth;overflow-wrap:break-word;text-rendering:optimizeSpeed;}
-body{padding-bottom:75px;}
 
-/* Luxury Shimmer Keyframes (Only for Price Card, Order Button & Card Footer Line) */
+* {
+  box-sizing: border-box !important;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  background: var(--bg-wholesale) !important;
+  color: var(--text-white);
+  font-family: var(--font-main);
+  font-size: 14px;
+  text-transform: uppercase !important;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden !important;
+  position: relative;
+  scroll-behavior: smooth;
+  overflow-wrap: break-word;
+  text-rendering: optimizeSpeed;
+}
+
+body {
+  padding-bottom: 75px;
+}
+
 @keyframes luxuryFooterSweep {
   0% { transform: translate3d(-120%, 0, 0) skewX(-22deg); }
   45%, 100% { transform: translate3d(260%, 0, 0) skewX(-22deg); }
 }
 
-.ecommerce-main-wrapper{width:100%;max-width:1200px;margin:0 auto;padding:12px 10px 50px 10px;display:flex;flex-direction:column;gap:16px;overflow-x:hidden;}
-@media(min-width:768px){.ecommerce-main-wrapper{padding:20px 24px 60px 24px;gap:24px;}}
-
-.product-details-clean-section{width:100%;display:grid;grid-template-columns:1fr;gap:16px;align-items:start;}
-@media(min-width:950px){.product-details-clean-section{grid-template-columns:1.1fr 0.9fr;gap:28px;}}
-
-.product-left-col{width:100%;display:flex;flex-direction:column;gap:10px;min-width:0;}
-.media-viewport{width:100%;position:relative;border-radius:16px;overflow:hidden;background:#0a0a10;display:flex;align-items:center;justify-content:center;min-height:280px;border:none;box-shadow:0 10px 28px rgba(0,0,0,0.6);contain:layout style;}
-@media(min-width:768px){.media-viewport{min-height:440px;}}
-.main-media-element{width:100%;height:auto;max-height:440px;object-fit:contain;display:block;background:#0a0a10;transition:opacity 0.18s ease;}
-
-.thumbnail-slider-wrapper{position:relative;width:100%;display:flex;align-items:center;overflow:hidden;}
-.thumbnail-strip{display:flex;gap:10px;padding:4px 2px;overflow-x:auto;width:100%;scrollbar-width:none;}
-.thumbnail-strip::-webkit-scrollbar{display:none;}
-.thumb-item{width:60px;height:60px;border-radius:11px;overflow:hidden;cursor:pointer;flex-shrink:0;background:#0c0c14;border:none;opacity:0.78;transition:transform 0.15s ease,opacity 0.15s ease,box-shadow 0.15s ease;position:relative;}
-.thumb-item img,.thumb-item video{width:100%;height:100%;object-fit:cover;display:block;}
-.thumb-item:hover{opacity:1;}
-.thumb-item.active{opacity:1;transform:scale(1.05);box-shadow:0 4px 14px rgba(212,175,55,0.28);}
-
-.product-right-col{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;}
-.price-discount-card,.qty-section-card,.product-info-section-box{background:var(--card-wholesale);border-radius:16px;border:none;box-shadow:0 8px 24px rgba(0,0,0,0.55);position:relative;overflow:hidden;}
-
-/* Soft Luxury Shimmer on Price Card */
-.price-discount-card{padding:12px 14px;display:flex;flex-direction:column;gap:6px;width:100%;}
-.price-discount-card::after{
-  content:"";position:absolute;top:0;left:0;width:42%;height:100%;
-  background:linear-gradient(90deg,transparent 0%,rgba(212,175,55,0.03) 30%,rgba(252,246,186,0.1) 50%,rgba(212,175,55,0.03) 70%,transparent 100%);
-  animation:luxuryFooterSweep 4s ease-in-out infinite;pointer-events:none;
+.ecommerce-main-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 10px 50px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-x: hidden;
 }
 
-.sample-price-block{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
-.sample-price-label{font-size:0.68rem;color:var(--gold-solid);font-weight:700;letter-spacing:0.5px;}
-.price-row-bottom{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
-.current-main-price{font-size:1.38rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);line-height:1.1;}
-.old-crossed-price{font-size:0.78rem;font-weight:600;color:var(--text-gray);text-decoration:line-through;}
-.in-stock-clean-badge{font-size:0.68rem;font-weight:700;color:#00e676;display:flex;align-items:center;gap:5px;text-transform:uppercase;}
-.in-stock-clean-badge::before{content:"";width:6px;height:6px;background:#00e676;border-radius:50%;display:inline-block;}
-
-.qty-section-card{display:flex;flex-direction:column;gap:10px;padding:12px 14px;width:100%;}
-.wholesale-preset-buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;}
-.preset-btn{background:#12121c;border:none;color:#ffffff;font-size:0.72rem;font-weight:800;padding:9px 10px;border-radius:9px;cursor:pointer;text-align:center;transition:all 0.18s ease;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:5px;white-space:nowrap;}
-.preset-btn .btn-price{font-size:0.80rem;color:var(--gold-solid);font-weight:800;}
-.preset-btn.active,.preset-btn:hover{background:var(--gold-gradient);color:#000;box-shadow:0 3px 12px rgba(212,175,55,0.28);}
-.preset-btn.active .btn-price,.preset-btn:hover .btn-price{color:#000;}
-.qty-label-mini{font-size:0.65rem;font-weight:700;color:var(--gold-solid);text-align:center;letter-spacing:0.5px;}
-.qty-controls-flex{display:flex;align-items:center;justify-content:center;gap:14px;}
-.qty-btn-ch{background:var(--gold-gradient);border:none;color:#000;font-size:0.95rem;font-weight:800;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.qty-btn-ch:active{transform:scale(0.92);}
-.qty-num-input{font-size:1.05rem;font-weight:800;color:#ffffff;width:82px;text-align:center;background:#08080e;border:none;border-radius:9px;outline:none;padding:5px 0;}
-.applied-unit-price-display{font-size:0.68rem;font-weight:700;text-align:center;color:var(--gold-solid);letter-spacing:0.5px;margin-top:2px;}
-
-.product-info-section-box{display:flex;flex-direction:column;gap:10px;padding:12px 14px;width:100%;}
-.section-box-title{font-size:0.68rem;font-weight:700;color:var(--gold-solid);display:flex;align-items:center;gap:6px;}
-.sku-display-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,175,55,0.1);border:none;border-radius:8px;padding:6px 11px;font-size:0.70rem;font-weight:800;color:var(--gold-solid);letter-spacing:0.5px;margin-bottom:2px;max-width:100%;flex-wrap:wrap;word-break:break-all;}
-.sku-display-badge strong{color:#fff;font-weight:800;letter-spacing:0.8px;word-break:break-all;}
-.sku-display-badge i{font-size:0.74rem;}
-.custom-wood-top-badge{font-size:0.68rem;font-weight:800;letter-spacing:0.6px;color:var(--pink-accent);line-height:1.3;word-break:break-word;}
-.product-title-restricted{font-size:1.05rem;font-weight:700;letter-spacing:0.4px;line-height:1.35;width:100%;word-break:break-word;overflow-wrap:break-word;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
-@media(min-width:768px){.product-title-restricted{font-size:1.28rem;}}
-.standard-description-box{font-size:0.75rem;color:var(--text-gray);line-height:1.5;text-transform:none!important;word-break:break-word;overflow-wrap:break-word;}
-.integrated-custom-note-group{display:flex;flex-direction:column;gap:5px;width:100%;margin-top:2px;padding-top:8px;}
-.integrated-note-label{font-size:0.65rem;font-weight:700;color:var(--gold-solid);display:flex;align-items:center;gap:6px;}
-.custom-note-input{width:100%;background:#08080e;border:none;border-radius:9px;padding:9px 11px;color:#ffffff;font-size:0.72rem;font-weight:600;outline:none;font-family:var(--font-main);text-transform:uppercase;}
-.action-buttons-flex-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;width:100%;}
-.seller-chat-compact-btn{color:var(--gold-solid);font-size:0.68rem;font-weight:700;padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(212,175,55,0.08);border-radius:9px;border:none;}
-.main-product-share-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--gold-solid);display:flex;align-items:center;justify-content:center;padding:4px;transition:transform 0.15s ease;}
-.main-product-share-btn:active{transform:scale(0.9);}
-
-/* =========================================================
-   RELATED PRODUCTS GRID (BORDERLESS SOFT LUXURY + SHIMMER FOOTER)
-   ========================================================= */
-.related-products-wrapper{margin-top:12px;width:100%;display:flex;flex-direction:column;gap:12px;padding-top:12px;}
-.related-section-title{font-size:0.85rem;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);letter-spacing:0.8px;}
-.feed-container{padding:2px 0;column-count:2;column-gap:9px;width:100%;contain:layout style;}
-@media (min-width: 768px){.feed-container{column-count:4;column-gap:14px;}}
-
-.product-card{
-  background:linear-gradient(155deg,#11111a 0%,#09090f 100%);
-  border-radius:14px;overflow:hidden;display:inline-block;width:100%;
-  border:none;position:relative;cursor:pointer;
-  margin-bottom:9px;break-inside:avoid;page-break-inside:avoid;
-  contain:paint;backface-visibility:hidden;
-  box-shadow:0 6px 20px rgba(0,0,0,0.55);
-  transition:transform 0.2s var(--luxury-ease),box-shadow 0.2s ease;
+@media (min-width: 768px) {
+  .ecommerce-main-wrapper {
+    padding: 20px 24px 60px 24px;
+    gap: 24px;
+  }
 }
-@media (min-width: 768px){.product-card{margin-bottom:14px;}}
-.product-card:hover{box-shadow:0 12px 26px rgba(0,0,0,0.75);transform:translate3d(0,-2px,0);}
-.product-card:active{transform:scale(0.97);}
 
-.product-media-box{position:relative;width:100%;aspect-ratio:1/1;background:#0c0c14;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.product-media-box img{width:100%;height:100%;display:block;object-fit:cover;background:transparent;}
-
-/* Shimmer ONLY on Price / MOQ / Share Bar */
-.card-footer-actions{
-  display:flex;justify-content:space-between;align-items:center;padding:8px 10px;
-  background:linear-gradient(180deg,#0b0b12 0%,#06060a 100%)!important;
-  border:none;gap:6px;white-space:nowrap;overflow:hidden;position:relative;
+.product-details-clean-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
 }
-.card-footer-actions::after{
-  content:"";position:absolute;top:0;left:0;width:45%;height:100%;
-  background:linear-gradient(90deg,transparent 0%,rgba(212,175,55,0.05) 25%,rgba(252,246,186,0.22) 50%,rgba(212,175,55,0.05) 75%,transparent 100%);
-  animation:luxuryFooterSweep 3.4s cubic-bezier(0.25,0.1,0.25,1) infinite;
-  animation-delay:var(--footer-shimmer-delay,0s);
-  will-change:transform;pointer-events:none;z-index:1;
+
+@media (min-width: 950px) {
+  .product-details-clean-section {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 28px;
+  }
 }
-.wholesale-info-inline{display:flex;align-items:center;gap:6px;overflow:hidden;position:relative;z-index:2;}
-.product-price-tag{font-size:0.82rem;font-weight:800;color:var(--gold-solid);}
-.moq-tag{font-size:0.56rem;color:#d0d0e2;font-weight:700;background:rgba(212,175,55,0.08);border:none;padding:2px 6px;border-radius:5px;}
-.card-right-icons{display:flex;align-items:center;gap:6px;position:relative;z-index:2;}
-.card-quick-add-btn{
-  background:rgba(212,175,55,0.14);border:none;color:var(--gold-light);
-  border-radius:6px;padding:4px 8px;font-size:0.60rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;
+
+.product-left-col {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
 }
-.card-quick-add-btn:active{transform:scale(0.9);}
-.card-action-icon-btn{background:transparent!important;border:none!important;padding:2px 4px!important;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:0.98rem;line-height:1;}
-.card-action-icon-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
 
-/* =========================================================
-   FIXED BOTTOM BAR (BORDERLESS SOFT LUXURY + SHIMMER ORDER NOW)
-   ========================================================= */
-.fixed-bottom-checkout-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(5,5,8,0.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:5px 12px;display:flex;justify-content:space-around;align-items:center;z-index:999999;border:none;box-shadow:0 -6px 20px rgba(0,0,0,0.8);height:58px;}
-@media(min-width:768px){.fixed-bottom-checkout-bar{justify-content:center;gap:80px;padding:6px 30px;height:60px;}}
-.footer-menu-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;gap:2px;background:transparent!important;border:none!important;padding:4px 12px;white-space:nowrap;}
-.footer-menu-icon{font-size:1.05rem;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);}
-.footer-menu-label{font-size:0.60rem;font-weight:700;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-solid);letter-spacing:0.4px;}
-
-.footer-menu-item.order-now-highlight{
-  position:relative;overflow:hidden;
-  background:var(--gold-gradient)!important;border-radius:12px!important;padding:8px 30px!important;
-  box-shadow:0 4px 16px rgba(212,175,55,0.28);
+.media-viewport {
+  width: 100%;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0a0a10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  border: none;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  contain: layout style;
 }
-.footer-menu-item.order-now-highlight::after{
-  content:"";position:absolute;top:0;left:0;width:42%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.48),transparent);
-  animation:luxuryFooterSweep 3s ease-in-out infinite;pointer-events:none;
+
+@media (min-width: 768px) {
+  .media-viewport {
+    min-height: 440px;
+  }
 }
-.footer-menu-item.order-now-highlight .footer-menu-label{color:#000000!important;-webkit-text-fill-color:#000000!important;font-size:0.74rem;font-weight:800;background:none!important;}
 
-.footer-cart-icon-wrapper{position:relative;display:flex;align-items:center;justify-content:center;}
-.footer-cart-badge{position:absolute;top:-5px;right:-8px;background:#ff2a85;color:#ffffff;font-size:0.54rem;font-weight:800;min-width:17px;height:17px;padding:0 3px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform 0.2s ease;}
-.footer-cart-badge.pulse-badge{transform:scale(1.32);}
-
-.flying-gold-coin{position:fixed;z-index:9999999;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffffff 0%,#fcf6ba 25%,#bf953f 65%,#8a5d0f 100%);border:none;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:14px;color:#4d3300;box-shadow:0 0 15px rgba(212,175,55,0.8);transition:left 0.6s cubic-bezier(0.22,1,0.36,1),top 0.6s cubic-bezier(0.22,1,0.36,1),transform 0.6s linear,opacity 0.6s ease;}
-
-/* Added-to-Cart Toast */
-#pdQuickToast{
-  position:fixed;top:16px;left:50%;transform:translate3d(-50%,-20px,0);
-  background:#11111a;border:none;color:#fcf6ba;
-  padding:9px 18px;border-radius:999px;font-size:0.72rem;font-weight:700;
-  z-index:99999999;opacity:0;pointer-events:none;transition:opacity 0.18s ease,transform 0.18s ease;
-  box-shadow:0 8px 25px rgba(0,0,0,0.85);white-space:nowrap;
+.main-media-element {
+  width: 100%;
+  height: auto;
+  max-height: 440px;
+  object-fit: contain;
+  display: block;
+  background: #0a0a10;
+  transition: opacity 0.18s ease;
 }
-#pdQuickToast.show{opacity:1;transform:translate3d(-50%,0,0);}
 
-.animated-welcome-msg{background:#12121c;padding:8px 12px;border-radius:8px;font-size:0.70rem;color:var(--gold-solid);font-weight:600;}
-.chat-warning-msg{background:rgba(255,42,133,0.15);color:#ff2a85;padding:6px 10px;border-radius:8px;font-size:0.65rem;font-weight:700;text-align:center;margin-top:4px;}
-.universal-share-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
-.share-target-btn{background:#08080e;border:none;border-radius:10px;padding:10px 6px;color:#ffffff;font-size:0.65rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-decoration:none;transition:all 0.2s ease;}
-.share-target-btn:hover{background:var(--gold-gradient);color:#000000;}
-.share-target-btn i{font-size:1.05rem;}
-.share-link-copy-row{display:flex;gap:6px;margin-top:8px;}
-.share-link-box{flex:1;min-width:0;background:#08080e;border:none;border-radius:8px;padding:7px 10px;color:var(--gold-solid);font-size:0.68rem;outline:none;text-transform:none!important;}
+.thumbnail-slider-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
 
-@supports ((-webkit-background-clip:text) or (background-clip:text)){
-  .current-main-price,.related-section-title,.product-title-restricted,.product-price-tag,.footer-menu-icon,.footer-menu-label,.main-product-share-btn i{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
+.thumbnail-strip {
+  display: flex;
+  gap: 10px;
+  padding: 4px 2px;
+  overflow-x: auto;
+  width: 100%;
+  scrollbar-width: none;
+}
+
+.thumbnail-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb-item {
+  width: 60px;
+  height: 60px;
+  border-radius: 11px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #0c0c14;
+  border: none;
+  opacity: 0.78;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+
+.thumb-item img,
+.thumb-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb-item:hover {
+  opacity: 1;
+}
+
+.thumb-item.active {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.28);
+}
+
+.product-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.price-discount-card,
+.qty-section-card,
+.product-info-section-box {
+  background: var(--card-wholesale);
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.price-discount-card {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.price-discount-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.03) 30%, rgba(252, 246, 186, 0.1) 50%, rgba(212, 175, 55, 0.03) 70%, transparent 100%);
+  animation: luxuryFooterSweep 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sample-price-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sample-price-label {
+  font-size: 0.68rem;
+  color: var(--gold-solid);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.price-row-bottom {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.current-main-price {
+  font-size: 1.38rem;
+  font-weight: 800;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-solid);
+  line-height: 1.1;
+}
+
+.old-crossed-price {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  text-decoration: line-through;
+}
+
+.in-stock-clean-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #00e676;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+}
+
+.in-stock-clean-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #00e676;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.qty-section-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  width: 100%;
+}
+
+.wholesale-preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.preset-btn {
+  background: #12121c;
+  border: none;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 9px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.preset-btn .btn-price {
+  font-size: 0.80rem;
+  color: var(--gold-solid);
+  font-weight: 800;
+}
+
+.preset-btn.active,
+.preset-btn:hover {
+  background: var(--gold-gradient);
+  color: #000;
+  box-shadow: 0 3px 12px rgba(212, 175, 55, 0.28);
+}
+
+.preset-btn.active .btn-price,
+.preset-btn:hover .btn-price {
+  color: #000;
+}
+
+.qty-label-mini {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--gold-solid);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.qty-controls-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.qty-btn-ch {
+  background: var(--gold-gradient);
+  border: none;
+  color: #000;
+  font-size: 0.95rem;
+  font-weight: 800;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.qty-btn-ch:active {
+  transform: scale(0.92);
+}
+
+.qty-num-input {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  width: 82px;
+  text-align: center;
+  background: #08080e;
+  border: none;
+  border-radius: 9px;
+  outline: none;
+  padding: 5px 0;
+}
+
+.applied-unit-price-display {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--gold-solid);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.product-info-section-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  width: 100%;
+}
+
+.section-box-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--gold-solid);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sku-display-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(212, 175, 55, 0.1);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 11px;
+  font-size: 0.70rem;
+  font-weight: 800;
+  color: var(--gold-solid);
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  max-width: 100%;
+  flex-wrap: wrap;
+  word-break: break-all;
+}
+
+.sku-display-badge strong {
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  word-break: break-all;
+}
+
+.sku-display-badge i {
+  font-size: 0.74rem;
+}
+
+.custom-wood-top-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--pink-accent);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.product-title-restricted {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1.35;
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-solid);
+}
+
+@media (min-width: 768px) {
+  .product-title-restricted {
+    font-size: 1.28rem;
+  }
+}
+
+.standard-description-box {
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  line-height: 1.5;
+  text-transform: none !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.integrated-custom-note-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  margin-top: 2px;
+  padding-top: 8px;
+}
+
+.integrated-note-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--gold-solid);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.custom-note-input {
+  width: 100%;
+  background: #08080e;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 11px;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  outline: none;
+  font-family: var(--font-main);
+  text-transform: uppercase;
+}
+
+.action-buttons-flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 2px;
+  width: 100%;
+}
+
+.seller-chat-compact-btn {
+  color: var(--gold-solid);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 7px 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(212, 175, 55, 0.08);
+  border-radius: 9px;
+  border: none;
+}
+
+.main-product-share-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--gold-solid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: transform 0.15s ease;
+}
+
+.main-product-share-btn:active {
+  transform: scale(0.9);
+}
+
+.related-products-wrapper {
+  margin-top: 12px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.related-section-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-solid);
+  letter-spacing: 0.8px;
+}
+
+.feed-container {
+  padding: 2px 0;
+  column-count: 2;
+  column-gap: 9px;
+  width: 100%;
+  contain: layout style;
+}
+
+@media (min-width: 768px) {
+  .feed-container {
+    column-count: 4;
+    column-gap: 14px;
+  }
+}
+
+.product-card {
+  background: linear-gradient(155deg, #11111a 0%, #09090f 100%);
+  border-radius: 14px;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 9px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  contain: paint;
+  backface-visibility: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+  transition: transform 0.2s var(--luxury-ease), box-shadow 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .product-card {
+    margin-bottom: 14px;
+  }
+}
+
+.product-card:hover {
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.75);
+  transform: translate3d(0, -2px, 0);
+}
+
+.product-card:active {
+  transform: scale(0.97);
+}
+
+.product-media-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #0c0c14;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-media-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: transparent;
+}
+
+.card-footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: linear-gradient(180deg, #0b0b12 0%, #06060a 100%) !important;
+  border: none;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-footer-actions::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.05) 25%, rgba(252, 246, 186, 0.22) 50%, rgba(212, 175, 55, 0.05) 75%, transparent 100%);
+  animation: luxuryFooterSweep 3.4s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: var(--footer-shimmer-delay, 0s);
+  will-change: transform;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wholesale-info-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.product-price-tag {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--gold-solid);
+}
+
+.moq-tag {
+  font-size: 0.56rem;
+  color: #d0d0e2;
+  font-weight: 700;
+  background: rgba(212, 175, 55, 0.08);
+  border: none;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.card-right-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+.card-quick-add-btn {
+  background: rgba(212, 175, 55, 0.14);
+  border: none;
+  color: var(--gold-light);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.60rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.card-quick-add-btn:active {
+  transform: scale(0.9);
+}
+
+.card-action-icon-btn {
+  background: transparent !important;
+  border: none !important;
+  padding: 2px 4px !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.98rem;
+  line-height: 1;
+}
+
+.card-action-icon-btn i {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-solid);
+}
+
+.fixed-bottom-checkout-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(5, 5, 8, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 5px 12px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999999;
+  border: none;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.8);
+  height: 58px;
+}
+
+@media (min-width: 768px) {
+  .fixed-bottom-checkout-bar {
+    justify-content: center;
+    gap: 80px;
+    padding: 6px 30px;
+    height: 60px;
+  }
+}
+
+.footer-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 2px;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+.footer-menu-icon {
+  font-size: 1.05rem;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-solid);
+}
+
+.footer-menu-label {
+  font-size: 0.60rem;
+  font-weight: 700;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-solid);
+  letter-spacing: 0.4px;
+}
+
+.footer-menu-item.order-now-highlight {
+  position: relative;
+  overflow: hidden;
+  background: var(--gold-gradient) !important;
+  border-radius: 12px !important;
+  padding: 8px 30px !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.28);
+}
+
+.footer-menu-item.order-now-highlight::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+  animation: luxuryFooterSweep 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.footer-menu-item.order-now-highlight .footer-menu-label {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: none !important;
+}
+
+.footer-cart-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: #ff2a85;
+  color: #ffffff;
+  font-size: 0.54rem;
+  font-weight: 800;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 3px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.footer-cart-badge.pulse-badge {
+  transform: scale(1.32);
+}
+
+.flying-gold-coin {
+  position: fixed;
+  z-index: 9999999;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fcf6ba 25%, #bf953f 65%, #8a5d0f 100%);
+  border: none;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #4d3300;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+  transition: left 0.6s cubic-bezier(0.22, 1, 0.36, 1), top 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s linear, opacity 0.6s ease;
+}
+
+#pdQuickToast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translate3d(-50%, -20px, 0);
+  background: #11111a;
+  border: none;
+  color: #fcf6ba;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  z-index: 99999999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+
+#pdQuickToast.show {
+  opacity: 1;
+  transform: translate3d(-50%, 0, 0);
+}
+
+.animated-welcome-msg {
+  background: #12121c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.70rem;
+  color: var(--gold-solid);
+  font-weight: 600;
+}
+
+.chat-warning-msg {
+  background: rgba(255, 42, 133, 0.15);
+  color: #ff2a85;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.universal-share-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.share-target-btn {
+  background: #08080e;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 6px;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.share-target-btn:hover {
+  background: var(--gold-gradient);
+  color: #000000;
+}
+
+.share-target-btn i {
+  font-size: 1.05rem;
+}
+
+.share-link-copy-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.share-link-box {
+  flex: 1;
+  min-width: 0;
+  background: #08080e;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: var(--gold-solid);
+  font-size: 0.68rem;
+  outline: none;
+  text-transform: none !important;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .current-main-price,
+  .related-section-title,
+  .product-title-restricted,
+  .product-price-tag,
+  .footer-menu-icon,
+  .footer-menu-label,
+  .main-product-share-btn i {
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
 }
 </style>
 </head>
@@ -210,117 +987,122 @@ body{padding-bottom:75px;}
 <div id="pdQuickToast"></div>
 
 <div class="ecommerce-main-wrapper" id="mainStoreContainer">
-<div class="product-details-clean-section" id="productDetailsViewSection">
-<div class="product-left-col">
-<div class="media-viewport" id="mediaViewportContainer">
-<img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%230a0a10'/%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
-</div>
-<div class="thumbnail-slider-wrapper">
-<div class="thumbnail-strip" id="productThumbnailsStrip"></div>
-</div>
-</div>
-<div class="product-right-col">
-<div class="price-discount-card">
-<div class="sample-price-block">
-<span class="sample-price-label">SAMPLE PRICE</span>
-<span class="in-stock-clean-badge" id="inStockBadgeLabel">STOCK: 1500 UNITS READY</span>
-</div>
-<div class="price-row-bottom">
-<div class="current-main-price" id="activeProductPriceTag">$25.00</div>
-<div class="old-crossed-price" id="activeProductOldPriceTag">$33.75</div>
-</div>
-</div>
-<div class="qty-section-card">
-<div class="wholesale-preset-buttons">
-<button type="button" class="preset-btn" onclick="setQuantityPreset(100, this)">
-<span class="btn-price" id="btnPrice100">$20.00</span>
-<span>/ 100 PCS</span>
-</button>
-<button type="button" class="preset-btn" onclick="setQuantityPreset(300, this)">
-<span class="btn-price" id="btnPrice300">$18.00</span>
-<span>/ 300 PCS</span>
-</button>
-</div>
-<span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
-<div class="qty-controls-flex">
-<button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
-<input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" max="999999" oninput="manualQuantityInput(this)">
-<button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
-</div>
-<div class="applied-unit-price-display">APPLIED UNIT PRICE: <span id="appliedUnitPriceDisplay">$25.00</span></div>
-</div>
-<div class="product-info-section-box">
-<span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
-<div class="sku-display-badge"><i class="fa-solid fa-barcode"></i><span>SKU:</span><strong id="productSkuText">--</strong></div>
-<div class="custom-wood-top-badge">CUSTOM SIZE & COLOR • SELECT THUMBNAIL FOR COLOR</div>
-<h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
-<div class="standard-description-box" id="unlimitedDescriptionContent">Loading wholesale specifications...</div>
-<div class="integrated-custom-note-group">
-<span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / COLOR / SIZE</span>
-<input type="text" id="customSizeInputField" class="custom-note-input" placeholder="E.G. BLACK / ORANGE / XL..." value="" autocomplete="off" maxlength="100">
-</div>
-<div class="action-buttons-flex-row">
-<button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()"><i class="fa-solid fa-headset"></i> <span>SELLER</span></button>
-<button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button>
-</div>
-</div>
-</div>
-</div>
+  <div class="product-details-clean-section" id="productDetailsViewSection">
+    <div class="product-left-col">
+      <div class="media-viewport" id="mediaViewportContainer">
+        <img id="mainDisplayMediaElement" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%230a0a10'/%3E%3C/svg%3E" class="main-media-element" alt="Product Media">
+      </div>
+      <div class="thumbnail-slider-wrapper">
+        <div class="thumbnail-strip" id="productThumbnailsStrip"></div>
+      </div>
+    </div>
 
-<div class="related-products-wrapper" id="relatedProductsSectionWrapper">
-<h3 class="related-section-title" id="relatedSectionHeading"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS (TAP TO SELECT OR + ADD)</h3>
-<div class="feed-container" id="relatedProductsFeedContainer"></div>
-</div>
+    <div class="product-right-col">
+      <div class="price-discount-card">
+        <div class="sample-price-block">
+          <span class="sample-price-label">SAMPLE PRICE</span>
+          <span class="in-stock-clean-badge" id="inStockBadgeLabel">STOCK: 1500 UNITS READY</span>
+        </div>
+        <div class="price-row-bottom">
+          <div class="current-main-price" id="activeProductPriceTag">$25.00</div>
+          <div class="old-crossed-price" id="activeProductOldPriceTag">$33.75</div>
+        </div>
+      </div>
+
+      <div class="qty-section-card">
+        <div class="wholesale-preset-buttons">
+          <button type="button" class="preset-btn" onclick="setQuantityPreset(100, this)">
+            <span class="btn-price" id="btnPrice100">$20.00</span>
+            <span>/ 100 PCS</span>
+          </button>
+          <button type="button" class="preset-btn" onclick="setQuantityPreset(300, this)">
+            <span class="btn-price" id="btnPrice300">$18.00</span>
+            <span>/ 300 PCS</span>
+          </button>
+        </div>
+        <span class="qty-label-mini">CUSTOM WHOLESALE QUANTITY</span>
+        <div class="qty-controls-flex">
+          <button type="button" class="qty-btn-ch" onclick="modifyQuantity(-1)">-</button>
+          <input type="number" id="itemQtyInputVal" class="qty-num-input" value="1" min="1" max="999999" oninput="manualQuantityInput(this)">
+          <button type="button" class="qty-btn-ch" onclick="modifyQuantity(1)">+</button>
+        </div>
+        <div class="applied-unit-price-display">APPLIED UNIT PRICE: <span id="appliedUnitPriceDisplay">$25.00</span></div>
+      </div>
+
+      <div class="product-info-section-box">
+        <span class="section-box-title"><i class="fa-solid fa-circle-info"></i> BULK SPECIFICATIONS</span>
+        <div class="sku-display-badge"><i class="fa-solid fa-barcode"></i><span>SKU:</span><strong id="productSkuText">--</strong></div>
+        <div class="custom-wood-top-badge">CUSTOM SIZE &amp; COLOR • SELECT THUMBNAIL FOR COLOR</div>
+        <h1 class="product-title-restricted" id="activeProductTitleHeading">LOADING WHOLESALE PRODUCT...</h1>
+        <div class="standard-description-box" id="unlimitedDescriptionContent">Loading wholesale specifications...</div>
+        <div class="integrated-custom-note-group">
+          <span class="integrated-note-label"><i class="fa-solid fa-pen-to-square"></i> CUSTOM BULK NOTE / COLOR / SIZE</span>
+          <input type="text" id="customSizeInputField" class="custom-note-input" placeholder="E.G. BLACK / ORANGE / XL..." value="" autocomplete="off" maxlength="100">
+        </div>
+        <div class="action-buttons-flex-row">
+          <button type="button" class="seller-chat-compact-btn" onclick="toggleChatModal()"><i class="fa-solid fa-headset"></i> <span>SELLER</span></button>
+          <button type="button" class="main-product-share-btn" onclick="triggerMainAffiliateShare(event)" title="Share Product"><i class="fa-solid fa-share-nodes"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-products-wrapper" id="relatedProductsSectionWrapper">
+    <h3 class="related-section-title" id="relatedSectionHeading"><i class="fa-solid fa-boxes-stacked"></i> RELATED WHOLESALE PRODUCTS (TAP TO SELECT OR + ADD)</h3>
+    <div class="feed-container" id="relatedProductsFeedContainer"></div>
+  </div>
 </div>
 
 <div class="fixed-bottom-checkout-bar">
-<a href="/wholesale/" class="footer-menu-item"><i class="fa-solid fa-house footer-menu-icon"></i><span class="footer-menu-label">HOME</span></a>
-<div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)"><span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span></div>
-<button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
-<div class="footer-cart-icon-wrapper"><i class="fa-solid fa-cart-shopping footer-menu-icon"></i><span class="footer-cart-badge" id="footerCartItemCountBadge">0</span></div>
-<span class="footer-menu-label">CART</span>
-</button>
+  <a href="/wholesale/" class="footer-menu-item"><i class="fa-solid fa-house footer-menu-icon"></i><span class="footer-menu-label">HOME</span></a>
+  <div class="footer-menu-item order-now-highlight" id="orderNowMainBtn" onclick="executeOrderNow(event)"><span class="footer-menu-label" id="orderBtnLabel">ORDER NOW</span></div>
+  <button type="button" class="footer-menu-item" id="footerCartMenuBtn" onclick="redirectToCartPage()">
+    <div class="footer-cart-icon-wrapper"><i class="fa-solid fa-cart-shopping footer-menu-icon"></i><span class="footer-cart-badge" id="footerCartItemCountBadge">0</span></div>
+    <span class="footer-menu-label">CART</span>
+  </button>
 </div>
 
 <div id="chatModalOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:9999999;align-items:center;justify-content:center;padding:12px;" onclick="if(event.target===this) toggleChatModal()">
-<div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.2);">
-<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
-<span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
-<button type="button" onclick="toggleChatModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
-</div>
-<div id="chatMessagesContainer" style="background:#040407;border-radius:10px;padding:10px;height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
-<div class="animated-welcome-msg">WELCOME! HOW CAN WE HELP YOUR BULK ORDER TODAY?</div>
-</div>
-<div id="chatWarningArea"></div>
-<div style="display:flex;gap:6px;">
-<input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1;min-width:0;background:#040407;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:#ffffff;font-size:0.70rem;outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
-<button type="button" onclick="sendChatMessage()" style="background:var(--gold-gradient);color:#000;border:none;padding:0 12px;border-radius:8px;font-weight:800;font-size:0.70rem;cursor:pointer;">SEND</button>
-</div>
-</div>
+  <div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.2);">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
+      <span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);">WHOLESALE SUPPORT DESK</span>
+      <button type="button" onclick="toggleChatModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
+    </div>
+    <div id="chatMessagesContainer" style="background:#040407;border-radius:10px;padding:10px;height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+      <div class="animated-welcome-msg">WELCOME! HOW CAN WE HELP YOUR BULK ORDER TODAY?</div>
+    </div>
+    <div id="chatWarningArea"></div>
+    <div style="display:flex;gap:6px;">
+      <input type="text" id="chatMessageInput" placeholder="TYPE YOUR MESSAGE..." style="flex:1;min-width:0;background:#040407;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:#ffffff;font-size:0.70rem;outline:none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+      <button type="button" onclick="sendChatMessage()" style="background:var(--gold-gradient);color:#000;border:none;padding:0 12px;border-radius:8px;font-weight:800;font-size:0.70rem;cursor:pointer;">SEND</button>
+    </div>
+  </div>
 </div>
 
 <div id="universalShareModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:9999999;align-items:center;justify-content:center;padding:12px;" onclick="if(event.target===this) closeShareModal()">
-<div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.25);">
-<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
-<span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
-<button type="button" onclick="closeShareModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
-</div>
-<div id="shareTargetGrid" class="universal-share-grid"></div>
-<div class="share-link-copy-row">
-<input type="text" id="shareModalUrlInput" class="share-link-box" readonly>
-<button type="button" id="shareModalCopyBtn" onclick="copyShareLinkFromModal()" style="background:var(--gold-gradient);color:#000;border:none;padding:0 12px;border-radius:8px;font-weight:800;font-size:0.68rem;cursor:pointer;">COPY</button>
-</div>
-</div>
+  <div style="background:#0c0c12;border-radius:14px;padding:16px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(212,175,55,0.25);">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
+      <span style="font-size:0.72rem;font-weight:700;color:var(--gold-solid);"><i class="fa-solid fa-share-nodes"></i> SHARE WHOLESALE PRODUCT</span>
+      <button type="button" onclick="closeShareModal()" style="background:none;border:none;color:var(--gold-solid);font-size:1.15rem;cursor:pointer;">×</button>
+    </div>
+    <div id="shareTargetGrid" class="universal-share-grid"></div>
+    <div class="share-link-copy-row">
+      <input type="text" id="shareModalUrlInput" class="share-link-box" readonly>
+      <button type="button" id="shareModalCopyBtn" onclick="copyShareLinkFromModal()" style="background:var(--gold-gradient);color:#000;border:none;padding:0 12px;border-radius:8px;font-weight:800;font-size:0.68rem;cursor:pointer;">COPY</button>
+    </div>
+  </div>
 </div>
 
 <script>
 const API_BASE_URL = '';
 const FALLBACK_IMG_URL = 'https://pub-508ef1e45bab487aadde85a1dba202c4.r2.dev/rorraxyfree/rorraxy.png';
+const WHOLESALE_CART_STORAGE_KEY = 'rorraxy_wholesale_cart';
+
 let currentActiveProduct = null;
 let allCachedProductsList = [];
 let seenRelatedIds = new Set();
 let currentItemQuantity = 1;
-let selectedProductColorImage = "";
+let selectedProductColorImage = '';
 let selectedVariantIndex = 0;
 let currentBaseUnitPrice = 25.00;
 let cachedAffiliateId = null;
@@ -363,9 +1145,9 @@ function generateAffiliateUrl(productId) {
   const affId = getActiveAffiliateId();
   if (affId) currentParams.set('ref', affId);
   const rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
-  const platform = localStorage.getItem('rorraxy_active_platform') || 'wholesale';
-  if (rate) currentParams.set('rate', rate);
-  if (platform) currentParams.set('platform', platform);
+  const platform = 'wholesale';
+  currentParams.set('rate', rate);
+  currentParams.set('platform', platform);
   return `${baseUrl}?${currentParams.toString()}`;
 }
 
@@ -374,17 +1156,17 @@ window.addEventListener('DOMContentLoaded', () => {
   const reqId = urlParams.get('id');
   const refParam = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
   const rateParam = urlParams.get('rate') || '3';
-  const platformParam = urlParams.get('platform') || 'wholesale';
 
   if (refParam) {
     localStorage.setItem('rorraxy_active_affiliate_ref', refParam);
     localStorage.setItem('rorraxy_active_commission_rate', rateParam);
-    localStorage.setItem('rorraxy_active_platform', platformParam);
+    localStorage.setItem('rorraxy_active_platform', 'wholesale');
   }
 
   getActiveAffiliateId();
   updateCartBadgeCount();
   updateAppliedUnitPriceDisplay();
+
   if (reqId) {
     fetchWholesaleProductDetails(reqId);
   } else {
@@ -409,10 +1191,10 @@ async function fetchWholesaleProductDetails(productId) {
       localProducts = JSON.parse(localStorage.getItem('rorraxy_wholesale_products') || '[]') || [];
       cachedFeed = JSON.parse(localStorage.getItem('rorraxy_wholesale_feed_cache') || '[]') || [];
     } catch (e) {}
+
     const combinedLocal = [...localProducts, ...cachedFeed];
     allCachedProductsList = combinedLocal;
 
-    // Instant Cache Render (<5ms)
     const foundItem = combinedLocal.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
     if (foundItem) {
       renderProductDetails(foundItem);
@@ -421,6 +1203,7 @@ async function fetchWholesaleProductDetails(productId) {
 
     const products = await fetchCloudflareProductsList();
     const mergedMap = new Map();
+
     for (let i = 0; i < combinedLocal.length; i++) {
       const p = combinedLocal[i];
       const pId = p.id || p.product_id || p.product_code || p.title;
@@ -431,17 +1214,23 @@ async function fetchWholesaleProductDetails(productId) {
       const pId = p.id || p.product_id || p.product_code || p.title;
       if (pId) mergedMap.set(String(pId), p);
     }
+
     const allProducts = Array.from(mergedMap.values());
     allCachedProductsList = allProducts;
 
     if (allProducts.length > 0) {
-      const matchedProduct = allProducts.find(p => String(p.id) === String(productId) || String(p.product_id) === String(productId) || String(p.product_code) === String(productId));
+      const matchedProduct = allProducts.find(
+        p => String(p.id) === String(productId) ||
+             String(p.product_id) === String(productId) ||
+             String(p.product_code) === String(productId)
+      );
       if (matchedProduct) {
         if (!foundItem) renderProductDetails(matchedProduct);
         renderRelatedProducts(allProducts, matchedProduct);
         return;
       }
     }
+
     if (!foundItem) renderFallbackProductDetails(productId);
   } catch (err) {
     if (!currentActiveProduct) renderFallbackProductDetails(productId);
@@ -452,13 +1241,13 @@ function renderFallbackProductDetails(productId) {
   const sampleProduct = {
     id: productId,
     sku: 'ROR-SAMPLE-' + String(productId).substring(0, 4).toUpperCase(),
-    title: "RORRAXY WHOLESALE BULK LUXURY ITEM",
+    title: 'RORRAXY WHOLESALE BULK LUXURY ITEM',
     price: 25.00,
     price_100: 20.00,
     price_300: 18.00,
     stock: 1500,
-    category: "Shoes",
-    description: "High-grade bulk wholesale manufacturing supply meeting international commercial standards.",
+    category: 'Shoes',
+    description: 'High-grade bulk wholesale manufacturing supply meeting international commercial standards.',
     image_url: FALLBACK_IMG_URL
   };
   allCachedProductsList = [sampleProduct];
@@ -478,6 +1267,7 @@ function renderProductDetails(prod) {
   selectedVariantIndex = 0;
   seenRelatedIds = new Set([String(prod.id || prod.product_id || prod.product_code || '')]);
   currentBaseUnitPrice = parseFloat(prod.price_bulk || prod.price_min_whole || prod.price || prod.wholesale_price) || 25.00;
+
   const oldP = currentBaseUnitPrice * 1.35;
   const p100 = parseFloat(prod.price_100 || (currentBaseUnitPrice * 0.8)).toFixed(2);
   const p300 = parseFloat(prod.price_300 || (currentBaseUnitPrice * 0.72)).toFixed(2);
@@ -489,7 +1279,7 @@ function renderProductDetails(prod) {
   currentItemQuantity = moq;
   document.getElementById('itemQtyInputVal').value = currentItemQuantity;
 
-  document.getElementById('activeProductTitleHeading').innerText = prod.title || "RORRAXY WHOLESALE PRODUCT";
+  document.getElementById('activeProductTitleHeading').innerText = prod.title || 'RORRAXY WHOLESALE PRODUCT';
   document.getElementById('activeProductPriceTag').innerText = `$${currentBaseUnitPrice.toFixed(2)}`;
   document.getElementById('activeProductOldPriceTag').innerText = `$${oldP.toFixed(2)}`;
 
@@ -497,7 +1287,7 @@ function renderProductDetails(prod) {
   const skuEl = document.getElementById('productSkuText');
   if (skuEl) skuEl.innerText = skuValue || 'N/A';
 
-  const rawDesc = prod.description || prod.desc || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+  const rawDesc = prod.description || prod.desc || 'High-grade bulk wholesale manufacturing supply meeting international standards.';
   document.getElementById('unlimitedDescriptionContent').innerText = cleanDescriptionText(rawDesc);
 
   const stockNum = prod.stock || 1500;
@@ -506,6 +1296,7 @@ function renderProductDetails(prod) {
   const strip = document.getElementById('productThumbnailsStrip');
   const mediaList = [];
   const seenUrls = new Set();
+
   const addMedia = (type, url) => {
     if (!url || typeof url !== 'string') return;
     const clean = url.trim();
@@ -515,7 +1306,7 @@ function renderProductDetails(prod) {
     mediaList.push({ type, url: clean });
   };
 
-  let primaryImg = prod.image_url || prod.imageUrl || prod.img || "";
+  let primaryImg = prod.image_url || prod.imageUrl || prod.img || '';
   if (primaryImg && primaryImg.startsWith('[')) {
     try {
       const parsedArr = JSON.parse(primaryImg);
@@ -539,14 +1330,15 @@ function renderProductDetails(prod) {
     }
   }
 
-  const videoFileUrl = prod.video_url || prod.videoUrl || "";
+  const videoFileUrl = prod.video_url || prod.videoUrl || '';
   if (videoFileUrl) addMedia('video', videoFileUrl);
+
   if (mediaList.length === 0) {
     mediaList.push({ type: 'image', url: FALLBACK_IMG_URL });
   }
 
   const firstImageMedia = mediaList.find(m => m.type === 'image');
-  selectedProductColorImage = firstImageMedia ? firstImageMedia.url : "";
+  selectedProductColorImage = firstImageMedia ? firstImageMedia.url : '';
   updateMainViewport(mediaList[0]);
 
   const fragment = document.createDocumentFragment();
@@ -564,6 +1356,7 @@ function renderProductDetails(prod) {
     }
     fragment.appendChild(thumbDiv);
   });
+
   strip.innerHTML = '';
   strip.appendChild(fragment);
   updateAppliedUnitPriceDisplay();
@@ -613,7 +1406,6 @@ function buildProductCardHtml(item, idx = 0) {
   </div>`;
 }
 
-// Allows user to seamlessly pick any product from the related list below without losing cart items
 function selectRelatedProductInline(productId) {
   const matched = allCachedProductsList.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
   if (matched) {
@@ -626,7 +1418,6 @@ function selectRelatedProductInline(productId) {
   }
 }
 
-// Allows quick "+ CART" right from the related product grid below
 function quickAddRelatedToCart(event, productId) {
   if (event) event.stopPropagation();
   const prod = allCachedProductsList.find(p => String(p.id || p.product_id || p.product_code) === String(productId));
@@ -634,15 +1425,17 @@ function quickAddRelatedToCart(event, productId) {
   const imgUrl = extractProductPrimaryImage(prod);
   const moq = parseInt(prod.moq || prod.MOQ || 1, 10) || 1;
   const unitPrice = parseFloat(prod.price_bulk || prod.price_min_whole || prod.price || 25.00) || 25.00;
-  addProductEntryToBothCarts({
+
+  addProductToWholesaleCart({
     product: prod,
     chosenImg: imgUrl,
     chosenNote: 'STANDARD BULK',
     qty: moq,
     unitPrice: unitPrice
   });
+
   triggerCoinDropAnimation(event);
-  showPdToast(`ADDED ${prod.title || 'ITEM'} TO CART`);
+  showPdToast(`ADDED ${prod.title || 'ITEM'} TO WHOLESALE CART`);
 }
 
 function renderRelatedProducts(allProducts, currentProd) {
@@ -657,9 +1450,24 @@ function renderRelatedProducts(allProducts, currentProd) {
   container.innerHTML = relatedList.map((item, idx) => buildProductCardHtml(item, idx)).join('');
 }
 
-function escapeHtmlAttr(str) { return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-function escapeJsSingle(str) { return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' '); }
-function navigateToProduct(productId) { window.location.href = generateAffiliateUrl(productId); }
+function escapeHtmlAttr(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function escapeJsSingle(str) {
+  return String(str || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, ' ');
+}
+
+function navigateToProduct(productId) {
+  window.location.href = generateAffiliateUrl(productId);
+}
 
 function updateMainViewport(mediaObj) {
   const viewport = document.getElementById('mediaViewportContainer');
@@ -743,15 +1551,16 @@ function playCoinDropChime() {
     freqs.forEach((freq, idx) => {
       const osc = audioCtxInstance.createOscillator();
       const gain = audioCtxInstance.createGain();
+      const startTime = now + (idx * 0.035);
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now + (idx * 0.035));
-      gain.gain.setValueAtTime(0, now + (idx * 0.035));
-      gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), now + (idx * 0.035) + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.00001, now + (idx * 0.035) + 1.1);
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(0.12 / (idx + 1), startTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.00001, startTime + 1.1);
       osc.connect(gain);
       gain.connect(audioCtxInstance.destination);
-      osc.start(now + (idx * 0.035));
-      osc.stop(now + (idx * 0.035) + 1.1);
+      osc.start(startTime);
+      osc.stop(startTime + 1.1);
     });
   } catch (e) {}
 }
@@ -760,21 +1569,25 @@ function triggerCoinDropAnimation(event) {
   const cartBtn = document.getElementById('footerCartMenuBtn');
   const cartBadge = document.getElementById('footerCartItemCountBadge');
   if (!cartBtn) return;
+
   const cartRect = cartBtn.getBoundingClientRect();
   const targetX = cartRect.left + (cartRect.width / 2) - 15;
   const targetY = cartRect.top + (cartRect.height / 2) - 15;
+
   let startX = window.innerWidth / 2 - 15;
   let startY = window.innerHeight - 80;
   if (event && event.clientX && event.clientY) {
     startX = event.clientX - 15;
     startY = event.clientY - 15;
   }
+
   const coin = document.createElement('div');
   coin.className = 'flying-gold-coin';
   coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
   coin.style.left = `${startX}px`;
   coin.style.top = `${startY}px`;
   document.body.appendChild(coin);
+
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       coin.style.left = `${targetX}px`;
@@ -783,6 +1596,7 @@ function triggerCoinDropAnimation(event) {
       coin.style.opacity = '0';
     });
   });
+
   setTimeout(() => {
     if (coin.parentNode) coin.parentNode.removeChild(coin);
     playCoinDropChime();
@@ -793,27 +1607,32 @@ function triggerCoinDropAnimation(event) {
   }, 600);
 }
 
-// Unified helper: Syncs BOTH 'rorraxy_wholesale_cart' and 'rorraxy_cart', and distinguishes different color images & notes!
-function addProductEntryToBothCarts({ product, chosenImg, chosenNote, qty, unitPrice }) {
-  let wholesaleCart = [];
-  let legacyCart = [];
+function getIsolatedWholesaleCart() {
   try {
-    wholesaleCart = JSON.parse(localStorage.getItem('rorraxy_wholesale_cart') || '[]') || [];
-    legacyCart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || [];
-  } catch (e) {}
+    const raw = JSON.parse(localStorage.getItem(WHOLESALE_CART_STORAGE_KEY) || '[]') || [];
+    if (!Array.isArray(raw)) return [];
+    const clean = raw.filter(item => {
+      const plat = (item.platform || item.mode || '').toString().toLowerCase().trim();
+      return plat !== 'retail' && item.is_wholesale !== false;
+    });
+    if (clean.length !== raw.length) {
+      localStorage.setItem(WHOLESALE_CART_STORAGE_KEY, JSON.stringify(clean));
+    }
+    return clean;
+  } catch (e) {
+    return [];
+  }
+}
 
-  // Merge existing items safely so nothing is ever lost
-  const baseCart = wholesaleCart.length >= legacyCart.length ? wholesaleCart : legacyCart;
-
+function addProductToWholesaleCart({ product, chosenImg, chosenNote, qty, unitPrice }) {
+  const baseCart = getIsolatedWholesaleCart();
   const prodId = String(product.id || product.productId || product.product_id || product.product_code || '101');
   const skuValue = String(product.sku || product.product_code || product.productCode || '').trim().toUpperCase();
   const activeAffId = getActiveAffiliateId();
   const rate = localStorage.getItem('rorraxy_active_commission_rate') || '3';
-  const platform = localStorage.getItem('rorraxy_active_platform') || 'wholesale';
-  const productDescText = cleanDescriptionText(product.description || product.desc || "") || "High-grade bulk wholesale manufacturing supply meeting international standards.";
+  const productDescText = cleanDescriptionText(product.description || product.desc || '') || 'High-grade bulk wholesale manufacturing supply meeting international standards.';
   const moq = parseInt(product.moq || product.MOQ || 1, 10) || 1;
 
-  // Match by Product ID + Selected Color Image + Custom Note (so Black & Orange are treated as 2 distinct items!)
   const existingItem = baseCart.find(item =>
     String(item.productId || item.id) === prodId &&
     String(item.img || '').trim() === String(chosenImg || '').trim() &&
@@ -827,7 +1646,8 @@ function addProductEntryToBothCarts({ product, chosenImg, chosenNote, qty, unitP
       existingItem.affiliateRef = activeAffId;
     }
     existingItem.commissionRate = parseFloat(rate);
-    existingItem.platform = platform;
+    existingItem.platform = 'wholesale';
+    existingItem.is_wholesale = true;
     existingItem.price = `$${unitPrice.toFixed(2)}`;
     if (!existingItem.sku && skuValue) existingItem.sku = skuValue;
     if (!existingItem.description) existingItem.description = productDescText;
@@ -835,12 +1655,13 @@ function addProductEntryToBothCarts({ product, chosenImg, chosenNote, qty, unitP
     baseCart.unshift({
       productId: prodId,
       sku: skuValue,
-      sellerId: product.seller_id || product.sellerId || "SELLER-RORRAXY-01",
+      sellerId: product.seller_id || product.sellerId || 'SELLER-RORRAXY-01',
       affiliateId: activeAffId || null,
       affiliateRef: activeAffId || null,
       commissionRate: parseFloat(rate),
-      platform: platform,
-      title: product.title || document.getElementById('activeProductTitleHeading').innerText || "RORRAXY WHOLESALE PRODUCT",
+      platform: 'wholesale',
+      is_wholesale: true,
+      title: product.title || document.getElementById('activeProductTitleHeading').innerText || 'RORRAXY WHOLESALE PRODUCT',
       description: productDescText,
       price: `$${unitPrice.toFixed(2)}`,
       price_sample: product.price_sample || 0,
@@ -857,8 +1678,7 @@ function addProductEntryToBothCarts({ product, chosenImg, chosenNote, qty, unitP
   }
 
   try {
-    localStorage.setItem('rorraxy_wholesale_cart', JSON.stringify(baseCart));
-    localStorage.setItem('rorraxy_cart', JSON.stringify(baseCart));
+    localStorage.setItem(WHOLESALE_CART_STORAGE_KEY, JSON.stringify(baseCart));
   } catch (e) {}
 
   updateCartBadgeCount();
@@ -877,8 +1697,8 @@ function executeOrderNow(event) {
   }
 
   const rawNote = document.getElementById('customSizeInputField').value.trim();
-  const variantTag = selectedVariantIndex > 0 && rawNote === "" ? `COLOR #${selectedVariantIndex + 1}` : "";
-  const chosenSize = rawNote !== "" ? rawNote.toUpperCase() : (variantTag || "STANDARD BULK");
+  const variantTag = selectedVariantIndex > 0 && rawNote === '' ? `COLOR #${selectedVariantIndex + 1}` : '';
+  const chosenSize = rawNote !== '' ? rawNote.toUpperCase() : (variantTag || 'STANDARD BULK');
 
   const finalImgUrl = (selectedProductColorImage && !selectedProductColorImage.startsWith('data:'))
     ? selectedProductColorImage
@@ -886,7 +1706,7 @@ function executeOrderNow(event) {
 
   const priceNum = calculateAppliedUnitPrice();
 
-  addProductEntryToBothCarts({
+  addProductToWholesaleCart({
     product: currentActiveProduct,
     chosenImg: finalImgUrl,
     chosenNote: chosenSize,
@@ -895,7 +1715,7 @@ function executeOrderNow(event) {
   });
 
   triggerCoinDropAnimation(event);
-  showPdToast(`ADDED ${currentItemQuantity} PCS TO CART`);
+  showPdToast(`ADDED ${currentItemQuantity} PCS TO WHOLESALE CART`);
 }
 
 function redirectToCartPage() {
@@ -903,13 +1723,7 @@ function redirectToCartPage() {
 }
 
 function updateCartBadgeCount() {
-  let wCart = [];
-  let rCart = [];
-  try {
-    wCart = JSON.parse(localStorage.getItem('rorraxy_wholesale_cart') || '[]') || [];
-    rCart = JSON.parse(localStorage.getItem('rorraxy_cart') || '[]') || [];
-  } catch (e) {}
-  const activeCart = wCart.length >= rCart.length ? wCart : rCart;
+  const activeCart = getIsolatedWholesaleCart();
   const totalQty = activeCart.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
   const badge = document.getElementById('footerCartItemCountBadge');
   if (badge) badge.innerText = totalQty;
@@ -932,20 +1746,23 @@ function sendChatMessage() {
   const box = document.getElementById('chatMessagesContainer');
   const warningArea = document.getElementById('chatWarningArea');
   const text = input.value.trim();
-  warningArea.innerHTML = "";
-  if (text !== "") {
+  warningArea.innerHTML = '';
+
+  if (text !== '') {
     const phoneRegex = /(\+?\d{1,4}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}|\d{10,11}/;
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|dev|app|store))/i;
+
     if (phoneRegex.test(text) || emailRegex.test(text) || urlRegex.test(text)) {
       warningArea.innerHTML = `<div class="chat-warning-msg"><i class="fa-solid fa-triangle-exclamation"></i> SHARING PHONE NUMBERS, EMAILS, OR LINKS IS STRICTLY PROHIBITED.</div>`;
       return;
     }
+
     const msgDiv = document.createElement('div');
-    msgDiv.style.cssText = "background:var(--gold-gradient);color:#000;padding:6px 10px;border-radius:8px;font-size:0.70rem;font-weight:700;max-width:85%;align-self:flex-end;word-break:break-word;";
+    msgDiv.style.cssText = 'background:var(--gold-gradient);color:#000;padding:6px 10px;border-radius:8px;font-size:0.70rem;font-weight:700;max-width:85%;align-self:flex-end;word-break:break-word;';
     msgDiv.textContent = text;
     box.appendChild(msgDiv);
-    input.value = "";
+    input.value = '';
     box.scrollTop = box.scrollHeight;
   }
 }
@@ -1012,9 +1829,11 @@ function openUniversalShareModal(title, text, url) {
   const copyBtn = document.getElementById('shareModalCopyBtn');
   if (copyBtn) copyBtn.innerText = 'COPY';
   if (urlInput) urlInput.value = url;
+
   const encUrl = encodeURIComponent(url);
   const encText = encodeURIComponent(url);
   const encTitle = encodeURIComponent(title);
+
   const targets = [
     { name: 'WHATSAPP', icon: 'fa-brands fa-whatsapp', href: `https://wa.me/?text=${encText}` },
     { name: 'TELEGRAM', icon: 'fa-brands fa-telegram', href: `https://t.me/share/url?url=${encUrl}&text=${encText}` },
@@ -1026,7 +1845,8 @@ function openUniversalShareModal(title, text, url) {
     { name: 'EMAIL APP', icon: 'fa-solid fa-envelope', href: `mailto:?subject=${encTitle}&body=${encText}` },
     { name: 'SYSTEM / APP', icon: 'fa-solid fa-up-right-from-square', href: url, copyFirst: true }
   ];
-  grid.innerHTML = targets.map(t => `<a class="share-target-btn" href="${escapeHtmlAttr(t.href)}" target="_blank" rel="noopener noreferrer" ${t.copyFirst ? `onclick="copyTextToClipboard('${escapeJsSingle(url)}')"`:''}><i class="${t.icon}"></i><span>${t.name}</span></a>`).join('');
+
+  grid.innerHTML = targets.map(t => `<a class="share-target-btn" href="${escapeHtmlAttr(t.href)}" target="_blank" rel="noopener noreferrer" ${t.copyFirst ? `onclick="copyTextToClipboard('${escapeJsSingle(url)}')"` : ''}><i class="${t.icon}"></i><span>${t.name}</span></a>`).join('');
   modal.style.display = 'flex';
 }
 
